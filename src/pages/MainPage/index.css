@@ -1,0 +1,92 @@
+@font-face {
+  font-family: 'Open Sans', sans-serif;
+  src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+}
+
+.data_container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 188px;
+  right: 0;
+  background-color: #333333;
+  padding-top: 47px;
+  padding-left: 72px;
+  padding-right: 56px;
+}
+
+.add_task_container {
+  position: relative;
+  width: 100%;
+}
+
+.add_task {
+  height: 50px;
+  width: 100%;
+  outline: none;
+  padding-left: 16px;
+  background-color: #4F4F4F;
+  border-radius: 4px;
+  padding-right: 127px;
+  color: white;
+}
+
+.add_task::-webkit-input-placeholder {
+  color: #E0E0E0;
+}
+
+.add_task::-moz-placeholder {
+  color: #E0E0E0;
+}
+
+/* Firefox 19+ */
+.add_task:-moz-placeholder {
+  color: #E0E0E0;
+}
+
+/* Firefox 18- */
+.add_task:-ms-input-placeholder {
+  color: #E0E0E0;
+}
+
+.control_task_time_icons {
+  position: absolute;
+  right: 14px;
+  top: 7px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+.play {
+  background: url("../../images/icons/play.svg") no-repeat center;
+}
+.stop {
+  background: url("../../images/icons/stop.svg") no-repeat center;
+}
+
+.time_container {
+  position: absolute;
+  top: 17px !important;
+  right: 56px;
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 16px;
+  color: #FFFFFF;
+}
+
+.folder  {
+  position: absolute;
+  top: 11px;
+  right: 126px;
+  width: 24px;
+  height: 24px;
+  background: url("../../images/icons/folder-symbol.svg") no-repeat center;
+  cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+}
