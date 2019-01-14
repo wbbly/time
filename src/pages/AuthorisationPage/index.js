@@ -2,7 +2,8 @@ import React from 'react';
 import './index.css';
 
 const AuthorisationPage = () => {
-  return (
+   return (
+
     <div className="wrapper">
       <i className="page_title"></i>
       <div className="authorisation_window">

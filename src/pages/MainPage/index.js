@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './index.css';
-// import LeftBar from '../../components/LeftBar/LeftBar';
-// import MainPageHistory from '../../components/MainPageHistory/MainPageHistory';
+import LeftBar from '../../components/LeftBar';
+import MainPageHistory from '../../components/MainPageHistory';
 
 class MainPage extends Component {
   state = {
@@ -20,11 +20,11 @@ class MainPage extends Component {
     const buttonState = classToggle ? 'play' : 'stop';
     const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
     let arr = [1,2,3,4,5]
-    // let items = arr.map((item)=> <MainPageHistory key={item} />);
+    let items = arr.map((item)=> <MainPageHistory key={item} />);
 
     return (
       <div className="wrapper_main_page">
-        {/*<LeftBar />*/}
+        <LeftBar />
         <div className="data_container">
           <div className="add_task_container">
             <input
@@ -38,7 +38,7 @@ class MainPage extends Component {
             <i className="folder"></i>
             <i onClick={this.changeClass} className={buttonClassName} />
           </div>
-          {/*{items}*/}
+          {items}
         </div>
       </div>
     );

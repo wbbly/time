@@ -1,34 +1,40 @@
 import React, {Component} from 'react';
 import './index.css';
-// import LeftBar from '../../components/LeftBar/LeftBar';
+import LeftBar from '../../components/LeftBar';
 
 class TeamPage extends Component {
   programersArr = [
     {
+      id: 1,
       name: 'Alexey',
       email: 'alexeysergeev@gmail.com',
       access: 'Admin'
     },
     {
+      id: 2,
       name: 'Alexey',
       email: 'alexeysergeev@gmail.com',
       access: 'Admin'
     },
     {
+      id: 3,
       name: 'Alexey',
       email: 'alexeysergeev@gmail.com',
       access: 'Admin'
     }
-  ]
+  ];
+    headerItems = [
+        'Name',
+        'E-mail',
+        'Access',
+    ];
 
   render() {
-    // let items = this.programersArr.map((item) => {
-    //   <td>1q</td>
-    //   console.log(item);
-    // })
-
+    const headerItemsElements = this.headerItems.map( (element)=>
+        <th key={element}>{element}</th>
+    )
     const items = this.programersArr.map((element) =>
-      <tr>
+      <tr key={element.id}>
         <td>{element.name}</td>
         <td>{element.email}</td>
         <td>
@@ -41,7 +47,7 @@ class TeamPage extends Component {
 
     return (
       <div className="wrapper_team_page">
-        {/*<LeftBar/>*/}
+        <LeftBar/>
         <div className="data_container_team_page">
           <div className="team_page_header">
             <div className="page_name">
@@ -55,15 +61,7 @@ class TeamPage extends Component {
           <div className="team_page_data">
             <table>
               <thead>
-              <th>
-                Name
-              </th>
-              <th>
-                E-mail
-              </th>
-              <th>
-                Access
-              </th>
+              {headerItemsElements}
               </thead>
               <tbody>
               {items}

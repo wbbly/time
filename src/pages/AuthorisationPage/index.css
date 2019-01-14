@@ -18,7 +18,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #FFFFFF;
-  height: 313px;
+  height: 270px;
   width: 284px;
   padding: 22px;
   z-index: 2;
@@ -33,16 +33,15 @@
   margin-top: 28px;
 }
 
-input {
+.wrapper input {
   border: 1px solid #828282;
   height: 47px;
   width: 100%;
   border-radius: 4px;
   outline: none;
-  padding-left: 16px;
 }
 
-input:focus {
+.wrapper input:focus {
   border-color: #56CCF2;
 }
 
