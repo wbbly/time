@@ -1,47 +1,41 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
 
 class MainPageHistory extends Component {
-  arrElements = [
-    {
-      name: 'dcdsjcns',
-      timeFrom: '12:11:10',
-      timeTo: '12:11:10',
-      timePassed: '08:10:10',
-      project: 'any'
-    },
-  ]
 
-  render() {
-    const items = this.arrElements.map((element) =>
-      <li key={element.name}>
-        <div className="name_container">
-          <div className="name">
-            {element.name}
-          </div>
-          <div className="project_name">
-            {element.project}
-          </div>
-        </div>
-        <div className="time_container_history">
-          <div className="time_now">
-            <div>{element.timeFrom}</div>
-            -
-            <div>{element.timeTo}</div>
-          </div>
-          <div className="timePassed">
-            {element.timePassed}
-          </div>
-          <i className="small_play"></i>
-          <i className="cancel"></i>
-        </div>
-      </li>)
-    return (
-      <ul>
-        {items}
-      </ul>
-    )
-  }
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        // this.arrElements.push(this.props.items);
+        return (
+            <div className="ul">
+                <div className="li" key={this.props.items.name}>
+                    <div className="name_container">
+                        <div className="name">
+                            {this.props.items.name}
+                        </div>
+                        <div className="project_name">
+                            {this.props.items.project}
+                        </div>
+                    </div>
+                    <div className="time_container_history">
+                        <div className="time_now">
+                            <div>{this.props.items.timeFrom}</div>
+                            -
+                            <div>{this.props.items.timeTo}</div>
+                        </div>
+                        <div className="timePassed">
+                            {this.props.items.timePassed}
+                        </div>
+                        <i className="small_play"></i>
+                        <i className="cancel"></i>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
 }
 

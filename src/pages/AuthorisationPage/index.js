@@ -4,7 +4,7 @@ import './index.css';
 const AuthorisationPage = () => {
    return (
 
-    <div className="wrapper">
+    <div className="wrapper_authorisation_page">
       <i className="page_title"></i>
       <div className="authorisation_window">
         <div className="input_container">

@@ -22,12 +22,13 @@
 
 .add_task {
   height: 50px;
-  width: 100%;
+  width: calc(100% - 127px - 16px);
   outline: none;
   padding-left: 16px;
   background-color: #4F4F4F;
   border-radius: 4px;
   padding-right: 127px;
+  border: 0;
   color: white;
 }
 

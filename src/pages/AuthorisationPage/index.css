@@ -3,7 +3,7 @@
   src: url("https://fonts.googleapis.com/css?family=Open+Sans")
 }
 
-.wrapper {
+.wrapper_authorisation_page {
   position: fixed;
   left: 0;
   top: 0;
@@ -33,7 +33,7 @@
   margin-top: 28px;
 }
 
-.wrapper input {
+.wrapper_authorisation_page input {
   border: 1px solid #828282;
   height: 47px;
   width: 100%;
@@ -41,7 +41,7 @@
   outline: none;
 }
 
-.wrapper input:focus {
+.wrapper_authorisation_page input:focus {
   border-color: #56CCF2;
 }
 
