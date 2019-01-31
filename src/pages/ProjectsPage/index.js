@@ -8,6 +8,11 @@ import CreateProjectModal from '../../components/CreateProjectModal'
 class ProjectsPage extends Component {
     state = {
         toggleProjectDataModal: false,
+    };
+
+    constructor(props) {
+        super(props)
+        console.log(this.props);
     }
     render() {
         return (
