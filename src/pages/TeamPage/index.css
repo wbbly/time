@@ -68,6 +68,7 @@
 
 .team_page_data table {
   width: 100%;
+  border-spacing: inherit;
 }
 
 .team_page_data table th {
