@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import './style.css'
+import ProjectData from "../../pages/ProjectsPage";
 
 class CreateProjectModal extends Component {
     state = {
@@ -24,6 +25,10 @@ class CreateProjectModal extends Component {
         )
     }
 
+    closeModal() {
+        this.props.toggleModal(false)
+    }
+
     render() {
         let selectItems = this.selectValue.map((value) =>
             <div className={`item`} onClick={e => this.setItem(value)}>
@@ -38,7 +43,7 @@ class CreateProjectModal extends Component {
                         <div className="create_projects_modal_header_title">
                             Create project
                         </div>
-                        <i className="create_projects_modal_header_close"></i>
+                        <i className="create_projects_modal_header_close" onClick={e => this.closeModal()}></i>
                     </div>
                     <div className="create_projects_modal_data">
                         <div className="create_projects_modal_data_input_container">

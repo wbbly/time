@@ -54,6 +54,7 @@
     width: 24px;
     height: 24px;
     background: url("../../images/icons/forbidden-mark.svg") no-repeat center;
+    cursor: pointer;
 }
 
 .create_projects_modal_data {

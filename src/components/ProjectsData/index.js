@@ -1,33 +1,21 @@
 import React, {Component} from 'react';
 import './style.css';
-import CreateProjectModal from '../../components/CreateProjectModal'
+import PropTypes from 'prop-types'
 
-class ProjectData extends Component {
+export default class ProjectData extends Component {
     render() {
+        let tableInfo = this.props.tableInfo;
         const tableHeader = ['Project name', 'Status', 'Team'];
-        const tableInfo = [
-            {
-                projectName: 'test',
-                projectStatus: '21',
-                team: 'Hr',
-            },
-            {
-                projectName: 'test',
-                projectStatus: '21',
-                team: 'Hr',
-            },
-        ]
         const tableInfoElements = tableInfo.map(item =>
-            <tr>
+            <tr key={item.id}>
                 <td>{item.projectName}</td>
                 <td>{item.projectStatus}</td>
                 <td>{item.team}</td>
             </tr>
-        )
+        );
         const tableHeaderElements = tableHeader.map(item => <th>{item}</th>)
         return (
             <div className="project_data_wrapper">
-                {/*<CreateProjectModal />*/}
                 <table>
                     <thead>
                     <tr>
@@ -43,4 +31,6 @@ class ProjectData extends Component {
     }
 }
 
-export default ProjectData;
+ProjectData.propTypes = {
+    tableInfo: PropTypes.array.isRequired,
+};

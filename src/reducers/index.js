@@ -1,7 +1,6 @@
-export const initialState = {
-    user: 'Unknown User',
-}
+import { combineReducers } from 'redux'
+import { projectReducer } from './ProjectsReducer'
 
-export function rootReducer(state = initialState) {
-    return state
-}
+export const rootReducer = combineReducers({
+    projectReducer: projectReducer,
+});
