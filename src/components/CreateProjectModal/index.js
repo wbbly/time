@@ -1,13 +1,19 @@
 import React, {Component} from 'react'
 import './style.css'
 import ProjectData from "../../pages/ProjectsPage";
+import PropTypes from 'prop-types'
 
-class CreateProjectModal extends Component {
+export default class CreateProjectModal extends Component {
     state = {
         selectedValue: 'green',
         listOpen: false,
     };
-    selectValue = ['green', 'red', 'blue', 'pink'];
+    selectValue = [
+        'green',
+        'red',
+        'blue',
+        'pink'
+    ];
 
     setItem(value) {
         this.setState(
@@ -25,8 +31,14 @@ class CreateProjectModal extends Component {
         )
     }
 
-    closeModal() {
-        this.props.toggleModal(false)
+    addProject(arr) {
+        arr.push({
+            id: +new Date(),
+            projectName: this.createProjectInput.value,
+            projectStatus: '21',
+            team: 'Hr',
+        });
+        this.props.toggleModal('CREATE_PROJECT', {toggle: false, tableData: arr})
     }
 
     render() {
@@ -43,11 +55,14 @@ class CreateProjectModal extends Component {
                         <div className="create_projects_modal_header_title">
                             Create project
                         </div>
-                        <i className="create_projects_modal_header_close" onClick={e => this.closeModal()}></i>
+                        <i className="create_projects_modal_header_close"
+                           onClick={e => this.props.toggleModal('TOGGLE_MODAL', {toggle: false})}></i>
                     </div>
                     <div className="create_projects_modal_data">
                         <div className="create_projects_modal_data_input_container">
-                            <input type="text" placeholder={'Project name...'}/>
+                            <input type="text" ref={(input) => {
+                                this.createProjectInput = input
+                            }} placeholder={'Project name...'}/>
                             <div className="create_projects_modal_data_select_container"
                                  onClick={e => this.toggleSelect()}>
                                 <div className="select_main">
@@ -59,7 +74,9 @@ class CreateProjectModal extends Component {
                         </div>
                     </div>
                     <div className="create_projects_modal_button_container">
-                        <button className="create_projects_modal_button_container_button">Create project</button>
+                        <button className="create_projects_modal_button_container_button"
+                                onClick={e => this.addProject(this.props.tableInfo)}>Create project
+                        </button>
                     </div>
                 </div>
             </div>
@@ -67,4 +84,6 @@ class CreateProjectModal extends Component {
     }
 }
 
-export default CreateProjectModal;
+CreateProjectModal.propTypes = {
+    tableInfo: PropTypes.array.isRequired,
+};

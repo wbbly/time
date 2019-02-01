@@ -10,7 +10,7 @@ import toggleModalAddProject from '../../actions/projectsActions';
 class ProjectsPage extends Component {
 
     toggleModal(item) {
-        item(true);
+        item('TOGGLE_MODAL',true);
     }
 
     render() {
@@ -18,19 +18,19 @@ class ProjectsPage extends Component {
 
         return (
             <div className="wrapper_projects_page">
-                {addNewProjectModalToggle && <CreateProjectModal toggleModal={toggleModalAddProject} />}
+                {addNewProjectModalToggle && <CreateProjectModal tableInfo={tableData} toggleModal={toggleModalAddProject} />}
                 <LeftBar/>
                 <div className="data_container_projects_page">
                     <div className="projects_page_header">
                         <div className="projects_page_title">
                             Projects
                         </div>
-                        <button className="create_project_button" onClick={e => this.toggleModal(toggleModalAddProject)}>
+                        <button className="create_project_button" onClick={e => toggleModalAddProject('TOGGLE_MODAL', {toggle: true})}>
                             Create new project
                         </button>
                     </div>
                     <div className="project_page_filters">
-                        <ProjectSearchBar/>
+                        <ProjectSearchBar tableInfo={tableData} toggleModal={toggleModalAddProject} />
                     </div>
                     <div className="project_data_wrapper">
                         <ProjectData tableInfo={tableData} />
@@ -50,7 +50,7 @@ const mapStateToProps = store => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        toggleModalAddProject: year => dispatch(toggleModalAddProject(year))[1]
+        toggleModalAddProject: (actionType, toggle) => dispatch(toggleModalAddProject(actionType, toggle))[1]
     }
 };
 

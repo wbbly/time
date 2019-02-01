@@ -5,7 +5,21 @@ import PropTypes from 'prop-types'
 export default class ProjectData extends Component {
     render() {
         let tableInfo = this.props.tableInfo;
-        const tableHeader = ['Project name', 'Status', 'Team'];
+        const tableHeader = [
+            {
+                key: 1,
+                value:'Project name'
+            },
+            {
+                key: 2,
+                value:'Status'
+            },
+            {
+                key: 3,
+                value:'Team'
+            },
+
+        ];
         const tableInfoElements = tableInfo.map(item =>
             <tr key={item.id}>
                 <td>{item.projectName}</td>
@@ -13,7 +27,7 @@ export default class ProjectData extends Component {
                 <td>{item.team}</td>
             </tr>
         );
-        const tableHeaderElements = tableHeader.map(item => <th>{item}</th>)
+        const tableHeaderElements = tableHeader.map(item => <th key={item.key}>{item.value}</th>);
         return (
             <div className="project_data_wrapper">
                 <table>
@@ -23,7 +37,7 @@ export default class ProjectData extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {tableInfoElements}
+                        {tableInfoElements}
                     </tbody>
                 </table>
             </div>

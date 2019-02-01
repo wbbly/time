@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import './index.css';
 import LeftBar from '../../components/LeftBar';
-import MainPageHistory from '../../components/MainPageHistory';
 import * as moment from 'moment';
+import {connect} from 'react-redux';
+import addTasks from '../../actions/mainPageAction'
 
 class MainPage extends Component {
     state = {
@@ -46,10 +47,7 @@ class MainPage extends Component {
                 timePassed: moment(this.state.time).format('HH:mm:ss'),
                 project: 'any'
             });
-            this.setState(state => ({
-                    arrTasks: arr
-                })
-            );
+            this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: arr});
             this.cleanMainField();
         }
     };
@@ -61,11 +59,49 @@ class MainPage extends Component {
         this.mainTaskName = '';
     }
 
+    deleteFromArr(item) {
+        let arrFromStoreString = JSON.stringify(this.props.arrTasks);
+        let arrFromStore = this.props.arrTasks;
+        let deleteElement = arrFromStoreString.indexOf(JSON.stringify(item));
+        arrFromStore.splice((deleteElement - 1), 1);
+        this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: arrFromStore});
+        this.setState({arrTasks: this.props.arrTasks});
+    }
+
+    componentWillMount() {
+        this.setState({arrTasks: this.props.arrTasks})
+    }
+
     render() {
         const {classToggle} = this.state;
         const buttonState = classToggle ? 'play' : 'stop';
         const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
-        let items = this.state.arrTasks.map((item) => <MainPageHistory items={item} key={item.id}/>);
+        let items = this.state.arrTasks.map((item) =>
+            <div className="ul">
+                <div className="li" key={item.id}>
+                    <div className="name_container">
+                        <div className="name">
+                            {item.name}
+                        </div>
+                        <div className="project_name">
+                            {item.project}
+                        </div>
+                    </div>
+                    <div className="time_container_history">
+                        <div className="time_now">
+                            <div>{item.timeFrom}</div>
+                            -
+                            <div>{item.timeTo}</div>
+                        </div>
+                        <div className="timePassed">
+                            {item.timePassed}
+                        </div>
+                        <i className="small_play"></i>
+                        <i className="cancel" onClick={e => this.deleteFromArr(item)}></i>
+                    </div>
+                </div>
+            </div>
+        );
 
         return (
             <div className="wrapper_main_page">
@@ -91,6 +127,24 @@ class MainPage extends Component {
             </div>
         );
     }
+
+    componentWillUnmount() {
+        this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: this.state.arrTasks});
+    }
 }
 
-export default MainPage;
+const mapStateToProps = store => {
+    return {
+        arrTasks: store.mainPageReducer.arrTasks,
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        addTasksAction: (actionType, action) => dispatch(addTasks(actionType, action))[1]
+    }
+};
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MainPage)
