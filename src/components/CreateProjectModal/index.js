@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './style.css'
 import ProjectData from "../../pages/ProjectsPage";
 import PropTypes from 'prop-types'

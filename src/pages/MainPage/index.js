@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import LeftBar from '../../components/LeftBar';
 import * as moment from 'moment';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import addTasks from '../../actions/mainPageAction'
 
 class MainPage extends Component {

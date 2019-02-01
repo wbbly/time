@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import LeftBar from '../../components/LeftBar';
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 class TeamPage extends Component {
     programersArr = [

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './style.css'
 
 class Select extends Component {
@@ -7,7 +7,7 @@ class Select extends Component {
         listOpen: false,
         selectedValue: 'Test',
         list: [1, 2, 3, 4, 5],
-    }
+    };
 
     render() {
         const listElements = this.state.list.map((item) =>

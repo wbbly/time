@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './style.css';
 import PropTypes from 'prop-types'
 
@@ -8,15 +8,15 @@ export default class ProjectData extends Component {
         const tableHeader = [
             {
                 key: 1,
-                value:'Project name'
+                value: 'Project name'
             },
             {
                 key: 2,
-                value:'Status'
+                value: 'Status'
             },
             {
                 key: 3,
-                value:'Team'
+                value: 'Team'
             },
 
         ];
@@ -37,7 +37,7 @@ export default class ProjectData extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {tableInfoElements}
+                    {tableInfoElements}
                     </tbody>
                 </table>
             </div>
