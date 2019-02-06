@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './index.css';
+import './style.css';
 import LeftBar from '../../components/LeftBar';
 import * as moment from 'moment';
 import { connect } from 'react-redux';
@@ -69,7 +69,7 @@ class MainPage extends Component {
     }
 
     componentWillMount() {
-        this.setState({arrTasks: this.props.arrTasks})
+        this.setState({arrTasks: this.props.arrTasks} )
     }
 
     render() {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './index.css';
+import './style.css';
 import { connect } from 'react-redux'
 import LeftBar from '../../components/LeftBar';
 import ProjectSearchBar from '../../components/projectSearchBar';

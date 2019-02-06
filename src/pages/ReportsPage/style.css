@@ -27,3 +27,15 @@
   font-size: 36px;
   color: #FFFFFF;
 }
+
+.wrapper_reports_page .line_chart_container {
+  position: relative;
+  top: 110px;
+  background-color: #4F4F4F;
+}
+
+.wrapper_reports_page .projects_chart_container {
+  position: relative;
+  top: 20%;
+  border-top: 1px solid #BDBDBD
+}

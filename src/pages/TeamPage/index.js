@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './index.css';
+import './style.css';
 import LeftBar from '../../components/LeftBar';
 import { connect } from 'react-redux'
 
