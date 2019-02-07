@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
 import './style.css';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { ApolloProvider } from 'react-apollo';
+import ApolloClient from 'apollo-boost';
 import LeftBar from '../../components/LeftBar';
 import ProjectSearchBar from '../../components/projectSearchBar';
 import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
 import toggleModalAddProject from '../../actions/projectsActions';
+
+export const client = new ApolloClient({
+    uri: "https://la-ge.herokuapp.com/v1alpha1/graphql",
+    headers: {
+        "Content-Type": "application/json",
+        "X-Hasura-Access-Key": "lalala"
+    }
+});
 
 class ProjectsPage extends Component {
 
@@ -35,7 +45,9 @@ class ProjectsPage extends Component {
                         <ProjectSearchBar tableInfo={tableData} toggleModal={toggleModalAddProject}/>
                     </div>
                     <div className="project_data_wrapper">
-                        <ProjectData tableInfo={tableData}/>
+                        <ApolloProvider client={client}>
+                            <ProjectData tableInfo={tableData}/>
+                        </ApolloProvider>
                     </div>
                 </div>
             </div>

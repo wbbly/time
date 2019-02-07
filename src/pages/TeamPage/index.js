@@ -43,7 +43,9 @@ class TeamPage extends Component {
                     <div className="team_page_data">
                         <table>
                             <thead>
-                            {headerItemsElements}
+                                <tr>
+                                    {headerItemsElements}
+                                </tr>
                             </thead>
                             <tbody>
                             {items}
