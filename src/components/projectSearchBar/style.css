@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=cyrillic');
+
+.wrapper_project_search_bar {
+  width: 100%;
+  height: 59px;
+  background-color: #4F4F4F;
+  display: flex;
+  align-items: center;
+}
+
+.project_search_bar_select_wrapper {
+  width: 55px;
+}
+
+.wrapper_project_search_bar .project_search_bar_select_wrapper {
+  margin-left: 30px;
+}
+
+.project_search_bar_search_field_container {
+  width: 100%;
+  position: relative;
+  margin-left: 22px;
+}
+
+.project_search_bar_search_field_container .magnifer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  background: url("../../images/magnifying-glass (3).svg") no-repeat center;
+}
+
+.project_search_bar_search_field_container input {
+  width: 94%;
+  margin-left: 46px;
+}
+
+.project_search_bar_button_container {
+  height: 100%;
+  width: 208px;
+}
+
+.project_search_bar_button_container button {
+  width: 100%;
+  height: 100%;
+  background-color: #616161;
+  color: white;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 16px;
+  cursor: pointer;
+}
+

@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'Open Sans', sans-serif;
+  src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+}
+
+.data_container_reports_page {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 188px;
+  right: 0;
+  background-color: #333333;
+  padding-top: 47px;
+  padding-left: 148px;
+  padding-right: 56px;
+}
+
+.data_container_reports_page .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.data_container_reports_page .header .header_name {
+  font-family: 'Open Sans', sans-serif;
+  line-height: normal;
+  font-size: 36px;
+  color: #FFFFFF;
+}
+
+.wrapper_reports_page .line_chart_container {
+  position: relative;
+  top: 110px;
+  background-color: #4F4F4F;
+}
+
+.wrapper_reports_page .projects_chart_container {
+  position: relative;
+  top: 20%;
+  border-top: 1px solid #BDBDBD
+}

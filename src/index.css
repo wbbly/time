@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Open Sans', sans-serif;
+  src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -11,4 +16,13 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+button {
+  border: 0;
+  outline: 0;
+}
+
+input {
+  outline: 0;
 }

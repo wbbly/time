@@ -1,0 +1,54 @@
+@font-face {
+  font-family: 'Open Sans', sans-serif;
+  src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+}
+
+.data_container_projects_page {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 188px;
+  right: 0;
+  background-color: #333333;
+  padding-top: 47px;
+  padding-left: 148px;
+  padding-right: 56px;
+}
+
+.projects_page_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.projects_page_title {
+  font-family: 'Open Sans', sans-serif;
+  line-height: normal;
+  font-size: 36px;
+  color: #FFFFFF;
+}
+
+.create_project_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 208px;
+  height: 41px;
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: normal;
+  font-size: 14px;
+  color: #FFFFFF;
+  background-color: #27AE60;
+  outline: none;
+  cursor: pointer;
+}
+
+.project_page_filters {
+  margin-top: 67px;
+}
+
+.project_data_wrapper {
+  margin-top: 88px;
+}

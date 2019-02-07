@@ -1,0 +1,55 @@
+@font-face {
+  font-family: 'Open Sans', sans-serif;
+  src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+}
+
+.project_data_wrapper {
+  width: 100%;
+}
+
+.project_data_wrapper table {
+  width: 100%;
+  border-spacing: inherit;
+}
+
+.project_data_wrapper table th,
+.project_data_wrapper table td {
+  text-align: left;
+}
+
+.project_data_wrapper table th {
+  padding-bottom: 11px;
+}
+
+.project_data_wrapper table thead tr {
+  border-bottom: 1px solid white;
+}
+
+.project_data_wrapper table tbody td {
+  height: 50px;
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 16px;
+  color: #FFFFFF;
+}
+
+.project_data_wrapper table tbody tr {
+  border-bottom: 1px solid rgba(189, 189, 189, 0.11); ;
+}
+
+.project_data_wrapper table tbody tr:hover {
+ background-color: #2F2F2F;
+}
+
+.project_data_wrapper table th {
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 18px;
+  text-align: left;
+  color: #FFFFFF;
+  border-bottom: 1px solid #BDBDBD;
+}
