@@ -4,26 +4,6 @@ import LeftBar from '../../components/LeftBar';
 import { connect } from 'react-redux'
 
 class TeamPage extends Component {
-    programersArr = [
-        {
-            id: 1,
-            name: 'Alexey',
-            email: 'alexeysergeev@gmail.com',
-            access: 'Admin'
-        },
-        {
-            id: 2,
-            name: 'Alexey',
-            email: 'alexeysergeev@gmail.com',
-            access: 'Admin'
-        },
-        {
-            id: 3,
-            name: 'Alexey',
-            email: 'alexeysergeev@gmail.com',
-            access: 'Admin'
-        }
-    ];
     headerItems = [
         'Name',
         'E-mail',
@@ -32,10 +12,9 @@ class TeamPage extends Component {
 
     render() {
         let programersArr = this.props.programersArr;
-        console.log(programersArr);
         const headerItemsElements = this.headerItems.map((element) =>
             <th key={element}>{element}</th>
-        )
+        );
         const items = programersArr.map((element) =>
             <tr key={element.id}>
                 <td>{element.name}</td>
@@ -46,7 +25,7 @@ class TeamPage extends Component {
                     </div>
                 </td>
             </tr>
-        )
+        );
 
         return (
             <div className="wrapper_team_page">
