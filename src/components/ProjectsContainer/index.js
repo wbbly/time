@@ -31,4 +31,4 @@ class ProjectsContainer extends Component {
     }
 }
 
-export default ProjectsContainer
+export default ProjectsContainer;
