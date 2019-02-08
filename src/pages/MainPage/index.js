@@ -3,7 +3,9 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import * as moment from 'moment';
 import { connect } from 'react-redux';
-import addTasks from '../../actions/mainPageAction'
+import addTasks from '../../actions/mainPageAction';
+import manualTimerModalAction from '../../actions/manualTimerModalAction';
+import ManualTimeModal from '../../components/Manual-time-modal';
 
 class MainPage extends Component {
     state = {
@@ -69,7 +71,7 @@ class MainPage extends Component {
     }
 
     componentWillMount() {
-        this.setState({arrTasks: this.props.arrTasks} )
+        this.setState({arrTasks: this.props.arrTasks})
     }
 
     render() {
@@ -97,6 +99,10 @@ class MainPage extends Component {
                             {item.timePassed}
                         </div>
                         <i className="small_play"></i>
+                        <i className="edit_button"
+                           onClick={(e) => {
+                               this.props.manualTimerModalAction('TOGGLE_MODAL', {manualTimerModalToggle: true})
+                           }}></i>
                         <i className="cancel" onClick={e => this.deleteFromArr(item)}></i>
                     </div>
                 </div>
@@ -105,6 +111,8 @@ class MainPage extends Component {
 
         return (
             <div className="wrapper_main_page">
+                {this.props.manualTimerModal.manualTimerModalToggle &&
+                <ManualTimeModal manualTimerModalAction={this.props.manualTimerModalAction}/>}
                 <LeftBar/>
                 <div className="data_container">
                     <div className="add_task_container">
@@ -136,12 +144,14 @@ class MainPage extends Component {
 const mapStateToProps = store => {
     return {
         arrTasks: store.mainPageReducer.arrTasks,
+        manualTimerModal: store.manualTimerModalReducer,
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        addTasksAction: (actionType, action) => dispatch(addTasks(actionType, action))[1]
+        addTasksAction: (actionType, action) => dispatch(addTasks(actionType, action))[1],
+        manualTimerModalAction: (actionType, action) => dispatch(manualTimerModalAction(actionType, action))[1]
     }
 };
 export default connect(
