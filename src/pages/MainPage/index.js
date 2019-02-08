@@ -102,7 +102,8 @@ class MainPage extends Component {
                         <i className="edit_button"
                            onClick={(e) => {
                                this.props.manualTimerModalAction('TOGGLE_MODAL', {manualTimerModalToggle: true})
-                           }}></i>
+                           }}>
+                        </i>
                         <i className="cancel" onClick={e => this.deleteFromArr(item)}></i>
                     </div>
                 </div>
