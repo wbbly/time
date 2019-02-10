@@ -11,7 +11,6 @@ class ProjectsContainer extends Component {
                 <div className="time">{item.projectTime}</div>
             </div>
         );
-        console.log(this.props, 'asd');
         return (
             <div className="projects_container_wrapper">
                 <div className="projects_container_projects">

@@ -2,14 +2,16 @@ const initialState = {
     tableData: [
         {
             id: 1,
-            projectName: 'test',
+            name: 'test',
             projectStatus: '21',
+            created_at: '',
             team: 'Hr',
         },
         {
             id: 2,
-            projectName: 'test',
+            name: 'test',
             projectStatus: '21',
+            created_at: '',
             team: 'Hr',
         },
     ],

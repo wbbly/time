@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './style.css';
 import LeftBar from '../../components/LeftBar';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { client } from '../../requestSettings';
+import { getTodayTimeEntries } from '../../queries';
 
 class TeamPage extends Component {
     headerItems = [
@@ -56,6 +58,11 @@ class TeamPage extends Component {
             </div>
         );
     }
+
+    componentDidMount() {
+        client.request(getTodayTimeEntries).then(data => console.log(data))
+    }
+
 }
 
 const mapStateToProps = store => {

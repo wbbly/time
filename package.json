@@ -8,6 +8,7 @@
     "apollo-boost": "^0.1.22",
     "chart.js": "^2.7.3",
     "graphql": "^14.0.2",
+    "graphql-request": "^1.8.2",
     "graphql-tag": "^2.10.1",
     "moment": "^2.18.1",
     "prop-types": "^15.6.2",

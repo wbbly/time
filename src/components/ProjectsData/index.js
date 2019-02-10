@@ -22,7 +22,7 @@ export default class ProjectData extends Component {
         ];
         const tableInfoElements = tableInfo.map(item =>
             <tr key={item.id}>
-                <td>{item.projectName}</td>
+                <td>{item.name}</td>
                 <td>{item.projectStatus}</td>
                 <td>{item.team}</td>
             </tr>

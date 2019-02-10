@@ -6,12 +6,17 @@ import ProjectSearchBar from '../../components/projectSearchBar';
 import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
 import toggleModalAddProject from '../../actions/projectsActions';
+import { client } from '../../requestSettings';
+import { getProjects } from '../../queries';
 
 class ProjectsPage extends Component {
 
     toggleModal(item) {
         item('TOGGLE_MODAL', true);
     }
+    state = {
+        etalonArr: []
+    };
 
     render() {
         const {tableData, addNewProjectModalToggle, toggleModalAddProject} = this.props;
@@ -32,7 +37,7 @@ class ProjectsPage extends Component {
                         </button>
                     </div>
                     <div className="project_page_filters">
-                        <ProjectSearchBar tableInfo={tableData} toggleModal={toggleModalAddProject}/>
+                        <ProjectSearchBar tableInfo={this.props.tableData} etalonArr={this.state.etalonArr} toggleModal={toggleModalAddProject}/>
                     </div>
                     <div className="project_data_wrapper">
                         <ProjectData tableInfo={tableData}/>
@@ -40,6 +45,13 @@ class ProjectsPage extends Component {
                 </div>
             </div>
         );
+    }
+
+    componentDidMount() {
+        client.request(getProjects).then(data=>{
+            this.setState({etalonArr: data.project});
+            this.props.toggleModalAddProject('CREATE_PROJECT', {toggle: false, tableData: data.project})
+        })
     }
 }
 
