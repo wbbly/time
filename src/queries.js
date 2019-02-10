@@ -20,3 +20,28 @@ export const getTodayTimeEntries = `{
         end_datetime
     }
 }`;
+
+export const addProject = `
+    mutation($name: String!) {
+        insert_project(
+            objects: [
+                {
+                  name: $name,
+                }
+              ]
+          ){
+            affected_rows
+          }
+    }
+`;
+
+export const deleteProject = `
+    mutation($id: Int!) {
+        delete_project(
+            where: {id: {_eq:$id}}
+        ){
+            affected_rows
+        }
+    }
+`;
+

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import './style.css'
 import ProjectData from "../../pages/ProjectsPage";
 import PropTypes from 'prop-types'
+import { client } from "../../requestSettings";
+import { deleteProject } from "../../queries";
 
 export default class CreateProjectModal extends Component {
     state = {
@@ -32,14 +34,19 @@ export default class CreateProjectModal extends Component {
     }
 
     addProject(arr) {
-        arr.push({
+        let object = {
             id: +new Date(),
-            projectName: this.createProjectInput.value,
+            name: this.createProjectInput.value,
             projectStatus: '21',
             team: 'Hr',
-        });
-        this.props.toggleModal('CREATE_PROJECT', {toggle: false, tableData: arr})
+        }
+        arr.push(object);
+        this.props.toggleModal('CREATE_PROJECT', {toggle: false, tableData: arr});
+        client.request(this.returnMutationLink(object)).then(data => {
+        })
     }
+
+
 
     render() {
         let selectItems = this.selectValue.map((value) =>
