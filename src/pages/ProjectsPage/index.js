@@ -44,7 +44,7 @@ class ProjectsPage extends Component {
                         />
                     </div>
                     <div className="project_data_wrapper">
-                        <ProjectData tableInfo={tableData} />
+                        <ProjectData tableInfo={tableData} projectsPageAction={projectsPageAction} />
                     </div>
                 </div>
             </div>

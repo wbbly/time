@@ -38,6 +38,17 @@ export function returnMutationLinkAddProject(object) {
             }`;
 }
 
+export function returnMutationLinkDeleteProject(object) {
+    return `
+            mutation {
+                delete_project(
+                        where:{id: {_eq:"${object.id}"}}
+                            ){
+                        affected_rows
+                    }
+            }`;
+}
+
 export const addProject = `
     mutation($name: String!) {
         insert_project(
