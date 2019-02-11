@@ -52,3 +52,9 @@
 .project_data_wrapper {
   margin-top: 88px;
 }
+
+.delete {
+  width: 24px;
+  height: 24px;
+  background: url("../../images/icons/waste-bin.svg") no-repeat center;
+}

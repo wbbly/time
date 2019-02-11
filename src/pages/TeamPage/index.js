@@ -1,57 +1,43 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import './style.css';
 import LeftBar from '../../components/LeftBar';
-import { connect } from 'react-redux';
 import { client } from '../../requestSettings';
 import { getTodayTimeEntries } from '../../queries';
 
 class TeamPage extends Component {
-    headerItems = [
-        'Name',
-        'E-mail',
-        'Access',
-    ];
+    headerItems = ['Name', 'E-mail', 'Access'];
 
     render() {
         let programersArr = this.props.programersArr;
-        const headerItemsElements = this.headerItems.map((element) =>
-            <th key={element}>{element}</th>
-        );
-        const items = programersArr.map((element) =>
+        const headerItemsElements = this.headerItems.map(element => <th key={element}>{element}</th>);
+        const items = programersArr.map(element => (
             <tr key={element.id}>
                 <td>{element.name}</td>
                 <td>{element.email}</td>
                 <td>
-                    <div className="access_container">
-                        {element.access}
-                    </div>
+                    <div className="access_container">{element.access}</div>
                 </td>
             </tr>
-        );
+        ));
 
         return (
             <div className="wrapper_team_page">
-                <LeftBar/>
+                <LeftBar />
                 <div className="data_container_team_page">
                     <div className="team_page_header">
-                        <div className="page_name">
-                            Team
-                        </div>
+                        <div className="page_name">Team</div>
                         <div className="invite_container">
-                            <input type="text"/>
+                            <input type="text" />
                             <button>Invite</button>
                         </div>
                     </div>
                     <div className="team_page_data">
                         <table>
                             <thead>
-                                <tr>
-                                    {headerItemsElements}
-                                </tr>
+                                <tr>{headerItemsElements}</tr>
                             </thead>
-                            <tbody>
-                            {items}
-                            </tbody>
+                            <tbody>{items}</tbody>
                         </table>
                     </div>
                 </div>
@@ -60,15 +46,14 @@ class TeamPage extends Component {
     }
 
     componentDidMount() {
-        client.request(getTodayTimeEntries).then(data => console.log(data))
+        client.request(getTodayTimeEntries).then(data => console.log(data));
     }
-
 }
 
 const mapStateToProps = store => {
     return {
-        programersArr: store.teamPageReducer.programersArr
-    }
+        programersArr: store.teamPageReducer.programersArr,
+    };
 };
 
 export default connect(mapStateToProps)(TeamPage);

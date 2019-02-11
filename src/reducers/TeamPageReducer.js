@@ -1,31 +1,31 @@
 const initialState = {
-    programersArr : [
+    programersArr: [
         {
             id: 1,
             name: 'Alexey',
             email: 'alexeysergeev@gmail.com',
-            access: 'Admin'
+            access: 'Admin',
         },
         {
             id: 2,
             name: 'Alexey',
             email: 'alexeysergeev@gmail.com',
-            access: 'Admin'
+            access: 'Admin',
         },
         {
             id: 3,
             name: 'Alexey',
             email: 'alexeysergeev@gmail.com',
-            access: 'Admin'
-        }
-    ]
+            access: 'Admin',
+        },
+    ],
 };
 
-export function teamPageReducer (state = initialState, action) {
+export function teamPageReducer(state = initialState, action) {
     switch (action.type) {
         case 'ADD_TASKS_ARR':
-            return {...state, arrTasks: action.payload.arrTasks};
+            return { ...state, arrTasks: action.payload.arrTasks };
         default:
-            return state
+            return state;
     }
 }

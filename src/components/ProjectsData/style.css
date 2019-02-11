@@ -26,6 +26,7 @@
 }
 
 .project_data_wrapper table tbody td {
+  position: relative;
   height: 50px;
   font-family: 'Open Sans', sans-serif;
   font-style: normal;
@@ -52,4 +53,14 @@
   text-align: left;
   color: #FFFFFF;
   border-bottom: 1px solid #BDBDBD;
+}
+
+.project_data_wrapper .delete {
+  position: absolute;
+  top: 12px;
+  left: 90%;
+  width: 24px;
+  height: 24px;
+  background: url("../../images/icons/waste-bin.svg") no-repeat center;
+  cursor: pointer;
 }

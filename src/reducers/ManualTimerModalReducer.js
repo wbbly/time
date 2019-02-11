@@ -1,12 +1,12 @@
 const initialState = {
-        manualTimerModalToggle: false
+    manualTimerModalToggle: false,
 };
 
 export function manualTimerModalReducer(state = initialState, action) {
     switch (action.type) {
         case 'TOGGLE_MODAL':
-            return {...state, manualTimerModalToggle: action.payload.manualTimerModalToggle};
+            return { ...state, manualTimerModalToggle: action.payload.manualTimerModalToggle };
         default:
-            return state
+            return state;
     }
 }

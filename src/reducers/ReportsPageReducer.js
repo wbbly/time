@@ -14,7 +14,7 @@ const initialState = {
                 borderDashOffset: 0.0,
                 borderJoinStyle: 'miter',
                 pointBorderColor: '#56CCF2',
-                scaleFontColor: "#FFFFFF",
+                scaleFontColor: '#FFFFFF',
                 pointBackgroundColor: '#fff',
                 pointBorderWidth: 1,
                 pointHoverRadius: 5,
@@ -24,55 +24,42 @@ const initialState = {
                 pointRadius: 1,
                 pointHitRadius: 10,
                 data: [65, 59, 80, 81, 56, 55, 40],
-            }
-        ]
+            },
+        ],
     },
     projectsArr: [
         {
             projectName: 'Ultradom.com.ua',
-            projectTime: '8:20:33'
+            projectTime: '8:20:33',
         },
         {
             projectName: 'Ultradom.com.ua',
-            projectTime: '8:20:33'
+            projectTime: '8:20:33',
         },
         {
             projectName: 'Ultradom.com.ua',
-            projectTime: '8:20:33'
+            projectTime: '8:20:33',
         },
         {
             projectName: 'Ultradom.com.ua',
-            projectTime: '8:20:33'
+            projectTime: '8:20:33',
         },
-
     ],
     dataDoughnutChat: {
-        labels: [
-            'Red',
-            'Green',
-            'Yellow'
-        ],
+        labels: ['Red', 'Green', 'Yellow'],
         datasets: [
             {
                 data: [300, 50, 100],
-                backgroundColor: [
-                    '#2F80ED',
-                    '#6FCF97',
-                    '#BB6BD9'
-                ],
-                hoverBackgroundColor: [
-                    '#2F80ED',
-                    '#6FCF97',
-                    '#BB6BD9'
-                ]
-            }
-        ]
-    }
+                backgroundColor: ['#2F80ED', '#6FCF97', '#BB6BD9'],
+                hoverBackgroundColor: ['#2F80ED', '#6FCF97', '#BB6BD9'],
+            },
+        ],
+    },
 };
 
 export function reportsPageReducer(state = initialState, action) {
     switch (action.type) {
         default:
-            return state
+            return state;
     }
 }

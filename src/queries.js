@@ -35,7 +35,7 @@ export function returnMutationLinkAddProject(object) {
                             ){
                         affected_rows
                     }
-            }`
+            }`;
 }
 
 export const addProject = `
@@ -61,4 +61,3 @@ export const deleteProject = `
         }
     }
 `;
-
