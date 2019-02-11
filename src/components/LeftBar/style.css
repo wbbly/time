@@ -79,7 +79,3 @@ i {
 .navigation_links:hover {
   background: #4F4F4F;
 }
-
-.navigation_links_container .navigation_links:first-of-type {
-  margin-top: 0;
-}

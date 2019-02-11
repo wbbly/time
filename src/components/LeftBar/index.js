@@ -1,33 +1,33 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './style.css';
-import { Link } from 'react-router-dom'
 
 const LeftBar = () => {
     return (
         <div className="wrapper">
-            <i className="logo_small"></i>
+            <i className="logo_small" />
             <div className="navigation_links_container">
                 <Link to="/main-page">
                     <div className="navigation_links">
-                        <i className="timer"></i>
+                        <i className="timer" />
                         <div className="links_text">timer</div>
                     </div>
                 </Link>
                 <Link to="/reports">
                     <div className="navigation_links">
-                        <i className="reports"></i>
+                        <i className="reports" />
                         <div className="links_text">reports</div>
                     </div>
                 </Link>
                 <Link to="/projects">
                     <div className="navigation_links">
-                        <i className="projects"></i>
+                        <i className="projects" />
                         <div className="links_text">projects</div>
                     </div>
                 </Link>
                 <Link to="/team">
                     <div className="navigation_links">
-                        <i className="team"></i>
+                        <i className="team" />
                         <div className="links_text">team</div>
                     </div>
                 </Link>
