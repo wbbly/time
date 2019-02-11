@@ -21,6 +21,23 @@ export const getTodayTimeEntries = `{
     }
 }`;
 
+export function returnMutationLinkAddProject(object) {
+    return `
+            mutation {
+                insert_project(
+                     objects: [
+                        {
+                            name: "${object.name}",
+                            projectStatus: "21",
+                            team: "HR"
+                         }
+                     ]
+                            ){
+                        affected_rows
+                    }
+            }`
+}
+
 export const addProject = `
     mutation($name: String!) {
         insert_project(

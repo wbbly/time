@@ -3,7 +3,7 @@ import './style.css'
 import ProjectData from "../../pages/ProjectsPage";
 import PropTypes from 'prop-types'
 import { client } from "../../requestSettings";
-import { deleteProject } from "../../queries";
+import { returnMutationLinkAddProject } from "../../queries";
 
 export default class CreateProjectModal extends Component {
     state = {
@@ -39,14 +39,12 @@ export default class CreateProjectModal extends Component {
             name: this.createProjectInput.value,
             projectStatus: '21',
             team: 'Hr',
-        }
+        };
         arr.push(object);
         this.props.projectsPageAction('CREATE_PROJECT', {toggle: false, tableData: arr});
-        client.request(this.returnMutationLink(object)).then(data => {
+        client.request(returnMutationLinkAddProject(object)).then(data => {
         })
     }
-
-
 
     render() {
         let selectItems = this.selectValue.map((value) =>
