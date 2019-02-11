@@ -6,6 +6,12 @@ import LeftBar from '../../components/LeftBar';
 import addTasks from '../../actions/MainPageAction';
 import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
+import { client } from '../../requestSettings';
+import {
+    getTodayTimeEntries,
+    returnMutationLinkAddTimeEntries,
+    returnMutationLinkDeleteTimeEntries,
+} from '../../queries';
 
 class MainPage extends Component {
     state = {
@@ -38,18 +44,21 @@ class MainPage extends Component {
                 }));
             }, 1000);
         } else {
-            let arr = this.state.arrTasks;
+            let arr = this.props.arrTasks;
             clearInterval(this.state.intervalId);
             this.time.timeFinish = moment().format('HH:mm:ss');
-            arr.push({
+            let object = {
                 id: +new Date(),
                 name: this.mainTaskName.value,
                 date: this.state.date,
                 timeFrom: this.time.timeStart,
                 timeTo: this.time.timeFinish,
                 timePassed: moment(this.state.time).format('HH:mm:ss'),
+                userId: 1,
                 project: 'any',
-            });
+            };
+            arr.push(object);
+            client.request(returnMutationLinkAddTimeEntries(object)).then(data => {});
             this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: arr });
             this.cleanMainField();
         }
@@ -61,16 +70,24 @@ class MainPage extends Component {
             .format('YYYY-MM-DD HH:mm:ss');
         this.time.timeFinish = '';
         this.time.timeStart = '';
-        this.mainTaskName = '';
+        this.mainTaskName.value = '';
     }
 
     deleteFromArr(item) {
-        let arrFromStoreString = JSON.stringify(this.props.arrTasks);
-        let arrFromStore = this.props.arrTasks;
-        let deleteElement = arrFromStoreString.indexOf(JSON.stringify(item));
-        arrFromStore.splice(deleteElement - 1, 1);
-        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: arrFromStore });
-        this.setState({ arrTasks: this.props.arrTasks });
+        let newArr = [];
+        for (let i = 0; i < this.props.arrTasks.length; i++) {
+            if (this.props.arrTasks[i].id !== item.id) {
+                newArr.push(this.props.arrTasks[i]);
+            }
+        }
+        client
+            .request(returnMutationLinkDeleteTimeEntries(item))
+            .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: newArr }));
+    }
+
+    startOldTask(oldTask) {
+        this.mainTaskName.value = oldTask.name;
+        this.changeClass();
     }
 
     componentWillMount() {
@@ -81,9 +98,9 @@ class MainPage extends Component {
         const { classToggle } = this.state;
         const buttonState = classToggle ? 'play' : 'stop';
         const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
-        let items = this.state.arrTasks.map(item => (
-            <div className="ul">
-                <div className="li" key={item.id}>
+        let items = this.props.arrTasks.map(item => (
+            <div className="ul" key={item.id}>
+                <div className="li">
                     <div className="name_container">
                         <div className="name">{item.name}</div>
                         <div className="project_name">{item.project}</div>
@@ -93,10 +110,11 @@ class MainPage extends Component {
                             <div>{item.timeFrom}</div>-<div>{item.timeTo}</div>
                         </div>
                         <div className="timePassed">{item.timePassed}</div>
-                        <i className="small_play" />
+                        <i className="small_play" onClick={e => this.startOldTask(item)} />
                         <i
                             className="edit_button"
                             onClick={e => {
+                                this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
                                 this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
                             }}
                         />
@@ -109,7 +127,11 @@ class MainPage extends Component {
         return (
             <div className="wrapper_main_page">
                 {this.props.manualTimerModal.manualTimerModalToggle && (
-                    <ManualTimeModal manualTimerModalAction={this.props.manualTimerModalAction} />
+                    <ManualTimeModal
+                        manualTimerModalAction={this.props.manualTimerModalAction}
+                        arrTasks={this.props.arrTasks}
+                        editedItem={this.props.editedItem}
+                    />
                 )}
                 <LeftBar />
                 <div className="data_container">
@@ -132,14 +154,17 @@ class MainPage extends Component {
         );
     }
 
-    componentWillUnmount() {
-        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: this.state.arrTasks });
+    componentDidMount() {
+        client
+            .request(getTodayTimeEntries)
+            .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timeTracker }));
     }
 }
 
 const mapStateToProps = store => {
     return {
         arrTasks: store.mainPageReducer.arrTasks,
+        editedItem: store.mainPageReducer.editedItem,
         manualTimerModal: store.manualTimerModalReducer,
     };
 };
