@@ -3,8 +3,8 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import * as moment from 'moment';
 import { connect } from 'react-redux';
-import addTasks from '../../actions/mainPageAction';
-import manualTimerModalAction from '../../actions/manualTimerModalAction';
+import addTasks from '../../actions/MainPageAction';
+import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
 
 class MainPage extends Component {

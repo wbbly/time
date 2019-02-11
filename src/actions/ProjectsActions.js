@@ -1,4 +1,4 @@
-export default function toggleModalAddProject(actionType, action) {
+export default function projectsPageAction(actionType, action) {
     if (actionType == 'CREATE_PROJECT') {
         return {
             type: 'CREATE_PROJECT',

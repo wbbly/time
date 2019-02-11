@@ -2,17 +2,10 @@ const initialState = {
     tableData: [
         {
             id: 1,
-            name: 'test',
-            projectStatus: '21',
+            name: '',
+            projectStatus: '',
             created_at: '',
-            team: 'Hr',
-        },
-        {
-            id: 2,
-            name: 'test',
-            projectStatus: '21',
-            created_at: '',
-            team: 'Hr',
+            team: '',
         },
     ],
     addNewProjectModalToggle: false

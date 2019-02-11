@@ -9,9 +9,9 @@ export default class ProjectSearchBar extends Component {
     search() {
         if (!!this.searchInput.value.length) {
             let afterSearch = this.props.tableInfo.filter(obj => Object.values(obj).some(value => value === (this.searchInput.value.toLowerCase())))
-            this.props.toggleModal('CHANGE_ARR', {tableData: afterSearch})
+            this.props.projectsPageAction('CHANGE_ARR', {tableData: afterSearch})
         } else {
-            this.props.toggleModal('CHANGE_ARR', {tableData: this.props.etalonArr})
+            this.props.projectsPageAction('CHANGE_ARR', {tableData: this.props.etalonArr})
         }
     }
 
@@ -34,10 +34,6 @@ export default class ProjectSearchBar extends Component {
                 </div>
             </div>
         )
-    }
-
-    componentDidMount() {
-        // this.etalonTable = JSON.parse(JSON.stringify(this.props.tableInfo));
     }
 }
 
