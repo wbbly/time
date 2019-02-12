@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import * as moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.css';
+import { returnMutationUpdateTimerProject } from '../../queries';
+import { client } from '../../requestSettings';
 
 class ManualTimeModal extends Component {
     componentDidMount() {
@@ -23,6 +25,7 @@ class ManualTimeModal extends Component {
 
         object.timePassed = createTimePassed(object.date, object.timeFrom, object.timeTo);
         this.props.arrTasks[index] = object;
+        client.request(returnMutationUpdateTimerProject(object)).then(data => {});
 
         function createTimePassed(date, timeFrom, timeTo) {
             timeFrom = moment(`${date} ${timeFrom}`);

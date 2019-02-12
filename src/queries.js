@@ -79,6 +79,22 @@ export function returnMutationLinkDeleteProject(object) {
         }`;
 }
 
+export function returnMutationUpdateTimerProject(object) {
+    return `
+        mutation {
+            update_timeTracker(
+                where: {id: {_eq: 20}},
+                _set: {
+                    timeFrom: "${object.timeFrom}"
+                    timeTo: "${object.timeTo}"
+                    name: "${object.name}"
+                }
+            ) {
+                affected_rows
+            }
+        }`;
+}
+
 export const addProject = `
     mutation($name: String!) {
         insert_project(
