@@ -8,76 +8,75 @@ export const getProjects = `{
 }`;
 
 export const getTodayTimeEntries = `{
-  timeTracker {
-                id
-                name
-                date
-                timeFrom
-                timeTo
-                timePassed
-                project
-  }
+    timeTracker {
+        id
+        name
+        date
+        timeFrom
+        timeTo
+        timePassed
+        project
+    }
 }`;
 
 export function returnMutationLinkAddTimeEntries(object) {
     return `
-    mutation {
-    insert_timeTracker(
-    objects: [
-            {
-                name: "${object.name}",
-                date: "${object.date}",
-                timeFrom: "${object.timeFrom}",
-                timeTo: "${object.timeTo}",
-                timePassed: "${object.timePassed}",
-                project: "${object.project}",
-                userId: "${object.userId}"
+        mutation {
+            insert_timeTracker(
+                objects: [
+                    {
+                        name: "${object.name}",
+                        date: "${object.date}",
+                        timeFrom: "${object.timeFrom}",
+                        timeTo: "${object.timeTo}",
+                        timePassed: "${object.timePassed}",
+                        project: "${object.project}",
+                    userId: "${object.userId}"
+                    }
+                ]
+            ){
+                affected_rows
             }
-        ]
-        ){
-            affected_rows
-        }
-    }
-`;
+        }`;
 }
 
 export function returnMutationLinkDeleteTimeEntries(object) {
     return `
-    mutation  {
-  delete_timeTracker (
-    where: {id: {_eq: ${object.id}}}
-  ) {
-    affected_rows
-  }
-}`;
+        mutation  {
+            delete_timeTracker (
+                where: {id: {_eq: ${object.id}}}
+            ) {
+                affected_rows
+            }
+        }`;
 }
 
 export function returnMutationLinkAddProject(object) {
     return `
-            mutation {
-                insert_project(
-                     objects: [
-                        {
-                            name: "${object.name}",
-                            projectStatus: "21",
-                            team: "HR"
-                         }
-                     ]
-                            ){
-                        affected_rows
+        mutation {
+            insert_project(
+                objects: [
+                    {
+                        name: "${object.name}",
+                        projectStatus: "21",
+                        team: "HR"
                     }
-            }`;
+                ]
+            ){
+                affected_rows
+            }
+        }`;
 }
 
 export function returnMutationLinkDeleteProject(object) {
     return `
-            mutation {
-                delete_project(
-                        where:{id: {_eq:"${object.id}"}}
-                            ){
-                        affected_rows
-                    }
-            }`;
+        mutation {
+            delete_project(
+                where:{id: {_eq:"${object.id}"}}
+                ){
+                    affected_rows
+                }
+        }`;
 }
 
 export const addProject = `
@@ -88,18 +87,7 @@ export const addProject = `
                   name: $name,
                 }
               ]
-          ){
-            affected_rows
-          }
-    }
-`;
-
-export const deleteProject = `
-    mutation($id: Int!) {
-        delete_project(
-            where: {id: {_eq:$id}}
         ){
             affected_rows
         }
-    }
-`;
+    }`;
