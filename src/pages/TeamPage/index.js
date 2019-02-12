@@ -45,9 +45,7 @@ class TeamPage extends Component {
         );
     }
 
-    componentDidMount() {
-        client.request(getTodayTimeEntries).then(data => console.log(data));
-    }
+    componentDidMount() {}
 }
 
 const mapStateToProps = store => {

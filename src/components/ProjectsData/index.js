@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
+import { client } from '../../requestSettings';
+import { returnMutationLinkDeleteProject } from '../../queries';
 
 export default class ProjectData extends Component {
     deleteFromArr(item, arr) {
-        console.log(arr, 'arr0');
-        arr.splice(arr.indexOf(item), 1);
-        console.log(arr, 'arr1');
+        let newArr = [];
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].id !== item.id) {
+                newArr.push(arr[i]);
+            }
+        }
+        this.props.projectsPageAction('CHANGE_ARR', { tableData: newArr });
+        client.request(returnMutationLinkDeleteProject(item)).then(data => {});
     }
 
     render() {
-        let tableInfo = this.props.tableInfo;
         const tableHeader = [
             {
                 key: 1,
@@ -25,7 +31,7 @@ export default class ProjectData extends Component {
                 value: 'Team',
             },
         ];
-        const tableInfoElements = tableInfo.map(item => (
+        const tableInfoElements = this.props.tableInfo.map(item => (
             <tr key={item.id}>
                 <td>{item.name}</td>
                 <td>{item.projectStatus}</td>
