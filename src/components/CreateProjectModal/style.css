@@ -76,6 +76,7 @@
     border: 1px solid #828282;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
+    text-transform: none;
     color: #4F4F4F;
 }
 

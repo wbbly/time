@@ -57,12 +57,28 @@ class MainPage extends Component {
                 userId: 1,
                 project: 'any',
             };
-            arr.push(object);
+            arr.unshift(object);
             client.request(returnMutationLinkAddTimeEntries(object)).then(data => {});
             this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: arr });
             this.cleanMainField();
         }
     };
+
+    saveTimer() {
+        if (!this.state.classToggle) {
+            localStorage.removeItem('LT');
+            localStorage.setItem(
+                'LT',
+                JSON.stringify({
+                    taskName: this.mainTaskName.value,
+                    timeStampClosePage: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    timeOnTimer: this.state.time.format('YYYY-MM-DD HH:mm:ss'),
+                })
+            );
+        } else {
+            localStorage.removeItem('LT');
+        }
+    }
 
     cleanMainField() {
         this.state.time = moment()
@@ -90,7 +106,35 @@ class MainPage extends Component {
         this.changeClass();
     }
 
+    getTimeNow() {
+        let timer = JSON.parse(localStorage.getItem('LT'));
+        if (!timer) {
+            return;
+        }
+        let timeStampClosePage = moment(timer.timeStampClosePage);
+        let timeOnTimer = timer.timeOnTimer;
+        let newTime = moment(timeOnTimer)
+            .add(moment(moment().diff(timeStampClosePage)).format('s'), 'seconds')
+            .format('HH:mm:ss')
+            .split(':');
+        this.setState({
+            time: moment()
+                .set({ hour: newTime[0], minute: newTime[1], second: newTime[2] })
+                .format('YYYY-MM-DD HH:mm:ss'),
+        });
+        this.changeClass();
+    }
+
+    setOldTaskName() {
+        let timer = JSON.parse(localStorage.getItem('LT'));
+        if (!timer) {
+            return;
+        }
+        this.mainTaskName.value = timer.taskName;
+    }
+
     componentWillMount() {
+        this.getTimeNow();
         this.setState({ arrTasks: this.props.arrTasks });
     }
 
@@ -148,16 +192,21 @@ class MainPage extends Component {
                         <i className="folder" />
                         <i onClick={this.changeClass} className={buttonClassName} />
                     </div>
-                    {items}
+                    <div className="time_tracker_wrapper">{items}</div>
                 </div>
             </div>
         );
     }
 
     componentDidMount() {
+        this.setOldTaskName();
         client
             .request(getTodayTimeEntries)
             .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timeTracker }));
+    }
+
+    componentWillUnmount() {
+        this.saveTimer();
     }
 }
 

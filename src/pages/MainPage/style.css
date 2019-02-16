@@ -17,6 +17,7 @@
 
 .add_task_container {
   position: relative;
+  margin-bottom: 66px;
   width: 100%;
 }
 
@@ -156,6 +157,7 @@ ul {
 .name_container {
   display: flex;
   align-items: center;
+  width: 81%;
 }
 
 .timePassed {
@@ -164,4 +166,16 @@ ul {
 
 .small_play {
   margin-left: 18px;
+}
+
+.time_tracker_wrapper {
+  background-color: #4F4F4F;
+}
+
+.time_tracker_wrapper_header {
+  height: 16px;
+}
+
+.time_tracker_wrapper .ul:first-of-type {
+  margin-top: 26px;
 }
