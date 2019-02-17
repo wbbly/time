@@ -83,3 +83,8 @@ i {
 Link, a {
   outline: none;
 }
+
+.navigation_links .timer_task {
+    margin-left: 10px;
+    color: white;
+}

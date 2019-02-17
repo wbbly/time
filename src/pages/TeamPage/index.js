@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './style.css';
 import LeftBar from '../../components/LeftBar';
-import { client } from '../../requestSettings';
-import { getTodayTimeEntries } from '../../queries';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Access'];

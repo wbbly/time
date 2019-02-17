@@ -21,6 +21,7 @@ class MainPage extends Component {
             .set({ hour: 0, minute: 0, second: 0 })
             .format('YYYY-MM-DD HH:mm:ss'),
         date: moment().format('YYYY-MM-DD'),
+        timerStartDateTime: '',
         arrTasks: [],
     };
     time = {
@@ -37,6 +38,7 @@ class MainPage extends Component {
 
     startTimer = () => {
         if (this.state.classToggle) {
+            this.setState({ timerStartDateTime: +moment() });
             this.time.timeStart = moment().format('HH:mm:ss');
             this.state.intervalId = setInterval(() => {
                 this.setState(state => ({
@@ -65,6 +67,7 @@ class MainPage extends Component {
     };
 
     saveTimer() {
+        console.log(this.state.classToggle);
         if (!this.state.classToggle) {
             localStorage.removeItem('LT');
             localStorage.setItem(
@@ -73,6 +76,7 @@ class MainPage extends Component {
                     taskName: this.mainTaskName.value,
                     timeStampClosePage: moment().format('YYYY-MM-DD HH:mm:ss'),
                     timeOnTimer: this.state.time.format('YYYY-MM-DD HH:mm:ss'),
+                    timerStartDateTime: this.state.timerStartDateTime,
                 })
             );
         } else {
@@ -123,6 +127,7 @@ class MainPage extends Component {
                 .format('YYYY-MM-DD HH:mm:ss'),
         });
         this.changeClass();
+        localStorage.removeItem('LT');
     }
 
     setOldTaskName() {
@@ -135,7 +140,6 @@ class MainPage extends Component {
 
     componentWillMount() {
         this.getTimeNow();
-        this.setState({ arrTasks: this.props.arrTasks });
     }
 
     render() {
