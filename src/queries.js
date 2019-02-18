@@ -8,7 +8,7 @@ export const getProjects = `{
 }`;
 
 export const getTodayTimeEntries = `{
-    timeTracker {
+    timeTracker (order_by: {date: desc}) {
         id
         name
         date

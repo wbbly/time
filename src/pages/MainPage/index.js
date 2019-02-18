@@ -7,6 +7,7 @@ import addTasks from '../../actions/MainPageAction';
 import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
 import { client } from '../../requestSettings';
+import { createArayOfArrays } from './createArrayOfArraysFunction';
 import {
     getTodayTimeEntries,
     returnMutationLinkAddTimeEntries,
@@ -142,11 +143,8 @@ class MainPage extends Component {
         this.getTimeNow();
     }
 
-    render() {
-        const { classToggle } = this.state;
-        const buttonState = classToggle ? 'play' : 'stop';
-        const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
-        let items = this.props.arrTasks.map(item => (
+    createItems(arr) {
+        let items = arr.map(item => (
             <div className="ul" key={item.id}>
                 <div className="li">
                     <div className="name_container">
@@ -169,6 +167,56 @@ class MainPage extends Component {
                         <i className="cancel" onClick={e => this.deleteFromArr(item)} />
                     </div>
                 </div>
+            </div>
+        ));
+        return items;
+    }
+
+    getDay(arr) {
+        return arr[0].date;
+    }
+
+    getDate(date) {
+        if (date === moment().format('YYYY-MM-DD')) {
+            return 'Today';
+        } else {
+            return date
+                .split('-')
+                .reverse()
+                .join('.');
+        }
+    }
+
+    getSumTime(arr) {
+        let sumTime = 0;
+        for (let i = 0; i < arr.length; i++) {
+            let timeInArr = arr[i].timePassed.split(':');
+            let timeInSeconds = moment()
+                .set({
+                    hour: timeInArr[0],
+                    minute: timeInArr[1],
+                    second: timeInArr[2],
+                })
+                .format('s');
+            sumTime += +timeInSeconds;
+        }
+        return moment()
+            .startOf('day')
+            .seconds(sumTime)
+            .format('HH:mm:ss');
+    }
+
+    render() {
+        const { classToggle } = this.state;
+        const buttonState = classToggle ? 'play' : 'stop';
+        const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
+        let timeTrackerWrapperItems = createArayOfArrays(this.props.arrTasks).map(arraysItem => (
+            <div className="time_tracker_wrapper">
+                <div className="header">
+                    <div className="date">{this.getDate(arraysItem[0].date)}</div>
+                    <div className="allTime">Total time: {this.getSumTime(arraysItem)}</div>
+                </div>
+                {this.createItems(arraysItem)}
             </div>
         ));
 
@@ -196,7 +244,7 @@ class MainPage extends Component {
                         <i className="folder" />
                         <i onClick={this.changeClass} className={buttonClassName} />
                     </div>
-                    <div className="time_tracker_wrapper">{items}</div>
+                    {timeTrackerWrapperItems}
                 </div>
             </div>
         );

@@ -72,12 +72,14 @@ class ManualTimeModal extends Component {
                             <input type="time" ref={input => (this.inputTimeEndValue = input)} />
                         </div>
                     </div>
-                    <button
-                        className="create_projects_modal_button_container_button manual_time_button"
-                        onClick={e => this.changeData()}
-                    >
-                        Change
-                    </button>
+                    <div className="manual_timer_modal_button_container">
+                        <button
+                            className="create_projects_modal_button_container_button manual_time_button"
+                            onClick={e => this.changeData()}
+                        >
+                            Change
+                        </button>
+                    </div>
                 </div>
             </div>
         );

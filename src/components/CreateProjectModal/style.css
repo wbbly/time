@@ -181,6 +181,7 @@
 .create_projects_modal_button_container_button {
     width: 177px;
     height: 41px;
+    margin-right: 22px;
     border: 0;
     background-color: #27AE60;
     font-family: 'Open Sans', sans-serif;
