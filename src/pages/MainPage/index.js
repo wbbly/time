@@ -190,20 +190,15 @@ class MainPage extends Component {
     getSumTime(arr) {
         let sumTime = 0;
         for (let i = 0; i < arr.length; i++) {
-            let timeInArr = arr[i].timePassed.split(':');
-            let timeInSeconds = moment()
-                .set({
-                    hour: timeInArr[0],
-                    minute: timeInArr[1],
-                    second: timeInArr[2],
-                })
-                .format('s');
-            sumTime += +timeInSeconds;
+            let hms = arr[i].timePassed;
+            let a = hms.split(':');
+            let seconds = +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
+            sumTime += seconds;
         }
-        return moment()
-            .startOf('day')
-            .seconds(sumTime)
-            .format('HH:mm:ss');
+        let date = new Date(null);
+        date.setSeconds(sumTime);
+        let result = date.toISOString().substr(11, 8);
+        return result;
     }
 
     render() {
