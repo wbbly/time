@@ -8,7 +8,7 @@ export const getProjects = `{
 }`;
 
 export const getTodayTimeEntries = `{
-    timeTracker {
+    timeTracker (order_by: {date: desc}) {
         id
         name
         date
@@ -76,6 +76,22 @@ export function returnMutationLinkDeleteProject(object) {
                 ){
                     affected_rows
                 }
+        }`;
+}
+
+export function returnMutationUpdateTimerProject(object) {
+    return `
+        mutation {
+            update_timeTracker(
+                where: {id: {_eq: 20}},
+                _set: {
+                    timeFrom: "${object.timeFrom}"
+                    timeTo: "${object.timeTo}"
+                    name: "${object.name}"
+                }
+            ) {
+                affected_rows
+            }
         }`;
 }
 

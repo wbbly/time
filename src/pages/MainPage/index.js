@@ -7,6 +7,7 @@ import addTasks from '../../actions/MainPageAction';
 import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
 import { client } from '../../requestSettings';
+import { createArayOfArrays } from './createArrayOfArraysFunction';
 import {
     getTodayTimeEntries,
     returnMutationLinkAddTimeEntries,
@@ -21,6 +22,7 @@ class MainPage extends Component {
             .set({ hour: 0, minute: 0, second: 0 })
             .format('YYYY-MM-DD HH:mm:ss'),
         date: moment().format('YYYY-MM-DD'),
+        timerStartDateTime: '',
         arrTasks: [],
     };
     time = {
@@ -37,6 +39,7 @@ class MainPage extends Component {
 
     startTimer = () => {
         if (this.state.classToggle) {
+            this.setState({ timerStartDateTime: +moment() });
             this.time.timeStart = moment().format('HH:mm:ss');
             this.state.intervalId = setInterval(() => {
                 this.setState(state => ({
@@ -57,12 +60,30 @@ class MainPage extends Component {
                 userId: 1,
                 project: 'any',
             };
-            arr.push(object);
+            arr.unshift(object);
             client.request(returnMutationLinkAddTimeEntries(object)).then(data => {});
             this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: arr });
             this.cleanMainField();
         }
     };
+
+    saveTimer() {
+        console.log(this.state.classToggle);
+        if (!this.state.classToggle) {
+            localStorage.removeItem('LT');
+            localStorage.setItem(
+                'LT',
+                JSON.stringify({
+                    taskName: this.mainTaskName.value,
+                    timeStampClosePage: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    timeOnTimer: this.state.time.format('YYYY-MM-DD HH:mm:ss'),
+                    timerStartDateTime: this.state.timerStartDateTime,
+                })
+            );
+        } else {
+            localStorage.removeItem('LT');
+        }
+    }
 
     cleanMainField() {
         this.state.time = moment()
@@ -90,15 +111,40 @@ class MainPage extends Component {
         this.changeClass();
     }
 
-    componentWillMount() {
-        this.setState({ arrTasks: this.props.arrTasks });
+    getTimeNow() {
+        let timer = JSON.parse(localStorage.getItem('LT'));
+        if (!timer) {
+            return;
+        }
+        let timeStampClosePage = moment(timer.timeStampClosePage);
+        let timeOnTimer = timer.timeOnTimer;
+        let newTime = moment(timeOnTimer)
+            .add(moment(moment().diff(timeStampClosePage)).format('s'), 'seconds')
+            .format('HH:mm:ss')
+            .split(':');
+        this.setState({
+            time: moment()
+                .set({ hour: newTime[0], minute: newTime[1], second: newTime[2] })
+                .format('YYYY-MM-DD HH:mm:ss'),
+        });
+        this.changeClass();
+        localStorage.removeItem('LT');
     }
 
-    render() {
-        const { classToggle } = this.state;
-        const buttonState = classToggle ? 'play' : 'stop';
-        const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
-        let items = this.props.arrTasks.map(item => (
+    setOldTaskName() {
+        let timer = JSON.parse(localStorage.getItem('LT'));
+        if (!timer) {
+            return;
+        }
+        this.mainTaskName.value = timer.taskName;
+    }
+
+    componentWillMount() {
+        this.getTimeNow();
+    }
+
+    createItems(arr) {
+        let items = arr.map(item => (
             <div className="ul" key={item.id}>
                 <div className="li">
                     <div className="name_container">
@@ -121,6 +167,56 @@ class MainPage extends Component {
                         <i className="cancel" onClick={e => this.deleteFromArr(item)} />
                     </div>
                 </div>
+            </div>
+        ));
+        return items;
+    }
+
+    getDay(arr) {
+        return arr[0].date;
+    }
+
+    getDate(date) {
+        if (date === moment().format('YYYY-MM-DD')) {
+            return 'Today';
+        } else {
+            return date
+                .split('-')
+                .reverse()
+                .join('.');
+        }
+    }
+
+    getSumTime(arr) {
+        let sumTime = 0;
+        for (let i = 0; i < arr.length; i++) {
+            let timeInArr = arr[i].timePassed.split(':');
+            let timeInSeconds = moment()
+                .set({
+                    hour: timeInArr[0],
+                    minute: timeInArr[1],
+                    second: timeInArr[2],
+                })
+                .format('s');
+            sumTime += +timeInSeconds;
+        }
+        return moment()
+            .startOf('day')
+            .seconds(sumTime)
+            .format('HH:mm:ss');
+    }
+
+    render() {
+        const { classToggle } = this.state;
+        const buttonState = classToggle ? 'play' : 'stop';
+        const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
+        let timeTrackerWrapperItems = createArayOfArrays(this.props.arrTasks).map(arraysItem => (
+            <div className="time_tracker_wrapper">
+                <div className="header">
+                    <div className="date">{this.getDate(arraysItem[0].date)}</div>
+                    <div className="allTime">Total time: {this.getSumTime(arraysItem)}</div>
+                </div>
+                {this.createItems(arraysItem)}
             </div>
         ));
 
@@ -148,16 +244,21 @@ class MainPage extends Component {
                         <i className="folder" />
                         <i onClick={this.changeClass} className={buttonClassName} />
                     </div>
-                    {items}
+                    {timeTrackerWrapperItems}
                 </div>
             </div>
         );
     }
 
     componentDidMount() {
+        this.setOldTaskName();
         client
             .request(getTodayTimeEntries)
             .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timeTracker }));
+    }
+
+    componentWillUnmount() {
+        this.saveTimer();
     }
 }
 

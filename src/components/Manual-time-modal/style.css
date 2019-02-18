@@ -46,10 +46,12 @@
     margin-bottom: 24px;
 }
 
-.manual_time_button {
+.manual_timer_modal_button_container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     margin-top: 24px;
-    position: relative;
-    left: 76%;
 }
 
 .manual_timer_modal_timepickers_container div {

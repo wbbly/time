@@ -72,10 +72,19 @@ i {
   width: 167px;
   height: 28px;
   padding-left: 21px;
-  margin-top: 17px;
+  margin-top: 10px;
   cursor: pointer;
 }
 
 .navigation_links:hover {
   background: #4F4F4F;
+}
+
+Link, a {
+  outline: none;
+}
+
+.navigation_links .timer_task {
+    margin-left: 10px;
+    color: white;
 }

@@ -24,7 +24,7 @@ export default class ProjectData extends Component {
             },
             {
                 key: 2,
-                value: 'Status',
+                value: 'Time',
             },
             {
                 key: 3,

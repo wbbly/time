@@ -76,6 +76,7 @@
     border: 1px solid #828282;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
+    text-transform: none;
     color: #4F4F4F;
 }
 
@@ -180,6 +181,7 @@
 .create_projects_modal_button_container_button {
     width: 177px;
     height: 41px;
+    margin-right: 22px;
     border: 0;
     background-color: #27AE60;
     font-family: 'Open Sans', sans-serif;

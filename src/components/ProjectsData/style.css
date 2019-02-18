@@ -5,10 +5,12 @@
 
 .project_data_wrapper {
   width: 100%;
+  height: 100%;
 }
 
 .project_data_wrapper table {
   width: 100%;
+  height: 65%;
   border-spacing: inherit;
 }
 
@@ -19,6 +21,7 @@
 
 .project_data_wrapper table th {
   padding-bottom: 11px;
+  width: 7.5%;
 }
 
 .project_data_wrapper table thead tr {
@@ -34,6 +37,7 @@
   line-height: normal;
   font-size: 16px;
   color: #FFFFFF;
+  width: 6.7%;
 }
 
 .project_data_wrapper table tbody tr {
@@ -64,3 +68,17 @@
   background: url("../../images/icons/waste-bin.svg") no-repeat center;
   cursor: pointer;
 }
+
+.project_data_wrapper table thead,
+.project_data_wrapper table  tbody
+{
+  display:block;
+}
+
+.project_data_wrapper table  tbody
+{
+  overflow-y: scroll;
+  height:100%;
+  width: 100%;
+}
+
