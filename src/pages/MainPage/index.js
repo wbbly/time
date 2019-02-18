@@ -239,7 +239,7 @@ class MainPage extends Component {
                         <i className="folder" />
                         <i onClick={this.changeClass} className={buttonClassName} />
                     </div>
-                    {timeTrackerWrapperItems}
+                    <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
                 </div>
             </div>
         );
