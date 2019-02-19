@@ -45,6 +45,7 @@ class ManualTimeModal extends Component {
 
             return hours + ':' + minutes + ':' + seconds;
         }
+        this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
     }
 
     render() {

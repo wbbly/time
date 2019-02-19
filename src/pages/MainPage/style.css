@@ -195,3 +195,9 @@ ul {
     font-size: 14px;
     color: #FFFFFF;
 }
+
+.main_wrapper_tracker_items {
+    height: 80%;
+    overflow-y: scroll;
+    padding-bottom: 24px;
+}
