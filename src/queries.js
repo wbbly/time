@@ -4,6 +4,7 @@ export const getProjects = `{
         name
         projectStatus
         team
+        colorProject
     }
 }`;
 
@@ -60,6 +61,7 @@ export function returnMutationLinkAddProject(object) {
                         name: "${object.name}",
                         projectStatus: "21",
                         team: "HR"
+                        colorProject: "${object.colorProject}"
                     }
                 ]
             ){

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as moment from 'moment';
 import './style.css';
+import { getDateInString } from '../../pages/MainPage/timeInSecondsFunction';
 
 class LeftBar extends Component {
     componentDidMount() {
@@ -20,25 +21,16 @@ class LeftBar extends Component {
 
     getTimeNow() {
         let timer = JSON.parse(localStorage.getItem('LT'));
-        if (!timer) {
+        if (!timer || !timer.timeStart) {
             return;
         }
-        let timeStampClosePage = moment(timer.timerStartDateTime);
-        let timeOnTimer = timer.timeOnTimer;
-        let newTime = moment(timeOnTimer)
-            .add(moment(moment().diff(timeStampClosePage)).format('s'), 'seconds')
-            .format('HH:mm:ss')
-            .split(':');
-        this.setState({
-            timer: moment()
-                .set({ hour: newTime[0], minute: newTime[1], second: newTime[2] })
-                .format('YYYY-MM-DD HH:mm:ss'),
-        });
+        let timeOnTimer = +new Date() - timer.timeStart;
+        this.setState({ timer: getDateInString(timeOnTimer) });
     }
 
-    visualTimer(timer) {
-        if (timer !== 'Invalid date') {
-            return timer;
+    visualTimer() {
+        if (!!this.state.timer && window.location.pathname !== '/main-page') {
+            return this.state.timer;
         }
     }
 
@@ -51,9 +43,7 @@ class LeftBar extends Component {
                         <div className="navigation_links">
                             <i className="timer" />
                             <div className="links_text">timer</div>
-                            <div className="timer_task">
-                                {this.visualTimer(moment(this.state.timer).format('HH:mm:ss'))}
-                            </div>
+                            <div className="timer_task">{this.visualTimer()}</div>
                         </div>
                     </Link>
                     <Link to="/reports" style={{ textDecoration: 'none' }}>

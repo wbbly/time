@@ -20,12 +20,6 @@ export default class ProjectSearchBar extends Component {
     render() {
         return (
             <div className="wrapper_project_search_bar">
-                <div className="project_search_bar_select_wrapper">
-                    <Select />
-                </div>
-                <div className="project_search_bar_select_wrapper">
-                    <Select />
-                </div>
                 <div className="project_search_bar_search_field_container">
                     <i className="magnifer" />
                     <input

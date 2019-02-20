@@ -29,6 +29,7 @@ export default class CreateProjectModal extends Component {
             name: this.createProjectInput.value,
             projectStatus: '21',
             team: 'Hr',
+            colorProject: this.state.selectedValue,
         };
         arr.push(object);
         this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: arr });
@@ -68,6 +69,7 @@ export default class CreateProjectModal extends Component {
                                 <div className="select_main">
                                     <div className={`circle ${this.state.selectedValue}`} />
                                 </div>
+                                <i className="vector" />
                                 {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                             </div>
                         </div>

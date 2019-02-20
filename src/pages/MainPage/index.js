@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 import './style.css';
+import { timeInSeconds } from './timeInSecondsFunction';
+import { getDateInString } from './timeInSecondsFunction';
 import LeftBar from '../../components/LeftBar';
 import addTasks from '../../actions/MainPageAction';
 import manualTimerModalAction from '../../actions/ManualTimerModalAction';
@@ -9,6 +11,7 @@ import ManualTimeModal from '../../components/Manual-time-modal';
 import { client } from '../../requestSettings';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
 import {
+    getProjects,
     getTodayTimeEntries,
     returnMutationLinkAddTimeEntries,
     returnMutationLinkDeleteTimeEntries,
@@ -22,12 +25,19 @@ class MainPage extends Component {
             .set({ hour: 0, minute: 0, second: 0 })
             .format('YYYY-MM-DD HH:mm:ss'),
         date: moment().format('YYYY-MM-DD'),
+        seletedProject: 'any',
         timerStartDateTime: '',
         arrTasks: [],
+        arrProjects: [],
+        projectListOpen: false,
     };
     time = {
         timeStart: '',
         timeFinish: '',
+    };
+
+    projectListeToggle = () => {
+        this.setState({ projectListOpen: !this.state.projectListOpen });
     };
 
     changeClass = () => {
@@ -40,7 +50,7 @@ class MainPage extends Component {
     startTimer = () => {
         if (this.state.classToggle) {
             this.setState({ timerStartDateTime: +moment() });
-            this.time.timeStart = moment().format('HH:mm:ss');
+            this.time.timeStart = +moment();
             this.state.intervalId = setInterval(() => {
                 this.setState(state => ({
                     time: moment(state.time).add(1, 'second'),
@@ -48,17 +58,18 @@ class MainPage extends Component {
             }, 1000);
         } else {
             let arr = this.props.arrTasks;
+            localStorage.removeItem('LT');
             clearInterval(this.state.intervalId);
             this.time.timeFinish = moment().format('HH:mm:ss');
             let object = {
                 id: +new Date(),
                 name: this.mainTaskName.value,
                 date: this.state.date,
-                timeFrom: this.time.timeStart,
+                timeFrom: getDateInString(this.time.timeStart),
                 timeTo: this.time.timeFinish,
                 timePassed: moment(this.state.time).format('HH:mm:ss'),
                 userId: 1,
-                project: 'any',
+                project: this.state.seletedProject,
             };
             arr.unshift(object);
             client.request(returnMutationLinkAddTimeEntries(object)).then(data => {});
@@ -68,21 +79,15 @@ class MainPage extends Component {
     };
 
     saveTimer() {
-        console.log(this.state.classToggle);
-        if (!this.state.classToggle) {
-            localStorage.removeItem('LT');
-            localStorage.setItem(
-                'LT',
-                JSON.stringify({
-                    taskName: this.mainTaskName.value,
-                    timeStampClosePage: moment().format('YYYY-MM-DD HH:mm:ss'),
-                    timeOnTimer: this.state.time.format('YYYY-MM-DD HH:mm:ss'),
-                    timerStartDateTime: this.state.timerStartDateTime,
-                })
-            );
-        } else {
-            localStorage.removeItem('LT');
-        }
+        localStorage.setItem(
+            'LT',
+            JSON.stringify({
+                taskName: this.mainTaskName.value,
+                timeStart: this.time.timeStart,
+                timerStartDateTime: this.state.timerStartDateTime,
+                seletedProject: this.state.seletedProject,
+            })
+        );
     }
 
     cleanMainField() {
@@ -108,27 +113,24 @@ class MainPage extends Component {
 
     startOldTask(oldTask) {
         this.mainTaskName.value = oldTask.name;
+        this.setState({ selectedProject: oldTask.project });
         this.changeClass();
     }
 
     getTimeNow() {
         let timer = JSON.parse(localStorage.getItem('LT'));
-        if (!timer) {
+        if (!timer || !timer.timeStart) {
             return;
         }
-        let timeStampClosePage = moment(timer.timeStampClosePage);
-        let timeOnTimer = timer.timeOnTimer;
-        let newTime = moment(timeOnTimer)
-            .add(moment(moment().diff(timeStampClosePage)).format('s'), 'seconds')
-            .format('HH:mm:ss')
-            .split(':');
+        let newTime = +moment() - timer.timeStart;
+        let timeInArr = getDateInString(newTime).split(':');
+        this.setState({ time: getDateInString(newTime) });
         this.setState({
             time: moment()
-                .set({ hour: newTime[0], minute: newTime[1], second: newTime[2] })
+                .set({ hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2] })
                 .format('YYYY-MM-DD HH:mm:ss'),
         });
         this.changeClass();
-        localStorage.removeItem('LT');
     }
 
     setOldTaskName() {
@@ -137,7 +139,23 @@ class MainPage extends Component {
             return;
         }
         this.mainTaskName.value = timer.taskName;
+        this.setState({ seletedProject: timer.seletedProject });
     }
+
+    findProject = (projectId, key) => {
+        if (projectId === 'any') {
+            return 'any';
+        }
+        for (let i = 0; i < this.state.arrProjects.length; i++) {
+            if (this.state.arrProjects[i].id === +projectId) {
+                if (key === 'name') {
+                    return this.state.arrProjects[i].name;
+                } else if (key === 'color') {
+                    return this.state.arrProjects[i].colorProject;
+                }
+            }
+        }
+    };
 
     componentWillMount() {
         this.getTimeNow();
@@ -149,14 +167,23 @@ class MainPage extends Component {
                 <div className="li">
                     <div className="name_container">
                         <div className="name">{item.name}</div>
-                        <div className="project_name">{item.project}</div>
+                        <div className="project_name">
+                            <span className={`circle ${this.findProject(item.project, 'color')}`} />
+                            <span>{this.findProject(item.project, 'name')}</span>
+                        </div>
                     </div>
                     <div className="time_container_history">
                         <div className="time_now">
                             <div>{item.timeFrom}</div>-<div>{item.timeTo}</div>
                         </div>
                         <div className="timePassed">{item.timePassed}</div>
-                        <i className="small_play" onClick={e => this.startOldTask(item)} />
+                        <i
+                            className="small_play"
+                            onClick={e => {
+                                this.startOldTask(item);
+                                this.saveTimer();
+                            }}
+                        />
                         <i
                             className="edit_button"
                             onClick={e => {
@@ -201,6 +228,10 @@ class MainPage extends Component {
         return result;
     }
 
+    setActiveProject(item) {
+        this.setState({ seletedProject: item.id });
+    }
+
     render() {
         const { classToggle } = this.state;
         const buttonState = classToggle ? 'play' : 'stop';
@@ -236,8 +267,37 @@ class MainPage extends Component {
                             }}
                         />
                         <div className="time_container">{moment(this.state.time).format('HH:mm:ss')}</div>
-                        <i className="folder" />
-                        <i onClick={this.changeClass} className={buttonClassName} />
+                        <i className="folder" onClick={e => this.projectListeToggle()}>
+                            {this.state.projectListOpen && (
+                                <div className="projects_modal_wrapper">
+                                    <div className="projects_modal_wrapper_header">
+                                        <input
+                                            placeholder="Finde..."
+                                            type="text"
+                                            className="projects_modal_wrapper_search"
+                                        />
+                                    </div>
+                                    <div className="projects_modal_data_wrapper">
+                                        {this.state.arrProjects.map(item => (
+                                            <div
+                                                className="projects_modal_item"
+                                                onClick={e => this.setActiveProject(item)}
+                                            >
+                                                <div className={`projects_modal_item_circle ${item.colorProject}`} />
+                                                <div className="projects_modal_item_name">{item.name}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </i>
+                        <i
+                            onClick={e => {
+                                this.changeClass();
+                                this.saveTimer();
+                            }}
+                            className={buttonClassName}
+                        />
                     </div>
                     <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
                 </div>
@@ -250,11 +310,12 @@ class MainPage extends Component {
         client
             .request(getTodayTimeEntries)
             .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timeTracker }));
+        client.request(getProjects).then(data => {
+            this.setState({ arrProjects: data.project });
+        });
     }
 
-    componentWillUnmount() {
-        this.saveTimer();
-    }
+    componentWillUnmount() {}
 }
 
 const mapStateToProps = store => {
