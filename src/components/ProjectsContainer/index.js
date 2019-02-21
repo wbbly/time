@@ -6,8 +6,8 @@ class ProjectsContainer extends Component {
     render() {
         let projectsItems = this.props.projectsArr.map(item => (
             <div className="projects_container_project_data">
-                <div className="name">{item.projectName}</div>
-                <div className="time">{item.projectTime}</div>
+                <div className="name">{item.projects}</div>
+                <div className="time">{item.timePassed}</div>
             </div>
         ));
         return (

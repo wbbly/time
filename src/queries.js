@@ -20,6 +20,20 @@ export const getTodayTimeEntries = `{
     }
 }`;
 
+export const getDateAndTimeToGraphick = `{
+    timeTracker (order_by: {date: desc}) {
+        date
+        timePassed
+    }
+}`;
+
+export const getProjectANndTimeToGraphick = `{
+    timeTracker (order_by: {date: desc}) {
+        project
+        timePassed
+    }
+}`;
+
 export function returnMutationLinkAddTimeEntries(object) {
     return `
         mutation {
