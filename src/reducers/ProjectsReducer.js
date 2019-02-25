@@ -6,6 +6,7 @@ const initialState = {
             projectStatus: '',
             created_at: '',
             team: '',
+            colorProject: '',
         },
     ],
     addNewProjectModalToggle: false,

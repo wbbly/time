@@ -4,6 +4,7 @@ export const getProjects = `{
         name
         projectStatus
         team
+        colorProject
     }
 }`;
 
@@ -18,6 +19,36 @@ export const getTodayTimeEntries = `{
         project
     }
 }`;
+
+export function getDateAndTimeToGraphick(object) {
+    return `{
+        timeTracker (
+            where: {
+                _and: [
+                    {date: {_gte: "${object.from}"}},
+                    {date: {_lte: "${object.to}"}},
+                ]
+            },
+            order_by: {date: desc}) {
+            date
+            timePassed
+        }
+    }`;
+}
+
+export function getProjectANndTimeToGraphick(object) {
+    return `{
+        timeTracker (where: {
+        _and: [
+            {date: {_gte: "${object.from}"}},
+            {date: {_lte: "${object.to}"}},
+        ]
+        },order_by: {date: desc}) {
+            project
+            timePassed
+        }
+    }`;
+}
 
 export function returnMutationLinkAddTimeEntries(object) {
     return `
@@ -60,6 +91,7 @@ export function returnMutationLinkAddProject(object) {
                         name: "${object.name}",
                         projectStatus: "21",
                         team: "HR"
+                        colorProject: "${object.colorProject}"
                     }
                 ]
             ){

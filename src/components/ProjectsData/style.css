@@ -21,7 +21,7 @@
 
 .project_data_wrapper table th {
   padding-bottom: 11px;
-  width: 7.5%;
+  width: 7.6%;
 }
 
 .project_data_wrapper table thead tr {
@@ -37,7 +37,7 @@
   line-height: normal;
   font-size: 16px;
   color: #FFFFFF;
-  width: 6.7%;
+  width: 1.1%;
 }
 
 .project_data_wrapper table tbody tr {
@@ -82,3 +82,22 @@
   width: 100%;
 }
 
+.create_projects_modal_data_select_container .select_list .item:hover {
+  background-color: #CECECE;
+}
+
+.create_projects_modal_data .green {
+  background-color: green;
+}
+
+.create_projects_modal_data .red {
+  background-color: red;
+}
+
+.create_projects_modal_data .blue {
+  background-color: blue;
+}
+
+.create_projects_modal_data .pink {
+  background-color: pink;
+}

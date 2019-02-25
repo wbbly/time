@@ -39,3 +39,39 @@
   top: 20%;
   border-top: 1px solid #BDBDBD
 }
+
+.wrapper_reports_page .selects_container {
+  position: relative;
+}
+
+.wrapper_reports_page .select_header {
+  display: flex;
+  align-items: center;
+  font-family: 'Open Sans', sans-serif;
+  line-height: normal;
+  font-size: 24px;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.wrapper_reports_page .arrow_down {
+  margin-left: 24px;
+  width: 24px;
+  height: 24px;
+  background: url("../../images/icons/arrow_down.svg") no-repeat center;
+}
+
+.wrapper_reports_page .select_body {
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  z-index: 3;
+  background-color: #f5f5f5;
+  box-shadow: 5px 5px 15px rgba(0,0,0,.25);
+}
+
+
+
+.add_task_container name {
+
+}

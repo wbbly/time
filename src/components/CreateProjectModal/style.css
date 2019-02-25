@@ -193,3 +193,10 @@
     border-radius: 0;
     cursor: pointer;
 }
+
+.create_projects_modal_container i.vector {
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
+    background: url("../../images/icons/Vector.svg") no-repeat center;
+}

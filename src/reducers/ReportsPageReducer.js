@@ -1,7 +1,7 @@
 const initialState = {
     dataBarChat: {
         defaultFontColor: 'red',
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: ['February', 'March', 'April', 'May', 'June', 'July'],
         datasets: [
             {
                 label: 'My First dataset',
@@ -29,20 +29,20 @@ const initialState = {
     },
     projectsArr: [
         {
-            projectName: 'Ultradom.com.ua',
-            projectTime: '8:20:33',
+            project: 'Ultradom.com.ua',
+            timePassed: '8:20:33',
         },
         {
-            projectName: 'Ultradom.com.ua',
-            projectTime: '8:20:33',
+            project: 'Ultradom.com.ua',
+            timePassed: '8:20:33',
         },
         {
-            projectName: 'Ultradom.com.ua',
-            projectTime: '8:20:33',
+            project: 'Ultradom.com.ua',
+            timePassed: '8:20:33',
         },
         {
-            projectName: 'Ultradom.com.ua',
-            projectTime: '8:20:33',
+            project: 'Ultradom.com.ua',
+            timePassed: '8:20:33',
         },
     ],
     dataDoughnutChat: {
@@ -55,10 +55,19 @@ const initialState = {
             },
         ],
     },
+    dataFromServer: [],
 };
 
 export function reportsPageReducer(state = initialState, action) {
     switch (action.type) {
+        case 'SET_LINE_GRAPH':
+            return { ...state, dataBarChat: action.payload };
+        case 'SET_DATA_FROM_SERVER':
+            return { ...state, dataFromServer: action.payload.data };
+        case 'SET_DOUGHNUT_GRAPH':
+            return { ...state, dataDoughnutChat: action.payload.data };
+        case 'SET_PROJECTS':
+            return { ...state, projectsArr: action.payload.data };
         default:
             return state;
     }
