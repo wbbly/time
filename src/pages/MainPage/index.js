@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 import './style.css';
-import { timeInSeconds } from './timeInSecondsFunction';
 import { getDateInString } from './timeInSecondsFunction';
 import LeftBar from '../../components/LeftBar';
 import addTasks from '../../actions/MainPageAction';
@@ -232,6 +231,30 @@ class MainPage extends Component {
         this.setState({ seletedProject: item.id });
     }
 
+    handleOutsideClick(e) {
+        // ignore clicks on the component itself
+        if (this.node.contains(e.target)) {
+            return;
+        } else {
+            alert('');
+        }
+
+        this.setState({ projectListOpen: !this.state.projectListOpen });
+    }
+
+    getProject(id) {
+        for (let i = 0; i < this.state.arrProjects.length; i++) {
+            if (this.state.arrProjects[i].id === id) {
+                return (
+                    <div className="active_project">
+                        <span className={`projects_modal_item_circle ${this.state.arrProjects[i].colorProject}`} />
+                        <span className="projects_modal_item_name">{this.state.arrProjects[i].name}</span>
+                    </div>
+                );
+            }
+        }
+    }
+
     render() {
         const { classToggle } = this.state;
         const buttonState = classToggle ? 'play' : 'stop';
@@ -267,10 +290,22 @@ class MainPage extends Component {
                             }}
                         />
                         <div className="time_container">{moment(this.state.time).format('HH:mm:ss')}</div>
+                        <div>{this.getProject(this.state.seletedProject)}</div>
                         <i className="folder" onClick={e => this.projectListeToggle()}>
                             {this.state.projectListOpen && (
-                                <div className="projects_modal_wrapper">
-                                    <div className="projects_modal_wrapper_header">
+                                <div
+                                    className="projects_modal_wrapper"
+                                    ref={node => {
+                                        this.node = node;
+                                    }}
+                                    onClick={e => this.handleOutsideClick(e)}
+                                >
+                                    <div
+                                        className="projects_modal_wrapper_header"
+                                        onClick={event => {
+                                            event.stopPropagation();
+                                        }}
+                                    >
                                         <input
                                             placeholder="Finde..."
                                             type="text"

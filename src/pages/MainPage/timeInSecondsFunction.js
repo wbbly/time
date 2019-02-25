@@ -1,5 +1,3 @@
-import * as moment from 'moment';
-
 export function timeInSeconds(string) {
     let hms = string;
     let a = hms.split(':');
@@ -10,6 +8,13 @@ export function timeInSeconds(string) {
 export function getDateInString(seconds) {
     let date = new Date(null);
     date.setMilliseconds(seconds);
+    let result = date.toISOString().substr(11, 8);
+    return result;
+}
+
+export function getTimInStringSeconds(seconds) {
+    let date = new Date(null);
+    date.setSeconds(seconds);
     let result = date.toISOString().substr(11, 8);
     return result;
 }

@@ -166,6 +166,7 @@
 }
 
 .projects_modal_item_circle {
+    display: inline-block;
     width: 12px;
     height: 12px;
     border-radius: 50%;
@@ -314,4 +315,20 @@ span.circle {
     height: 8px;
     border: 1px solid white;
     border-radius: 50%;
+}
+
+.add_task_container .active_project {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 17px;
+    right: 160px;
+}
+
+.add_task_container .active_project .projects_modal_item_circle {
+    border: 1px solid white;
+}
+
+.add_task_container .active_project .projects_modal_item_name {
+    color: white;
 }

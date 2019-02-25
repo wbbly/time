@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import * as _ from 'underscore';
+import * as moment from 'moment';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
+import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import './style.css';
@@ -15,6 +19,13 @@ class ReportsPage extends Component {
         toggleBar: false,
         projectsArr: [],
         toggleChar: false,
+        selectionRange: {
+            startDate: new Date(),
+            endDate: new Date(),
+            key: 'selection',
+        },
+        dateSelect: false,
+        dateSelectName: 'This Week',
     };
     lineChartOption = {
         scales: {
@@ -74,6 +85,10 @@ class ReportsPage extends Component {
 
     getProjectsNamesById(data) {
         for (let i = 0; i < data.timeTracker.length; i++) {
+            if (data.timeTracker[i].project === 'any') {
+                alert('projects name error');
+                return;
+            }
             let projectId = +data.timeTracker[i].project;
             data.timeTracker[i].project = _.where(this.state.projectsArr, { id: projectId })[0].name;
             data.timeTracker[i].colorProject = _.where(this.state.projectsArr, { id: projectId })[0].colorProject;
@@ -86,11 +101,31 @@ class ReportsPage extends Component {
         let finishArr = [];
         let projects = createArrTimeAndDate(arr, 'firstArr', 'project', 'timePassed');
         let time = createArrTimeAndDate(arr, 'secondArr', 'project', 'timePassed');
-        console.log(time);
         for (let i = 0; i < projects.length; i++) {
             finishArr.push({ projects: projects[i], timePassed: time[i] });
         }
         return finishArr;
+    }
+
+    handleSelect = ranges => {
+        this.setState({ selectionRange: ranges.selection });
+        this.setState({
+            dateSelectName: `${moment(ranges.selection.startDate).format('DD.MM.YYYY')} - ${moment(
+                ranges.selection.endDate
+            ).format('DD.MM.YYYY')}`,
+        });
+        this.getDataToGraph({
+            from: this.getYear(ranges.selection.startDate),
+            to: this.getYear(ranges.selection.endDate),
+        });
+    };
+
+    getYear(date) {
+        return moment(date).format('YYYY-MM-DD');
+    }
+
+    openCalendar() {
+        this.setState({ dateSelect: !this.state.dateSelect });
     }
 
     render() {
@@ -100,7 +135,20 @@ class ReportsPage extends Component {
                 <div className="data_container_reports_page">
                     <div className="header">
                         <div className="header_name">Summary report</div>
-                        <div className="selects_container" />
+                        <div className="selects_container">
+                            <div className="select_header" onClick={e => this.openCalendar()}>
+                                <span>{this.state.dateSelectName}</span>
+                                <i className="arrow_down" />
+                            </div>
+                            {this.state.dateSelect && (
+                                <div className="select_body">
+                                    <DateRangePicker
+                                        ranges={[this.state.selectionRange]}
+                                        onChange={this.handleSelect}
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
@@ -119,27 +167,31 @@ class ReportsPage extends Component {
             </div>
         );
     }
-    componentDidMount() {
-        client.request(getDateAndTimeToGraphick).then(data => {
-            for (let i = 0; i < data.timeTracker.length; i++) {
-                data.timeTracker[i].timePassed = getTimeInSecondFromString(data.timeTracker[i].timePassed);
-            }
-            this.props.reportsPageAction('SET_DATA_FROM_SERVER', { data: data.timeTracker });
-            this.props.reportsPageAction('SET_LINE_GRAPH', this.changeGraph(this.props.dataBarChat));
-            this.setState({ toggleBar: true });
-        });
+
+    getDataToGraph(obj) {
         client.request(getProjects).then(data => {
             this.setState({ projectsArr: data.project });
+            client.request(getDateAndTimeToGraphick(obj)).then(data => {
+                for (let i = 0; i < data.timeTracker.length; i++) {
+                    data.timeTracker[i].timePassed = getTimeInSecondFromString(data.timeTracker[i].timePassed);
+                }
+                this.props.reportsPageAction('SET_DATA_FROM_SERVER', { data: data.timeTracker });
+                this.props.reportsPageAction('SET_LINE_GRAPH', this.changeGraph(this.props.dataBarChat));
+                this.setState({ toggleBar: true });
+            });
+            client.request(getProjectANndTimeToGraphick(obj)).then(data => {
+                data = this.getProjectsNamesById(data);
+                this.props.reportsPageAction('SET_PROJECTS', { data: this.getItemsFromArr(data.timeTracker) });
+                this.changeDoughnutChat(this.props.dataDoughnutChat, data);
+                let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, data);
+                this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
+                this.setState({ toggleChar: true });
+            });
         });
-        client.request(getProjectANndTimeToGraphick).then(data => {
-            data = this.getProjectsNamesById(data);
-            console.log(this.getItemsFromArr(data.timeTracker));
-            this.props.reportsPageAction('SET_PROJECTS', { data: this.getItemsFromArr(data.timeTracker) });
-            this.changeDoughnutChat(this.props.dataDoughnutChat, data);
-            let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, data);
-            this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-            this.setState({ toggleChar: true });
-        });
+    }
+
+    componentDidMount() {
+        this.getDataToGraph({ from: '2019-02-23', to: '2019-02-25' });
     }
 }
 

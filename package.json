@@ -17,7 +17,7 @@
     "react": "^16.7.0",
     "react-apollo": "^2.3.1",
     "react-chartjs-2": "^2.7.4",
-    "react-datepicker": "^2.1.0",
+    "react-date-range": "^1.0.0-beta",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
