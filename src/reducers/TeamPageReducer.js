@@ -1,30 +1,14 @@
 const initialState = {
-    programersArr: [
-        {
-            id: 1,
-            name: 'Alexey',
-            email: 'alexeysergeev@gmail.com',
-            access: 'Admin',
-        },
-        {
-            id: 2,
-            name: 'Alexey',
-            email: 'alexeysergeev@gmail.com',
-            access: 'Admin',
-        },
-        {
-            id: 3,
-            name: 'Alexey',
-            email: 'alexeysergeev@gmail.com',
-            access: 'Admin',
-        },
-    ],
+    programersArr: [],
+    createUserModal: false,
 };
 
 export function teamPageReducer(state = initialState, action) {
     switch (action.type) {
-        case 'ADD_TASKS_ARR':
-            return { ...state, arrTasks: action.payload.arrTasks };
+        case 'SET_TABLE_DATA':
+            return { ...state, programersArr: action.payload.programersArr };
+        case 'TOGGLE_ADD_USER_MODAL':
+            return { ...state, createUserModal: action.payload.createUserModal };
         default:
             return state;
     }

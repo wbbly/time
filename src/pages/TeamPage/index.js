@@ -2,9 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './style.css';
 import LeftBar from '../../components/LeftBar';
+import AddToTeamModal from '../../components/AddToTeamModal';
+import { client } from '../../requestSettings';
+import { getTeamData } from '../../queries';
+import teamPageAction from '../../actions/TeamPageAction';
+import { checkAuthentication } from '../../services/authentication';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Access'];
+
+    openAddUserModal() {
+        this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: !this.props.createUserModal });
+    }
 
     render() {
         let programersArr = this.props.programersArr;
@@ -13,21 +22,32 @@ class TeamPage extends Component {
             <tr key={element.id}>
                 <td>{element.name}</td>
                 <td>{element.email}</td>
-                <td>
-                    <div className="access_container">{element.access}</div>
-                </td>
+                <td>{!!element.status ? <div className="access_container">Admin</div> : <div>-</div>}</td>
             </tr>
         ));
 
         return (
             <div className="wrapper_team_page">
+                {checkAuthentication()}
+                {this.props.createUserModal && (
+                    <AddToTeamModal
+                        programersArr={this.props.programersArr}
+                        teamPageAction={this.props.teamPageAction}
+                    />
+                )}
                 <LeftBar />
                 <div className="data_container_team_page">
                     <div className="team_page_header">
                         <div className="page_name">Team</div>
                         <div className="invite_container">
                             <input type="text" />
-                            <button>Invite</button>
+                            <button
+                                onClick={e => {
+                                    this.openAddUserModal();
+                                }}
+                            >
+                                Add to team
+                            </button>
                         </div>
                     </div>
                     <div className="team_page_data">
@@ -43,13 +63,27 @@ class TeamPage extends Component {
         );
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        client.request(getTeamData).then(data => {
+            this.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.team });
+        });
+    }
 }
 
 const mapStateToProps = store => {
     return {
         programersArr: store.teamPageReducer.programersArr,
+        createUserModal: store.teamPageReducer.createUserModal,
     };
 };
 
-export default connect(mapStateToProps)(TeamPage);
+const mapDispatchToProps = dispatch => {
+    return {
+        teamPageAction: (actionType, action) => dispatch(teamPageAction(actionType, action))[1],
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(TeamPage);

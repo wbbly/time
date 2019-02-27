@@ -8,15 +8,26 @@ export const getProjects = `{
     }
 }`;
 
-export const getTodayTimeEntries = `{
-    timeTracker (order_by: {date: desc}) {
+export function getTodayTimeEntries(email) {
+    return `{
+        timeTracker (where: {email: {_eq: "${email}"}},order_by: {date: desc}) {
+            id
+            name
+            date
+            timeFrom
+            timeTo
+            timePassed
+            project
+        }
+    }`;
+}
+
+export const getTeamData = `{
+    team (order_by: {name: desc}){
         id
         name
-        date
-        timeFrom
-        timeTo
-        timePassed
-        project
+        email
+        status
     }
 }`;
 
@@ -25,6 +36,7 @@ export function getDateAndTimeToGraphick(object) {
         timeTracker (
             where: {
                 _and: [
+                    {email: {_eq: "${object.email}"}},
                     {date: {_gte: "${object.from}"}},
                     {date: {_lte: "${object.to}"}},
                 ]
@@ -40,6 +52,7 @@ export function getProjectANndTimeToGraphick(object) {
     return `{
         timeTracker (where: {
         _and: [
+            {email: {_eq: "${object.email}"}}
             {date: {_gte: "${object.from}"}},
             {date: {_lte: "${object.to}"}},
         ]
@@ -62,7 +75,25 @@ export function returnMutationLinkAddTimeEntries(object) {
                         timeTo: "${object.timeTo}",
                         timePassed: "${object.timePassed}",
                         project: "${object.project}",
-                    userId: "${object.userId}"
+                        userId: "${object.userId}",
+                        email: "${object.email}",
+                    }
+                ]
+            ){
+                affected_rows
+            }
+        }`;
+}
+
+export function returnMutationLinkAddUser(object) {
+    return `
+        mutation {
+            insert_team(
+                objects: [
+                    {
+                        name: "${object.name}",
+                        email: "${object.email}",
+                        status: "${object.status}",
                     }
                 ]
             ){

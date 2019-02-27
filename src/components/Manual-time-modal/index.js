@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import * as moment from 'moment';
-import 'react-datepicker/dist/react-datepicker.css';
 import './style.css';
 import { returnMutationUpdateTimerProject } from '../../queries';
 import { client } from '../../requestSettings';

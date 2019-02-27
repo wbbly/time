@@ -15,6 +15,7 @@ import {
     returnMutationLinkAddTimeEntries,
     returnMutationLinkDeleteTimeEntries,
 } from '../../queries';
+import { checkAuthentication } from '../../services/authentication';
 
 class MainPage extends Component {
     state = {
@@ -69,6 +70,7 @@ class MainPage extends Component {
                 timePassed: moment(this.state.time).format('HH:mm:ss'),
                 userId: 1,
                 project: this.state.seletedProject,
+                email: atob(localStorage.getItem('active_email')),
             };
             arr.unshift(object);
             client.request(returnMutationLinkAddTimeEntries(object)).then(data => {});
@@ -271,6 +273,7 @@ class MainPage extends Component {
 
         return (
             <div className="wrapper_main_page">
+                {checkAuthentication()}
                 {this.props.manualTimerModal.manualTimerModalToggle && (
                     <ManualTimeModal
                         manualTimerModalAction={this.props.manualTimerModalAction}
@@ -343,7 +346,7 @@ class MainPage extends Component {
     componentDidMount() {
         this.setOldTaskName();
         client
-            .request(getTodayTimeEntries)
+            .request(getTodayTimeEntries(atob(localStorage.getItem('active_email'))))
             .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timeTracker }));
         client.request(getProjects).then(data => {
             this.setState({ arrProjects: data.project });
