@@ -40,6 +40,7 @@
   padding-left: 24px;
   border: 1px solid #828282;
   border-radius: 4px;
+  color: black;
 }
 
 .wrapper_authorisation_page input:focus {

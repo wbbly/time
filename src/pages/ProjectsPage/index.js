@@ -8,6 +8,7 @@ import CreateProjectModal from '../../components/CreateProjectModal';
 import projectsPageAction from '../../actions/ProjectsActions';
 import { client } from '../../requestSettings';
 import { getProjects } from '../../queries';
+import { checkAuthentication } from '../../services/authentication';
 
 class ProjectsPage extends Component {
     toggleModal(item) {
@@ -22,6 +23,7 @@ class ProjectsPage extends Component {
 
         return (
             <div className="wrapper_projects_page">
+                {checkAuthentication()}
                 {addNewProjectModalToggle && (
                     <CreateProjectModal tableInfo={tableData} projectsPageAction={projectsPageAction} />
                 )}

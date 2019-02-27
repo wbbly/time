@@ -26,3 +26,15 @@ button {
 input {
   outline: 0;
 }
+
+input:focus {
+  border-color: #56CCF2;
+}
+
+button {
+  cursor: pointer;
+}
+
+.error {
+  border: 1px solid red !important;
+}

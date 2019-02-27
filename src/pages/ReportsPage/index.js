@@ -13,6 +13,7 @@ import { client } from '../../requestSettings';
 import { getDateAndTimeToGraphick, getProjectANndTimeToGraphick, getProjects } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { getTimeInSecondFromString, createArrTimeAndDate } from '../../services/timeService';
+import { checkAuthentication } from '../../services/authentication';
 
 class ReportsPage extends Component {
     state = {
@@ -117,6 +118,7 @@ class ReportsPage extends Component {
         this.getDataToGraph({
             from: this.getYear(ranges.selection.startDate),
             to: this.getYear(ranges.selection.endDate),
+            email: atob(localStorage.getItem('active_email')),
         });
     };
 
@@ -131,6 +133,7 @@ class ReportsPage extends Component {
     render() {
         return (
             <div className="wrapper_reports_page">
+                {checkAuthentication()}
                 <LeftBar />
                 <div className="data_container_reports_page">
                     <div className="header">
@@ -191,7 +194,17 @@ class ReportsPage extends Component {
     }
 
     componentDidMount() {
-        this.getDataToGraph({ from: '2019-02-23', to: '2019-02-25' });
+        this.getDataToGraph({
+            email: atob(localStorage.getItem('active_email')),
+            from: moment()
+                .startOf('week')
+                .add(1, 'day')
+                .format('YYYY-MM-DD'),
+            to: moment()
+                .endOf('week')
+                .add(1, 'day')
+                .format('YYYY-MM-DD'),
+        });
     }
 }
 
