@@ -59,6 +59,12 @@ class ProjectsPage extends Component {
             this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.project });
         });
     }
+
+    componentWillUnmount() {
+        client.request(getProjects).then(data => {
+            this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.project });
+        });
+    }
 }
 
 const mapStateToProps = store => {

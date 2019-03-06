@@ -58,14 +58,13 @@ class MainPage extends Component {
             }, 1000);
         } else {
             let arr = this.props.arrTasks;
-            localStorage.removeItem('LT');
             clearInterval(this.state.intervalId);
             this.time.timeFinish = moment().format('HH:mm:ss');
             let object = {
                 id: +new Date(),
                 name: this.mainTaskName.value,
                 date: this.state.date,
-                timeFrom: getDateInString(this.time.timeStart),
+                timeFrom: moment(this.time.timeStart).format('HH:mm:ss'),
                 timeTo: this.time.timeFinish,
                 timePassed: moment(this.state.time).format('HH:mm:ss'),
                 userId: 1,
