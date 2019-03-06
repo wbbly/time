@@ -1,4 +1,4 @@
-export function createArayOfArrays(arr) {
+export function createArayOfArrays(arr = []) {
     const formattedLogsDates = []; // ['YYYY-MM-DD', 'YYYY-MM-DD']
     const formattedLogsDatesValues = []; // [[{}, {}, {}, {}, {}], []]
 

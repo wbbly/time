@@ -17,12 +17,17 @@ export default class ProjectSearchBar extends Component {
         }
     }
 
+    setDefaultArr() {
+        this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
+    }
+
     render() {
         return (
             <div className="wrapper_project_search_bar">
                 <div className="project_search_bar_search_field_container">
                     <i className="magnifer" />
                     <input
+                        onFocus={e => this.setDefaultArr()}
                         type="text"
                         ref={input => (this.searchInput = input)}
                         className="project_search_bar_search_field"
@@ -35,6 +40,10 @@ export default class ProjectSearchBar extends Component {
                 </div>
             </div>
         );
+    }
+
+    componentWillUnmount() {
+        this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
     }
 }
 
