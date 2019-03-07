@@ -10,9 +10,21 @@ import { checkAuthentication } from '../../services/authentication';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Access'];
+    state = {
+        activeEmail: '',
+    };
 
     openAddUserModal() {
         this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: !this.props.createUserModal });
+    }
+
+    canAddToTeam(email) {
+        email = atob(email);
+        if (email === 'genryh.kovalenko@lazy-ants.de' || email === 'hr@lazy-ants.com') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     render() {
@@ -40,14 +52,15 @@ class TeamPage extends Component {
                     <div className="team_page_header">
                         <div className="page_name">Team</div>
                         <div className="invite_container">
-                            <input type="text" />
-                            <button
-                                onClick={e => {
-                                    this.openAddUserModal();
-                                }}
-                            >
-                                Add to team
-                            </button>
+                            {this.canAddToTeam(this.state.activeEmail) && (
+                                <button
+                                    onClick={e => {
+                                        this.openAddUserModal();
+                                    }}
+                                >
+                                    Add to team
+                                </button>
+                            )}
                         </div>
                     </div>
                     <div className="team_page_data">
@@ -64,6 +77,7 @@ class TeamPage extends Component {
     }
 
     componentDidMount() {
+        this.setState({ activeEmail: localStorage.getItem('active_email') });
         client.request(getTeamData).then(data => {
             this.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.team });
         });

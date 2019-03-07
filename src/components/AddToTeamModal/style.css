@@ -19,7 +19,6 @@
 .add_to_team_modal_wrapper .add_to_team_modal_data {
     position: relative;
     width: calc(26% - 28px - 49px);
-    height: calc(40% - 28px - 28px);
     padding: 28px 49px 28px 28px;
     background-color: #FFFFFF;
     box-shadow: 0 4px 34px rgba(0, 0, 0, 0.25);
