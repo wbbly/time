@@ -30,23 +30,9 @@
 
 .invite_container {
   position: relative;
-  width: 498px;
-}
-
-.invite_container input {
-  width: 498px;
-  height: 36px;
-  background: #FFFFFF;
-  border: 2px solid #BDBDBD;
-  box-sizing: border-box;
-  border-radius: 4px;
-  outline: none;
 }
 
 .invite_container button {
-  position: absolute;
-  top: 3px;
-  right: 5px;
   width: 100px;
   height: 30px;
   background: #27AE60;

@@ -42,8 +42,7 @@
 .manual_time_modal_close {
     position: relative;
     left: 99%;
-    top: 0;
-    margin-bottom: 24px;
+    top: -7px;
 }
 
 .manual_timer_modal_button_container {

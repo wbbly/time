@@ -36,7 +36,10 @@ export default class ProjectData extends Component {
                 <td>{item.name}</td>
                 <td>{item.projectStatus}</td>
                 <td>
-                    {item.team} <i className="delete" onClick={e => this.deleteFromArr(item, this.props.tableInfo)} />
+                    {item.team}
+                    {this.props.canAddToTeam(this.props.activeEmail) && (
+                        <i className="delete" onClick={e => this.deleteFromArr(item, this.props.tableInfo)} />
+                    )}
                 </td>
             </tr>
         ));

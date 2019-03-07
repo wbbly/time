@@ -25,7 +25,7 @@ class MainPage extends Component {
             .set({ hour: 0, minute: 0, second: 0 })
             .format('YYYY-MM-DD HH:mm:ss'),
         date: moment().format('YYYY-MM-DD'),
-        seletedProject: 'any',
+        seletedProject: 52,
         timerStartDateTime: '',
         arrTasks: [],
         arrProjects: [],
@@ -38,6 +38,20 @@ class MainPage extends Component {
 
     projectListeToggle = () => {
         this.setState({ projectListOpen: !this.state.projectListOpen });
+        document.addEventListener('click', this.closeDropdown);
+    };
+
+    closeDropdown = e => {
+        if (this.dropList && !this.dropList.contains(e.target)) {
+            this.setState(
+                {
+                    projectListOpen: !this.state.projectListOpen,
+                },
+                () => {
+                    document.removeEventListener('click', this.closeDropdown);
+                }
+            );
+        }
     };
 
     changeClass = () => {
@@ -124,7 +138,7 @@ class MainPage extends Component {
         }
         let newTime = +moment() - timer.timeStart;
         let timeInArr = getDateInString(newTime).split(':');
-        this.setState({ time: getDateInString(newTime) });
+        // this.setState({ time: getDateInString(newTime) });
         this.setState({
             time: moment()
                 .set({ hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2] })
@@ -174,7 +188,7 @@ class MainPage extends Component {
                     </div>
                     <div className="time_container_history">
                         <div className="time_now">
-                            <div>{item.timeFrom}</div>-<div>{item.timeTo}</div>
+                            <div>{item.timeFrom.slice(0, -3)}</div> - <div>{item.timeTo.slice(0, -3)}</div>
                         </div>
                         <div className="timePassed">{item.timePassed}</div>
                         <i
@@ -295,13 +309,7 @@ class MainPage extends Component {
                         <div>{this.getProject(this.state.seletedProject)}</div>
                         <i className="folder" onClick={e => this.projectListeToggle()}>
                             {this.state.projectListOpen && (
-                                <div
-                                    className="projects_modal_wrapper"
-                                    ref={node => {
-                                        this.node = node;
-                                    }}
-                                    onClick={e => this.handleOutsideClick(e)}
-                                >
+                                <div className="projects_modal_wrapper" ref={div => (this.dropList = div)}>
                                     <div
                                         className="projects_modal_wrapper_header"
                                         onClick={event => {
