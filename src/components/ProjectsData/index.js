@@ -28,7 +28,7 @@ export default class ProjectData extends Component {
             },
             {
                 key: 3,
-                value: 'Team',
+                value: '',
             },
         ];
         const tableInfoElements = this.props.tableInfo.map(item => (
@@ -36,7 +36,6 @@ export default class ProjectData extends Component {
                 <td>{item.name}</td>
                 <td>{item.projectStatus}</td>
                 <td>
-                    {item.team}
                     {this.props.canAddToTeam(this.props.activeEmail) && (
                         <i className="delete" onClick={e => this.deleteFromArr(item, this.props.tableInfo)} />
                     )}

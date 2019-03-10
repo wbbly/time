@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'Open Sans', sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+}
+
+.reports_by_projects_wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 188px;
+    right: 0;
+    background-color: #333333;
+    padding-top: 47px;
+    padding-left: 72px;
+    padding-right: 56px;
+}
+
+.reports_by_projects_wrapper .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.reports_by_projects_wrapper .header .header_name {
+    font-family: 'Open Sans', sans-serif;
+    line-height: normal;
+    font-size: 36px;
+    color: #FFFFFF;
+}
+
+.reports_by_projects_wrapper .projects_container_wrapper .projects_container_projects .projects_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 11px;
+    font-family: 'Open Sans', sans-serif;
+    line-height: normal;
+    font-size: 16px;
+    color: #FFFFFF;
+    padding-top: 10%;
+    border-bottom: 1px solid #BDBDBD;
+}
+
+.reports_by_projects_wrapper .projects_container_project_data .time {
+    font-family: 'Open Sans', sans-serif;
+    line-height: normal;
+    font-size: 16px;
+    color: #FFFFFF;
+}
+
+.reports_by_projects_wrapper .projects_container_wrapper .projects_container_projects {
+    width: 100%;
+}
+

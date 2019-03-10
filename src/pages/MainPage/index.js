@@ -85,6 +85,7 @@ class MainPage extends Component {
                 project: this.state.seletedProject,
                 email: atob(localStorage.getItem('active_email')),
             };
+            console.log(object, 'objectvobjectobject');
             arr.unshift(object);
             client.request(returnMutationLinkAddTimeEntries(object)).then(data => {});
             this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: arr });

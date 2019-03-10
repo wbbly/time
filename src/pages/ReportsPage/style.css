@@ -49,9 +49,13 @@
   align-items: center;
   font-family: 'Open Sans', sans-serif;
   line-height: normal;
-  font-size: 24px;
+  font-size: 20px;
   color: #FFFFFF;
   cursor: pointer;
+}
+
+.wrapper_reports_page .select_header.users {
+  font-size: 20px;
 }
 
 .wrapper_reports_page .arrow_down {
@@ -59,6 +63,23 @@
   width: 24px;
   height: 24px;
   background: url("../../images/icons/arrow_down.svg") no-repeat center;
+}
+
+.selects_container.select_users .select_body {
+  width: 100%;
+}
+
+.selects_container.select_users .select_users_item {
+  display: flex;
+  align-self: center;
+  height: 24px;
+  padding: 12px 12px;
+  cursor: pointer;
+}
+
+.selects_container.select_users .select_users_item:hover {
+  background: #4F4F4F;
+  color: white;
 }
 
 .wrapper_reports_page .select_body {

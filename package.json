@@ -15,6 +15,7 @@
     "moment": "^2.18.1",
     "prettier": "^1.14.2",
     "prop-types": "^15.6.2",
+    "query-string": "^5.1.1",
     "react": "^16.7.0",
     "react-apollo": "^2.3.1",
     "react-chartjs-2": "^2.7.4",
