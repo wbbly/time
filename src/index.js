@@ -10,6 +10,7 @@ import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
 import ProjectsPage from './pages/ProjectsPage';
 import TeamPage from './pages/TeamPage';
+import ReportsByProjectsPage from './pages/ReportsByProjectPage';
 
 ReactDOM.render(
     <Provider store={store}>
@@ -20,6 +21,10 @@ ReactDOM.render(
                 <Route path="/reports" component={ReportsPage} />
                 <Route path="/projects" component={ProjectsPage} />
                 <Route path="/team" component={TeamPage} />
+                <Route
+                    path="/project-report/:id/:dateStart/:endDate/:name/:activeEmail"
+                    component={ReportsByProjectsPage}
+                />
             </div>
         </Router>
     </Provider>,

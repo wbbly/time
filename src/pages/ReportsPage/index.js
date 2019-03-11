@@ -10,10 +10,11 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
 import { client } from '../../requestSettings';
-import { getDateAndTimeToGraphick, getProjectANndTimeToGraphick, getProjects } from '../../queries';
+import { getDateAndTimeToGraphick, getProjectANndTimeToGraphick, getProjects, getUsers } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { getTimeInSecondFromString, createArrTimeAndDate } from '../../services/timeService';
 import { checkAuthentication } from '../../services/authentication';
+import { adminOrNot } from '../../services/authentication';
 
 class ReportsPage extends Component {
     state = {
@@ -26,7 +27,9 @@ class ReportsPage extends Component {
             key: 'selection',
         },
         dateSelect: false,
-        dateSelectName: 'This Week',
+        selectUsersHeader: '',
+        dateSelectUsers: false,
+        selectUersData: [],
     };
     lineChartOption = {
         scales: {
@@ -110,11 +113,7 @@ class ReportsPage extends Component {
 
     handleSelect = ranges => {
         this.setState({ selectionRange: ranges.selection });
-        this.setState({
-            dateSelectName: `${moment(ranges.selection.startDate).format('DD.MM.YYYY')} - ${moment(
-                ranges.selection.endDate
-            ).format('DD.MM.YYYY')}`,
-        });
+        this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
         this.getDataToGraph({
             from: this.getYear(ranges.selection.startDate),
             to: this.getYear(ranges.selection.endDate),
@@ -126,8 +125,22 @@ class ReportsPage extends Component {
         return moment(date).format('YYYY-MM-DD');
     }
 
+    selectUser(item) {
+        this.setState({ selectUsersHeader: item });
+        this.getDataToGraph({
+            email: item,
+            from: moment(this.props.timeRange.startDate).format('YYYY-MM-DD'),
+            to: moment(this.props.timeRange.startDate.endDate).format('YYYY-MM-DD'),
+        });
+        this.openDateSelectUsers();
+    }
+
     openCalendar() {
         this.setState({ dateSelect: !this.state.dateSelect });
+    }
+
+    openDateSelectUsers() {
+        this.setState({ dateSelectUsers: !this.state.dateSelectUsers });
     }
 
     render() {
@@ -138,17 +151,34 @@ class ReportsPage extends Component {
                 <div className="data_container_reports_page">
                     <div className="header">
                         <div className="header_name">Summary report</div>
+                        {adminOrNot(localStorage.getItem('active_email')) && (
+                            <div className="selects_container select_users">
+                                <div className="select_header users" onClick={e => this.openDateSelectUsers()}>
+                                    <span>{this.state.selectUsersHeader}</span>
+                                    <i className="arrow_down" />
+                                </div>
+                                {this.state.dateSelectUsers && (
+                                    <div className="select_body">
+                                        {this.state.selectUersData.map(item => (
+                                            <div className="select_users_item" onClick={e => this.selectUser(item)}>
+                                                {item}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                         <div className="selects_container">
                             <div className="select_header" onClick={e => this.openCalendar()}>
-                                <span>{this.state.dateSelectName}</span>
+                                <span>
+                                    {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} {' - '}
+                                    {moment(this.props.timeRange.endDate).format('DD.MM.YYYY')}
+                                </span>
                                 <i className="arrow_down" />
                             </div>
                             {this.state.dateSelect && (
                                 <div className="select_body">
-                                    <DateRangePicker
-                                        ranges={[this.state.selectionRange]}
-                                        onChange={this.handleSelect}
-                                    />
+                                    <DateRangePicker ranges={[this.props.timeRange]} onChange={this.handleSelect} />
                                 </div>
                             )}
                         </div>
@@ -161,6 +191,9 @@ class ReportsPage extends Component {
                     <div className="projects_chart_container">
                         {this.state.toggleChar && (
                             <ProjectsContainer
+                                selectionRange={this.props.timeRange}
+                                activeEmail={this.state.selectUsersHeader}
+                                allProjects={this.state.projectsArr}
                                 projectsArr={this.props.projectsArr}
                                 dataDoughnutChat={this.props.dataDoughnutChat}
                             />
@@ -194,16 +227,20 @@ class ReportsPage extends Component {
     }
 
     componentDidMount() {
+        this.setState({ selectUsersHeader: atob(localStorage.getItem('active_email')) });
         this.getDataToGraph({
             email: atob(localStorage.getItem('active_email')),
-            from: moment()
-                .startOf('week')
-                .add(1, 'day')
-                .format('YYYY-MM-DD'),
-            to: moment()
-                .endOf('week')
-                .add(1, 'day')
-                .format('YYYY-MM-DD'),
+            from: moment(this.props.timeRange.startDate).format('YYYY-MM-DD'),
+            to: moment(this.props.timeRange.startDate.endDate).format('YYYY-MM-DD'),
+        });
+        client.request(getUsers()).then(data => {
+            let arr = [];
+            for (let i = 0; i < data.timeTracker.length; i++) {
+                if (arr.indexOf(data.timeTracker[i].email) === -1) {
+                    arr.push(data.timeTracker[i].email);
+                }
+            }
+            this.setState({ selectUersData: arr });
         });
     }
 }
@@ -215,6 +252,7 @@ const mapStateToProps = store => {
         projectsArr: store.reportsPageReducer.projectsArr,
         dataDoughnutChat: store.reportsPageReducer.dataDoughnutChat,
         dataFromServer: store.reportsPageReducer.dataFromServer,
+        timeRange: store.reportsPageReducer.timeRange,
     };
 };
 

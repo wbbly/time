@@ -1,4 +1,9 @@
 const initialState = {
+    timeRange: {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection',
+    },
     dataBarChat: {
         defaultFontColor: 'red',
         labels: ['February', 'March', 'April', 'May', 'June', 'July'],
@@ -68,6 +73,8 @@ export function reportsPageReducer(state = initialState, action) {
             return { ...state, dataDoughnutChat: action.payload.data };
         case 'SET_PROJECTS':
             return { ...state, projectsArr: action.payload.data };
+        case 'SET_TIME':
+            return { ...state, timeRange: action.payload.data };
         default:
             return state;
     }

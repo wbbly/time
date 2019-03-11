@@ -24,7 +24,11 @@
     align-items: center;
     justify-content: space-between;
     height: 50px;
-    border-bottom: 1px solid rgba(189, 189, 189, 0.11);;
+    border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+}
+
+.projects_container_wrapper .projects_container_project_data:hover {
+    background-color: #4F4F4F;
 }
 
 .projects_container_project_data .name,

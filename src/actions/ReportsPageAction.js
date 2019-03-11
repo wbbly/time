@@ -19,5 +19,10 @@ export default function reportsPageAction(actionType, action) {
             type: 'SET_PROJECTS',
             payload: action,
         };
+    } else if (actionType === 'SET_TIME') {
+        return {
+            type: 'SET_TIME',
+            payload: action,
+        };
     }
 }

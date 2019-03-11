@@ -22,6 +22,37 @@ export function getTodayTimeEntries(email) {
     }`;
 }
 
+export function getUsers() {
+    return `{
+        timeTracker {
+            email
+        }
+    }`;
+}
+
+export function getProjectReport(object) {
+    return `{
+        timeTracker (
+            where: {
+                _and:[
+                    {project:{_eq: "${object.projectId}"}},
+                    {email:{_eq: "${object.activeEmail}"}},
+                    {date: {_gte: "${object.from}"}},
+                    {date: {_lte: "${object.to}"}},
+                ]
+            },
+            order_by: {date: desc}) {
+                id
+                name
+                date
+                timeFrom
+                timeTo
+                timePassed
+                project
+        }
+    }`;
+}
+
 export const getTeamData = `{
     team (order_by: {name: desc}){
         id
