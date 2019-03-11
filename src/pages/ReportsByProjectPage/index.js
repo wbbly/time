@@ -19,10 +19,7 @@ class ReportsByProjectsPage extends Component {
     }
 
     getSlash(item) {
-        if (!item) {
-            return '-';
-        }
-        return item;
+        return item || '-';
     }
 
     getSumTime = arr => {
@@ -47,8 +44,8 @@ class ReportsByProjectsPage extends Component {
                 <LeftBar />
                 <div className="header">
                     <div className="header_name">
-                        {this.props.match.params.name}: {this.getDateInPointsFormat(this.props.match.params.dateStart)}{' '}
-                        - {this.getDateInPointsFormat(this.props.match.params.endDate)}
+                        {this.props.match.params.name}: {this.getDateInPointsFormat(this.props.match.params.dateStart)}
+                        {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
                     </div>
                     <div className="header_name">Sum time: {this.state.sumTime}</div>
                 </div>
@@ -58,6 +55,7 @@ class ReportsByProjectsPage extends Component {
                             <div>Project name</div>
                             <div>Time</div>
                         </div>
+                        {' - '}
                         <div className="projects_container_project_data_container">{projectsItems}</div>
                     </div>
                 </div>
@@ -76,7 +74,6 @@ class ReportsByProjectsPage extends Component {
                 })
             )
             .then(data => {
-                console.log(data, 'datadatadatadata');
                 this.getSumTime(data.timeTracker);
                 this.setState({ dataOfProject: data.timeTracker });
             });

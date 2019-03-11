@@ -22,7 +22,7 @@ ReactDOM.render(
                 <Route path="/projects" component={ProjectsPage} />
                 <Route path="/team" component={TeamPage} />
                 <Route
-                    path="/project_report/:id/:dateStart/:endDate/:name/:activeEmail"
+                    path="/project-report/:id/:dateStart/:endDate/:name/:activeEmail"
                     component={ReportsByProjectsPage}
                 />
             </div>

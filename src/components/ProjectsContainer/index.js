@@ -22,7 +22,7 @@ class ProjectsContainer extends Component {
         let projectsItems = this.props.projectsArr.map(item => (
             <Link
                 to={{
-                    pathname: `/project_report/${this.getIdOfProject(item.projects)}/${this.getDateToLink(
+                    pathname: `/project-report/${this.getIdOfProject(item.projects)}/${this.getDateToLink(
                         this.props.selectionRange.startDate
                     )}/${this.getDateToLink(this.props.selectionRange.endDate)}/${item.projects}/${
                         this.props.activeEmail

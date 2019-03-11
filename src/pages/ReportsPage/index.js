@@ -171,7 +171,7 @@ class ReportsPage extends Component {
                         <div className="selects_container">
                             <div className="select_header" onClick={e => this.openCalendar()}>
                                 <span>
-                                    {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} -{' '}
+                                    {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} {' - '}
                                     {moment(this.props.timeRange.endDate).format('DD.MM.YYYY')}
                                 </span>
                                 <i className="arrow_down" />
