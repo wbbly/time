@@ -332,3 +332,8 @@ span.circle {
 .add_task_container .active_project .projects_modal_item_name {
     color: white;
 }
+
+.folder .projects_modal_wrapper .projects_modal_data_wrapper {
+    overflow-y: scroll;
+    height: 230px;
+}
