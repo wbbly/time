@@ -22,6 +22,15 @@ export function getTodayTimeEntries(email) {
     }`;
 }
 
+export function getProjectTime(email) {
+    return `{
+        timeTracker (where: {email: {_eq: "${email}"}},order_by: {date: desc}) {
+            timePassed
+            project
+        }
+    }`;
+}
+
 export function getUsers() {
     return `{
         timeTracker {
