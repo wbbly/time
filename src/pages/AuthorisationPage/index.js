@@ -17,16 +17,12 @@ class AuthorisationPage extends Component {
                 this.setState({ haveToken: true });
             })
             .catch(error => {
-                let errorCode = error.code;
-                let errorMessage = error.message;
-                if (error.code === 'auth/user-not-found') {
-                    this.email.classList.add('error');
-                    this.password.classList.add('error');
-                    setTimeout(() => {
-                        this.email.classList.remove('error');
-                        this.password.classList.remove('error');
-                    }, 1000);
-                }
+                this.email.classList.add('error');
+                this.password.classList.add('error');
+                setTimeout(() => {
+                    this.email.classList.remove('error');
+                    this.password.classList.remove('error');
+                }, 1000);
             });
 
         let callback = null;
