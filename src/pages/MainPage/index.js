@@ -29,6 +29,8 @@ class MainPage extends Component {
         timerStartDateTime: '',
         arrTasks: [],
         arrProjects: [],
+        arrProjectsToModal: [],
+        arrProjectsEtalon: [],
         projectListOpen: false,
     };
     time = {
@@ -79,7 +81,7 @@ class MainPage extends Component {
                 name: this.mainTaskName.value,
                 date: this.state.date,
                 timeFrom: moment(this.time.timeStart).format('HH:mm:ss'),
-                timeTo: this.time.timeFinish,
+                timeTo: moment().format('HH:mm:ss'),
                 timePassed: moment(this.state.time).format('HH:mm:ss'),
                 userId: 1,
                 project: this.state.seletedProject,
@@ -279,6 +281,24 @@ class MainPage extends Component {
         }
     }
 
+    findUser(items, searchText, event) {
+        if (searchText.length > 1) {
+            searchText = searchText.toLowerCase();
+            let finishArr = items.filter(it => {
+                let values = [];
+                values.push(it['name']);
+                return (
+                    JSON.stringify(values)
+                        .toLowerCase()
+                        .indexOf(searchText) > -1
+                );
+            });
+            this.setState({ arrProjectsToModal: finishArr });
+        } else {
+            this.setState({ arrProjectsToModal: this.state.arrProjectsEtalon });
+        }
+    }
+
     render() {
         const { classToggle } = this.state;
         const buttonState = classToggle ? 'play' : 'stop';
@@ -328,11 +348,19 @@ class MainPage extends Component {
                                         <input
                                             placeholder="Finde..."
                                             type="text"
+                                            ref={input => (this.inputSearchText = input)}
+                                            onKeyUp={e =>
+                                                this.findUser(
+                                                    this.state.arrProjectsEtalon,
+                                                    this.inputSearchText.value,
+                                                    e
+                                                )
+                                            }
                                             className="projects_modal_wrapper_search"
                                         />
                                     </div>
                                     <div className="projects_modal_data_wrapper">
-                                        {this.state.arrProjects.map(item => (
+                                        {this.state.arrProjectsToModal.map(item => (
                                             <div
                                                 className="projects_modal_item"
                                                 onClick={e => this.setActiveProject(item)}
@@ -366,6 +394,8 @@ class MainPage extends Component {
             .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timeTracker }));
         client.request(getProjects).then(data => {
             this.setState({ arrProjects: data.project });
+            this.setState({ arrProjectsToModal: data.project });
+            this.setState({ arrProjectsEtalon: data.project });
         });
     }
 

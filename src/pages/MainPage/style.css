@@ -337,3 +337,12 @@ span.circle {
     overflow-y: scroll;
     height: 230px;
 }
+
+.projects_modal_wrapper_header input {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #000;
+}
