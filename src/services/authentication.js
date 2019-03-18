@@ -10,6 +10,14 @@ export function checkAuthentication() {
     }
 }
 
+export function checkAuthenticationOnLoginPage() {
+    if (!!localStorage.getItem('active_email')) {
+        return <Redirect to={'/main-page'} />;
+    } else {
+        return;
+    }
+}
+
 export function adminOrNot(email = '') {
     email = atob(email);
     if (adminEmails.indexOf(email) !== -1) {

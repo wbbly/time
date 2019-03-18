@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './index.css';
 import { Redirect } from 'react-router-dom';
 import * as firebase from 'firebase';
+import { checkAuthenticationOnLoginPage } from '../../services/authentication';
 
 class AuthorisationPage extends Component {
     state = {
@@ -56,6 +57,7 @@ class AuthorisationPage extends Component {
     render() {
         return (
             <div className="wrapper_authorisation_page">
+                {checkAuthenticationOnLoginPage()}
                 {this.state.haveToken && <Redirect to={'main-page'} />};
                 <i className="page_title" />
                 <div className="authorisation_window">
