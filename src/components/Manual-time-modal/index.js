@@ -24,7 +24,7 @@ class ManualTimeModal extends Component {
 
         object.timePassed = createTimePassed(object.date, object.timeFrom, object.timeTo);
         this.props.arrTasks[index] = object;
-        client.request(returnMutationUpdateTimerProject(object)).then(data => {});
+        client.request(returnMutationUpdateTimerProject(this.props.arrTasks[index].id, object)).then(data => {});
 
         function createTimePassed(date, timeFrom, timeTo) {
             timeFrom = moment(`${date} ${timeFrom}`);
