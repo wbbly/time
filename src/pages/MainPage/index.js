@@ -125,6 +125,14 @@ class MainPage extends Component {
             .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: newArr }));
     }
 
+    checkZero(timeInString) {
+        if (timeInString.length === 2) {
+            return timeInString + ':00';
+        } else {
+            return timeInString;
+        }
+    }
+
     startOldTask(oldTask) {
         this.mainTaskName.value = oldTask.name;
         this.setState({ selectedProject: oldTask.project });
@@ -188,7 +196,8 @@ class MainPage extends Component {
                     </div>
                     <div className="time_container_history">
                         <div className="time_now">
-                            <div>{item.timeFrom.slice(0, -3)}</div> - <div>{item.timeTo.slice(0, -3)}</div>
+                            <div>{this.checkZero(item.timeFrom.slice(0, -3))}</div> -{' '}
+                            <div>{this.checkZero(item.timeTo.slice(0, -3))}</div>
                         </div>
                         <div className="timePassed">{item.timePassed}</div>
                         <i

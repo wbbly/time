@@ -11,6 +11,17 @@ class ManualTimeModal extends Component {
         this.inputTimeEndValue.value = this.props.editedItem.timeTo;
     }
 
+    checkSeconds(object) {
+        if (object.timeFrom.length === 5) {
+            object.timeFrom = object.timeFrom + ':00';
+        }
+        if (object.timeTo.length === 5) {
+            object.timeTo = object.timeTo + ':00';
+        }
+
+        return object;
+    }
+
     changeData() {
         let index = this.props.arrTasks.findIndex(x => x.id === this.props.editedItem.id);
         let object = {
@@ -24,7 +35,18 @@ class ManualTimeModal extends Component {
 
         object.timePassed = createTimePassed(object.date, object.timeFrom, object.timeTo);
         this.props.arrTasks[index] = object;
-        client.request(returnMutationUpdateTimerProject(object)).then(data => {});
+        if (!object.timeFrom || !object.timeTo) {
+            this.inputTimeStartValue.classList.add('error');
+            this.inputTimeEndValue.classList.add('error');
+            setTimeout(() => {
+                this.inputTimeStartValue.classList.remove('error');
+                this.inputTimeEndValue.classList.remove('error');
+            }, 1000);
+            return;
+        }
+        client
+            .request(returnMutationUpdateTimerProject(this.props.arrTasks[index].id, this.checkSeconds(object)))
+            .then(data => {});
 
         function createTimePassed(date, timeFrom, timeTo) {
             timeFrom = moment(`${date} ${timeFrom}`);
@@ -65,11 +87,11 @@ class ManualTimeModal extends Component {
                     <div className="manual_timer_modal_timepickers_container">
                         <div>
                             <span> Time start:</span>
-                            <input type="time" ref={input => (this.inputTimeStartValue = input)} />
+                            <input type="time" required ref={input => (this.inputTimeStartValue = input)} />
                         </div>
                         <div>
                             <span>Time end:</span>
-                            <input type="time" ref={input => (this.inputTimeEndValue = input)} />
+                            <input type="time" required ref={input => (this.inputTimeEndValue = input)} />
                         </div>
                     </div>
                     <div className="manual_timer_modal_button_container">
