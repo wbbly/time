@@ -81,3 +81,7 @@ input[type="time"],
     font-size: 16px;
     color: #000000;
 }
+
+.error {
+    border: 1px solid red;
+}
