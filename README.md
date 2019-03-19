@@ -1,3 +1,8 @@
+Lazy Time
+=========
+
+Time tracker app built on React and GraphQL
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
