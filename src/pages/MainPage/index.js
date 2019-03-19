@@ -66,7 +66,10 @@ class MainPage extends Component {
     startTimer = () => {
         if (this.state.classToggle) {
             this.setState({ timerStartDateTime: +moment() });
-            this.time.timeStart = +moment();
+            console.log(this.time.timeStart.length);
+            if (this.time.timeStart.length === 0) {
+                this.time.timeStart = +moment();
+            }
             this.state.intervalId = setInterval(() => {
                 this.setState(state => ({
                     time: moment(state.time).add(1, 'second'),
@@ -146,9 +149,9 @@ class MainPage extends Component {
         if (!timer || !timer.timeStart) {
             return;
         }
+        this.time.timeStart = timer.timeStart;
         let newTime = +moment() - timer.timeStart;
         let timeInArr = getDateInString(newTime).split(':');
-        // this.setState({ time: getDateInString(newTime) });
         this.setState({
             time: moment()
                 .set({ hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2] })
