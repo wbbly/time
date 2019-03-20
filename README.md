@@ -1,4 +1,4 @@
-# Lazy Time frontend application
+# Lazy Time
 
 ## CLONE REPO
 
