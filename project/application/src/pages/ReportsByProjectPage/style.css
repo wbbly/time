@@ -39,6 +39,8 @@
     color: #FFFFFF;
     padding-top: 10%;
     border-bottom: 1px solid #BDBDBD;
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 .reports_by_projects_wrapper .projects_container_project_data .time {

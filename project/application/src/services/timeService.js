@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export function getTimeInSecondFromString(string) {
     let a = string.split(':');
     var seconds = +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
@@ -22,4 +24,13 @@ export function createArrTimeAndDate(arr, key, firstKey, secondKey) {
     } else if (key === 'firstArr') {
         return arrDates;
     }
+}
+
+export function changeDate(arr) {
+    console.log(arr, 'arr');
+    let newArr = [];
+    for (let i = 0; i < arr.length; i++) {
+        newArr.push(moment(arr[i]).format('dddd DD.MM.YYYY'))
+    }
+    return newArr
 }

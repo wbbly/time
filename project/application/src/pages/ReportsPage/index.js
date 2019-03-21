@@ -12,9 +12,10 @@ import ProjectsContainer from '../../components/ProjectsContainer';
 import { client } from '../../requestSettings';
 import { getDateAndTimeToGraphick, getProjectANndTimeToGraphick, getProjects, getUsers } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { getTimeInSecondFromString, createArrTimeAndDate } from '../../services/timeService';
+import { getTimeInSecondFromString, createArrTimeAndDate, changeDate } from '../../services/timeService';
 import { checkAuthentication } from '../../services/authentication';
 import { adminOrNot } from '../../services/authentication';
+import  ReportsSearchBar  from '../../components/reportsSearchBar'
 
 class ReportsPage extends Component {
     state = {
@@ -59,26 +60,27 @@ class ReportsPage extends Component {
         legend: {
             display: true,
             labels: {
-                fontColor: '#BDBDBD',
+                fontColor: '#BDBDBD' ,
             },
         },
     };
 
     changeDoughnutChat(chartObject, dataFromServer) {
         let newObjectChart = chartObject;
-        newObjectChart.labels = createArrTimeAndDate(dataFromServer.timeTracker, 'firstArr', 'project', 'timePassed');
         newObjectChart.datasets[0].data = createArrTimeAndDate(
             dataFromServer.timeTracker,
             'secondArr',
             'project',
             'timePassed'
         );
+        console.log(newObjectChart);
         return newObjectChart;
     }
 
     changeGraph(object) {
         let newObject = object;
-        newObject.labels = createArrTimeAndDate(this.props.dataFromServer, 'firstArr', 'date', 'timePassed');
+        newObject.labels = changeDate(createArrTimeAndDate(this.props.dataFromServer, 'firstArr', 'date', 'timePassed'));
+        console.log(this.props.dataFromServer);
         newObject.datasets[0].data = createArrTimeAndDate(this.props.dataFromServer, 'secondArr', 'date', 'timePassed');
         return newObject;
     }
@@ -183,6 +185,7 @@ class ReportsPage extends Component {
                             )}
                         </div>
                     </div>
+                    <ReportsSearchBar users={this.state.selectUersData} />
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
                             <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />

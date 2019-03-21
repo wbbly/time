@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
-import Select from '../select';
 
 export default class ProjectSearchBar extends Component {
     etalonTable = [];
