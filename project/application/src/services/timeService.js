@@ -30,7 +30,7 @@ export function changeDate(arr) {
     console.log(arr, 'arr');
     let newArr = [];
     for (let i = 0; i < arr.length; i++) {
-        newArr.push(moment(arr[i]).format('dddd DD.MM.YYYY'))
+        newArr.push(moment(arr[i]).format('dddd DD.MM.YYYY'));
     }
-    return newArr
+    return newArr;
 }

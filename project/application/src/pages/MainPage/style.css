@@ -198,6 +198,7 @@ ul {
     padding-right: 16px;
     color: white;
     margin-top: 10px;
+    margin-left: 8px;
 }
 
 .time_now {
@@ -265,6 +266,7 @@ ul {
 
 .time_tracker_wrapper {
     margin-top: 26px;
+    padding-bottom: 12px;
 }
 
 .time_tracker_wrapper .header {
@@ -272,7 +274,7 @@ ul {
     align-items: center;
     justify-content: space-between;
     height: 35px;
-    padding: 0 16px;
+    padding: 0 24px;
 }
 
 .time_tracker_wrapper .header div {
@@ -345,4 +347,17 @@ span.circle {
     line-height: normal;
     font-size: 16px;
     color: #000;
+}
+
+.time_container_history .item_button {
+    display: none;
+}
+
+.wrapper_main_page .li:hover {
+    background-color: #333333;
+}
+
+.wrapper_main_page .li:hover .time_container_history .item_button {
+    display: block;
+    background-color: #333333;
 }

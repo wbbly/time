@@ -18,8 +18,7 @@ class ProjectsContainer extends Component {
         return moment(momentDate).format('YYYY-MM-DD');
     }
 
-    render()
-    {
+    render() {
         let projectsItems = this.props.projectsArr.map(item => (
             <Link
                 to={{

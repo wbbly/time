@@ -34,6 +34,9 @@
 .project_search_bar_search_field_container input {
   width: 94%;
   margin-left: 46px;
+  outline: 0;
+  border: 0;
+  background-color: transparent;
 }
 
 .project_search_bar_button_container {

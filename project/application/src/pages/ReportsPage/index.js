@@ -15,7 +15,7 @@ import reportsPageAction from '../../actions/ReportsPageAction';
 import { getTimeInSecondFromString, createArrTimeAndDate, changeDate } from '../../services/timeService';
 import { checkAuthentication } from '../../services/authentication';
 import { adminOrNot } from '../../services/authentication';
-import  ReportsSearchBar  from '../../components/reportsSearchBar'
+import ReportsSearchBar from '../../components/reportsSearchBar';
 
 class ReportsPage extends Component {
     state = {
@@ -60,7 +60,7 @@ class ReportsPage extends Component {
         legend: {
             display: true,
             labels: {
-                fontColor: '#BDBDBD' ,
+                fontColor: '#BDBDBD',
             },
         },
     };
@@ -79,7 +79,9 @@ class ReportsPage extends Component {
 
     changeGraph(object) {
         let newObject = object;
-        newObject.labels = changeDate(createArrTimeAndDate(this.props.dataFromServer, 'firstArr', 'date', 'timePassed'));
+        newObject.labels = changeDate(
+            createArrTimeAndDate(this.props.dataFromServer, 'firstArr', 'date', 'timePassed')
+        );
         console.log(this.props.dataFromServer);
         newObject.datasets[0].data = createArrTimeAndDate(this.props.dataFromServer, 'secondArr', 'date', 'timePassed');
         return newObject;

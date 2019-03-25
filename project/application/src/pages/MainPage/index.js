@@ -16,6 +16,7 @@ import {
     returnMutationLinkDeleteTimeEntries,
 } from '../../queries';
 import { checkAuthentication } from '../../services/authentication';
+import openSocket from 'socket.io-client';
 
 class MainPage extends Component {
     state = {
@@ -37,6 +38,58 @@ class MainPage extends Component {
         timeStart: '',
         timeFinish: '',
     };
+
+    socket = openSocket('https://api.time.lazy-ants.com/');
+
+    timeSocket(mainPage) {
+        const socket = openSocket('https://api.time.lazy-ants.com/');
+        socket.on('connect', function() {
+            console.log('Connected');
+            socket.emit(
+                'join',
+                {
+                    userEmail: atob(localStorage.getItem('active_email')),
+                },
+                res => {
+                    console.log(res);
+                    socket.emit('check-timer', {
+                        userEmail: atob(localStorage.getItem('active_email')),
+                    });
+                }
+            );
+        });
+        socket.on('check-timer', function(data) {
+            console.log('check-timer', data);
+            if (!data) {
+                return;
+            }
+            localStorage.setItem(
+                'LT',
+                JSON.stringify({
+                    taskName: data.issue,
+                    timeStart: +moment(data.dateFrom),
+                    timerStartDateTime: +moment(data.dateFrom),
+                    seletedProject: data.project.id,
+                })
+            );
+            mainPage.setOldTaskName();
+            mainPage.getTimeNow({
+                taskName: data.issue,
+                timeStart: +moment(data.dateFrom),
+                timerStartDateTime: +moment(data.dateFrom),
+                seletedProject: data.project.id,
+            });
+        });
+
+        socket.on('start-timer', function(data) {
+            console.log('start-timer', data);
+            mainPage.startTimer();
+        });
+        socket.on('stop-timer', function(data) {
+            console.log('stop-timer', data);
+            mainPage.timerOff();
+        });
+    }
 
     projectListeToggle = () => {
         this.setState({ projectListOpen: !this.state.projectListOpen });
@@ -60,21 +113,63 @@ class MainPage extends Component {
         this.setState(state => ({
             classToggle: !state.classToggle,
         }));
-        this.startTimer();
     };
+
+    saveStartTimer(className) {
+        console.log(className);
+        if (className === 'control_task_time_icons play') {
+            console.log('Start timer');
+            this.socket.emit('start-timer', {
+                userEmail: atob(localStorage.getItem('active_email')),
+                issue: this.mainTaskName.value,
+                projectId: this.state.seletedProject,
+            });
+        } else {
+            this.socket.emit('stop-timer', {
+                userEmail: atob(localStorage.getItem('active_email')),
+            });
+        }
+    }
+
+    timerOn() {
+        this.setState({ timerStartDateTime: +moment() });
+        if (this.time.timeStart.length === 0) {
+            this.time.timeStart = +moment();
+        }
+        this.state.intervalId = setInterval(() => {
+            this.setState(state => ({
+                time: moment(state.time).add(1, 'second'),
+            }));
+        }, 1000);
+    }
+
+    timerOff() {
+        let arr = this.props.arrTasks;
+        clearInterval(this.state.intervalId);
+        this.time.timeFinish = moment().format('HH:mm:ss');
+        let object = {
+            id: +new Date(),
+            name: this.mainTaskName.value,
+            date: this.state.date,
+            timeFrom: moment(this.time.timeStart).format('HH:mm:ss'),
+            timeTo: moment().format('HH:mm:ss'),
+            timePassed: moment(this.state.time).format('HH:mm:ss'),
+            userId: 1,
+            project: this.state.seletedProject,
+            email: atob(localStorage.getItem('active_email')),
+        };
+        arr.unshift(object);
+        client.request(returnMutationLinkAddTimeEntries(object)).then(data => {});
+        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: arr });
+        this.cleanMainField();
+        this.setState(state => ({
+            classToggle: !state.classToggle,
+        }));
+    }
 
     startTimer = () => {
         if (this.state.classToggle) {
-            this.setState({ timerStartDateTime: +moment() });
-            console.log(this.time.timeStart.length);
-            if (this.time.timeStart.length === 0) {
-                this.time.timeStart = +moment();
-            }
-            this.state.intervalId = setInterval(() => {
-                this.setState(state => ({
-                    time: moment(state.time).add(1, 'second'),
-                }));
-            }, 1000);
+            this.timerOn();
         } else {
             let arr = this.props.arrTasks;
             clearInterval(this.state.intervalId);
@@ -96,18 +191,6 @@ class MainPage extends Component {
             this.cleanMainField();
         }
     };
-
-    saveTimer() {
-        localStorage.setItem(
-            'LT',
-            JSON.stringify({
-                taskName: this.mainTaskName.value,
-                timeStart: this.time.timeStart,
-                timerStartDateTime: this.state.timerStartDateTime,
-                seletedProject: this.state.seletedProject,
-            })
-        );
-    }
 
     cleanMainField() {
         this.state.time = moment()
@@ -145,6 +228,9 @@ class MainPage extends Component {
     }
 
     getTimeNow() {
+        if (moment(this.state.time).format('HH:mm:ss') !== '00:00:00') {
+            return;
+        }
         let timer = JSON.parse(localStorage.getItem('LT'));
         if (!timer || !timer.timeStart) {
             return;
@@ -157,7 +243,10 @@ class MainPage extends Component {
                 .set({ hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2] })
                 .format('YYYY-MM-DD HH:mm:ss'),
         });
-        this.changeClass();
+        this.timerOn();
+        this.setState(state => ({
+            classToggle: !state.classToggle,
+        }));
     }
 
     setOldTaskName() {
@@ -185,7 +274,7 @@ class MainPage extends Component {
     };
 
     componentWillMount() {
-        this.getTimeNow();
+        this.timeSocket(this);
     }
 
     createItems(arr) {
@@ -201,30 +290,38 @@ class MainPage extends Component {
                     </div>
                     <div className="time_container_history">
                         <div className="time_now">
-                            <div>{this.checkZero(item.timeFrom.slice(0, -3))}</div> -{' '}
+                            <div>{this.checkZero(item.timeFrom.slice(0, -3))}</div>-{' '}
                             <div>{this.checkZero(item.timeTo.slice(0, -3))}</div>
                         </div>
                         <div className="timePassed">{item.timePassed}</div>
+                        {moment(this.state.time).format('HH:mm:ss') === '00:00:00' && (
+                            <i
+                                className="small_play item_button"
+                                onClick={e => {
+                                    this.saveOldTask(item.name, item.project);
+                                }}
+                            />
+                        )}
                         <i
-                            className="small_play"
-                            onClick={e => {
-                                this.startOldTask(item);
-                                this.saveTimer();
-                            }}
-                        />
-                        <i
-                            className="edit_button"
+                            className="edit_button item_button"
                             onClick={e => {
                                 this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
                                 this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
                             }}
                         />
-                        <i className="cancel" onClick={e => this.deleteFromArr(item)} />
+                        <i className="cancel item_button" onClick={e => this.deleteFromArr(item)} />
                     </div>
                 </div>
             </div>
         ));
         return items;
+    }
+
+    saveOldTask(name, project) {
+        console.log(name, project);
+        this.mainTaskName.value = name;
+        this.setState({ seletedProject: +project });
+        this.saveStartTimer('control_task_time_icons play');
     }
 
     getDay(arr) {
@@ -258,17 +355,6 @@ class MainPage extends Component {
 
     setActiveProject(item) {
         this.setState({ seletedProject: item.id });
-    }
-
-    handleOutsideClick(e) {
-        // ignore clicks on the component itself
-        if (this.node.contains(e.target)) {
-            return;
-        } else {
-            alert('');
-        }
-
-        this.setState({ projectListOpen: !this.state.projectListOpen });
     }
 
     getProject(id) {
@@ -378,8 +464,7 @@ class MainPage extends Component {
                         </i>
                         <i
                             onClick={e => {
-                                this.changeClass();
-                                this.saveTimer();
+                                this.saveStartTimer(buttonClassName);
                             }}
                             className={buttonClassName}
                         />
@@ -391,7 +476,6 @@ class MainPage extends Component {
     }
 
     componentDidMount() {
-        this.setOldTaskName();
         client
             .request(getTodayTimeEntries(atob(localStorage.getItem('active_email'))))
             .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timeTracker }));

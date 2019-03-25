@@ -55,8 +55,8 @@ const initialState = {
         options: {
             title: {
                 display: false,
-                text: 'Custom Chart Title'
-            }
+                text: 'Custom Chart Title',
+            },
         },
         datasets: [
             {
