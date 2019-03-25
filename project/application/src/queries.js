@@ -1,5 +1,5 @@
 export const getProjects = `{
-    project(order_by: {created_at: desc}) {
+    project(order_by: {id: desc}) {
         id
         name
         projectStatus
@@ -10,7 +10,7 @@ export const getProjects = `{
 
 export function getTodayTimeEntries(email) {
     return `{
-        timeTracker (where: {email: {_eq: "${email}"}},order_by: {date: desc}) {
+        timeTracker (where: {email: {_eq: "${email}"}},order_by: {id: desc}) {
             id
             name
             date
@@ -24,7 +24,7 @@ export function getTodayTimeEntries(email) {
 
 export function getProjectTime(email) {
     return `{
-        timeTracker (where: {email: {_eq: "${email}"}},order_by: {date: desc}) {
+        timeTracker (where: {email: {_eq: "${email}"}},order_by: {id: desc}) {
             timePassed
             project
         }
@@ -50,7 +50,7 @@ export function getProjectReport(object) {
                     {date: {_lte: "${object.to}"}},
                 ]
             },
-            order_by: {date: desc}) {
+            order_by: {id: desc}) {
                 id
                 name
                 date
@@ -81,7 +81,7 @@ export function getDateAndTimeToGraphick(object) {
                     {date: {_lte: "${object.to}"}},
                 ]
             },
-            order_by: {date: desc}) {
+            order_by: {id: desc}) {
             date
             timePassed
         }
@@ -96,7 +96,7 @@ export function getProjectANndTimeToGraphick(object) {
             {date: {_gte: "${object.from}"}},
             {date: {_lte: "${object.to}"}},
         ]
-        },order_by: {date: desc}) {
+        },order_by: {id: desc}) {
             project
             timePassed
         }
@@ -202,9 +202,9 @@ export const addProject = `
         insert_project(
             objects: [
                 {
-                  name: $name,
+                    name: $name,
                 }
-              ]
+            ]
         ){
             affected_rows
         }

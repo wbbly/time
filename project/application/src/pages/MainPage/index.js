@@ -23,6 +23,8 @@ import { AppConfig } from '../../config';
 class MainPage extends Component {
     ONE_MINUTE = 1000; // in ms
     TIMER_SUBSCRIPTION;
+    startTimerInitiator = false;
+    stopTimerInitiator = false;
     state = {
         classToggle: true,
         time: moment()
@@ -44,21 +46,25 @@ class MainPage extends Component {
 
     socket = openSocket(AppConfig.socketURL);
 
-    timeSocket(mainPage) {
-        mainPage.socket.on('connect', () => {
-            mainPage.socket.emit(
+    initSocketConnection = () => {
+        this.socket.on('connect', () => {
+            this.socket.emit(
                 'join',
                 {
                     userEmail: atob(localStorage.getItem('active_email')),
                 },
                 _ => {
-                    mainPage.socket.emit('check-timer', {
+                    this.socket.emit('check-timer', {
                         userEmail: atob(localStorage.getItem('active_email')),
                     });
                 }
             );
         });
-        mainPage.socket.on('check-timer', data => {
+        this.socket.on('check-timer', data => {
+            if (this.startTimerInitiator) {
+                this.startTimerInitiator = false;
+            }
+
             if (data) {
                 localStorage.setItem(
                     'current-timer',
@@ -68,7 +74,7 @@ class MainPage extends Component {
                         seletedProject: data.project.id,
                     })
                 );
-                mainPage.getTimeNow(
+                this.getTimeNow(
                     {
                         taskName: data.issue,
                         timeStart: +moment(data.dateFrom),
@@ -78,10 +84,17 @@ class MainPage extends Component {
                 );
             }
         });
-        mainPage.socket.on('stop-timer', data => {
-            mainPage.timerOff(data);
+        this.socket.on('stop-timer', data => {
+            clearInterval(this.TIMER_SUBSCRIPTION);
+            this.TIMER_SUBSCRIPTION = undefined;
+            const timeEntry = this.getTimeEntry(data);
+            this.timerStop(timeEntry);
+            if (this.stopTimerInitiator) {
+                this.saveTimeEntry(timeEntry);
+                this.stopTimerInitiator = false;
+            }
         });
-    }
+    };
 
     projectListeToggle = () => {
         this.setState({ projectListOpen: !this.state.projectListOpen });
@@ -103,19 +116,21 @@ class MainPage extends Component {
 
     saveStartTimer(className) {
         if (className === 'control_task_time_icons play') {
+            this.startTimerInitiator = true;
             this.socket.emit('start-timer', {
                 userEmail: atob(localStorage.getItem('active_email')),
                 issue: this.mainTaskName.value,
                 projectId: this.state.seletedProject,
             });
         } else {
+            this.stopTimerInitiator = true;
             this.socket.emit('stop-timer', {
                 userEmail: atob(localStorage.getItem('active_email')),
             });
         }
     }
 
-    timerOn() {
+    timerStart() {
         this.setState({ timerStartDateTime: +moment() });
         if (this.time.timeStart.length === 0) {
             this.time.timeStart = +moment();
@@ -127,13 +142,20 @@ class MainPage extends Component {
         }, this.ONE_MINUTE);
     }
 
-    timerOff(data) {
+    timerStop(timeEntry) {
         let timeEntries = this.props.arrTasks;
-        clearInterval(this.TIMER_SUBSCRIPTION);
-        this.TIMER_SUBSCRIPTION = undefined;
+        timeEntries.unshift(timeEntry);
+        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: timeEntries });
 
+        localStorage.removeItem('current-timer');
+        this.cleanMainField();
+        this.setState(state => ({
+            classToggle: !state.classToggle,
+        }));
+    }
+
+    getTimeEntry(data) {
         const { issue, dateFrom, dateTo, project, userEmail } = data;
-        const { projectId } = project;
 
         this.time.timeFinish = moment(dateTo).format('HH:mm:ss');
         const timeEntry = {
@@ -143,18 +165,15 @@ class MainPage extends Component {
             timeFrom: moment(dateFrom).format('HH:mm:ss'),
             timeTo: moment(dateTo).format('HH:mm:ss'),
             timePassed: getDateInString(+moment(dateTo) - +moment(dateFrom)),
-            project: projectId,
+            project: project.id,
             email: userEmail,
         };
-        timeEntries.unshift(timeEntry);
 
+        return timeEntry;
+    }
+
+    saveTimeEntry(timeEntry) {
         client.request(returnMutationLinkAddTimeEntries(timeEntry)).then(_ => {});
-        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: timeEntries });
-        localStorage.removeItem('current-timer');
-        this.cleanMainField();
-        this.setState(state => ({
-            classToggle: !state.classToggle,
-        }));
     }
 
     cleanMainField() {
@@ -204,7 +223,7 @@ class MainPage extends Component {
                 .set({ hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2] })
                 .format('YYYY-MM-DD HH:mm:ss'),
         });
-        this.timerOn();
+        this.timerStart();
         this.setState(state => ({
             classToggle: !state.classToggle,
         }));
@@ -236,7 +255,7 @@ class MainPage extends Component {
     };
 
     componentWillMount() {
-        this.timeSocket(this);
+        this.initSocketConnection();
     }
 
     createItems(arr) {
