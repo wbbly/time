@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectSearchBar from '../../components/projectSearchBar';
@@ -10,6 +11,7 @@ import { client } from '../../requestSettings';
 import { getProjects, getProjectTime } from '../../queries';
 import { checkAuthentication } from '../../services/authentication';
 import { timeInSeconds } from '../../pages/MainPage/timeInSecondsFunction';
+import { AppConfig } from '../../config';
 
 class ProjectsPage extends Component {
     toggleModal(item) {
@@ -23,7 +25,9 @@ class ProjectsPage extends Component {
 
     canAddToTeam(email = '') {
         email = atob(email);
-        if (email === 'genryh.kovalenko@lazy-ants.de' || email === 'hr@lazy-ants.com') {
+        const adminEmails = AppConfig.adminEmails;
+
+        if (adminEmails.indexOf(email) > -1) {
             return true;
         } else {
             return false;

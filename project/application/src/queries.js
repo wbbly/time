@@ -115,7 +115,6 @@ export function returnMutationLinkAddTimeEntries(object) {
                         timeTo: "${object.timeTo}",
                         timePassed: "${object.timePassed}",
                         project: "${object.project}",
-                        userId: "${object.userId}",
                         email: "${object.email}",
                     }
                 ]

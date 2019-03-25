@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'Open Sans', sans-serif;
-    src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
 }
 
 .data_container {
@@ -26,7 +26,7 @@
     width: calc(100% - 127px - 16px);
     outline: none;
     padding-left: 16px;
-    background-color: #4F4F4F;
+    background-color: #4f4f4f;
     border-radius: 4px;
     padding-right: 127px;
     border: 0;
@@ -34,21 +34,21 @@
 }
 
 .add_task::-webkit-input-placeholder {
-    color: #E0E0E0;
+    color: #e0e0e0;
 }
 
 .add_task::-moz-placeholder {
-    color: #E0E0E0;
+    color: #e0e0e0;
 }
 
 /* Firefox 19+ */
 .add_task:-moz-placeholder {
-    color: #E0E0E0;
+    color: #e0e0e0;
 }
 
 /* Firefox 18- */
 .add_task:-ms-input-placeholder {
-    color: #E0E0E0;
+    color: #e0e0e0;
 }
 
 .control_task_time_icons {
@@ -72,12 +72,12 @@
     position: absolute;
     top: 17px !important;
     right: 56px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
     font-size: 16px;
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 .folder {
@@ -97,7 +97,7 @@
     width: 229px;
     height: 261px;
     padding: 12px;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
@@ -105,11 +105,14 @@
     padding-left: 6px;
     height: 32px;
     width: 222px;
-    border: 1px solid #BDBDBD;
+    border: 1px solid #bdbdbd;
 }
 
-.folder .projects_modal_wrapper .projects_modal_wrapper_search ::-webkit-input-placeholder {
-    font-family: 'Open Sans', sans-serif;
+.folder
+    .projects_modal_wrapper
+    .projects_modal_wrapper_search
+    ::-webkit-input-placeholder {
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
@@ -118,8 +121,11 @@
     color: #767676;
 }
 
-.folder .projects_modal_wrapper .projects_modal_wrapper_search ::-moz-placeholder {
-    font-family: 'Open Sans', sans-serif;
+.folder
+    .projects_modal_wrapper
+    .projects_modal_wrapper_search
+    ::-moz-placeholder {
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
@@ -129,8 +135,11 @@
 }
 
 /* Firefox 19+ */
-.folder .projects_modal_wrapper .projects_modal_wrapper_search :-moz-placeholder {
-    font-family: 'Open Sans', sans-serif;
+.folder
+    .projects_modal_wrapper
+    .projects_modal_wrapper_search
+    :-moz-placeholder {
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
@@ -140,8 +149,11 @@
 }
 
 /* Firefox 18- */
-.folder .projects_modal_wrapper .projects_modal_wrapper_search :-ms-input-placeholder {
-    font-family: 'Open Sans', sans-serif;
+.folder
+    .projects_modal_wrapper
+    .projects_modal_wrapper_search
+    :-ms-input-placeholder {
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
@@ -158,7 +170,7 @@
 
 .projects_modal_item_name {
     margin-left: 7px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     line-height: normal;
     font-size: 14px;
@@ -173,17 +185,16 @@
 }
 
 .projects_modal_item:hover {
-    background-color: #E0E0E0;;
+    background-color: #e0e0e0;
 }
 
 ul {
     list-style-type: none;
 }
 
-
 .wrapper_main_page .ul {
     padding-left: 0;
-    background-color: #4F4F4F;
+    background-color: #4f4f4f;
 }
 
 .wrapper_main_page .li {
@@ -198,6 +209,7 @@ ul {
     padding-right: 16px;
     color: white;
     margin-top: 10px;
+    margin-left: 8px;
 }
 
 .time_now {
@@ -236,7 +248,8 @@ ul {
     margin-left: 18px;
     width: 15px;
     height: 15px;
-    background: url("../../images/icons/baseline-create-24px.svg") no-repeat center;
+    background: url("../../images/icons/baseline-create-24px.svg") no-repeat
+        center;
     cursor: pointer;
     background-size: 20px;
 }
@@ -256,7 +269,7 @@ ul {
 }
 
 .time_tracker_wrapper {
-    background-color: #4F4F4F;
+    background-color: #4f4f4f;
 }
 
 .time_tracker_wrapper_header {
@@ -265,6 +278,7 @@ ul {
 
 .time_tracker_wrapper {
     margin-top: 26px;
+    padding-bottom: 12px;
 }
 
 .time_tracker_wrapper .header {
@@ -272,14 +286,14 @@ ul {
     align-items: center;
     justify-content: space-between;
     height: 35px;
-    padding: 0 16px;
+    padding: 0 24px;
 }
 
 .time_tracker_wrapper .header div {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     line-height: normal;
     font-size: 14px;
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 .main_wrapper_tracker_items {
@@ -339,10 +353,23 @@ span.circle {
 }
 
 .projects_modal_wrapper_header input {
-    font-family: 'Open Sans';
+    font-family: "Open Sans";
     font-style: normal;
     font-weight: normal;
     line-height: normal;
     font-size: 16px;
     color: #000;
+}
+
+.time_container_history .item_button {
+    display: none;
+}
+
+.wrapper_main_page .li:hover {
+    background-color: #333333;
+}
+
+.wrapper_main_page .li:hover .time_container_history .item_button {
+    display: block;
+    background-color: #333333;
 }

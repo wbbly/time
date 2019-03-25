@@ -1,8 +1,10 @@
 import { GraphQLClient } from 'graphql-request';
 
-export const client = new GraphQLClient('https://la-ge.herokuapp.com/v1alpha1/graphql', {
+import { AppConfig } from './config';
+
+export const client = new GraphQLClient(AppConfig.graphqlURL, {
     headers: {
         'Content-Type': 'application/json',
-        'X-Hasura-Access-Key': 'lalala',
+        'X-Hasura-Access-Key': AppConfig.graphqlAccessKey,
     },
 });

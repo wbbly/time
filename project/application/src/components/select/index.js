@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import './style.css';
 
 class Select extends Component {
@@ -14,6 +15,7 @@ class Select extends Component {
                 <span>{item}</span>
             </li>
         ));
+
         return (
             <div className="select_wrapper">
                 {!this.state.listOpen && (

@@ -1,88 +1,89 @@
 @font-face {
-  font-family: 'Open Sans', sans-serif;
-  src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
 }
 
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: start;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  height: 100%;
-  width: 188px;
-  background-color: #3B3B3B;
-  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.14);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 188px;
+    background-color: #3b3b3b;
+    box-shadow: 6px 0 20px rgba(0, 0, 0, 0.14);
 }
 
 .logo_small {
-  display: block;
-  width: 133px;
-  height: 18px;
-  background: url("../../images/lazy timer_Logo_Small.svg") no-repeat center;
-  margin-top: 34px;
+    display: block;
+    width: 133px;
+    height: 18px;
+    background: url("../../images/lazy timer_Logo_Small.svg") no-repeat center;
+    margin-top: 34px;
 }
 
 i {
-  display: block;
+    display: block;
 }
 
 .navigation_links_container i {
-  width: 15px;
-  height: 15px;
+    width: 15px;
+    height: 15px;
 }
 
 .navigation_links_container {
-  margin-top: 35px;
+    margin-top: 35px;
 }
 
 .timer {
-  background: url("../../images/icons/clock.svg") no-repeat center;
+    background: url("../../images/icons/clock.svg") no-repeat center;
 }
 
 .reports {
-  background: url("../../images/icons/newspaper.svg") no-repeat center;
+    background: url("../../images/icons/newspaper.svg") no-repeat center;
 }
 
 .projects {
-  background: url("../../images/icons/folder.svg") no-repeat center;
+    background: url("../../images/icons/folder.svg") no-repeat center;
 }
 
 .team {
-  background: url("../../images/icons/team.svg") no-repeat center;
+    background: url("../../images/icons/team.svg") no-repeat center;
 }
 
 .links_text {
-  font-family: 'Open Sans', sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  line-height: normal;
-  font-size: 14px;
-  color: #FFFFFF;
-  margin-left: 8px;
-  text-transform: capitalize;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 14px;
+    color: #ffffff;
+    margin-left: 8px;
+    text-transform: capitalize;
 }
 
 .navigation_links {
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  width: 167px;
-  height: 28px;
-  padding-left: 21px;
-  margin-top: 10px;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 167px;
+    height: 28px;
+    padding-left: 21px;
+    margin-top: 10px;
+    cursor: pointer;
 }
 
 .navigation_links:hover {
-  background: #4F4F4F;
+    background: #4f4f4f;
 }
 
-Link, a {
-  outline: none;
+link,
+a {
+    outline: none;
 }
 
 .navigation_links .timer_task {

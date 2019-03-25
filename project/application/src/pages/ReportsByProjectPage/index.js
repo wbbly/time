@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import './style.css';
 import LeftBar from '../../components/LeftBar';
 import { getProjectReport } from '../../queries';
@@ -39,6 +40,7 @@ class ReportsByProjectsPage extends Component {
                 </div>
             </div>
         ));
+
         return (
             <div className="reports_by_projects_wrapper">
                 <LeftBar />

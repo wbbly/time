@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as moment from 'moment';
+
 import './style.css';
 import { returnMutationUpdateTimerProject } from '../../queries';
 import { client } from '../../requestSettings';
@@ -42,6 +43,7 @@ class ManualTimeModal extends Component {
                 this.inputTimeStartValue.classList.remove('error');
                 this.inputTimeEndValue.classList.remove('error');
             }, 1000);
+
             return;
         }
         client
@@ -52,6 +54,7 @@ class ManualTimeModal extends Component {
             timeFrom = moment(`${date} ${timeFrom}`);
             timeTo = moment(`${date} ${timeTo}`);
             let diff = timeTo.diff(timeFrom);
+
             return msToTime(diff);
         }
 

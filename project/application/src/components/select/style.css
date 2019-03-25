@@ -1,45 +1,45 @@
 .select_wrapper {
-  position: relative;
+    position: relative;
 }
 
 input {
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  line-height: normal;
-  font-size: 16px;
-  color: white;
-  border: 0ch;
-  background-color: transparent;
-  width: 100%;
-  outline: none;
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: white;
+    border: 0ch;
+    background-color: transparent;
+    width: 100%;
+    outline: none;
 }
 
 ul {
-  padding: 0;
-  background: rgba(45, 156, 219, 0.68);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 0px 2px rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
-  list-style: none;
+    padding: 0;
+    background: rgba(45, 156, 219, 0.68);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 0px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+    list-style: none;
 }
 
 li {
-  padding-left: 8px;
-  width: 100%;
-  height: 21px;
-  color: white;
-  cursor: pointer;
+    padding-left: 8px;
+    width: 100%;
+    height: 21px;
+    color: white;
+    cursor: pointer;
 }
 
 li:hover {
-  background-color: rgba(29, 31, 50, 0.43);
+    background-color: rgba(29, 31, 50, 0.43);
 }
 
 .select_wrapper .icon {
-  position: absolute;
-  top: 10px;
-  left: 48px;
-  width: 6px;
-  height: 5px;
-  background: url("../../images/Polygon.svg") no-repeat right;
+    position: absolute;
+    top: 10px;
+    left: 48px;
+    width: 6px;
+    height: 5px;
+    background: url("../../images/Polygon.svg") no-repeat right;
 }

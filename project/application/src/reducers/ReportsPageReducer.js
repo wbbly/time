@@ -51,7 +51,13 @@ const initialState = {
         },
     ],
     dataDoughnutChat: {
-        labels: ['Red', 'Green', 'Yellow'],
+        labels: [],
+        options: {
+            title: {
+                display: false,
+                text: 'Custom Chart Title',
+            },
+        },
         datasets: [
             {
                 data: [300, 50, 100],

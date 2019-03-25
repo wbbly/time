@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import './style.css';
 import LeftBar from '../../components/LeftBar';
 import AddToTeamModal from '../../components/AddToTeamModal';
@@ -7,6 +8,7 @@ import { client } from '../../requestSettings';
 import { getTeamData } from '../../queries';
 import teamPageAction from '../../actions/TeamPageAction';
 import { checkAuthentication } from '../../services/authentication';
+import { AppConfig } from '../../config';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Access'];
@@ -20,7 +22,9 @@ class TeamPage extends Component {
 
     canAddToTeam(email) {
         email = atob(email);
-        if (email === 'genryh.kovalenko@lazy-ants.de' || email === 'hr@lazy-ants.com') {
+        const adminEmails = AppConfig.adminEmails;
+
+        if (adminEmails.indexOf(email) > -1) {
             return true;
         } else {
             return false;

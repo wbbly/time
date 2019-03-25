@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import './index.css';
 import { Redirect } from 'react-router-dom';
 import * as firebase from 'firebase';
+
+import './index.css';
 import { checkAuthenticationOnLoginPage } from '../../services/authentication';
+import { AppConfig } from '../../config';
 
 class AuthorisationPage extends Component {
     state = {
@@ -43,14 +45,7 @@ class AuthorisationPage extends Component {
     };
 
     componentWillMount() {
-        let config = {
-            apiKey: 'AIzaSyCDnjbXomAp2vCRARCz5Xu-__W8LQRYSUM',
-            authDomain: 'lazy-time.firebaseapp.com',
-            databaseURL: 'https://lazy-time.firebaseio.com',
-            projectId: 'lazy-time',
-            storageBucket: 'lazy-time.appspot.com',
-            messagingSenderId: '457186337232',
-        };
+        const config = AppConfig.firebase;
         firebase.initializeApp(config);
     }
 

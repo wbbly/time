@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'Open Sans', sans-serif;
-    src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
 }
 
 .reports_by_projects_wrapper {
@@ -22,33 +22,39 @@
 }
 
 .reports_by_projects_wrapper .header .header_name {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     line-height: normal;
     font-size: 36px;
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
-.reports_by_projects_wrapper .projects_container_wrapper .projects_container_projects .projects_header {
+.reports_by_projects_wrapper
+    .projects_container_wrapper
+    .projects_container_projects
+    .projects_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 11px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     line-height: normal;
     font-size: 16px;
-    color: #FFFFFF;
+    color: #ffffff;
     padding-top: 10%;
-    border-bottom: 1px solid #BDBDBD;
+    border-bottom: 1px solid #bdbdbd;
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 .reports_by_projects_wrapper .projects_container_project_data .time {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     line-height: normal;
     font-size: 16px;
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
-.reports_by_projects_wrapper .projects_container_wrapper .projects_container_projects {
+.reports_by_projects_wrapper
+    .projects_container_wrapper
+    .projects_container_projects {
     width: 100%;
 }
-

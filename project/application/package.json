@@ -12,7 +12,7 @@
     "graphql-request": "^1.8.2",
     "graphql-tag": "^2.10.1",
     "husky": "^1.0.0-rc.14",
-    "moment": "^2.18.1",
+    "moment": "^2.24.0",
     "prettier": "^1.14.2",
     "prop-types": "^15.6.2",
     "query-string": "^5.1.1",
@@ -24,8 +24,9 @@
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.3",
+    "react-scripts": "^2.1.8",
     "redux": "^4.0.1",
+    "socket.io-client": "^2.2.0",
     "underscore": "^1.9.1"
   },
   "scripts": {
@@ -36,7 +37,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "prettier --write \"**/*.js\" && git add ."
+      "pre-commit": "prettier --write \"**/*.js\""
     }
   },
   "eslintConfig": {

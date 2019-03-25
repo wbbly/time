@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+
 import { projectReducer } from './ProjectsReducer';
 import { mainPageReducer } from './MainPageReducer';
 import { teamPageReducer } from './TeamPageReducer';

@@ -16,5 +16,6 @@ export function createArayOfArrays(arr = []) {
 
         formattedLogsDatesValues[index].push(arr[i]);
     }
+
     return formattedLogsDatesValues;
 }
