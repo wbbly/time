@@ -6,6 +6,7 @@ import 'react-date-range/dist/theme/default.css';
 import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
+
 import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
@@ -73,7 +74,7 @@ class ReportsPage extends Component {
             'project',
             'timePassed'
         );
-        console.log(newObjectChart);
+
         return newObjectChart;
     }
 
@@ -82,8 +83,8 @@ class ReportsPage extends Component {
         newObject.labels = changeDate(
             createArrTimeAndDate(this.props.dataFromServer, 'firstArr', 'date', 'timePassed')
         );
-        console.log(this.props.dataFromServer);
         newObject.datasets[0].data = createArrTimeAndDate(this.props.dataFromServer, 'secondArr', 'date', 'timePassed');
+
         return newObject;
     }
 
@@ -102,6 +103,7 @@ class ReportsPage extends Component {
             data.timeTracker[i].colorProject = _.where(this.state.projectsArr, { id: projectId })[0].colorProject;
             data.timeTracker[i].timePassed = getTimeInSecondFromString(data.timeTracker[i].timePassed);
         }
+
         return data;
     }
 
@@ -112,6 +114,7 @@ class ReportsPage extends Component {
         for (let i = 0; i < projects.length; i++) {
             finishArr.push({ projects: projects[i], timePassed: time[i] });
         }
+
         return finishArr;
     }
 

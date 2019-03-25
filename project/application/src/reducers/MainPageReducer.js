@@ -1,7 +1,6 @@
 const initialState = {
     mainTaskField: {
         classToggle: true,
-        intervalId: '',
         time: '',
         date: '',
         arrTasks: [],

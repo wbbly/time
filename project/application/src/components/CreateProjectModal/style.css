@@ -1,10 +1,9 @@
 @font-face {
-    font-family: 'Open Sans', sans-serif;
-    src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
 }
 
 .wrapper_create_projects_modal {
-
 }
 
 .create_projects_modal_background {
@@ -25,7 +24,7 @@
     left: 50%;
     width: 945px;
     z-index: 2;
-    background: #FFFFFF;
+    background: #ffffff;
     border: 1px solid #828282;
     box-sizing: border-box;
     border-radius: 4px;
@@ -37,12 +36,12 @@
     justify-content: space-between;
     width: calc(100% - 40px);
     padding: 0 20px;
-    border-bottom: 1px solid #BDBDBD;
+    border-bottom: 1px solid #bdbdbd;
     height: 63px;
 }
 
 .create_projects_modal_header_title {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     line-height: normal;
     font-size: 16px;
     color: #000000;
@@ -77,43 +76,51 @@
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
     text-transform: none;
-    color: #4F4F4F;
+    color: #4f4f4f;
 }
 
-.create_projects_modal_data .create_projects_modal_data_input_container input::-webkit-input-placeholder {
-    font-family: 'Open Sans', sans-serif;
+.create_projects_modal_data
+    .create_projects_modal_data_input_container
+    input::-webkit-input-placeholder {
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
     font-size: 14px;
-    color: #4F4F4F;
+    color: #4f4f4f;
 }
 
-.create_projects_modal_data .create_projects_modal_data_input_container input::-moz-placeholder {
-    font-family: 'Open Sans', sans-serif;
+.create_projects_modal_data
+    .create_projects_modal_data_input_container
+    input::-moz-placeholder {
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
     font-size: 14px;
-    color: #4F4F4F;
+    color: #4f4f4f;
 }
 
-.create_projects_modal_data .create_projects_modal_data_input_container input:-moz-placeholder {
-    font-family: 'Open Sans', sans-serif;
+.create_projects_modal_data
+    .create_projects_modal_data_input_container
+    input:-moz-placeholder {
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
     font-size: 14px;
-    color: #4F4F4F;
+    color: #4f4f4f;
 }
 
-.create_projects_modal_data .create_projects_modal_data_input_container input:-ms-input-placeholder {
-    font-family: 'Open Sans', sans-serif;
+.create_projects_modal_data
+    .create_projects_modal_data_input_container
+    input:-ms-input-placeholder {
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
     font-size: 14px;
-    color: #4F4F4F;
+    color: #4f4f4f;
 }
 
 .create_projects_modal_data .circle {
@@ -151,7 +158,7 @@
 }
 
 .create_projects_modal_data_select_container .select_list .item:hover {
-    background-color: #CECECE;
+    background-color: #cecece;
 }
 
 .create_projects_modal_data .green {
@@ -183,13 +190,13 @@
     height: 41px;
     margin-right: 22px;
     border: 0;
-    background-color: #27AE60;
-    font-family: 'Open Sans', sans-serif;
+    background-color: #27ae60;
+    font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: bold;
     line-height: normal;
     font-size: 14px;
-    color: #FFFFFF;
+    color: #ffffff;
     border-radius: 0;
     cursor: pointer;
 }

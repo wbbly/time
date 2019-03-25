@@ -1,98 +1,92 @@
 @font-face {
-  font-family: 'Open Sans', sans-serif;
-  src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
 }
 
 .data_container_reports_page {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 188px;
-  right: 0;
-  background-color: #333333;
-  padding-top: 47px;
-  padding-left: 148px;
-  padding-right: 56px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 188px;
+    right: 0;
+    background-color: #333333;
+    padding-top: 47px;
+    padding-left: 148px;
+    padding-right: 56px;
 }
 
 .data_container_reports_page .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .data_container_reports_page .header .header_name {
-  font-family: 'Open Sans', sans-serif;
-  line-height: normal;
-  font-size: 36px;
-  color: #FFFFFF;
+    font-family: "Open Sans", sans-serif;
+    line-height: normal;
+    font-size: 36px;
+    color: #ffffff;
 }
 
 .wrapper_reports_page .line_chart_container {
-  position: relative;
-  top: 110px;
-  background-color: #4F4F4F;
+    position: relative;
+    top: 110px;
+    background-color: #4f4f4f;
 }
 
 .wrapper_reports_page .projects_chart_container {
-  position: relative;
-  top: 20%;
-  border-top: 1px solid #BDBDBD
+    position: relative;
+    top: 20%;
+    border-top: 1px solid #bdbdbd;
 }
 
 .wrapper_reports_page .selects_container {
-  position: relative;
+    position: relative;
 }
 
 .wrapper_reports_page .select_header {
-  display: flex;
-  align-items: center;
-  font-family: 'Open Sans', sans-serif;
-  line-height: normal;
-  font-size: 20px;
-  color: #FFFFFF;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-family: "Open Sans", sans-serif;
+    line-height: normal;
+    font-size: 20px;
+    color: #ffffff;
+    cursor: pointer;
 }
 
 .wrapper_reports_page .select_header.users {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .wrapper_reports_page .arrow_down {
-  margin-left: 24px;
-  width: 24px;
-  height: 24px;
-  background: url("../../images/icons/arrow_down.svg") no-repeat center;
+    margin-left: 24px;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/arrow_down.svg") no-repeat center;
 }
 
 .selects_container.select_users .select_body {
-  width: 100%;
+    width: 100%;
 }
 
 .selects_container.select_users .select_users_item {
-  display: flex;
-  align-self: center;
-  height: 24px;
-  padding: 12px 12px;
-  cursor: pointer;
+    display: flex;
+    align-self: center;
+    height: 24px;
+    padding: 12px 12px;
+    cursor: pointer;
 }
 
 .selects_container.select_users .select_users_item:hover {
-  background: #4F4F4F;
-  color: white;
+    background: #4f4f4f;
+    color: white;
 }
 
 .wrapper_reports_page .select_body {
-  position: absolute;
-  top: 30px;
-  right: 10px;
-  z-index: 3;
-  background-color: #f5f5f5;
-  box-shadow: 5px 5px 15px rgba(0,0,0,.25);
-}
-
-
-
-.add_task_container name {
-
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    z-index: 3;
+    background-color: #f5f5f5;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import './style.css';
 import * as firebase from 'firebase';
+
+import './style.css';
 import { returnMutationLinkAddUser } from '../../queries';
 import { client } from '../../requestSettings';
 
@@ -26,11 +27,7 @@ class AddToTeamModal extends Component {
         firebase
             .auth()
             .createUserWithEmailAndPassword(email.value, password.value)
-            .catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-            });
+            .catch(_ => {});
         this.closeModal();
     };
 

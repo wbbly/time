@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import './style.css';
 import { client } from '../../requestSettings';
 import { returnMutationLinkDeleteProject } from '../../queries';
@@ -46,6 +47,7 @@ export default class ProjectData extends Component {
             </tr>
         ));
         const tableHeaderElements = tableHeader.map(item => <th key={item.key}>{item.value}</th>);
+
         return (
             <div className="project_data_wrapper">
                 <table>

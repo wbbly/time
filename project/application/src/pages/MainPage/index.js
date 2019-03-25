@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import openSocket from 'socket.io-client';
 import * as moment from 'moment';
+
 import './style.css';
 import { getDateInString } from './timeInSecondsFunction';
 import LeftBar from '../../components/LeftBar';
@@ -16,12 +18,13 @@ import {
     returnMutationLinkDeleteTimeEntries,
 } from '../../queries';
 import { checkAuthentication } from '../../services/authentication';
-import openSocket from 'socket.io-client';
+import { AppConfig } from '../../config';
 
 class MainPage extends Component {
+    ONE_MINUTE = 1000; // in ms
+    TIMER_SUBSCRIPTION;
     state = {
         classToggle: true,
-        intervalId: '',
         time: moment()
             .set({ hour: 0, minute: 0, second: 0 })
             .format('YYYY-MM-DD HH:mm:ss'),
@@ -39,44 +42,43 @@ class MainPage extends Component {
         timeFinish: '',
     };
 
-    socket = openSocket('https://api.time.lazy-ants.com/');
+    socket = openSocket(AppConfig.socketURL);
 
     timeSocket(mainPage) {
-         mainPage.socket.on('connect', function() {
+        mainPage.socket.on('connect', () => {
             mainPage.socket.emit(
                 'join',
                 {
                     userEmail: atob(localStorage.getItem('active_email')),
                 },
-                res => {
+                _ => {
                     mainPage.socket.emit('check-timer', {
                         userEmail: atob(localStorage.getItem('active_email')),
                     });
                 }
             );
         });
-        mainPage.socket.on('check-timer', function(data) {
-            if (!data) {
-                return;
+        mainPage.socket.on('check-timer', data => {
+            if (data) {
+                localStorage.setItem(
+                    'current-timer',
+                    JSON.stringify({
+                        taskName: data.issue,
+                        timeStart: +moment(data.dateFrom),
+                        seletedProject: data.project.id,
+                    })
+                );
+                mainPage.getTimeNow(
+                    {
+                        taskName: data.issue,
+                        timeStart: +moment(data.dateFrom),
+                        seletedProject: data.project.id,
+                    },
+                    data
+                );
             }
-            localStorage.setItem(
-                'LT',
-                JSON.stringify({
-                    taskName: data.issue,
-                    timeStart: +moment(data.dateFrom),
-                    seletedProject: data.project.id,
-                })
-            );
-            mainPage.getTimeNow({
-                taskName: data.issue,
-                timeStart: +moment(data.dateFrom),
-                seletedProject: data.project.id,
-            }, data);
         });
-
-        mainPage.socket.on('start-timer', function(data) {
-           });
-        mainPage.socket.on('stop-timer', function(data) {
+        mainPage.socket.on('stop-timer', data => {
             mainPage.timerOff(data);
         });
     }
@@ -118,31 +120,37 @@ class MainPage extends Component {
         if (this.time.timeStart.length === 0) {
             this.time.timeStart = +moment();
         }
-        this.state.intervalId = setInterval(() => {
+        this.TIMER_SUBSCRIPTION = setInterval(() => {
             this.setState(state => ({
                 time: moment(state.time).add(1, 'second'),
             }));
-        }, 1000);
+        }, this.ONE_MINUTE);
     }
 
     timerOff(data) {
-        let arr = this.props.arrTasks;
-        clearInterval(this.state.intervalId);
-        this.time.timeFinish = moment().format('HH:mm:ss');
-        let object = {
+        let timeEntries = this.props.arrTasks;
+        clearInterval(this.TIMER_SUBSCRIPTION);
+        this.TIMER_SUBSCRIPTION = undefined;
+
+        const { issue, dateFrom, dateTo, project, userEmail } = data;
+        const { projectId } = project;
+
+        this.time.timeFinish = moment(dateTo).format('HH:mm:ss');
+        const timeEntry = {
             id: +new Date(),
-            name: data.issue,
-            date: moment(data.dateFrom).format('YYYY-MM-DD'),
-            timeFrom: moment(data.dateFrom).format('HH:mm:ss'),
-            timeTo: moment(data.dateTo).format('HH:mm:ss'),
-            timePassed: getDateInString(+moment(data.dateTo) - +moment(data.dateFrom)),
-            project: data.project.id,
-            email: atob(localStorage.getItem('active_email')),
+            name: issue,
+            date: moment(dateFrom).format('YYYY-MM-DD'),
+            timeFrom: moment(dateFrom).format('HH:mm:ss'),
+            timeTo: moment(dateTo).format('HH:mm:ss'),
+            timePassed: getDateInString(+moment(dateTo) - +moment(dateFrom)),
+            project: projectId,
+            email: userEmail,
         };
-        arr.unshift(object);
-        client.request(returnMutationLinkAddTimeEntries(object)).then(data => {});
-        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: arr });
-        localStorage.removeItem('LT');
+        timeEntries.unshift(timeEntry);
+
+        client.request(returnMutationLinkAddTimeEntries(timeEntry)).then(_ => {});
+        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: timeEntries });
+        localStorage.removeItem('current-timer');
         this.cleanMainField();
         this.setState(state => ({
             classToggle: !state.classToggle,
@@ -150,9 +158,11 @@ class MainPage extends Component {
     }
 
     cleanMainField() {
-        this.state.time = moment()
-            .set({ hour: 0, minute: 0, second: 0 })
-            .format('YYYY-MM-DD HH:mm:ss');
+        this.setState({
+            time: moment()
+                .set({ hour: 0, minute: 0, second: 0 })
+                .format('YYYY-MM-DD HH:mm:ss'),
+        });
         this.time.timeFinish = '';
         this.time.timeStart = '';
         this.mainTaskName.value = '';
@@ -213,6 +223,7 @@ class MainPage extends Component {
         if (projectId === 'any') {
             return 'any';
         }
+
         for (let i = 0; i < this.state.arrProjects.length; i++) {
             if (this.state.arrProjects[i].id === +projectId) {
                 if (key === 'name') {
@@ -265,6 +276,7 @@ class MainPage extends Component {
                 </div>
             </div>
         ));
+
         return items;
     }
 
@@ -296,6 +308,7 @@ class MainPage extends Component {
         let date = new Date(null);
         date.setSeconds(sumTime);
         let result = date.toISOString().substr(11, 8);
+
         return result;
     }
 
@@ -322,6 +335,7 @@ class MainPage extends Component {
             let finishArr = items.filter(it => {
                 let values = [];
                 values.push(it['name']);
+
                 return (
                     JSON.stringify(values)
                         .toLowerCase()

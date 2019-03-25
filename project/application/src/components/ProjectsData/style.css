@@ -1,103 +1,101 @@
 @font-face {
-  font-family: 'Open Sans', sans-serif;
-  src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
 }
 
 .project_data_wrapper {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .project_data_wrapper table {
-  width: 100%;
-  height: 65%;
-  border-spacing: inherit;
+    width: 100%;
+    height: 65%;
+    border-spacing: inherit;
 }
 
 .project_data_wrapper table th,
 .project_data_wrapper table td {
-  text-align: left;
+    text-align: left;
 }
 
 .project_data_wrapper table th {
-  padding-bottom: 11px;
-  width: 0.6%;
+    padding-bottom: 11px;
+    width: 0.6%;
 }
 
 .project_data_wrapper table thead tr {
-  border-bottom: 1px solid white;
+    border-bottom: 1px solid white;
 }
 
 .project_data_wrapper table tbody td {
-  position: relative;
-  height: 50px;
-  font-family: 'Open Sans', sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  line-height: normal;
-  font-size: 16px;
-  color: #FFFFFF;
-  width: 1.1%;
+    position: relative;
+    height: 50px;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #ffffff;
+    width: 1.1%;
 }
 
 .project_data_wrapper table tbody tr {
-  border-bottom: 1px solid rgba(189, 189, 189, 0.11); ;
+    border-bottom: 1px solid rgba(189, 189, 189, 0.11);
 }
 
 .project_data_wrapper table tbody tr:hover {
- background-color: #2F2F2F;
+    background-color: #2f2f2f;
 }
 
 .project_data_wrapper table th {
-  font-family: 'Open Sans', sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  line-height: normal;
-  font-size: 18px;
-  text-align: left;
-  color: #FFFFFF;
-  border-bottom: 1px solid #BDBDBD;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 18px;
+    text-align: left;
+    color: #ffffff;
+    border-bottom: 1px solid #bdbdbd;
 }
 
 .project_data_wrapper .delete {
-  position: absolute;
-  top: 12px;
-  left: 90%;
-  width: 24px;
-  height: 24px;
-  background: url("../../images/icons/waste-bin.svg") no-repeat center;
-  cursor: pointer;
+    position: absolute;
+    top: 12px;
+    left: 90%;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/waste-bin.svg") no-repeat center;
+    cursor: pointer;
 }
 
 .project_data_wrapper table thead,
-.project_data_wrapper table  tbody
-{
-  display:block;
+.project_data_wrapper table tbody {
+    display: block;
 }
 
-.project_data_wrapper table  tbody
-{
-  overflow-y: scroll;
-  height:100%;
-  width: 100%;
+.project_data_wrapper table tbody {
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
 }
 
 .create_projects_modal_data_select_container .select_list .item:hover {
-  background-color: #CECECE;
+    background-color: #cecece;
 }
 
 .create_projects_modal_data .green {
-  background-color: green;
+    background-color: green;
 }
 
 .create_projects_modal_data .red {
-  background-color: red;
+    background-color: red;
 }
 
 .create_projects_modal_data .blue {
-  background-color: blue;
+    background-color: blue;
 }
 
 .create_projects_modal_data .pink {
-  background-color: pink;
+    background-color: pink;
 }

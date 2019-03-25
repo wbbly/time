@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as moment from 'moment';
 import { Doughnut } from 'react-chartjs-2';
+
 import './style.css';
 import { getTimInStringSeconds } from '../../pages/MainPage/timeInSecondsFunction';
 
@@ -36,6 +37,7 @@ class ProjectsContainer extends Component {
                 </div>
             </Link>
         ));
+
         return (
             <div className="projects_container_wrapper">
                 <div className="projects_container_projects">

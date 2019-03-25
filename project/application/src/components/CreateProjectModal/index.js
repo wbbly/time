@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import './style.css';
 import { client } from '../../requestSettings';
 import { returnMutationLinkAddProject } from '../../queries';
@@ -42,6 +43,7 @@ export default class CreateProjectModal extends Component {
                 <div className={`circle ${value}`} />
             </div>
         ));
+
         return (
             <div className="wrapper_create_projects_modal">
                 <div className="create_projects_modal_background" />

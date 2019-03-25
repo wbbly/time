@@ -1,89 +1,89 @@
 @font-face {
-  font-family: 'Open Sans', sans-serif;
-  src: url("https://fonts.googleapis.com/css?family=Open+Sans")
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
 }
 
 .data_container_team_page {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 188px;
-  right: 0;
-  background-color: #333333;
-  padding-top: 47px;
-  padding-left: 148px;
-  padding-right: 148px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 188px;
+    right: 0;
+    background-color: #333333;
+    padding-top: 47px;
+    padding-left: 148px;
+    padding-right: 148px;
 }
 
 .team_page_header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .page_name {
-  font-family: 'Open Sans', sans-serif;
-  line-height: normal;
-  font-size: 36px;
-  color: #FFFFFF;
+    font-family: "Open Sans", sans-serif;
+    line-height: normal;
+    font-size: 36px;
+    color: #ffffff;
 }
 
 .invite_container {
-  position: relative;
+    position: relative;
 }
 
 .invite_container button {
-  width: 100px;
-  height: 30px;
-  background: #27AE60;
-  border-radius: 4px;
-  font-family: 'Open Sans', sans-serif;
-  font-style: normal;
-  font-weight: bold;
-  line-height: normal;
-  font-size: 14px;
-  text-align: center;
-  color: #FFFFFF;
-  cursor: pointer;
-  margin-top: 0;
+    width: 100px;
+    height: 30px;
+    background: #27ae60;
+    border-radius: 4px;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    font-size: 14px;
+    text-align: center;
+    color: #ffffff;
+    cursor: pointer;
+    margin-top: 0;
 }
 
 .team_page_data {
-  margin-top: 74px;
+    margin-top: 74px;
 }
 
 .team_page_data table {
-  width: 100%;
-  border-spacing: inherit;
+    width: 100%;
+    border-spacing: inherit;
 }
 
 .team_page_data table th {
-  font-family: 'Open Sans', sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  line-height: normal;
-  font-size: 18px;
-  text-align: left;
-  color: #FFFFFF;
-  border-bottom: 1px solid #BDBDBD;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 18px;
+    text-align: left;
+    color: #ffffff;
+    border-bottom: 1px solid #bdbdbd;
 }
 
 .team_page_data table td {
-  height: 50px;
-  font-family: 'Open Sans', sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  line-height: normal;
-  font-size: 16px;
-  color: #FFFFFF;
+    height: 50px;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #ffffff;
 }
 
 .team_page_data table .access_container {
-  width: 83px;
-  height: 30px;
-  background: #27AE60;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 83px;
+    height: 30px;
+    background: #27ae60;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

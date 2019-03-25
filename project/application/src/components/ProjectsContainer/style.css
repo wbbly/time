@@ -11,12 +11,12 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 11px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     line-height: normal;
     font-size: 16px;
-    color: #FFFFFF;
+    color: #ffffff;
     padding-top: 10%;
-    border-bottom: 1px solid #BDBDBD;
+    border-bottom: 1px solid #bdbdbd;
 }
 
 .projects_container_wrapper .projects_container_project_data {
@@ -30,15 +30,15 @@
 }
 
 .projects_container_wrapper .projects_container_project_data:hover {
-    background-color: #4F4F4F;
+    background-color: #4f4f4f;
 }
 
 .projects_container_project_data .name,
 .projects_container_project_data .time {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     line-height: normal;
     font-size: 16px;
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 .projects_container_project_data_container {

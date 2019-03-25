@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+
 import './style.css';
 import { getDateInString } from '../../pages/MainPage/timeInSecondsFunction';
 
 class LeftBar extends Component {
+    ONE_MINUTE = 1000; // in ms
+
     componentDidMount() {
         this.setState({ arrTasks: this.props.arrTasks });
+        this.activeSmalltimer();
     }
 
     state = {
@@ -15,11 +19,11 @@ class LeftBar extends Component {
     activeSmalltimer() {
         setInterval(() => {
             this.getTimeNow();
-        }, 1000);
+        }, this.ONE_MINUTE);
     }
 
     getTimeNow() {
-        let timer = JSON.parse(localStorage.getItem('LT'));
+        let timer = JSON.parse(localStorage.getItem('current-timer'));
         if (!timer || !timer.timeStart) {
             return;
         }
@@ -66,9 +70,6 @@ class LeftBar extends Component {
                 </div>
             </div>
         );
-    }
-    componentDidMount() {
-        this.activeSmalltimer();
     }
 }
 
