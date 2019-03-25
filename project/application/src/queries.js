@@ -1,5 +1,5 @@
 export const getProjects = `{
-    project(order_by: {id: desc}) {
+    project(order_by: {name: desc}) {
         id
         name
         projectStatus
@@ -10,7 +10,7 @@ export const getProjects = `{
 
 export function getTodayTimeEntries(email) {
     return `{
-        timeTracker (where: {email: {_eq: "${email}"}},order_by: {id: desc}) {
+        timeTracker (where: {email: {_eq: "${email}"}},order_by: {date: desc, timeFrom: desc}) {
             id
             name
             date
@@ -24,7 +24,7 @@ export function getTodayTimeEntries(email) {
 
 export function getProjectTime(email) {
     return `{
-        timeTracker (where: {email: {_eq: "${email}"}},order_by: {id: desc}) {
+        timeTracker (where: {email: {_eq: "${email}"}},order_by: {date: desc, timeFrom: desc}) {
             timePassed
             project
         }
@@ -50,7 +50,7 @@ export function getProjectReport(object) {
                     {date: {_lte: "${object.to}"}},
                 ]
             },
-            order_by: {id: desc}) {
+            order_by: {date: desc, timeFrom: desc}) {
                 id
                 name
                 date
@@ -81,7 +81,7 @@ export function getDateAndTimeToGraphick(object) {
                     {date: {_lte: "${object.to}"}},
                 ]
             },
-            order_by: {id: desc}) {
+            order_by: {date: desc, timeFrom: desc}) {
             date
             timePassed
         }
@@ -96,7 +96,7 @@ export function getProjectANndTimeToGraphick(object) {
             {date: {_gte: "${object.from}"}},
             {date: {_lte: "${object.to}"}},
         ]
-        },order_by: {id: desc}) {
+        },order_by: {date: desc, timeFrom: desc}) {
             project
             timePassed
         }
