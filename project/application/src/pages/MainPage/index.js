@@ -22,7 +22,8 @@ import { AppConfig } from '../../config';
 
 class MainPage extends Component {
     ONE_MINUTE = 1000; // in ms
-    TIMER_SUBSCRIPTION;
+    TIMER_LIVE_SUBSCRIPTION;
+    TIMER_MANUAL_UPDATE_SUBSCRIPTION;
     startTimerInitiator = false;
     stopTimerInitiator = false;
     state = {
@@ -85,8 +86,8 @@ class MainPage extends Component {
             }
         });
         this.socket.on('stop-timer', data => {
-            clearInterval(this.TIMER_SUBSCRIPTION);
-            this.TIMER_SUBSCRIPTION = undefined;
+            clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
+            this.TIMER_LIVE_SUBSCRIPTION = undefined;
             const timeEntry = this.getTimeEntry(data);
             this.timerStop(timeEntry);
             if (this.stopTimerInitiator) {
@@ -135,11 +136,29 @@ class MainPage extends Component {
         if (this.time.timeStart.length === 0) {
             this.time.timeStart = +moment();
         }
-        this.TIMER_SUBSCRIPTION = setInterval(() => {
+
+        clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
+        this.TIMER_LIVE_SUBSCRIPTION = undefined;
+        this.TIMER_LIVE_SUBSCRIPTION = setInterval(() => {
             this.setState(state => ({
                 time: moment(state.time).add(1, 'second'),
             }));
         }, this.ONE_MINUTE);
+    }
+
+    timerUpdate() {
+        clearTimeout(this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
+        this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = undefined;
+
+        this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = setTimeout(() => {
+            if (this.TIMER_LIVE_SUBSCRIPTION) {
+                this.socket.emit('update-timer', {
+                    userEmail: atob(localStorage.getItem('active_email')),
+                    issue: this.mainTaskName.value,
+                    projectId: this.state.seletedProject,
+                });
+            }
+        }, 300);
     }
 
     timerStop(timeEntry) {
@@ -208,9 +227,6 @@ class MainPage extends Component {
     }
 
     getTimeNow(object, data) {
-        if (moment(this.state.time).format('HH:mm:ss') !== '00:00:00') {
-            return;
-        }
         let timer = object;
         if (!timer || !timer.timeStart) {
             return;
@@ -333,6 +349,7 @@ class MainPage extends Component {
 
     setActiveProject(item) {
         this.setState({ seletedProject: item.id });
+        this.timerUpdate();
     }
 
     getProject(id) {
@@ -401,6 +418,7 @@ class MainPage extends Component {
                             ref={input => {
                                 this.mainTaskName = input;
                             }}
+                            onKeyUp={e => this.timerUpdate()}
                         />
                         <div className="time_container">{moment(this.state.time).format('HH:mm:ss')}</div>
                         <div>{this.getProject(this.state.seletedProject)}</div>
