@@ -12,36 +12,30 @@ class AuthorisationPage extends Component {
     };
 
     login = (email, password) => {
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(user => {
-                localStorage.setItem('active_email', btoa(user.user.email));
-                this.setState({ haveToken: true });
+        fetch(AppConfig.apiURL + 'user/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
             })
-            .catch(error => {
-                this.email.classList.add('error');
-                this.password.classList.add('error');
-                setTimeout(() => {
-                    this.email.classList.remove('error');
-                    this.password.classList.remove('error');
-                }, 1000);
-            });
-
-        let callback = null;
-        let metadataRef = null;
-        firebase.auth().onAuthStateChanged(user => {
-            if (callback) {
-                metadataRef.off('value', callback);
+        }).then((res) => {
+            if (!res.ok) {
+                throw res
             }
-            if (user) {
-                metadataRef = firebase.database().ref('metadata/' + user.uid + '/refreshTime');
-                callback = snapshot => {
-                    user.getIdToken(true);
-                };
-                metadataRef.on('value', callback);
-            }
-        });
+            return res.json()
+        }).then(
+            (result) => {
+                localStorage.setItem('userObject', JSON.stringify(result.user));
+                this.setState({ haveToken: true });
+            },
+            (err) => err.text().then( errorMessage => {
+                alert(JSON.parse(errorMessage).message)
+            })
+        )
     };
 
     componentWillMount() {
@@ -53,11 +47,11 @@ class AuthorisationPage extends Component {
         return (
             <div className="wrapper_authorisation_page">
                 {checkAuthenticationOnLoginPage()}
-                {this.state.haveToken && <Redirect to={'main-page'} />};
-                <i className="page_title" />
+                {this.state.haveToken && <Redirect to={'main-page'}/>};
+                <i className="page_title"/>
                 <div className="authorisation_window">
                     <div className="input_container">
-                        <input type="text" ref={input => (this.email = input)} placeholder="Add your login..." />
+                        <input type="text" ref={input => (this.email = input)} placeholder="Add your login..."/>
                         <div className="input_title">Login</div>
                     </div>
                     <div className="input_container">
@@ -81,4 +75,5 @@ class AuthorisationPage extends Component {
         );
     }
 }
+
 export default AuthorisationPage;

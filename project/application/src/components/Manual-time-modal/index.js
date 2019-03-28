@@ -6,11 +6,11 @@ import { returnMutationUpdateTimerProject } from '../../queries';
 import { client } from '../../requestSettings';
 
 class ManualTimeModal extends Component {
-    componentDidMount() {
-        this.inputNameValue.value = this.props.editedItem.name;
-        this.inputTimeStartValue.value = this.props.editedItem.timeFrom;
-        this.inputTimeEndValue.value = this.props.editedItem.timeTo;
-    }
+
+    state = {
+        activeProject: '',
+        selectProject: false
+    };
 
     checkSeconds(object) {
         if (object.timeFrom.length === 5) {
@@ -21,6 +21,21 @@ class ManualTimeModal extends Component {
         }
 
         return object;
+    }
+
+    getIssues() {
+        console.log(this.props.arrProjects);
+        let items = this.props.arrProjects.map(item =>
+                (
+                    <div className="item_select_wrapper">
+                        <div className="issue_name margin_top_zero">{item.name}</div>
+                        <div className={`circle ${item.projectColor.name} margin_top_zero`}></div>
+                    </div>
+
+                )
+            )
+        ;
+        return items
     }
 
     changeData() {
@@ -48,7 +63,8 @@ class ManualTimeModal extends Component {
         }
         client
             .request(returnMutationUpdateTimerProject(this.props.arrTasks[index].id, this.checkSeconds(object)))
-            .then(data => {});
+            .then(data => {
+            });
 
         function createTimePassed(date, timeFrom, timeTo) {
             timeFrom = moment(`${date} ${timeFrom}`);
@@ -69,32 +85,42 @@ class ManualTimeModal extends Component {
 
             return hours + ':' + minutes + ':' + seconds;
         }
-        this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
+
+        this.props.manualTimerModalAction('TOGGLE_MODAL', {manualTimerModalToggle: false});
     }
 
     render() {
         return (
             <div className="manual_time_modal_wrapper">
-                <div className="manual_time_modal_background" />
+                <div className="manual_time_modal_background"/>
                 <div className="manual_time_modal_container">
                     <i
                         className="create_projects_modal_header_close manual_time_modal_close"
                         onClick={e => {
-                            this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
+                            this.props.manualTimerModalAction('TOGGLE_MODAL', {manualTimerModalToggle: false});
                         }}
                     />
                     <div>
                         <span>Task name:</span>
-                        <input type="text" ref={input => (this.inputNameValue = input)} />
+                        <input type="text" ref={input => (this.inputNameValue = input)}/>
                     </div>
                     <div className="manual_timer_modal_timepickers_container">
                         <div>
                             <span> Time start:</span>
-                            <input type="time" required ref={input => (this.inputTimeStartValue = input)} />
+                            <input type="time" required ref={input => (this.inputTimeStartValue = input)}/>
                         </div>
                         <div>
                             <span>Time end:</span>
-                            <input type="time" required ref={input => (this.inputTimeEndValue = input)} />
+                            <input type="time" required ref={input => (this.inputTimeEndValue = input)}/>
+                        </div>
+                        <div className=" project_select_edit_modal">
+                            <span>Project:</span>
+                            <input type="text" readOnly ref={input => (this.inputTaskName = input)}/>
+                            <div className="circle main_circle"></div>
+                            <i></i>
+                            <div className="projects_list">
+                                {this.state.selectProject && this.getIssues()}
+                            </div>
                         </div>
                     </div>
                     <div className="manual_timer_modal_button_container">
@@ -108,6 +134,14 @@ class ManualTimeModal extends Component {
                 </div>
             </div>
         );
+    }
+
+    componentDidMount() {
+        this.inputNameValue.value = this.props.editedItem.issue;
+        this.setState({activeProject: this.props.editedItem.project});
+        this.inputTimeStartValue.value = moment(this.props.editedItem.startDatetime).format('HH:mm');
+        this.inputTimeEndValue.value = moment(this.props.editedItem.endDatetime).format('HH:mm');
+        this.inputTaskName.value = this.props.editedItem.project.name
     }
 }
 

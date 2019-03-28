@@ -11,11 +11,18 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
 import { client } from '../../requestSettings';
-import { getDateAndTimeToGraphick, getProjectANndTimeToGraphick, getProjects, getUsers } from '../../queries';
+import {
+    getDateAndTimeToGraphick,
+    getProjectANndTimeToGraphick,
+    getProjects,
+    getUsers,
+    getReports
+} from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { getTimeInSecondFromString, createArrTimeAndDate, changeDate } from '../../services/timeService';
 import { checkAuthentication } from '../../services/authentication';
 import { adminOrNot } from '../../services/authentication';
+import { getUserId } from '../../services/authentication'
 import ReportsSearchBar from '../../components/reportsSearchBar';
 
 class ReportsPage extends Component {
@@ -66,18 +73,6 @@ class ReportsPage extends Component {
         },
     };
 
-    changeDoughnutChat(chartObject, dataFromServer) {
-        let newObjectChart = chartObject;
-        newObjectChart.datasets[0].data = createArrTimeAndDate(
-            dataFromServer.timeTracker,
-            'secondArr',
-            'project',
-            'timePassed'
-        );
-
-        return newObjectChart;
-    }
-
     changeGraph(object) {
         let newObject = object;
         newObject.labels = changeDate(
@@ -88,8 +83,16 @@ class ReportsPage extends Component {
         return newObject;
     }
 
+    setDataToGraph(object, objectData) {
+        let newObject = object;
+        newObject.labels = objectData.labels;
+        newObject.datasets.data = objectData.timeArr;
+        return newObject
+    }
+
     creatProJectsSumm(arr) {
-        for (let i = 0; i < arr.length; i++) {}
+        for (let i = 0; i < arr.length; i++) {
+        }
     }
 
     getProjectsNamesById(data) {
@@ -99,8 +102,8 @@ class ReportsPage extends Component {
                 return;
             }
             let projectId = +data.timeTracker[i].project;
-            data.timeTracker[i].project = _.where(this.state.projectsArr, { id: projectId })[0].name;
-            data.timeTracker[i].colorProject = _.where(this.state.projectsArr, { id: projectId })[0].colorProject;
+            data.timeTracker[i].project = _.where(this.state.projectsArr, {id: projectId})[0].name;
+            data.timeTracker[i].colorProject = _.where(this.state.projectsArr, {id: projectId})[0].colorProject;
             data.timeTracker[i].timePassed = getTimeInSecondFromString(data.timeTracker[i].timePassed);
         }
 
@@ -112,20 +115,21 @@ class ReportsPage extends Component {
         let projects = createArrTimeAndDate(arr, 'firstArr', 'project', 'timePassed');
         let time = createArrTimeAndDate(arr, 'secondArr', 'project', 'timePassed');
         for (let i = 0; i < projects.length; i++) {
-            finishArr.push({ projects: projects[i], timePassed: time[i] });
+            finishArr.push({projects: projects[i], timePassed: time[i]});
         }
 
         return finishArr;
     }
 
     handleSelect = ranges => {
-        this.setState({ selectionRange: ranges.selection });
-        this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
+        this.setState({selectionRange: ranges.selection});
+        this.props.reportsPageAction('SET_TIME', {data: ranges.selection});
         this.getDataToGraph({
             from: this.getYear(ranges.selection.startDate),
             to: this.getYear(ranges.selection.endDate),
             email: atob(localStorage.getItem('active_email')),
         });
+        this.getDataUsers(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate))
     };
 
     getYear(date) {
@@ -133,7 +137,7 @@ class ReportsPage extends Component {
     }
 
     selectUser(item) {
-        this.setState({ selectUsersHeader: item });
+        this.setState({selectUsersHeader: item});
         this.getDataToGraph({
             email: item,
             from: moment(this.props.timeRange.startDate).format('YYYY-MM-DD'),
@@ -143,18 +147,18 @@ class ReportsPage extends Component {
     }
 
     openCalendar() {
-        this.setState({ dateSelect: !this.state.dateSelect });
+        this.setState({dateSelect: !this.state.dateSelect});
     }
 
     openDateSelectUsers() {
-        this.setState({ dateSelectUsers: !this.state.dateSelectUsers });
+        this.setState({dateSelectUsers: !this.state.dateSelectUsers});
     }
 
     render() {
         return (
             <div className="wrapper_reports_page">
                 {checkAuthentication()}
-                <LeftBar />
+                <LeftBar/>
                 <div className="data_container_reports_page">
                     <div className="header">
                         <div className="header_name">Summary report</div>
@@ -162,7 +166,7 @@ class ReportsPage extends Component {
                             <div className="selects_container select_users">
                                 <div className="select_header users" onClick={e => this.openDateSelectUsers()}>
                                     <span>{this.state.selectUsersHeader}</span>
-                                    <i className="arrow_down" />
+                                    <i className="arrow_down"/>
                                 </div>
                                 {this.state.dateSelectUsers && (
                                     <div className="select_body">
@@ -181,19 +185,19 @@ class ReportsPage extends Component {
                                     {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} {' - '}
                                     {moment(this.props.timeRange.endDate).format('DD.MM.YYYY')}
                                 </span>
-                                <i className="arrow_down" />
+                                <i className="arrow_down"/>
                             </div>
                             {this.state.dateSelect && (
                                 <div className="select_body">
-                                    <DateRangePicker ranges={[this.props.timeRange]} onChange={this.handleSelect} />
+                                    <DateRangePicker ranges={[this.props.timeRange]} onChange={this.handleSelect}/>
                                 </div>
                             )}
                         </div>
                     </div>
-                    <ReportsSearchBar users={this.state.selectUersData} />
+                    <ReportsSearchBar users={this.state.selectUersData}/>
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
-                            <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
+                            <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption}/>
                         )}
                     </div>
                     <div className="projects_chart_container">
@@ -212,30 +216,81 @@ class ReportsPage extends Component {
         );
     }
 
+    getArrOfDataAndArrOfLabels(data, key1, key2) {
+        let finishData = {
+            labels: [],
+            timeArr: []
+        };
+        console.log(data, '@@@@');
+        for (let i = 0; i < data.length; i++) {
+            let date = moment(data[i][key1]).format('dddd DD.MM.YYYY');
+            let time = +moment(data[i][key2]) + moment(data[i][key1])
+            let item = finishData.labels.indexOf(date);
+            if (item === -1) {
+                finishData.labels.push(date);
+                finishData.timeArr.push(time)
+            } else {
+                finishData.timeArr[item] += time
+            }
+        }
+        console.log(finishData);
+        return finishData
+    }
+
+    changeDoughnutChat(chartObject, dataFromServer) {
+        this.setState({toggleChar: false})
+        let newObjectChart = chartObject;
+        let labels = []
+        let dataTime = []
+        for (let i = 0; i < dataFromServer.length; i++) {
+            let project = dataFromServer[i].project_id;
+            let time = +moment(dataFromServer[i].end_datetime) - +moment(dataFromServer[i].start_datetime);
+            let index = labels.indexOf(project);
+            if (index === -1) {
+                labels.push(project);
+                dataTime.push(time)
+            } else {
+                dataTime[index] += time;
+            }
+
+        }
+        newObjectChart.datasets[0].data = dataTime;
+        return newObjectChart;
+    }
+
+    getDataUsers(dateFrom, dateTo) {
+        this.setState({toggleBar: false});
+        client.request(getReports(getUserId(), undefined, dateFrom, dateTo)).then((data) => {
+            this.props.reportsPageAction('SET_LINE_GRAPH', this.setDataToGraph(this.props.dataBarChat, this.getArrOfDataAndArrOfLabels(data.user[0].timer, 'start_datetime', 'end_datetime')));
+            let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, data.user[0].timer);
+            this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', {data: obj});
+            this.setState({toggleBar: true});
+            this.setState({toggleChar: true})
+        })
+    }
+
     getDataToGraph(obj) {
+        // client.request(getReport()).then(data => {})
         client.request(getProjects).then(data => {
-            this.setState({ projectsArr: data.project });
+            this.setState({projectsArr: data.project});
             client.request(getDateAndTimeToGraphick(obj)).then(data => {
                 for (let i = 0; i < data.timeTracker.length; i++) {
                     data.timeTracker[i].timePassed = getTimeInSecondFromString(data.timeTracker[i].timePassed);
                 }
-                this.props.reportsPageAction('SET_DATA_FROM_SERVER', { data: data.timeTracker });
-                this.props.reportsPageAction('SET_LINE_GRAPH', this.changeGraph(this.props.dataBarChat));
-                this.setState({ toggleBar: true });
+                this.props.reportsPageAction('SET_DATA_FROM_SERVER', {data: data.timeTracker});
+                // this.props.reportsPageAction('SET_LINE_GRAPH', this.changeGraph(this.props.dataBarChat));
+                this.setState({toggleBar: true});
             });
             client.request(getProjectANndTimeToGraphick(obj)).then(data => {
                 data = this.getProjectsNamesById(data);
-                this.props.reportsPageAction('SET_PROJECTS', { data: this.getItemsFromArr(data.timeTracker) });
-                this.changeDoughnutChat(this.props.dataDoughnutChat, data);
-                let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, data);
-                this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-                this.setState({ toggleChar: true });
+                this.props.reportsPageAction('SET_PROJECTS', {data: this.getItemsFromArr(data.timeTracker)});
             });
         });
     }
 
     componentDidMount() {
-        this.setState({ selectUsersHeader: atob(localStorage.getItem('active_email')) });
+        // this.getDataUsers()
+        this.setState({selectUsersHeader: atob(localStorage.getItem('active_email'))});
         this.getDataToGraph({
             email: atob(localStorage.getItem('active_email')),
             from: moment(this.props.timeRange.startDate).format('YYYY-MM-DD'),
@@ -248,7 +303,7 @@ class ReportsPage extends Component {
                     arr.push(data.timeTracker[i].email);
                 }
             }
-            this.setState({ selectUersData: arr });
+            this.setState({selectUersData: arr});
         });
     }
 }

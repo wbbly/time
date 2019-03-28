@@ -13,6 +13,7 @@
     padding-top: 47px;
     padding-left: 148px;
     padding-right: 56px;
+    overflow-y: auto;
 }
 
 .projects_page_header {

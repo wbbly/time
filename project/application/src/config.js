@@ -11,4 +11,5 @@ export const AppConfig = {
         messagingSenderId: '457186337232',
     },
     socketURL: 'https://api.time.lazy-ants.com/',
+    apiURL: 'https://api.time.lazy-ants.com/',
 };

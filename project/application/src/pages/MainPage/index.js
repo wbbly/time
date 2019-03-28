@@ -16,6 +16,7 @@ import {
     getTodayTimeEntries,
     returnMutationLinkAddTimeEntries,
     returnMutationLinkDeleteTimeEntries,
+    getProjectsV2,
 } from '../../queries';
 import { checkAuthentication } from '../../services/authentication';
 import { AppConfig } from '../../config';
@@ -29,10 +30,17 @@ class MainPage extends Component {
     state = {
         classToggle: true,
         time: moment()
-            .set({ hour: 0, minute: 0, second: 0 })
+            .set({hour: 0, minute: 0, second: 0})
             .format('YYYY-MM-DD HH:mm:ss'),
         date: moment().format('YYYY-MM-DD'),
-        seletedProject: 52,
+        seletedProject: {
+            id: "f339b6b6-d044-44f3-8887-684e112f7cfd",
+            isActive: true,
+            name: "any",
+            projectColor: {
+                name: "green",
+            }
+        },
         timerStartDateTime: '',
         arrTasks: [],
         arrProjects: [],
@@ -50,18 +58,18 @@ class MainPage extends Component {
     initSocketConnection = () => {
         this.socket.on('connect', () => {
             this.socket.emit(
-                'join',
+                'join-v2',
                 {
-                    userEmail: atob(localStorage.getItem('active_email')),
+                    userId: JSON.parse(localStorage.getItem('userObject')).id,
                 },
                 _ => {
-                    this.socket.emit('check-timer', {
-                        userEmail: atob(localStorage.getItem('active_email')),
+                    this.socket.emit('check-timer-v2', {
+                        userId: JSON.parse(localStorage.getItem('userObject')).id,
                     });
                 }
             );
         });
-        this.socket.on('check-timer', data => {
+        this.socket.on('check-timer-v2', data => {
             if (this.startTimerInitiator) {
                 this.startTimerInitiator = false;
             }
@@ -71,34 +79,33 @@ class MainPage extends Component {
                     'current-timer',
                     JSON.stringify({
                         taskName: data.issue,
-                        timeStart: +moment(data.dateFrom),
-                        seletedProject: data.project.id,
+                        timeStart: +moment(data.startDatetime),
+                        seletedProject: data.project,
                     })
                 );
                 this.getTimeNow(
                     {
                         taskName: data.issue,
-                        timeStart: +moment(data.dateFrom),
-                        seletedProject: data.project.id,
+                        timeStart: +moment(data.startDatetime),
+                        seletedProject: data.project,
                     },
                     data
                 );
             }
         });
-        this.socket.on('stop-timer', data => {
+        this.socket.on('stop-timer-v2', data => {
             clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
             this.TIMER_LIVE_SUBSCRIPTION = undefined;
-            const timeEntry = this.getTimeEntry(data);
-            this.timerStop(timeEntry);
+            this.timerStop(data);
             if (this.stopTimerInitiator) {
-                this.saveTimeEntry(timeEntry);
+                // this.saveTimeEntry(timeEntry);
                 this.stopTimerInitiator = false;
             }
         });
     };
 
     projectListeToggle = () => {
-        this.setState({ projectListOpen: !this.state.projectListOpen });
+        this.setState({projectListOpen: !this.state.projectListOpen});
         document.addEventListener('click', this.closeDropdown);
     };
 
@@ -118,21 +125,21 @@ class MainPage extends Component {
     saveStartTimer(className) {
         if (className === 'control_task_time_icons play') {
             this.startTimerInitiator = true;
-            this.socket.emit('start-timer', {
-                userEmail: atob(localStorage.getItem('active_email')),
+            this.socket.emit('start-timer-v2', {
+                userId: JSON.parse(localStorage.getItem('userObject')).id,
                 issue: this.mainTaskName.value,
-                projectId: this.state.seletedProject,
+                projectId:this.state.seletedProject.id,
             });
         } else {
             this.stopTimerInitiator = true;
-            this.socket.emit('stop-timer', {
-                userEmail: atob(localStorage.getItem('active_email')),
+            this.socket.emit('stop-timer-v2', {
+                userId: JSON.parse(localStorage.getItem('userObject')).id,
             });
         }
     }
 
     timerStart() {
-        this.setState({ timerStartDateTime: +moment() });
+        this.setState({timerStartDateTime: +moment()});
         if (this.time.timeStart.length === 0) {
             this.time.timeStart = +moment();
         }
@@ -153,7 +160,7 @@ class MainPage extends Component {
         this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = setTimeout(() => {
             if (this.TIMER_LIVE_SUBSCRIPTION) {
                 this.socket.emit('update-timer', {
-                    userEmail: atob(localStorage.getItem('active_email')),
+                    userId: JSON.parse(localStorage.getItem('userObject')).id,
                     issue: this.mainTaskName.value,
                     projectId: this.state.seletedProject,
                 });
@@ -164,7 +171,7 @@ class MainPage extends Component {
     timerStop(timeEntry) {
         let timeEntries = this.props.arrTasks;
         timeEntries.unshift(timeEntry);
-        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: timeEntries });
+        this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: timeEntries});
 
         localStorage.removeItem('current-timer');
         this.cleanMainField();
@@ -173,32 +180,10 @@ class MainPage extends Component {
         }));
     }
 
-    getTimeEntry(data) {
-        const { issue, dateFrom, dateTo, project, userEmail } = data;
-
-        this.time.timeFinish = moment(dateTo).format('HH:mm:ss');
-        const timeEntry = {
-            id: +new Date(),
-            name: issue,
-            date: moment(dateFrom).format('YYYY-MM-DD'),
-            timeFrom: moment(dateFrom).format('HH:mm:ss'),
-            timeTo: moment(dateTo).format('HH:mm:ss'),
-            timePassed: getDateInString(+moment(dateTo) - +moment(dateFrom)),
-            project: project.id,
-            email: userEmail,
-        };
-
-        return timeEntry;
-    }
-
-    saveTimeEntry(timeEntry) {
-        client.request(returnMutationLinkAddTimeEntries(timeEntry)).then(_ => {});
-    }
-
     cleanMainField() {
         this.setState({
             time: moment()
-                .set({ hour: 0, minute: 0, second: 0 })
+                .set({hour: 0, minute: 0, second: 0})
                 .format('YYYY-MM-DD HH:mm:ss'),
         });
         this.time.timeFinish = '';
@@ -215,15 +200,7 @@ class MainPage extends Component {
         }
         client
             .request(returnMutationLinkDeleteTimeEntries(item))
-            .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: newArr }));
-    }
-
-    checkZero(timeInString) {
-        if (timeInString.length === 2) {
-            return timeInString + ':00';
-        } else {
-            return timeInString;
-        }
+            .then(data => this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: newArr}));
     }
 
     getTimeNow(object, data) {
@@ -236,7 +213,7 @@ class MainPage extends Component {
         let timeInArr = getDateInString(newTime).split(':');
         this.setState({
             time: moment()
-                .set({ hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2] })
+                .set({hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2]})
                 .format('YYYY-MM-DD HH:mm:ss'),
         });
         this.timerStart();
@@ -251,24 +228,12 @@ class MainPage extends Component {
             return;
         }
         this.mainTaskName.value = data.issue;
-        this.setState({ seletedProject: data.project.id });
+        this.setState({seletedProject: data.project});
     }
 
-    findProject = (projectId, key) => {
-        if (projectId === 'any') {
-            return 'any';
-        }
-
-        for (let i = 0; i < this.state.arrProjects.length; i++) {
-            if (this.state.arrProjects[i].id === +projectId) {
-                if (key === 'name') {
-                    return this.state.arrProjects[i].name;
-                } else if (key === 'color') {
-                    return this.state.arrProjects[i].colorProject;
-                }
-            }
-        }
-    };
+    getTimePassed(start, end) {
+        return getDateInString(+moment(end) - +moment(start))
+    }
 
     componentWillMount() {
         this.initSocketConnection();
@@ -276,37 +241,38 @@ class MainPage extends Component {
 
     createItems(arr) {
         let items = arr.map(item => (
-            <div className="ul" key={item.id}>
+            <div className="ul" key={+moment()}>
                 <div className="li">
                     <div className="name_container">
-                        <div className="name">{item.name}</div>
+                        <div className="name">{item.issue}</div>
                         <div className="project_name">
-                            <span className={`circle ${this.findProject(item.project, 'color')}`} />
-                            <span>{this.findProject(item.project, 'name')}</span>
+                            <span className={`circle ${item.project.projectColor.name}`}/>
+                            <span>{item.project.name}</span>
                         </div>
                     </div>
                     <div className="time_container_history">
                         <div className="time_now">
-                            <div>{this.checkZero(item.timeFrom.slice(0, -3))}</div>-{' '}
-                            <div>{this.checkZero(item.timeTo.slice(0, -3))}</div>
+                            <div>{moment(item.startDatetime).format('HH:mm')}</div>
+                            -{' '}
+                            <div>{moment(item.endDatetime).format('HH:mm')}</div>
                         </div>
-                        <div className="timePassed">{item.timePassed}</div>
+                        <div className="timePassed">{this.getTimePassed(item.startDatetime, item.endDatetime)}</div>
                         {moment(this.state.time).format('HH:mm:ss') === '00:00:00' && (
                             <i
                                 className="small_play item_button"
                                 onClick={e => {
-                                    this.saveOldTask(item.name, item.project);
+                                    this.saveOldTask(item.issue, item.project.id);
                                 }}
                             />
                         )}
                         <i
                             className="edit_button item_button"
                             onClick={e => {
-                                this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
-                                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
+                                this.props.addTasksAction('SET_EDITED_ITEM', {editedItem: item});
+                                this.props.manualTimerModalAction('TOGGLE_MODAL', {manualTimerModalToggle: true});
                             }}
                         />
-                        <i className="cancel item_button" onClick={e => this.deleteFromArr(item)} />
+                        <i className="cancel item_button" onClick={e => this.deleteFromArr(item)}/>
                     </div>
                 </div>
             </div>
@@ -317,7 +283,7 @@ class MainPage extends Component {
 
     saveOldTask(name, project) {
         this.mainTaskName.value = name;
-        this.setState({ seletedProject: +project });
+        this.setState({seletedProject: +project});
         this.saveStartTimer('control_task_time_icons play');
     }
 
@@ -335,34 +301,26 @@ class MainPage extends Component {
     getSumTime(arr) {
         let sumTime = 0;
         for (let i = 0; i < arr.length; i++) {
-            let hms = arr[i].timePassed;
-            let a = hms.split(':');
-            let seconds = +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
-            sumTime += seconds;
+            sumTime += +moment(arr[i].endDatetime) - +moment(arr[i].startDatetime)
         }
-        let date = new Date(null);
-        date.setSeconds(sumTime);
-        let result = date.toISOString().substr(11, 8);
-
-        return result;
+         return getDateInString(sumTime);
     }
 
     setActiveProject(item) {
-        this.setState({ seletedProject: item.id });
+        this.setState({seletedProject: item});
         this.timerUpdate();
     }
 
-    getProject(id) {
-        for (let i = 0; i < this.state.arrProjects.length; i++) {
-            if (this.state.arrProjects[i].id === id) {
-                return (
-                    <div className="active_project">
-                        <span className={`projects_modal_item_circle ${this.state.arrProjects[i].colorProject}`} />
-                        <span className="projects_modal_item_name">{this.state.arrProjects[i].name}</span>
-                    </div>
-                );
-            }
+    getProject(activeProject) {
+        if (typeof activeProject !== 'object') {
+            return
         }
+        return (
+            <div className="active_project">
+                <span className={`projects_modal_item_circle ${activeProject.projectColor.name || 'blue'}`}/>
+                <span className="projects_modal_item_name">{activeProject.name}</span>
+            </div>
+        );
     }
 
     findUser(items, searchText, event) {
@@ -378,20 +336,20 @@ class MainPage extends Component {
                         .indexOf(searchText) > -1
                 );
             });
-            this.setState({ arrProjectsToModal: finishArr });
+            this.setState({arrProjectsToModal: finishArr});
         } else {
-            this.setState({ arrProjectsToModal: this.state.arrProjectsEtalon });
+            this.setState({arrProjectsToModal: this.state.arrProjectsEtalon});
         }
     }
 
     render() {
-        const { classToggle } = this.state;
+        const {classToggle} = this.state;
         const buttonState = classToggle ? 'play' : 'stop';
         const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
         let timeTrackerWrapperItems = createArayOfArrays(this.props.arrTasks).map(arraysItem => (
             <div className="time_tracker_wrapper">
                 <div className="header">
-                    <div className="date">{this.getDate(arraysItem[0].date)}</div>
+                    <div className="date">{moment(arraysItem[0].startDatetime).format('DD.MM.YYYY')}</div>
                     <div className="allTime">Total time: {this.getSumTime(arraysItem)}</div>
                 </div>
                 {this.createItems(arraysItem)}
@@ -406,9 +364,10 @@ class MainPage extends Component {
                         manualTimerModalAction={this.props.manualTimerModalAction}
                         arrTasks={this.props.arrTasks}
                         editedItem={this.props.editedItem}
+                        arrProjects = {this.state.arrProjectsEtalon}
                     />
                 )}
-                <LeftBar />
+                <LeftBar/>
                 <div className="data_container">
                     <div className="add_task_container">
                         <input
@@ -451,7 +410,7 @@ class MainPage extends Component {
                                                 className="projects_modal_item"
                                                 onClick={e => this.setActiveProject(item)}
                                             >
-                                                <div className={`projects_modal_item_circle ${item.colorProject}`} />
+                                                <div className={`projects_modal_item_circle ${item.projectColor.name}`}/>
                                                 <div className="projects_modal_item_name">{item.name}</div>
                                             </div>
                                         ))}
@@ -474,12 +433,14 @@ class MainPage extends Component {
 
     componentDidMount() {
         client
-            .request(getTodayTimeEntries(atob(localStorage.getItem('active_email'))))
-            .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timeTracker }));
-        client.request(getProjects).then(data => {
-            this.setState({ arrProjects: data.project });
-            this.setState({ arrProjectsToModal: data.project });
-            this.setState({ arrProjectsEtalon: data.project });
+            .request(getTodayTimeEntries(JSON.parse(localStorage.getItem('userObject')).id))
+            .then(data => {
+                this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: data.timerV2})
+            });
+        client.request(getProjectsV2).then(data => {
+            this.setState({arrProjects: data.projectV2});
+            this.setState({arrProjectsToModal: data.projectV2});
+            this.setState({arrProjectsEtalon: data.projectV2});
         });
     }
 

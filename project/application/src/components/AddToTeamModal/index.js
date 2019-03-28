@@ -1,45 +1,54 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-
 import './style.css';
-import { returnMutationLinkAddUser } from '../../queries';
-import { client } from '../../requestSettings';
+import { AppConfig } from '../../config';
+
+const ROLE_USER = 'e1f1f00c-abee-448c-b65d-cdd51bb042f1';
+const ROLE_ADMIN = '449bca08-9f3d-4956-a38e-7b5de27bdc73';
 
 class AddToTeamModal extends Component {
     addUser = (email, password, userName) => {
-        this.props.programersArr.unshift({
-            id: +new Date(),
-            name: userName.value,
-            email: email.value,
-            status: 0,
-        });
-
-        client
-            .request(
-                returnMutationLinkAddUser({
+        fetch(AppConfig.apiURL + 'user/register', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+                roleId: ROLE_USER
+            })
+        }).then((res) => {
+            console.log(res);
+            if (!res.ok) {
+                throw res
+            }
+            return res.json()
+        }).then(
+            (result) => {
+                this.props.programersArr.unshift({
+                    id: +new Date(),
                     name: userName.value,
                     email: email.value,
-                    status: 0,
-                })
-            )
-            .then(data => {});
+                    role: {title: 'ROLE_USER'},
+                });
+            },
+            (err) => err.text().then(errorMessage => {
+                alert(JSON.parse(errorMessage).message)
+            })
+        )
 
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(email.value, password.value)
-            .catch(_ => {});
-        this.closeModal();
     };
 
     closeModal() {
-        this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: false });
+        this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', {createUserModal: false});
     }
 
     render() {
         return (
             <div className="add_to_team_modal_wrapper">
                 <div className="add_to_team_modal_data">
-                    <i onClick={e => this.closeModal()} />
+                    <i onClick={e => this.closeModal()}/>
                     <div className="add_to_team_modal_input_container">
                         <div className="add_to_team_modal_input_title">Username</div>
                         <input
@@ -70,10 +79,13 @@ class AddToTeamModal extends Component {
                             className="add_to_team_modal_input"
                         />
                     </div>
-                    <button onClick={e => this.addUser(this.email, this.password, this.userName)}>Add user</button>
+                    <button onClick={e => this.addUser(this.email.value, this.password.value, this.userName.value)}>Add
+                        user
+                    </button>
                 </div>
             </div>
         );
     }
 }
+
 export default AddToTeamModal;

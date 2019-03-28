@@ -9,6 +9,7 @@ import { getTeamData } from '../../queries';
 import teamPageAction from '../../actions/TeamPageAction';
 import { checkAuthentication } from '../../services/authentication';
 import { AppConfig } from '../../config';
+import { adminOrNot } from '../../services/authentication'
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Access'];
@@ -36,9 +37,9 @@ class TeamPage extends Component {
         const headerItemsElements = this.headerItems.map(element => <th key={element}>{element}</th>);
         const items = programersArr.map(element => (
             <tr key={element.id}>
-                <td>{element.name}</td>
+                <td>{element.username}</td>
                 <td>{element.email}</td>
-                <td>{!!element.status ? <div className="access_container">Admin</div> : <div>-</div>}</td>
+                <td><div className="access_container">{element.role.title}</div></td>
             </tr>
         ));
 
@@ -56,7 +57,7 @@ class TeamPage extends Component {
                     <div className="team_page_header">
                         <div className="page_name">Team</div>
                         <div className="invite_container">
-                            {this.canAddToTeam(this.state.activeEmail) && (
+                            {adminOrNot() && (
                                 <button
                                     onClick={e => {
                                         this.openAddUserModal();
@@ -83,7 +84,8 @@ class TeamPage extends Component {
     componentDidMount() {
         this.setState({ activeEmail: localStorage.getItem('active_email') });
         client.request(getTeamData).then(data => {
-            this.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.team });
+            console.log(data.user);
+            this.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.user});
         });
     }
 }

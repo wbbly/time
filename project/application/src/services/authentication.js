@@ -4,7 +4,7 @@ import React from 'react';
 import { AppConfig } from '../config';
 
 export function checkAuthentication() {
-    if (!!localStorage.getItem('active_email')) {
+    if (!!localStorage.getItem('userObject')) {
         return;
     } else {
         return <Redirect to={'/'} />;
@@ -12,7 +12,7 @@ export function checkAuthentication() {
 }
 
 export function checkAuthenticationOnLoginPage() {
-    if (!!localStorage.getItem('active_email')) {
+    if (!!localStorage.getItem('userObject')) {
         return <Redirect to={'/main-page'} />;
     } else {
         return;
@@ -20,11 +20,18 @@ export function checkAuthenticationOnLoginPage() {
 }
 
 export function adminOrNot(email = '') {
-    email = atob(email);
-
-    if (AppConfig.adminEmails.indexOf(email) !== -1) {
-        return true;
+    let object = JSON.parse(localStorage.getItem('userObject'))
+    if (object.role.title === 'ROLE_ADMIN') {
+        return true
     } else {
-        return false;
+        return false
     }
+}
+
+export function  getUserId() {
+    return (JSON.parse(localStorage.getItem('userObject')) || {}).id
+}
+
+export function  getUserAdminRight() {
+    return (JSON.parse(localStorage.getItem('userObject')) || {}).role.title
 }

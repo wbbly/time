@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './style.css';
 import { client } from '../../requestSettings';
 import { returnMutationLinkDeleteProject } from '../../queries';
-import { getTimInStringSeconds } from '../../pages/MainPage/timeInSecondsFunction';
+import { getDateInString } from '../../pages/MainPage/timeInSecondsFunction';
 
 export default class ProjectData extends Component {
     deleteFromArr(item, arr) {
@@ -28,21 +28,12 @@ export default class ProjectData extends Component {
                 key: 2,
                 value: 'Time',
             },
-            {
-                key: 3,
-                value: '',
-            },
         ];
         const tableInfoElements = this.props.tableInfo.map(item => (
             <tr key={item.id}>
                 <td>{item.name}</td>
                 <td>
-                    {this.props.projectsTime[item.id] ? getTimInStringSeconds(this.props.projectsTime[item.id]) : ' - '}
-                </td>
-                <td>
-                    {this.props.canAddToTeam(this.props.activeEmail) && (
-                        <i className="delete" onClick={e => this.deleteFromArr(item, this.props.tableInfo)} />
-                    )}
+                    {getDateInString(item.totalTime)}
                 </td>
             </tr>
         ));

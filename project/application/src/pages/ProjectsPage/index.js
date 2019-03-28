@@ -8,9 +8,8 @@ import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
 import projectsPageAction from '../../actions/ProjectsActions';
 import { client } from '../../requestSettings';
-import { getProjects, getProjectTime } from '../../queries';
-import { checkAuthentication } from '../../services/authentication';
-import { timeInSeconds } from '../../pages/MainPage/timeInSecondsFunction';
+import {  getProjectsV2ProjectPageAdmin, getProjectsV2ProjectPageUser } from '../../queries';
+import { checkAuthentication, getUserAdminRight, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 class ProjectsPage extends Component {
@@ -32,19 +31,6 @@ class ProjectsPage extends Component {
         } else {
             return false;
         }
-    }
-
-    gatTimeSpentOfProject(projectsTime) {
-        let obj = {};
-        for (let i = 0; i < projectsTime.length; i++) {
-            if (obj[projectsTime[i].project]) {
-                obj[projectsTime[i].project] = obj[projectsTime[i].project] + timeInSeconds(projectsTime[i].timePassed);
-            } else {
-                obj[projectsTime[i].project] = 0;
-                obj[projectsTime[i].project] = obj[projectsTime[i].project] + timeInSeconds(projectsTime[i].timePassed);
-            }
-        }
-        this.setState({ projectsTime: obj });
     }
 
     render() {
@@ -91,20 +77,18 @@ class ProjectsPage extends Component {
     }
 
     componentDidMount() {
-        client.request(getProjectTime(atob(localStorage.getItem('active_email')))).then(data => {
-            this.gatTimeSpentOfProject(data.timeTracker);
-        });
-        client.request(getProjects).then(data => {
-            this.setState({ etalonArr: data.project });
-            this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.project });
-        });
+        if (getUserAdminRight() === 'ROLE_ADMIN') {
+            client.request(getProjectsV2ProjectPageAdmin).then(data => {
+                this.setState({etalonArr: data.projectV2});
+                this.props.projectsPageAction('CREATE_PROJECT', {toggle: false, tableData: data.projectV2});
+            });
+        } else {
+            client.request(getProjectsV2ProjectPageUser(getUserId())).then(data => {
+                this.setState({etalonArr: data.projectV2});
+                this.props.projectsPageAction('CREATE_PROJECT', {toggle: false, tableData: data.projectV2});
+            });
+        }
         this.setState({ activeEmail: localStorage.getItem('active_email') });
-    }
-
-    componentWillUnmount() {
-        client.request(getProjects).then(data => {
-            this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.project });
-        });
     }
 }
 
