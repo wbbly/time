@@ -91,7 +91,6 @@ class TeamPage extends Component {
 
     getDataFromServer() {
         client.request(getTeamData).then(data => {
-            console.log(data);
             this.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.user });
         });
     }

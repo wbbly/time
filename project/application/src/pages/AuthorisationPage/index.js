@@ -6,7 +6,7 @@ import * as firebase from 'firebase';
 import './index.css';
 import { checkAuthenticationOnLoginPage } from '../../services/authentication';
 import { AppConfig } from '../../config';
-import RegisterModal from '../../components/RegisterModal'
+import RegisterModal from '../../components/RegisterModal';
 import toggleRegisterModal from '../../actions/AuthorisationPageAction';
 
 class AuthorisationPage extends Component {
@@ -36,7 +36,7 @@ class AuthorisationPage extends Component {
             .then(
                 result => {
                     localStorage.setItem('userObject', JSON.stringify(result.user));
-                    this.setState({haveToken: true});
+                    this.setState({ haveToken: true });
                 },
                 err =>
                     err.text().then(errorMessage => {
@@ -54,13 +54,14 @@ class AuthorisationPage extends Component {
         return (
             <div className="wrapper_authorisation_page">
                 {checkAuthenticationOnLoginPage()}
-                {this.props.authorisationPageReducer && < RegisterModal
-                    toggleRegisterModal={this.props.toggleRegisterModal}/>}
-                {this.state.haveToken && <Redirect to={'main-page'}/>};
-                <i className="page_title"/>
+                {this.props.authorisationPageReducer && (
+                    <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />
+                )}
+                {this.state.haveToken && <Redirect to={'main-page'} />};
+                <i className="page_title" />
                 <div className="authorisation_window">
                     <div className="input_container">
-                        <input type="text" ref={input => (this.email = input)} placeholder="Add your login..."/>
+                        <input type="text" ref={input => (this.email = input)} placeholder="Add your login..." />
                         <div className="input_title">Login</div>
                     </div>
                     <div className="input_container">
@@ -94,9 +95,8 @@ class AuthorisationPage extends Component {
 }
 
 const mapStateToProps = store => {
-    console.log(store);
     return {
-        authorisationPageReducer: store.authorisationPageReducer.registerModal
+        authorisationPageReducer: store.authorisationPageReducer.registerModal,
     };
 };
 
@@ -106,4 +106,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect (mapStateToProps, mapDispatchToProps)(AuthorisationPage);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AuthorisationPage);

@@ -18,7 +18,7 @@ import {
     returnMutationLinkDeleteTimeEntries,
     getProjectsV2,
 } from '../../queries';
-import { checkAuthentication, getUserId} from '../../services/authentication';
+import { checkAuthentication, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 class MainPage extends Component {
@@ -204,7 +204,6 @@ class MainPage extends Component {
     }
 
     getTimeNow(object, data) {
-        console.log(object, 'obj');
         let timer = object;
         if (!timer || !timer.timeStart) {
             return;
@@ -231,7 +230,6 @@ class MainPage extends Component {
         if (!data) {
             return;
         }
-        console.log(data, '!!!!');
         if (!!this.mainTaskName) {
             this.mainTaskName.value = data.issue;
         }

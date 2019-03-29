@@ -39,9 +39,9 @@ class RegisterModal extends Component {
         return (
             <div className="register_modal_wrapper">
                 <div className="add_to_team_modal_data">
-                    <i onClick={e =>
-                        this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: false })
-                    }/>
+                    <i
+                        onClick={e => this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: false })}
+                    />
                     <div className="add_to_team_modal_input_container">
                         <div className="add_to_team_modal_input_title">Email</div>
                         <input

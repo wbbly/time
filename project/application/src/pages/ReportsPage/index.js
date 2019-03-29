@@ -220,7 +220,6 @@ class ReportsPage extends Component {
             labels: [],
             timeArr: [],
         };
-        console.log(data, '@@@@');
         for (let i = 0; i < data.length; i++) {
             let date = moment(data[i][key1]).format('dddd DD.MM.YYYY');
             let time = +moment(data[i][key2]) + moment(data[i][key1]);
@@ -232,7 +231,6 @@ class ReportsPage extends Component {
                 finishData.timeArr[item] += time;
             }
         }
-        console.log(finishData);
         return finishData;
     }
 

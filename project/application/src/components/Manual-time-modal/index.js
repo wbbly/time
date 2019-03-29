@@ -24,7 +24,6 @@ class ManualTimeModal extends Component {
     }
 
     getIssues() {
-        console.log(this.props.arrProjects);
         let items = this.props.arrProjects.map(item => (
             <div
                 className="item_select_wrapper"
@@ -44,7 +43,6 @@ class ManualTimeModal extends Component {
     }
 
     changeData() {
-        console.log(this.state.activeItem);
         let changedItem = JSON.parse(JSON.stringify(this.state.activeItem));
         let startDateArr = this.inputTimeStartValue.value.split(':');
         let endDateArr = this.inputTimeEndValue.value.split(':');
@@ -66,7 +64,6 @@ class ManualTimeModal extends Component {
 
         changedItem.project = this.state.activeProject;
         changedItem.issue = this.inputNameValue.value;
-        console.log(changedItem);
 
         client
             .request(

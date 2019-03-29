@@ -20,7 +20,6 @@ class AddToTeamModal extends Component {
             }),
         })
             .then(res => {
-                console.log(res);
                 if (!res.ok) {
                     throw res;
                 }
@@ -34,7 +33,6 @@ class AddToTeamModal extends Component {
                         email: this.email.value,
                         role: { title: 'ROLE_USER' },
                     });
-                    console.log(this.props.programersArr, '1212');
                     // this.props.getData();
                     this.closeModal();
                 },

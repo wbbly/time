@@ -22,7 +22,7 @@ export function checkAuthenticationOnLoginPage() {
 export function adminOrNot(email = '') {
     let object = JSON.parse(localStorage.getItem('userObject'));
     if (!object) {
-        return
+        return;
     }
     if (object.role.title === 'ROLE_ADMIN') {
         return true;
@@ -34,7 +34,7 @@ export function adminOrNot(email = '') {
 export function getUserId() {
     let storageItem = JSON.parse(localStorage.getItem('userObject'));
     if (!storageItem) {
-        return
+        return;
     }
     return storageItem.id;
 }
@@ -42,7 +42,7 @@ export function getUserId() {
 export function getUserAdminRight() {
     let storageItem = JSON.parse(localStorage.getItem('userObject'));
     if (!storageItem) {
-        return
+        return;
     }
     return storageItem.role.title;
 }
