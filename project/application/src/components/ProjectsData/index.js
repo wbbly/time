@@ -32,9 +32,7 @@ export default class ProjectData extends Component {
         const tableInfoElements = this.props.tableInfo.map(item => (
             <tr key={item.id}>
                 <td>{item.name}</td>
-                <td>
-                    {getDateInString(item.totalTime)}
-                </td>
+                <td>{getDateInString(item.totalTime)}</td>
             </tr>
         ));
         const tableHeaderElements = tableHeader.map(item => <th key={item.key}>{item.value}</th>);

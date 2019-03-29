@@ -30,16 +30,16 @@ class MainPage extends Component {
     state = {
         classToggle: true,
         time: moment()
-            .set({hour: 0, minute: 0, second: 0})
+            .set({ hour: 0, minute: 0, second: 0 })
             .format('YYYY-MM-DD HH:mm:ss'),
         date: moment().format('YYYY-MM-DD'),
         seletedProject: {
-            id: "f339b6b6-d044-44f3-8887-684e112f7cfd",
+            id: 'f339b6b6-d044-44f3-8887-684e112f7cfd',
             isActive: true,
-            name: "any",
+            name: 'any',
             projectColor: {
-                name: "green",
-            }
+                name: 'green',
+            },
         },
         timerStartDateTime: '',
         arrTasks: [],
@@ -105,7 +105,7 @@ class MainPage extends Component {
     };
 
     projectListeToggle = () => {
-        this.setState({projectListOpen: !this.state.projectListOpen});
+        this.setState({ projectListOpen: !this.state.projectListOpen });
         document.addEventListener('click', this.closeDropdown);
     };
 
@@ -122,13 +122,13 @@ class MainPage extends Component {
         }
     };
 
-    saveStartTimer(className) {
+    saveStartTimer(className, setProjectId = this.state.seletedProject.id) {
         if (className === 'control_task_time_icons play') {
             this.startTimerInitiator = true;
             this.socket.emit('start-timer-v2', {
                 userId: JSON.parse(localStorage.getItem('userObject')).id,
                 issue: this.mainTaskName.value,
-                projectId:this.state.seletedProject.id,
+                projectId: setProjectId,
             });
         } else {
             this.stopTimerInitiator = true;
@@ -139,7 +139,7 @@ class MainPage extends Component {
     }
 
     timerStart() {
-        this.setState({timerStartDateTime: +moment()});
+        this.setState({ timerStartDateTime: +moment() });
         if (this.time.timeStart.length === 0) {
             this.time.timeStart = +moment();
         }
@@ -171,19 +171,19 @@ class MainPage extends Component {
     timerStop(timeEntry) {
         let timeEntries = this.props.arrTasks;
         timeEntries.unshift(timeEntry);
-        this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: timeEntries});
+        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: timeEntries });
 
         localStorage.removeItem('current-timer');
-        this.cleanMainField();
         this.setState(state => ({
             classToggle: !state.classToggle,
         }));
+        this.cleanMainField();
     }
 
     cleanMainField() {
         this.setState({
             time: moment()
-                .set({hour: 0, minute: 0, second: 0})
+                .set({ hour: 0, minute: 0, second: 0 })
                 .format('YYYY-MM-DD HH:mm:ss'),
         });
         this.time.timeFinish = '';
@@ -200,20 +200,21 @@ class MainPage extends Component {
         }
         client
             .request(returnMutationLinkDeleteTimeEntries(item))
-            .then(data => this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: newArr}));
+            .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: newArr }));
     }
 
     getTimeNow(object, data) {
+        console.log(object, 'obj');
         let timer = object;
         if (!timer || !timer.timeStart) {
             return;
         }
         this.time.timeStart = timer.timeStart;
         let newTime = +moment() - timer.timeStart;
-        let timeInArr = getDateInString(newTime).split(':');
+        let timeInArr = moment(newTime + 1000).utc().format('HH:mm:ss').split(':');
         this.setState({
             time: moment()
-                .set({hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2]})
+                .set({ hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2] })
                 .format('YYYY-MM-DD HH:mm:ss'),
         });
         this.timerStart();
@@ -227,16 +228,19 @@ class MainPage extends Component {
         if (!data) {
             return;
         }
-        this.mainTaskName.value = data.issue;
-        this.setState({seletedProject: data.project});
+        console.log(data, '!!!!');
+        if (!!this.mainTaskName ) {
+            this.mainTaskName.value = data.issue;
+        }
+        this.setState({ seletedProject: data.project });
     }
 
     getTimePassed(start, end) {
-        return getDateInString(+moment(end) - +moment(start))
+        return getDateInString(+moment(end) - +moment(start));
     }
 
     componentWillMount() {
-        this.initSocketConnection();
+
     }
 
     createItems(arr) {
@@ -246,14 +250,13 @@ class MainPage extends Component {
                     <div className="name_container">
                         <div className="name">{item.issue}</div>
                         <div className="project_name">
-                            <span className={`circle ${item.project.projectColor.name}`}/>
+                            <span className={`circle ${item.project.projectColor.name}`} />
                             <span>{item.project.name}</span>
                         </div>
                     </div>
                     <div className="time_container_history">
                         <div className="time_now">
-                            <div>{moment(item.startDatetime).format('HH:mm')}</div>
-                            -{' '}
+                            <div>{moment(item.startDatetime).format('HH:mm')}</div>-{' '}
                             <div>{moment(item.endDatetime).format('HH:mm')}</div>
                         </div>
                         <div className="timePassed">{this.getTimePassed(item.startDatetime, item.endDatetime)}</div>
@@ -261,18 +264,18 @@ class MainPage extends Component {
                             <i
                                 className="small_play item_button"
                                 onClick={e => {
-                                    this.saveOldTask(item.issue, item.project.id);
+                                    this.saveOldTask(item.issue, item);
                                 }}
                             />
                         )}
                         <i
                             className="edit_button item_button"
                             onClick={e => {
-                                this.props.addTasksAction('SET_EDITED_ITEM', {editedItem: item});
-                                this.props.manualTimerModalAction('TOGGLE_MODAL', {manualTimerModalToggle: true});
+                                this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
                             }}
                         />
-                        <i className="cancel item_button" onClick={e => this.deleteFromArr(item)}/>
+                        <i className="cancel item_button" onClick={e => this.deleteFromArr(item)} />
                     </div>
                 </div>
             </div>
@@ -281,10 +284,10 @@ class MainPage extends Component {
         return items;
     }
 
-    saveOldTask(name, project) {
+    saveOldTask(name, item) {
         this.mainTaskName.value = name;
-        this.setState({seletedProject: +project});
-        this.saveStartTimer('control_task_time_icons play');
+        this.setState({ seletedProject: item.project});
+        this.saveStartTimer('control_task_time_icons play', item.project.id);
     }
 
     getDate(date) {
@@ -301,23 +304,23 @@ class MainPage extends Component {
     getSumTime(arr) {
         let sumTime = 0;
         for (let i = 0; i < arr.length; i++) {
-            sumTime += +moment(arr[i].endDatetime) - +moment(arr[i].startDatetime)
+            sumTime += +moment(arr[i].endDatetime) - +moment(arr[i].startDatetime);
         }
-         return getDateInString(sumTime);
+        return getDateInString(sumTime);
     }
 
     setActiveProject(item) {
-        this.setState({seletedProject: item});
+        this.setState({ seletedProject: item });
         this.timerUpdate();
     }
 
     getProject(activeProject) {
         if (typeof activeProject !== 'object') {
-            return
+            return;
         }
         return (
             <div className="active_project">
-                <span className={`projects_modal_item_circle ${activeProject.projectColor.name || 'blue'}`}/>
+                <span className={`projects_modal_item_circle ${activeProject.projectColor.name || 'blue'}`} />
                 <span className="projects_modal_item_name">{activeProject.name}</span>
             </div>
         );
@@ -336,14 +339,14 @@ class MainPage extends Component {
                         .indexOf(searchText) > -1
                 );
             });
-            this.setState({arrProjectsToModal: finishArr});
+            this.setState({ arrProjectsToModal: finishArr });
         } else {
-            this.setState({arrProjectsToModal: this.state.arrProjectsEtalon});
+            this.setState({ arrProjectsToModal: this.state.arrProjectsEtalon });
         }
     }
 
     render() {
-        const {classToggle} = this.state;
+        const { classToggle } = this.state;
         const buttonState = classToggle ? 'play' : 'stop';
         const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
         let timeTrackerWrapperItems = createArayOfArrays(this.props.arrTasks).map(arraysItem => (
@@ -364,10 +367,12 @@ class MainPage extends Component {
                         manualTimerModalAction={this.props.manualTimerModalAction}
                         arrTasks={this.props.arrTasks}
                         editedItem={this.props.editedItem}
-                        arrProjects = {this.state.arrProjectsEtalon}
+                        arrProjects={this.state.arrProjectsEtalon}
+                        getTimeForMainPage={this.getTimeForMainPage}
+                        addTasksAction = {this.props.addTasksAction}
                     />
                 )}
-                <LeftBar/>
+                <LeftBar />
                 <div className="data_container">
                     <div className="add_task_container">
                         <input
@@ -410,7 +415,9 @@ class MainPage extends Component {
                                                 className="projects_modal_item"
                                                 onClick={e => this.setActiveProject(item)}
                                             >
-                                                <div className={`projects_modal_item_circle ${item.projectColor.name}`}/>
+                                                <div
+                                                    className={`projects_modal_item_circle ${item.projectColor.name}`}
+                                                />
                                                 <div className="projects_modal_item_name">{item.name}</div>
                                             </div>
                                         ))}
@@ -432,15 +439,18 @@ class MainPage extends Component {
     }
 
     componentDidMount() {
-        client
-            .request(getTodayTimeEntries(JSON.parse(localStorage.getItem('userObject')).id))
-            .then(data => {
-                this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: data.timerV2})
-            });
+        this.initSocketConnection();
+        this.getTimeForMainPage();
         client.request(getProjectsV2).then(data => {
-            this.setState({arrProjects: data.projectV2});
-            this.setState({arrProjectsToModal: data.projectV2});
-            this.setState({arrProjectsEtalon: data.projectV2});
+            this.setState({ arrProjects: data.projectV2 });
+            this.setState({ arrProjectsToModal: data.projectV2 });
+            this.setState({ arrProjectsEtalon: data.projectV2 });
+        });
+    }
+
+    getTimeForMainPage() {
+        client.request(getTodayTimeEntries(JSON.parse(localStorage.getItem('userObject')).id)).then(data => {
+            this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
         });
     }
 

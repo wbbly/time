@@ -7,8 +7,8 @@ export function timeInSeconds(string) {
 }
 
 export function getDateInString(seconds) {
-    if (!seconds){
-        return '-'
+    if (!seconds) {
+        return '-';
     }
     let date = new Date(null);
     date.setMilliseconds(seconds);

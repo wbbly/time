@@ -20,18 +20,18 @@ export function checkAuthenticationOnLoginPage() {
 }
 
 export function adminOrNot(email = '') {
-    let object = JSON.parse(localStorage.getItem('userObject'))
+    let object = JSON.parse(localStorage.getItem('userObject'));
     if (object.role.title === 'ROLE_ADMIN') {
-        return true
+        return true;
     } else {
-        return false
+        return false;
     }
 }
 
-export function  getUserId() {
-    return (JSON.parse(localStorage.getItem('userObject')) || {}).id
+export function getUserId() {
+    return (JSON.parse(localStorage.getItem('userObject')) || {}).id;
 }
 
-export function  getUserAdminRight() {
-    return (JSON.parse(localStorage.getItem('userObject')) || {}).role.title
+export function getUserAdminRight() {
+    return (JSON.parse(localStorage.getItem('userObject')) || {}).role.title;
 }

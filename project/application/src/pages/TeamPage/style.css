@@ -13,6 +13,7 @@
     padding-top: 47px;
     padding-left: 148px;
     padding-right: 148px;
+    overflow-y: auto;
 }
 
 .team_page_header {

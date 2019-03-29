@@ -8,7 +8,7 @@ import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
 import projectsPageAction from '../../actions/ProjectsActions';
 import { client } from '../../requestSettings';
-import {  getProjectsV2ProjectPageAdmin, getProjectsV2ProjectPageUser } from '../../queries';
+import { getProjectsV2ProjectPageAdmin, getProjectsV2ProjectPageUser } from '../../queries';
 import { checkAuthentication, getUserAdminRight, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
@@ -79,13 +79,13 @@ class ProjectsPage extends Component {
     componentDidMount() {
         if (getUserAdminRight() === 'ROLE_ADMIN') {
             client.request(getProjectsV2ProjectPageAdmin).then(data => {
-                this.setState({etalonArr: data.projectV2});
-                this.props.projectsPageAction('CREATE_PROJECT', {toggle: false, tableData: data.projectV2});
+                this.setState({ etalonArr: data.projectV2 });
+                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
             });
         } else {
             client.request(getProjectsV2ProjectPageUser(getUserId())).then(data => {
-                this.setState({etalonArr: data.projectV2});
-                this.props.projectsPageAction('CREATE_PROJECT', {toggle: false, tableData: data.projectV2});
+                this.setState({ etalonArr: data.projectV2 });
+                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
             });
         }
         this.setState({ activeEmail: localStorage.getItem('active_email') });

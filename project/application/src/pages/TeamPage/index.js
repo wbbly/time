@@ -9,7 +9,7 @@ import { getTeamData } from '../../queries';
 import teamPageAction from '../../actions/TeamPageAction';
 import { checkAuthentication } from '../../services/authentication';
 import { AppConfig } from '../../config';
-import { adminOrNot } from '../../services/authentication'
+import { adminOrNot } from '../../services/authentication';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Access'];
@@ -39,7 +39,9 @@ class TeamPage extends Component {
             <tr key={element.id}>
                 <td>{element.username}</td>
                 <td>{element.email}</td>
-                <td><div className="access_container">{element.role.title}</div></td>
+                <td>
+                    <div className="access_container">{element.role.title}</div>
+                </td>
             </tr>
         ));
 
@@ -50,6 +52,7 @@ class TeamPage extends Component {
                     <AddToTeamModal
                         programersArr={this.props.programersArr}
                         teamPageAction={this.props.teamPageAction}
+                        getData={this.getDataFromServer}
                     />
                 )}
                 <LeftBar />
@@ -83,9 +86,13 @@ class TeamPage extends Component {
 
     componentDidMount() {
         this.setState({ activeEmail: localStorage.getItem('active_email') });
+        this.getDataFromServer()
+    }
+
+    getDataFromServer() {
         client.request(getTeamData).then(data => {
-            console.log(data.user);
-            this.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.user});
+            console.log(data);
+            this.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.user });
         });
     }
 }
