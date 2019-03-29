@@ -86,7 +86,7 @@ class TeamPage extends Component {
 
     componentDidMount() {
         this.setState({ activeEmail: localStorage.getItem('active_email') });
-        this.getDataFromServer()
+        this.getDataFromServer();
     }
 
     getDataFromServer() {

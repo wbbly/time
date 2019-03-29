@@ -80,11 +80,11 @@ export const getProjectsV2ProjectPageAdmin = {
 
 export function getProjectsV2ProjectPageUser(id) {
     return {
-        graphqlRequest: `{ project_v2 (where: {user_id: {_eq: "${id}"}}) {
+        graphqlRequest: `{ project_v2  {
         id
         is_active
         name
-        timer  {
+        timer (where: {user_id: {_eq: "${id}"}}) {
             start_datetime
             end_datetime
         }

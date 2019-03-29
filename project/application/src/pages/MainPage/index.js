@@ -18,7 +18,7 @@ import {
     returnMutationLinkDeleteTimeEntries,
     getProjectsV2,
 } from '../../queries';
-import { checkAuthentication } from '../../services/authentication';
+import { checkAuthentication, getUserId} from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 class MainPage extends Component {
@@ -60,11 +60,11 @@ class MainPage extends Component {
             this.socket.emit(
                 'join-v2',
                 {
-                    userId: JSON.parse(localStorage.getItem('userObject')).id,
+                    userId: getUserId(),
                 },
                 _ => {
                     this.socket.emit('check-timer-v2', {
-                        userId: JSON.parse(localStorage.getItem('userObject')).id,
+                        userId: getUserId(),
                     });
                 }
             );
@@ -211,7 +211,10 @@ class MainPage extends Component {
         }
         this.time.timeStart = timer.timeStart;
         let newTime = +moment() - timer.timeStart;
-        let timeInArr = moment(newTime + 1000).utc().format('HH:mm:ss').split(':');
+        let timeInArr = moment(newTime + 1000)
+            .utc()
+            .format('HH:mm:ss')
+            .split(':');
         this.setState({
             time: moment()
                 .set({ hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2] })
@@ -229,7 +232,7 @@ class MainPage extends Component {
             return;
         }
         console.log(data, '!!!!');
-        if (!!this.mainTaskName ) {
+        if (!!this.mainTaskName) {
             this.mainTaskName.value = data.issue;
         }
         this.setState({ seletedProject: data.project });
@@ -239,9 +242,7 @@ class MainPage extends Component {
         return getDateInString(+moment(end) - +moment(start));
     }
 
-    componentWillMount() {
-
-    }
+    componentWillMount() {}
 
     createItems(arr) {
         let items = arr.map(item => (
@@ -286,7 +287,7 @@ class MainPage extends Component {
 
     saveOldTask(name, item) {
         this.mainTaskName.value = name;
-        this.setState({ seletedProject: item.project});
+        this.setState({ seletedProject: item.project });
         this.saveStartTimer('control_task_time_icons play', item.project.id);
     }
 
@@ -369,7 +370,7 @@ class MainPage extends Component {
                         editedItem={this.props.editedItem}
                         arrProjects={this.state.arrProjectsEtalon}
                         getTimeForMainPage={this.getTimeForMainPage}
-                        addTasksAction = {this.props.addTasksAction}
+                        addTasksAction={this.props.addTasksAction}
                     />
                 )}
                 <LeftBar />
@@ -449,7 +450,7 @@ class MainPage extends Component {
     }
 
     getTimeForMainPage() {
-        client.request(getTodayTimeEntries(JSON.parse(localStorage.getItem('userObject')).id)).then(data => {
+        client.request(getTodayTimeEntries(getUserId())).then(data => {
             this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
         });
     }

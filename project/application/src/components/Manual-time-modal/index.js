@@ -26,18 +26,21 @@ class ManualTimeModal extends Component {
     getIssues() {
         console.log(this.props.arrProjects);
         let items = this.props.arrProjects.map(item => (
-            <div className="item_select_wrapper" onClick={e => this.setProject(item)}
-                 ref={div => (this.dropList = div)}>
+            <div
+                className="item_select_wrapper"
+                onClick={e => this.setProject(item)}
+                ref={div => (this.dropList = div)}
+            >
                 <div className="issue_name margin_top_zero">{item.name}</div>
-                <div className={`circle ${item.projectColor.name} margin_top_zero`}/>
+                <div className={`circle ${item.projectColor.name} margin_top_zero`} />
             </div>
         ));
         return items;
     }
 
     setProject(project) {
-        this.setState({activeProject: project});
-        this.inputTaskName.value = project.name
+        this.setState({ activeProject: project });
+        this.inputTaskName.value = project.name;
     }
 
     changeData() {
@@ -46,93 +49,48 @@ class ManualTimeModal extends Component {
         let startDateArr = this.inputTimeStartValue.value.split(':');
         let endDateArr = this.inputTimeEndValue.value.split(':');
 
-        changedItem.startDatetime = moment(changedItem.startDatetime).set({
-            'hour': startDateArr[0],
-            'minute': startDateArr[1],
-            'second': 0
-        }).format();
-        changedItem.endDatetime = moment(changedItem.endDatetime).set({
-            'hour': endDateArr[0],
-            'minute': endDateArr[1],
-            'second': 0
-        }).format();
+        changedItem.startDatetime = moment(changedItem.startDatetime)
+            .set({
+                hour: startDateArr[0],
+                minute: startDateArr[1],
+                second: 0,
+            })
+            .format();
+        changedItem.endDatetime = moment(changedItem.endDatetime)
+            .set({
+                hour: endDateArr[0],
+                minute: endDateArr[1],
+                second: 0,
+            })
+            .format();
 
         changedItem.project = this.state.activeProject;
         changedItem.issue = this.inputNameValue.value;
         console.log(changedItem);
 
-        client.request(changeTimeMutation(
-            {
-                id: changedItem.id,
-                issue: changedItem.issue,
-                projectId: changedItem.project.id,
-                startDatetime: changedItem.startDatetime,
-                endDatetime: changedItem.endDatetime,
-            }
-        )).then(data => {
-            this.test()
-        });
-
-
+        client
+            .request(
+                changeTimeMutation({
+                    id: changedItem.id,
+                    issue: changedItem.issue,
+                    projectId: changedItem.project.id,
+                    startDatetime: changedItem.startDatetime,
+                    endDatetime: changedItem.endDatetime,
+                })
+            )
+            .then(data => {
+                this.getNewData();
+            });
     }
 
-    test() {
+    getNewData() {
         client.request(getTodayTimeEntries(JSON.parse(localStorage.getItem('userObject')).id)).then(data => {
-            this.props.addTasksAction('ADD_TASKS_ARR', {arrTasks: data.timerV2});
+            this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
         });
-
-
-        //     let index = this.props.arrTasks.findIndex(x => x.id === this.props.editedItem.id);
-        //     let object = {
-        //         id: this.props.arrTasks[index].id,
-        //         date: this.props.editedItem.date,
-        //         project: this.props.editedItem.project,
-        //         name: this.inputNameValue.value,
-        //         timeFrom: this.inputTimeStartValue.value,
-        //         timeTo: this.inputTimeEndValue.value,
-        //     };
-        //
-        //     object.timePassed = createTimePassed(object.date, object.timeFrom, object.timeTo);
-        //     this.props.arrTasks[index] = object;
-        //     if (!object.timeFrom || !object.timeTo) {
-        //         this.inputTimeStartValue.classList.add('error');
-        //         this.inputTimeEndValue.classList.add('error');
-        //         setTimeout(() => {
-        //             this.inputTimeStartValue.classList.remove('error');
-        //             this.inputTimeEndValue.classList.remove('error');
-        //         }, 1000);
-        //
-        //         return;
-        //     }
-        //     client
-        //         .request(returnMutationUpdateTimerProject(this.props.arrTasks[index].id, this.checkSeconds(object)))
-        //         .then(data => {});
-        //
-        //     function createTimePassed(date, timeFrom, timeTo) {
-        //         timeFrom = moment(`${date} ${timeFrom}`);
-        //         timeTo = moment(`${date} ${timeTo}`);
-        //         let diff = timeTo.diff(timeFrom);
-        //
-        //         return msToTime(diff);
-        //     }
-        //
-        //     function msToTime(duration) {
-        //         let seconds = parseInt((duration / 1000) % 60),
-        //             minutes = parseInt((duration / (1000 * 60)) % 60),
-        //             hours = parseInt((duration / (1000 * 60 * 60)) % 24);
-        //
-        //         hours = hours < 10 ? '0' + hours : hours;
-        //         minutes = minutes < 10 ? '0' + minutes : minutes;
-        //         seconds = seconds < 10 ? '0' + seconds : seconds;
-        //
-        //         return hours + ':' + minutes + ':' + seconds;
-        //     }
-        //
-        //     this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
     }
 
     toggleProjectsBar() {
-        this.setState({selectProject: !this.state.selectProject})
+        this.setState({ selectProject: !this.state.selectProject });
     }
 
     closeDropdown = e => {
@@ -142,7 +100,7 @@ class ManualTimeModal extends Component {
                     selectProject: false,
                 },
                 () => {
-                    document.removeEventListener("click", this.closeDropdown);
+                    document.removeEventListener('click', this.closeDropdown);
                 }
             );
         }
@@ -151,35 +109,40 @@ class ManualTimeModal extends Component {
     render() {
         return (
             <div className="manual_time_modal_wrapper">
-                <div className="manual_time_modal_background"/>
+                <div className="manual_time_modal_background" />
                 <div className="manual_time_modal_container">
                     <i
                         className="create_projects_modal_header_close manual_time_modal_close"
                         onClick={e => {
-                            this.props.manualTimerModalAction('TOGGLE_MODAL', {manualTimerModalToggle: false});
+                            this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
                         }}
                     />
                     <div>
                         <span>Task name:</span>
-                        <input type="text" ref={input => (this.inputNameValue = input)}/>
+                        <input type="text" ref={input => (this.inputNameValue = input)} />
                     </div>
                     <div className="manual_timer_modal_timepickers_container">
                         <div>
                             <span> Time start:</span>
-                            <input type="time" required ref={input => (this.inputTimeStartValue = input)}/>
+                            <input type="time" required ref={input => (this.inputTimeStartValue = input)} />
                         </div>
                         <div>
                             <span>Time end:</span>
-                            <input type="time" required ref={input => (this.inputTimeEndValue = input)}/>
+                            <input type="time" required ref={input => (this.inputTimeEndValue = input)} />
                         </div>
                         <div className=" project_select_edit_modal">
                             <span>Project:</span>
-                            <input type="text" readOnly ref={input => (this.inputTaskName = input)} onClick={e => {
-                                this.toggleProjectsBar();
-                                document.addEventListener("click", this.closeDropdown)
-                            }}/>
-                            <div className={`circle main_circle ${this.state.activeProject.projectColor.name}`}/>
-                            <i/>
+                            <input
+                                type="text"
+                                readOnly
+                                ref={input => (this.inputTaskName = input)}
+                                onClick={e => {
+                                    this.toggleProjectsBar();
+                                    document.addEventListener('click', this.closeDropdown);
+                                }}
+                            />
+                            <div className={`circle main_circle ${this.state.activeProject.projectColor.name}`} />
+                            <i />
                             <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
                         </div>
                     </div>
@@ -197,8 +160,8 @@ class ManualTimeModal extends Component {
     }
 
     componentWillMount() {
-        this.setState({activeProject: this.props.editedItem.project});
-        this.setState({activeItem: this.props.editedItem});
+        this.setState({ activeProject: this.props.editedItem.project });
+        this.setState({ activeItem: this.props.editedItem });
     }
 
     componentDidMount() {
