@@ -1,4 +1,4 @@
-import { getUserId } from "../services/authentication";
+import { getUserId } from '../services/authentication';
 import * as moment from 'moment';
 
 const initialState = {
@@ -62,21 +62,23 @@ const initialState = {
                 text: 'Custom Chart Title',
             },
             legend: {
-                display: false
+                display: false,
             },
             tooltips: {
                 callbacks: {
-                    label: function (tooltipItem) {
+                    label: function(tooltipItem) {
                         console.log(tooltipItem, 'tooltipItem');
-                        return moment(tooltipItem.yLabel).utc().format('HH:mm:ss');
-                    }
-                }
+                        return moment(tooltipItem.yLabel)
+                            .utc()
+                            .format('HH:mm:ss');
+                    },
+                },
             },
         },
         datasets: [
             {
                 data: [300, 50, 100],
-                backgroundColor: ['#7B68EE','#191970','#000080','#191970','#2F80ED', '#6FCF97', '#BB6BD9'],
+                backgroundColor: ['#7B68EE', '#191970', '#000080', '#191970', '#2F80ED', '#6FCF97', '#BB6BD9'],
                 hoverBackgroundColor: ['#2F80ED', '#6FCF97', '#BB6BD9'],
             },
         ],

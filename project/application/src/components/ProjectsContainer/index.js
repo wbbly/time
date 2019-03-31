@@ -22,11 +22,14 @@ class ProjectsContainer extends Component {
     render() {
         console.log(this.props.projectsArr);
         let projectsItems = this.props.projectsArr.map(item => (
-
-                <div className="projects_container_project_data">
-                    <div className="name">{item.name}</div>
-                    <div className="time">{moment(item.duration).utc().format('HH:mm:ss')}</div>
+            <div className="projects_container_project_data">
+                <div className="name">{item.name}</div>
+                <div className="time">
+                    {moment(item.duration)
+                        .utc()
+                        .format('HH:mm:ss')}
                 </div>
+            </div>
         ));
 
         return (

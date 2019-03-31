@@ -52,14 +52,16 @@ class ManualTimeModal extends Component {
                 hour: startDateArr[0],
                 minute: startDateArr[1],
                 second: 0,
-            }).utc()
+            })
+            .utc()
             .format();
         changedItem.endDatetime = moment(changedItem.endDatetime)
             .set({
                 hour: endDateArr[0],
                 minute: endDateArr[1],
                 second: 0,
-            }).utc()
+            })
+            .utc()
             .format();
 
         changedItem.project = this.state.activeProject;
