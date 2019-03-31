@@ -364,13 +364,11 @@ export function returnMutationLinkAddProject(object) {
     return {
         graphqlRequest: `
         mutation {
-            insert_project(
+            insert_project_v2(
                 objects: [
                     {
                         name: "${object.name}",
-                        projectStatus: "21",
-                        team: "HR"
-                        colorProject: "${object.colorProject}"
+                        project_color_id: "${object.colorProject.id}"
                     }
                 ]
             ){
@@ -389,6 +387,18 @@ export function returnMutationLinkDeleteProject(object) {
                 ){
                     affected_rows
                 }
+        }`,
+    };
+}
+
+export function getProjectColor() {
+    return {
+        graphqlRequest: `
+         {
+            project_color {
+                id
+                name
+            }
         }`,
     };
 }
