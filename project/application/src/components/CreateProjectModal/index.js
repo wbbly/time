@@ -3,14 +3,18 @@ import PropTypes from 'prop-types';
 
 import './style.css';
 import { client } from '../../requestSettings';
-import { returnMutationLinkAddProject } from '../../queries';
+import { returnMutationLinkAddProject, getProjectColor } from '../../queries';
 
 export default class CreateProjectModal extends Component {
     state = {
-        selectedValue: 'green',
+        selectedValue: {
+            id: 'a642f337-9082-4f64-8ace-1d0e99fa7258',
+            name: 'blue'
+        },
         listOpen: false,
+        selectValue: []
     };
-    selectValue = ['green', 'red', 'blue', 'pink'];
+
 
     setItem(value) {
         this.setState({
@@ -38,9 +42,10 @@ export default class CreateProjectModal extends Component {
     }
 
     render() {
-        let selectItems = this.selectValue.map(value => (
+        console.log(this.state.selectValue);
+        let selectItems = this.state.selectValue.map(value => (
             <div className={`item`} onClick={e => this.setItem(value)}>
-                <div className={`circle ${value}`} />
+                <div className={`circle ${value.name}`} />
             </div>
         ));
 
@@ -69,7 +74,7 @@ export default class CreateProjectModal extends Component {
                                 onClick={e => this.toggleSelect()}
                             >
                                 <div className="select_main">
-                                    <div className={`circle ${this.state.selectedValue}`} />
+                                    <div className={`circle ${this.state.selectedValue.name}`} />
                                 </div>
                                 <i className="vector" />
                                 {this.state.listOpen && <div className="select_list">{selectItems}</div>}
@@ -87,6 +92,12 @@ export default class CreateProjectModal extends Component {
                 </div>
             </div>
         );
+    }
+
+    componentDidMount() {
+        client.request(getProjectColor()).then(data => {
+            this.setState({selectValue: data.project_color})
+  });
     }
 }
 

@@ -37,6 +37,12 @@
     outline: 0;
     border: 0;
     background-color: transparent;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #ffffff;
 }
 
 .project_search_bar_button_container {

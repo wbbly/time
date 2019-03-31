@@ -54,7 +54,7 @@
 }
 
 .manual_timer_modal_timepickers_container div {
-    margin-top: 24px;
+    margin-top: 12px;
 }
 
 input::-webkit-outer-spin-button,
@@ -72,7 +72,7 @@ input::-webkit-search-results-decoration {
 
 input[type="time"],
 .manual_time_modal_wrapper input {
-    margin-top: 12px;
+    margin-top: 3px;
     padding-right: 24px;
 }
 
@@ -86,3 +86,89 @@ input[type="time"],
 .error {
     border: 1px solid red;
 }
+
+.manual_time_modal_container  .project_select_edit_modal {
+    position: relative;
+    margin-top: 12px;
+}
+
+.manual_time_modal_container .item_select_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    margin-top: 0;
+    border-radius: 4px;
+    padding: 0 24px;
+    cursor: pointer;
+}
+
+.manual_time_modal_container .circle {
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+}
+
+.manual_time_modal_container .main_circle {
+    position: absolute;
+    right: 50px;
+    top: 50%;
+}
+
+.manual_time_modal_container .project_select_edit_modal i {
+    background: url("../../images/Polygon.svg") no-repeat center;
+    position: absolute;
+    top: 50%;
+    right: 24px;
+    display: block;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    background-size: 16px;
+}
+
+.manual_time_modal_container .projects_list {
+    position: absolute;
+    max-height: 250px;
+    width: calc(100% - 24px);
+    background-color: white;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+    overflow-y: scroll;
+}
+
+.manual_time_modal_container .projects_list .item_select_wrapper:hover .issue_name,
+.manual_time_modal_container .projects_list .item_select_wrapper:hover {
+    background: #4f4f4f;
+    color: white;
+}
+
+.create_projects_modal_data_select_container .select_list .item:hover {
+    background-color: #cecece;
+}
+
+.projects_list .circle {
+    width: 23px;
+    height: 23px
+}
+
+.margin_top_zero {
+    margin-top: 0 !important;
+}
+
+.manual_time_modal_container .projects_list .green {
+    background-color: green;
+}
+
+.manual_time_modal_container .projects_list .red {
+    background-color: red;
+}
+
+.manual_time_modal_container .projects_list .blue {
+    background-color: blue;
+}
+
+.manual_time_modal_container .projects_list .pink {
+    background-color: pink;
+}
+
+

@@ -36,7 +36,7 @@ export default class ReportsSearchBar extends Component {
                 <div className="reports_search_bar_search_field_container">
                     <div className="reports_search_select_wrapper" ref={div => (this.dropList = div)}>
                         <div className="reports_search_select_header" onClick={e => this.togglSelect()}>
-                            {this.state.activeSelectItem}
+                            {this.state.activeSelectItem.username}
                             <i className="arrow_down" />
                         </div>
                     </div>
@@ -44,7 +44,7 @@ export default class ReportsSearchBar extends Component {
                         <div className="select_body">
                             {this.props.users.map(item => (
                                 <div className="select_users_item" onClick={e => this.setItem(item)}>
-                                    {item}
+                                    {item.username}
                                 </div>
                             ))}
                         </div>

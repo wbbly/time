@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import './style.css';
 import { getDateInString } from '../../pages/MainPage/timeInSecondsFunction';
+import { getUserAdminRight } from '../../services/authentication';
 
 class LeftBar extends Component {
     ONE_MINUTE = 1000; // in ms

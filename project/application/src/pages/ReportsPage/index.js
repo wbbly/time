@@ -11,12 +11,9 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
 import { client } from '../../requestSettings';
-import { getDateAndTimeToGraphick, getProjectANndTimeToGraphick, getProjects, getUsers } from '../../queries';
+import { getUsers, getReports } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { getTimeInSecondFromString, createArrTimeAndDate, changeDate } from '../../services/timeService';
-import { checkAuthentication } from '../../services/authentication';
-import { adminOrNot } from '../../services/authentication';
-import ReportsSearchBar from '../../components/reportsSearchBar';
+import { checkAuthentication, getUserId } from '../../services/authentication';
 
 class ReportsPage extends Component {
     state = {
@@ -41,20 +38,14 @@ class ReportsPage extends Component {
                         display: false,
                     },
                     ticks: {
-                        beginAtZero: false,
+                        beginAtZero: true,
                         fontColor: '#BDBDBD',
                     },
                 },
             ],
             yAxes: [
                 {
-                    gridLines: {
-                        color: '#BDBDBD',
-                    },
-                    ticks: {
-                        beginAtZero: false,
-                        fontColor: '#BDBDBD',
-                    },
+                    display: false,
                 },
             ],
         },
@@ -64,90 +55,36 @@ class ReportsPage extends Component {
                 fontColor: '#BDBDBD',
             },
         },
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem) {
+                    return moment(tooltipItem.yLabel)
+                        .utc()
+                        .format('HH:mm:ss');
+                },
+            },
+        },
     };
 
-    changeDoughnutChat(chartObject, dataFromServer) {
-        let newObjectChart = chartObject;
-        newObjectChart.datasets[0].data = createArrTimeAndDate(
-            dataFromServer.timeTracker,
-            'secondArr',
-            'project',
-            'timePassed'
-        );
-
-        return newObjectChart;
-    }
-
-    changeGraph(object) {
+    setDataToGraph(object, objectData) {
         let newObject = object;
-        newObject.labels = changeDate(
-            createArrTimeAndDate(this.props.dataFromServer, 'firstArr', 'date', 'timePassed')
-        );
-        newObject.datasets[0].data = createArrTimeAndDate(this.props.dataFromServer, 'secondArr', 'date', 'timePassed');
-
+        newObject.labels = objectData.labels;
+        newObject.datasets[0].data = objectData.timeArr;
         return newObject;
-    }
-
-    creatProJectsSumm(arr) {
-        for (let i = 0; i < arr.length; i++) {}
-    }
-
-    getProjectsNamesById(data) {
-        for (let i = 0; i < data.timeTracker.length; i++) {
-            if (data.timeTracker[i].project === 'any') {
-                alert('projects name error');
-                return;
-            }
-            let projectId = +data.timeTracker[i].project;
-            data.timeTracker[i].project = _.where(this.state.projectsArr, { id: projectId })[0].name;
-            data.timeTracker[i].colorProject = _.where(this.state.projectsArr, { id: projectId })[0].colorProject;
-            data.timeTracker[i].timePassed = getTimeInSecondFromString(data.timeTracker[i].timePassed);
-        }
-
-        return data;
-    }
-
-    getItemsFromArr(arr) {
-        let finishArr = [];
-        let projects = createArrTimeAndDate(arr, 'firstArr', 'project', 'timePassed');
-        let time = createArrTimeAndDate(arr, 'secondArr', 'project', 'timePassed');
-        for (let i = 0; i < projects.length; i++) {
-            finishArr.push({ projects: projects[i], timePassed: time[i] });
-        }
-
-        return finishArr;
     }
 
     handleSelect = ranges => {
         this.setState({ selectionRange: ranges.selection });
         this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
-        this.getDataToGraph({
-            from: this.getYear(ranges.selection.startDate),
-            to: this.getYear(ranges.selection.endDate),
-            email: atob(localStorage.getItem('active_email')),
-        });
+        this.getDataUsers(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
     };
 
     getYear(date) {
         return moment(date).format('YYYY-MM-DD');
     }
 
-    selectUser(item) {
-        this.setState({ selectUsersHeader: item });
-        this.getDataToGraph({
-            email: item,
-            from: moment(this.props.timeRange.startDate).format('YYYY-MM-DD'),
-            to: moment(this.props.timeRange.startDate.endDate).format('YYYY-MM-DD'),
-        });
-        this.openDateSelectUsers();
-    }
-
     openCalendar() {
         this.setState({ dateSelect: !this.state.dateSelect });
-    }
-
-    openDateSelectUsers() {
-        this.setState({ dateSelectUsers: !this.state.dateSelectUsers });
     }
 
     render() {
@@ -158,23 +95,6 @@ class ReportsPage extends Component {
                 <div className="data_container_reports_page">
                     <div className="header">
                         <div className="header_name">Summary report</div>
-                        {adminOrNot(localStorage.getItem('active_email')) && (
-                            <div className="selects_container select_users">
-                                <div className="select_header users" onClick={e => this.openDateSelectUsers()}>
-                                    <span>{this.state.selectUsersHeader}</span>
-                                    <i className="arrow_down" />
-                                </div>
-                                {this.state.dateSelectUsers && (
-                                    <div className="select_body">
-                                        {this.state.selectUersData.map(item => (
-                                            <div className="select_users_item" onClick={e => this.selectUser(item)}>
-                                                {item}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        )}
                         <div className="selects_container">
                             <div className="select_header" onClick={e => this.openCalendar()}>
                                 <span>
@@ -190,7 +110,7 @@ class ReportsPage extends Component {
                             )}
                         </div>
                     </div>
-                    <ReportsSearchBar users={this.state.selectUersData} />
+                    {/*<ReportsSearchBar users={this.state.selectUersData} />*/}
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
                             <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
@@ -212,43 +132,95 @@ class ReportsPage extends Component {
         );
     }
 
-    getDataToGraph(obj) {
-        client.request(getProjects).then(data => {
-            this.setState({ projectsArr: data.project });
-            client.request(getDateAndTimeToGraphick(obj)).then(data => {
-                for (let i = 0; i < data.timeTracker.length; i++) {
-                    data.timeTracker[i].timePassed = getTimeInSecondFromString(data.timeTracker[i].timePassed);
-                }
-                this.props.reportsPageAction('SET_DATA_FROM_SERVER', { data: data.timeTracker });
-                this.props.reportsPageAction('SET_LINE_GRAPH', this.changeGraph(this.props.dataBarChat));
-                this.setState({ toggleBar: true });
-            });
-            client.request(getProjectANndTimeToGraphick(obj)).then(data => {
-                data = this.getProjectsNamesById(data);
-                this.props.reportsPageAction('SET_PROJECTS', { data: this.getItemsFromArr(data.timeTracker) });
-                this.changeDoughnutChat(this.props.dataDoughnutChat, data);
-                let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, data);
-                this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-                this.setState({ toggleChar: true });
-            });
+    getLablesAndTime(data) {
+        let finishData = {
+            labels: [],
+            timeArr: [],
+        };
+        for (let key in data) {
+            finishData.labels.push(moment(key).format('ddd DD.MM.YYYY'));
+            finishData.timeArr.push(data[key]);
+        }
+        return finishData;
+    }
+
+    changeDoughnutChat(chartObject, dataFromServer) {
+        this.setState({ toggleChar: false });
+        let newObjectChart = chartObject;
+        let labels = [];
+        let dataTime = [];
+        for (let i = 0; i < dataFromServer.length; i++) {
+            labels.push(dataFromServer[i].name);
+            dataTime.push(dataFromServer[i].duration);
+        }
+        newObjectChart.labels = labels;
+        newObjectChart.datasets[0].data = dataTime;
+        return newObjectChart;
+    }
+
+    getArrOfProjectsData(data) {
+        const statsByProjects = [];
+        const statsByDates = getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate);
+
+        for (var i = 0; i < data.project_v2.length; i++) {
+            const project = data.project_v2[i];
+            let diff = 0;
+            for (var j = 0; j < project.timer.length; j++) {
+                const timer = project.timer[j];
+                const timerDiff = +moment(timer.end_datetime).utc() - +moment(timer.start_datetime).utc();
+                diff += timerDiff;
+
+                const date = timer.start_datetime.split('T')[0];
+                statsByDates[date] += timerDiff;
+            }
+
+            if (diff) {
+                statsByProjects.push({
+                    name: project.name,
+                    duration: diff,
+                });
+            }
+        }
+
+        return { statsByProjects, statsByDates };
+
+        function getDates(startDate, stopDate) {
+            let dateObj = {};
+            let currentDate = moment(startDate);
+            stopDate = moment(stopDate);
+            while (currentDate <= stopDate) {
+                dateObj[`${moment(currentDate).format('YYYY-MM-DD')}`] = 0;
+                currentDate = moment(currentDate).add(1, 'days');
+            }
+            return dateObj;
+        }
+    }
+
+    getDataUsers(dateFrom, dateTo) {
+        this.setState({ toggleBar: false });
+        client.request(getReports(getUserId(), undefined, dateFrom, dateTo)).then(data => {
+            let dataToGraph = this.getArrOfProjectsData(data);
+            this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
+            this.props.reportsPageAction(
+                'SET_LINE_GRAPH',
+                this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(dataToGraph.statsByDates))
+            );
+            let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
+            this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
+            this.setState({ toggleBar: true });
+            this.setState({ toggleChar: true });
         });
     }
 
     componentDidMount() {
+        this.getDataUsers(
+            this.getYear(this.state.selectionRange.startDate),
+            this.getYear(this.state.selectionRange.endDate)
+        );
+
         this.setState({ selectUsersHeader: atob(localStorage.getItem('active_email')) });
-        this.getDataToGraph({
-            email: atob(localStorage.getItem('active_email')),
-            from: moment(this.props.timeRange.startDate).format('YYYY-MM-DD'),
-            to: moment(this.props.timeRange.startDate.endDate).format('YYYY-MM-DD'),
-        });
         client.request(getUsers()).then(data => {
-            let arr = [];
-            for (let i = 0; i < data.timeTracker.length; i++) {
-                if (arr.indexOf(data.timeTracker[i].email) === -1) {
-                    arr.push(data.timeTracker[i].email);
-                }
-            }
-            this.setState({ selectUersData: arr });
+            this.setState({ selectUersData: data.user });
         });
     }
 }
@@ -261,6 +233,7 @@ const mapStateToProps = store => {
         dataDoughnutChat: store.reportsPageReducer.dataDoughnutChat,
         dataFromServer: store.reportsPageReducer.dataFromServer,
         timeRange: store.reportsPageReducer.timeRange,
+        setUserId: store.reportsPageReducer.setUserId,
     };
 };
 

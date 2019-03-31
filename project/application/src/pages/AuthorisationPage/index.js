@@ -1,47 +1,48 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import * as firebase from 'firebase';
 
 import './index.css';
 import { checkAuthenticationOnLoginPage } from '../../services/authentication';
 import { AppConfig } from '../../config';
+import RegisterModal from '../../components/RegisterModal';
+import toggleRegisterModal from '../../actions/AuthorisationPageAction';
 
 class AuthorisationPage extends Component {
     state = {
         haveToken: false,
+        authorisationModal: true,
     };
 
     login = (email, password) => {
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(user => {
-                localStorage.setItem('active_email', btoa(user.user.email));
-                this.setState({ haveToken: true });
+        fetch(AppConfig.apiURL + 'user/login', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+            }),
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
             })
-            .catch(error => {
-                this.email.classList.add('error');
-                this.password.classList.add('error');
-                setTimeout(() => {
-                    this.email.classList.remove('error');
-                    this.password.classList.remove('error');
-                }, 1000);
-            });
-
-        let callback = null;
-        let metadataRef = null;
-        firebase.auth().onAuthStateChanged(user => {
-            if (callback) {
-                metadataRef.off('value', callback);
-            }
-            if (user) {
-                metadataRef = firebase.database().ref('metadata/' + user.uid + '/refreshTime');
-                callback = snapshot => {
-                    user.getIdToken(true);
-                };
-                metadataRef.on('value', callback);
-            }
-        });
+            .then(
+                result => {
+                    localStorage.setItem('userObject', JSON.stringify(result.user));
+                    this.setState({ haveToken: true });
+                },
+                err =>
+                    err.text().then(errorMessage => {
+                        alert(JSON.parse(errorMessage).message);
+                    })
+            );
     };
 
     componentWillMount() {
@@ -53,6 +54,9 @@ class AuthorisationPage extends Component {
         return (
             <div className="wrapper_authorisation_page">
                 {checkAuthenticationOnLoginPage()}
+                {this.props.authorisationPageReducer && (
+                    <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />
+                )}
                 {this.state.haveToken && <Redirect to={'main-page'} />};
                 <i className="page_title" />
                 <div className="authorisation_window">
@@ -76,9 +80,33 @@ class AuthorisationPage extends Component {
                     >
                         Login
                     </button>
+                    <button
+                        className="registration_button"
+                        onClick={e => {
+                            this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: true });
+                        }}
+                    >
+                        Registration
+                    </button>
                 </div>
             </div>
         );
     }
 }
-export default AuthorisationPage;
+
+const mapStateToProps = store => {
+    return {
+        authorisationPageReducer: store.authorisationPageReducer.registerModal,
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        toggleRegisterModal: (actionType, action) => dispatch(toggleRegisterModal(actionType, action))[1],
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AuthorisationPage);
