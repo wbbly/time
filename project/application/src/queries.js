@@ -179,8 +179,9 @@ export function getProjectTime(email) {
 export function getUsers() {
     return {
         graphqlRequest: `{
-            timeTracker {
-                email
+            user {
+                id,
+                username
             }
         }`,
     };
@@ -244,9 +245,9 @@ export function getDateAndTimeToGraphick(object) {
 }
 
 export function getReports(userId, projectId, startTime, endTime) {
-    const userWhereStatement = userId ? `(where: {id: {_eq: "${userId}"}})` : '';
+    const projectWhereStatement = projectId ? `(where: {id: {_eq: "${projectId}"}})` : '';
 
-    const projectWhereStatement = projectId ? `project_id: {_eq: "${projectId}"}` : '';
+    const userWhereStatement = userId ? `user_id: {_eq: "${userId}"}` : '';
     let startTimeStatement = '';
     let endTimeStatement = '';
 
@@ -260,8 +261,8 @@ export function getReports(userId, projectId, startTime, endTime) {
     }
 
     let timerStatementArray = [];
-    if (projectWhereStatement) {
-        timerStatementArray.push(projectWhereStatement);
+    if (userWhereStatement) {
+        timerStatementArray.push(userWhereStatement);
     }
     if (startTimeStatement) {
         timerStatementArray.push(startTimeStatement);
@@ -273,14 +274,12 @@ export function getReports(userId, projectId, startTime, endTime) {
     const timerWhereStatement = timerStatementString ? `(where: {${timerStatementString}})` : '';
 
     const graphqlRequest = `{
-      user ${userWhereStatement} {
+      project_v2 ${projectWhereStatement} {
         id
-        username
+        name
         timer ${timerWhereStatement} {
-          issue
           start_datetime
-          end_datetime
-          project_id
+          end_datetime         
         }
       }
     }`;

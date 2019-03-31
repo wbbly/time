@@ -89,6 +89,7 @@ input[type="time"],
 
 .manual_time_modal_container  .project_select_edit_modal {
     position: relative;
+    margin-top: 12px;
 }
 
 .manual_time_modal_container .item_select_wrapper {
@@ -111,13 +112,13 @@ input[type="time"],
 .manual_time_modal_container .main_circle {
     position: absolute;
     right: 50px;
-    top: 23px;
+    top: 50%;
 }
 
 .manual_time_modal_container .project_select_edit_modal i {
     background: url("../../images/Polygon.svg") no-repeat center;
     position: absolute;
-    top: 36px;
+    top: 50%;
     right: 24px;
     display: block;
     width: 24px;
@@ -128,7 +129,7 @@ input[type="time"],
 
 .manual_time_modal_container .projects_list {
     position: absolute;
-    max-height: 120px;
+    max-height: 250px;
     width: calc(100% - 24px);
     background-color: white;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);

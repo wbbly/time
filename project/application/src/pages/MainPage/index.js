@@ -188,7 +188,8 @@ class MainPage extends Component {
         });
         this.time.timeFinish = '';
         this.time.timeStart = '';
-        this.mainTaskName.value = '';
+        setTimeout(()=> {this.mainTaskName.value = ''},300);
+
     }
 
     deleteFromArr(item) {

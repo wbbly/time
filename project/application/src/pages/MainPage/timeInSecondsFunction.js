@@ -18,6 +18,10 @@ export function getDateInString(seconds) {
 }
 
 export function getTimInStringSeconds(seconds) {
+    console.log(seconds, '!!!!');
+    if (typeof seconds === 'string') {
+        return '-'
+    }
     let date = new Date(null);
     date.setSeconds(seconds);
     let result = date.toISOString().substr(11, 8);

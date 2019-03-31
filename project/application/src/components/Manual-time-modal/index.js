@@ -52,14 +52,14 @@ class ManualTimeModal extends Component {
                 hour: startDateArr[0],
                 minute: startDateArr[1],
                 second: 0,
-            })
+            }).utc()
             .format();
         changedItem.endDatetime = moment(changedItem.endDatetime)
             .set({
                 hour: endDateArr[0],
                 minute: endDateArr[1],
                 second: 0,
-            })
+            }).utc()
             .format();
 
         changedItem.project = this.state.activeProject;
@@ -77,6 +77,7 @@ class ManualTimeModal extends Component {
             )
             .then(data => {
                 this.getNewData();
+                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
             });
     }
 
@@ -118,6 +119,21 @@ class ManualTimeModal extends Component {
                         <span>Task name:</span>
                         <input type="text" ref={input => (this.inputNameValue = input)} />
                     </div>
+                    <div className=" project_select_edit_modal">
+                        <span>Project:</span>
+                        <input
+                            type="text"
+                            readOnly
+                            ref={input => (this.inputTaskName = input)}
+                            onClick={e => {
+                                this.toggleProjectsBar();
+                                document.addEventListener('click', this.closeDropdown);
+                            }}
+                        />
+                        <div className={`circle main_circle ${this.state.activeProject.projectColor.name}`} />
+                        <i />
+                        <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
+                    </div>
                     <div className="manual_timer_modal_timepickers_container">
                         <div>
                             <span> Time start:</span>
@@ -126,21 +142,6 @@ class ManualTimeModal extends Component {
                         <div>
                             <span>Time end:</span>
                             <input type="time" required ref={input => (this.inputTimeEndValue = input)} />
-                        </div>
-                        <div className=" project_select_edit_modal">
-                            <span>Project:</span>
-                            <input
-                                type="text"
-                                readOnly
-                                ref={input => (this.inputTaskName = input)}
-                                onClick={e => {
-                                    this.toggleProjectsBar();
-                                    document.addEventListener('click', this.closeDropdown);
-                                }}
-                            />
-                            <div className={`circle main_circle ${this.state.activeProject.projectColor.name}`} />
-                            <i />
-                            <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
                         </div>
                     </div>
                     <div className="manual_timer_modal_button_container">

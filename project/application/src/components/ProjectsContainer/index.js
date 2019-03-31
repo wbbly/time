@@ -20,22 +20,13 @@ class ProjectsContainer extends Component {
     }
 
     render() {
+        console.log(this.props.projectsArr);
         let projectsItems = this.props.projectsArr.map(item => (
-            <Link
-                to={{
-                    pathname: `/project-report/${this.getIdOfProject(item.projects)}/${this.getDateToLink(
-                        this.props.selectionRange.startDate
-                    )}/${this.getDateToLink(this.props.selectionRange.endDate)}/${item.projects}/${
-                        this.props.activeEmail
-                    }`,
-                }}
-                style={{ textDecoration: 'none' }}
-            >
+
                 <div className="projects_container_project_data">
-                    <div className="name">{item.projects}</div>
-                    <div className="time">{getTimInStringSeconds(item.timePassed)}</div>
+                    <div className="name">{item.name}</div>
+                    <div className="time">{moment(item.duration).utc().format('HH:mm:ss')}</div>
                 </div>
-            </Link>
         ));
 
         return (

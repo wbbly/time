@@ -26,6 +26,7 @@ class RegisterModal extends Component {
             })
             .then(
                 result => {
+                    alert('connect with admin to activate your account');
                     this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: false });
                 },
                 err =>

@@ -1,15 +1,19 @@
+import { getUserId } from "../services/authentication";
+import * as moment from 'moment';
+
 const initialState = {
     timeRange: {
         startDate: new Date(),
         endDate: new Date(),
         key: 'selection',
     },
+    setUserId: getUserId(),
     dataBarChat: {
         defaultFontColor: 'red',
         labels: ['February', 'March', 'April', 'May', 'June', 'July'],
         datasets: [
             {
-                label: 'My First dataset',
+                label: 'Total hrs by date',
                 fill: true,
                 lineTension: 0.1,
                 backgroundColor: '#56CCF2',
@@ -57,11 +61,22 @@ const initialState = {
                 display: false,
                 text: 'Custom Chart Title',
             },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem) {
+                        console.log(tooltipItem, 'tooltipItem');
+                        return moment(tooltipItem.yLabel).utc().format('HH:mm:ss');
+                    }
+                }
+            },
         },
         datasets: [
             {
                 data: [300, 50, 100],
-                backgroundColor: ['#2F80ED', '#6FCF97', '#BB6BD9'],
+                backgroundColor: ['#7B68EE','#191970','#000080','#191970','#2F80ED', '#6FCF97', '#BB6BD9'],
                 hoverBackgroundColor: ['#2F80ED', '#6FCF97', '#BB6BD9'],
             },
         ],

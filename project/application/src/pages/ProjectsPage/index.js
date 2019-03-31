@@ -46,7 +46,7 @@ class ProjectsPage extends Component {
                 <div className="data_container_projects_page">
                     <div className="projects_page_header">
                         <div className="projects_page_title">Projects</div>
-                        {this.canAddToTeam(this.state.activeEmail) && (
+                        {getUserAdminRight() === 'ROLE_ADMIN' && (
                             <button
                                 className="create_project_button"
                                 onClick={e => projectsPageAction('TOGGLE_MODAL', { toggle: true })}
