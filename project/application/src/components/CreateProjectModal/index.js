@@ -9,12 +9,11 @@ export default class CreateProjectModal extends Component {
     state = {
         selectedValue: {
             id: 'a642f337-9082-4f64-8ace-1d0e99fa7258',
-            name: 'blue'
+            name: 'blue',
         },
         listOpen: false,
-        selectValue: []
+        selectValue: [],
     };
-
 
     setItem(value) {
         this.setState({
@@ -96,8 +95,8 @@ export default class CreateProjectModal extends Component {
 
     componentDidMount() {
         client.request(getProjectColor()).then(data => {
-            this.setState({selectValue: data.project_color})
-  });
+            this.setState({ selectValue: data.project_color });
+        });
     }
 }
 
