@@ -153,7 +153,7 @@ class MainPage extends Component {
 
         this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = setTimeout(() => {
             if (this.TIMER_LIVE_SUBSCRIPTION) {
-                this.socket.emit('update-timer', {
+                this.socket.emit('update-timer-v2', {
                     userId: JSON.parse(localStorage.getItem('userObject')).id,
                     issue: this.mainTaskName.value,
                     projectId: this.state.seletedProject,
