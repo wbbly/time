@@ -12,15 +12,12 @@ import ManualTimeModal from '../../components/Manual-time-modal';
 import { client } from '../../requestSettings';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
 import {
-    getProjects,
     getTodayTimeEntries,
-    returnMutationLinkAddTimeEntries,
     returnMutationLinkDeleteTimeEntries,
     getProjectsV2,
 } from '../../queries';
 import { checkAuthentication, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
-
 
 class MainPage extends Component {
     ONE_MINUTE = 1000; // in ms
@@ -198,9 +195,9 @@ class MainPage extends Component {
                 newArr.push(this.props.arrTasks[i]);
             }
         }
-        client
-            .request(returnMutationLinkDeleteTimeEntries(item))
-            .then(data => {this.getTimeForMainPage()});
+        client.request(returnMutationLinkDeleteTimeEntries(item)).then(data => {
+            this.getTimeForMainPage();
+        });
     }
 
     getTimeNow(object, data) {
@@ -338,7 +335,7 @@ class MainPage extends Component {
         const buttonState = classToggle ? 'play' : 'stop';
         const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
         let timeTrackerWrapperItems = createArayOfArrays(this.props.arrTasks).map(arraysItem => (
-            <div className="time_tracker_wrapper" key={arraysItem.id}>
+            <div className="time_tracker_wrapper" key={+moment(arraysItem[0].startDatetime)}>
                 <div className="header">
                     <div className="date">{moment(arraysItem[0].startDatetime).format('DD.MM.YYYY')}</div>
                     <div className="allTime">Total time: {this.getSumTime(arraysItem)}</div>
@@ -420,7 +417,7 @@ class MainPage extends Component {
                             className={buttonClassName}
                         />
                     </div>
-                     <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
+                    <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
                 </div>
             </div>
         );

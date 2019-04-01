@@ -121,7 +121,7 @@ export function getProjectsV2ProjectPageUser(id) {
 
 export function getTodayTimeEntries(id) {
     return {
-        graphqlRequest: `{ timer_v2 (where: {user_id: {_eq: "${id}"}},order_by: {start_datetime: desc}) {
+        graphqlRequest: `{ timer_v2 (where: {user_id: {_eq: "${id}"}},order_by: {start_datetime: desc}, limit: 50) {
             id,
             start_datetime,
             end_datetime,
