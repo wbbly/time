@@ -22,17 +22,6 @@ class ProjectsPage extends Component {
         projectsTime: {},
     };
 
-    canAddToTeam(email = '') {
-        email = atob(email);
-        const adminEmails = AppConfig.adminEmails;
-
-        if (adminEmails.indexOf(email) > -1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     render() {
         const { tableData, addNewProjectModalToggle, projectsPageAction } = this.props;
 
@@ -65,7 +54,6 @@ class ProjectsPage extends Component {
                     <div className="project_data_wrapper">
                         <ProjectData
                             activeEmail={this.state.activeEmail}
-                            canAddToTeam={this.canAddToTeam}
                             tableInfo={tableData}
                             projectsPageAction={projectsPageAction}
                             projectsTime={this.state.projectsTime}

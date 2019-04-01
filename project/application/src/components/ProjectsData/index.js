@@ -7,16 +7,6 @@ import { returnMutationLinkDeleteProject } from '../../queries';
 import { getDateInString } from '../../pages/MainPage/timeInSecondsFunction';
 
 export default class ProjectData extends Component {
-    deleteFromArr(item, arr) {
-        let newArr = [];
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].id !== item.id) {
-                newArr.push(arr[i]);
-            }
-        }
-        this.props.projectsPageAction('CHANGE_ARR', { tableData: newArr });
-        client.request(returnMutationLinkDeleteProject(item)).then(data => {});
-    }
 
     render() {
         const tableHeader = [
