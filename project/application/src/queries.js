@@ -257,8 +257,8 @@ export function getReports(userId, projectId, startTime, endTime) {
     if (startTime) {
         endTime = endTime ? endTime : startTime;
 
-        startTime = new Date(startTime).toISOString();
-        endTime = new Date(+new Date(endTime) + 24 * 60 * 60 * 1000 - 1).toISOString();
+        startTime = new Date(startTime).toISOString().slice(0, -1);
+        endTime = new Date(+new Date(endTime) + 24 * 60 * 60 * 1000 - 1).toISOString().slice(0, -1);
         startTimeStatement = `start_datetime: {_gte: "${startTime}"}`;
         endTimeStatement = `end_datetime: {_lt: "${endTime}"}`;
     }
