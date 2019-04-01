@@ -32,6 +32,7 @@ class AddToTeamModal extends Component {
                         username: this.email.value,
                         email: this.email.value,
                         role: { title: 'ROLE_USER' },
+                        is_active: false,
                     });
                     // this.props.getData();
                     this.closeModal();

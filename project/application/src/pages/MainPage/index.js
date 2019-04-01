@@ -236,8 +236,8 @@ class MainPage extends Component {
     componentWillMount() {}
 
     createItems(arr) {
-        let items = arr.map(item => (
-            <div className="ul" key={+moment()}>
+        let items = arr.map((item, index) => (
+            <div className="ul" key={'time-entries_' + index}>
                 <div className="li">
                     <div className="name_container">
                         <div className="name">{item.issue}</div>
@@ -330,8 +330,8 @@ class MainPage extends Component {
         const { classToggle } = this.state;
         const buttonState = classToggle ? 'play' : 'stop';
         const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
-        let timeTrackerWrapperItems = createArayOfArrays(this.props.arrTasks).map(arraysItem => (
-            <div className="time_tracker_wrapper" key={+moment(arraysItem[0].startDatetime)}>
+        let timeTrackerWrapperItems = createArayOfArrays(this.props.arrTasks).map((arraysItem, index) => (
+            <div className="time_tracker_wrapper" key={'time-entry-group_' + index}>
                 <div className="header">
                     <div className="date">{moment(arraysItem[0].startDatetime).format('DD.MM.YYYY')}</div>
                     <div className="allTime">Total time: {this.getSumTime(arraysItem)}</div>

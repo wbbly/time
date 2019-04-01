@@ -18,7 +18,6 @@ export function getDateInString(seconds) {
 }
 
 export function getTimInStringSeconds(seconds) {
-    console.log(seconds, '!!!!');
     if (typeof seconds === 'string') {
         return '-';
     }

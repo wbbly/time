@@ -29,13 +29,13 @@ export default class ProjectData extends Component {
                 value: 'Time',
             },
         ];
-        const tableInfoElements = this.props.tableInfo.map(item => (
-            <tr key={item.id}>
+        const tableInfoElements = this.props.tableInfo.map((item, index) => (
+            <tr key={'table-header_' + index}>
                 <td>{item.name}</td>
                 <td>{getDateInString(item.totalTime)}</td>
             </tr>
         ));
-        const tableHeaderElements = tableHeader.map(item => <th key={item.key}>{item.value}</th>);
+        const tableHeaderElements = tableHeader.map((item, index) => <th key={'table-info_' + index}>{item.value}</th>);
 
         return (
             <div className="project_data_wrapper">

@@ -10,8 +10,8 @@ class Select extends Component {
     };
 
     render() {
-        const listElements = this.state.list.map(item => (
-            <li onClick={e => this.setItem(item)} key={item}>
+        const listElements = this.state.list.map((item, index) => (
+            <li onClick={e => this.setItem(item)} key={'select-element_' + index}>
                 <span>{item}</span>
             </li>
         ));

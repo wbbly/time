@@ -12,7 +12,7 @@ import { AppConfig } from '../../config';
 import { adminOrNot } from '../../services/authentication';
 
 class TeamPage extends Component {
-    headerItems = ['Name', 'E-mail', 'Access'];
+    headerItems = ['Name', 'E-mail', 'Access', 'Status'];
     state = {
         activeEmail: '',
     };
@@ -34,13 +34,18 @@ class TeamPage extends Component {
 
     render() {
         let programersArr = this.props.programersArr;
-        const headerItemsElements = this.headerItems.map(element => <th key={element}>{element}</th>);
-        const items = programersArr.map(element => (
-            <tr key={element.id}>
+        const headerItemsElements = this.headerItems.map((element, index) => (
+            <th key={'team-group-header_' + index}>{element}</th>
+        ));
+        const items = programersArr.map((element, index) => (
+            <tr key={'team-member_' + index}>
                 <td>{element.username}</td>
                 <td>{element.email}</td>
                 <td>
                     <div className="access_container">{element.role.title}</div>
+                </td>
+                <td>
+                    <div>{element.is_active ? 'Active' : 'Not active'}</div>
                 </td>
             </tr>
         ));

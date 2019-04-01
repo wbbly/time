@@ -67,7 +67,6 @@ const initialState = {
             tooltips: {
                 callbacks: {
                     label: function(tooltipItem) {
-                        console.log(tooltipItem, 'tooltipItem');
                         return moment(tooltipItem.yLabel)
                             .utc()
                             .format('HH:mm:ss');

@@ -41,7 +41,6 @@ export default class CreateProjectModal extends Component {
     }
 
     render() {
-        console.log(this.state.selectValue);
         let selectItems = this.state.selectValue.map(value => (
             <div className={`item`} onClick={e => this.setItem(value)}>
                 <div className={`circle ${value.name}`} />

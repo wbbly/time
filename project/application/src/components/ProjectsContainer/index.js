@@ -20,7 +20,6 @@ class ProjectsContainer extends Component {
     }
 
     render() {
-        console.log(this.props.projectsArr);
         let projectsItems = this.props.projectsArr.map(item => (
             <div className="projects_container_project_data">
                 <div className="name">{item.name}</div>

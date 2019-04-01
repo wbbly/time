@@ -40,7 +40,7 @@ export const getProjectsV2 = {
 };
 
 export const getProjectsV2ProjectPageAdmin = {
-    graphqlRequest: `{ project_v2 (limit: 100) {
+    graphqlRequest: `{ project_v2 (order_by: {name: asc}, limit: 100) {
         id
         is_active
         name
@@ -80,7 +80,7 @@ export const getProjectsV2ProjectPageAdmin = {
 
 export function getProjectsV2ProjectPageUser(id) {
     return {
-        graphqlRequest: `{ project_v2  {
+        graphqlRequest: `{ project_v2 (order_by: {name: asc})  {
         id
         is_active
         name
@@ -121,12 +121,12 @@ export function getProjectsV2ProjectPageUser(id) {
 
 export function getTodayTimeEntries(id) {
     return {
-        graphqlRequest: `{ timer_v2 (where: {user_id: {_eq: "${id}"}},order_by: {start_datetime: desc}, limit: 50) {
+        graphqlRequest: `{ timer_v2 (where: {user_id: {_eq: "${id}"}},order_by: {created_at: desc}, limit: 50) {
             id,
             start_datetime,
             end_datetime,
             issue,
-             project {
+            project {
                 name,
                 id,
                 project_color {
@@ -214,15 +214,16 @@ export function getProjectReport(object) {
 
 export const getTeamData = {
     graphqlRequest: `{
-      user{
-          id,
-          username,
-          email,
-          role{
-              title
-          }
-      }
-  }`,
+    user (order_by: {username: asc}) {
+            id,
+            username,
+            email,
+            role{
+                title
+            },
+            is_active
+        }
+    }`,
 };
 
 export function getDateAndTimeToGraphick(object) {
@@ -245,7 +246,9 @@ export function getDateAndTimeToGraphick(object) {
 }
 
 export function getReports(userId, projectId, startTime, endTime) {
-    const projectWhereStatement = projectId ? `(where: {id: {_eq: "${projectId}"}})` : '';
+    const projectWhereStatement = projectId
+        ? `(where: {id: {_eq: "${projectId}"}}, order_by: {name: asc})`
+        : '(order_by: {name: asc})';
 
     const userWhereStatement = userId ? `user_id: {_eq: "${userId}"}` : '';
     let startTimeStatement = '';
@@ -274,14 +277,14 @@ export function getReports(userId, projectId, startTime, endTime) {
     const timerWhereStatement = timerStatementString ? `(where: {${timerStatementString}})` : '';
 
     const graphqlRequest = `{
-      project_v2 ${projectWhereStatement} {
-        id
-        name
-        timer ${timerWhereStatement} {
-          start_datetime
-          end_datetime         
+        project_v2 ${projectWhereStatement} {
+            id
+            name
+            timer ${timerWhereStatement} {
+                start_datetime
+                end_datetime         
+            }
         }
-      }
     }`;
 
     return {
