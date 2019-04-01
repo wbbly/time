@@ -11,11 +11,7 @@ import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
 import { client } from '../../requestSettings';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
-import {
-    getTodayTimeEntries,
-    returnMutationLinkDeleteTimeEntries,
-    getProjectsV2,
-} from '../../queries';
+import { getTodayTimeEntries, returnMutationLinkDeleteTimeEntries, getProjectsV2 } from '../../queries';
 import { checkAuthentication, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
