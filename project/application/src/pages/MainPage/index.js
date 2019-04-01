@@ -156,7 +156,7 @@ class MainPage extends Component {
                 this.socket.emit('update-timer-v2', {
                     userId: JSON.parse(localStorage.getItem('userObject')).id,
                     issue: this.mainTaskName.value,
-                    projectId: this.state.seletedProject,
+                    projectId: this.state.seletedProject.id,
                 });
             }
         }, 300);
