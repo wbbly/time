@@ -12,17 +12,6 @@ class ManualTimeModal extends Component {
         activeItem: '',
     };
 
-    checkSeconds(object) {
-        if (object.timeFrom.length === 5) {
-            object.timeFrom = object.timeFrom + ':00';
-        }
-        if (object.timeTo.length === 5) {
-            object.timeTo = object.timeTo + ':00';
-        }
-
-        return object;
-    }
-
     getIssues() {
         let items = this.props.arrProjects.map(item => (
             <div

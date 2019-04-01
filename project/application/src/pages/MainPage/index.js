@@ -11,13 +11,7 @@ import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
 import { client } from '../../requestSettings';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
-import {
-    getProjects,
-    getTodayTimeEntries,
-    returnMutationLinkAddTimeEntries,
-    returnMutationLinkDeleteTimeEntries,
-    getProjectsV2,
-} from '../../queries';
+import { getTodayTimeEntries, returnMutationLinkDeleteTimeEntries, getProjectsV2 } from '../../queries';
 import { checkAuthentication, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
@@ -96,7 +90,7 @@ class MainPage extends Component {
         this.socket.on('stop-timer-v2', data => {
             clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
             this.TIMER_LIVE_SUBSCRIPTION = undefined;
-            this.timerStop(data);
+            this.timerStop();
             if (this.stopTimerInitiator) {
                 // this.saveTimeEntry(timeEntry);
                 this.stopTimerInitiator = false;
@@ -168,11 +162,8 @@ class MainPage extends Component {
         }, 300);
     }
 
-    timerStop(timeEntry) {
-        let timeEntries = this.props.arrTasks;
-        timeEntries.unshift(timeEntry);
-        this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: timeEntries });
-
+    timerStop() {
+        this.getTimeForMainPage();
         localStorage.removeItem('current-timer');
         this.setState(state => ({
             classToggle: !state.classToggle,
@@ -200,9 +191,9 @@ class MainPage extends Component {
                 newArr.push(this.props.arrTasks[i]);
             }
         }
-        client
-            .request(returnMutationLinkDeleteTimeEntries(item))
-            .then(data => this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: newArr }));
+        client.request(returnMutationLinkDeleteTimeEntries(item)).then(data => {
+            this.getTimeForMainPage();
+        });
     }
 
     getTimeNow(object, data) {
@@ -223,7 +214,7 @@ class MainPage extends Component {
         });
         this.timerStart();
         this.setState(state => ({
-            classToggle: !state.classToggle,
+            classToggle: false,
         }));
         this.setOldTaskName(data);
     }
@@ -291,17 +282,6 @@ class MainPage extends Component {
         this.saveStartTimer('control_task_time_icons play', item.project.id);
     }
 
-    getDate(date) {
-        if (date === moment().format('YYYY-MM-DD')) {
-            return 'Today';
-        } else {
-            return date
-                .split('-')
-                .reverse()
-                .join('.');
-        }
-    }
-
     getSumTime(arr) {
         let sumTime = 0;
         for (let i = 0; i < arr.length; i++) {
@@ -351,7 +331,7 @@ class MainPage extends Component {
         const buttonState = classToggle ? 'play' : 'stop';
         const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
         let timeTrackerWrapperItems = createArayOfArrays(this.props.arrTasks).map(arraysItem => (
-            <div className="time_tracker_wrapper">
+            <div className="time_tracker_wrapper" key={+moment(arraysItem[0].startDatetime)}>
                 <div className="header">
                     <div className="date">{moment(arraysItem[0].startDatetime).format('DD.MM.YYYY')}</div>
                     <div className="allTime">Total time: {this.getSumTime(arraysItem)}</div>
