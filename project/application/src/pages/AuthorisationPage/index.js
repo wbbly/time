@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import * as firebase from 'firebase';
 
 import './index.css';
 import { checkAuthenticationOnLoginPage } from '../../services/authentication';
@@ -46,8 +45,6 @@ class AuthorisationPage extends Component {
     };
 
     componentWillMount() {
-        const config = AppConfig.firebase;
-        firebase.initializeApp(config);
     }
 
     render() {

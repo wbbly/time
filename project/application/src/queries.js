@@ -1,14 +1,3 @@
-export const getProjects = {
-    graphqlRequest: `{ project(order_by: {name: desc}) {
-            id
-            name
-            projectStatus
-            team
-            colorProject
-        }
-    }`,
-};
-
 export const getProjectsV2 = {
     graphqlRequest: `{ project_v2(order_by: {name: desc}) {
             id
@@ -165,17 +154,6 @@ export function getTodayTimeEntries(id) {
     };
 }
 
-export function getProjectTime(email) {
-    return {
-        graphqlRequest: `{
-            timeTracker (where: {email: {_eq: "${email}"}},order_by: {date: desc, timeFrom: desc}) {
-                timePassed
-                project
-            }
-        }`,
-    };
-}
-
 export function getUsers() {
     return {
         graphqlRequest: `{
@@ -226,25 +204,6 @@ export const getTeamData = {
     }`,
 };
 
-export function getDateAndTimeToGraphick(object) {
-    return {
-        graphqlRequest: `{
-            timeTracker (
-                where: {
-                    _and: [
-                        {email: {_eq: "${object.email}"}},
-                        {date: {_gte: "${object.from}"}},
-                        {date: {_lte: "${object.to}"}},
-                    ]
-                },
-                order_by: {date: desc, timeFrom: desc}) {
-                date
-                timePassed
-            }
-        }`,
-    };
-}
-
 export function getReports(userId, projectId, startTime, endTime) {
     const projectWhereStatement = projectId
         ? `(where: {id: {_eq: "${projectId}"}}, order_by: {name: asc})`
@@ -289,46 +248,6 @@ export function getReports(userId, projectId, startTime, endTime) {
 
     return {
         graphqlRequest,
-    };
-}
-
-export function getProjectANndTimeToGraphick(object) {
-    return {
-        graphqlRequest: `{
-            timeTracker (where: {
-            _and: [
-                {email: {_eq: "${object.email}"}}
-                {date: {_gte: "${object.from}"}},
-                {date: {_lte: "${object.to}"}},
-            ]
-            },order_by: {date: desc, timeFrom: desc}) {
-                project
-                timePassed
-            }
-        }`,
-    };
-}
-
-export function returnMutationLinkAddTimeEntries(object) {
-    return {
-        graphqlRequest: `
-        mutation {
-            insert_timeTracker(
-                objects: [
-                    {
-                        name: "${object.name}",
-                        date: "${object.date}",
-                        timeFrom: "${object.timeFrom}",
-                        timeTo: "${object.timeTo}",
-                        timePassed: "${object.timePassed}",
-                        project: "${object.project}",
-                        email: "${object.email}",
-                    }
-                ]
-            ){
-                affected_rows
-            }
-        }`,
     };
 }
 
@@ -401,24 +320,6 @@ export function getProjectColor() {
             project_color {
                 id
                 name
-            }
-        }`,
-    };
-}
-
-export function returnMutationUpdateTimerProject(id, object) {
-    return {
-        graphqlRequest: `
-        mutation {
-            update_timeTracker(
-                where: {id: {_eq:  ${id}}},
-                _set: {
-                    timeFrom: "${object.timeFrom}"
-                    timeTo: "${object.timeTo}"
-                    name: "${object.name}"
-                }
-            ) {
-                affected_rows
             }
         }`,
     };

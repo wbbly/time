@@ -8,7 +8,6 @@ import { client } from '../../requestSettings';
 import { getTeamData } from '../../queries';
 import teamPageAction from '../../actions/TeamPageAction';
 import { checkAuthentication } from '../../services/authentication';
-import { AppConfig } from '../../config';
 import { adminOrNot } from '../../services/authentication';
 
 class TeamPage extends Component {
@@ -21,17 +20,6 @@ class TeamPage extends Component {
         this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: !this.props.createUserModal });
     }
 
-    canAddToTeam(email) {
-        email = atob(email);
-        const adminEmails = AppConfig.adminEmails;
-
-        if (adminEmails.indexOf(email) > -1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     render() {
         let programersArr = this.props.programersArr;
         const headerItemsElements = this.headerItems.map((element, index) => (
@@ -42,7 +30,8 @@ class TeamPage extends Component {
                 <td>{element.username}</td>
                 <td>{element.email}</td>
                 <td>
-                    <div className="access_container">{element.role.title}</div>
+                    {element.role.title !== 'ROLE_ADMIN' && <div className="access_container">{element.role.title}</div>}
+                    {element.role.title === 'ROLE_ADMIN' && <div className="access_container red">{element.role.title}</div>}
                 </td>
                 <td>
                     <div>{element.is_active ? 'Active' : 'Not active'}</div>

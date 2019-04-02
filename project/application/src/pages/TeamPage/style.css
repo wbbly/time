@@ -89,3 +89,7 @@
     align-items: center;
     justify-content: center;
 }
+
+.team_page_data table .access_container.red {
+    background-color: red;
+}
