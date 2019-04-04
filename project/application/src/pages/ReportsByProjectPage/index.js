@@ -12,6 +12,7 @@ class ReportsByProjectsPage extends Component {
     state = {
         dataOfProject: [],
         sumTime: '',
+        countTasks: '',
     };
 
     getDateInPointsFormat(momentDate) {
@@ -55,6 +56,9 @@ class ReportsByProjectsPage extends Component {
                         {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
                     </div>
                     <div className="header_name">
+                        Sum tasks: {this.state.countTasks}
+                    </div>
+                    <div className="header_name">
                         Sum time:{' '}
                         {moment(this.state.sumTime)
                             .utc()
@@ -90,6 +94,7 @@ class ReportsByProjectsPage extends Component {
             .then(data => {
                 this.setState({ dataOfProject: data.project_v2[0].timer });
                 this.setState({ sumTime: this.getSumtime(data.project_v2[0].timer) });
+                this.setState({ countTasks: data.project_v2[0].timer.length });
             });
     }
 }

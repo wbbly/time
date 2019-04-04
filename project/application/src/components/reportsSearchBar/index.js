@@ -15,7 +15,7 @@ export default class ReportsSearchBar extends Component {
     };
 
     openSelect() {
-        this.userInput.select()
+        this.userInput.select();
         this.setState({ toggleSelect: true });
         document.addEventListener('click', this.closeDropdown);
     }
