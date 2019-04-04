@@ -165,6 +165,29 @@ export function getUsers() {
     };
 }
 
+
+export function getDataByProjectName(projectName,userId,startDate,endDate) {
+    return {
+        graphqlRequest: `{
+            project_v2 (
+                where:{
+                name:{_eq:"${projectName}"},
+                }) {
+                timer(where:{
+                    user_id: {_eq:"${userId}"}
+                    start_datetime: {_gte:"${startDate}"},
+                    end_datetime: {_lt:"${endDate}"}
+                })
+                 {
+                    issue
+                    start_datetime
+                    end_datetime
+                }
+            }
+        }`,
+    };
+}
+
 export function getProjectReport(object) {
     return {
         graphqlRequest: `{

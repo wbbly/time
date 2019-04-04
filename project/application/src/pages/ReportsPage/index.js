@@ -213,6 +213,7 @@ class ReportsPage extends Component {
         this.setState({toggleBar: false});
         client.request(getReports(this.props.setUser.id, undefined, dateFrom, dateTo)).then(data => {
             let dataToGraph = this.getArrOfProjectsData(data);
+            console.log(dataToGraph, '!@');
             this.props.reportsPageAction('SET_PROJECTS', {data: dataToGraph.statsByProjects});
             this.props.reportsPageAction(
                 'SET_LINE_GRAPH',
