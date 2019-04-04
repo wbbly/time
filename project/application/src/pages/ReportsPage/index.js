@@ -13,7 +13,7 @@ import ProjectsContainer from '../../components/ProjectsContainer';
 import { client } from '../../requestSettings';
 import { getUsers, getReports } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { checkAuthentication, getUserId } from '../../services/authentication';
+import { checkAuthentication, getUserAdminRight } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
 
 class ReportsPage extends Component {
@@ -112,7 +112,7 @@ class ReportsPage extends Component {
                             )}
                         </div>
                     </div>
-                    <ReportsSearchBar
+                    {getUserAdminRight() === 'ROLE_ADMIN' && <ReportsSearchBar
                         settedDate={{
                             startDate: this.state.selectionRange.startDate,
                             endDate: this.state.selectionRange.endDate,
@@ -120,7 +120,7 @@ class ReportsPage extends Component {
                         getDataUsers={e => this.getDataUsers()}
                         setUser={this.props.setUser}
                         reportsPageAction={this.props.reportsPageAction}
-                    />
+                    />}
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
                             <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
