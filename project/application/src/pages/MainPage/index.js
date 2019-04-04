@@ -181,7 +181,7 @@ class MainPage extends Component {
         this.time.timeStart = '';
         setTimeout(() => {
             this.mainTaskName.value = '';
-        }, 300);
+        }, 500);
     }
 
     deleteFromArr(item) {
