@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 import './style.css';
-import { client } from "../../requestSettings";
-import { getUsers } from "../../queries";
+import { client } from '../../requestSettings';
+import { getUsers } from '../../queries';
 import * as moment from 'moment';
 
 export default class ReportsSearchBar extends Component {
@@ -37,8 +37,8 @@ export default class ReportsSearchBar extends Component {
     };
 
     setItem(item) {
-        this.userInput.value  = item.username;
-        this.props.reportsPageAction('SET_ACTIVE_USER', { data: item })
+        this.userInput.value = item.username;
+        this.props.reportsPageAction('SET_ACTIVE_USER', { data: item });
     }
 
     findUser(items, searchText) {
@@ -54,7 +54,7 @@ export default class ReportsSearchBar extends Component {
                         .indexOf(searchText) > -1
                 );
             });
-            this.setState({ selectUersData: finishArr})
+            this.setState({ selectUersData: finishArr });
         } else {
             this.setState({ selectUersData: this.state.selectUersDataEtalon });
         }
@@ -63,8 +63,7 @@ export default class ReportsSearchBar extends Component {
     setOtherUser() {
         let start = this.getYear(this.props.settedDate.startDate);
         let end = this.getYear(this.props.settedDate.endDate);
-        this.props.getDataUsers(
-        )
+        this.props.getDataUsers();
     }
 
     getYear(date) {
@@ -77,15 +76,12 @@ export default class ReportsSearchBar extends Component {
                 <div className="reports_search_bar_search_field_container">
                     <div className="reports_search_select_wrapper" ref={div => (this.dropList = div)}>
                         <div className="reports_search_select_header">
-                            <input type="text"
-                                   onFocus={e => this.openSelect()}
-                                   onKeyUp={e =>
-                                       this.findUser(
-                                           this.state.selectUersDataEtalon,
-                                           this.userInput.value
-                                       )
-                                   }
-                                   ref={input => (this.userInput = input)}/>
+                            <input
+                                type="text"
+                                onFocus={e => this.openSelect()}
+                                onKeyUp={e => this.findUser(this.state.selectUersDataEtalon, this.userInput.value)}
+                                ref={input => (this.userInput = input)}
+                            />
                             {/*{this.props.setUser.username}*/}
                             <i className="arrow_down" />
                         </div>
@@ -115,6 +111,5 @@ export default class ReportsSearchBar extends Component {
             this.setState({ selectUersData: data.user });
             this.setState({ selectUersDataEtalon: data.user });
         });
-
     }
 }

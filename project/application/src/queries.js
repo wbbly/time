@@ -165,8 +165,7 @@ export function getUsers() {
     };
 }
 
-
-export function getDataByProjectName(projectName,userId,startDate,endDate) {
+export function getDataByProjectName(projectName, userId, startDate, endDate) {
     return {
         graphqlRequest: `{
             project_v2 (

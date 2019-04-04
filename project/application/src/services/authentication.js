@@ -46,7 +46,7 @@ export function getUserData() {
     }
     return {
         id: storageItem.id,
-        username: storageItem.username
+        username: storageItem.username,
     };
 }
 

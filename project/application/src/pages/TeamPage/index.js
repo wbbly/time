@@ -30,8 +30,12 @@ class TeamPage extends Component {
                 <td>{element.username}</td>
                 <td>{element.email}</td>
                 <td>
-                    {element.role.title !== 'ROLE_ADMIN' && <div className="access_container">{element.role.title}</div>}
-                    {element.role.title === 'ROLE_ADMIN' && <div className="access_container red">{element.role.title}</div>}
+                    {element.role.title !== 'ROLE_ADMIN' && (
+                        <div className="access_container">{element.role.title}</div>
+                    )}
+                    {element.role.title === 'ROLE_ADMIN' && (
+                        <div className="access_container red">{element.role.title}</div>
+                    )}
                 </td>
                 <td>
                     <div>{element.is_active ? 'Active' : 'Not active'}</div>

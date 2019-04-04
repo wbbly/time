@@ -14,7 +14,7 @@ import { client } from '../../requestSettings';
 import { getUsers, getReports } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { checkAuthentication, getUserId } from '../../services/authentication';
-import ReportsSearchBar from "../../components/reportsSearchBar";
+import ReportsSearchBar from '../../components/reportsSearchBar';
 
 class ReportsPage extends Component {
     state = {
@@ -59,7 +59,7 @@ class ReportsPage extends Component {
         },
         tooltips: {
             callbacks: {
-                label: function (tooltipItem) {
+                label: function(tooltipItem) {
                     return moment(tooltipItem.yLabel)
                         .utc()
                         .format('HH:mm:ss');
@@ -76,8 +76,8 @@ class ReportsPage extends Component {
     }
 
     handleSelect = ranges => {
-        this.setState({selectionRange: ranges.selection});
-        this.props.reportsPageAction('SET_TIME', {data: ranges.selection});
+        this.setState({ selectionRange: ranges.selection });
+        this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
         this.getDataUsers(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
     };
 
@@ -86,14 +86,14 @@ class ReportsPage extends Component {
     }
 
     openCalendar() {
-        this.setState({dateSelect: !this.state.dateSelect});
+        this.setState({ dateSelect: !this.state.dateSelect });
     }
 
     render() {
         return (
             <div className="wrapper_reports_page">
                 {checkAuthentication()}
-                <LeftBar/>
+                <LeftBar />
                 <div className="data_container_reports_page">
                     <div className="header">
                         <div className="header_name">Summary report</div>
@@ -103,11 +103,11 @@ class ReportsPage extends Component {
                                     {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} {' - '}
                                     {moment(this.props.timeRange.endDate).format('DD.MM.YYYY')}
                                 </span>
-                                <i className="arrow_down"/>
+                                <i className="arrow_down" />
                             </div>
                             {this.state.dateSelect && (
                                 <div className="select_body">
-                                    <DateRangePicker ranges={[this.props.timeRange]} onChange={this.handleSelect}/>
+                                    <DateRangePicker ranges={[this.props.timeRange]} onChange={this.handleSelect} />
                                 </div>
                             )}
                         </div>
@@ -115,7 +115,7 @@ class ReportsPage extends Component {
                     <ReportsSearchBar
                         settedDate={{
                             startDate: this.state.selectionRange.startDate,
-                            endDate: this.state.selectionRange.endDate
+                            endDate: this.state.selectionRange.endDate,
                         }}
                         getDataUsers={e => this.getDataUsers()}
                         setUser={this.props.setUser}
@@ -123,7 +123,7 @@ class ReportsPage extends Component {
                     />
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
-                            <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption}/>
+                            <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
                         )}
                     </div>
                     <div className="projects_chart_container">
@@ -155,7 +155,7 @@ class ReportsPage extends Component {
     }
 
     changeDoughnutChat(chartObject, dataFromServer) {
-        this.setState({toggleChar: false});
+        this.setState({ toggleChar: false });
         let newObjectChart = chartObject;
         let labels = [];
         let dataTime = [];
@@ -192,7 +192,7 @@ class ReportsPage extends Component {
             }
         }
 
-        return {statsByProjects, statsByDates};
+        return { statsByProjects, statsByDates };
 
         function getDates(startDate, stopDate) {
             let dateObj = {};
@@ -206,23 +206,22 @@ class ReportsPage extends Component {
         }
     }
 
-
-
-
-    getDataUsers(dateFrom = this.getYear(this.state.selectionRange.startDate), dateTo = this.getYear(this.state.selectionRange.endDate)) {
-        this.setState({toggleBar: false});
+    getDataUsers(
+        dateFrom = this.getYear(this.state.selectionRange.startDate),
+        dateTo = this.getYear(this.state.selectionRange.endDate)
+    ) {
+        this.setState({ toggleBar: false });
         client.request(getReports(this.props.setUser.id, undefined, dateFrom, dateTo)).then(data => {
             let dataToGraph = this.getArrOfProjectsData(data);
-            console.log(dataToGraph, '!@');
-            this.props.reportsPageAction('SET_PROJECTS', {data: dataToGraph.statsByProjects});
+            this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
             this.props.reportsPageAction(
                 'SET_LINE_GRAPH',
                 this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(dataToGraph.statsByDates))
             );
             let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
-            this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', {data: obj});
-            this.setState({toggleBar: true});
-            this.setState({toggleChar: true});
+            this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
+            this.setState({ toggleBar: true });
+            this.setState({ toggleChar: true });
         });
     }
 
@@ -232,10 +231,10 @@ class ReportsPage extends Component {
             this.getYear(this.state.selectionRange.endDate)
         );
 
-        this.setState({selectUsersHeader: atob(localStorage.getItem('active_email'))});
+        this.setState({ selectUsersHeader: atob(localStorage.getItem('active_email')) });
         client.request(getUsers()).then(data => {
-            this.setState({selectUersData: data.user});
-            this.setState({selectUersDataEtalon: data.user});
+            this.setState({ selectUersData: data.user });
+            this.setState({ selectUersDataEtalon: data.user });
         });
     }
 }

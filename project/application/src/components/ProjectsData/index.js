@@ -7,7 +7,6 @@ import { returnMutationLinkDeleteProject } from '../../queries';
 import { getDateInString } from '../../pages/MainPage/timeInSecondsFunction';
 
 export default class ProjectData extends Component {
-
     render() {
         const tableHeader = [
             {
