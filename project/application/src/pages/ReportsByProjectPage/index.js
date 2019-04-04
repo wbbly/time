@@ -55,9 +55,7 @@ class ReportsByProjectsPage extends Component {
                         {this.props.match.params.name}: {this.getDateInPointsFormat(this.props.match.params.dateStart)}
                         {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
                     </div>
-                    <div className="header_name">
-                        Sum tasks: {this.state.countTasks}
-                    </div>
+                    <div className="header_name">Sum tasks: {this.state.countTasks}</div>
                     <div className="header_name">
                         Sum time:{' '}
                         {moment(this.state.sumTime)
