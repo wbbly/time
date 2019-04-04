@@ -112,15 +112,17 @@ class ReportsPage extends Component {
                             )}
                         </div>
                     </div>
-                    {getUserAdminRight() === 'ROLE_ADMIN' && <ReportsSearchBar
-                        settedDate={{
-                            startDate: this.state.selectionRange.startDate,
-                            endDate: this.state.selectionRange.endDate,
-                        }}
-                        getDataUsers={e => this.getDataUsers()}
-                        setUser={this.props.setUser}
-                        reportsPageAction={this.props.reportsPageAction}
-                    />}
+                    {getUserAdminRight() === 'ROLE_ADMIN' && (
+                        <ReportsSearchBar
+                            settedDate={{
+                                startDate: this.state.selectionRange.startDate,
+                                endDate: this.state.selectionRange.endDate,
+                            }}
+                            getDataUsers={e => this.getDataUsers()}
+                            setUser={this.props.setUser}
+                            reportsPageAction={this.props.reportsPageAction}
+                        />
+                    )}
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
                             <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />

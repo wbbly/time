@@ -13,6 +13,7 @@
     padding-top: 47px;
     padding-left: 72px;
     padding-right: 56px;
+    overflow-y: auto;
 }
 
 .reports_by_projects_wrapper .header {

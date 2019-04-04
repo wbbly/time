@@ -45,11 +45,6 @@
     color: #ffffff;
 }
 
-.projects_container_project_data_container {
-    max-height: 205px;
-    overflow: auto;
-}
-
 .projects_container_wrapper .chart {
     margin-left: 10%;
 }
