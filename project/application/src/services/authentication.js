@@ -39,6 +39,17 @@ export function getUserId() {
     return storageItem.id;
 }
 
+export function getUserData() {
+    let storageItem = JSON.parse(localStorage.getItem('userObject'));
+    if (!storageItem) {
+        return;
+    }
+    return {
+        id: storageItem.id,
+        username: storageItem.username
+    };
+}
+
 export function getUserAdminRight() {
     let storageItem = JSON.parse(localStorage.getItem('userObject'));
     if (!storageItem) {

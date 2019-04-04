@@ -1,4 +1,4 @@
-import { getUserId } from '../services/authentication';
+import { getUserData } from '../services/authentication';
 import * as moment from 'moment';
 
 const initialState = {
@@ -7,7 +7,7 @@ const initialState = {
         endDate: new Date(),
         key: 'selection',
     },
-    setUserId: getUserId(),
+    setUser: getUserData(),
     dataBarChat: {
         defaultFontColor: 'red',
         labels: ['February', 'March', 'April', 'May', 'June', 'July'],
@@ -66,7 +66,7 @@ const initialState = {
             },
             tooltips: {
                 callbacks: {
-                    label: function(tooltipItem) {
+                    label: function (tooltipItem) {
                         return moment(tooltipItem.yLabel)
                             .utc()
                             .format('HH:mm:ss');
@@ -88,15 +88,17 @@ const initialState = {
 export function reportsPageReducer(state = initialState, action) {
     switch (action.type) {
         case 'SET_LINE_GRAPH':
-            return { ...state, dataBarChat: action.payload };
+            return {...state, dataBarChat: action.payload};
         case 'SET_DATA_FROM_SERVER':
-            return { ...state, dataFromServer: action.payload.data };
+            return {...state, dataFromServer: action.payload.data};
         case 'SET_DOUGHNUT_GRAPH':
-            return { ...state, dataDoughnutChat: action.payload.data };
+            return {...state, dataDoughnutChat: action.payload.data};
         case 'SET_PROJECTS':
-            return { ...state, projectsArr: action.payload.data };
+            return {...state, projectsArr: action.payload.data};
         case 'SET_TIME':
-            return { ...state, timeRange: action.payload.data };
+            return {...state, timeRange: action.payload.data};
+        case 'SET_ACTIVE_USER':
+            return {...state, setUser: action.payload.data};
         default:
             return state;
     }
