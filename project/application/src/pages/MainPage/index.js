@@ -19,8 +19,6 @@ class MainPage extends Component {
     ONE_MINUTE = 1000; // in ms
     TIMER_LIVE_SUBSCRIPTION;
     TIMER_MANUAL_UPDATE_SUBSCRIPTION;
-    startTimerInitiator = false;
-    stopTimerInitiator = false;
     state = {
         classToggle: true,
         time: moment()
@@ -64,11 +62,7 @@ class MainPage extends Component {
             );
         });
         this.socket.on('check-timer-v2', data => {
-            if (this.startTimerInitiator) {
-                this.startTimerInitiator = false;
-            }
-
-            if (data) {
+            if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
                 localStorage.setItem(
                     'current-timer',
                     JSON.stringify({
@@ -91,10 +85,6 @@ class MainPage extends Component {
             clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
             this.TIMER_LIVE_SUBSCRIPTION = undefined;
             this.timerStop();
-            if (this.stopTimerInitiator) {
-                // this.saveTimeEntry(timeEntry);
-                this.stopTimerInitiator = false;
-            }
         });
     };
 
@@ -118,14 +108,12 @@ class MainPage extends Component {
 
     saveStartTimer(className, setProjectId = this.state.seletedProject.id) {
         if (className === 'control_task_time_icons play') {
-            this.startTimerInitiator = true;
             this.socket.emit('start-timer-v2', {
                 userId: JSON.parse(localStorage.getItem('userObject')).id,
                 issue: this.mainTaskName.value,
                 projectId: setProjectId,
             });
         } else {
-            this.stopTimerInitiator = true;
             this.socket.emit('stop-timer-v2', {
                 userId: JSON.parse(localStorage.getItem('userObject')).id,
             });
@@ -156,10 +144,13 @@ class MainPage extends Component {
                 this.socket.emit('update-timer-v2', {
                     userId: JSON.parse(localStorage.getItem('userObject')).id,
                     issue: this.mainTaskName.value,
-                    projectId: this.state.seletedProject,
+                    projectId: this.state.seletedProject.id,
                 });
             }
-        }, 300);
+
+            clearTimeout(this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
+            this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = undefined;
+        }, 1000);
     }
 
     timerStop() {
@@ -375,7 +366,7 @@ class MainPage extends Component {
                                         }}
                                     >
                                         <input
-                                            placeholder="Finde..."
+                                            placeholder="Find..."
                                             type="text"
                                             ref={input => (this.inputSearchText = input)}
                                             onKeyUp={e =>
@@ -389,8 +380,9 @@ class MainPage extends Component {
                                         />
                                     </div>
                                     <div className="projects_modal_data_wrapper">
-                                        {this.state.arrProjectsToModal.map(item => (
+                                        {this.state.arrProjectsToModal.map((item, index) => (
                                             <div
+                                                key={'timer-project-' + index}
                                                 className="projects_modal_item"
                                                 onClick={e => this.setActiveProject(item)}
                                             >

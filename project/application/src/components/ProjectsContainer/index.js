@@ -38,6 +38,7 @@ class ProjectsContainer extends Component {
                     this.props.selectionRange.startDate
                 )}/${this.getDateToLink(this.props.selectionRange.endDate)}`}
                 style={{ textDecoration: 'none' }}
+                key={'projects_item' + index}
             >
                 <div className="projects_container_project_data">
                     <div className="name">{item.name}</div>
