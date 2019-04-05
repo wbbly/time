@@ -185,15 +185,12 @@ class MainPage extends Component {
     }
 
     deleteFromArr(item) {
-        let newArr = [];
-        for (let i = 0; i < this.props.arrTasks.length; i++) {
-            if (this.props.arrTasks[i].id !== item.id) {
-                newArr.push(this.props.arrTasks[i]);
-            }
+        let check = window.confirm('Do you really want to delete this time entry?');
+        if (check) {
+            client.request(returnMutationLinkDeleteTimeEntries(item)).then(data => {
+                this.getTimeForMainPage();
+            });
         }
-        client.request(returnMutationLinkDeleteTimeEntries(item)).then(data => {
-            this.getTimeForMainPage();
-        });
     }
 
     getTimeNow(object, data) {
