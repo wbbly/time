@@ -19,16 +19,32 @@ class ProjectsContainer extends Component {
         return moment(momentDate).format('YYYY-MM-DD');
     }
 
+    convertMS(milliseconds) {
+        var day, hour, minute, seconds;
+        seconds = Math.floor(milliseconds / 1000);
+        minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        hour = Math.floor(minute / 60);
+        minute = minute % 60;
+        day = Math.floor(hour / 24);
+        hour = hour % 24;
+        return `${day} day | ${hour}:${minute}:${seconds}`;
+    }
+
     render() {
-        let projectsItems = this.props.projectsArr.map((item, index) => (
-            <div className="projects_container_project_data" key={'projects_item' + index}>
-                <div className="name">{item.name}</div>
-                <div className="time">
-                    {moment(item.duration)
-                        .utc()
-                        .format('HH:mm:ss')}
+        let projectsItems = this.props.projectsArr.map(item => (
+            <Link
+                to={`/project-report/${item.name}/${this.getDateToLink(
+                    this.props.selectionRange.startDate
+                )}/${this.getDateToLink(this.props.selectionRange.endDate)}`}
+                style={{ textDecoration: 'none' }}
+                key={'projects_item' + index}
+            >
+                <div className="projects_container_project_data">
+                    <div className="name">{item.name}</div>
+                    <div className="time">{this.convertMS(item.duration)}</div>
                 </div>
-            </div>
+            </Link>
         ));
 
         return (

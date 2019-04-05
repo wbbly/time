@@ -21,10 +21,7 @@ ReactDOM.render(
                 <Route path="/reports" component={ReportsPage} />
                 <Route path="/projects" component={ProjectsPage} />
                 <Route path="/team" component={TeamPage} />
-                <Route
-                    path="/project-report/:id/:dateStart/:endDate/:name/:activeEmail"
-                    component={ReportsByProjectsPage}
-                />
+                <Route path="/project-report/:name/:dateStart/:endDate/" component={ReportsByProjectsPage} />
             </div>
         </Router>
     </Provider>,

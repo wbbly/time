@@ -13,7 +13,8 @@ import ProjectsContainer from '../../components/ProjectsContainer';
 import { client } from '../../requestSettings';
 import { getUsers, getReports } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { checkAuthentication, getUserId } from '../../services/authentication';
+import { checkAuthentication, getUserAdminRight } from '../../services/authentication';
+import ReportsSearchBar from '../../components/reportsSearchBar';
 
 class ReportsPage extends Component {
     state = {
@@ -29,6 +30,7 @@ class ReportsPage extends Component {
         selectUsersHeader: '',
         dateSelectUsers: false,
         selectUersData: [],
+        selectUersDataEtalon: [],
     };
     lineChartOption = {
         scales: {
@@ -110,7 +112,17 @@ class ReportsPage extends Component {
                             )}
                         </div>
                     </div>
-                    {/*<ReportsSearchBar users={this.state.selectUersData} />*/}
+                    {getUserAdminRight() === 'ROLE_ADMIN' && (
+                        <ReportsSearchBar
+                            settedDate={{
+                                startDate: this.state.selectionRange.startDate,
+                                endDate: this.state.selectionRange.endDate,
+                            }}
+                            getDataUsers={e => this.getDataUsers()}
+                            setUser={this.props.setUser}
+                            reportsPageAction={this.props.reportsPageAction}
+                        />
+                    )}
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
                             <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
@@ -196,9 +208,12 @@ class ReportsPage extends Component {
         }
     }
 
-    getDataUsers(dateFrom, dateTo) {
+    getDataUsers(
+        dateFrom = this.getYear(this.state.selectionRange.startDate),
+        dateTo = this.getYear(this.state.selectionRange.endDate)
+    ) {
         this.setState({ toggleBar: false });
-        client.request(getReports(getUserId(), undefined, dateFrom, dateTo)).then(data => {
+        client.request(getReports(this.props.setUser.id, undefined, dateFrom, dateTo)).then(data => {
             let dataToGraph = this.getArrOfProjectsData(data);
             this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
             this.props.reportsPageAction(
@@ -221,6 +236,7 @@ class ReportsPage extends Component {
         this.setState({ selectUsersHeader: atob(localStorage.getItem('active_email')) });
         client.request(getUsers()).then(data => {
             this.setState({ selectUersData: data.user });
+            this.setState({ selectUersDataEtalon: data.user });
         });
     }
 }
@@ -233,7 +249,7 @@ const mapStateToProps = store => {
         dataDoughnutChat: store.reportsPageReducer.dataDoughnutChat,
         dataFromServer: store.reportsPageReducer.dataFromServer,
         timeRange: store.reportsPageReducer.timeRange,
-        setUserId: store.reportsPageReducer.setUserId,
+        setUser: store.reportsPageReducer.setUser,
     };
 };
 

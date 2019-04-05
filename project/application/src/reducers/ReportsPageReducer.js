@@ -1,4 +1,4 @@
-import { getUserId } from '../services/authentication';
+import { getUserData } from '../services/authentication';
 import * as moment from 'moment';
 
 const initialState = {
@@ -7,7 +7,7 @@ const initialState = {
         endDate: new Date(),
         key: 'selection',
     },
-    setUserId: getUserId(),
+    setUser: getUserData(),
     dataBarChat: {
         defaultFontColor: 'red',
         labels: ['February', 'March', 'April', 'May', 'June', 'July'],
@@ -97,6 +97,8 @@ export function reportsPageReducer(state = initialState, action) {
             return { ...state, projectsArr: action.payload.data };
         case 'SET_TIME':
             return { ...state, timeRange: action.payload.data };
+        case 'SET_ACTIVE_USER':
+            return { ...state, setUser: action.payload.data };
         default:
             return state;
     }

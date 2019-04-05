@@ -44,8 +44,7 @@ class AuthorisationPage extends Component {
             );
     };
 
-    componentWillMount() {
-    }
+    componentWillMount() {}
 
     render() {
         return (

@@ -2,8 +2,12 @@
     display: flex;
 }
 
-.projects_container_wrapper .projects_container_projects {
+.projects_container_wrapper a {
     width: 46%;
+}
+
+.projects_container_wrapper .projects_container_projects {
+    width: 100%;
 }
 
 .projects_container_wrapper .projects_container_projects .projects_header {
@@ -39,11 +43,6 @@
     line-height: normal;
     font-size: 16px;
     color: #ffffff;
-}
-
-.projects_container_project_data_container {
-    max-height: 205px;
-    overflow: auto;
 }
 
 .projects_container_wrapper .chart {

@@ -172,19 +172,16 @@ class MainPage extends Component {
         this.time.timeStart = '';
         setTimeout(() => {
             this.mainTaskName.value = '';
-        }, 300);
+        }, 500);
     }
 
     deleteFromArr(item) {
-        let newArr = [];
-        for (let i = 0; i < this.props.arrTasks.length; i++) {
-            if (this.props.arrTasks[i].id !== item.id) {
-                newArr.push(this.props.arrTasks[i]);
-            }
+        let check = window.confirm('Do you really want to delete this time entry?');
+        if (check) {
+            client.request(returnMutationLinkDeleteTimeEntries(item)).then(data => {
+                this.getTimeForMainPage();
+            });
         }
-        client.request(returnMutationLinkDeleteTimeEntries(item)).then(data => {
-            this.getTimeForMainPage();
-        });
     }
 
     getTimeNow(object, data) {
@@ -350,6 +347,7 @@ class MainPage extends Component {
                         <input
                             type="text"
                             className="add_task"
+                            maxlength="110"
                             placeholder="Add your task name"
                             ref={input => {
                                 this.mainTaskName = input;

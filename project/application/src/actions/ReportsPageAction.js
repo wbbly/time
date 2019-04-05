@@ -24,5 +24,10 @@ export default function reportsPageAction(actionType, action) {
             type: 'SET_TIME',
             payload: action,
         };
+    } else if (actionType === 'SET_ACTIVE_USER') {
+        return {
+            type: 'SET_ACTIVE_USER',
+            payload: action,
+        };
     }
 }

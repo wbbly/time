@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 
 import './style.css';
 import LeftBar from '../../components/LeftBar';
-import { getProjectReport } from '../../queries';
+import { getDataByProjectName } from '../../queries';
 import { client } from '../../requestSettings';
 import { timeInSeconds, getTimInStringSeconds } from '../MainPage/timeInSecondsFunction';
+import { connect } from 'react-redux';
+import * as moment from 'moment';
 
 class ReportsByProjectsPage extends Component {
     state = {
         dataOfProject: [],
         sumTime: '',
+        countTasks: '',
     };
 
     getDateInPointsFormat(momentDate) {
@@ -23,20 +26,23 @@ class ReportsByProjectsPage extends Component {
         return item || '-';
     }
 
-    getSumTime = arr => {
-        let sum = 0;
+    getSumtime(arr) {
+        let sumDate = 0;
         for (let i = 0; i < arr.length; i++) {
-            sum += timeInSeconds(arr[i].timePassed);
+            sumDate += +moment(arr[i].end_datetime) - +moment(arr[i].start_datetime);
         }
-        this.setState({ sumTime: getTimInStringSeconds(sum) });
-    };
+        return sumDate;
+    }
 
     render() {
         let projectsItems = this.state.dataOfProject.map(item => (
             <div className="projects_container_project_data">
-                <div className="name">{this.getSlash(item.name)}</div>
+                <div className="name">{this.getSlash(item.issue)}</div>
                 <div className="time">
-                    {this.getDateInPointsFormat(item.date)} | {item.timePassed}
+                    {moment(item.start_datetime).format('DD.MM.YYYY')} |{' '}
+                    {moment(+moment(item.end_datetime) - +moment(item.start_datetime))
+                        .utc()
+                        .format('HH:mm:ss')}
                 </div>
             </div>
         ));
@@ -49,7 +55,13 @@ class ReportsByProjectsPage extends Component {
                         {this.props.match.params.name}: {this.getDateInPointsFormat(this.props.match.params.dateStart)}
                         {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
                     </div>
-                    <div className="header_name">Sum time: {this.state.sumTime}</div>
+                    <div className="header_name">Sum tasks: {this.state.countTasks}</div>
+                    <div className="header_name">
+                        Sum time:{' '}
+                        {moment(this.state.sumTime)
+                            .utc()
+                            .format('HH:mm:ss')}
+                    </div>
                 </div>
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">
@@ -68,18 +80,27 @@ class ReportsByProjectsPage extends Component {
     componentDidMount() {
         client
             .request(
-                getProjectReport({
-                    projectId: this.props.match.params.id,
-                    activeEmail: this.props.match.params.activeEmail,
-                    from: this.props.match.params.dateStart,
-                    to: this.props.match.params.endDate,
-                })
+                getDataByProjectName(
+                    this.props.match.params.name,
+                    this.props.setUser.id,
+                    new Date(this.props.match.params.dateStart).toISOString().slice(0, -1),
+                    new Date(+new Date(this.props.match.params.endDate) + 24 * 60 * 60 * 1000 - 1)
+                        .toISOString()
+                        .slice(0, -1)
+                )
             )
             .then(data => {
-                this.getSumTime(data.timeTracker);
-                this.setState({ dataOfProject: data.timeTracker });
+                this.setState({ dataOfProject: data.project_v2[0].timer });
+                this.setState({ sumTime: this.getSumtime(data.project_v2[0].timer) });
+                this.setState({ countTasks: data.project_v2[0].timer.length });
             });
     }
 }
 
-export default ReportsByProjectsPage;
+const mapStateToProps = store => {
+    return {
+        setUser: store.reportsPageReducer.setUser,
+    };
+};
+
+export default connect(mapStateToProps)(ReportsByProjectsPage);
