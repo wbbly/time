@@ -4,7 +4,6 @@ import * as moment from 'moment';
 import { Doughnut } from 'react-chartjs-2';
 
 import './style.css';
-import { getTimInStringSeconds } from '../../pages/MainPage/timeInSecondsFunction';
 
 class ProjectsContainer extends Component {
     getIdOfProject(projectName) {
@@ -32,7 +31,7 @@ class ProjectsContainer extends Component {
     }
 
     render() {
-        let projectsItems = this.props.projectsArr.map(item => (
+        let projectsItems = this.props.projectsArr.map((item, index) => (
             <Link
                 to={`/project-report/${item.name}/${this.getDateToLink(
                     this.props.selectionRange.startDate
