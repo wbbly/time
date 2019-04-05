@@ -52,7 +52,9 @@ class ReportsByProjectsPage extends Component {
                 <div className="name">{this.getSlash(item.issue)}</div>
                 <div className="time">
                     {moment(item.start_datetime).format('DD.MM.YYYY')} |{' '}
-                    {this.convertMS(+moment(item.end_datetime) - +moment(item.start_datetime))}
+                    {moment(+moment(item.end_datetime) - +moment(item.start_datetime))
+                        .utc()
+                        .format('HH:mm:ss')}
                 </div>
             </div>
         ));

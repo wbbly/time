@@ -27,7 +27,18 @@ class ProjectsContainer extends Component {
         minute = minute % 60;
         day = Math.floor(hour / 24);
         hour = hour % 24;
-        return `${day} day | ${hour}:${minute}:${seconds}`;
+        return `${day} day | ${this.getZero(hour)}:${this.getZero(minute)}:${this.getZero(seconds)}`;
+    }
+
+    getZero (item) {
+        if (!item) {
+            return '00'
+        }
+        if ((item+'').length === 1) {
+            return '0'+item
+        } else {
+            return item
+        }
     }
 
     render() {
