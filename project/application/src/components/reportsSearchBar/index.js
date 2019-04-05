@@ -14,7 +14,7 @@ export default class ReportsSearchBar extends Component {
         toggleSelectProject: false,
         selectUersData: [],
         selectUersDataEtalon: [],
-        selectProjectData: []
+        selectProjectData: [],
     };
 
     openSelect() {
@@ -93,20 +93,20 @@ export default class ReportsSearchBar extends Component {
 
     getChecked(id) {
         if (this.state.selectProjectData.indexOf(id) !== -1) {
-            return true
+            return true;
         }
     }
 
     addProject(e, id) {
-        let projects = JSON.parse(JSON.stringify(this.state.selectProjectData))
+        let projects = JSON.parse(JSON.stringify(this.state.selectProjectData));
         if (e.target.checked) {
-            projects.push(id)
+            projects.push(id);
         } else {
             let item = projects.indexOf(id);
-            projects.splice(item,1)
+            projects.splice(item, 1);
         }
         console.log(projects);
-        this.setState({selectProjectData:projects})
+        this.setState({ selectProjectData: projects });
     }
 
     render() {
@@ -152,14 +152,18 @@ export default class ReportsSearchBar extends Component {
                     {this.state.toggleSelectProject && (
                         <div className="select_body">
                             {this.props.projectsData.map((item, index) => (
-                                <div className="select_users_item"
-                                          key={item.name+index}>
+                                <div className="select_users_item" key={item.name + index}>
                                     <label>
-                                    <Checkbox color={'primary'}
-                                              value={item.id}
-                                              checked={this.getChecked(item.id)}
-                                              onChange={e => {this.addProject(e,item.id)}}
-                                    /> {item.name}</label>
+                                        <Checkbox
+                                            color={'primary'}
+                                            value={item.id}
+                                            checked={this.getChecked(item.id)}
+                                            onChange={e => {
+                                                this.addProject(e, item.id);
+                                            }}
+                                        />{' '}
+                                        {item.name}
+                                    </label>
                                 </div>
                             ))}
                         </div>
