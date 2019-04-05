@@ -180,7 +180,9 @@ class MainPage extends Component {
         this.time.timeFinish = '';
         this.time.timeStart = '';
         setTimeout(() => {
-            this.mainTaskName.value = '';
+            if (!!this.mainTaskName) {
+                this.mainTaskName.value = '';
+            }
         }, 500);
     }
 

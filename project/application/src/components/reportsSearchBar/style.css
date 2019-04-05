@@ -18,7 +18,7 @@
 }
 
 .reports_search_bar_search_field_container {
-    width: 100%;
+    /*width: 100%;*/
     position: relative;
     margin-left: 22px;
     display: flex;
@@ -35,7 +35,7 @@
 }
 
 .reports_search_bar_search_field_container input {
-    width: 94%;
+    /*width: 94%;*/
     margin-left: 46px;
 }
 
@@ -66,7 +66,7 @@
 
 .reports_search_select_wrapper {
     position: relative;
-    width: 36%;
+    width: 100%;
     padding: 0 19px;
     border-right: 1px solid white;
 }
@@ -86,7 +86,7 @@
 
 .select_users_item {
     display: flex;
-    align-self: center;
+    align-items: center;
     height: 24px;
     padding: 12px 12px;
     cursor: pointer;
@@ -101,7 +101,7 @@
     position: absolute;
     top: 30px;
     left: 13px;
-    width: 37%;
+    width: 94%;
     max-height: 250px;
     overflow-y: auto;
     z-index: 3;
@@ -110,6 +110,7 @@
 }
 
 .reports_search_select_header input {
+    width: 100%;
     background-color: transparent;
     border: 0;
     color: white;

@@ -72,7 +72,7 @@
 
 .selects_container.select_users .select_users_item {
     display: flex;
-    align-self: center;
+    align-items: center;
     height: 24px;
     padding: 12px 12px;
     cursor: pointer;
@@ -90,4 +90,8 @@
     z-index: 3;
     background-color: #f5f5f5;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+.reports_search_bar_search_field_container.select {
+width: 50%;
 }
