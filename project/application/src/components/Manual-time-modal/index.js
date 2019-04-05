@@ -4,12 +4,17 @@ import * as moment from 'moment';
 import './style.css';
 import { changeTimeMutation, getTodayTimeEntries } from '../../queries';
 import { client } from '../../requestSettings';
+import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
 
 class ManualTimeModal extends Component {
     state = {
         activeProject: '',
         selectProject: false,
         activeItem: '',
+        startDate: '',
+        startTime: '',
+        endDate: '',
+        endTime: '',
     };
 
     getIssues() {
@@ -33,26 +38,6 @@ class ManualTimeModal extends Component {
 
     changeData() {
         let changedItem = JSON.parse(JSON.stringify(this.state.activeItem));
-        let startDateArr = this.inputTimeStartValue.value.split(':');
-        let endDateArr = this.inputTimeEndValue.value.split(':');
-
-        changedItem.startDatetime = moment(changedItem.startDatetime)
-            .set({
-                hour: startDateArr[0],
-                minute: startDateArr[1],
-                second: 0,
-            })
-            .utc()
-            .format();
-        changedItem.endDatetime = moment(changedItem.endDatetime)
-            .set({
-                hour: endDateArr[0],
-                minute: endDateArr[1],
-                second: 0,
-            })
-            .utc()
-            .format();
-
         changedItem.project = this.state.activeProject;
         changedItem.issue = this.inputNameValue.value;
 
@@ -62,8 +47,20 @@ class ManualTimeModal extends Component {
                     id: changedItem.id,
                     issue: changedItem.issue,
                     projectId: changedItem.project.id,
-                    startDatetime: changedItem.startDatetime,
-                    endDatetime: changedItem.endDatetime,
+                    startDatetime: moment(
+                        `${moment(this.state.startDate).format('YYYY-MM-DD')} ${moment(this.state.startTime).format(
+                            'HH:mm'
+                        )}`
+                    )
+                        .utc()
+                        .format(),
+                    endDatetime: moment(
+                        `${moment(this.state.endDate).format('YYYY-MM-DD')} ${moment(this.state.endTime).format(
+                            'HH:mm'
+                        )}`
+                    )
+                        .utc()
+                        .format(),
                 })
             )
             .then(data => {
@@ -95,7 +92,28 @@ class ManualTimeModal extends Component {
         }
     };
 
+    onChangeTime = time => {
+        console.log('Time: ', time);
+        this.setState({ startTime: time });
+    };
+
+    onChangeDate = date => {
+        console.log('Time: ', date);
+        this.setState({ startDate: date });
+    };
+
+    onChangeTimeEnd = time => {
+        console.log('Time: ', time);
+        this.setState({ endTime: time });
+    };
+
+    onChangeDateEnd = date => {
+        console.log('Time: ', date);
+        this.setState({ endDate: date });
+    };
+
     render() {
+        const { startDate, startTime, endDate, endTime } = this.state;
         return (
             <div className="manual_time_modal_wrapper">
                 <div className="manual_time_modal_background" />
@@ -108,7 +126,7 @@ class ManualTimeModal extends Component {
                     />
                     <div>
                         <span>Task name:</span>
-                        <input type="text" ref={input => (this.inputNameValue = input)} />
+                        <input type="text" maxLength={110} ref={input => (this.inputNameValue = input)} />
                     </div>
                     <div className=" project_select_edit_modal">
                         <span>Project:</span>
@@ -126,13 +144,23 @@ class ManualTimeModal extends Component {
                         <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
                     </div>
                     <div className="manual_timer_modal_timepickers_container">
-                        <div>
+                        <div className="margin_12">
                             <span> Time start:</span>
-                            <input type="time" required ref={input => (this.inputTimeStartValue = input)} />
+                            <div className="date_time">
+                                <DateFormatInput value={startDate} onChange={this.onChangeDate} name="date-input" />
+                                <TimeFormatInput
+                                    value={startTime}
+                                    onChange={e => this.onChangeTime(e)}
+                                    name="time-input"
+                                />
+                            </div>
                         </div>
-                        <div>
+                        <div className="margin_12">
                             <span>Time end:</span>
-                            <input type="time" required ref={input => (this.inputTimeEndValue = input)} />
+                            <div className="date_time">
+                                <DateFormatInput value={endDate} onChange={this.onChangeDateEnd} name="date-input" />
+                                <TimeFormatInput value={endTime} onChange={this.onChangeTimeEnd} name="time-input" />
+                            </div>
                         </div>
                     </div>
                     <div className="manual_timer_modal_button_container">
@@ -155,9 +183,11 @@ class ManualTimeModal extends Component {
 
     componentDidMount() {
         this.inputNameValue.value = this.props.editedItem.issue;
-
-        this.inputTimeStartValue.value = moment(this.props.editedItem.startDatetime).format('HH:mm');
-        this.inputTimeEndValue.value = moment(this.props.editedItem.endDatetime).format('HH:mm');
+        console.log(this.props.editedItem.startDatetime, 'this.props.editedItem.startDatetime');
+        this.setState({ startDate: new Date(this.props.editedItem.startDatetime) });
+        this.setState({ startTime: new Date(this.props.editedItem.startDatetime) });
+        this.setState({ endDate: new Date(this.props.editedItem.endDatetime) });
+        this.setState({ endTime: new Date(this.props.editedItem.endDatetime) });
         this.inputTaskName.value = this.props.editedItem.project.name;
     }
 }

@@ -31,6 +31,7 @@ class ReportsPage extends Component {
         dateSelectUsers: false,
         selectUersData: [],
         selectUersDataEtalon: [],
+        projectsData: [],
     };
     lineChartOption = {
         scales: {
@@ -118,6 +119,7 @@ class ReportsPage extends Component {
                                 startDate: this.state.selectionRange.startDate,
                                 endDate: this.state.selectionRange.endDate,
                             }}
+                            projectsData={this.state.projectsData}
                             getDataUsers={e => this.getDataUsers()}
                             setUser={this.props.setUser}
                             reportsPageAction={this.props.reportsPageAction}
@@ -214,6 +216,7 @@ class ReportsPage extends Component {
     ) {
         this.setState({ toggleBar: false });
         client.request(getReports(this.props.setUser.id, undefined, dateFrom, dateTo)).then(data => {
+            this.setState({ projectsData: data.project_v2 });
             let dataToGraph = this.getArrOfProjectsData(data);
             this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
             this.props.reportsPageAction(

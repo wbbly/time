@@ -34,15 +34,25 @@ class ReportsByProjectsPage extends Component {
         return sumDate;
     }
 
+    convertMS(milliseconds) {
+        var day, hour, minute, seconds;
+        seconds = Math.floor(milliseconds / 1000);
+        minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        hour = Math.floor(minute / 60);
+        minute = minute % 60;
+        day = Math.floor(hour / 24);
+        hour = hour % 24;
+        return `${day} day | ${hour}:${minute}:${seconds}`;
+    }
+
     render() {
         let projectsItems = this.state.dataOfProject.map(item => (
             <div className="projects_container_project_data">
                 <div className="name">{this.getSlash(item.issue)}</div>
                 <div className="time">
                     {moment(item.start_datetime).format('DD.MM.YYYY')} |{' '}
-                    {moment(+moment(item.end_datetime) - +moment(item.start_datetime))
-                        .utc()
-                        .format('HH:mm:ss')}
+                    {this.convertMS(+moment(item.end_datetime) - +moment(item.start_datetime))}
                 </div>
             </div>
         ));
