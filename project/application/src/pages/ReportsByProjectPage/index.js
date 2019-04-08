@@ -4,9 +4,9 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import { getDataByProjectName } from '../../queries';
 import { client } from '../../requestSettings';
-import { timeInSeconds, getTimInStringSeconds } from '../MainPage/timeInSecondsFunction';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
+import { convertMS } from '../../services/timeService';
 
 class ReportsByProjectsPage extends Component {
     state = {
@@ -34,17 +34,6 @@ class ReportsByProjectsPage extends Component {
         return sumDate;
     }
 
-    convertMS(milliseconds) {
-        var day, hour, minute, seconds;
-        seconds = Math.floor(milliseconds / 1000);
-        minute = Math.floor(seconds / 60);
-        seconds = seconds % 60;
-        hour = Math.floor(minute / 60);
-        minute = minute % 60;
-        day = Math.floor(hour / 24);
-        hour = hour % 24;
-        return `${day} day | ${hour}:${minute}:${seconds}`;
-    }
 
     render() {
         let projectsItems = this.state.dataOfProject.map(item => (
@@ -70,9 +59,7 @@ class ReportsByProjectsPage extends Component {
                     <div className="header_name">Sum tasks: {this.state.countTasks}</div>
                     <div className="header_name">
                         Sum time:{' '}
-                        {moment(this.state.sumTime)
-                            .utc()
-                            .format('HH:mm:ss')}
+                        {convertMS(this.state.sumTime)}
                     </div>
                 </div>
                 <div className="projects_container_wrapper">

@@ -14,6 +14,7 @@ import { createArayOfArrays } from './createArrayOfArraysFunction';
 import { getTodayTimeEntries, returnMutationLinkDeleteTimeEntries, getProjectsV2 } from '../../queries';
 import { checkAuthentication, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
+import { convertMS } from "../../services/timeService";
 
 class MainPage extends Component {
     ONE_MINUTE = 1000; // in ms
@@ -220,7 +221,7 @@ class MainPage extends Component {
     }
 
     getTimePassed(start, end) {
-        return getDateInString(+moment(end) - +moment(start));
+        return convertMS(+moment(end) - +moment(start));
     }
 
     componentWillMount() {}

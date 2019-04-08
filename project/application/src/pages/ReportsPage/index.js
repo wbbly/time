@@ -11,7 +11,7 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
 import { client } from '../../requestSettings';
-import { getUsers, getReports } from '../../queries';
+import { getUsers, getReports, getDatafromTimerTableToReport } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { checkAuthentication, getUserAdminRight } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
@@ -57,6 +57,7 @@ class ReportsPage extends Component {
             labels: {
                 fontColor: '#BDBDBD',
             },
+
         },
         tooltips: {
             callbacks: {
@@ -146,15 +147,15 @@ class ReportsPage extends Component {
         );
     }
 
-    getLablesAndTime(data) {
+    getLablesAndTime(labels, time) {
         let finishData = {
             labels: [],
             timeArr: [],
         };
-        for (let key in data) {
-            finishData.labels.push(moment(key).format('ddd DD.MM.YYYY'));
-            finishData.timeArr.push(data[key]);
+        for (let i = 0; i < labels.length; i++) {
+            finishData.labels.push(moment(labels[i]).format('ddd DD.MM.YYYY'));
         }
+        finishData.timeArr = time;
         return finishData;
     }
 
@@ -174,14 +175,14 @@ class ReportsPage extends Component {
 
     getArrOfProjectsData(data) {
         const statsByProjects = [];
-        const statsByDates = getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate);
-
+        const statsByDates = this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate);
         for (var i = 0; i < data.project_v2.length; i++) {
             const project = data.project_v2[i];
             let diff = 0;
-            for (var j = 0; j < project.timer.length; j++) {
-                const timer = project.timer[j];
-                const timerDiff = +moment(timer.end_datetime).utc() - +moment(timer.start_datetime).utc();
+            let newProjectsTimer = project.timer;
+            for (var j = 0; j < newProjectsTimer.length; j++) {
+                const timer = newProjectsTimer[j];
+                const timerDiff = +new Date(timer.end_datetime) - +new Date(timer.start_datetime);
                 diff += timerDiff;
 
                 const date = timer.start_datetime.split('T')[0];
@@ -197,17 +198,17 @@ class ReportsPage extends Component {
         }
 
         return { statsByProjects, statsByDates };
+    }
 
-        function getDates(startDate, stopDate) {
-            let dateObj = {};
-            let currentDate = moment(startDate);
-            stopDate = moment(stopDate);
-            while (currentDate <= stopDate) {
-                dateObj[`${moment(currentDate).format('YYYY-MM-DD')}`] = 0;
-                currentDate = moment(currentDate).add(1, 'days');
-            }
-            return dateObj;
+    getDates(startDate, stopDate) {
+        let dateObj = {};
+        let currentDate = moment(startDate);
+        stopDate = moment(stopDate);
+        while (currentDate <= stopDate) {
+            dateObj[`${moment(currentDate).format('YYYY-MM-DD')}`] = 0;
+            currentDate = moment(currentDate).add(1, 'days');
         }
+        return dateObj;
     }
 
     getDataUsers(
@@ -219,14 +220,59 @@ class ReportsPage extends Component {
             this.setState({ projectsData: data.project_v2 });
             let dataToGraph = this.getArrOfProjectsData(data);
             this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
-            this.props.reportsPageAction(
-                'SET_LINE_GRAPH',
-                this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(dataToGraph.statsByDates))
-            );
             let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
             this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
             this.setState({ toggleBar: true });
             this.setState({ toggleChar: true });
+        });
+        client.request(getDatafromTimerTableToReport(this.props.setUser.id, dateFrom, dateTo)).then(data => {
+            let { timer_v2 } = data;
+            const statsByDates = Object.keys(this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate));
+            const period = [];
+            let allSum = [];
+            for (let i = 0; i < statsByDates.length; i++) {
+                period.push({
+                    startTime: new Date(`${statsByDates[i]} 00:00:00`).getTime(),
+                    endTime: new Date(`${statsByDates[i]} 23:59:59`).getTime()
+                })
+            }
+            for (let i = 0; i < period.length; i++) {
+                let day = period[i];
+                var {sum, dataModified} = dayProcess(day.startTime, day.endTime, timer_v2);
+                allSum.push(sum)
+                // console.log( dataModified, 'dataModified');
+                timer_v2 = dataModified;
+            }
+            this.props.reportsPageAction(
+                'SET_LINE_GRAPH',
+                this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(statsByDates,allSum))
+            );
+
+            function dayProcess(startTime, endTime, data) {
+                if (!data) {
+                    return { sum: 0, dataModified: data}
+                }
+                let sum = 0;
+
+                const dataModified = [];
+                for (let i = 0; i < data.length; i++) {
+                    dataModified.push(data[i]);
+                    if (getTimestamp(data[i].start_datetime) >= startTime && getTimestamp(data[i].end_datetime) <= endTime) {
+                        console.log(getTimestamp(data[i].start_datetime) >= startTime, getTimestamp(data[i].start_datetime) <= endTime, getTimestamp(data[i].end_datetime) > endTime );
+                        sum += (getTimestamp(data[i].end_datetime) - getTimestamp(data[i].start_datetime));
+                    } else if (getTimestamp(data[i].start_datetime) >= startTime && getTimestamp(data[i].start_datetime) <= endTime && getTimestamp(data[i].end_datetime) > endTime) {
+                        console.log( '111');
+                        sum += (getTimestamp(endTime) - getTimestamp(data[i].start_datetime));
+                        dataModified.splice(i, 1, ...[{start_datetime: dataModified[i].start_datetime, end_datetime: endTime}, {start_datetime: endTime + 1000, end_datetime: dataModified[i].end_datetime}])
+                    }
+                }
+
+                return {sum, dataModified};
+            }
+            function getTimestamp(date) {
+                return new Date(date).getTime();
+            }
+
         });
     }
 

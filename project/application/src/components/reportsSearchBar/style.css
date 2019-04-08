@@ -109,6 +109,20 @@
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
 }
 
+.wrapper_reports_search_bar .search_menu_select {
+    display: flex;
+    flex-direction: column;
+    padding-left: 11px;
+}
+
+.wrapper_reports_search_bar .search_menu_select div {
+    height: 32px;
+}
+
+.wrapper_reports_search_bar .search_menu_select div:hover {
+    background-color: #E0E0E0;
+}
+
 .reports_search_select_header input {
     width: 100%;
     background-color: transparent;

@@ -187,26 +187,17 @@ export function getDataByProjectName(projectName, userId, startDate, endDate) {
     };
 }
 
-export function getProjectReport(object) {
+export function getDatafromTimerTableToReport (userId, startDate, endDate) {
     return {
         graphqlRequest: `{
-            timeTracker (
-                where: {
-                    _and:[
-                        {project:{_eq: "${object.projectId}"}},
-                        {email:{_eq: "${object.activeEmail}"}},
-                        {date: {_gte: "${object.from}"}},
-                        {date: {_lte: "${object.to}"}},
-                    ]
-                },
-            order_by: {date: desc, timeFrom: desc}) {
-                id
-                name
-                date
-                timeFrom
-                timeTo
-                timePassed
-                project
+            timer_v2 (
+                where:{
+                user_id:{_eq:"${userId}"},
+                start_datetime: {_gte: "${new Date(startDate).toISOString().slice(0, -1)}"}
+                end_datetime: {_lt: "${new Date(+new Date(endDate) + 24 * 60 * 60 * 1000 - 1).toISOString().slice(0, -1)}"}
+                }){
+                start_datetime
+                end_datetime
             }
         }`,
     };

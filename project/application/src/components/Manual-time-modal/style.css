@@ -185,17 +185,3 @@ input[type="time"],
 .manual_time_modal_container input:hover {
     border-bottom: 2px solid rgba(0, 0, 0, 0.87);
 }
-
-.DateFormatInput-input-4 {
-    font-size: 13.3px;
-    font-family: 'Open Sans';
-    font-weight: 500;
-    color: #828282;
-}
-
-.TimeFormatInput-input-70 {
-    font-size: 13.3px;
-    font-family: 'Open Sans';
-    font-weight: 500;
-    color: #828282
-}
