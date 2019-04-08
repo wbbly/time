@@ -21,9 +21,10 @@
 .logo_small {
     display: block;
     width: 133px;
-    height: 18px;
-    background: url("../../images/lazy timer_Logo_Small.svg") no-repeat center;
+    height: 26px;
+    background: url("../../images/wobbly_logo.png") no-repeat center;
     margin-top: 34px;
+    background-size: 110px;
 }
 
 i {

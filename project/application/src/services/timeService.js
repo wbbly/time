@@ -34,3 +34,24 @@ export function changeDate(arr) {
 
     return newArr;
 }
+
+export function convertMS(milliseconds) {
+    let hour, minute, seconds;
+    seconds = Math.floor(milliseconds / 1000);
+    minute = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    hour = Math.floor(minute / 60);
+    minute = minute % 60;
+    return `${getZero(hour)}:${getZero(minute)}:${getZero(seconds)}`;
+
+    function getZero (item) {
+        if (!item) {
+            return '00'
+        }
+        if ((item+'').length === 1) {
+            return '0'+item
+        } else {
+            return item
+        }
+    }
+}

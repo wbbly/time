@@ -73,12 +73,13 @@
 
 .page_title {
     position: absolute;
-    width: 400px;
-    height: 100px;
-    background: url("../../images/logo_L_A.svg") no-repeat center;
+    width: 273px;
+    height: 64px;
+    background: url("../../images/wobbly_logo.png") no-repeat center;
     top: 10%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background-size: 271px;
 }
 
 .wrapper_authorisation_page .registration_button {
