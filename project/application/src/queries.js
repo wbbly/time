@@ -165,7 +165,7 @@ export function getUsers() {
     };
 }
 
-export function getDataByProjectName(projectName, userId, startDate, endDate) {
+export function getDataByProjectName(projectName, userName, startDate, endDate) {
     return {
         graphqlRequest: `{
             project_v2 (
@@ -173,8 +173,8 @@ export function getDataByProjectName(projectName, userId, startDate, endDate) {
                 name:{_eq:"${projectName}"},
                 }) {
                 timer(where:{
-                    user_id: {_eq:"${userId}"}
-                    start_datetime: {_gte:"${startDate}"},
+                    user: {username: {_in:[${userName}]}}
+                    start_datetime: {_gte:"${startDate}"}
                     end_datetime: {_lt:"${endDate}"}
                 })
                  {
@@ -187,12 +187,14 @@ export function getDataByProjectName(projectName, userId, startDate, endDate) {
     };
 }
 
-export function getDatafromTimerTableToReport(userId, startDate, endDate) {
+export function getDatafromTimerTableToReport(userId, projectName, startDate, endDate) {
+    console.log(userId);
     return {
         graphqlRequest: `{
             timer_v2 (
                 where:{
-                user_id:{_eq:"${userId}"},
+                user:{email: {_in:[${userId}]}},
+                ${(projectName.length)? `project:{name: {_in:[${projectName}]}}`: ''},
                 start_datetime: {_gte: "${new Date(startDate).toISOString().slice(0, -1)}"}
                 end_datetime: {_lt: "${new Date(+new Date(endDate) + 24 * 60 * 60 * 1000 - 1)
                     .toISOString()
@@ -219,12 +221,12 @@ export const getTeamData = {
     }`,
 };
 
-export function getReports(userId, projectId, startTime, endTime) {
-    const projectWhereStatement = projectId
-        ? `(where: {id: {_in: [${projectId}]}}, order_by: {name: asc})`
+export function getReports(userEmails, projectNames, startTime, endTime) {
+    const projectWhereStatement = projectNames
+        ? `(where: {name: {_in: [${projectNames}]}}, order_by: {name: asc})`
         : '(order_by: {name: asc})';
 
-    const userWhereStatement = userId ? `user_id: {_eq: "${userId}"}` : '';
+    const userWhereStatement = userEmails.length ? `user: {email: {_in: [${userEmails}]}}` : '';
     let startTimeStatement = '';
     let endTimeStatement = '';
 

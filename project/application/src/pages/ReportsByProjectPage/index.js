@@ -77,7 +77,7 @@ class ReportsByProjectsPage extends Component {
             .request(
                 getDataByProjectName(
                     this.props.match.params.name,
-                    this.props.setUser.id,
+                    this.props.setUser,
                     new Date(this.props.match.params.dateStart).toISOString().slice(0, -1),
                     new Date(+new Date(this.props.match.params.endDate) + 24 * 60 * 60 * 1000 - 1)
                         .toISOString()

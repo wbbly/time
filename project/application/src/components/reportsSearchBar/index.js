@@ -5,6 +5,7 @@ import './style.css';
 import { client } from '../../requestSettings';
 import { getUsers } from '../../queries';
 import * as moment from 'moment';
+import { getUserData } from "../../services/authentication";
 
 export default class ReportsSearchBar extends Component {
     state = {
@@ -17,20 +18,40 @@ export default class ReportsSearchBar extends Component {
         selectProjectData: [],
         projectsData: [],
         etalonProjectsData: [],
+        checkedProjects: false,
+        selectUserData: [],
     };
 
     openSelect() {
-        this.userInput.select();
         this.setState({toggleSelect: true});
+        this.findUser(this.state.selectUersDataEtalon, '');
         document.addEventListener('click', this.closeDropdown);
     }
 
     openSelectProject() {
-        this.setState({toggleSelectProject: !this.state.toggleSelectProject});
+        this.setState({toggleSelectProject: true});
+        this.findProject(
+            this.state.etalonProjectsData,
+            ''
+        );
+        document.addEventListener('click', this.closeDropdownProject);
     }
 
+    closeDropdownProject = e => {
+        if (this.projectHeaderSelect && !this.projectHeaderSelect.contains(e.target)) {
+            this.setState(
+                {
+                    toggleSelectProject: false,
+                },
+                () => {
+                    document.removeEventListener('click', this.closeDropdownProject);
+                }
+            );
+        }
+    };
+
     closeDropdown = e => {
-        if (this.dropList && !this.dropList.contains(e.target)) {
+        if (this.dropList && !this.dropList.contains(e.target) && !this.smallSeleUserInput.contains(e.target) && !this.usersItemsContainer.contains(e.target)  ) {
             this.setState(
                 {
                     toggleSelect: !this.state.toggleSelect,
@@ -55,7 +76,6 @@ export default class ReportsSearchBar extends Component {
                         .indexOf(searchText) > -1
                 );
             });
-            console.log(finishArr, 'finishArr');
             this.setState({projectsData: finishArr});
         } else {
             this.setState({projectsData: this.state.etalonProjectsData});
@@ -68,7 +88,12 @@ export default class ReportsSearchBar extends Component {
     }
 
     closeDropdownProject = e => {
-        if (this.dropListProjects && !this.dropListProjects.contains(e.target)) {
+        if (
+            this.dropListProjects && !this.dropListProjects.contains(e.target) &&
+            !this.projectSelectList.contains(e.target) &&
+            !this.projectHeaderClean.contains(e.target) &&
+            !this.smallSeleProjectInput.contains(e.target)
+        ) {
             this.setState(
                 {
                     toggleSelectProject: false,
@@ -79,11 +104,6 @@ export default class ReportsSearchBar extends Component {
             );
         }
     };
-
-    setItem(item) {
-        this.userInput.value = item.username;
-        this.props.reportsPageAction('SET_ACTIVE_USER', {data: item});
-    }
 
     findUser(items, searchText) {
         if (searchText.length > 1) {
@@ -114,23 +134,74 @@ export default class ReportsSearchBar extends Component {
         return moment(date).format('YYYY-MM-DD');
     }
 
-    getChecked(id) {
-        if (this.state.selectProjectData.indexOf(id) !== -1) {
+    getChecked(name) {
+        if (this.props.selectedProjects.indexOf(`"${name}"`) !== -1) {
             return true;
         }
     }
 
-    addProject(e, id) {
+    getCheckedUsers(name) {
+        if (this.state.selectUserData.indexOf((""+name)) !== -1) {
+            return true;
+        }
+    }
+
+    addProject(e, name) {
         let projects = JSON.parse(JSON.stringify(this.state.selectProjectData));
         if (e.target.checked) {
-            projects.push(id);
+            projects.push(`"${name}"`);
         } else {
-            let item = projects.indexOf(id);
+            let item = projects.indexOf(`"${name}"`);
             projects.splice(item, 1);
         }
-        console.log(projects);
         this.setState({selectProjectData: projects});
-        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data:projects})
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data: projects});
+    }
+
+    addUsers(e, user) {
+        let users = JSON.parse(JSON.stringify(this.state.selectUserData));
+        if (e.target.checked) {
+            users.push(`"${user.username}"`);
+        } else {
+            let item = users.indexOf(("" + user.username));
+            users.splice(item, 1);
+        }
+        this.setState({selectUserData: users});
+        this.props.reportsPageAction('SET_ACTIVE_USER', {data: users});
+    }
+
+    selectAllProjects() {
+        let projects = [];
+        for (let i = 0; i < this.state.etalonProjectsData.length; i++) {
+            projects.push(this.state.etalonProjectsData[i].name)
+        }
+        this.setState({checkedProjects: true});
+        this.setState({selectProjectData: projects});
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data: projects});
+    }
+
+    selectAllUsers() {
+        let users = [];
+        for (let i = 0; i < this.state.selectUersData.length; i++) {
+            users.push(this.state.selectUersData[i].username)
+        }
+        this.setState({selectUserData: users});
+        this.props.reportsPageAction('SET_ACTIVE_USER', {data: users});
+    }
+
+    selectNoneUsers() {
+        this.setState({selectUserData: []});
+        this.props.reportsPageAction('SET_ACTIVE_USER', {data: []});
+    }
+
+    selectNone() {
+        let projects = [];
+        for (let i = 0; i < this.state.etalonProjectsData.length; i++) {
+            projects.push(this.state.etalonProjectsData[i].name)
+        }
+        this.setState({checkedProjects: false});
+        this.setState({selectProjectData: []});
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data: []});
     }
 
     render() {
@@ -138,68 +209,85 @@ export default class ReportsSearchBar extends Component {
             <div className="wrapper_reports_search_bar">
                 <div className="reports_search_bar_search_field_container select">
                     <div className="reports_search_select_wrapper" ref={div => (this.dropList = div)}>
-                        <div className="reports_search_select_header">
-                            <input
-                                type="text"
-                                onFocus={e => this.openSelect()}
-                                onKeyUp={e => this.findUser(this.state.selectUersDataEtalon, this.userInput.value)}
-                                ref={input => (this.userInput = input)}
-                            />
-                            {/*{this.props.setUser.username}*/}
+                        <div className="reports_search_select_header" onClick={e => this.openSelect()}
+                             ref={div => (this.userInput = div)}>
+                            <div>
+                              User:  {this.state.selectUserData.join(' ')}
+                            </div>
                             <i className="arrow_down"/>
                         </div>
                     </div>
                     {this.state.toggleSelect && (
                         <div className="select_body">
-                            {this.state.selectUersData.map(item => (
-                                <div className="select_users_item" onClick={e => this.setItem(item)}>
-                                    {item.username}
-                                </div>
-                            ))}
+                            <div className="search_menu_select">
+                                <input
+                                    type="text"
+                                    onKeyUp={e => this.findUser(this.state.selectUersDataEtalon, this.smallSeleUserInput.value)}
+                                    ref={input => (this.smallSeleUserInput = input)}
+                                    placeholder={'Find'}
+                                />
+                                <div onClick={e => this.selectAllUsers()}>Select all</div>
+                                <div onClick={e => this.selectNoneUsers()}>Select none</div>
+                                <i className="small_clear" onClick={e => this.clearSmallProjectSearch()}/>
+                            </div>
+                            <div className="select_items_container" ref={div => (this.usersItemsContainer = div)}>
+                                {this.state.selectUersData.map((item, index) => (
+                                    <div className="select_users_item"  key={item.username + index}>
+                                        <label>
+                                            <Checkbox
+                                                color={'primary'}
+                                                value={item.username}
+                                                checked={this.getCheckedUsers(item.username)}
+                                                onChange={e => {
+                                                    this.addUsers(e, item);
+                                                }}
+                                            />{' '}
+                                            {item.username}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>
-                <div className="reports_search_bar_search_field_container select">
-                    <div className="reports_search_select_wrapper" ref={div => (this.dropListProjects = div)}>
-                        <div className="reports_search_select_header">
-                            <input
-                                type="text"
-                                onClick={e => this.openSelectProject()}
-                                value={'Projects'}
-                                readOnly={true}
-                                ref={input => (this.projectInput = input)}
-                            />
+                <div className="reports_search_bar_search_field_container select"
+                     onClick={e => this.openSelectProject()}
+                >
+                    <div className="reports_search_select_wrapper">
+                        <div className="reports_search_select_header" ref={div => (this.dropListProjects = div)}>
+                            <div>Project:{this.state.selectProjectData.join(' ')}</div>
                             {/*{this.props.setUser.username}*/}
                             <i className="arrow_down"/>
                         </div>
                     </div>
                     {this.state.toggleSelectProject && (
-                        <div className="select_body">
+                        <div className="select_body" ref={div => (this.projectHeaderSelect = div)}>
                             <div className="search_menu_select">
-                                <input type="text"
-                                       onKeyUp={e => {
-                                           this.findProject(this.state.etalonProjectsData, this.smallSeleProjectInput.value)
-                                       }}
-                                       ref={input => this.smallSeleProjectInput = input}
-                                       placeholder={"Find"}/>
-                                <div>
-                                    Select all
-                                </div>
-                                <div>
-                                    Select none
-                                </div>
-                                <i className="small_clear" onClick={e => this.clearSmallProjectSearch()}></i>
+                                <input
+                                    type="text"
+                                    onKeyUp={e => {
+                                        this.findProject(
+                                            this.state.etalonProjectsData,
+                                            this.smallSeleProjectInput.value
+                                        );
+                                    }}
+                                    ref={input => (this.smallSeleProjectInput = input)}
+                                    placeholder={'Find'}
+                                />
+                                <div onClick={e => this.selectAllProjects()}>Select all</div>
+                                <div onClick={e => this.selectNone()}>Select none</div>
+                                <i className="small_clear" ref={i => (this.projectHeaderClean = i)} onClick={e => this.clearSmallProjectSearch()}/>
                             </div>
-                            <div className="select_items_container">
+                            <div className="select_items_container" ref={div => (this.projectSelectList = div)}>
                                 {this.state.projectsData.map((item, index) => (
                                     <div className="select_users_item" key={item.name + index}>
                                         <label>
                                             <Checkbox
                                                 color={'primary'}
-                                                value={item.id}
-                                                checked={this.getChecked(item.id)}
+                                                value={item.name}
+                                                checked={this.getChecked(item.name)}
                                                 onChange={e => {
-                                                    this.addProject(e, item.id);
+                                                    this.addProject(e, item.name);
                                                 }}
                                             />{' '}
                                             {item.name}
@@ -226,9 +314,13 @@ export default class ReportsSearchBar extends Component {
             this.setState({selectUersDataEtalon: data.user});
         });
         setTimeout(() => {
-            this.setState({projectsData: this.props.projectsData})
-            this.setState({etalonProjectsData: this.props.projectsData})
-        }, 600)
+            this.setState({projectsData: this.props.projectsData});
+            this.setState({etalonProjectsData: this.props.projectsData});
+        }, 800);
+    }
 
+    componentWillUnmount() {
+        this.props.reportsPageAction('SET_ACTIVE_USER', {data: [`"${getUserData().username}"`]});
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data: []});
     }
 }

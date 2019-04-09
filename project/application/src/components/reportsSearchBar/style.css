@@ -48,7 +48,8 @@
 }
 
 .reports_search_bar_button_container button {
-    width: 100%;
+    width: 90%;
+    margin-left: 21px;
     height: 100%;
     background-color: #616161;
     color: white;
@@ -69,7 +70,7 @@
 
 .reports_search_select_wrapper {
     position: relative;
-    width: 100%;
+    width: 95%;
     padding: 0 19px;
     border-right: 1px solid white;
 }
@@ -80,11 +81,14 @@
     font-family: "Open Sans";
     font-style: normal;
     font-weight: normal;
+    height: 24px;
     font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .select_users_item {
@@ -172,4 +176,12 @@
     font-size: 16px;
     line-height: normal;
     outline: none;
+}
+
+.reports_search_select_header div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 75%;
+    width: 75%;
 }

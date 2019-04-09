@@ -121,10 +121,12 @@ class ReportsPage extends Component {
                             }}
                             projectsData={this.state.projectsData}
                             getDataUsers={e => this.getDataUsers()}
+                            selectedProjects={this.props.selectedProjects}
                             setUser={this.props.setUser}
                             reportsPageAction={this.props.reportsPageAction}
                         />
                     )}
+                    <div className="total_time">Total 111:22:11</div>
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
                             <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
@@ -215,16 +217,31 @@ class ReportsPage extends Component {
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
         this.setState({ toggleBar: false });
-        client.request(getReports(this.props.setUser.id, (this.props.selectedProjects.length)?  this.props.selectedProjects : undefined, dateFrom, dateTo)).then(data => {
-            this.setState({ projectsData: data.project_v2 });
-            let dataToGraph = this.getArrOfProjectsData(data);
-            this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
-            let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
-            this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-            this.setState({ toggleBar: true });
-            this.setState({ toggleChar: true });
-        });
-        client.request(getDatafromTimerTableToReport(this.props.setUser.id, dateFrom, dateTo)).then(data => {
+        client
+            .request(
+                getReports(
+                    this.props.setUser,
+                    this.props.selectedProjects.length ? this.props.selectedProjects : undefined,
+                    dateFrom,
+                    dateTo
+                )
+            )
+            .then(data => {
+                this.setState({ projectsData: data.project_v2 });
+                let dataToGraph = this.getArrOfProjectsData(data);
+                this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
+                let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
+                this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
+                this.setState({ toggleBar: true });
+                this.setState({ toggleChar: true });
+            });
+        client.request(
+            getDatafromTimerTableToReport(
+                this.props.setUser,
+                this.props.selectedProjects.length ? this.props.selectedProjects : [],
+                dateFrom,
+                dateTo
+            )).then(data => {
             let { timer_v2 } = data;
             const statsByDates = Object.keys(
                 this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate)
@@ -262,18 +279,12 @@ class ReportsPage extends Component {
                         getTimestamp(data[i].start_datetime) >= startTime &&
                         getTimestamp(data[i].end_datetime) <= endTime
                     ) {
-                        console.log(
-                            getTimestamp(data[i].start_datetime) >= startTime,
-                            getTimestamp(data[i].start_datetime) <= endTime,
-                            getTimestamp(data[i].end_datetime) > endTime
-                        );
                         sum += getTimestamp(data[i].end_datetime) - getTimestamp(data[i].start_datetime);
                     } else if (
                         getTimestamp(data[i].start_datetime) >= startTime &&
                         getTimestamp(data[i].start_datetime) <= endTime &&
                         getTimestamp(data[i].end_datetime) > endTime
                     ) {
-                        console.log('111');
                         sum += getTimestamp(endTime) - getTimestamp(data[i].start_datetime);
                         dataModified.splice(
                             i,
@@ -309,7 +320,6 @@ class ReportsPage extends Component {
 }
 
 const mapStateToProps = store => {
-    console.log(store.reportsPageReducer.selectedProjects, '1212');
     return {
         dataBarChat: store.reportsPageReducer.dataBarChat,
         lineChartOption: store.reportsPageReducer.lineChartOption,
@@ -318,7 +328,7 @@ const mapStateToProps = store => {
         dataFromServer: store.reportsPageReducer.dataFromServer,
         timeRange: store.reportsPageReducer.timeRange,
         setUser: store.reportsPageReducer.setUser,
-        selectedProjects: store.reportsPageReducer.selectedProjects
+        selectedProjects: store.reportsPageReducer.selectedProjects,
     };
 };
 
