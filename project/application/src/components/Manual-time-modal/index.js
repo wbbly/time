@@ -93,22 +93,18 @@ class ManualTimeModal extends Component {
     };
 
     onChangeTime = time => {
-        console.log('Time: ', time);
         this.setState({ startTime: time });
     };
 
     onChangeDate = date => {
-        console.log('Time: ', date);
         this.setState({ startDate: date });
     };
 
     onChangeTimeEnd = time => {
-        console.log('Time: ', time);
         this.setState({ endTime: time });
     };
 
     onChangeDateEnd = date => {
-        console.log('Time: ', date);
         this.setState({ endDate: date });
     };
 
@@ -183,7 +179,6 @@ class ManualTimeModal extends Component {
 
     componentDidMount() {
         this.inputNameValue.value = this.props.editedItem.issue;
-        console.log(this.props.editedItem.startDatetime, 'this.props.editedItem.startDatetime');
         this.setState({ startDate: new Date(this.props.editedItem.startDatetime) });
         this.setState({ startTime: new Date(this.props.editedItem.startDatetime) });
         this.setState({ endDate: new Date(this.props.editedItem.endDatetime) });

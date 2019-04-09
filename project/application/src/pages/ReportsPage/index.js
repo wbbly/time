@@ -121,10 +121,12 @@ class ReportsPage extends Component {
                             }}
                             projectsData={this.state.projectsData}
                             getDataUsers={e => this.getDataUsers()}
+                            selectedProjects={this.props.selectedProjects}
                             setUser={this.props.setUser}
                             reportsPageAction={this.props.reportsPageAction}
                         />
                     )}
+                    {/*<div className="total_time">Total 111:22:11</div>*/}
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
                             <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
@@ -215,83 +217,95 @@ class ReportsPage extends Component {
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
         this.setState({ toggleBar: false });
-        client.request(getReports(this.props.setUser.id, undefined, dateFrom, dateTo)).then(data => {
-            this.setState({ projectsData: data.project_v2 });
-            let dataToGraph = this.getArrOfProjectsData(data);
-            this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
-            let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
-            this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-            this.setState({ toggleBar: true });
-            this.setState({ toggleChar: true });
-        });
-        client.request(getDatafromTimerTableToReport(this.props.setUser.id, dateFrom, dateTo)).then(data => {
-            let { timer_v2 } = data;
-            const statsByDates = Object.keys(
-                this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate)
-            );
-            const period = [];
-            let allSum = [];
-            for (let i = 0; i < statsByDates.length; i++) {
-                period.push({
-                    startTime: new Date(`${statsByDates[i]} 00:00:00`).getTime(),
-                    endTime: new Date(`${statsByDates[i]} 23:59:59`).getTime(),
-                });
-            }
-            for (let i = 0; i < period.length; i++) {
-                let day = period[i];
-                var { sum, dataModified } = dayProcess(day.startTime, day.endTime, timer_v2);
-                allSum.push(sum);
-                // console.log( dataModified, 'dataModified');
-                timer_v2 = dataModified;
-            }
-            this.props.reportsPageAction(
-                'SET_LINE_GRAPH',
-                this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(statsByDates, allSum))
-            );
-
-            function dayProcess(startTime, endTime, data) {
-                if (!data) {
-                    return { sum: 0, dataModified: data };
+        client
+            .request(
+                getReports(
+                    this.props.setUser,
+                    this.props.selectedProjects.length ? this.props.selectedProjects : undefined,
+                    dateFrom,
+                    dateTo
+                )
+            )
+            .then(data => {
+                this.setState({ projectsData: data.project_v2 });
+                let dataToGraph = this.getArrOfProjectsData(data);
+                this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
+                let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
+                this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
+                this.setState({ toggleBar: true });
+                this.setState({ toggleChar: true });
+            });
+        client
+            .request(
+                getDatafromTimerTableToReport(
+                    this.props.setUser,
+                    this.props.selectedProjects.length ? this.props.selectedProjects : [],
+                    dateFrom,
+                    dateTo
+                )
+            )
+            .then(data => {
+                let { timer_v2 } = data;
+                const statsByDates = Object.keys(
+                    this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate)
+                );
+                const period = [];
+                let allSum = [];
+                for (let i = 0; i < statsByDates.length; i++) {
+                    period.push({
+                        startTime: new Date(`${statsByDates[i]} 00:00:00`).getTime(),
+                        endTime: new Date(`${statsByDates[i]} 23:59:59`).getTime(),
+                    });
                 }
-                let sum = 0;
+                for (let i = 0; i < period.length; i++) {
+                    let day = period[i];
+                    var { sum, dataModified } = dayProcess(day.startTime, day.endTime, timer_v2);
+                    allSum.push(sum);
+                    // console.log( dataModified, 'dataModified');
+                    timer_v2 = dataModified;
+                }
+                this.props.reportsPageAction(
+                    'SET_LINE_GRAPH',
+                    this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(statsByDates, allSum))
+                );
 
-                const dataModified = [];
-                for (let i = 0; i < data.length; i++) {
-                    dataModified.push(data[i]);
-                    if (
-                        getTimestamp(data[i].start_datetime) >= startTime &&
-                        getTimestamp(data[i].end_datetime) <= endTime
-                    ) {
-                        console.log(
-                            getTimestamp(data[i].start_datetime) >= startTime,
-                            getTimestamp(data[i].start_datetime) <= endTime,
-                            getTimestamp(data[i].end_datetime) > endTime
-                        );
-                        sum += getTimestamp(data[i].end_datetime) - getTimestamp(data[i].start_datetime);
-                    } else if (
-                        getTimestamp(data[i].start_datetime) >= startTime &&
-                        getTimestamp(data[i].start_datetime) <= endTime &&
-                        getTimestamp(data[i].end_datetime) > endTime
-                    ) {
-                        console.log('111');
-                        sum += getTimestamp(endTime) - getTimestamp(data[i].start_datetime);
-                        dataModified.splice(
-                            i,
-                            1,
-                            ...[
-                                { start_datetime: dataModified[i].start_datetime, end_datetime: endTime },
-                                { start_datetime: endTime + 1000, end_datetime: dataModified[i].end_datetime },
-                            ]
-                        );
+                function dayProcess(startTime, endTime, data) {
+                    if (!data) {
+                        return { sum: 0, dataModified: data };
                     }
-                }
+                    let sum = 0;
 
-                return { sum, dataModified };
-            }
-            function getTimestamp(date) {
-                return new Date(date).getTime();
-            }
-        });
+                    const dataModified = [];
+                    for (let i = 0; i < data.length; i++) {
+                        dataModified.push(data[i]);
+                        if (
+                            getTimestamp(data[i].start_datetime) >= startTime &&
+                            getTimestamp(data[i].end_datetime) <= endTime
+                        ) {
+                            sum += getTimestamp(data[i].end_datetime) - getTimestamp(data[i].start_datetime);
+                        } else if (
+                            getTimestamp(data[i].start_datetime) >= startTime &&
+                            getTimestamp(data[i].start_datetime) <= endTime &&
+                            getTimestamp(data[i].end_datetime) > endTime
+                        ) {
+                            sum += getTimestamp(endTime) - getTimestamp(data[i].start_datetime);
+                            dataModified.splice(
+                                i,
+                                1,
+                                ...[
+                                    { start_datetime: dataModified[i].start_datetime, end_datetime: endTime },
+                                    { start_datetime: endTime + 1000, end_datetime: dataModified[i].end_datetime },
+                                ]
+                            );
+                        }
+                    }
+
+                    return { sum, dataModified };
+                }
+                function getTimestamp(date) {
+                    return new Date(date).getTime();
+                }
+            });
     }
 
     componentDidMount() {
@@ -317,6 +331,7 @@ const mapStateToProps = store => {
         dataFromServer: store.reportsPageReducer.dataFromServer,
         timeRange: store.reportsPageReducer.timeRange,
         setUser: store.reportsPageReducer.setUser,
+        selectedProjects: store.reportsPageReducer.selectedProjects,
     };
 };
 

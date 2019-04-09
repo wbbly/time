@@ -29,5 +29,10 @@ export default function reportsPageAction(actionType, action) {
             type: 'SET_ACTIVE_USER',
             payload: action,
         };
+    } else if (actionType === 'SET_SELECTED_PROJECTS') {
+        return {
+            type: 'SET_SELECTED_PROJECTS',
+            payload: action,
+        };
     }
 }

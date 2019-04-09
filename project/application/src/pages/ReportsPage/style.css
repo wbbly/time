@@ -93,5 +93,10 @@
 }
 
 .reports_search_bar_search_field_container.select {
-width: 50%;
+    width: 42%;
+}
+
+.total_time {
+    position: relative;
+    top: 102px;
 }

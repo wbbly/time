@@ -7,7 +7,7 @@ const initialState = {
         endDate: new Date(),
         key: 'selection',
     },
-    setUser: getUserData(),
+    setUser: [`"${getUserData().username}"`],
     dataBarChat: {
         defaultFontColor: 'red',
         labels: ['February', 'March', 'April', 'May', 'June', 'July'],
@@ -83,6 +83,7 @@ const initialState = {
         ],
     },
     dataFromServer: [],
+    selectedProjects: [],
 };
 
 export function reportsPageReducer(state = initialState, action) {
@@ -99,6 +100,8 @@ export function reportsPageReducer(state = initialState, action) {
             return { ...state, timeRange: action.payload.data };
         case 'SET_ACTIVE_USER':
             return { ...state, setUser: action.payload.data };
+        case 'SET_SELECTED_PROJECTS':
+            return { ...state, selectedProjects: action.payload.data };
         default:
             return state;
     }
