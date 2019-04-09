@@ -4,7 +4,7 @@ import openSocket from 'socket.io-client';
 import * as moment from 'moment';
 
 import './style.css';
-import { getDateInString } from './timeInSecondsFunction';
+import { getDateInString, getTimeDiff } from './timeInSecondsFunction';
 import LeftBar from '../../components/LeftBar';
 import addTasks from '../../actions/MainPageAction';
 import manualTimerModalAction from '../../actions/ManualTimerModalAction';
@@ -17,7 +17,7 @@ import { AppConfig } from '../../config';
 import { convertMS } from "../../services/timeService";
 
 class MainPage extends Component {
-    ONE_MINUTE = 1000; // in ms
+    ONE_SECOND = 1000; // in ms
     TIMER_LIVE_SUBSCRIPTION;
     TIMER_MANUAL_UPDATE_SUBSCRIPTION;
     state = {
@@ -129,11 +129,9 @@ class MainPage extends Component {
 
         clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
         this.TIMER_LIVE_SUBSCRIPTION = undefined;
-        this.TIMER_LIVE_SUBSCRIPTION = setInterval(() => {
-            this.setState(state => ({
-                time: moment(state.time).add(1, 'second'),
-            }));
-        }, this.ONE_MINUTE);
+
+        this.setState({ time: getTimeDiff(this.time.timeStart) });
+        this.TIMER_LIVE_SUBSCRIPTION = setInterval(() => this.setState({ time: getTimeDiff(this.time.timeStart) }), this.ONE_SECOND);
     }
 
     timerUpdate() {
@@ -151,7 +149,7 @@ class MainPage extends Component {
 
             clearTimeout(this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
             this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = undefined;
-        }, 1000);
+        }, this.ONE_SECOND);
     }
 
     timerStop() {
@@ -350,7 +348,7 @@ class MainPage extends Component {
                         <input
                             type="text"
                             className="add_task"
-                            maxlength="110"
+                            maxLength="110"
                             placeholder="Add your task name"
                             ref={input => {
                                 this.mainTaskName = input;

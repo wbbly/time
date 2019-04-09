@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import './style.css';
-import { getDateInString } from '../../pages/MainPage/timeInSecondsFunction';
-import { getUserAdminRight } from '../../services/authentication';
+import { getTimeDiff } from '../../pages/MainPage/timeInSecondsFunction'
 
 class LeftBar extends Component {
-    ONE_MINUTE = 1000; // in ms
+    ONE_SECOND = 1000; // in ms
 
     componentDidMount() {
         this.setState({ arrTasks: this.props.arrTasks });
@@ -18,18 +17,18 @@ class LeftBar extends Component {
     };
 
     activeSmalltimer() {
-        setInterval(() => {
-            this.getTimeNow();
-        }, this.ONE_MINUTE);
+        setInterval(() => this.getTimeNow(), this.ONE_SECOND);
     }
 
     getTimeNow() {
         let timer = JSON.parse(localStorage.getItem('current-timer'));
         if (!timer || !timer.timeStart) {
+            this.setState({ timer: '' });
+
             return;
         }
-        let timeOnTimer = +new Date() - timer.timeStart;
-        this.setState({ timer: getDateInString(timeOnTimer) });
+
+        this.setState({ timer: getTimeDiff(timer.timeStart, true) });
     }
 
     visualTimer() {

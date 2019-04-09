@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export function timeInSeconds(string) {
     let hms = string;
     let a = hms.split(':');
@@ -26,4 +28,10 @@ export function getTimInStringSeconds(seconds) {
     let result = date.toISOString().substr(11, 8);
 
     return result;
+}
+
+export function getTimeDiff(timeFrom, inString) {
+    const timeDiff = moment(+moment() - timeFrom).utc();
+
+    return inString ? timeDiff.format('HH:mm:ss') : timeDiff;
 }
