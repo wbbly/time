@@ -1,4 +1,7 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=cyrillic");
+@font-face {
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
+}
 
 .wrapper_reports_search_bar {
     width: 100%;
@@ -87,14 +90,14 @@
 .select_users_item {
     display: flex;
     align-items: center;
-    height: 24px;
-    padding: 12px 12px;
+    height: 32px;
+    padding: 0 12px;
     cursor: pointer;
+    font-weight: 600;
 }
 
 .select_users_item:hover {
-    background: #4f4f4f;
-    color: white;
+    background: #E0E0E0;
 }
 
 .wrapper_reports_search_bar .select_body {
@@ -103,20 +106,54 @@
     left: 13px;
     width: 94%;
     max-height: 250px;
-    overflow-y: auto;
     z-index: 3;
     background-color: #f5f5f5;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
 }
 
+.wrapper_reports_search_bar .select_items_container {
+    height: 137px;
+    overflow-y: auto;
+}
+
 .wrapper_reports_search_bar .search_menu_select {
+    position: relative;
     display: flex;
     flex-direction: column;
-    padding-left: 11px;
+}
+
+.wrapper_reports_search_bar .search_menu_select input {
+    padding-left: 6px;
+    padding-right: 12px;
+    margin: 12px;
+    margin-bottom: 0;
+    border: 1px solid #BDBDBD;
+    box-sizing: border-box;
+    height: 32px;
+    outline: none;
+}
+
+.small_clear {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    top: 24px;
+    right: 24px;
+    background: url("../../images/icons/close6x6.png") no-repeat center;
+    cursor: pointer;
 }
 
 .wrapper_reports_search_bar .search_menu_select div {
+    display: flex;
+    align-items: center;
     height: 32px;
+    height: 32px;
+    padding-left: 64px;
+    font-family: 'Open Sans';
+    font-weight: 600;
+    font-size: 14px;
+    line-height: normal;
+    color: #000000;
 }
 
 .wrapper_reports_search_bar .search_menu_select div:hover {

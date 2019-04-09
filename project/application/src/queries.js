@@ -221,7 +221,7 @@ export const getTeamData = {
 
 export function getReports(userId, projectId, startTime, endTime) {
     const projectWhereStatement = projectId
-        ? `(where: {id: {_eq: "${projectId}"}}, order_by: {name: asc})`
+        ? `(where: {id: {_in: [${projectId}]}}, order_by: {name: asc})`
         : '(order_by: {name: asc})';
 
     const userWhereStatement = userId ? `user_id: {_eq: "${userId}"}` : '';

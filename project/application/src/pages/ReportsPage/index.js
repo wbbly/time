@@ -215,7 +215,7 @@ class ReportsPage extends Component {
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
         this.setState({ toggleBar: false });
-        client.request(getReports(this.props.setUser.id, undefined, dateFrom, dateTo)).then(data => {
+        client.request(getReports(this.props.setUser.id, (this.props.selectedProjects.length)?  this.props.selectedProjects : undefined, dateFrom, dateTo)).then(data => {
             this.setState({ projectsData: data.project_v2 });
             let dataToGraph = this.getArrOfProjectsData(data);
             this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
@@ -309,6 +309,7 @@ class ReportsPage extends Component {
 }
 
 const mapStateToProps = store => {
+    console.log(store.reportsPageReducer.selectedProjects, '1212');
     return {
         dataBarChat: store.reportsPageReducer.dataBarChat,
         lineChartOption: store.reportsPageReducer.lineChartOption,
@@ -317,6 +318,7 @@ const mapStateToProps = store => {
         dataFromServer: store.reportsPageReducer.dataFromServer,
         timeRange: store.reportsPageReducer.timeRange,
         setUser: store.reportsPageReducer.setUser,
+        selectedProjects: store.reportsPageReducer.selectedProjects
     };
 };
 

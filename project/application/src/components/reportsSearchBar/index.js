@@ -15,20 +15,18 @@ export default class ReportsSearchBar extends Component {
         selectUersData: [],
         selectUersDataEtalon: [],
         selectProjectData: [],
+        projectsData: [],
+        etalonProjectsData: [],
     };
 
     openSelect() {
         this.userInput.select();
-        this.setState({ toggleSelect: true });
+        this.setState({toggleSelect: true});
         document.addEventListener('click', this.closeDropdown);
     }
 
     openSelectProject() {
-        this.setState({ toggleSelectProject: !this.state.toggleSelectProject });
-    }
-
-    closeUserSelect() {
-        this.setState({ toggleSelect: false });
+        this.setState({toggleSelectProject: !this.state.toggleSelectProject});
     }
 
     closeDropdown = e => {
@@ -43,6 +41,31 @@ export default class ReportsSearchBar extends Component {
             );
         }
     };
+
+    findProject(items, searchText) {
+        if (searchText.length > 1) {
+            searchText = searchText.toLowerCase();
+            let finishArr = items.filter(it => {
+                let values = [];
+                values.push(it['name']);
+
+                return (
+                    JSON.stringify(values)
+                        .toLowerCase()
+                        .indexOf(searchText) > -1
+                );
+            });
+            console.log(finishArr, 'finishArr');
+            this.setState({projectsData: finishArr});
+        } else {
+            this.setState({projectsData: this.state.etalonProjectsData});
+        }
+    }
+
+    clearSmallProjectSearch() {
+        this.smallSeleProjectInput.value = '';
+        this.setState({projectsData: this.state.etalonProjectsData});
+    }
 
     closeDropdownProject = e => {
         if (this.dropListProjects && !this.dropListProjects.contains(e.target)) {
@@ -59,7 +82,7 @@ export default class ReportsSearchBar extends Component {
 
     setItem(item) {
         this.userInput.value = item.username;
-        this.props.reportsPageAction('SET_ACTIVE_USER', { data: item });
+        this.props.reportsPageAction('SET_ACTIVE_USER', {data: item});
     }
 
     findUser(items, searchText) {
@@ -75,9 +98,9 @@ export default class ReportsSearchBar extends Component {
                         .indexOf(searchText) > -1
                 );
             });
-            this.setState({ selectUersData: finishArr });
+            this.setState({selectUersData: finishArr});
         } else {
-            this.setState({ selectUersData: this.state.selectUersDataEtalon });
+            this.setState({selectUersData: this.state.selectUersDataEtalon});
         }
     }
 
@@ -106,7 +129,8 @@ export default class ReportsSearchBar extends Component {
             projects.splice(item, 1);
         }
         console.log(projects);
-        this.setState({ selectProjectData: projects });
+        this.setState({selectProjectData: projects});
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data:projects})
     }
 
     render() {
@@ -122,7 +146,7 @@ export default class ReportsSearchBar extends Component {
                                 ref={input => (this.userInput = input)}
                             />
                             {/*{this.props.setUser.username}*/}
-                            <i className="arrow_down" />
+                            <i className="arrow_down"/>
                         </div>
                     </div>
                     {this.state.toggleSelect && (
@@ -146,34 +170,43 @@ export default class ReportsSearchBar extends Component {
                                 ref={input => (this.projectInput = input)}
                             />
                             {/*{this.props.setUser.username}*/}
-                            <i className="arrow_down" />
+                            <i className="arrow_down"/>
                         </div>
                     </div>
                     {this.state.toggleSelectProject && (
                         <div className="select_body">
-                            {/*<div className="search_menu_select">*/}
-                            {/*<div>*/}
-                            {/*Select all*/}
-                            {/*</div>*/}
-                            {/*<div>*/}
-                            {/*Select none*/}
-                            {/*</div>*/}
-                            {/*</div>*/}
-                            {this.props.projectsData.map((item, index) => (
-                                <div className="select_users_item" key={item.name + index}>
-                                    <label>
-                                        <Checkbox
-                                            color={'primary'}
-                                            value={item.id}
-                                            checked={this.getChecked(item.id)}
-                                            onChange={e => {
-                                                this.addProject(e, item.id);
-                                            }}
-                                        />{' '}
-                                        {item.name}
-                                    </label>
+                            <div className="search_menu_select">
+                                <input type="text"
+                                       onKeyUp={e => {
+                                           this.findProject(this.state.etalonProjectsData, this.smallSeleProjectInput.value)
+                                       }}
+                                       ref={input => this.smallSeleProjectInput = input}
+                                       placeholder={"Find"}/>
+                                <div>
+                                    Select all
                                 </div>
-                            ))}
+                                <div>
+                                    Select none
+                                </div>
+                                <i className="small_clear" onClick={e => this.clearSmallProjectSearch()}></i>
+                            </div>
+                            <div className="select_items_container">
+                                {this.state.projectsData.map((item, index) => (
+                                    <div className="select_users_item" key={item.name + index}>
+                                        <label>
+                                            <Checkbox
+                                                color={'primary'}
+                                                value={item.id}
+                                                checked={this.getChecked(item.id)}
+                                                onChange={e => {
+                                                    this.addProject(e, item.id);
+                                                }}
+                                            />{' '}
+                                            {item.name}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>
@@ -189,8 +222,13 @@ export default class ReportsSearchBar extends Component {
     componentDidMount() {
         this.userInput.value = this.props.setUser.username;
         client.request(getUsers()).then(data => {
-            this.setState({ selectUersData: data.user });
-            this.setState({ selectUersDataEtalon: data.user });
+            this.setState({selectUersData: data.user});
+            this.setState({selectUersDataEtalon: data.user});
         });
+        setTimeout(() => {
+            this.setState({projectsData: this.props.projectsData})
+            this.setState({etalonProjectsData: this.props.projectsData})
+        }, 600)
+
     }
 }

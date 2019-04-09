@@ -13,12 +13,15 @@
     padding-top: 47px;
     padding-left: 72px;
     padding-right: 56px;
+    overflow-y: scroll
 }
 
 .add_task_container {
-    position: relative;
-    margin-bottom: 66px;
-    width: 100%;
+    position: fixed;
+    left: 259px;
+    right: 73px;
+    top: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .add_task {
@@ -299,12 +302,7 @@ ul {
 
 .main_wrapper_tracker_items {
     height: 80%;
-    overflow-y: scroll;
     padding-bottom: 24px;
-}
-
-.main_wrapper_tracker_items::-webkit-scrollbar {
-    width: 0;
 }
 
 .green {
