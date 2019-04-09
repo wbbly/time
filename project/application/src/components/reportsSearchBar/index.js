@@ -152,12 +152,12 @@ export default class ReportsSearchBar extends Component {
                     {this.state.toggleSelectProject && (
                         <div className="select_body">
                             {/*<div className="search_menu_select">*/}
-                                {/*<div>*/}
-                                    {/*Select all*/}
-                                {/*</div>*/}
-                                {/*<div>*/}
-                                    {/*Select none*/}
-                                {/*</div>*/}
+                            {/*<div>*/}
+                            {/*Select all*/}
+                            {/*</div>*/}
+                            {/*<div>*/}
+                            {/*Select none*/}
+                            {/*</div>*/}
                             {/*</div>*/}
                             {this.props.projectsData.map((item, index) => (
                                 <div className="select_users_item" key={item.name + index}>

@@ -14,7 +14,7 @@ import { createArayOfArrays } from './createArrayOfArraysFunction';
 import { getTodayTimeEntries, returnMutationLinkDeleteTimeEntries, getProjectsV2 } from '../../queries';
 import { checkAuthentication, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
-import { convertMS } from "../../services/timeService";
+import { convertMS } from '../../services/timeService';
 
 class MainPage extends Component {
     ONE_SECOND = 1000; // in ms
@@ -131,7 +131,10 @@ class MainPage extends Component {
         this.TIMER_LIVE_SUBSCRIPTION = undefined;
 
         this.setState({ time: getTimeDiff(this.time.timeStart) });
-        this.TIMER_LIVE_SUBSCRIPTION = setInterval(() => this.setState({ time: getTimeDiff(this.time.timeStart) }), this.ONE_SECOND);
+        this.TIMER_LIVE_SUBSCRIPTION = setInterval(
+            () => this.setState({ time: getTimeDiff(this.time.timeStart) }),
+            this.ONE_SECOND
+        );
     }
 
     timerUpdate() {

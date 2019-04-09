@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as moment from 'moment';
 import { Doughnut } from 'react-chartjs-2';
-import { convertMS } from "../../services/timeService";
+import { convertMS } from '../../services/timeService';
 
 import './style.css';
 
@@ -11,14 +11,14 @@ class ProjectsContainer extends Component {
         return moment(momentDate).format('YYYY-MM-DD');
     }
 
-    getZero (item) {
+    getZero(item) {
         if (!item) {
-            return '00'
+            return '00';
         }
-        if ((item+'').length === 1) {
-            return '0'+item
+        if ((item + '').length === 1) {
+            return '0' + item;
         } else {
-            return item
+            return item;
         }
     }
 

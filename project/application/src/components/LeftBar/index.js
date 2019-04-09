@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import './style.css';
-import { getTimeDiff } from '../../pages/MainPage/timeInSecondsFunction'
+import { getTimeDiff } from '../../pages/MainPage/timeInSecondsFunction';
 
 class LeftBar extends Component {
     ONE_SECOND = 1000; // in ms

@@ -34,7 +34,6 @@ class ReportsByProjectsPage extends Component {
         return sumDate;
     }
 
-
     render() {
         let projectsItems = this.state.dataOfProject.map(item => (
             <div className="projects_container_project_data">
@@ -57,10 +56,7 @@ class ReportsByProjectsPage extends Component {
                         {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
                     </div>
                     <div className="header_name">Sum tasks: {this.state.countTasks}</div>
-                    <div className="header_name">
-                        Sum time:{' '}
-                        {convertMS(this.state.sumTime)}
-                    </div>
+                    <div className="header_name">Sum time: {convertMS(this.state.sumTime)}</div>
                 </div>
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">

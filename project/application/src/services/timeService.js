@@ -44,14 +44,14 @@ export function convertMS(milliseconds) {
     minute = minute % 60;
     return `${getZero(hour)}:${getZero(minute)}:${getZero(seconds)}`;
 
-    function getZero (item) {
+    function getZero(item) {
         if (!item) {
-            return '00'
+            return '00';
         }
-        if ((item+'').length === 1) {
-            return '0'+item
+        if ((item + '').length === 1) {
+            return '0' + item;
         } else {
-            return item
+            return item;
         }
     }
 }
