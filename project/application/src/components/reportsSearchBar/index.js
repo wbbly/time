@@ -5,7 +5,7 @@ import './style.css';
 import { client } from '../../requestSettings';
 import { getUsers } from '../../queries';
 import * as moment from 'moment';
-import { getUserData } from "../../services/authentication";
+import { getUserData } from '../../services/authentication';
 
 export default class ReportsSearchBar extends Component {
     state = {
@@ -23,17 +23,14 @@ export default class ReportsSearchBar extends Component {
     };
 
     openSelect() {
-        this.setState({toggleSelect: true});
+        this.setState({ toggleSelect: true });
         this.findUser(this.state.selectUersDataEtalon, '');
         document.addEventListener('click', this.closeDropdown);
     }
 
     openSelectProject() {
-        this.setState({toggleSelectProject: true});
-        this.findProject(
-            this.state.etalonProjectsData,
-            ''
-        );
+        this.setState({ toggleSelectProject: true });
+        this.findProject(this.state.etalonProjectsData, '');
         document.addEventListener('click', this.closeDropdownProject);
     }
 
@@ -51,7 +48,12 @@ export default class ReportsSearchBar extends Component {
     };
 
     closeDropdown = e => {
-        if (this.dropList && !this.dropList.contains(e.target) && !this.smallSeleUserInput.contains(e.target) && !this.usersItemsContainer.contains(e.target)  ) {
+        if (
+            this.dropList &&
+            !this.dropList.contains(e.target) &&
+            !this.smallSeleUserInput.contains(e.target) &&
+            !this.usersItemsContainer.contains(e.target)
+        ) {
             this.setState(
                 {
                     toggleSelect: !this.state.toggleSelect,
@@ -76,20 +78,21 @@ export default class ReportsSearchBar extends Component {
                         .indexOf(searchText) > -1
                 );
             });
-            this.setState({projectsData: finishArr});
+            this.setState({ projectsData: finishArr });
         } else {
-            this.setState({projectsData: this.state.etalonProjectsData});
+            this.setState({ projectsData: this.state.etalonProjectsData });
         }
     }
 
     clearSmallProjectSearch() {
         this.smallSeleProjectInput.value = '';
-        this.setState({projectsData: this.state.etalonProjectsData});
+        this.setState({ projectsData: this.state.etalonProjectsData });
     }
 
     closeDropdownProject = e => {
         if (
-            this.dropListProjects && !this.dropListProjects.contains(e.target) &&
+            this.dropListProjects &&
+            !this.dropListProjects.contains(e.target) &&
             !this.projectSelectList.contains(e.target) &&
             !this.projectHeaderClean.contains(e.target) &&
             !this.smallSeleProjectInput.contains(e.target)
@@ -118,9 +121,9 @@ export default class ReportsSearchBar extends Component {
                         .indexOf(searchText) > -1
                 );
             });
-            this.setState({selectUersData: finishArr});
+            this.setState({ selectUersData: finishArr });
         } else {
-            this.setState({selectUersData: this.state.selectUersDataEtalon});
+            this.setState({ selectUersData: this.state.selectUersDataEtalon });
         }
     }
 
@@ -141,7 +144,7 @@ export default class ReportsSearchBar extends Component {
     }
 
     getCheckedUsers(name) {
-        if (this.state.selectUserData.indexOf((""+name)) !== -1) {
+        if (this.state.selectUserData.indexOf('' + name) !== -1) {
             return true;
         }
     }
@@ -154,8 +157,8 @@ export default class ReportsSearchBar extends Component {
             let item = projects.indexOf(`"${name}"`);
             projects.splice(item, 1);
         }
-        this.setState({selectProjectData: projects});
-        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data: projects});
+        this.setState({ selectProjectData: projects });
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: projects });
     }
 
     addUsers(e, user) {
@@ -163,45 +166,45 @@ export default class ReportsSearchBar extends Component {
         if (e.target.checked) {
             users.push(`"${user.username}"`);
         } else {
-            let item = users.indexOf(("" + user.username));
+            let item = users.indexOf('' + user.username);
             users.splice(item, 1);
         }
-        this.setState({selectUserData: users});
-        this.props.reportsPageAction('SET_ACTIVE_USER', {data: users});
+        this.setState({ selectUserData: users });
+        this.props.reportsPageAction('SET_ACTIVE_USER', { data: users });
     }
 
     selectAllProjects() {
         let projects = [];
         for (let i = 0; i < this.state.etalonProjectsData.length; i++) {
-            projects.push(this.state.etalonProjectsData[i].name)
+            projects.push(this.state.etalonProjectsData[i].name);
         }
-        this.setState({checkedProjects: true});
-        this.setState({selectProjectData: projects});
-        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data: projects});
+        this.setState({ checkedProjects: true });
+        this.setState({ selectProjectData: projects });
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: projects });
     }
 
     selectAllUsers() {
         let users = [];
         for (let i = 0; i < this.state.selectUersData.length; i++) {
-            users.push(this.state.selectUersData[i].username)
+            users.push(this.state.selectUersData[i].username);
         }
-        this.setState({selectUserData: users});
-        this.props.reportsPageAction('SET_ACTIVE_USER', {data: users});
+        this.setState({ selectUserData: users });
+        this.props.reportsPageAction('SET_ACTIVE_USER', { data: users });
     }
 
     selectNoneUsers() {
-        this.setState({selectUserData: []});
-        this.props.reportsPageAction('SET_ACTIVE_USER', {data: []});
+        this.setState({ selectUserData: [] });
+        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [] });
     }
 
     selectNone() {
         let projects = [];
         for (let i = 0; i < this.state.etalonProjectsData.length; i++) {
-            projects.push(this.state.etalonProjectsData[i].name)
+            projects.push(this.state.etalonProjectsData[i].name);
         }
-        this.setState({checkedProjects: false});
-        this.setState({selectProjectData: []});
-        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data: []});
+        this.setState({ checkedProjects: false });
+        this.setState({ selectProjectData: [] });
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: [] });
     }
 
     render() {
@@ -209,12 +212,13 @@ export default class ReportsSearchBar extends Component {
             <div className="wrapper_reports_search_bar">
                 <div className="reports_search_bar_search_field_container select">
                     <div className="reports_search_select_wrapper" ref={div => (this.dropList = div)}>
-                        <div className="reports_search_select_header" onClick={e => this.openSelect()}
-                             ref={div => (this.userInput = div)}>
-                            <div>
-                              User:  {this.state.selectUserData.join(' ')}
-                            </div>
-                            <i className="arrow_down"/>
+                        <div
+                            className="reports_search_select_header"
+                            onClick={e => this.openSelect()}
+                            ref={div => (this.userInput = div)}
+                        >
+                            <div>User: {this.state.selectUserData.join(' ')}</div>
+                            <i className="arrow_down" />
                         </div>
                     </div>
                     {this.state.toggleSelect && (
@@ -222,17 +226,19 @@ export default class ReportsSearchBar extends Component {
                             <div className="search_menu_select">
                                 <input
                                     type="text"
-                                    onKeyUp={e => this.findUser(this.state.selectUersDataEtalon, this.smallSeleUserInput.value)}
+                                    onKeyUp={e =>
+                                        this.findUser(this.state.selectUersDataEtalon, this.smallSeleUserInput.value)
+                                    }
                                     ref={input => (this.smallSeleUserInput = input)}
                                     placeholder={'Find'}
                                 />
                                 <div onClick={e => this.selectAllUsers()}>Select all</div>
                                 <div onClick={e => this.selectNoneUsers()}>Select none</div>
-                                <i className="small_clear" onClick={e => this.clearSmallProjectSearch()}/>
+                                <i className="small_clear" onClick={e => this.clearSmallProjectSearch()} />
                             </div>
                             <div className="select_items_container" ref={div => (this.usersItemsContainer = div)}>
                                 {this.state.selectUersData.map((item, index) => (
-                                    <div className="select_users_item"  key={item.username + index}>
+                                    <div className="select_users_item" key={item.username + index}>
                                         <label>
                                             <Checkbox
                                                 color={'primary'}
@@ -250,14 +256,15 @@ export default class ReportsSearchBar extends Component {
                         </div>
                     )}
                 </div>
-                <div className="reports_search_bar_search_field_container select"
-                     onClick={e => this.openSelectProject()}
+                <div
+                    className="reports_search_bar_search_field_container select"
+                    onClick={e => this.openSelectProject()}
                 >
                     <div className="reports_search_select_wrapper">
                         <div className="reports_search_select_header" ref={div => (this.dropListProjects = div)}>
                             <div>Project:{this.state.selectProjectData.join(' ')}</div>
                             {/*{this.props.setUser.username}*/}
-                            <i className="arrow_down"/>
+                            <i className="arrow_down" />
                         </div>
                     </div>
                     {this.state.toggleSelectProject && (
@@ -276,7 +283,11 @@ export default class ReportsSearchBar extends Component {
                                 />
                                 <div onClick={e => this.selectAllProjects()}>Select all</div>
                                 <div onClick={e => this.selectNone()}>Select none</div>
-                                <i className="small_clear" ref={i => (this.projectHeaderClean = i)} onClick={e => this.clearSmallProjectSearch()}/>
+                                <i
+                                    className="small_clear"
+                                    ref={i => (this.projectHeaderClean = i)}
+                                    onClick={e => this.clearSmallProjectSearch()}
+                                />
                             </div>
                             <div className="select_items_container" ref={div => (this.projectSelectList = div)}>
                                 {this.state.projectsData.map((item, index) => (
@@ -310,17 +321,17 @@ export default class ReportsSearchBar extends Component {
     componentDidMount() {
         this.userInput.value = this.props.setUser.username;
         client.request(getUsers()).then(data => {
-            this.setState({selectUersData: data.user});
-            this.setState({selectUersDataEtalon: data.user});
+            this.setState({ selectUersData: data.user });
+            this.setState({ selectUersDataEtalon: data.user });
         });
         setTimeout(() => {
-            this.setState({projectsData: this.props.projectsData});
-            this.setState({etalonProjectsData: this.props.projectsData});
+            this.setState({ projectsData: this.props.projectsData });
+            this.setState({ etalonProjectsData: this.props.projectsData });
         }, 800);
     }
 
     componentWillUnmount() {
-        this.props.reportsPageAction('SET_ACTIVE_USER', {data: [`"${getUserData().username}"`]});
-        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {data: []});
+        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [`"${getUserData().username}"`] });
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: [] });
     }
 }

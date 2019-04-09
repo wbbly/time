@@ -194,7 +194,7 @@ export function getDatafromTimerTableToReport(userId, projectName, startDate, en
             timer_v2 (
                 where:{
                 user:{email: {_in:[${userId}]}},
-                ${(projectName.length)? `project:{name: {_in:[${projectName}]}}`: ''},
+                ${projectName.length ? `project:{name: {_in:[${projectName}]}}` : ''},
                 start_datetime: {_gte: "${new Date(startDate).toISOString().slice(0, -1)}"}
                 end_datetime: {_lt: "${new Date(+new Date(endDate) + 24 * 60 * 60 * 1000 - 1)
                     .toISOString()
