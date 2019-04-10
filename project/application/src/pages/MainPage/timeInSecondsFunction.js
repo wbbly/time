@@ -31,7 +31,9 @@ export function getTimInStringSeconds(seconds) {
 }
 
 export function getTimeDiff(timeFrom, inString) {
-    const timeDiff = moment(+moment() - timeFrom).utc();
+    let serverClientTimediff = localStorage.getItem('server-client-timediff');
+    serverClientTimediff = serverClientTimediff ? +serverClientTimediff : 0;
+    const timeDiff = moment(+moment() - timeFrom + serverClientTimediff).utc();
 
     return inString ? timeDiff.format('HH:mm:ss') : timeDiff;
 }

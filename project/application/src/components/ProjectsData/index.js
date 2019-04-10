@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.css';
-import { client } from '../../requestSettings';
-import { returnMutationLinkDeleteProject } from '../../queries';
-import { getDateInString } from '../../pages/MainPage/timeInSecondsFunction';
+import { convertMS } from  '../../services/timeService'
 
 export default class ProjectData extends Component {
     render() {
@@ -21,7 +19,7 @@ export default class ProjectData extends Component {
         const tableInfoElements = this.props.tableInfo.map((item, index) => (
             <tr key={'table-header_' + index}>
                 <td>{item.name}</td>
-                <td>{getDateInString(item.totalTime)}</td>
+                <td>{convertMS(item.totalTime)}</td>
             </tr>
         ));
         const tableHeaderElements = tableHeader.map((item, index) => <th key={'table-info_' + index}>{item.value}</th>);

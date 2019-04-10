@@ -189,12 +189,12 @@ export function getDataByProjectName(projectName, userName, startDate, endDate) 
     };
 }
 
-export function getDatafromTimerTableToReport(userId, projectName, startDate, endDate) {
+export function getDatafromTimerTableToReport(userEmail, projectName, startDate, endDate) {
     return {
         graphqlRequest: `{
             timer_v2 (
                 where:{
-                user:{email: {_in:[${userId}]}},
+                user:{email: {_in:[${userEmail}]}},
                 ${projectName.length ? `project:{name: {_in:[${projectName}]}}` : ''},
                 start_datetime: {_gte: "${new Date(startDate).toISOString().slice(0, -1)}"}
                 end_datetime: {_lt: "${new Date(+new Date(endDate) + 24 * 60 * 60 * 1000 - 1)

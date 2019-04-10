@@ -46,5 +46,18 @@
 }
 
 .projects_container_wrapper .chart {
+    position: relative;
     margin-left: 10%;
+}
+
+.total_time_tasks {
+    position: absolute;
+    top: 151px;
+    left: 106px;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: normal;
+    color: #FFFFFF;
 }

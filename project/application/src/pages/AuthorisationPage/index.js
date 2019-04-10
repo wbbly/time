@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import './index.css';
-import { checkAuthenticationOnLoginPage } from '../../services/authentication';
+import { checkAuthenticationOnLoginPage, getUserData } from '../../services/authentication';
 import { AppConfig } from '../../config';
 import RegisterModal from '../../components/RegisterModal';
 import toggleRegisterModal from '../../actions/AuthorisationPageAction';
+import reportsPageAction from '../../actions/ReportsPageAction';
 
 class AuthorisationPage extends Component {
     state = {
@@ -35,6 +36,7 @@ class AuthorisationPage extends Component {
             .then(
                 result => {
                     localStorage.setItem('userObject', JSON.stringify(result.user));
+                    this.props.reportsPageAction('SET_ACTIVE_USER', { data: (!!getUserData())?`"${getUserData().username}"`:'' });
                     this.setState({ haveToken: true });
                 },
                 err =>
@@ -99,6 +101,7 @@ const mapStateToProps = store => {
 const mapDispatchToProps = dispatch => {
     return {
         toggleRegisterModal: (actionType, action) => dispatch(toggleRegisterModal(actionType, action))[1],
+        reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
     };
 };
 

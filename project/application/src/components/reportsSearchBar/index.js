@@ -138,13 +138,13 @@ export default class ReportsSearchBar extends Component {
     }
 
     getChecked(name) {
-        if (this.props.selectedProjects.indexOf(`"${name}"`) !== -1) {
+        if (this.props.selectedProjects.join().indexOf(`"${name}"`) !== -1) {
             return true;
         }
     }
 
     getCheckedUsers(name) {
-        if (this.state.selectUserData.indexOf('' + name) !== -1) {
+        if (this.state.selectUserData.join().indexOf(`"${name}"`) !== -1) {
             return true;
         }
     }

@@ -11,18 +11,9 @@ class ProjectsContainer extends Component {
         return moment(momentDate).format('YYYY-MM-DD');
     }
 
-    getZero(item) {
-        if (!item) {
-            return '00';
-        }
-        if ((item + '').length === 1) {
-            return '0' + item;
-        } else {
-            return item;
-        }
-    }
-
     render() {
+        let datesValue = JSON.parse(JSON.stringify(this.props.dataDoughnutChat.datasets[0].data.reduce(function(a,b){return(a+b)})))
+        console.log(datesValue, 'datesArr');
         let projectsItems = this.props.projectsArr.map((item, index) => (
             <Link
                 to={`/project-report/${item.name}/${this.getDateToLink(
@@ -48,6 +39,7 @@ class ProjectsContainer extends Component {
                     <div className="projects_container_project_data_container">{projectsItems}</div>
                 </div>
                 <div className="chart">
+                    <div className="total_time_tasks">{convertMS(datesValue)}</div>
                     <Doughnut data={this.props.dataDoughnutChat} width={303} height={303} />
                 </div>
             </div>

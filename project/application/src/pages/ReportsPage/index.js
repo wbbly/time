@@ -15,6 +15,7 @@ import { getUsers, getReports, getDatafromTimerTableToReport } from '../../queri
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { checkAuthentication, getUserAdminRight } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
+import { convertMS } from  '../../services/timeService'
 
 class ReportsPage extends Component {
     state = {
@@ -32,6 +33,7 @@ class ReportsPage extends Component {
         selectUersData: [],
         selectUersDataEtalon: [],
         projectsData: [],
+        totalUpChartTime: '',
     };
     lineChartOption = {
         scales: {
@@ -126,7 +128,10 @@ class ReportsPage extends Component {
                             reportsPageAction={this.props.reportsPageAction}
                         />
                     )}
-                    {/*<div className="total_time">Total 111:22:11</div>*/}
+                    <div className="total_time_container">
+                        <span className="total_time_name">Total</span>
+                        <span className="total_time_time">{convertMS(this.state.totalUpChartTime)}</span>
+                    </div>
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
                             <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
@@ -156,6 +161,7 @@ class ReportsPage extends Component {
         for (let i = 0; i < labels.length; i++) {
             finishData.labels.push(moment(labels[i]).format('ddd DD.MM.YYYY'));
         }
+        this.setState({totalUpChartTime:time.reduce(function(a,b){return(a+b)})});
         finishData.timeArr = time;
         return finishData;
     }
@@ -319,6 +325,8 @@ class ReportsPage extends Component {
             this.setState({ selectUersDataEtalon: data.user });
         });
     }
+
+
 }
 
 const mapStateToProps = store => {
