@@ -3,6 +3,7 @@ import * as moment from 'moment';
 
 import './style.css';
 import { changeTimeMutation, getTodayTimeEntries } from '../../queries';
+import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { client } from '../../requestSettings';
 import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
 
@@ -18,11 +19,12 @@ class ManualTimeModal extends Component {
     };
 
     getIssues() {
-        let items = this.props.arrProjects.map(item => (
+        let items = this.props.arrProjects.map((item, index) => (
             <div
                 className="item_select_wrapper"
                 onClick={e => this.setProject(item)}
                 ref={div => (this.dropList = div)}
+                key={'item_select_wrapper' + index}
             >
                 <div className="issue_name margin_top_zero">{item.name}</div>
                 <div className={`circle ${item.projectColor.name} margin_top_zero`} />
@@ -39,7 +41,9 @@ class ManualTimeModal extends Component {
     changeData() {
         let changedItem = JSON.parse(JSON.stringify(this.state.activeItem));
         changedItem.project = this.state.activeProject;
-        changedItem.issue = this.inputNameValue.value;
+
+        const issue = (this.inputNameValue || {}).value || '';
+        changedItem.issue = encodeTimeEntryIssue(issue);
 
         client
             .request(
@@ -71,6 +75,11 @@ class ManualTimeModal extends Component {
 
     getNewData() {
         client.request(getTodayTimeEntries(JSON.parse(localStorage.getItem('userObject')).id)).then(data => {
+            for (let i = 0; i < data.timerV2.length; i++) {
+                const timeEntry = data.timerV2[i];
+                timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
+            }
+
             this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
         });
     }

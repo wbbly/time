@@ -1,3 +1,5 @@
+import { encodeTimeEntryIssue, decodeTimeEntryIssue } from './services/timeEntryService';
+
 export const getProjectsV2 = {
     graphqlRequest: `{ project_v2(order_by: {name: desc}) {
             id
@@ -138,7 +140,7 @@ export function getTodayTimeEntries(id) {
                     id,
                     startDatetime,
                     endDatetime,
-                    issue,
+                    issue: decodeTimeEntryIssue(issue),
                     project: {
                         name: projectName,
                         id: projectId,
@@ -188,7 +190,6 @@ export function getDataByProjectName(projectName, userName, startDate, endDate) 
 }
 
 export function getDatafromTimerTableToReport(userId, projectName, startDate, endDate) {
-    console.log(userId);
     return {
         graphqlRequest: `{
             timer_v2 (

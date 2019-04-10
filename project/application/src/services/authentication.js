@@ -1,8 +1,6 @@
 import { Redirect } from 'react-router-dom';
 import React from 'react';
 
-import { AppConfig } from '../config';
-
 export function checkAuthentication() {
     if (!!localStorage.getItem('userObject')) {
         return;
@@ -42,8 +40,12 @@ export function getUserId() {
 export function getUserData() {
     let storageItem = JSON.parse(localStorage.getItem('userObject'));
     if (!storageItem) {
-        return;
+        return {
+            id: null,
+            username: '',
+        };
     }
+
     return {
         id: storageItem.id,
         username: storageItem.username,

@@ -261,7 +261,6 @@ class ReportsPage extends Component {
                     let day = period[i];
                     var { sum, dataModified } = dayProcess(day.startTime, day.endTime, timer_v2);
                     allSum.push(sum);
-                    // console.log( dataModified, 'dataModified');
                     timer_v2 = dataModified;
                 }
                 this.props.reportsPageAction(

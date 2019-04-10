@@ -15,6 +15,7 @@ import { getTodayTimeEntries, returnMutationLinkDeleteTimeEntries, getProjectsV2
 import { checkAuthentication, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 import { convertMS } from '../../services/timeService';
+import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 
 class MainPage extends Component {
     ONE_SECOND = 1000; // in ms
@@ -64,6 +65,7 @@ class MainPage extends Component {
         });
         this.socket.on('check-timer-v2', data => {
             if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
+                data.issue = decodeTimeEntryIssue(data.issue);
                 localStorage.setItem(
                     'current-timer',
                     JSON.stringify({
@@ -109,9 +111,10 @@ class MainPage extends Component {
 
     saveStartTimer(className, setProjectId = this.state.seletedProject.id) {
         if (className === 'control_task_time_icons play') {
+            const issue = (this.mainTaskName || {}).value || '';
             this.socket.emit('start-timer-v2', {
                 userId: JSON.parse(localStorage.getItem('userObject')).id,
-                issue: this.mainTaskName.value,
+                issue: encodeTimeEntryIssue(issue),
                 projectId: setProjectId,
             });
         } else {
@@ -143,9 +146,10 @@ class MainPage extends Component {
 
         this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = setTimeout(() => {
             if (this.TIMER_LIVE_SUBSCRIPTION) {
+                const issue = (this.mainTaskName || {}).value || '';
                 this.socket.emit('update-timer-v2', {
                     userId: JSON.parse(localStorage.getItem('userObject')).id,
-                    issue: this.mainTaskName.value,
+                    issue: encodeTimeEntryIssue(issue),
                     projectId: this.state.seletedProject.id,
                 });
             }

@@ -7,6 +7,7 @@ import { client } from '../../requestSettings';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 import { convertMS } from '../../services/timeService';
+import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 
 class ReportsByProjectsPage extends Component {
     state = {
@@ -35,8 +36,8 @@ class ReportsByProjectsPage extends Component {
     }
 
     render() {
-        let projectsItems = this.state.dataOfProject.map(item => (
-            <div className="projects_container_project_data">
+        let projectsItems = this.state.dataOfProject.map((item, index) => (
+            <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
                 <div className="name">{this.getSlash(item.issue)}</div>
                 <div className="time">
                     {moment(item.start_datetime).format('DD.MM.YYYY')} |{' '}
@@ -85,6 +86,14 @@ class ReportsByProjectsPage extends Component {
                 )
             )
             .then(data => {
+                for (let i = 0; i < data.project_v2.length; i++) {
+                    const project = data.project_v2[i];
+                    for (let j = 0; j < project.timer.length; j++) {
+                        const timeEntry = project.timer[j];
+                        timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
+                    }
+                }
+
                 this.setState({ dataOfProject: data.project_v2[0].timer });
                 this.setState({ sumTime: this.getSumtime(data.project_v2[0].timer) });
                 this.setState({ countTasks: data.project_v2[0].timer.length });
