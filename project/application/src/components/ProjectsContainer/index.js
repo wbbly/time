@@ -17,11 +17,13 @@ class ProjectsContainer extends Component {
         },
         tooltips: {
             callbacks: {
-                label: function (tooltipItem, data) {
-                    return moment(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]).utc().format('HH:mm:ss');
-                    // return moment(tooltipItem.yLabel)
-                    //     .utc()
-                    //     .format('HH:mm:ss');
+                label: function(tooltipItem, data) {
+
+                    let lable = data.labels[tooltipItem.datasetIndex];
+                    let date = moment(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index])
+                        .utc()
+                        .format('HH:mm:ss');
+                        return lable + date
                 },
             },
         },
