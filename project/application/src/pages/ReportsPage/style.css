@@ -96,7 +96,25 @@
     width: 42%;
 }
 
-.total_time {
+.total_time_container {
     position: relative;
-    top: 102px;
+    top: 98px;
+    left: 0;
+}
+
+.total_time_container .total_time_name {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: normal;
+    color: #BDBDBD
+}
+
+.total_time_container .total_time_time {
+    font-family: "Open Sans";
+    font-size: 24px;
+    margin-left: 11px;
+    line-height: normal;
+    color: #FFFFFF;
 }

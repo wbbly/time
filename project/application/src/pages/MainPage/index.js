@@ -12,7 +12,7 @@ import ManualTimeModal from '../../components/Manual-time-modal';
 import { client } from '../../requestSettings';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
 import { getTodayTimeEntries, returnMutationLinkDeleteTimeEntries, getProjectsV2 } from '../../queries';
-import { checkAuthentication, getUserId } from '../../services/authentication';
+import { checkAuthentication, getUserData, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 import { convertMS } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
@@ -65,23 +65,42 @@ class MainPage extends Component {
         });
         this.socket.on('check-timer-v2', data => {
             if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
-                data.issue = decodeTimeEntryIssue(data.issue);
-                localStorage.setItem(
-                    'current-timer',
-                    JSON.stringify({
-                        taskName: data.issue,
-                        timeStart: +moment(data.startDatetime),
-                        seletedProject: data.project,
-                    })
-                );
-                this.getTimeNow(
-                    {
-                        taskName: data.issue,
-                        timeStart: +moment(data.startDatetime),
-                        seletedProject: data.project,
+                fetch(AppConfig.apiURL + 'time/current', {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
                     },
-                    data
-                );
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw res;
+                        }
+                        return res.json();
+                    })
+                    .then(
+                        result => {
+                            localStorage.setItem('server-client-timediff', +moment(result.timeISO) - +moment());
+                            data.issue = decodeTimeEntryIssue(data.issue);
+                            localStorage.setItem(
+                                'current-timer',
+                                JSON.stringify({
+                                    taskName: data.issue,
+                                    timeStart: +moment(data.startDatetime),
+                                    seletedProject: data.project,
+                                })
+                            );
+                            this.getTimeNow(
+                                {
+                                    taskName: data.issue,
+                                    timeStart: +moment(data.startDatetime),
+                                    seletedProject: data.project,
+                                },
+                                data
+                            );
+                        },
+                        err => err.text().then(errorMessage => {})
+                    );
             }
         });
         this.socket.on('stop-timer-v2', data => {
@@ -198,8 +217,8 @@ class MainPage extends Component {
             return;
         }
         this.time.timeStart = timer.timeStart;
-        let newTime = +moment() - timer.timeStart;
-        let timeInArr = moment(newTime + 1000)
+        let newTime = +moment().utc() - timer.timeStart;
+        let timeInArr = moment(newTime)
             .utc()
             .format('HH:mm:ss')
             .split(':');

@@ -37,6 +37,12 @@ class LeftBar extends Component {
         }
     }
 
+    logout() {
+        localStorage.removeItem('userObject');
+        localStorage.removeItem('current-timer');
+        window.location.reload();
+    }
+
     render() {
         return (
             <div className="wrapper">
@@ -67,6 +73,10 @@ class LeftBar extends Component {
                             <div className="links_text">team</div>
                         </div>
                     </Link>
+                </div>
+                <div className="logout_container" onClick={e => this.logout()}>
+                    <i className="logout" />
+                    <span>Log out</span>
                 </div>
             </div>
         );

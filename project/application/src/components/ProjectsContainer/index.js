@@ -7,22 +7,38 @@ import { convertMS } from '../../services/timeService';
 import './style.css';
 
 class ProjectsContainer extends Component {
+    doughnutOptions = {
+        title: {
+            display: false,
+        },
+        legend: {
+            display: false,
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    let lable = data.labels[tooltipItem.datasetIndex];
+                    let date = moment(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index])
+                        .utc()
+                        .format('HH:mm:ss');
+                    return lable + date;
+                },
+            },
+        },
+    };
+
     getDateToLink(momentDate) {
         return moment(momentDate).format('YYYY-MM-DD');
     }
 
-    getZero(item) {
-        if (!item) {
-            return '00';
-        }
-        if ((item + '').length === 1) {
-            return '0' + item;
-        } else {
-            return item;
-        }
-    }
-
     render() {
+        let datesValue = JSON.parse(
+            JSON.stringify(
+                this.props.dataDoughnutChat.datasets[0].data.reduce((a, b) => {
+                    return a + b;
+                })
+            )
+        );
         let projectsItems = this.props.projectsArr.map((item, index) => (
             <Link
                 to={`/project-report/${item.name}/${this.getDateToLink(
@@ -48,7 +64,13 @@ class ProjectsContainer extends Component {
                     <div className="projects_container_project_data_container">{projectsItems}</div>
                 </div>
                 <div className="chart">
-                    <Doughnut data={this.props.dataDoughnutChat} width={303} height={303} />
+                    <div className="total_time_tasks">{convertMS(datesValue)}</div>
+                    <Doughnut
+                        data={this.props.dataDoughnutChat}
+                        options={this.doughnutOptions}
+                        width={303}
+                        height={303}
+                    />
                 </div>
             </div>
         );
