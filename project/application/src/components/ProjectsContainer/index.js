@@ -15,16 +15,16 @@ class ProjectsContainer extends Component {
         legend: {
             display: false,
         },
-        // tooltips: {
-        //     callbacks: {
-        //         label: function (tooltipItem) {
-        //             console.log(tooltipItem);
-        //             return moment(tooltipItem.yLabel)
-        //                 .utc()
-        //                 .format('HH:mm:ss');
-        //         },
-        //     },
-        // },
+        tooltips: {
+            callbacks: {
+                label: function (tooltipItem, data) {
+                    return moment(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]).utc().format('HH:mm:ss');
+                    // return moment(tooltipItem.yLabel)
+                    //     .utc()
+                    //     .format('HH:mm:ss');
+                },
+            },
+        },
     };
 
     getDateToLink(momentDate) {
@@ -34,7 +34,7 @@ class ProjectsContainer extends Component {
     render() {
         let datesValue = JSON.parse(
             JSON.stringify(
-                this.props.dataDoughnutChat.datasets[0].data.reduce(function (a, b) {
+                this.props.dataDoughnutChat.datasets[0].data.reduce(function(a, b) {
                     return a + b;
                 })
             )
@@ -45,7 +45,7 @@ class ProjectsContainer extends Component {
                 to={`/project-report/${item.name}/${this.getDateToLink(
                     this.props.selectionRange.startDate
                 )}/${this.getDateToLink(this.props.selectionRange.endDate)}`}
-                style={{textDecoration: 'none'}}
+                style={{ textDecoration: 'none' }}
                 key={'projects_item' + index}
             >
                 <div className="projects_container_project_data">
@@ -66,8 +66,12 @@ class ProjectsContainer extends Component {
                 </div>
                 <div className="chart">
                     <div className="total_time_tasks">{convertMS(datesValue)}</div>
-                    <Doughnut data={this.props.dataDoughnutChat} options={this.doughnutOptions} width={303}
-                              height={303}/>
+                    <Doughnut
+                        data={this.props.dataDoughnutChat}
+                        options={this.doughnutOptions}
+                        width={303}
+                        height={303}
+                    />
                 </div>
             </div>
         );
