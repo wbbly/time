@@ -10,7 +10,6 @@ class ProjectsContainer extends Component {
     doughnutOptions = {
         title: {
             display: false,
-            text: 'Custom Chart Title',
         },
         legend: {
             display: false,
@@ -18,12 +17,11 @@ class ProjectsContainer extends Component {
         tooltips: {
             callbacks: {
                 label: function(tooltipItem, data) {
-
                     let lable = data.labels[tooltipItem.datasetIndex];
                     let date = moment(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index])
                         .utc()
                         .format('HH:mm:ss');
-                        return lable + date
+                    return lable + date;
                 },
             },
         },
@@ -36,12 +34,11 @@ class ProjectsContainer extends Component {
     render() {
         let datesValue = JSON.parse(
             JSON.stringify(
-                this.props.dataDoughnutChat.datasets[0].data.reduce(function(a, b) {
+                this.props.dataDoughnutChat.datasets[0].data.reduce((a, b) => {
                     return a + b;
                 })
             )
         );
-        console.log(datesValue, 'datesArr');
         let projectsItems = this.props.projectsArr.map((item, index) => (
             <Link
                 to={`/project-report/${item.name}/${this.getDateToLink(

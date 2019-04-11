@@ -7,7 +7,7 @@ const initialState = {
         endDate: new Date(),
         key: 'selection',
     },
-    setUser: [!!getUserData() ? `"${getUserData().username}"` : ''],
+    setUser: [`"${getUserData().username}"`],
     dataBarChat: {
         defaultFontColor: 'red',
         labels: ['February', 'March', 'April', 'May', 'June', 'July'],

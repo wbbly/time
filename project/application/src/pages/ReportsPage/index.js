@@ -162,7 +162,7 @@ class ReportsPage extends Component {
             finishData.labels.push(moment(labels[i]).format('ddd DD.MM.YYYY'));
         }
         this.setState({
-            totalUpChartTime: time.reduce(function(a, b) {
+            totalUpChartTime: time.reduce((a, b) => {
                 return a + b;
             }),
         });
@@ -181,7 +181,6 @@ class ReportsPage extends Component {
         }
         newObjectChart.labels = labels;
         newObjectChart.datasets[0].data = dataTime;
-        console.log(newObjectChart);
         return newObjectChart;
     }
 

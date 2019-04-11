@@ -65,7 +65,7 @@ class MainPage extends Component {
         });
         this.socket.on('check-timer-v2', data => {
             if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
-                fetch('https://api.wobbly.me/time/current', {
+                fetch(AppConfig.apiURL + 'time/current', {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
@@ -80,7 +80,6 @@ class MainPage extends Component {
                     })
                     .then(
                         result => {
-                            console.log(result, 'resultresultresultresult');
                             localStorage.setItem('server-client-timediff', +moment(result.timeISO) - +moment());
                             data.issue = decodeTimeEntryIssue(data.issue);
                             localStorage.setItem(
@@ -212,35 +211,11 @@ class MainPage extends Component {
         }
     }
 
-    checkTimeServer = () => {
-        fetch('https://api.wobbly.me/time/current', {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    console.log(result, 'resultresultresultresult');
-                    this.setState({ timeServer: result.timeISO });
-                },
-                err => err.text().then(errorMessage => {})
-            );
-    };
-
     getTimeNow(object, data) {
         let timer = object;
         if (!timer || !timer.timeStart) {
             return;
         }
-        this.checkTimeServer();
         this.time.timeStart = timer.timeStart;
         let newTime = +moment().utc() - timer.timeStart;
         let timeInArr = moment(newTime)
