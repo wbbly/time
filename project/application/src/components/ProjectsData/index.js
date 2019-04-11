@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.css';
-import { convertMS } from  '../../services/timeService'
+import { convertMS } from '../../services/timeService';
 
 export default class ProjectData extends Component {
     render() {

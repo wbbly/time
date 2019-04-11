@@ -176,7 +176,7 @@ export default class ReportsSearchBar extends Component {
     selectAllProjects() {
         let projects = [];
         for (let i = 0; i < this.state.etalonProjectsData.length; i++) {
-            projects.push(this.state.etalonProjectsData[i].name);
+            projects.push(`"${this.state.etalonProjectsData[i].name}"`);
         }
         this.setState({ checkedProjects: true });
         this.setState({ selectProjectData: projects });
@@ -186,7 +186,7 @@ export default class ReportsSearchBar extends Component {
     selectAllUsers() {
         let users = [];
         for (let i = 0; i < this.state.selectUersData.length; i++) {
-            users.push(this.state.selectUersData[i].username);
+            users.push(`"${this.state.selectUersData[i].username}"`);
         }
         this.setState({ selectUserData: users });
         this.props.reportsPageAction('SET_ACTIVE_USER', { data: users });

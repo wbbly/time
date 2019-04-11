@@ -64,14 +64,13 @@ class MainPage extends Component {
             );
         });
         this.socket.on('check-timer-v2', data => {
-
             if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
                 fetch('https://api.wobbly.me/time/current', {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
-                    }
+                    },
                 })
                     .then(res => {
                         if (!res.ok) {
@@ -101,15 +100,8 @@ class MainPage extends Component {
                                 data
                             );
                         },
-                        err =>
-                            err.text().then(errorMessage => {
-                            })
+                        err => err.text().then(errorMessage => {})
                     );
-
-
-
-
-
             }
         });
         this.socket.on('stop-timer-v2', data => {
@@ -226,7 +218,7 @@ class MainPage extends Component {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-            }
+            },
         })
             .then(res => {
                 if (!res.ok) {
@@ -237,11 +229,9 @@ class MainPage extends Component {
             .then(
                 result => {
                     console.log(result, 'resultresultresultresult');
-                    this.setState({timeServer: result.timeISO})
+                    this.setState({ timeServer: result.timeISO });
                 },
-                err =>
-                    err.text().then(errorMessage => {
-                    })
+                err => err.text().then(errorMessage => {})
             );
     };
 
@@ -250,7 +240,7 @@ class MainPage extends Component {
         if (!timer || !timer.timeStart) {
             return;
         }
-        this.checkTimeServer()
+        this.checkTimeServer();
         this.time.timeStart = timer.timeStart;
         let newTime = +moment().utc() - timer.timeStart;
         let timeInArr = moment(newTime)

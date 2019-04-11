@@ -8,7 +8,7 @@ class LeftBar extends Component {
     ONE_SECOND = 1000; // in ms
 
     componentDidMount() {
-        this.setState({arrTasks: this.props.arrTasks});
+        this.setState({ arrTasks: this.props.arrTasks });
         this.activeSmalltimer();
     }
 
@@ -23,12 +23,12 @@ class LeftBar extends Component {
     getTimeNow() {
         let timer = JSON.parse(localStorage.getItem('current-timer'));
         if (!timer || !timer.timeStart) {
-            this.setState({timer: ''});
+            this.setState({ timer: '' });
 
             return;
         }
 
-        this.setState({timer: getTimeDiff(timer.timeStart, true)});
+        this.setState({ timer: getTimeDiff(timer.timeStart, true) });
     }
 
     visualTimer() {
@@ -38,44 +38,44 @@ class LeftBar extends Component {
     }
 
     logout() {
-      localStorage.removeItem('userObject');
-      localStorage.removeItem('current-timer');
-      window.location.reload()
+        localStorage.removeItem('userObject');
+        localStorage.removeItem('current-timer');
+        window.location.reload();
     }
 
     render() {
         return (
             <div className="wrapper">
-                <i className="logo_small"/>
+                <i className="logo_small" />
                 <div className="navigation_links_container">
-                    <Link to="/main-page" style={{textDecoration: 'none'}}>
+                    <Link to="/main-page" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
-                            <i className="timer"/>
+                            <i className="timer" />
                             <div className="links_text">timer</div>
                             <div className="timer_task">{this.visualTimer()}</div>
                         </div>
                     </Link>
-                    <Link to="/reports" style={{textDecoration: 'none'}}>
+                    <Link to="/reports" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
-                            <i className="reports"/>
+                            <i className="reports" />
                             <div className="links_text">reports</div>
                         </div>
                     </Link>
-                    <Link to="/projects" style={{textDecoration: 'none'}}>
+                    <Link to="/projects" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
-                            <i className="projects"/>
+                            <i className="projects" />
                             <div className="links_text">projects</div>
                         </div>
                     </Link>
-                    <Link to="/team" style={{textDecoration: 'none'}}>
+                    <Link to="/team" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
-                            <i className="team"/>
+                            <i className="team" />
                             <div className="links_text">team</div>
                         </div>
                     </Link>
                 </div>
                 <div className="logout_container" onClick={e => this.logout()}>
-                    <i className="logout"></i>
+                    <i className="logout" />
                     <span>Log out</span>
                 </div>
             </div>

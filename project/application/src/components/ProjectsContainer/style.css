@@ -47,12 +47,13 @@
 
 .projects_container_wrapper .chart {
     position: relative;
+    margin-top: 24px;
     margin-left: 10%;
 }
 
 .total_time_tasks {
     position: absolute;
-    top: 151px;
+    top: 135px;
     left: 106px;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
