@@ -1,4 +1,4 @@
-# Lazy Time
+# Wobbly Time
 
 ## CLONE REPO
 
@@ -22,7 +22,7 @@ cp docker-compose.override.yml.dist docker-compose.override.yml
 bash dev.sh
 ```
 
-- in production mode, http://time.lazy-ants.com
+- in production mode, http://wobbly.me
 
 ```
 bash prod.sh
