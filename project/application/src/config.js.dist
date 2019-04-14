@@ -1,6 +1,6 @@
 export const AppConfig = {
-    graphqlURL: 'https://la-ge.herokuapp.com/v1alpha1/graphql',
-    graphqlAccessKey: 'lalala',
+    graphqlURL: '<URL>',
+    graphqlAccessKey: '<ACCESS-KEY>',
     socketURL: 'https://api.wobbly.me/',
     apiURL: 'https://api.wobbly.me/',
 };
