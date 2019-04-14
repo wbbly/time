@@ -12,6 +12,7 @@ cd lazy-time
 ```
 cp docker/nginx/nginx.conf.dist docker/nginx/nginx.conf
 cp docker-compose.override.yml.dist docker-compose.override.yml
+cp project/application/src/config.js.dist project/application/src/config.js
 ```
 
 ## BUILD APPLICATION
