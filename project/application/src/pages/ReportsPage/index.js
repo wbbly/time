@@ -130,7 +130,11 @@ class ReportsPage extends Component {
                     )}
                     <div className="total_time_container">
                         <span className="total_time_name">Total</span>
-                        <span className="total_time_time">{(typeof this.state.totalUpChartTime === 'number') ? convertMS(this.state.totalUpChartTime) : typeof this.state.totalUpChartTime}</span>
+                        <span className="total_time_time">
+                            {typeof this.state.totalUpChartTime === 'number'
+                                ? convertMS(this.state.totalUpChartTime)
+                                : typeof this.state.totalUpChartTime}
+                        </span>
                     </div>
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
@@ -168,7 +172,7 @@ class ReportsPage extends Component {
                 }),
             });
         } else {
-            this.setState({totalUpChartTime: '00:00:00'});
+            this.setState({ totalUpChartTime: '00:00:00' });
         }
         finishData.timeArr = time;
         return finishData;

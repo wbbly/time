@@ -67,7 +67,9 @@ class ProjectsContainer extends Component {
                     <div className="projects_container_project_data_container">{projectsItems}</div>
                 </div>
                 <div className="chart">
-                    <div className="total_time_tasks">{(typeof datesValue === 'number')? convertMS(datesValue):datesValue }</div>
+                    <div className="total_time_tasks">
+                        {typeof datesValue === 'number' ? convertMS(datesValue) : datesValue}
+                    </div>
                     <Doughnut
                         data={this.props.dataDoughnutChat}
                         options={this.doughnutOptions}
