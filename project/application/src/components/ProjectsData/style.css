@@ -91,3 +91,17 @@
 .create_projects_modal_data .pink {
     background-color: pink;
 }
+
+.project_data_wrapper .edit_button {
+    position: absolute;
+    top: 21px;
+    right: 8px;
+    margin-top: -2px;
+    margin-left: 18px;
+    width: 15px;
+    height: 15px;
+    background: url("../../images/icons/baseline-create-24px.svg") no-repeat
+    center;
+    cursor: pointer;
+    background-size: 20px;
+}

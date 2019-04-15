@@ -11,12 +11,14 @@ import ReportsPage from './pages/ReportsPage';
 import ProjectsPage from './pages/ProjectsPage';
 import TeamPage from './pages/TeamPage';
 import ReportsByProjectsPage from './pages/ReportsByProjectPage';
+import AuthorisationPage from './pages/AuthorisationPage';
+
 
 ReactDOM.render(
     <Provider store={store}>
         <Router>
             <div>
-                <Route path="/" component={App} />
+                <Route path="/authorisation-page" component={AuthorisationPage} />
                 <Route path="/main-page" component={MainPage} />
                 <Route path="/reports" component={ReportsPage} />
                 <Route path="/projects" component={ProjectsPage} />

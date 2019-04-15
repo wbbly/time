@@ -17,10 +17,8 @@ class ProjectsContainer extends Component {
         tooltips: {
             callbacks: {
                 label: function(tooltipItem, data) {
-                    let lable = data.labels[tooltipItem.datasetIndex];
-                    let date = moment(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index])
-                        .utc()
-                        .format('HH:mm:ss');
+                    let lable = data.labels[tooltipItem.index];
+                    let date = convertMS(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index])
                     return lable + date;
                 },
             },

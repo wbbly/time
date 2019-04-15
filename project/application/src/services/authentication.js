@@ -5,7 +5,7 @@ export function checkAuthentication() {
     if (!!localStorage.getItem('userObject')) {
         return;
     } else {
-        return <Redirect to={'/'} />;
+        return <Redirect to={'/authorisation-page'} />;
     }
 }
 

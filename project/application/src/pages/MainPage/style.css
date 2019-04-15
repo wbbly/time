@@ -4,24 +4,18 @@
 }
 
 .data_container {
-    position: fixed;
-    top: 0;
-    bottom: 0;
+    position: relative;
+    padding: 50px 56px 0;
+    width: calc(100% - 300px);
     left: 188px;
-    right: 0;
-    background-color: #333333;
-    padding-top: 47px;
-    padding-left: 72px;
-    padding-right: 56px;
-    overflow-y: scroll
+    background-color: #333;
 }
 
 .add_task_container {
     position: fixed;
-    left: 259px;
-    right: 73px;
+    width: calc(100% - 300px);
     top: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(0,0,0,.3);
 }
 
 .add_task {

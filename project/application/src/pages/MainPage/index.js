@@ -101,6 +101,8 @@ class MainPage extends Component {
                         },
                         err => err.text().then(errorMessage => {})
                     );
+            } else if (!data) {
+                localStorage.removeItem('current-timer')
             }
         });
         this.socket.on('stop-timer-v2', data => {

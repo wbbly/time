@@ -128,13 +128,7 @@ export default class ReportsSearchBar extends Component {
     }
 
     setOtherUser() {
-        let start = this.getYear(this.props.settedDate.startDate);
-        let end = this.getYear(this.props.settedDate.endDate);
         this.props.getDataUsers();
-    }
-
-    getYear(date) {
-        return moment(date).format('YYYY-MM-DD');
     }
 
     getChecked(name) {
@@ -217,7 +211,7 @@ export default class ReportsSearchBar extends Component {
                             onClick={e => this.openSelect()}
                             ref={div => (this.userInput = div)}
                         >
-                            <div>User: {this.state.selectUserData.join(' ')}</div>
+                            <div>User: {(this.state.selectUserData.length > 1)?this.state.selectUserData.join(' ') : this.state.selectUserData[0]}</div>
                             <i className="arrow_down" />
                         </div>
                     </div>
@@ -242,7 +236,7 @@ export default class ReportsSearchBar extends Component {
                                         <label>
                                             <Checkbox
                                                 color={'primary'}
-                                                value={item.username}
+                                                value={(item.username)? item.username: ''}
                                                 checked={this.getCheckedUsers(item.username)}
                                                 onChange={e => {
                                                     this.addUsers(e, item);
@@ -323,11 +317,14 @@ export default class ReportsSearchBar extends Component {
         client.request(getUsers()).then(data => {
             this.setState({ selectUersData: data.user });
             this.setState({ selectUersDataEtalon: data.user });
+            this.setState({ selectUserData: this.props.setUser})
         });
         setTimeout(() => {
             this.setState({ projectsData: this.props.projectsData });
             this.setState({ etalonProjectsData: this.props.projectsData });
+
         }, 800);
+
     }
 
     componentWillUnmount() {
