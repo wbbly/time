@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import openSocket from 'socket.io-client';
 import * as moment from 'moment';
@@ -12,7 +13,7 @@ import ManualTimeModal from '../../components/Manual-time-modal';
 import { client } from '../../requestSettings';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
 import { getTodayTimeEntries, returnMutationLinkDeleteTimeEntries, getProjectsV2 } from '../../queries';
-import { checkAuthentication, getUserData, getUserId } from '../../services/authentication';
+import { userLoggedIn, getUserData, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 import { convertMS } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
@@ -357,9 +358,10 @@ class MainPage extends Component {
             </div>
         ));
 
+        if (!userLoggedIn()) return <Redirect to={'/login'} />;
+
         return (
             <div className="wrapper_main_page">
-                {checkAuthentication()}
                 {this.props.manualTimerModal.manualTimerModalToggle && (
                     <ManualTimeModal
                         manualTimerModalAction={this.props.manualTimerModalAction}

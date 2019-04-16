@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import * as moment from 'moment';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -13,7 +14,7 @@ import ProjectsContainer from '../../components/ProjectsContainer';
 import { client } from '../../requestSettings';
 import { getUsers, getReports, getDatafromTimerTableToReport } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { checkAuthentication, getUserAdminRight } from '../../services/authentication';
+import { userLoggedIn, getUserAdminRight } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
 import { convertMS } from '../../services/timeService';
 
@@ -107,9 +108,10 @@ class ReportsPage extends Component {
     };
 
     render() {
+        if (!userLoggedIn()) return <Redirect to={'/login'} />;
+
         return (
             <div className="wrapper_reports_page">
-                {checkAuthentication()}
                 <LeftBar />
                 <div className="data_container_reports_page">
                     <div className="header">

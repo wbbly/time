@@ -16,8 +16,8 @@ ReactDOM.render(
     <Provider store={store}>
         <Router>
             <div>
-                <Redirect from="" to="/authorisation-page" />
-                <Route path="/authorisation-page" component={AuthorisationPage} />
+                <Redirect from="" to="/login" />
+                <Route path="/login" component={AuthorisationPage} />
                 <Route path="/main-page" component={MainPage} />
                 <Route path="/reports" component={ReportsPage} />
                 <Route path="/projects" component={ProjectsPage} />

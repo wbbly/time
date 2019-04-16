@@ -1,12 +1,5 @@
-import { Redirect } from 'react-router-dom';
-import React from 'react';
-
-export function checkAuthentication() {
-    if (!!localStorage.getItem('user-object')) {
-        return;
-    } else {
-        return <Redirect to={'/authorisation-page'} />;
-    }
+export function userLoggedIn() {
+    return !!localStorage.getItem('user-object');
 }
 
 export function adminOrNot(email = '') {

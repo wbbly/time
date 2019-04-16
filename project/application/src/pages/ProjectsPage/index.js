@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './style.css';
@@ -9,7 +10,7 @@ import CreateProjectModal from '../../components/CreateProjectModal';
 import projectsPageAction from '../../actions/ProjectsActions';
 import { client } from '../../requestSettings';
 import { getProjectsV2ProjectPageAdmin, getProjectsV2ProjectPageUser } from '../../queries';
-import { checkAuthentication, getUserAdminRight, getUserId } from '../../services/authentication';
+import { userLoggedIn, getUserAdminRight, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 class ProjectsPage extends Component {
@@ -25,9 +26,10 @@ class ProjectsPage extends Component {
     render() {
         const { tableData, addNewProjectModalToggle, projectsPageAction } = this.props;
 
+        if (!userLoggedIn()) return <Redirect to={'/login'} />;
+
         return (
             <div className="wrapper_projects_page">
-                {checkAuthentication()}
                 {addNewProjectModalToggle && (
                     <CreateProjectModal tableInfo={tableData} projectsPageAction={projectsPageAction} />
                 )}
