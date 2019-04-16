@@ -4,7 +4,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import './style.css';
 import { client } from '../../requestSettings';
 import { getUsers } from '../../queries';
-import * as moment from 'moment';
 import { getUserData } from '../../services/authentication';
 
 export default class ReportsSearchBar extends Component {
@@ -128,13 +127,7 @@ export default class ReportsSearchBar extends Component {
     }
 
     setOtherUser() {
-        let start = this.getYear(this.props.settedDate.startDate);
-        let end = this.getYear(this.props.settedDate.endDate);
         this.props.getDataUsers();
-    }
-
-    getYear(date) {
-        return moment(date).format('YYYY-MM-DD');
     }
 
     getChecked(name) {
@@ -217,7 +210,12 @@ export default class ReportsSearchBar extends Component {
                             onClick={e => this.openSelect()}
                             ref={div => (this.userInput = div)}
                         >
-                            <div>User: {this.state.selectUserData.join(' ')}</div>
+                            <div>
+                                User:&nbsp;
+                                {this.props.setUser.map((item, index) => (
+                                    <span key={item + index}>{item}</span>
+                                ))}
+                            </div>
                             <i className="arrow_down" />
                         </div>
                     </div>
@@ -242,7 +240,7 @@ export default class ReportsSearchBar extends Component {
                                         <label>
                                             <Checkbox
                                                 color={'primary'}
-                                                value={item.username}
+                                                value={item.username || ''}
                                                 checked={this.getCheckedUsers(item.username)}
                                                 onChange={e => {
                                                     this.addUsers(e, item);
@@ -320,16 +318,16 @@ export default class ReportsSearchBar extends Component {
 
     componentDidMount() {
         this.userInput.value = this.props.setUser.username;
+        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [`"${getUserData().username}"`] });
         client.request(getUsers()).then(data => {
-            this.setState({ selectUersData: data.user });
             this.setState({ selectUersDataEtalon: data.user });
+            this.setState({ selectUserData: this.props.setUser });
         });
         setTimeout(() => {
             this.setState({ projectsData: this.props.projectsData });
             this.setState({ etalonProjectsData: this.props.projectsData });
         }, 800);
     }
-
     componentWillUnmount() {
         this.props.reportsPageAction('SET_ACTIVE_USER', { data: [`"${getUserData().username}"`] });
         this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: [] });

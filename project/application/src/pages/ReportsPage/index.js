@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import * as _ from 'underscore';
+import { Redirect } from 'react-router-dom';
 import * as moment from 'moment';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import { DateRangePicker } from 'react-date-range';
+import * as rdrLocales from 'react-date-range/dist/locale';
+import { DateRange } from 'react-date-range';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 
@@ -13,7 +14,7 @@ import ProjectsContainer from '../../components/ProjectsContainer';
 import { client } from '../../requestSettings';
 import { getUsers, getReports, getDatafromTimerTableToReport } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { checkAuthentication, getUserAdminRight } from '../../services/authentication';
+import { userLoggedIn, getUserAdminRight } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
 import { convertMS } from '../../services/timeService';
 
@@ -90,12 +91,27 @@ class ReportsPage extends Component {
 
     openCalendar() {
         this.setState({ dateSelect: !this.state.dateSelect });
+        document.addEventListener('click', this.closeDropdown);
     }
 
+    closeDropdown = e => {
+        if (this.datePickerSelect && !this.datePickerSelect.contains(e.target)) {
+            this.setState(
+                {
+                    dateSelect: !this.state.dateSelect,
+                },
+                () => {
+                    document.removeEventListener('click', this.closeDropdown);
+                }
+            );
+        }
+    };
+
     render() {
+        if (!userLoggedIn()) return <Redirect to={'/login'} />;
+
         return (
             <div className="wrapper_reports_page">
-                {checkAuthentication()}
                 <LeftBar />
                 <div className="data_container_reports_page">
                     <div className="header">
@@ -109,8 +125,12 @@ class ReportsPage extends Component {
                                 <i className="arrow_down" />
                             </div>
                             {this.state.dateSelect && (
-                                <div className="select_body">
-                                    <DateRangePicker ranges={[this.props.timeRange]} onChange={this.handleSelect} />
+                                <div className="select_body" ref={div => (this.datePickerSelect = div)}>
+                                    <DateRange
+                                        locale={rdrLocales['enGB']}
+                                        ranges={[this.props.timeRange]}
+                                        onChange={this.handleSelect}
+                                    />
                                 </div>
                             )}
                         </div>
@@ -163,7 +183,7 @@ class ReportsPage extends Component {
             timeArr: [],
         };
         for (let i = 0; i < labels.length; i++) {
-            finishData.labels.push(moment(labels[i]).format('ddd DD.MM.YYYY'));
+            finishData.labels.push(moment(labels[i]).format('ddd DD.MM'));
         }
         if (time.length) {
             this.setState({
@@ -193,6 +213,7 @@ class ReportsPage extends Component {
     }
 
     getArrOfProjectsData(data) {
+        this.setState({ toggleBar: false });
         const statsByProjects = [];
         const statsByDates = this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate);
         for (var i = 0; i < data.project_v2.length; i++) {
@@ -234,7 +255,6 @@ class ReportsPage extends Component {
         dateFrom = this.getYear(this.state.selectionRange.startDate),
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
-        this.setState({ toggleBar: false });
         client
             .request(
                 getReports(
@@ -248,9 +268,9 @@ class ReportsPage extends Component {
                 this.setState({ projectsData: data.project_v2 });
                 let dataToGraph = this.getArrOfProjectsData(data);
                 this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
+                this.setState({ toggleBar: true });
                 let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
                 this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-                this.setState({ toggleBar: true });
                 this.setState({ toggleChar: true });
             });
         client

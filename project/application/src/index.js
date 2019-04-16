@@ -2,21 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { Redirect, Route, BrowserRouter as Router } from 'react-router-dom';
 import { store } from './store/configureStore';
 import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
 import ProjectsPage from './pages/ProjectsPage';
 import TeamPage from './pages/TeamPage';
 import ReportsByProjectsPage from './pages/ReportsByProjectPage';
+import AuthorisationPage from './pages/AuthorisationPage';
 
 ReactDOM.render(
     <Provider store={store}>
         <Router>
             <div>
-                <Route path="/" component={App} />
+                <Redirect from="" to="/login" />
+                <Route path="/login" component={AuthorisationPage} />
                 <Route path="/main-page" component={MainPage} />
                 <Route path="/reports" component={ReportsPage} />
                 <Route path="/projects" component={ProjectsPage} />

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './style.css';
@@ -7,7 +8,7 @@ import AddToTeamModal from '../../components/AddToTeamModal';
 import { client } from '../../requestSettings';
 import { getTeamData } from '../../queries';
 import teamPageAction from '../../actions/TeamPageAction';
-import { checkAuthentication } from '../../services/authentication';
+import { userLoggedIn } from '../../services/authentication';
 import { adminOrNot } from '../../services/authentication';
 
 class TeamPage extends Component {
@@ -43,9 +44,10 @@ class TeamPage extends Component {
             </tr>
         ));
 
+        if (!userLoggedIn()) return <Redirect to={'/login'} />;
+
         return (
             <div className="wrapper_team_page">
-                {checkAuthentication()}
                 {this.props.createUserModal && (
                     <AddToTeamModal
                         programersArr={this.props.programersArr}

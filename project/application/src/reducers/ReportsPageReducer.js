@@ -6,11 +6,12 @@ const initialState = {
         startDate: new Date(),
         endDate: new Date(),
         key: 'selection',
+        firstDayOfWeek: 1,
     },
-    setUser: [`"${getUserData().username}"`],
+    setUser: [],
     dataBarChat: {
         defaultFontColor: 'red',
-        labels: ['February', 'March', 'April', 'May', 'June', 'July'],
+        labels: [],
         datasets: [
             {
                 label: 'Total hrs by date',
@@ -32,7 +33,7 @@ const initialState = {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: [65, 59, 80, 81, 56, 55, 40],
+                data: [],
             },
         ],
     },

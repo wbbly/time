@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import './index.css';
-import { checkAuthenticationOnLoginPage, getUserData } from '../../services/authentication';
+import { userLoggedIn, getUserData } from '../../services/authentication';
 import { AppConfig } from '../../config';
 import RegisterModal from '../../components/RegisterModal';
 import toggleRegisterModal from '../../actions/AuthorisationPageAction';
@@ -35,9 +35,9 @@ class AuthorisationPage extends Component {
             })
             .then(
                 result => {
-                    localStorage.setItem('userObject', JSON.stringify(result.user));
+                    localStorage.setItem('user-object', JSON.stringify(result.user));
                     this.props.reportsPageAction('SET_ACTIVE_USER', {
-                        data: `"${getUserData().username}"`,
+                        data: [`"${getUserData().username}"`],
                     });
                     this.setState({ haveToken: true });
                 },
@@ -51,13 +51,13 @@ class AuthorisationPage extends Component {
     componentWillMount() {}
 
     render() {
+        if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/main-page'} />;
+
         return (
             <div className="wrapper_authorisation_page">
-                {checkAuthenticationOnLoginPage()}
                 {this.props.authorisationPageReducer && (
                     <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />
                 )}
-                {this.state.haveToken && <Redirect to={'main-page'} />};
                 <i className="page_title" />
                 <div className="authorisation_window">
                     <div className="input_container">

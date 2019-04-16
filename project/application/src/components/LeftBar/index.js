@@ -38,7 +38,7 @@ class LeftBar extends Component {
     }
 
     logout() {
-        localStorage.removeItem('userObject');
+        localStorage.removeItem('user-object');
         localStorage.removeItem('current-timer');
         window.location.reload();
     }
