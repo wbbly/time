@@ -2,9 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { Redirect, Route, BrowserRouter as Router } from 'react-router-dom';
 import { store } from './store/configureStore';
 import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
@@ -17,8 +16,8 @@ ReactDOM.render(
     <Provider store={store}>
         <Router>
             <div>
+                <Redirect from="" to="/authorisation-page" />
                 <Route path="/authorisation-page" component={AuthorisationPage} />
-                <Route path="" component={AuthorisationPage} />
                 <Route path="/main-page" component={MainPage} />
                 <Route path="/reports" component={ReportsPage} />
                 <Route path="/projects" component={ProjectsPage} />

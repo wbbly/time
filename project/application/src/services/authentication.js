@@ -9,14 +9,6 @@ export function checkAuthentication() {
     }
 }
 
-export function checkAuthenticationOnLoginPage() {
-    if (!!localStorage.getItem('user-object')) {
-        return <Redirect to={'/main-page'} />;
-    } else {
-        return;
-    }
-}
-
 export function adminOrNot(email = '') {
     let object = JSON.parse(localStorage.getItem('user-object'));
     if (!object) {

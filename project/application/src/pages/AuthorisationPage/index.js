@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import './index.css';
-import { checkAuthenticationOnLoginPage, getUserData } from '../../services/authentication';
+import { getUserData } from '../../services/authentication';
 import { AppConfig } from '../../config';
 import RegisterModal from '../../components/RegisterModal';
 import toggleRegisterModal from '../../actions/AuthorisationPageAction';
@@ -51,9 +51,12 @@ class AuthorisationPage extends Component {
     componentWillMount() {}
 
     render() {
+        if (!!localStorage.getItem('user-object')) {
+            return <Redirect to={'/main-page'} />;
+        }
+
         return (
             <div className="wrapper_authorisation_page">
-                {checkAuthenticationOnLoginPage()}
                 {this.props.authorisationPageReducer && (
                     <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />
                 )}

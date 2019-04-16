@@ -211,8 +211,10 @@ export default class ReportsSearchBar extends Component {
                             ref={div => (this.userInput = div)}
                         >
                             <div>
-                                User:{' '}
-                                {this.props.setUser.map( (item,index) => <span key={item+index}>{item}</span>)}
+                                User:&nbsp;
+                                {this.props.setUser.map((item, index) => (
+                                    <span key={item + index}>{item}</span>
+                                ))}
                             </div>
                             <i className="arrow_down" />
                         </div>
