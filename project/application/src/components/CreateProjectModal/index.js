@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import './style.css';
 import { client } from '../../requestSettings';
+import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { returnMutationLinkAddProject, getProjectColor } from '../../queries';
 
 export default class CreateProjectModal extends Component {
@@ -27,17 +28,27 @@ export default class CreateProjectModal extends Component {
         });
     }
 
-    addProject(arr) {
-        let object = {
+    addProject(projects) {
+        let project = {
             id: +new Date(),
             name: this.createProjectInput.value,
-            projectStatus: '21',
-            team: 'Hr',
             colorProject: this.state.selectedValue,
         };
-        arr.push(object);
-        this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: arr });
-        client.request(returnMutationLinkAddProject(object)).then(data => {});
+        projects.push(project);
+
+        this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: projects });
+        client.request(returnMutationLinkAddProject(project)).then(
+            _ => {},
+            err => {
+                const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
+
+                if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                    alert('Project is already existed');
+                } else {
+                    alert("Project can't be created");
+                }
+            }
+        );
     }
 
     render() {

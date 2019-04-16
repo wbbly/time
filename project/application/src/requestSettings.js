@@ -11,13 +11,16 @@ const graphQLClient = new GraphQLClient(AppConfig.graphqlURL, {
 export const client = {
     request: ({ graphqlRequest, parseFunction }) => {
         return new Promise((resolve, reject) => {
-            graphQLClient.request(graphqlRequest).then(data => {
-                if (typeof parseFunction === 'function') {
-                    resolve(parseFunction(data));
-                }
+            graphQLClient.request(graphqlRequest).then(
+                data => {
+                    if (typeof parseFunction === 'function') {
+                        resolve(parseFunction(data));
+                    }
 
-                return resolve(data);
-            });
+                    return resolve(data);
+                },
+                err => reject(JSON.stringify(err, undefined, 2))
+            ); // https://github.com/prisma/graphql-request#error-handling
         });
     },
 };
