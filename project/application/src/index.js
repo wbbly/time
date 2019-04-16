@@ -13,7 +13,6 @@ import TeamPage from './pages/TeamPage';
 import ReportsByProjectsPage from './pages/ReportsByProjectPage';
 import AuthorisationPage from './pages/AuthorisationPage';
 
-
 ReactDOM.render(
     <Provider store={store}>
         <Router>

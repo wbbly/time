@@ -15,7 +15,7 @@
     position: fixed;
     width: calc(100% - 300px);
     top: 0;
-    box-shadow: 0 4px 8px rgba(0,0,0,.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .add_task {
@@ -107,9 +107,9 @@
 }
 
 .folder
-    .projects_modal_wrapper
-    .projects_modal_wrapper_search
-    ::-webkit-input-placeholder {
+.projects_modal_wrapper
+.projects_modal_wrapper_search
+::-webkit-input-placeholder {
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -120,9 +120,9 @@
 }
 
 .folder
-    .projects_modal_wrapper
-    .projects_modal_wrapper_search
-    ::-moz-placeholder {
+.projects_modal_wrapper
+.projects_modal_wrapper_search
+::-moz-placeholder {
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -134,9 +134,9 @@
 
 /* Firefox 19+ */
 .folder
-    .projects_modal_wrapper
-    .projects_modal_wrapper_search
-    :-moz-placeholder {
+.projects_modal_wrapper
+.projects_modal_wrapper_search
+:-moz-placeholder {
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -148,9 +148,9 @@
 
 /* Firefox 18- */
 .folder
-    .projects_modal_wrapper
-    .projects_modal_wrapper_search
-    :-ms-input-placeholder {
+.projects_modal_wrapper
+.projects_modal_wrapper_search
+:-ms-input-placeholder {
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -247,8 +247,7 @@ ul {
     margin-left: 18px;
     width: 15px;
     height: 15px;
-    background: url("../../images/icons/baseline-create-24px.svg") no-repeat
-        center;
+    background: url("../../images/icons/baseline-create-24px.svg") no-repeat center;
     cursor: pointer;
     background-size: 20px;
 }

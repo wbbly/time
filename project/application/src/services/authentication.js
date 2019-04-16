@@ -2,7 +2,7 @@ import { Redirect } from 'react-router-dom';
 import React from 'react';
 
 export function checkAuthentication() {
-    if (!!localStorage.getItem('userObject')) {
+    if (!!localStorage.getItem('user-object')) {
         return;
     } else {
         return <Redirect to={'/authorisation-page'} />;
@@ -10,7 +10,7 @@ export function checkAuthentication() {
 }
 
 export function checkAuthenticationOnLoginPage() {
-    if (!!localStorage.getItem('userObject')) {
+    if (!!localStorage.getItem('user-object')) {
         return <Redirect to={'/main-page'} />;
     } else {
         return;
@@ -18,7 +18,7 @@ export function checkAuthenticationOnLoginPage() {
 }
 
 export function adminOrNot(email = '') {
-    let object = JSON.parse(localStorage.getItem('userObject'));
+    let object = JSON.parse(localStorage.getItem('user-object'));
     if (!object) {
         return;
     }
@@ -30,7 +30,7 @@ export function adminOrNot(email = '') {
 }
 
 export function getUserId() {
-    let storageItem = JSON.parse(localStorage.getItem('userObject'));
+    let storageItem = JSON.parse(localStorage.getItem('user-object'));
     if (!storageItem) {
         return;
     }
@@ -38,7 +38,7 @@ export function getUserId() {
 }
 
 export function getUserData() {
-    let storageItem = JSON.parse(localStorage.getItem('userObject'));
+    let storageItem = JSON.parse(localStorage.getItem('user-object'));
     if (!storageItem) {
         return {
             id: null,
@@ -53,7 +53,7 @@ export function getUserData() {
 }
 
 export function getUserAdminRight() {
-    let storageItem = JSON.parse(localStorage.getItem('userObject'));
+    let storageItem = JSON.parse(localStorage.getItem('user-object'));
     if (!storageItem) {
         return;
     }

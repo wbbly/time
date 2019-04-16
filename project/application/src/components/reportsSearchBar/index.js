@@ -4,7 +4,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import './style.css';
 import { client } from '../../requestSettings';
 import { getUsers } from '../../queries';
-import * as moment from 'moment';
 import { getUserData } from '../../services/authentication';
 
 export default class ReportsSearchBar extends Component {
@@ -211,7 +210,12 @@ export default class ReportsSearchBar extends Component {
                             onClick={e => this.openSelect()}
                             ref={div => (this.userInput = div)}
                         >
-                            <div>User: {(this.state.selectUserData.length > 1)?this.state.selectUserData.join(' ') : this.state.selectUserData[0]}</div>
+                            <div>
+                                User:{' '}
+                                {this.state.selectUserData.length > 1
+                                    ? this.state.selectUserData.join(' ')
+                                    : this.state.selectUserData[0]}
+                            </div>
                             <i className="arrow_down" />
                         </div>
                     </div>
@@ -236,7 +240,7 @@ export default class ReportsSearchBar extends Component {
                                         <label>
                                             <Checkbox
                                                 color={'primary'}
-                                                value={(item.username)? item.username: ''}
+                                                value={item.username || ''}
                                                 checked={this.getCheckedUsers(item.username)}
                                                 onChange={e => {
                                                     this.addUsers(e, item);
@@ -315,18 +319,14 @@ export default class ReportsSearchBar extends Component {
     componentDidMount() {
         this.userInput.value = this.props.setUser.username;
         client.request(getUsers()).then(data => {
-            this.setState({ selectUersData: data.user });
             this.setState({ selectUersDataEtalon: data.user });
-            this.setState({ selectUserData: this.props.setUser})
+            this.setState({ selectUserData: this.props.setUser });
         });
         setTimeout(() => {
             this.setState({ projectsData: this.props.projectsData });
             this.setState({ etalonProjectsData: this.props.projectsData });
-
         }, 800);
-
     }
-
     componentWillUnmount() {
         this.props.reportsPageAction('SET_ACTIVE_USER', { data: [`"${getUserData().username}"`] });
         this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: [] });

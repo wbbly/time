@@ -91,7 +91,6 @@ class ReportsPage extends Component {
     openCalendar() {
         this.setState({ dateSelect: !this.state.dateSelect });
         document.addEventListener('click', this.closeDropdown);
-
     }
 
     closeDropdown = e => {
@@ -106,7 +105,6 @@ class ReportsPage extends Component {
             );
         }
     };
-
 
     render() {
         return (
@@ -125,11 +123,12 @@ class ReportsPage extends Component {
                                 <i className="arrow_down" />
                             </div>
                             {this.state.dateSelect && (
-                                <div className="select_body" ref={div => this.datePickerSelect = div}>
+                                <div className="select_body" ref={div => (this.datePickerSelect = div)}>
                                     <DateRange
                                         locale={rdrLocales['enGB']}
                                         ranges={[this.props.timeRange]}
-                                        onChange={this.handleSelect} />
+                                        onChange={this.handleSelect}
+                                    />
                                 </div>
                             )}
                         </div>

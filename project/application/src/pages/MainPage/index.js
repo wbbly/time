@@ -102,7 +102,7 @@ class MainPage extends Component {
                         err => err.text().then(errorMessage => {})
                     );
             } else if (!data) {
-                localStorage.removeItem('current-timer')
+                localStorage.removeItem('current-timer');
             }
         });
         this.socket.on('stop-timer-v2', data => {
@@ -134,13 +134,13 @@ class MainPage extends Component {
         if (className === 'control_task_time_icons play') {
             const issue = (this.mainTaskName || {}).value || '';
             this.socket.emit('start-timer-v2', {
-                userId: JSON.parse(localStorage.getItem('userObject')).id,
+                userId: JSON.parse(localStorage.getItem('user-object')).id,
                 issue: encodeTimeEntryIssue(issue),
                 projectId: setProjectId,
             });
         } else {
             this.socket.emit('stop-timer-v2', {
-                userId: JSON.parse(localStorage.getItem('userObject')).id,
+                userId: JSON.parse(localStorage.getItem('user-object')).id,
             });
         }
     }
@@ -169,7 +169,7 @@ class MainPage extends Component {
             if (this.TIMER_LIVE_SUBSCRIPTION) {
                 const issue = (this.mainTaskName || {}).value || '';
                 this.socket.emit('update-timer-v2', {
-                    userId: JSON.parse(localStorage.getItem('userObject')).id,
+                    userId: JSON.parse(localStorage.getItem('user-object')).id,
                     issue: encodeTimeEntryIssue(issue),
                     projectId: this.state.seletedProject.id,
                 });

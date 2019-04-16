@@ -74,7 +74,7 @@ class ManualTimeModal extends Component {
     }
 
     getNewData() {
-        client.request(getTodayTimeEntries(JSON.parse(localStorage.getItem('userObject')).id)).then(data => {
+        client.request(getTodayTimeEntries(JSON.parse(localStorage.getItem('user-object')).id)).then(data => {
             for (let i = 0; i < data.timerV2.length; i++) {
                 const timeEntry = data.timerV2[i];
                 timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);

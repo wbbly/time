@@ -35,7 +35,7 @@ class AuthorisationPage extends Component {
             })
             .then(
                 result => {
-                    localStorage.setItem('userObject', JSON.stringify(result.user));
+                    localStorage.setItem('user-object', JSON.stringify(result.user));
                     this.props.reportsPageAction('SET_ACTIVE_USER', {
                         data: `"${getUserData().username}"`,
                     });
