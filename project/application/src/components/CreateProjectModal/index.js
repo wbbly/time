@@ -28,24 +28,46 @@ export default class CreateProjectModal extends Component {
         });
     }
 
-    addProject(projects) {
-        let project = {
-            id: +new Date(),
-            name: this.createProjectInput.value,
-            colorProject: this.state.selectedValue,
-        };
-        projects.push(project);
+    addProjectPreProcessing() {
+        let ok = true;
+        const projectName = this.createProjectInput.value.toLowerCase().trim();
+        if (!projectName.length) {
+            ok = false;
+            alert(`Project name can't be empty`);
+        } else if (projectName !== this.createProjectInput.value) {
+            const r = window.confirm(`Project name will be changed to "${projectName}". Are you agree?`);
+            ok = r === true;
+        }
 
-        this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: projects });
+        if (ok) {
+            return {
+                id: +new Date(),
+                name: projectName,
+                colorProject: this.state.selectedValue,
+            };
+        }
+
+        return null;
+    }
+
+    addProject(projects) {
+        const project = this.addProjectPreProcessing();
+        if (!project) {
+            return null;
+        }
+
         client.request(returnMutationLinkAddProject(project)).then(
-            _ => {},
+            _ => {
+                projects.push(project);
+                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: projects });
+            },
             err => {
                 const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
 
                 if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
                     alert('Project is already existed');
                 } else {
-                    alert("Project can't be created");
+                    alert(`Project can't be created`);
                 }
             }
         );
