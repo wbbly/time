@@ -8,7 +8,7 @@ const initialState = {
         key: 'selection',
         firstDayOfWeek: 1,
     },
-    setUser: [`"${getUserData().username}"`],
+    setUser: [],
     dataBarChat: {
         defaultFontColor: 'red',
         labels: [],

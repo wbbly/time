@@ -18,6 +18,7 @@ ReactDOM.render(
         <Router>
             <div>
                 <Route path="/authorisation-page" component={AuthorisationPage} />
+                <Route path="" component={AuthorisationPage} />
                 <Route path="/main-page" component={MainPage} />
                 <Route path="/reports" component={ReportsPage} />
                 <Route path="/projects" component={ProjectsPage} />

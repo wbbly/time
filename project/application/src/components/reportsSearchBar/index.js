@@ -212,9 +212,7 @@ export default class ReportsSearchBar extends Component {
                         >
                             <div>
                                 User:{' '}
-                                {this.state.selectUserData.length > 1
-                                    ? this.state.selectUserData.join(' ')
-                                    : this.state.selectUserData[0]}
+                                {this.props.setUser.map( (item,index) => <span key={item+index}>{item}</span>)}
                             </div>
                             <i className="arrow_down" />
                         </div>
@@ -318,6 +316,7 @@ export default class ReportsSearchBar extends Component {
 
     componentDidMount() {
         this.userInput.value = this.props.setUser.username;
+        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [`"${getUserData().username}"`] });
         client.request(getUsers()).then(data => {
             this.setState({ selectUersDataEtalon: data.user });
             this.setState({ selectUserData: this.props.setUser });
