@@ -23,6 +23,21 @@ class ProjectsPage extends Component {
         projectsTime: {},
     };
 
+    getProjects = () => {
+        if (getUserAdminRight() === 'ROLE_ADMIN') {
+            client.request(getProjectsV2ProjectPageAdmin).then(data => {
+                console.log(data);
+                this.setState({ etalonArr: data.projectV2 });
+                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
+            });
+        } else {
+            client.request(getProjectsV2ProjectPageUser(getUserId())).then(data => {
+                this.setState({ etalonArr: data.projectV2 });
+                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
+            });
+        }
+    }
+
     render() {
         const { tableData, addNewProjectModalToggle, projectsPageAction } = this.props;
 
@@ -59,6 +74,9 @@ class ProjectsPage extends Component {
                             tableInfo={tableData}
                             projectsPageAction={projectsPageAction}
                             projectsTime={this.state.projectsTime}
+                            editedProject={this.props.editedProject}
+                            editProjectModal={this.props.editProjectModal}
+                            getProjects={this.getProjects}
                         />
                     </div>
                 </div>
@@ -67,17 +85,7 @@ class ProjectsPage extends Component {
     }
 
     componentDidMount() {
-        if (getUserAdminRight() === 'ROLE_ADMIN') {
-            client.request(getProjectsV2ProjectPageAdmin).then(data => {
-                this.setState({ etalonArr: data.projectV2 });
-                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
-            });
-        } else {
-            client.request(getProjectsV2ProjectPageUser(getUserId())).then(data => {
-                this.setState({ etalonArr: data.projectV2 });
-                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
-            });
-        }
+        this.getProjects();
         this.setState({ activeEmail: localStorage.getItem('active_email') });
     }
 }
@@ -86,6 +94,8 @@ const mapStateToProps = store => {
     return {
         tableData: store.projectReducer.tableData,
         addNewProjectModalToggle: store.projectReducer.addNewProjectModalToggle,
+        editedProject: store.projectReducer.editedProject,
+        editProjectModal: store.projectReducer.editProjectModal,
     };
 };
 
