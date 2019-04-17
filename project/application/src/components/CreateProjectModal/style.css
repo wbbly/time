@@ -76,6 +76,10 @@
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
     text-transform: none;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
     color: #4f4f4f;
 }
 

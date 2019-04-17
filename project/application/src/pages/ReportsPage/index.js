@@ -156,7 +156,12 @@ class ReportsPage extends Component {
                     </div>
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
-                            <Bar ref={Bar => this.barChart = Bar} data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
+                            <Bar
+                                ref={Bar => (this.barChart = Bar)}
+                                data={this.props.dataBarChat}
+                                height={50}
+                                options={this.lineChartOption}
+                            />
                         )}
                     </div>
                     <div className="projects_chart_container">

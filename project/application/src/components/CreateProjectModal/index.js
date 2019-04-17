@@ -37,7 +37,7 @@ export default class CreateProjectModal extends Component {
 
         client.request(returnMutationLinkAddProject(project)).then(
             _ => {
-                this.props.getProjects()
+                this.props.getProjects();
             },
             err => {
                 const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
