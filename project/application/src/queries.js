@@ -360,7 +360,6 @@ export function changeProject(object) {
     };
 }
 
-
 export function getSelectedProject(id) {
     return {
         graphqlRequest: `
@@ -376,5 +375,5 @@ export function getSelectedProject(id) {
                     }
                 }
             }`,
-        };
+    };
 }

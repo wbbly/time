@@ -11,12 +11,9 @@ import projectsPageAction from '../../actions/ProjectsActions';
 import { client } from '../../requestSettings';
 import { getProjectsV2ProjectPageAdmin, getProjectsV2ProjectPageUser } from '../../queries';
 import { userLoggedIn, getUserAdminRight, getUserId } from '../../services/authentication';
-import { AppConfig } from '../../config';
 
 class ProjectsPage extends Component {
-    toggleModal(item) {
-        item('TOGGLE_MODAL', true);
-    }
+
     state = {
         etalonArr: [],
         activeEmail: '',
@@ -26,7 +23,6 @@ class ProjectsPage extends Component {
     getProjects = () => {
         if (getUserAdminRight() === 'ROLE_ADMIN') {
             client.request(getProjectsV2ProjectPageAdmin).then(data => {
-                console.log(data);
                 this.setState({ etalonArr: data.projectV2 });
                 this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
             });
@@ -36,7 +32,7 @@ class ProjectsPage extends Component {
                 this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
             });
         }
-    }
+    };
 
     render() {
         const { tableData, addNewProjectModalToggle, projectsPageAction } = this.props;
@@ -46,7 +42,10 @@ class ProjectsPage extends Component {
         return (
             <div className="wrapper_projects_page">
                 {addNewProjectModalToggle && (
-                    <CreateProjectModal tableInfo={tableData} projectsPageAction={projectsPageAction} />
+                    <CreateProjectModal
+                        tableInfo={tableData}
+                        projectsPageAction={projectsPageAction}
+                        getProjectsthis={this.getProjects()}/>
                 )}
                 <LeftBar />
                 <div className="data_container_projects_page">

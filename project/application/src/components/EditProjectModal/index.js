@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import './style.css';
 
-import { client } from "../../requestSettings";
-import { getProjectColor, returnMutationLinkAddProject, changeProject, getSelectedProject } from "../../queries";
+import { client } from '../../requestSettings';
+import { getProjectColor, returnMutationLinkAddProject, changeProject, getSelectedProject } from '../../queries';
+import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
+import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 
 export default class EditProjectModal extends Component {
     state = {
@@ -28,23 +30,36 @@ export default class EditProjectModal extends Component {
     }
 
     changeProject() {
+        const project = addProjectPreProcessing(this.createProjectInput.value, this.state.selectedValue.id);
+        if (!project) {
+            return null;
+        }
+
         let object = {
             id: this.state.projectId,
             name: this.createProjectInput.value,
-            projectStatus: '21',
-            team: 'Hr',
             colorProject: this.state.selectedValue.id,
         };
-        client.request(changeProject(object)).then(data => {
-            this.props.getProjects();
-            this.closeModal()
-        });
+        client.request(changeProject(object)).then(
+            _ => {
+                this.props.getProjects();
+                this.closeModal();
+            },
+            err => {
+                const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
+
+                if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                    alert('Project is already existed');
+                } else {
+                    alert(`Project can't be created`);
+                }
+            }
+        )
     }
 
     closeModal = () => {
-        this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', {tableData: false})
+        this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', {tableData: false});
     };
-
 
     render() {
         let selectItems = this.state.selectValue.map(value => (
@@ -59,10 +74,7 @@ export default class EditProjectModal extends Component {
                     <div className="edit_project_modal_container">
                         <div className="create_projects_modal_header">
                             <div className="create_projects_modal_header_title">Create project</div>
-                            <i
-                                className="create_projects_modal_header_close"
-                                onClick={e => this.closeModal()}
-                            />
+                            <i className="create_projects_modal_header_close" onClick={e => this.closeModal()}/>
                         </div>
                         <div className="create_projects_modal_data">
                             <div className="create_projects_modal_data_input_container">
@@ -96,26 +108,21 @@ export default class EditProjectModal extends Component {
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 
     componentDidMount() {
-        // console.log(this.props.editedProject, 'this.props.editedProject');
         client.request(getProjectColor()).then(data => {
             this.setState({selectValue: data.project_color});
         });
 
         client.request(getSelectedProject(this.props.editedProject.id)).then(data => {
             this.setState({projectId: data.project_v2[0].id});
-            this.setItem(
-                {
-                    id: data.project_v2[0].project_color.id,
-                    name: data.project_v2[0].project_color.name
-                }
-            );
+            this.setItem({
+                id: data.project_v2[0].project_color.id,
+                name: data.project_v2[0].project_color.name,
+            });
             this.createProjectInput.value = data.project_v2[0].name;
-
-            console.log(data.project_v2[0], 'this.props.editedProjectthis.props.editedProjectthis.props.editedProject');
         });
     }
 }

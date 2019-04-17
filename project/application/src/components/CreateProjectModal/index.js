@@ -5,6 +5,7 @@ import './style.css';
 import { client } from '../../requestSettings';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { returnMutationLinkAddProject, getProjectColor } from '../../queries';
+import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
 
 export default class CreateProjectModal extends Component {
     state = {
@@ -28,38 +29,15 @@ export default class CreateProjectModal extends Component {
         });
     }
 
-    addProjectPreProcessing() {
-        let ok = true;
-        const projectName = this.createProjectInput.value.toLowerCase().trim();
-        if (!projectName.length) {
-            ok = false;
-            alert(`Project name can't be empty`);
-        } else if (projectName !== this.createProjectInput.value) {
-            const r = window.confirm(`Project name will be changed to "${projectName}". Are you agree?`);
-            ok = r === true;
-        }
-
-        if (ok) {
-            return {
-                id: +new Date(),
-                name: projectName,
-                colorProject: this.state.selectedValue,
-            };
-        }
-
-        return null;
-    }
-
     addProject(projects) {
-        const project = this.addProjectPreProcessing();
+        const project = addProjectPreProcessing(this.createProjectInput.value, this.state.selectedValue);
         if (!project) {
             return null;
         }
 
         client.request(returnMutationLinkAddProject(project)).then(
             _ => {
-                projects.push(project);
-                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: projects });
+                this.props.getProjects()
             },
             err => {
                 const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));

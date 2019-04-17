@@ -64,9 +64,7 @@ class ReportsPage extends Component {
         tooltips: {
             callbacks: {
                 label: function(tooltipItem) {
-                    return moment(tooltipItem.yLabel)
-                        .utc()
-                        .format('HH:mm:ss');
+                    return convertMS(tooltipItem.yLabel)
                 },
             },
         },
