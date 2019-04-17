@@ -38,7 +38,7 @@ export default class CreateProjectModal extends Component {
         client.request(returnMutationLinkAddProject(project)).then(
             _ => {
                 this.props.getProjects();
-                this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false })
+                this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false });
             },
             err => {
                 const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
