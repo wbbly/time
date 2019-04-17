@@ -127,7 +127,11 @@ export default class ReportsSearchBar extends Component {
     }
 
     setOtherUser() {
-        this.props.getDataUsers();
+        if (this.props.setUser.length) {
+            this.props.getDataUsers();
+        } else {
+            alert('Please, select at least one user');
+        }
     }
 
     getChecked(name) {
@@ -246,7 +250,7 @@ export default class ReportsSearchBar extends Component {
                                                     this.addUsers(e, item);
                                                 }}
                                             />{' '}
-                                            {item.username}
+                                            <span className="select_users_item_username">{item.username}</span>
                                         </label>
                                     </div>
                                 ))}
@@ -299,7 +303,7 @@ export default class ReportsSearchBar extends Component {
                                                     this.addProject(e, item.name);
                                                 }}
                                             />{' '}
-                                            {item.name}
+                                            <span className="select_users_item_username">{item.name}</span>
                                         </label>
                                     </div>
                                 ))}

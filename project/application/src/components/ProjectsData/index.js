@@ -6,6 +6,11 @@ import { convertMS } from '../../services/timeService';
 import EditProjectModal from '../EditProjectModal/index';
 
 export default class ProjectData extends Component {
+    setEdiItem(item) {
+        this.props.projectsPageAction('SET_EDIT_PROJECT', { tableData: item });
+        this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', { tableData: true });
+    }
+
     render() {
         const tableHeader = [
             {
@@ -21,7 +26,7 @@ export default class ProjectData extends Component {
             <tr key={'table-header_' + index}>
                 <td>{item.name}</td>
                 <td>
-                    {convertMS(item.totalTime)} <i className="edit_button" />
+                    {convertMS(item.totalTime)} <i className="edit_button" onClick={e => this.setEdiItem(item)} />
                 </td>
             </tr>
         ));
@@ -29,7 +34,13 @@ export default class ProjectData extends Component {
 
         return (
             <div className="project_data_wrapper">
-                <EditProjectModal />
+                {this.props.editProjectModal && (
+                    <EditProjectModal
+                        editedProject={this.props.editedProject}
+                        projectsPageAction={this.props.projectsPageAction}
+                        getProjects={this.props.getProjects}
+                    />
+                )}
                 <table>
                     <thead>
                         <tr>{tableHeaderElements}</tr>

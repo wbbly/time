@@ -14,6 +14,16 @@ export default function projectsPageAction(actionType, action) {
             type: 'CHANGE_ARR',
             payload: action,
         };
+    } else if (actionType === 'SET_EDIT_PROJECT') {
+        return {
+            type: 'SET_EDIT_PROJECT',
+            payload: action,
+        };
+    } else if (actionType === 'TOGGLE_EDIT_PROJECT_MODAL') {
+        return {
+            type: 'TOGGLE_EDIT_PROJECT_MODAL',
+            payload: action,
+        };
     } else {
         return {
             type: 'TOGGLE_MODAL',

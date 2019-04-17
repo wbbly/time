@@ -185,3 +185,7 @@
     max-width: 75%;
     width: 75%;
 }
+
+.select_items_container label {
+    white-space: nowrap;
+}

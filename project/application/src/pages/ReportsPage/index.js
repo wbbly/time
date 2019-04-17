@@ -22,7 +22,7 @@ class ReportsPage extends Component {
     state = {
         toggleBar: false,
         projectsArr: [],
-        toggleChar: false,
+        toggleChar: true,
         selectionRange: {
             startDate: new Date(),
             endDate: new Date(),
@@ -64,9 +64,7 @@ class ReportsPage extends Component {
         tooltips: {
             callbacks: {
                 label: function(tooltipItem) {
-                    return moment(tooltipItem.yLabel)
-                        .utc()
-                        .format('HH:mm:ss');
+                    return convertMS(tooltipItem.yLabel);
                 },
             },
         },
@@ -158,7 +156,12 @@ class ReportsPage extends Component {
                     </div>
                     <div className="line_chart_container">
                         {this.state.toggleBar && (
-                            <Bar data={this.props.dataBarChat} height={50} options={this.lineChartOption} />
+                            <Bar
+                                ref={Bar => (this.barChart = Bar)}
+                                data={this.props.dataBarChat}
+                                height={50}
+                                options={this.lineChartOption}
+                            />
                         )}
                     </div>
                     <div className="projects_chart_container">
@@ -199,7 +202,6 @@ class ReportsPage extends Component {
     }
 
     changeDoughnutChat(chartObject, dataFromServer) {
-        this.setState({ toggleChar: false });
         let newObjectChart = chartObject;
         let labels = [];
         let dataTime = [];
@@ -271,7 +273,6 @@ class ReportsPage extends Component {
                 this.setState({ toggleBar: true });
                 let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
                 this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-                this.setState({ toggleChar: true });
             });
         client
             .request(
@@ -291,8 +292,8 @@ class ReportsPage extends Component {
                 let allSum = [];
                 for (let i = 0; i < statsByDates.length; i++) {
                     period.push({
-                        startTime: new Date(`${statsByDates[i]} 00:00:00`).getTime(),
-                        endTime: new Date(`${statsByDates[i]} 23:59:59`).getTime(),
+                        startTime: new Date(`${statsByDates[i]}T00:00:00`).getTime(),
+                        endTime: new Date(`${statsByDates[i]}T23:59:59`).getTime(),
                     });
                 }
                 for (let i = 0; i < period.length; i++) {

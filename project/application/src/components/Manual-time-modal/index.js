@@ -44,27 +44,28 @@ class ManualTimeModal extends Component {
 
         const issue = (this.inputNameValue || {}).value || '';
         changedItem.issue = encodeTimeEntryIssue(issue);
-
+        let startTime = moment(
+            `${moment(this.state.startDate).format('YYYY-MM-DD')} ${moment(this.state.startTime).format('HH:mm')}`
+        )
+            .utc()
+            .format();
+        let endTime = moment(
+            `${moment(this.state.endDate).format('YYYY-MM-DD')} ${moment(this.state.endTime).format('HH:mm')}`
+        )
+            .utc()
+            .format();
+        if (+moment(startTime) > +moment(endTime)) {
+            alert('wrong entered start time,  please check it');
+            return;
+        }
         client
             .request(
                 changeTimeMutation({
                     id: changedItem.id,
                     issue: changedItem.issue,
                     projectId: changedItem.project.id,
-                    startDatetime: moment(
-                        `${moment(this.state.startDate).format('YYYY-MM-DD')} ${moment(this.state.startTime).format(
-                            'HH:mm'
-                        )}`
-                    )
-                        .utc()
-                        .format(),
-                    endDatetime: moment(
-                        `${moment(this.state.endDate).format('YYYY-MM-DD')} ${moment(this.state.endTime).format(
-                            'HH:mm'
-                        )}`
-                    )
-                        .utc()
-                        .format(),
+                    startDatetime: startTime,
+                    endDatetime: endTime,
                 })
             )
             .then(data => {
@@ -121,60 +122,69 @@ class ManualTimeModal extends Component {
         const { startDate, startTime, endDate, endTime } = this.state;
         return (
             <div className="manual_time_modal_wrapper">
-                <div className="manual_time_modal_background" />
-                <div className="manual_time_modal_container">
-                    <i
-                        className="create_projects_modal_header_close manual_time_modal_close"
-                        onClick={e => {
-                            this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
-                        }}
-                    />
-                    <div>
-                        <span>Task name:</span>
-                        <input type="text" maxLength={110} ref={input => (this.inputNameValue = input)} />
-                    </div>
-                    <div className=" project_select_edit_modal">
-                        <span>Project:</span>
-                        <input
-                            type="text"
-                            readOnly
-                            ref={input => (this.inputTaskName = input)}
+                <div className="manual_time_modal_background">
+                    <div className="manual_time_modal_container">
+                        <i
+                            className="create_projects_modal_header_close manual_time_modal_close"
                             onClick={e => {
-                                this.toggleProjectsBar();
-                                document.addEventListener('click', this.closeDropdown);
+                                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
                             }}
                         />
-                        <div className={`circle main_circle ${this.state.activeProject.projectColor.name}`} />
-                        <i />
-                        <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
-                    </div>
-                    <div className="manual_timer_modal_timepickers_container">
-                        <div className="margin_12">
-                            <span> Time start:</span>
-                            <div className="date_time">
-                                <DateFormatInput value={startDate} onChange={this.onChangeDate} name="date-input" />
-                                <TimeFormatInput
-                                    value={startTime}
-                                    onChange={e => this.onChangeTime(e)}
-                                    name="time-input"
-                                />
+                        <div>
+                            <span>Task name:</span>
+                            <input type="text" maxLength={110} ref={input => (this.inputNameValue = input)} />
+                        </div>
+                        <div className=" project_select_edit_modal">
+                            <span>Project:</span>
+                            <input
+                                type="text"
+                                readOnly
+                                ref={input => (this.inputTaskName = input)}
+                                onClick={e => {
+                                    this.toggleProjectsBar();
+                                    document.addEventListener('click', this.closeDropdown);
+                                }}
+                            />
+                            <div className={`circle main_circle ${this.state.activeProject.projectColor.name}`} />
+                            <i />
+                            <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
+                        </div>
+                        <div className="manual_timer_modal_timepickers_container">
+                            <div className="margin_12">
+                                <span> Time start:</span>
+                                <div className="date_time">
+                                    <DateFormatInput value={startDate} onChange={this.onChangeDate} name="date-input" />
+                                    <TimeFormatInput
+                                        value={startTime}
+                                        onChange={e => this.onChangeTime(e)}
+                                        name="time-input"
+                                    />
+                                </div>
+                            </div>
+                            <div className="margin_12">
+                                <span>Time end:</span>
+                                <div className="date_time">
+                                    <DateFormatInput
+                                        value={endDate}
+                                        onChange={this.onChangeDateEnd}
+                                        name="date-input"
+                                    />
+                                    <TimeFormatInput
+                                        value={endTime}
+                                        onChange={this.onChangeTimeEnd}
+                                        name="time-input"
+                                    />
+                                </div>
                             </div>
                         </div>
-                        <div className="margin_12">
-                            <span>Time end:</span>
-                            <div className="date_time">
-                                <DateFormatInput value={endDate} onChange={this.onChangeDateEnd} name="date-input" />
-                                <TimeFormatInput value={endTime} onChange={this.onChangeTimeEnd} name="time-input" />
-                            </div>
+                        <div className="manual_timer_modal_button_container">
+                            <button
+                                className="create_projects_modal_button_container_button manual_time_button"
+                                onClick={e => this.changeData()}
+                            >
+                                Change
+                            </button>
                         </div>
-                    </div>
-                    <div className="manual_timer_modal_button_container">
-                        <button
-                            className="create_projects_modal_button_container_button manual_time_button"
-                            onClick={e => this.changeData()}
-                        >
-                            Change
-                        </button>
                     </div>
                 </div>
             </div>

@@ -112,7 +112,7 @@ export function getProjectsV2ProjectPageUser(id) {
 
 export function getTodayTimeEntries(id) {
     return {
-        graphqlRequest: `{ timer_v2 (where: {user_id: {_eq: "${id}"}},order_by: {created_at: desc}, limit: 50) {
+        graphqlRequest: `{ timer_v2 (where: {user_id: {_eq: "${id}"}},order_by: {start_datetime: desc}, limit: 50) {
             id,
             start_datetime,
             end_datetime,
@@ -340,5 +340,40 @@ export function getProjectColor() {
                 name
             }
         }`,
+    };
+}
+
+export function changeProject(object) {
+    return {
+        graphqlRequest: `
+            mutation {
+                update_project_v2(
+                where:{id: {_eq: "${object.id}"}},
+                    _set: {
+                        name: "${object.name}"
+                        project_color_id:"${object.colorProject}"
+                    }
+                ) {
+                    affected_rows
+                }
+            }`,
+    };
+}
+
+export function getSelectedProject(id) {
+    return {
+        graphqlRequest: `
+            {
+                project_v2 (where: {id: 
+                {_eq: "${id}"}
+                }) {
+                    id
+                    name
+		            project_color{ 
+                        id
+                        name
+                    }
+                }
+            }`,
     };
 }
