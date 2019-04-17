@@ -19,7 +19,7 @@ export function projectReducer(state = initialState, action) {
         case 'TOGGLE_MODAL':
             return { ...state, addNewProjectModalToggle: action.payload.toggle };
         case 'CREATE_PROJECT':
-            return { ...state, addNewProjectModalToggle: action.payload.toggle, tableData: action.payload.tableData };
+            return { ...state, tableData: action.payload.tableData };
         case 'CHANGE_ARR':
             return { ...state, tableData: action.payload.tableData };
         case 'SET_EDIT_PROJECT':

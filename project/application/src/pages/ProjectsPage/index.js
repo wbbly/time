@@ -23,12 +23,12 @@ class ProjectsPage extends Component {
         if (getUserAdminRight() === 'ROLE_ADMIN') {
             client.request(getProjectsV2ProjectPageAdmin).then(data => {
                 this.setState({ etalonArr: data.projectV2 });
-                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
+                this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
             });
         } else {
             client.request(getProjectsV2ProjectPageUser(getUserId())).then(data => {
                 this.setState({ etalonArr: data.projectV2 });
-                this.props.projectsPageAction('CREATE_PROJECT', { toggle: false, tableData: data.projectV2 });
+                this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
             });
         }
     };
@@ -44,7 +44,7 @@ class ProjectsPage extends Component {
                     <CreateProjectModal
                         tableInfo={tableData}
                         projectsPageAction={projectsPageAction}
-                        getProjectsthis={this.getProjects}
+                        getProjects={this.getProjects}
                     />
                 )}
                 <LeftBar />

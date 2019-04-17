@@ -5,20 +5,18 @@
 
 .manual_time_modal_background {
     position: fixed;
-    background-color: gray;
+    background-color: rgba(89, 89, 89, 0.5);
     left: 0;
     right: 0;
     bottom: 0;
     top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 1;
-    opacity: 0.5;
 }
 
 .manual_time_modal_container {
-    position: fixed;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
     width: calc(45% - 48px);
     z-index: 2;
     background: #ffffff;
@@ -90,7 +88,7 @@ input[type="time"],
     border: 1px solid red;
 }
 
-.manual_time_modal_container  .project_select_edit_modal {
+.manual_time_modal_container .project_select_edit_modal {
     position: relative;
     margin-top: 12px;
 }

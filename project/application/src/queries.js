@@ -75,7 +75,7 @@ export function getProjectsV2ProjectPageUser(id) {
         id
         is_active
         name
-        timer (where: {user_id: {_eq: "${id}"}}б) {
+        timer (where: {user_id: {_eq: "${id}"}}) {
             start_datetime
             end_datetime
         }
