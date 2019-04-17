@@ -130,7 +130,7 @@ export default class ReportsSearchBar extends Component {
         if (this.props.setUser.length) {
             this.props.getDataUsers();
         } else {
-            alert('add users')
+            alert('add users');
         }
     }
 

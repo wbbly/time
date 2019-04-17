@@ -29,7 +29,7 @@ export default class CreateProjectModal extends Component {
         });
     }
 
-    addProject(projects) {
+    addProject() {
         const project = addProjectPreProcessing(this.createProjectInput.value, this.state.selectedValue);
         if (!project) {
             return null;

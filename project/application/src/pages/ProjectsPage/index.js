@@ -13,7 +13,6 @@ import { getProjectsV2ProjectPageAdmin, getProjectsV2ProjectPageUser } from '../
 import { userLoggedIn, getUserAdminRight, getUserId } from '../../services/authentication';
 
 class ProjectsPage extends Component {
-
     state = {
         etalonArr: [],
         activeEmail: '',
@@ -45,7 +44,8 @@ class ProjectsPage extends Component {
                     <CreateProjectModal
                         tableInfo={tableData}
                         projectsPageAction={projectsPageAction}
-                        getProjectsthis={this.getProjects()}/>
+                        getProjectsthis={this.getProjects}
+                    />
                 )}
                 <LeftBar />
                 <div className="data_container_projects_page">

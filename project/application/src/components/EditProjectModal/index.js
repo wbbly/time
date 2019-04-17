@@ -54,17 +54,17 @@ export default class EditProjectModal extends Component {
                     alert(`Project can't be created`);
                 }
             }
-        )
+        );
     }
 
     closeModal = () => {
-        this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', {tableData: false});
+        this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', { tableData: false });
     };
 
     render() {
         let selectItems = this.state.selectValue.map(value => (
             <div className={`item`} onClick={e => this.setItem(value)}>
-                <div className={`circle ${value.name}`}/>
+                <div className={`circle ${value.name}`} />
             </div>
         ));
 
@@ -74,7 +74,7 @@ export default class EditProjectModal extends Component {
                     <div className="edit_project_modal_container">
                         <div className="create_projects_modal_header">
                             <div className="create_projects_modal_header_title">Create project</div>
-                            <i className="create_projects_modal_header_close" onClick={e => this.closeModal()}/>
+                            <i className="create_projects_modal_header_close" onClick={e => this.closeModal()} />
                         </div>
                         <div className="create_projects_modal_data">
                             <div className="create_projects_modal_data_input_container">
@@ -90,9 +90,9 @@ export default class EditProjectModal extends Component {
                                     onClick={e => this.toggleSelect()}
                                 >
                                     <div className="select_main">
-                                        <div className={`circle ${this.state.selectedValue.name}`}/>
+                                        <div className={`circle ${this.state.selectedValue.name}`} />
                                     </div>
-                                    <i className="vector"/>
+                                    <i className="vector" />
                                     {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                                 </div>
                             </div>
@@ -113,11 +113,11 @@ export default class EditProjectModal extends Component {
 
     componentDidMount() {
         client.request(getProjectColor()).then(data => {
-            this.setState({selectValue: data.project_color});
+            this.setState({ selectValue: data.project_color });
         });
 
         client.request(getSelectedProject(this.props.editedProject.id)).then(data => {
-            this.setState({projectId: data.project_v2[0].id});
+            this.setState({ projectId: data.project_v2[0].id });
             this.setItem({
                 id: data.project_v2[0].project_color.id,
                 name: data.project_v2[0].project_color.name,
