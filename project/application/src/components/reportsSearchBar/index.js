@@ -346,7 +346,7 @@ export default class ReportsSearchBar extends Component {
         setTimeout(() => {
             this.setState({ projectsData: this.props.projectsData });
             this.setState({ etalonProjectsData: this.props.projectsData });
-        }, 800);
+        }, 1500);
     }
     componentWillUnmount() {
         this.props.reportsPageAction('SET_ACTIVE_USER', { data: [getUserData().username] });
