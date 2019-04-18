@@ -11,12 +11,11 @@ import { Bar } from 'react-chartjs-2';
 import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
-import { client } from '../../requestSettings';
-import { getUsers, getReports, getDatafromTimerTableToReport } from '../../queries';
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { userLoggedIn, getUserAdminRight } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
 import { convertMS } from '../../services/timeService';
+import { AppConfig } from '../../config';
 
 class ReportsPage extends Component {
     state = {
@@ -257,106 +256,173 @@ class ReportsPage extends Component {
         dateFrom = this.getYear(this.state.selectionRange.startDate),
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
-        client
-            .request(
-                getReports(
-                    this.props.setUser,
-                    this.props.selectedProjects.length ? this.props.selectedProjects : undefined,
-                    dateFrom,
-                    dateTo
-                )
-            )
-            .then(data => {
-                this.setState({ projectsData: data.project_v2 });
-                let dataToGraph = this.getArrOfProjectsData(data);
-                this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
-                this.setState({ toggleBar: true });
-                let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
-                this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-            });
-        client
-            .request(
-                getDatafromTimerTableToReport(
-                    this.props.setUser,
-                    this.props.selectedProjects.length ? this.props.selectedProjects : [],
-                    dateFrom,
-                    dateTo
-                )
-            )
-            .then(data => {
-                let { timer_v2 } = data;
-                const statsByDates = Object.keys(
-                    this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate)
-                );
-                const period = [];
-                let allSum = [];
-                for (let i = 0; i < statsByDates.length; i++) {
-                    period.push({
-                        startTime: new Date(`${statsByDates[i]}T00:00:00`).getTime(),
-                        endTime: new Date(`${statsByDates[i]}T23:59:59`).getTime(),
-                    });
-                }
-                for (let i = 0; i < period.length; i++) {
-                    let day = period[i];
-                    var { sum, dataModified } = dayProcess(day.startTime, day.endTime, timer_v2);
-                    allSum.push(sum);
-                    timer_v2 = dataModified;
-                }
-                this.props.reportsPageAction(
-                    'SET_LINE_GRAPH',
-                    this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(statsByDates, allSum))
-                );
+        function getPharametrs(name, arr) {
+            let pharam = [];
+            for (let i = 0; i < arr.length; i++) {
+                pharam.push(`${name}[]=${arr[i]}`);
+            }
+            return pharam.join('&');
+        }
 
-                function dayProcess(startTime, endTime, data) {
-                    if (!data) {
-                        return { sum: 0, dataModified: data };
+        let setUser =
+            !!this.props.setUser && !!this.props.setUser.length ? getPharametrs('userEmails', this.props.setUser) : '';
+        fetch(
+            AppConfig.apiURL +
+                `project/reports-projects?${setUser}${getPharametrs(
+                    'projectNames',
+                    this.props.selectedProjects
+                )}&startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
+                    +new Date(dateTo) + 24 * 60 * 60 * 1000 - 1
+                )
+                    .toISOString()
+                    .slice(0, -1)}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let data = result.data;
+                    this.setState({ projectsData: data.project_v2 });
+                    let dataToGraph = this.getArrOfProjectsData(data);
+                    this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
+                    this.setState({ toggleBar: true });
+                    let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
+                    this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
+                },
+                err => err.text().then(errorMessage => {})
+            );
+
+        fetch(
+            AppConfig.apiURL +
+                `timer/reports-list?${setUser}${getPharametrs(
+                    'projectNames',
+                    this.props.selectedProjects
+                )}&startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
+                    +new Date(dateTo) + 24 * 60 * 60 * 1000 - 1
+                )
+                    .toISOString()
+                    .slice(0, -1)}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let { timer_v2 } = result.data;
+                    const statsByDates = Object.keys(
+                        this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate)
+                    );
+                    const period = [];
+                    let allSum = [];
+                    for (let i = 0; i < statsByDates.length; i++) {
+                        period.push({
+                            startTime: new Date(`${statsByDates[i]}T00:00:00`).getTime(),
+                            endTime: new Date(`${statsByDates[i]}T23:59:59`).getTime(),
+                        });
                     }
-                    let sum = 0;
+                    for (let i = 0; i < period.length; i++) {
+                        let day = period[i];
+                        var { sum, dataModified } = dayProcess(day.startTime, day.endTime, timer_v2);
+                        allSum.push(sum);
+                        timer_v2 = dataModified;
+                    }
+                    this.props.reportsPageAction(
+                        'SET_LINE_GRAPH',
+                        this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(statsByDates, allSum))
+                    );
 
-                    const dataModified = [];
-                    for (let i = 0; i < data.length; i++) {
-                        dataModified.push(data[i]);
-                        if (
-                            getTimestamp(data[i].start_datetime) >= startTime &&
-                            getTimestamp(data[i].end_datetime) <= endTime
-                        ) {
-                            sum += getTimestamp(data[i].end_datetime) - getTimestamp(data[i].start_datetime);
-                        } else if (
-                            getTimestamp(data[i].start_datetime) >= startTime &&
-                            getTimestamp(data[i].start_datetime) <= endTime &&
-                            getTimestamp(data[i].end_datetime) > endTime
-                        ) {
-                            sum += getTimestamp(endTime) - getTimestamp(data[i].start_datetime);
-                            dataModified.splice(
-                                i,
-                                1,
-                                ...[
-                                    { start_datetime: dataModified[i].start_datetime, end_datetime: endTime },
-                                    { start_datetime: endTime + 1000, end_datetime: dataModified[i].end_datetime },
-                                ]
-                            );
+                    function dayProcess(startTime, endTime, data) {
+                        if (!data) {
+                            return { sum: 0, dataModified: data };
                         }
+                        let sum = 0;
+
+                        const dataModified = [];
+                        for (let i = 0; i < data.length; i++) {
+                            dataModified.push(data[i]);
+                            if (
+                                getTimestamp(data[i].start_datetime) >= startTime &&
+                                getTimestamp(data[i].end_datetime) <= endTime
+                            ) {
+                                sum += getTimestamp(data[i].end_datetime) - getTimestamp(data[i].start_datetime);
+                            } else if (
+                                getTimestamp(data[i].start_datetime) >= startTime &&
+                                getTimestamp(data[i].start_datetime) <= endTime &&
+                                getTimestamp(data[i].end_datetime) > endTime
+                            ) {
+                                sum += getTimestamp(endTime) - getTimestamp(data[i].start_datetime);
+                                dataModified.splice(
+                                    i,
+                                    1,
+                                    ...[
+                                        { start_datetime: dataModified[i].start_datetime, end_datetime: endTime },
+                                        { start_datetime: endTime + 1000, end_datetime: dataModified[i].end_datetime },
+                                    ]
+                                );
+                            }
+                        }
+
+                        return { sum, dataModified };
                     }
 
-                    return { sum, dataModified };
-                }
-                function getTimestamp(date) {
-                    return new Date(date).getTime();
-                }
-            });
+                    function getTimestamp(date) {
+                        return new Date(date).getTime();
+                    }
+                },
+                err => err.text().then(errorMessage => {})
+            );
     }
 
     componentDidMount() {
-        this.getDataUsers(
-            this.getYear(this.state.selectionRange.startDate),
-            this.getYear(this.state.selectionRange.endDate)
-        );
-
         this.setState({ selectUsersHeader: atob(localStorage.getItem('active_email')) });
-        client.request(getUsers()).then(data => {
-            this.setState({ selectUersData: data.user });
-            this.setState({ selectUersDataEtalon: data.user });
-        });
+        fetch(AppConfig.apiURL + `user/list`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let data = result.data;
+                    this.setState({ selectUersData: data.user });
+                    this.setState({ selectUersDataEtalon: data.user });
+                    setTimeout(() => {
+                        this.getDataUsers(
+                            this.getYear(this.state.selectionRange.startDate),
+                            this.getYear(this.state.selectionRange.endDate)
+                        );
+                    }, 500);
+                },
+                err => err.text().then(errorMessage => {})
+            );
     }
 }
 

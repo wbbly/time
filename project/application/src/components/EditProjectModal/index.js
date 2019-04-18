@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import './style.css';
 
-import { client } from '../../requestSettings';
-import { getProjectColor, returnMutationLinkAddProject, changeProject, getSelectedProject } from '../../queries';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
+import { AppConfig } from '../../config';
 
 export default class EditProjectModal extends Component {
     state = {
@@ -40,21 +39,40 @@ export default class EditProjectModal extends Component {
             name: this.createProjectInput.value,
             colorProject: this.state.selectedValue.id,
         };
-        client.request(changeProject(object)).then(
-            _ => {
-                this.props.getProjects();
-                this.closeModal();
-            },
-            err => {
-                const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
 
-                if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                    alert('Project is already existed');
-                } else {
-                    alert(`Project can't be created`);
+        fetch(AppConfig.apiURL + `project/${object.id}`, {
+            method: 'PATCH',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: this.createProjectInput.value,
+                projectColorId: this.state.selectedValue.id,
+            }),
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
                 }
-            }
-        );
+                return res.json();
+            })
+            .then(
+                result => {
+                    this.props.getProjects();
+                    this.closeModal();
+                },
+                err =>
+                    err.text().then(errorMessage => {
+                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
+
+                        if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                            alert('Project is already existed');
+                        } else {
+                            alert(`Project can't be created`);
+                        }
+                    })
+            );
     }
 
     closeModal = () => {
@@ -112,17 +130,51 @@ export default class EditProjectModal extends Component {
     }
 
     componentDidMount() {
-        client.request(getProjectColor()).then(data => {
-            this.setState({ selectValue: data.project_color });
-        });
+        fetch(AppConfig.apiURL + `project-color/list`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let data = result.data;
+                    this.setState({ selectValue: data.project_color });
+                },
+                err => err.text().then(errorMessage => {})
+            );
 
-        client.request(getSelectedProject(this.props.editedProject.id)).then(data => {
-            this.setState({ projectId: data.project_v2[0].id });
-            this.setItem({
-                id: data.project_v2[0].project_color.id,
-                name: data.project_v2[0].project_color.name,
-            });
-            this.createProjectInput.value = data.project_v2[0].name;
-        });
+        fetch(AppConfig.apiURL + `project/${this.props.editedProject.id}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let data = result.data;
+                    this.setState({ projectId: data.project_v2[0].id });
+                    this.setItem({
+                        id: data.project_v2[0].project_color.id,
+                        name: data.project_v2[0].project_color.name,
+                    });
+                    this.createProjectInput.value = data.project_v2[0].name;
+                },
+                err => err.text().then(errorMessage => {})
+            );
     }
 }

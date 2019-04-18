@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.css';
-import { client } from '../../requestSettings';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
-import { returnMutationLinkAddProject, getProjectColor } from '../../queries';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
+import { AppConfig } from '../../config';
 
 export default class CreateProjectModal extends Component {
     state = {
@@ -34,22 +33,38 @@ export default class CreateProjectModal extends Component {
         if (!project) {
             return null;
         }
-
-        client.request(returnMutationLinkAddProject(project)).then(
-            _ => {
-                this.props.getProjects();
-                this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false });
+        fetch(AppConfig.apiURL + `project/add`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             },
-            err => {
-                const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
-
-                if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                    alert('Project is already existed');
-                } else {
-                    alert(`Project can't be created`);
+            body: JSON.stringify({
+                name: project.name,
+                projectColorId: project.colorProject.id,
+            }),
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
                 }
-            }
-        );
+                return res.json();
+            })
+            .then(
+                result => {
+                    this.props.getProjects();
+                    this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false });
+                },
+                err =>
+                    err.text().then(errorMessage => {
+                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
+                        if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                            alert('Project is already existed');
+                        } else {
+                            alert(`Project can't be created`);
+                        }
+                    })
+            );
     }
 
     render() {
@@ -105,9 +120,26 @@ export default class CreateProjectModal extends Component {
     }
 
     componentDidMount() {
-        client.request(getProjectColor()).then(data => {
-            this.setState({ selectValue: data.project_color });
-        });
+        fetch(AppConfig.apiURL + `project-color/list`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let data = result.data;
+                    this.setState({ selectValue: data.project_color });
+                },
+                err => err.text().then(errorMessage => {})
+            );
     }
 }
 
