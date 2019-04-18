@@ -47,7 +47,7 @@ class MainPage extends Component {
         timeFinish: '',
     };
 
-    socket = openSocket(AppConfig.socketURL);
+    socket = openSocket(AppConfig.apiURL);
 
     initSocketConnection = () => {
         this.socket.on('connect', () => {
