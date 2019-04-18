@@ -3,8 +3,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 import './style.css';
 import { client } from '../../requestSettings';
-import { getUsers } from '../../queries';
-import { getUserData } from '../../services/authentication';
+import { getUserData, getUserId } from '../../services/authentication';
+import { AppConfig } from "../../config";
 
 export default class ReportsSearchBar extends Component {
     state = {
@@ -135,13 +135,13 @@ export default class ReportsSearchBar extends Component {
     }
 
     getChecked(name) {
-        if (this.props.selectedProjects.join().indexOf(`"${name}"`) !== -1) {
+        if (this.props.selectedProjects.join().indexOf(name) !== -1) {
             return true;
         }
     }
 
     getCheckedUsers(name) {
-        if (this.state.selectUserData.join().indexOf(`"${name}"`) !== -1) {
+        if (this.state.selectUserData.join().indexOf(name) !== -1) {
             return true;
         }
     }
@@ -149,7 +149,7 @@ export default class ReportsSearchBar extends Component {
     addProject(e, name) {
         let projects = JSON.parse(JSON.stringify(this.state.selectProjectData));
         if (e.target.checked) {
-            projects.push(`"${name}"`);
+            projects.push(name);
         } else {
             let item = projects.indexOf(`"${name}"`);
             projects.splice(item, 1);
@@ -161,7 +161,7 @@ export default class ReportsSearchBar extends Component {
     addUsers(e, user) {
         let users = JSON.parse(JSON.stringify(this.state.selectUserData));
         if (e.target.checked) {
-            users.push(`"${user.username}"`);
+            users.push(user.username);
         } else {
             let item = users.indexOf('' + user.username);
             users.splice(item, 1);
@@ -173,7 +173,7 @@ export default class ReportsSearchBar extends Component {
     selectAllProjects() {
         let projects = [];
         for (let i = 0; i < this.state.etalonProjectsData.length; i++) {
-            projects.push(`"${this.state.etalonProjectsData[i].name}"`);
+            projects.push(this.state.etalonProjectsData[i].name);
         }
         this.setState({ checkedProjects: true });
         this.setState({ selectProjectData: projects });
@@ -183,7 +183,7 @@ export default class ReportsSearchBar extends Component {
     selectAllUsers() {
         let users = [];
         for (let i = 0; i < this.state.selectUersData.length; i++) {
-            users.push(`"${this.state.selectUersData[i].username}"`);
+            users.push(this.state.selectUersData[i].username);
         }
         this.setState({ selectUserData: users });
         this.props.reportsPageAction('SET_ACTIVE_USER', { data: users });
@@ -322,18 +322,37 @@ export default class ReportsSearchBar extends Component {
 
     componentDidMount() {
         this.userInput.value = this.props.setUser.username;
-        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [`"${getUserData().username}"`] });
-        client.request(getUsers()).then(data => {
-            this.setState({ selectUersDataEtalon: data.user });
-            this.setState({ selectUserData: this.props.setUser });
-        });
+        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [getUserData().username] });
+        fetch(AppConfig.apiURL + `user/list`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let data = result.data;
+                    this.setState({ selectUersDataEtalon: data.user });
+                    this.setState({ selectUserData: this.props.setUser });
+
+                },
+                err => err.text().then(errorMessage => {
+                })
+            );
         setTimeout(() => {
             this.setState({ projectsData: this.props.projectsData });
             this.setState({ etalonProjectsData: this.props.projectsData });
         }, 800);
     }
     componentWillUnmount() {
-        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [`"${getUserData().username}"`] });
+        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [getUserData().username] });
         this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: [] });
     }
 }

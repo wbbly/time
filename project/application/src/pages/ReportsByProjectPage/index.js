@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 
 import './style.css';
 import LeftBar from '../../components/LeftBar';
-import { getDataByProjectName } from '../../queries';
 import { client } from '../../requestSettings';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 import { convertMS } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
+import { AppConfig } from "../../config";
 
 class ReportsByProjectsPage extends Component {
     state = {
@@ -50,7 +50,7 @@ class ReportsByProjectsPage extends Component {
 
         return (
             <div className="reports_by_projects_wrapper">
-                <LeftBar />
+                <LeftBar/>
                 <div className="header">
                     <div className="header_name">
                         {this.props.match.params.name}: {this.getDateInPointsFormat(this.props.match.params.dateStart)}
@@ -74,30 +74,42 @@ class ReportsByProjectsPage extends Component {
     }
 
     componentDidMount() {
-        client
-            .request(
-                getDataByProjectName(
-                    this.props.match.params.name,
-                    this.props.setUser,
-                    new Date(this.props.match.params.dateStart).toISOString().slice(0, -1),
-                    new Date(+new Date(this.props.match.params.endDate) + 24 * 60 * 60 * 1000 - 1)
-                        .toISOString()
-                        .slice(0, -1)
-                )
-            )
-            .then(data => {
-                for (let i = 0; i < data.project_v2.length; i++) {
-                    const project = data.project_v2[i];
-                    for (let j = 0; j < project.timer.length; j++) {
-                        const timeEntry = project.timer[j];
-                        timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
-                    }
+        let setUser = (!!this.props.setUser[0])? this.props.setUser[0].replace('"','').replace('"','') : '';
+        fetch(AppConfig.apiURL + `project/reports-project?projectName=${this.props.match.params.name}&userEmail=${setUser
+            }&startDate=${new Date(this.props.match.params.dateStart).toISOString().slice(0, -1)}&endDate=${new Date(+new Date(this.props.match.params.endDate) + 24 * 60 * 60 * 1000 - 1)
+            .toISOString()
+            .slice(0, -1)}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
                 }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let data = result.data;
+                    for (let i = 0; i < data.project_v2.length; i++) {
+                        const project = data.project_v2[i];
+                        for (let j = 0; j < project.timer.length; j++) {
+                            const timeEntry = project.timer[j];
+                            timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
+                        }
+                    }
 
-                this.setState({ dataOfProject: data.project_v2[0].timer });
-                this.setState({ sumTime: this.getSumtime(data.project_v2[0].timer) });
-                this.setState({ countTasks: data.project_v2[0].timer.length });
-            });
+                    this.setState({dataOfProject: data.project_v2[0].timer});
+                    this.setState({sumTime: this.getSumtime(data.project_v2[0].timer)});
+                    this.setState({countTasks: data.project_v2[0].timer.length});
+
+                },
+                err => err.text().then(errorMessage => {
+                })
+            );
     }
 }
 

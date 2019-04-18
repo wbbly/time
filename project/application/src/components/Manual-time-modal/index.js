@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import * as moment from 'moment';
 
 import './style.css';
-import { changeTimeMutation, getTodayTimeEntries } from '../../queries';
+import { getTodayTimeEntriesParseFunction } from '../../queries';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { client } from '../../requestSettings';
 import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
+import { AppConfig } from '../../config';
 
 class ManualTimeModal extends Component {
     state = {
@@ -54,35 +55,70 @@ class ManualTimeModal extends Component {
         )
             .utc()
             .format();
-        if (+moment(startTime) > +moment(endTime)) {
+        if (+moment(startTime) > +moment(endTime) || +moment(endTime) < +moment(startTime)) {
             alert('wrong entered start time,  please check it');
             return;
         }
-        client
-            .request(
-                changeTimeMutation({
-                    id: changedItem.id,
+
+        fetch(AppConfig.apiURL + `timer/${changedItem.id}`, {
+            method: 'PATCH',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                {
                     issue: changedItem.issue,
                     projectId: changedItem.project.id,
                     startDatetime: startTime,
                     endDatetime: endTime,
-                })
+                }
             )
-            .then(data => {
-                this.getNewData();
-                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
-            });
+
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    this.getNewData();
+                    this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
+                },
+                err => err.text().then(errorMessage => {
+                })
+            );
     }
 
     getNewData() {
-        client.request(getTodayTimeEntries(JSON.parse(localStorage.getItem('user-object')).id)).then(data => {
-            for (let i = 0; i < data.timerV2.length; i++) {
-                const timeEntry = data.timerV2[i];
-                timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
-            }
+        fetch(AppConfig.apiURL + `timer/user-list?userId=${JSON.parse(localStorage.getItem('user-object')).id}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let data = getTodayTimeEntriesParseFunction(result.data)
+                    for (let i = 0; i < data.timerV2.length; i++) {
+                        const timeEntry = data.timerV2[i];
+                        timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
+                    }
 
-            this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
-        });
+                    this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
+                    },
+                err => err.text().then(errorMessage => {
+                })
+            );
     }
 
     toggleProjectsBar() {

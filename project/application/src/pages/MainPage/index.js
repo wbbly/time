@@ -12,8 +12,12 @@ import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
 import { client } from '../../requestSettings';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
-import { getTodayTimeEntries, returnMutationLinkDeleteTimeEntries, getProjectsV2 } from '../../queries';
-import { userLoggedIn, getUserData, getUserId } from '../../services/authentication';
+import {
+    getProjectListRequest,
+    getProjectListParseFunction,
+    getTodayTimeEntriesParseFunction
+} from '../../queries';
+import { userLoggedIn, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 import { convertMS } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
@@ -206,11 +210,29 @@ class MainPage extends Component {
     }
 
     deleteFromArr(item) {
+        console.log(item, 'itemitemitem');
         let check = window.confirm('Do you really want to delete this time entry?');
         if (check) {
-            client.request(returnMutationLinkDeleteTimeEntries(item)).then(data => {
-                this.getTimeForMainPage();
-            });
+            fetch(AppConfig.apiURL + `timer/${item.id}`, {
+                method: 'DELETE',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw res;
+                    }
+                    return res.json();
+                })
+                .then(
+                    result => {
+                        this.getTimeForMainPage();
+                    },
+                    err => err.text().then(errorMessage => {
+                    })
+                );
         }
     }
 
@@ -443,17 +465,53 @@ class MainPage extends Component {
     componentDidMount() {
         this.initSocketConnection();
         this.getTimeForMainPage();
-        client.request(getProjectsV2).then(data => {
-            this.setState({ arrProjects: data.projectV2 });
-            this.setState({ arrProjectsToModal: data.projectV2 });
-            this.setState({ arrProjectsEtalon: data.projectV2 });
-        });
+        fetch(AppConfig.apiURL + 'project/list', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let dataParsed = getProjectListParseFunction(result);
+                    this.setState({ arrProjects: dataParsed.projectV2 });
+                    this.setState({ arrProjectsToModal: dataParsed.projectV2 });
+                    this.setState({ arrProjectsEtalon: dataParsed.projectV2 });
+                },
+                err => err.text().then(errorMessage => {
+                })
+            );
     }
 
     getTimeForMainPage() {
-        client.request(getTodayTimeEntries(getUserId())).then(data => {
-            this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
-        });
+        fetch(AppConfig.apiURL + `timer/user-list?userId=${JSON.parse(localStorage.getItem('user-object')).id}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    let data = getTodayTimeEntriesParseFunction(result.data);
+                    this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
+                },
+                err => err.text().then(errorMessage => {
+                })
+            );
     }
 
     componentWillUnmount() {
