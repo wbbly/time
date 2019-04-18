@@ -11,13 +11,11 @@ import { Bar } from 'react-chartjs-2';
 import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
-import { client } from '../../requestSettings';
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { userLoggedIn, getUserAdminRight } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
 import { convertMS } from '../../services/timeService';
-import { AppConfig } from "../../config";
-import { decodeTimeEntryIssue } from "../../services/timeEntryService";
+import { AppConfig } from '../../config';
 
 class ReportsPage extends Component {
     state = {
@@ -64,7 +62,7 @@ class ReportsPage extends Component {
         },
         tooltips: {
             callbacks: {
-                label: function (tooltipItem) {
+                label: function(tooltipItem) {
                     return convertMS(tooltipItem.yLabel);
                 },
             },
@@ -79,8 +77,8 @@ class ReportsPage extends Component {
     }
 
     handleSelect = ranges => {
-        this.setState({selectionRange: ranges.selection});
-        this.props.reportsPageAction('SET_TIME', {data: ranges.selection});
+        this.setState({ selectionRange: ranges.selection });
+        this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
         this.getDataUsers(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
     };
 
@@ -89,7 +87,7 @@ class ReportsPage extends Component {
     }
 
     openCalendar() {
-        this.setState({dateSelect: !this.state.dateSelect});
+        this.setState({ dateSelect: !this.state.dateSelect });
         document.addEventListener('click', this.closeDropdown);
     }
 
@@ -107,11 +105,11 @@ class ReportsPage extends Component {
     };
 
     render() {
-        if (!userLoggedIn()) return <Redirect to={'/login'}/>;
+        if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         return (
             <div className="wrapper_reports_page">
-                <LeftBar/>
+                <LeftBar />
                 <div className="data_container_reports_page">
                     <div className="header">
                         <div className="header_name">Summary report</div>
@@ -121,7 +119,7 @@ class ReportsPage extends Component {
                                     {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} {' - '}
                                     {moment(this.props.timeRange.endDate).format('DD.MM.YYYY')}
                                 </span>
-                                <i className="arrow_down"/>
+                                <i className="arrow_down" />
                             </div>
                             {this.state.dateSelect && (
                                 <div className="select_body" ref={div => (this.datePickerSelect = div)}>
@@ -196,7 +194,7 @@ class ReportsPage extends Component {
                 }),
             });
         } else {
-            this.setState({totalUpChartTime: '00:00:00'});
+            this.setState({ totalUpChartTime: '00:00:00' });
         }
         finishData.timeArr = time;
         return finishData;
@@ -216,7 +214,7 @@ class ReportsPage extends Component {
     }
 
     getArrOfProjectsData(data) {
-        this.setState({toggleBar: false});
+        this.setState({ toggleBar: false });
         const statsByProjects = [];
         const statsByDates = this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate);
         for (var i = 0; i < data.project_v2.length; i++) {
@@ -240,7 +238,7 @@ class ReportsPage extends Component {
             }
         }
 
-        return {statsByProjects, statsByDates};
+        return { statsByProjects, statsByDates };
     }
 
     getDates(startDate, stopDate) {
@@ -258,24 +256,34 @@ class ReportsPage extends Component {
         dateFrom = this.getYear(this.state.selectionRange.startDate),
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
-
         function getPharametrs(name, arr) {
             let pharam = [];
             for (let i = 0; i < arr.length; i++) {
-                pharam.push(`${name}[]=${arr[i]}`)
+                pharam.push(`${name}[]=${arr[i]}`);
             }
-            return pharam.join('&')
+            return pharam.join('&');
         }
 
-        let setUser = (!!this.props.setUser && !!this.props.setUser.length) ? getPharametrs('userEmails', this.props.setUser) : '';
-        fetch(AppConfig.apiURL + `project/reports-projects?${setUser
-            }${getPharametrs('projectNames', this.props.selectedProjects)}&startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(+new Date(dateTo) + 24 * 60 * 60 * 1000 - 1).toISOString().slice(0, -1)}`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
+        let setUser =
+            !!this.props.setUser && !!this.props.setUser.length ? getPharametrs('userEmails', this.props.setUser) : '';
+        fetch(
+            AppConfig.apiURL +
+                `project/reports-projects?${setUser}${getPharametrs(
+                    'projectNames',
+                    this.props.selectedProjects
+                )}&startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
+                    +new Date(dateTo) + 24 * 60 * 60 * 1000 - 1
+                )
+                    .toISOString()
+                    .slice(0, -1)}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
             .then(res => {
                 if (!res.ok) {
                     throw res;
@@ -284,25 +292,35 @@ class ReportsPage extends Component {
             })
             .then(
                 result => {
-                    let data = result.data
-                    this.setState({projectsData: data.project_v2});
+                    let data = result.data;
+                    this.setState({ projectsData: data.project_v2 });
                     let dataToGraph = this.getArrOfProjectsData(data);
-                    this.props.reportsPageAction('SET_PROJECTS', {data: dataToGraph.statsByProjects});
-                    this.setState({toggleBar: true});
+                    this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
+                    this.setState({ toggleBar: true });
                     let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
-                    this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', {data: obj});
+                    this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
                 },
-                err => err.text().then(errorMessage => {
-                })
+                err => err.text().then(errorMessage => {})
             );
 
-        fetch(AppConfig.apiURL + `timer/reports-list?${setUser}${getPharametrs('projectNames', this.props.selectedProjects)}&startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(+new Date(dateTo) + 24 * 60 * 60 * 1000 - 1).toISOString().slice(0, -1)}`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
+        fetch(
+            AppConfig.apiURL +
+                `timer/reports-list?${setUser}${getPharametrs(
+                    'projectNames',
+                    this.props.selectedProjects
+                )}&startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
+                    +new Date(dateTo) + 24 * 60 * 60 * 1000 - 1
+                )
+                    .toISOString()
+                    .slice(0, -1)}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
             .then(res => {
                 if (!res.ok) {
                     throw res;
@@ -311,7 +329,7 @@ class ReportsPage extends Component {
             })
             .then(
                 result => {
-                    let {timer_v2} = result.data;
+                    let { timer_v2 } = result.data;
                     const statsByDates = Object.keys(
                         this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate)
                     );
@@ -325,7 +343,7 @@ class ReportsPage extends Component {
                     }
                     for (let i = 0; i < period.length; i++) {
                         let day = period[i];
-                        var {sum, dataModified} = dayProcess(day.startTime, day.endTime, timer_v2);
+                        var { sum, dataModified } = dayProcess(day.startTime, day.endTime, timer_v2);
                         allSum.push(sum);
                         timer_v2 = dataModified;
                     }
@@ -336,7 +354,7 @@ class ReportsPage extends Component {
 
                     function dayProcess(startTime, endTime, data) {
                         if (!data) {
-                            return {sum: 0, dataModified: data};
+                            return { sum: 0, dataModified: data };
                         }
                         let sum = 0;
 
@@ -358,27 +376,26 @@ class ReportsPage extends Component {
                                     i,
                                     1,
                                     ...[
-                                        {start_datetime: dataModified[i].start_datetime, end_datetime: endTime},
-                                        {start_datetime: endTime + 1000, end_datetime: dataModified[i].end_datetime},
+                                        { start_datetime: dataModified[i].start_datetime, end_datetime: endTime },
+                                        { start_datetime: endTime + 1000, end_datetime: dataModified[i].end_datetime },
                                     ]
                                 );
                             }
                         }
 
-                        return {sum, dataModified};
+                        return { sum, dataModified };
                     }
 
                     function getTimestamp(date) {
                         return new Date(date).getTime();
                     }
                 },
-                err => err.text().then(errorMessage => {
-                })
+                err => err.text().then(errorMessage => {})
             );
     }
 
     componentDidMount() {
-        this.setState({selectUsersHeader: atob(localStorage.getItem('active_email'))});
+        this.setState({ selectUsersHeader: atob(localStorage.getItem('active_email')) });
         fetch(AppConfig.apiURL + `user/list`, {
             method: 'GET',
             headers: {
@@ -395,18 +412,16 @@ class ReportsPage extends Component {
             .then(
                 result => {
                     let data = result.data;
-                    this.setState({selectUersData: data.user});
-                    this.setState({selectUersDataEtalon: data.user});
+                    this.setState({ selectUersData: data.user });
+                    this.setState({ selectUersDataEtalon: data.user });
                     setTimeout(() => {
                         this.getDataUsers(
                             this.getYear(this.state.selectionRange.startDate),
                             this.getYear(this.state.selectionRange.endDate)
                         );
-                    }, 500)
-
+                    }, 500);
                 },
-                err => err.text().then(errorMessage => {
-                })
+                err => err.text().then(errorMessage => {})
             );
     }
 }

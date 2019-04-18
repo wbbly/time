@@ -5,12 +5,10 @@ import { connect } from 'react-redux';
 import './style.css';
 import LeftBar from '../../components/LeftBar';
 import AddToTeamModal from '../../components/AddToTeamModal';
-import { client } from '../../requestSettings';
 import teamPageAction from '../../actions/TeamPageAction';
 import { userLoggedIn } from '../../services/authentication';
 import { adminOrNot } from '../../services/authentication';
-import { AppConfig } from "../../config";
-import { decodeTimeEntryIssue } from "../../services/timeEntryService";
+import { AppConfig } from '../../config';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Access', 'Status'];
@@ -109,8 +107,7 @@ class TeamPage extends Component {
                     let data = result.data;
                     this.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.user });
                 },
-                err => err.text().then(errorMessage => {
-                })
+                err => err.text().then(errorMessage => {})
             );
     }
 }

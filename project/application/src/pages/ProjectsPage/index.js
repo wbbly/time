@@ -8,13 +8,9 @@ import ProjectSearchBar from '../../components/projectSearchBar';
 import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
 import projectsPageAction from '../../actions/ProjectsActions';
-import { client } from '../../requestSettings';
-import {
-    getProjectsV2ProjectPageUserParseFunction,
-    getProjectsV2ProjectPageAdminParseFunction
-} from '../../queries';
+import { getProjectsV2ProjectPageUserParseFunction, getProjectsV2ProjectPageAdminParseFunction } from '../../queries';
 import { userLoggedIn, getUserAdminRight, getUserId } from '../../services/authentication';
-import { AppConfig } from "../../config";
+import { AppConfig } from '../../config';
 
 class ProjectsPage extends Component {
     state = {
@@ -43,10 +39,8 @@ class ProjectsPage extends Component {
                         let data = getProjectsV2ProjectPageAdminParseFunction(result.data);
                         this.setState({ etalonArr: data.projectV2 });
                         this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
-
                     },
-                    err => err.text().then(errorMessage => {
-                    })
+                    err => err.text().then(errorMessage => {})
                 );
         } else {
             fetch(AppConfig.apiURL + `project/admin-list?userId=${getUserId()}`, {
@@ -68,10 +62,8 @@ class ProjectsPage extends Component {
                         let data = getProjectsV2ProjectPageUserParseFunction(result.data);
                         this.setState({ etalonArr: data.projectV2 });
                         this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
-
                     },
-                    err => err.text().then(errorMessage => {
-                    })
+                    err => err.text().then(errorMessage => {})
                 );
         }
     };

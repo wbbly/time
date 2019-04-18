@@ -4,10 +4,10 @@ export function getProjectListParseFunction(result) {
     const dataParsed = {
         projectV2: [],
     };
-    const {project_v2} = result.data;
+    const { project_v2 } = result.data;
     for (let i = 0; i < project_v2.length; i++) {
         const item = project_v2[i];
-        const {id, is_active: isActive, name, project_color: projectColor} = item;
+        const { id, is_active: isActive, name, project_color: projectColor } = item;
         dataParsed.projectV2.push({
             id,
             isActive,
@@ -16,7 +16,7 @@ export function getProjectListParseFunction(result) {
         });
     }
 
-    return dataParsed
+    return dataParsed;
 }
 
 export function getProjectsV2ProjectPageAdminParseFunction(data) {

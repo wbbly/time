@@ -4,7 +4,6 @@ import * as moment from 'moment';
 import './style.css';
 import { getTodayTimeEntriesParseFunction } from '../../queries';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
-import { client } from '../../requestSettings';
 import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
 import { AppConfig } from '../../config';
 
@@ -66,15 +65,12 @@ class ManualTimeModal extends Component {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(
-                {
-                    issue: changedItem.issue,
-                    projectId: changedItem.project.id,
-                    startDatetime: startTime,
-                    endDatetime: endTime,
-                }
-            )
-
+            body: JSON.stringify({
+                issue: changedItem.issue,
+                projectId: changedItem.project.id,
+                startDatetime: startTime,
+                endDatetime: endTime,
+            }),
         })
             .then(res => {
                 if (!res.ok) {
@@ -87,8 +83,7 @@ class ManualTimeModal extends Component {
                     this.getNewData();
                     this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
                 },
-                err => err.text().then(errorMessage => {
-                })
+                err => err.text().then(errorMessage => {})
             );
     }
 
@@ -108,16 +103,15 @@ class ManualTimeModal extends Component {
             })
             .then(
                 result => {
-                    let data = getTodayTimeEntriesParseFunction(result.data)
+                    let data = getTodayTimeEntriesParseFunction(result.data);
                     for (let i = 0; i < data.timerV2.length; i++) {
                         const timeEntry = data.timerV2[i];
                         timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
                     }
 
                     this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
-                    },
-                err => err.text().then(errorMessage => {
-                })
+                },
+                err => err.text().then(errorMessage => {})
             );
     }
 

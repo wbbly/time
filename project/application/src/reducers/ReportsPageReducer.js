@@ -1,4 +1,3 @@
-import { getUserData } from '../services/authentication';
 import * as moment from 'moment';
 
 const initialState = {

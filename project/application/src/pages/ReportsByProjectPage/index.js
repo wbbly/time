@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 
 import './style.css';
 import LeftBar from '../../components/LeftBar';
-import { client } from '../../requestSettings';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 import { convertMS } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
-import { AppConfig } from "../../config";
+import { AppConfig } from '../../config';
 
 class ReportsByProjectsPage extends Component {
     state = {
@@ -50,7 +49,7 @@ class ReportsByProjectsPage extends Component {
 
         return (
             <div className="reports_by_projects_wrapper">
-                <LeftBar/>
+                <LeftBar />
                 <div className="header">
                     <div className="header_name">
                         {this.props.match.params.name}: {this.getDateInPointsFormat(this.props.match.params.dateStart)}
@@ -74,17 +73,26 @@ class ReportsByProjectsPage extends Component {
     }
 
     componentDidMount() {
-        let setUser = (!!this.props.setUser[0])? this.props.setUser[0].replace('"','').replace('"','') : '';
-        fetch(AppConfig.apiURL + `project/reports-project?projectName=${this.props.match.params.name}&userEmail=${setUser
-            }&startDate=${new Date(this.props.match.params.dateStart).toISOString().slice(0, -1)}&endDate=${new Date(+new Date(this.props.match.params.endDate) + 24 * 60 * 60 * 1000 - 1)
-            .toISOString()
-            .slice(0, -1)}`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
+        let setUser = !!this.props.setUser[0] ? this.props.setUser[0].replace('"', '').replace('"', '') : '';
+        fetch(
+            AppConfig.apiURL +
+                `project/reports-project?projectName=${
+                    this.props.match.params.name
+                }&userEmail=${setUser}&startDate=${new Date(this.props.match.params.dateStart)
+                    .toISOString()
+                    .slice(0, -1)}&endDate=${new Date(
+                    +new Date(this.props.match.params.endDate) + 24 * 60 * 60 * 1000 - 1
+                )
+                    .toISOString()
+                    .slice(0, -1)}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
             .then(res => {
                 if (!res.ok) {
                     throw res;
@@ -102,13 +110,11 @@ class ReportsByProjectsPage extends Component {
                         }
                     }
 
-                    this.setState({dataOfProject: data.project_v2[0].timer});
-                    this.setState({sumTime: this.getSumtime(data.project_v2[0].timer)});
-                    this.setState({countTasks: data.project_v2[0].timer.length});
-
+                    this.setState({ dataOfProject: data.project_v2[0].timer });
+                    this.setState({ sumTime: this.getSumtime(data.project_v2[0].timer) });
+                    this.setState({ countTasks: data.project_v2[0].timer.length });
                 },
-                err => err.text().then(errorMessage => {
-                })
+                err => err.text().then(errorMessage => {})
             );
     }
 }

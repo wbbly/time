@@ -10,13 +10,8 @@ import LeftBar from '../../components/LeftBar';
 import addTasks from '../../actions/MainPageAction';
 import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
-import { client } from '../../requestSettings';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
-import {
-    getProjectListRequest,
-    getProjectListParseFunction,
-    getTodayTimeEntriesParseFunction
-} from '../../queries';
+import { getProjectListRequest, getProjectListParseFunction, getTodayTimeEntriesParseFunction } from '../../queries';
 import { userLoggedIn, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 import { convertMS } from '../../services/timeService';
@@ -230,8 +225,7 @@ class MainPage extends Component {
                     result => {
                         this.getTimeForMainPage();
                     },
-                    err => err.text().then(errorMessage => {
-                    })
+                    err => err.text().then(errorMessage => {})
                 );
         }
     }
@@ -485,8 +479,7 @@ class MainPage extends Component {
                     this.setState({ arrProjectsToModal: dataParsed.projectV2 });
                     this.setState({ arrProjectsEtalon: dataParsed.projectV2 });
                 },
-                err => err.text().then(errorMessage => {
-                })
+                err => err.text().then(errorMessage => {})
             );
     }
 
@@ -509,8 +502,7 @@ class MainPage extends Component {
                     let data = getTodayTimeEntriesParseFunction(result.data);
                     this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
                 },
-                err => err.text().then(errorMessage => {
-                })
+                err => err.text().then(errorMessage => {})
             );
     }
 

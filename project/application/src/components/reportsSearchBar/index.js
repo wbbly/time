@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import './style.css';
-import { client } from '../../requestSettings';
-import { getUserData, getUserId } from '../../services/authentication';
-import { AppConfig } from "../../config";
+import { getUserData } from '../../services/authentication';
+import { AppConfig } from '../../config';
 
 export default class ReportsSearchBar extends Component {
     state = {
@@ -341,10 +340,8 @@ export default class ReportsSearchBar extends Component {
                     let data = result.data;
                     this.setState({ selectUersDataEtalon: data.user });
                     this.setState({ selectUserData: this.props.setUser });
-
                 },
-                err => err.text().then(errorMessage => {
-                })
+                err => err.text().then(errorMessage => {})
             );
         setTimeout(() => {
             this.setState({ projectsData: this.props.projectsData });
