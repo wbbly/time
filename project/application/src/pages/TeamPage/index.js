@@ -8,6 +8,7 @@ import AddToTeamModal from '../../components/AddToTeamModal';
 import teamPageAction from '../../actions/TeamPageAction';
 import { userLoggedIn } from '../../services/authentication';
 import { adminOrNot } from '../../services/authentication';
+import EditTeamModal from '../../components/EditTeamModal'
 import { AppConfig } from '../../config';
 
 class TeamPage extends Component {
@@ -18,6 +19,11 @@ class TeamPage extends Component {
 
     openAddUserModal() {
         this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: !this.props.createUserModal });
+    }
+
+    openEditMiodal(item) {
+        this.props.teamPageAction('TOGGLE_EDIT_USER_MODAL', { editUserModal: true });
+        this.props.teamPageAction('SET_EDIT_USER', { editedUser: item })
     }
 
     render() {
@@ -39,6 +45,10 @@ class TeamPage extends Component {
                 </td>
                 <td>
                     <div>{element.is_active ? 'Active' : 'Not active'}</div>
+                    {adminOrNot() && <i
+                        onClick={e => this.openEditMiodal(element)}
+                        className="edit_button item_button"
+                    /> }
                 </td>
             </tr>
         ));
@@ -54,6 +64,12 @@ class TeamPage extends Component {
                         getData={this.getDataFromServer}
                     />
                 )}
+                {this.props.editUserModal && <EditTeamModal
+                    teamPageAction={this.props.teamPageAction}
+                    editedUser={this.props.editedUser}
+                    getDataFromServer={this.getDataFromServer}
+                    teamPage={this}
+                /> }
                 <LeftBar />
                 <div className="data_container_team_page">
                     <div className="team_page_header">
@@ -88,7 +104,7 @@ class TeamPage extends Component {
         this.getDataFromServer();
     }
 
-    getDataFromServer() {
+    getDataFromServer(teamPage = this) {
         fetch(AppConfig.apiURL + `user/list`, {
             method: 'GET',
             headers: {
@@ -105,7 +121,7 @@ class TeamPage extends Component {
             .then(
                 result => {
                     let data = result.data;
-                    this.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.user });
+                    teamPage.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.user });
                 },
                 err => err.text().then(errorMessage => {})
             );
@@ -116,6 +132,8 @@ const mapStateToProps = store => {
     return {
         programersArr: store.teamPageReducer.programersArr,
         createUserModal: store.teamPageReducer.createUserModal,
+        editUserModal: store.teamPageReducer.editUserModal,
+        editedUser: store.teamPageReducer.editedUser,
     };
 };
 
