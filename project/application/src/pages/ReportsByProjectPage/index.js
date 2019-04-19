@@ -84,15 +84,15 @@ class ReportsByProjectsPage extends Component {
             !!this.props.setUser && !!this.props.setUser.length ? getPharametrs('userEmails', this.props.setUser) : '';
         fetch(
             AppConfig.apiURL +
-                `project/reports-project?projectName=${
-                    this.props.match.params.name
-                }&startDate=${new Date(this.props.match.params.dateStart)
+                `project/reports-project?projectName=${this.props.match.params.name}&startDate=${new Date(
+                    this.props.match.params.dateStart
+                )
                     .toISOString()
                     .slice(0, -1)}&endDate=${new Date(
                     +new Date(this.props.match.params.endDate) + 24 * 60 * 60 * 1000 - 1
                 )
                     .toISOString()
-                    .slice(0, -1)}${setUser ? `&${setUser}`: ''}`,
+                    .slice(0, -1)}${setUser ? `&${setUser}` : ''}`,
             {
                 method: 'GET',
                 headers: {

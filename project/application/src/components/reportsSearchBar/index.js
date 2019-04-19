@@ -126,7 +126,7 @@ export default class ReportsSearchBar extends Component {
     }
 
     setOtherUser() {
-            this.props.getDataUsers();
+        this.props.getDataUsers();
     }
 
     getChecked(name) {
@@ -316,7 +316,7 @@ export default class ReportsSearchBar extends Component {
     }
 
     componentDidMount() {
-        this.setState({selectUserData: this.props.setUser});
+        this.setState({ selectUserData: this.props.setUser });
         this.setState({ selectProjectData: this.props.selectedProjects });
         this.userInput.value = this.props.setUser.username;
         // this.props.reportsPageAction('SET_ACTIVE_USER', { data: [getUserData().username] });
