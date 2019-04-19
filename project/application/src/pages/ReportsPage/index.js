@@ -4,7 +4,8 @@ import * as moment from 'moment';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import * as rdrLocales from 'react-date-range/dist/locale';
-import { DateRange } from 'react-date-range';
+import { DateRangePicker } from 'react-date-range';
+import { format, addDays } from 'date-fns';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 
@@ -123,9 +124,16 @@ class ReportsPage extends Component {
                             </div>
                             {this.state.dateSelect && (
                                 <div className="select_body" ref={div => (this.datePickerSelect = div)}>
-                                    <DateRange
+                                    <DateRangePicker
                                         locale={rdrLocales['enGB']}
-                                        ranges={[this.props.timeRange]}
+                                        ranges={[
+                                            {
+                                                startDate: new Date(),
+                                                endDate: new Date(),
+                                                key: 'selection',
+                                                firstDayOfWeek: 1,
+                                            },
+                                        ]}
                                         onChange={this.handleSelect}
                                     />
                                 </div>
@@ -201,6 +209,7 @@ class ReportsPage extends Component {
     }
 
     changeDoughnutChat(chartObject, dataFromServer) {
+        this.setState({toggleChar: false})
         let newObjectChart = chartObject;
         let labels = [];
         let dataTime = [];
@@ -266,16 +275,15 @@ class ReportsPage extends Component {
 
         let setUser =
             !!this.props.setUser && !!this.props.setUser.length ? getPharametrs('userEmails', this.props.setUser) : '';
+        let setProjectNames =
+            !!this.props.selectedProjects && !!this.props.selectedProjects.length ? getPharametrs('projectNames', this.props.selectedProjects) : '';
         fetch(
             AppConfig.apiURL +
-                `project/reports-projects?${setUser}${getPharametrs(
-                    'projectNames',
-                    this.props.selectedProjects
-                )}&startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
+                `project/reports-projects?startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
                     +new Date(dateTo) + 24 * 60 * 60 * 1000 - 1
                 )
                     .toISOString()
-                    .slice(0, -1)}`,
+                    .slice(0, -1)}${setUser ? `&${setUser}`: ''}${setProjectNames ? `&${setProjectNames}`: ''}`,
             {
                 method: 'GET',
                 headers: {
@@ -299,20 +307,18 @@ class ReportsPage extends Component {
                     this.setState({ toggleBar: true });
                     let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
                     this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
+                    this.setState({toggleChar: true})
                 },
                 err => err.text().then(errorMessage => {})
             );
 
         fetch(
             AppConfig.apiURL +
-                `timer/reports-list?${setUser}${getPharametrs(
-                    'projectNames',
-                    this.props.selectedProjects
-                )}&startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
+                `timer/reports-list?startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
                     +new Date(dateTo) + 24 * 60 * 60 * 1000 - 1
                 )
                     .toISOString()
-                    .slice(0, -1)}`,
+                    .slice(0, -1)}${setUser ? `&${setUser}`: ''}${setProjectNames ? `&${setProjectNames}`: ''}`,
             {
                 method: 'GET',
                 headers: {
@@ -395,6 +401,7 @@ class ReportsPage extends Component {
     }
 
     componentDidMount() {
+        this.setState({selectionRange: this.props.timeRange});
         this.setState({ selectUsersHeader: atob(localStorage.getItem('active_email')) });
         fetch(AppConfig.apiURL + `user/list`, {
             method: 'GET',
