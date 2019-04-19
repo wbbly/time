@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { getUserData } from '../services/authentication';
 
 const initialState = {
     timeRange: {
@@ -7,7 +8,7 @@ const initialState = {
         key: 'selection',
         firstDayOfWeek: 1,
     },
-    setUser: [],
+    setUser: [getUserData().username],
     dataBarChat: {
         defaultFontColor: 'red',
         labels: [],
@@ -77,7 +78,7 @@ const initialState = {
         datasets: [
             {
                 data: [300, 50, 100],
-                backgroundColor: ['#7B68EE', '#191970', '#000080', '#191970', '#2F80ED', '#6FCF97', '#BB6BD9'],
+                backgroundColor: ['#7B68EE', '#191970', '#000080', '#191970', '#191970', '#000080', '#191970','#2F80ED', '#6FCF97', '#BB6BD9','#7B68EE', '#191970', '#000080', '#191970', '#2F80ED', '#6FCF97', '#BB6BD9'],
                 hoverBackgroundColor: ['#2F80ED', '#6FCF97', '#BB6BD9'],
             },
         ],

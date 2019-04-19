@@ -126,11 +126,7 @@ export default class ReportsSearchBar extends Component {
     }
 
     setOtherUser() {
-        if (this.props.setUser.length) {
             this.props.getDataUsers();
-        } else {
-            alert('Please, select at least one user');
-        }
     }
 
     getChecked(name) {
@@ -320,8 +316,10 @@ export default class ReportsSearchBar extends Component {
     }
 
     componentDidMount() {
+        this.setState({selectUserData: this.props.setUser});
+        this.setState({ selectProjectData: this.props.selectedProjects });
         this.userInput.value = this.props.setUser.username;
-        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [getUserData().username] });
+        // this.props.reportsPageAction('SET_ACTIVE_USER', { data: [getUserData().username] });
         fetch(AppConfig.apiURL + `user/list`, {
             method: 'GET',
             headers: {
@@ -347,9 +345,5 @@ export default class ReportsSearchBar extends Component {
             this.setState({ projectsData: this.props.projectsData });
             this.setState({ etalonProjectsData: this.props.projectsData });
         }, 1500);
-    }
-    componentWillUnmount() {
-        this.props.reportsPageAction('SET_ACTIVE_USER', { data: [getUserData().username] });
-        this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: [] });
     }
 }
