@@ -25,8 +25,8 @@
     "underscore": "^1.9.1"
   },
   "scripts": {
-    "start": "npm run copy:libs && react-scripts start",
-    "build": "npm run copy:libs && react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "copy:libs": "npm i && cp -r libs/react-date-range/ node_modules/react-date-range",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
