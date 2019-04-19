@@ -91,7 +91,7 @@ export default class EditProjectModal extends Component {
                 <div className="edit_project_modal_background">
                     <div className="edit_project_modal_container">
                         <div className="create_projects_modal_header">
-                            <div className="create_projects_modal_header_title">Create project</div>
+                            <div className="create_projects_modal_header_title">Edit project</div>
                             <i className="create_projects_modal_header_close" onClick={e => this.closeModal()} />
                         </div>
                         <div className="create_projects_modal_data">
@@ -120,7 +120,7 @@ export default class EditProjectModal extends Component {
                                 className="create_projects_modal_button_container_button"
                                 onClick={e => this.changeProject()}
                             >
-                                Create project
+                                Edit project
                             </button>
                         </div>
                     </div>

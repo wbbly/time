@@ -8,7 +8,7 @@ import AddToTeamModal from '../../components/AddToTeamModal';
 import teamPageAction from '../../actions/TeamPageAction';
 import { userLoggedIn } from '../../services/authentication';
 import { adminOrNot } from '../../services/authentication';
-import EditTeamModal from '../../components/EditTeamModal'
+import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
 
 class TeamPage extends Component {
@@ -23,7 +23,7 @@ class TeamPage extends Component {
 
     openEditMiodal(item) {
         this.props.teamPageAction('TOGGLE_EDIT_USER_MODAL', { editUserModal: true });
-        this.props.teamPageAction('SET_EDIT_USER', { editedUser: item })
+        this.props.teamPageAction('SET_EDIT_USER', { editedUser: item });
     }
 
     render() {
@@ -45,10 +45,9 @@ class TeamPage extends Component {
                 </td>
                 <td>
                     <div>{element.is_active ? 'Active' : 'Not active'}</div>
-                    {adminOrNot() && <i
-                        onClick={e => this.openEditMiodal(element)}
-                        className="edit_button item_button"
-                    /> }
+                    {adminOrNot() && (
+                        <i onClick={e => this.openEditMiodal(element)} className="edit_button item_button" />
+                    )}
                 </td>
             </tr>
         ));
@@ -64,12 +63,14 @@ class TeamPage extends Component {
                         getData={this.getDataFromServer}
                     />
                 )}
-                {this.props.editUserModal && <EditTeamModal
-                    teamPageAction={this.props.teamPageAction}
-                    editedUser={this.props.editedUser}
-                    getDataFromServer={this.getDataFromServer}
-                    teamPage={this}
-                /> }
+                {this.props.editUserModal && (
+                    <EditTeamModal
+                        teamPageAction={this.props.teamPageAction}
+                        editedUser={this.props.editedUser}
+                        getDataFromServer={this.getDataFromServer}
+                        teamPage={this}
+                    />
+                )}
                 <LeftBar />
                 <div className="data_container_team_page">
                     <div className="team_page_header">
