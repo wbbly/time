@@ -14,7 +14,7 @@
     "query-string": "^5.1.1",
     "react": "^16.7.0",
     "react-chartjs-2": "^2.7.4",
-    "react-date-range": "^1.0.0-beta",
+    "react-date-range": "1.0.0-beta",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
