@@ -112,7 +112,6 @@ class EditTeamModal extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.editedUser);
         this.setState({ value: this.props.editedUser.role.title });
         this.setState({ id: this.props.editedUser.id });
         this.setState({ valueStatus: !this.props.editedUser.role.is_active ? 'active' : 'notActive' });

@@ -58,7 +58,6 @@ class ProjectsPage extends Component {
                 })
                 .then(
                     result => {
-                        console.log(result, 'resultresultresultresultresult');
                         let data = getProjectsV2ProjectPageUserParseFunction(result.data);
                         this.setState({ etalonArr: data.projectV2 });
                         this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });

@@ -205,7 +205,6 @@ class MainPage extends Component {
     }
 
     deleteFromArr(item) {
-        console.log(item, 'itemitemitem');
         let check = window.confirm('Do you really want to delete this time entry?');
         if (check) {
             fetch(AppConfig.apiURL + `timer/${item.id}`, {
