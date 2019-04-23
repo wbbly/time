@@ -40,7 +40,7 @@ class LeftBar extends Component {
     logout() {
         localStorage.removeItem('user-object');
         localStorage.removeItem('current-timer');
-        window.location.reload();
+        window.location.href = window.location.origin;
     }
 
     render() {
