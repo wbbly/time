@@ -7,11 +7,11 @@
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 188px;
+    left: 0;
     right: 0;
     background-color: #333333;
     padding-top: 47px;
-    padding-left: 72px;
+    padding-left: 260px;
     padding-right: 56px;
     overflow-y: auto;
 }

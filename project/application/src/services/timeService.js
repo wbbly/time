@@ -55,3 +55,47 @@ export function convertMS(milliseconds) {
         }
     }
 }
+
+export function convertDateToISOString(date) {
+    return moment(date)
+        .utc()
+        .toISOString();
+}
+
+export function convertDateToShiftedISOString(date, shiftTimestamp) {
+    return moment(date)
+        .add(shiftTimestamp, 'ms')
+        .utc()
+        .toISOString();
+}
+
+export function convertUTCDateToLocalISOString(date) {
+    return moment(date)
+        .subtract(new Date(date).getTimezoneOffset() * 60 * 1000)
+        .utc()
+        .toISOString();
+}
+
+export function convertUTCDateToShiftedLocalISOString(date, shiftTimestamp) {
+    return moment(date)
+        .subtract(new Date(date).getTimezoneOffset() * 60 * 1000)
+        .add(shiftTimestamp, 'ms')
+        .utc()
+        .toISOString();
+}
+
+export function getDate(date) {
+    return new Date(date);
+}
+
+export function getCurrentDate() {
+    return new Date();
+}
+
+export function getTimestamp() {
+    return new Date().getTime();
+}
+
+export function getDateTimestamp(date) {
+    return new Date(date).getTime();
+}

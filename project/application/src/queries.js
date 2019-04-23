@@ -1,3 +1,4 @@
+import { getDateTimestamp } from './services/timeService';
 import { decodeTimeEntryIssue } from './services/timeEntryService';
 
 export function getProjectListParseFunction(result) {
@@ -33,7 +34,7 @@ export function getProjectsV2ProjectPageAdminParseFunction(data) {
         for (let i = 0; i < timer.length; i++) {
             const timeEntry = timer[i];
             const { start_datetime: startDatetime, end_datetime: endDatetime } = timeEntry;
-            totalTime += +new Date(endDatetime) - +new Date(startDatetime);
+            totalTime += getDateTimestamp(endDatetime) - getDateTimestamp(startDatetime);
         }
 
         dataParsed.projectV2.push({
@@ -60,7 +61,7 @@ export function getProjectsV2ProjectPageUserParseFunction(data) {
         for (let i = 0; i < timer.length; i++) {
             const timeEntry = timer[i];
             const { start_datetime: startDatetime, end_datetime: endDatetime } = timeEntry;
-            totalTime += +new Date(endDatetime) - +new Date(startDatetime);
+            totalTime += getDateTimestamp(endDatetime) - getDateTimestamp(startDatetime);
         }
 
         dataParsed.projectV2.push({

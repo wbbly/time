@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
 import * as moment from 'moment';
 
 import './style.css';
 import { getTodayTimeEntriesParseFunction } from '../../queries';
+import { getDate } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
-import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
 import { AppConfig } from '../../config';
 
 class ManualTimeModal extends Component {
@@ -228,10 +229,10 @@ class ManualTimeModal extends Component {
 
     componentDidMount() {
         this.inputNameValue.value = this.props.editedItem.issue;
-        this.setState({ startDate: new Date(this.props.editedItem.startDatetime) });
-        this.setState({ startTime: new Date(this.props.editedItem.startDatetime) });
-        this.setState({ endDate: new Date(this.props.editedItem.endDatetime) });
-        this.setState({ endTime: new Date(this.props.editedItem.endDatetime) });
+        this.setState({ startDate: getDate(this.props.editedItem.startDatetime) });
+        this.setState({ startTime: getDate(this.props.editedItem.startDatetime) });
+        this.setState({ endDate: getDate(this.props.editedItem.endDatetime) });
+        this.setState({ endTime: getDate(this.props.editedItem.endDatetime) });
         this.inputTaskName.value = this.props.editedItem.project.name;
     }
 }

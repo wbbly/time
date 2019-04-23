@@ -4,7 +4,7 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
-import { convertMS } from '../../services/timeService';
+import { convertMS, convertDateToISOString, convertDateToShiftedISOString } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { AppConfig } from '../../config';
 
@@ -32,30 +32,6 @@ class ReportsByProjectsPage extends Component {
             sumDate += +moment(arr[i].end_datetime) - +moment(arr[i].start_datetime);
         }
         return sumDate;
-    }
-
-    /**
-     *
-     * @param {*} date
-     */
-    convertLocalTimeToISODate(date) {
-        return moment(date)
-            .utc()
-            .toISOString()
-            .slice(0, -1);
-    }
-
-    /**
-     *
-     * @param {*} date
-     * @param {*} shiftTimestamp
-     */
-    convertLocalTimeToShiftedISODate(date, shiftTimestamp) {
-        return moment(date)
-            .add(shiftTimestamp, 'ms')
-            .utc()
-            .toISOString()
-            .slice(0, -1);
     }
 
     render() {
@@ -97,7 +73,7 @@ class ReportsByProjectsPage extends Component {
     }
 
     componentDidMount() {
-        function getPharametrs(name, arr) {
+        function getParametersString(name, arr) {
             let pharam = [];
             for (let i = 0; i < arr.length; i++) {
                 pharam.push(`${name}[]=${arr[i]}`);
@@ -105,17 +81,17 @@ class ReportsByProjectsPage extends Component {
             return pharam.join('&');
         }
         let setUser =
-            !!this.props.setUser && !!this.props.setUser.length ? getPharametrs('userEmails', this.props.setUser) : '';
+            !!this.props.setUser && !!this.props.setUser.length
+                ? getParametersString('userEmails', this.props.setUser)
+                : '';
         fetch(
             AppConfig.apiURL +
-                `project/reports-project?projectName=${
-                    this.props.match.params.name
-                }&startDate=${this.convertLocalTimeToISODate(
+                `project/reports-project?projectName=${this.props.match.params.name}&startDate=${convertDateToISOString(
                     this.props.match.params.dateStart
-                )}&endDate=${this.convertLocalTimeToShiftedISODate(
+                ).slice(0, -1)}&endDate=${convertDateToShiftedISOString(
                     this.props.match.params.endDate,
                     24 * 60 * 60 * 1000 - 1
-                )}${setUser ? `&${setUser}` : ''}`,
+                ).slice(0, -1)}${setUser ? `&${setUser}` : ''}`,
             {
                 method: 'GET',
                 headers: {

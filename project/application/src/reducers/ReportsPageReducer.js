@@ -1,10 +1,12 @@
 import * as moment from 'moment';
+
 import { getUserData } from '../services/authentication';
+import { getCurrentDate } from '../services/timeService';
 
 const initialState = {
     timeRange: {
-        startDate: new Date(),
-        endDate: new Date(),
+        startDate: getCurrentDate(),
+        endDate: getCurrentDate(),
         key: 'selection',
         firstDayOfWeek: 1,
     },
@@ -37,30 +39,12 @@ const initialState = {
             },
         ],
     },
-    projectsArr: [
-        {
-            project: 'Ultradom.com.ua',
-            timePassed: '8:20:33',
-        },
-        {
-            project: 'Ultradom.com.ua',
-            timePassed: '8:20:33',
-        },
-        {
-            project: 'Ultradom.com.ua',
-            timePassed: '8:20:33',
-        },
-        {
-            project: 'Ultradom.com.ua',
-            timePassed: '8:20:33',
-        },
-    ],
+    projectsArr: [],
     dataDoughnutChat: {
         labels: [],
         options: {
             title: {
                 display: false,
-                text: 'Custom Chart Title',
             },
             legend: {
                 display: false,
@@ -77,7 +61,7 @@ const initialState = {
         },
         datasets: [
             {
-                data: [300, 50, 100],
+                data: [],
                 backgroundColor: [
                     '#7B68EE',
                     '#191970',

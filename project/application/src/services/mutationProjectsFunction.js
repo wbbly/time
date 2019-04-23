@@ -1,3 +1,5 @@
+import { getTimestamp } from './timeService';
+
 export function addProjectPreProcessing(inputValue, color) {
     let ok = true;
     const projectName = inputValue.toLowerCase().trim();
@@ -11,7 +13,7 @@ export function addProjectPreProcessing(inputValue, color) {
 
     if (ok) {
         return {
-            id: +new Date(),
+            id: getTimestamp(),
             name: projectName,
             colorProject: color,
         };

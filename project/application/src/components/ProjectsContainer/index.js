@@ -41,6 +41,7 @@ class ProjectsContainer extends Component {
                 )
             );
         }
+
         let projectsItems = this.props.projectsArr.map((item, index) => (
             <Link
                 to={`/project-report/${item.name}/${this.getDateToLink(
@@ -67,7 +68,7 @@ class ProjectsContainer extends Component {
                 </div>
                 <div className="chart">
                     <div className="total_time_tasks">
-                        {typeof datesValue === 'number' ? convertMS(datesValue) : datesValue}
+                        {typeof datesValue === 'number' ? convertMS(datesValue) : ''}
                     </div>
                     <Doughnut
                         data={this.props.dataDoughnutChat}

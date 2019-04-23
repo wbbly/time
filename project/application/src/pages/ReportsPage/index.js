@@ -5,7 +5,6 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import * as rdrLocales from 'react-date-range/dist/locale';
 import { DateRangePicker } from 'react-date-range';
-import { format, addDays } from 'date-fns';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 
@@ -15,17 +14,24 @@ import ProjectsContainer from '../../components/ProjectsContainer';
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { userLoggedIn, getUserAdminRight } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
-import { convertMS } from '../../services/timeService';
+import {
+    convertMS,
+    convertDateToISOString,
+    convertDateToShiftedISOString,
+    convertUTCDateToLocalISOString,
+    getCurrentDate,
+    getDateTimestamp,
+} from '../../services/timeService';
 import { AppConfig } from '../../config';
 
 class ReportsPage extends Component {
     state = {
         toggleBar: false,
+        toggleChar: false,
         projectsArr: [],
-        toggleChar: true,
         selectionRange: {
-            startDate: new Date(),
-            endDate: new Date(),
+            startDate: getCurrentDate(),
+            endDate: getCurrentDate(),
             key: 'selection',
         },
         dateSelect: false,
@@ -77,6 +83,7 @@ class ReportsPage extends Component {
         let newObject = object;
         newObject.labels = objectData.labels;
         newObject.datasets[0].data = objectData.timeArr;
+
         return newObject;
     }
 
@@ -131,8 +138,8 @@ class ReportsPage extends Component {
                                         locale={rdrLocales['enGB']}
                                         ranges={[
                                             {
-                                                startDate: new Date(),
-                                                endDate: new Date(),
+                                                startDate: getCurrentDate(),
+                                                endDate: getCurrentDate(),
                                                 key: 'selection',
                                                 firstDayOfWeek: 1,
                                             },
@@ -156,26 +163,28 @@ class ReportsPage extends Component {
                             reportsPageAction={this.props.reportsPageAction}
                         />
                     )}
-                    <div className="total_time_container">
-                        <span className="total_time_name">Total</span>
-                        <span className="total_time_time">
-                            {typeof this.state.totalUpChartTime === 'number'
-                                ? convertMS(this.state.totalUpChartTime)
-                                : typeof this.state.totalUpChartTime}
-                        </span>
-                    </div>
-                    <div className="line_chart_container">
-                        {this.state.toggleBar && (
+                    {this.state.toggleBar && this.state.toggleChar && (
+                        <div className="total_time_container">
+                            <span className="total_time_name">Total</span>
+                            <span className="total_time_time">
+                                {typeof this.state.totalUpChartTime === 'number'
+                                    ? convertMS(this.state.totalUpChartTime)
+                                    : '00:00:00'}
+                            </span>
+                        </div>
+                    )}
+                    {this.state.toggleBar && this.state.toggleChar && (
+                        <div className="line_chart_container">
                             <Bar
                                 ref={Bar => (this.barChart = Bar)}
                                 data={this.props.dataBarChat}
                                 height={50}
                                 options={this.lineChartOption}
                             />
-                        )}
-                    </div>
-                    <div className="projects_chart_container">
-                        {this.state.toggleChar && (
+                        </div>
+                    )}
+                    {this.state.toggleBar && this.state.toggleChar && (
+                        <div className="projects_chart_container">
                             <ProjectsContainer
                                 selectionRange={this.props.timeRange}
                                 activeEmail={this.state.selectUsersHeader}
@@ -183,8 +192,8 @@ class ReportsPage extends Component {
                                 projectsArr={this.props.projectsArr}
                                 dataDoughnutChat={this.props.dataDoughnutChat}
                             />
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
         );
@@ -198,6 +207,7 @@ class ReportsPage extends Component {
         for (let i = 0; i < labels.length; i++) {
             finishData.labels.push(moment(labels[i]).format('ddd DD.MM'));
         }
+
         if (time.length) {
             this.setState({
                 totalUpChartTime: time.reduce((a, b) => {
@@ -207,12 +217,13 @@ class ReportsPage extends Component {
         } else {
             this.setState({ totalUpChartTime: '00:00:00' });
         }
+
         finishData.timeArr = time;
+
         return finishData;
     }
 
     changeDoughnutChat(chartObject, dataFromServer) {
-        this.setState({ toggleChar: false });
         let newObjectChart = chartObject;
         let labels = [];
         let dataTime = [];
@@ -222,11 +233,11 @@ class ReportsPage extends Component {
         }
         newObjectChart.labels = labels;
         newObjectChart.datasets[0].data = dataTime;
+
         return newObjectChart;
     }
 
     getArrOfProjectsData(data) {
-        this.setState({ toggleBar: false });
         const statsByProjects = [];
         const statsByDates = this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate);
         for (var i = 0; i < data.project_v2.length; i++) {
@@ -235,7 +246,7 @@ class ReportsPage extends Component {
             let newProjectsTimer = project.timer;
             for (var j = 0; j < newProjectsTimer.length; j++) {
                 const timer = newProjectsTimer[j];
-                const timerDiff = +new Date(timer.end_datetime) - +new Date(timer.start_datetime);
+                const timerDiff = getDateTimestamp(timer.end_datetime) - getDateTimestamp(timer.start_datetime);
                 diff += timerDiff;
 
                 const date = timer.start_datetime.split('T')[0];
@@ -264,80 +275,25 @@ class ReportsPage extends Component {
         return dateObj;
     }
 
-    /**
-     *
-     * @param {*} date
-     */
-    convertLocalTimeToISODate(date) {
-        return moment(date)
-            .utc()
-            .toISOString()
-            .slice(0, -1);
-    }
-
-    /**
-     *
-     * @param {*} date
-     * @param {*} shiftTimestamp
-     */
-    convertLocalTimeToShiftedISODate(date, shiftTimestamp) {
-        return moment(date)
-            .add(shiftTimestamp, 'ms')
-            .utc()
-            .toISOString()
-            .slice(0, -1);
-    }
-
-    /**
-     *
-     * @param {*} date
-     */
-    convertISODateToLocalISOTime(date) {
-        return moment(date)
-            .subtract(new Date(date).getTimezoneOffset() * 60 * 1000)
-            .utc()
-            .toISOString()
-            .slice(0, -1);
-    }
-
-    /**
-     *
-     * @param {*} date
-     * @param {*} shiftTimestamp
-     */
-    convertISODateToShiftedLocalISOTime(date, shiftTimestamp) {
-        return moment(date)
-            .subtract(new Date(date).getTimezoneOffset() * 60 * 1000)
-            .add(shiftTimestamp, 'ms')
-            .utc()
-            .toISOString()
-            .slice(0, -1);
-    }
-
-    /**
-     *
-     * @param {*} date
-     */
-    getTimestamp(date) {
-        return new Date(date).getTime();
-    }
-
-    getSumTimeEntriesByDay(period, data) {
+    getSumTimeEntriesByDay(datePeriod, timeEntries) {
         const sumTimeEntriesByDay = {};
-        for (let i = 0; i < period.length; i++) {
-            sumTimeEntriesByDay[period[i]] = 0;
+        for (let i = 0; i < datePeriod.length; i++) {
+            const date = datePeriod[i];
+            sumTimeEntriesByDay[date] = 0;
         }
 
-        if (!data) {
+        if (!timeEntries) {
             return Object.keys(sumTimeEntriesByDay).map(date => sumTimeEntriesByDay[date]);
         }
 
-        for (let i = 0; i < data.length; i++) {
-            const startDatetimeTimestamp = this.getTimestamp(this.convertISODateToLocalISOTime(data[i].start_datetime));
-            const endDatetimeTimestamp = this.getTimestamp(this.convertISODateToLocalISOTime(data[i].end_datetime));
-            const diff = endDatetimeTimestamp - startDatetimeTimestamp;
+        for (let i = 0; i < timeEntries.length; i++) {
+            const { start_datetime: startDatetime, end_datetime: endDatetime } = timeEntries[i];
+            const startDatetimeLocalISO = convertUTCDateToLocalISOString(startDatetime);
+            const endDatetimeLocalISO = convertUTCDateToLocalISOString(endDatetime);
+
+            const diff = getDateTimestamp(endDatetimeLocalISO) - getDateTimestamp(startDatetimeLocalISO);
             if (diff) {
-                sumTimeEntriesByDay[this.convertISODateToLocalISOTime(data[i].start_datetime).split('T')[0]] += diff;
+                sumTimeEntriesByDay[startDatetimeLocalISO.split('T')[0]] += diff;
             }
         }
 
@@ -348,25 +304,29 @@ class ReportsPage extends Component {
         dateFrom = this.getYear(this.state.selectionRange.startDate),
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
-        function getPharametrs(name, arr) {
+        function getParametersString(name, arr) {
             let pharam = [];
             for (let i = 0; i < arr.length; i++) {
                 pharam.push(`${name}[]=${arr[i]}`);
             }
+
             return pharam.join('&');
         }
 
         let setUser =
-            !!this.props.setUser && !!this.props.setUser.length ? getPharametrs('userEmails', this.props.setUser) : '';
+            !!this.props.setUser && !!this.props.setUser.length
+                ? getParametersString('userEmails', this.props.setUser)
+                : '';
         let setProjectNames =
             !!this.props.selectedProjects && !!this.props.selectedProjects.length
-                ? getPharametrs('projectNames', this.props.selectedProjects)
+                ? getParametersString('projectNames', this.props.selectedProjects)
                 : '';
         fetch(
             AppConfig.apiURL +
-                `project/reports-projects?startDate=${this.convertLocalTimeToISODate(
-                    dateFrom
-                )}&endDate=${this.convertLocalTimeToShiftedISODate(dateTo, 24 * 60 * 60 * 1000 - 1)}${
+                `project/reports-projects?startDate=${convertDateToISOString(dateFrom).slice(
+                    0,
+                    -1
+                )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000 - 1).slice(0, -1)}${
                     setUser ? `&${setUser}` : ''
                 }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
@@ -386,22 +346,25 @@ class ReportsPage extends Component {
             .then(
                 result => {
                     let data = result.data;
-                    this.setState({ projectsData: data.project_v2 });
+                    const { project_v2: projectV2 } = data;
+                    this.setState({ projectsData: projectV2 });
+
                     let dataToGraph = this.getArrOfProjectsData(data);
                     this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
-                    this.setState({ toggleBar: true });
+
                     let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
                     this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
                     this.setState({ toggleChar: true });
                 },
-                err => err.text().then(errorMessage => {})
+                err => err.text().then(_ => {})
             );
 
         fetch(
             AppConfig.apiURL +
-                `timer/reports-list?startDate=${this.convertLocalTimeToISODate(
-                    dateFrom
-                )}&endDate=${this.convertLocalTimeToShiftedISODate(dateTo, 24 * 60 * 60 * 1000 - 1)}${
+                `timer/reports-list?startDate=${convertDateToISOString(dateFrom).slice(
+                    0,
+                    -1
+                )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000 - 1).slice(0, -1)}${
                     setUser ? `&${setUser}` : ''
                 }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
@@ -420,19 +383,23 @@ class ReportsPage extends Component {
             })
             .then(
                 result => {
-                    let { timer_v2 } = result.data;
-                    const period = Object.keys(
+                    let { timer_v2: timerV2 } = result.data;
+                    const datePeriod = Object.keys(
                         this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate)
                     );
 
-                    const allSum = this.getSumTimeEntriesByDay(period, timer_v2);
+                    const sumTimeEntriesByDay = this.getSumTimeEntriesByDay(datePeriod, timerV2);
 
                     this.props.reportsPageAction(
                         'SET_LINE_GRAPH',
-                        this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(period, allSum))
+                        this.setDataToGraph(
+                            this.props.dataBarChat,
+                            this.getLablesAndTime(datePeriod, sumTimeEntriesByDay)
+                        )
                     );
+                    this.setState({ toggleBar: true });
                 },
-                err => err.text().then(errorMessage => {})
+                err => err.text().then(_ => {})
             );
     }
 
@@ -464,7 +431,7 @@ class ReportsPage extends Component {
                         );
                     }, 500);
                 },
-                err => err.text().then(errorMessage => {})
+                err => err.text().then(_ => {})
             );
     }
 }

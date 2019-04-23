@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './style.css';
+
+import { getTimestamp } from '../../services/timeService';
 import { AppConfig } from '../../config';
 
 const ROLE_USER = 'e1f1f00c-abee-448c-b65d-cdd51bb042f1';
@@ -28,7 +30,7 @@ class AddToTeamModal extends Component {
             .then(
                 result => {
                     this.props.programersArr.unshift({
-                        id: +new Date(),
+                        id: getTimestamp(),
                         username: this.email.value,
                         email: this.email.value,
                         role: { title: 'ROLE_USER' },

@@ -1,5 +1,7 @@
 import * as moment from 'moment';
 
+import { getDate } from '../../services/timeService';
+
 export function timeInSeconds(string) {
     let hms = string;
     let a = hms.split(':');
@@ -12,7 +14,7 @@ export function getDateInString(seconds) {
     if (!seconds) {
         return '-';
     }
-    let date = new Date(null);
+    let date = getDate(null);
     date.setMilliseconds(seconds);
     let result = date.toISOString().substr(11, 8);
 
@@ -23,7 +25,8 @@ export function getTimInStringSeconds(seconds) {
     if (typeof seconds === 'string') {
         return '-';
     }
-    let date = new Date(null);
+
+    let date = getDate(null);
     date.setSeconds(seconds);
     let result = date.toISOString().substr(11, 8);
 
