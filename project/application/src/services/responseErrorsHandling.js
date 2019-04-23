@@ -1,5 +1,5 @@
-function getErrorMessages(error) {
-    const clientErrors = error.response.errors || [];
+function getErrorMessages(errors) {
+    const clientErrors = errors || [];
     const clientErrorMessages = [];
     clientErrors.forEach(clientError => {
         clientErrorMessages.push(clientError.message || '');

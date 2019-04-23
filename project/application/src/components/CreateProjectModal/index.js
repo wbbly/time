@@ -56,8 +56,8 @@ export default class CreateProjectModal extends Component {
                     this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false });
                 },
                 err =>
-                    err.text().then(errorMessage => {
-                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
+                    err.text().then(error => {
+                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
                         if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
                             alert('Project is already existed');
                         } else {

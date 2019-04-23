@@ -63,9 +63,8 @@ export default class EditProjectModal extends Component {
                     this.closeModal();
                 },
                 err =>
-                    err.text().then(errorMessage => {
-                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(err));
-
+                    err.text().then(error => {
+                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
                         if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
                             alert('Project is already existed');
                         } else {
