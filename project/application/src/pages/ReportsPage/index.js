@@ -52,6 +52,9 @@ class ReportsPage extends Component {
             yAxes: [
                 {
                     display: false,
+                    ticks: {
+                        beginAtZero: true,
+                    },
                 },
             ],
         },
