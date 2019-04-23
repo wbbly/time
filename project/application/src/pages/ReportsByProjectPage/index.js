@@ -34,6 +34,30 @@ class ReportsByProjectsPage extends Component {
         return sumDate;
     }
 
+    /**
+     *
+     * @param {*} date
+     */
+    convertLocalTimeToISODate(date) {
+        return moment(date)
+            .utc()
+            .toISOString()
+            .slice(0, -1);
+    }
+
+    /**
+     *
+     * @param {*} date
+     * @param {*} shiftTimestamp
+     */
+    convertLocalTimeToShiftedISODate(date, shiftTimestamp) {
+        return moment(date)
+            .add(shiftTimestamp, 'ms')
+            .utc()
+            .toISOString()
+            .slice(0, -1);
+    }
+
     render() {
         let projectsItems = this.state.dataOfProject.map((item, index) => (
             <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
@@ -84,15 +108,14 @@ class ReportsByProjectsPage extends Component {
             !!this.props.setUser && !!this.props.setUser.length ? getPharametrs('userEmails', this.props.setUser) : '';
         fetch(
             AppConfig.apiURL +
-                `project/reports-project?projectName=${this.props.match.params.name}&startDate=${new Date(
+                `project/reports-project?projectName=${
+                    this.props.match.params.name
+                }&startDate=${this.convertLocalTimeToISODate(
                     this.props.match.params.dateStart
-                )
-                    .toISOString()
-                    .slice(0, -1)}&endDate=${new Date(
-                    +new Date(this.props.match.params.endDate) + 24 * 60 * 60 * 1000 - 1
-                )
-                    .toISOString()
-                    .slice(0, -1)}${setUser ? `&${setUser}` : ''}`,
+                )}&endDate=${this.convertLocalTimeToShiftedISODate(
+                    this.props.match.params.endDate,
+                    24 * 60 * 60 * 1000 - 1
+                )}${setUser ? `&${setUser}` : ''}`,
             {
                 method: 'GET',
                 headers: {

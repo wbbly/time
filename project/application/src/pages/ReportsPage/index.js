@@ -261,6 +261,86 @@ class ReportsPage extends Component {
         return dateObj;
     }
 
+    /**
+     *
+     * @param {*} date
+     */
+    convertLocalTimeToISODate(date) {
+        return moment(date)
+            .utc()
+            .toISOString()
+            .slice(0, -1);
+    }
+
+    /**
+     *
+     * @param {*} date
+     * @param {*} shiftTimestamp
+     */
+    convertLocalTimeToShiftedISODate(date, shiftTimestamp) {
+        return moment(date)
+            .add(shiftTimestamp, 'ms')
+            .utc()
+            .toISOString()
+            .slice(0, -1);
+    }
+
+    /**
+     *
+     * @param {*} date
+     */
+    convertISODateToLocalISOTime(date) {
+        return moment(date)
+            .subtract(new Date(date).getTimezoneOffset() * 60 * 1000)
+            .utc()
+            .toISOString()
+            .slice(0, -1);
+    }
+
+    /**
+     *
+     * @param {*} date
+     * @param {*} shiftTimestamp
+     */
+    convertISODateToShiftedLocalISOTime(date, shiftTimestamp) {
+        return moment(date)
+            .subtract(new Date(date).getTimezoneOffset() * 60 * 1000)
+            .add(shiftTimestamp, 'ms')
+            .utc()
+            .toISOString()
+            .slice(0, -1);
+    }
+
+    /**
+     *
+     * @param {*} date
+     */
+    getTimestamp(date) {
+        return new Date(date).getTime();
+    }
+
+    getSumTimeEntriesByDay(period, data) {
+        const sumTimeEntriesByDay = {};
+        for (let i = 0; i < period.length; i++) {
+            sumTimeEntriesByDay[period[i]] = 0;
+        }
+
+        if (!data) {
+            return Object.keys(sumTimeEntriesByDay).map(date => sumTimeEntriesByDay[date]);
+        }
+
+        for (let i = 0; i < data.length; i++) {
+            const startDatetimeTimestamp = this.getTimestamp(this.convertISODateToLocalISOTime(data[i].start_datetime));
+            const endDatetimeTimestamp = this.getTimestamp(this.convertISODateToLocalISOTime(data[i].end_datetime));
+            const diff = endDatetimeTimestamp - startDatetimeTimestamp;
+            if (diff) {
+                sumTimeEntriesByDay[this.convertISODateToLocalISOTime(data[i].start_datetime).split('T')[0]] += diff;
+            }
+        }
+
+        return Object.keys(sumTimeEntriesByDay).map(date => sumTimeEntriesByDay[date]);
+    }
+
     getDataUsers(
         dateFrom = this.getYear(this.state.selectionRange.startDate),
         dateTo = this.getYear(this.state.selectionRange.endDate)
@@ -281,11 +361,11 @@ class ReportsPage extends Component {
                 : '';
         fetch(
             AppConfig.apiURL +
-                `project/reports-projects?startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
-                    +new Date(dateTo) + 24 * 60 * 60 * 1000 - 1
-                )
-                    .toISOString()
-                    .slice(0, -1)}${setUser ? `&${setUser}` : ''}${setProjectNames ? `&${setProjectNames}` : ''}`,
+                `project/reports-projects?startDate=${this.convertLocalTimeToISODate(
+                    dateFrom
+                )}&endDate=${this.convertLocalTimeToShiftedISODate(dateTo, 24 * 60 * 60 * 1000 - 1)}${
+                    setUser ? `&${setUser}` : ''
+                }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
                 method: 'GET',
                 headers: {
@@ -316,11 +396,11 @@ class ReportsPage extends Component {
 
         fetch(
             AppConfig.apiURL +
-                `timer/reports-list?startDate=${new Date(dateFrom).toISOString().slice(0, -1)}&endDate=${new Date(
-                    +new Date(dateTo) + 24 * 60 * 60 * 1000 - 1
-                )
-                    .toISOString()
-                    .slice(0, -1)}${setUser ? `&${setUser}` : ''}${setProjectNames ? `&${setProjectNames}` : ''}`,
+                `timer/reports-list?startDate=${this.convertLocalTimeToISODate(
+                    dateFrom
+                )}&endDate=${this.convertLocalTimeToShiftedISODate(dateTo, 24 * 60 * 60 * 1000 - 1)}${
+                    setUser ? `&${setUser}` : ''
+                }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
                 method: 'GET',
                 headers: {
@@ -338,65 +418,16 @@ class ReportsPage extends Component {
             .then(
                 result => {
                     let { timer_v2 } = result.data;
-                    const statsByDates = Object.keys(
+                    const period = Object.keys(
                         this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate)
                     );
-                    const period = [];
-                    let allSum = [];
-                    for (let i = 0; i < statsByDates.length; i++) {
-                        period.push({
-                            startTime: new Date(`${statsByDates[i]}T00:00:00`).getTime(),
-                            endTime: new Date(`${statsByDates[i]}T23:59:59`).getTime(),
-                        });
-                    }
-                    for (let i = 0; i < period.length; i++) {
-                        let day = period[i];
-                        var { sum, dataModified } = dayProcess(day.startTime, day.endTime, timer_v2);
-                        allSum.push(sum);
-                        timer_v2 = dataModified;
-                    }
+
+                    const allSum = this.getSumTimeEntriesByDay(period, timer_v2);
+
                     this.props.reportsPageAction(
                         'SET_LINE_GRAPH',
-                        this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(statsByDates, allSum))
+                        this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(period, allSum))
                     );
-
-                    function dayProcess(startTime, endTime, data) {
-                        if (!data) {
-                            return { sum: 0, dataModified: data };
-                        }
-                        let sum = 0;
-
-                        const dataModified = [];
-                        for (let i = 0; i < data.length; i++) {
-                            dataModified.push(data[i]);
-                            if (
-                                getTimestamp(data[i].start_datetime) >= startTime &&
-                                getTimestamp(data[i].end_datetime) <= endTime
-                            ) {
-                                sum += getTimestamp(data[i].end_datetime) - getTimestamp(data[i].start_datetime);
-                            } else if (
-                                getTimestamp(data[i].start_datetime) >= startTime &&
-                                getTimestamp(data[i].start_datetime) <= endTime &&
-                                getTimestamp(data[i].end_datetime) > endTime
-                            ) {
-                                sum += getTimestamp(endTime) - getTimestamp(data[i].start_datetime);
-                                dataModified.splice(
-                                    i,
-                                    1,
-                                    ...[
-                                        { start_datetime: dataModified[i].start_datetime, end_datetime: endTime },
-                                        { start_datetime: endTime + 1000, end_datetime: dataModified[i].end_datetime },
-                                    ]
-                                );
-                            }
-                        }
-
-                        return { sum, dataModified };
-                    }
-
-                    function getTimestamp(date) {
-                        return new Date(date).getTime();
-                    }
                 },
                 err => err.text().then(errorMessage => {})
             );
