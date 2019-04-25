@@ -112,6 +112,7 @@ export default class ReportsSearchBar extends Component {
             let finishArr = items.filter(it => {
                 let values = [];
                 values.push(it['username']);
+                values.push(it['email']);
 
                 return (
                     JSON.stringify(values)
@@ -156,9 +157,9 @@ export default class ReportsSearchBar extends Component {
     addUsers(e, user) {
         let users = JSON.parse(JSON.stringify(this.state.selectUserData));
         if (e.target.checked) {
-            users.push(user.username);
+            users.push(user.email);
         } else {
-            let item = users.indexOf('' + user.username);
+            let item = users.indexOf(`${user.email}`);
             users.splice(item, 1);
         }
         this.setState({ selectUserData: users });
@@ -178,7 +179,7 @@ export default class ReportsSearchBar extends Component {
     selectAllUsers() {
         let users = [];
         for (let i = 0; i < this.state.selectUersData.length; i++) {
-            users.push(this.state.selectUersData[i].username);
+            users.push(this.state.selectUersData[i].email);
         }
         this.setState({ selectUserData: users });
         this.props.reportsPageAction('SET_ACTIVE_USER', { data: users });
@@ -212,7 +213,7 @@ export default class ReportsSearchBar extends Component {
                             <div>
                                 User:&nbsp;
                                 {this.props.setUser.map((item, index) => (
-                                    <span key={item + index}>{item}</span>
+                                    <span key={item + index}>{index === 0 ? item : `, ${item}`}</span>
                                 ))}
                             </div>
                             <i className="arrow_down" />
@@ -235,12 +236,12 @@ export default class ReportsSearchBar extends Component {
                             </div>
                             <div className="select_items_container" ref={div => (this.usersItemsContainer = div)}>
                                 {this.state.selectUersData.map((item, index) => (
-                                    <div className="select_users_item" key={item.username + index}>
+                                    <div className="select_users_item" key={item.email + index}>
                                         <label>
                                             <Checkbox
                                                 color={'primary'}
-                                                value={item.username || ''}
-                                                checked={this.getCheckedUsers(item.username)}
+                                                value={item.email || ''}
+                                                checked={this.getCheckedUsers(item.email)}
                                                 onChange={e => {
                                                     this.addUsers(e, item);
                                                 }}
@@ -260,7 +261,6 @@ export default class ReportsSearchBar extends Component {
                     <div className="reports_search_select_wrapper">
                         <div className="reports_search_select_header" ref={div => (this.dropListProjects = div)}>
                             <div>Project:{this.state.selectProjectData.join(' ')}</div>
-                            {/*{this.props.setUser.username}*/}
                             <i className="arrow_down" />
                         </div>
                     </div>
@@ -318,8 +318,7 @@ export default class ReportsSearchBar extends Component {
     componentDidMount() {
         this.setState({ selectUserData: this.props.setUser });
         this.setState({ selectProjectData: this.props.selectedProjects });
-        this.userInput.value = this.props.setUser.username;
-        // this.props.reportsPageAction('SET_ACTIVE_USER', { data: [getUserData().username] });
+        this.userInput.value = this.props.setUser.email;
         fetch(AppConfig.apiURL + `user/list`, {
             method: 'GET',
             headers: {
