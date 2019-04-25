@@ -259,7 +259,7 @@ export default class ReportsSearchBar extends Component {
                 >
                     <div className="reports_search_select_wrapper">
                         <div className="reports_search_select_header" ref={div => (this.dropListProjects = div)}>
-                            <div>Project:{this.state.selectProjectData.join(' ')}</div>
+                            <div>Project: {this.state.selectProjectData.join(', ')}</div>
                             <i className="arrow_down" />
                         </div>
                     </div>
