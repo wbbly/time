@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import './style.css';
-import { getUserData } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 export default class ReportsSearchBar extends Component {
@@ -318,7 +317,7 @@ export default class ReportsSearchBar extends Component {
     componentDidMount() {
         this.setState({ selectUserData: this.props.setUser });
         this.setState({ selectProjectData: this.props.selectedProjects });
-        this.userInput.value = this.props.setUser.email;
+        this.userInput.value = this.props.setUser[0] || '';
         fetch(AppConfig.apiURL + `user/list`, {
             method: 'GET',
             headers: {

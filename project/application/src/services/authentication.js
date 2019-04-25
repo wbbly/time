@@ -28,12 +28,14 @@ export function getUserData() {
         return {
             id: null,
             username: '',
+            email: '',
         };
     }
 
     return {
         id: storageItem.id,
         username: storageItem.username,
+        email: storageItem.email,
     };
 }
 
