@@ -41,24 +41,36 @@ class ManualTimeModal extends Component {
 
     changeData() {
         let changedItem = JSON.parse(JSON.stringify(this.state.activeItem));
-        changedItem.project = this.state.activeProject;
 
-        const issue = (this.inputNameValue || {}).value || '';
-        changedItem.issue = encodeTimeEntryIssue(issue);
-        let startTime = moment(
-            `${moment(this.state.startDate).format('YYYY-MM-DD')} ${moment(this.state.startTime).format('HH:mm')}`
+        const startDatetimeNew = moment(
+            `${moment(this.state.startDate).format('YYYY-MM-DD')} ${moment(this.state.startTime).format('HH:mm:ss.ms')}`
         )
             .utc()
-            .format();
-        let endTime = moment(
-            `${moment(this.state.endDate).format('YYYY-MM-DD')} ${moment(this.state.endTime).format('HH:mm')}`
+            .toISOString();
+        if (new Date(changedItem.startDatetime).getTime() !== new Date(startDatetimeNew).getTime()) {
+            changedItem.startDatetime = startDatetimeNew;
+        }
+
+        const endDatetimeNew = moment(
+            `${moment(this.state.endDate).format('YYYY-MM-DD')} ${moment(this.state.endTime).format('HH:mm:ss.ms')}`
         )
             .utc()
-            .format();
-        if (+moment(startTime) > +moment(endTime) || +moment(endTime) < +moment(startTime)) {
-            alert('wrong entered start time,  please check it');
+            .toISOString();
+        if (new Date(changedItem.endDatetime).getTime() !== new Date(endDatetimeNew).getTime()) {
+            changedItem.endDatetime = endDatetimeNew;
+        }
+
+        if (
+            +moment(changedItem.startDatetime) > +moment(changedItem.endDatetime) ||
+            +moment(changedItem.endDatetime) < +moment(changedItem.startDatetime)
+        ) {
+            alert('Wrong Time start, please check it!');
+
             return;
         }
+
+        changedItem.issue = encodeTimeEntryIssue((this.inputNameValue || {}).value || '');
+        changedItem.project = this.state.activeProject;
 
         fetch(AppConfig.apiURL + `timer/${changedItem.id}`, {
             method: 'PATCH',
@@ -69,8 +81,8 @@ class ManualTimeModal extends Component {
             body: JSON.stringify({
                 issue: changedItem.issue,
                 projectId: changedItem.project.id,
-                startDatetime: startTime,
-                endDatetime: endTime,
+                startDatetime: changedItem.startDatetime,
+                endDatetime: changedItem.endDatetime,
             }),
         })
             .then(res => {
