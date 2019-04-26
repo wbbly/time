@@ -49,14 +49,16 @@ class ManualTimeModal extends Component {
         const startDatetimeNew = moment(
             `${moment(this.state.startDate).format('YYYY-MM-DD')} ${moment(this.state.startTime).format('HH:mm')}`
         );
-        if (this.state.startDateChanged || this.state.startTimeChanged) {
-            changedItem['startDatetime'] = startDatetimeNew.utc().toISOString();
-        }
-
         const endDatetimeNew = moment(
             `${moment(this.state.endDate).format('YYYY-MM-DD')} ${moment(this.state.endTime).format('HH:mm')}`
         );
-        if (this.state.endDateChanged || this.state.endTimeChanged) {
+        if (
+            this.state.startDateChanged ||
+            this.state.startTimeChanged ||
+            this.state.endDateChanged ||
+            this.state.endTimeChanged
+        ) {
+            changedItem['startDatetime'] = startDatetimeNew.utc().toISOString();
             changedItem['endDatetime'] = endDatetimeNew.utc().toISOString();
         }
 
