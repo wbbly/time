@@ -172,6 +172,9 @@ class ReportsPage extends Component {
                                     ? convertMS(this.state.totalUpChartTime)
                                     : '00:00:00'}
                             </span>
+                            <span className="export_button" onClick={e => this.export()}>
+                                Export
+                            </span>
                         </div>
                     )}
                     {this.state.toggleBar && this.state.toggleChar && (
