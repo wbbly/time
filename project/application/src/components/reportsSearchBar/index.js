@@ -146,7 +146,7 @@ export default class ReportsSearchBar extends Component {
         if (e.target.checked) {
             projects.push(name);
         } else {
-            let item = projects.indexOf(`"${name}"`);
+            let item = projects.indexOf(`${name}`);
             projects.splice(item, 1);
         }
         this.setState({ selectProjectData: projects });

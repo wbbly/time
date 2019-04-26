@@ -37,7 +37,7 @@ class AuthorisationPage extends Component {
                 result => {
                     localStorage.setItem('user-object', JSON.stringify(result.user));
                     this.props.reportsPageAction('SET_ACTIVE_USER', {
-                        data: [getUserData().username],
+                        data: [getUserData().email],
                     });
                     this.setState({ haveToken: true });
                 },
@@ -51,7 +51,7 @@ class AuthorisationPage extends Component {
     componentWillMount() {}
 
     render() {
-        if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/main-page'} />;
+        if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
 
         return (
             <div className="wrapper_authorisation_page">

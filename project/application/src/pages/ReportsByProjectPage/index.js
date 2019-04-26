@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import './style.css';
 import LeftBar from '../../components/LeftBar';
@@ -6,6 +7,8 @@ import { connect } from 'react-redux';
 import * as moment from 'moment';
 import { convertMS, convertDateToISOString, convertDateToShiftedISOString } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
+import { userLoggedIn } from '../../services/authentication';
+import { getParametersString } from '../../services/apiService';
 import { AppConfig } from '../../config';
 
 class ReportsByProjectsPage extends Component {
@@ -35,6 +38,8 @@ class ReportsByProjectsPage extends Component {
     }
 
     render() {
+        if (!userLoggedIn()) return <Redirect to={'/login'} />;
+
         let projectsItems = this.state.dataOfProject.map((item, index) => (
             <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
                 <div className="name">{this.getSlash(item.issue)}</div>
@@ -72,25 +77,16 @@ class ReportsByProjectsPage extends Component {
     }
 
     componentDidMount() {
-        function getParametersString(name, arr) {
-            let pharam = [];
-            for (let i = 0; i < arr.length; i++) {
-                pharam.push(`${name}[]=${arr[i]}`);
-            }
-            return pharam.join('&');
-        }
-        let setUser =
-            !!this.props.setUser && !!this.props.setUser.length
-                ? getParametersString('userEmails', this.props.setUser)
-                : '';
+        const { projectName, userEmails, dateStart, endDate } = this.props.match.params;
+
         fetch(
             AppConfig.apiURL +
-                `project/reports-project?projectName=${this.props.match.params.name}&startDate=${convertDateToISOString(
-                    this.props.match.params.dateStart
-                ).slice(0, -1)}&endDate=${convertDateToShiftedISOString(
-                    this.props.match.params.endDate,
-                    24 * 60 * 60 * 1000 - 1
-                ).slice(0, -1)}${setUser ? `&${setUser}` : ''}`,
+                `project/reports-project?projectName=${projectName || ''}&startDate=${convertDateToISOString(
+                    dateStart
+                ).slice(0, -1)}&endDate=${convertDateToShiftedISOString(endDate, 24 * 60 * 60 * 1000 - 1).slice(
+                    0,
+                    -1
+                )}&${getParametersString('userEmails', (userEmails || []).split(','))}`,
             {
                 method: 'GET',
                 headers: {

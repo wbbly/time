@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { Redirect, Route, BrowserRouter as Router } from 'react-router-dom';
+import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { store } from './store/configureStore';
 import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
@@ -16,13 +16,20 @@ ReactDOM.render(
     <Provider store={store}>
         <Router>
             <div>
-                <Redirect from="" to="/login" />
-                <Route path="/login" component={AuthorisationPage} />
-                <Route path="/main-page" component={MainPage} />
-                <Route path="/reports" component={ReportsPage} />
-                <Route path="/projects" component={ProjectsPage} />
-                <Route path="/team" component={TeamPage} />
-                <Route path="/project-report/:name/:dateStart/:endDate/" component={ReportsByProjectsPage} />
+                <Switch>
+                    <Route path="/timer" component={MainPage} />
+                    <Route path="/reports/summary" component={ReportsPage} />
+                    <Route
+                        path="/reports/detailed/projects/:projectName/team/:userEmails/from/:dateStart/to/:endDate/"
+                        component={ReportsByProjectsPage}
+                    />
+                    <Route path="/projects" component={ProjectsPage} />
+                    <Route path="/team" component={TeamPage} />
+                    <Route path="/login" component={AuthorisationPage} />
+
+                    <Redirect from="/reports" to="/reports/summary" />
+                    <Redirect from="/" to="/login" />
+                </Switch>
             </div>
         </Router>
     </Provider>,

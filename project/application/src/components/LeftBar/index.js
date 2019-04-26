@@ -32,7 +32,7 @@ class LeftBar extends Component {
     }
 
     visualTimer() {
-        if (!!this.state.timer && window.location.pathname !== '/main-page') {
+        if (!!this.state.timer && window.location.pathname !== '/timer') {
             return this.state.timer;
         }
     }
@@ -48,7 +48,7 @@ class LeftBar extends Component {
             <div className="wrapper">
                 <i className="logo_small" />
                 <div className="navigation_links_container">
-                    <Link to="/main-page" style={{ textDecoration: 'none' }}>
+                    <Link to="/timer" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="timer" />
                             <div className="links_text">timer</div>

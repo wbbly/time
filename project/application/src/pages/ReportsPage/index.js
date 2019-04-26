@@ -191,8 +191,7 @@ class ReportsPage extends Component {
                         <div className="projects_chart_container">
                             <ProjectsContainer
                                 selectionRange={this.props.timeRange}
-                                activeEmail={this.state.selectUsersHeader}
-                                allProjects={this.state.projectsArr}
+                                usersArr={this.props.setUser}
                                 projectsArr={this.props.projectsArr}
                                 dataDoughnutChat={this.props.dataDoughnutChat}
                             />
