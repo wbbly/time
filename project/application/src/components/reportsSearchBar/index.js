@@ -253,13 +253,17 @@ export default class ReportsSearchBar extends Component {
                         </div>
                     )}
                 </div>
-                <div
-                    className="reports_search_bar_search_field_container select"
-                    onClick={e => this.openSelectProject()}
-                >
-                    <div className="reports_search_select_wrapper">
-                        <div className="reports_search_select_header" ref={div => (this.dropListProjects = div)}>
-                            <div>Project: {this.state.selectProjectData.join(', ')}</div>
+                <div className="reports_search_bar_search_field_container select">
+                    <div className="reports_search_select_wrapper" ref={div => (this.dropListProjects = div)}>
+                        <div
+                            className="reports_search_select_header"
+                            onClick={e => this.openSelectProject()}
+                            ref={div => (this.projectInput = div)}
+                        >
+                            <div>
+                                Project:&nbsp;
+                                {this.state.selectProjectData.join(', ')}
+                            </div>
                             <i className="arrow_down" />
                         </div>
                     </div>
@@ -318,6 +322,7 @@ export default class ReportsSearchBar extends Component {
         this.setState({ selectUserData: this.props.setUser });
         this.setState({ selectProjectData: this.props.selectedProjects });
         this.userInput.value = this.props.setUser[0] || '';
+        this.projectInput.value = '';
         fetch(AppConfig.apiURL + `user/list`, {
             method: 'GET',
             headers: {

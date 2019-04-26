@@ -188,4 +188,5 @@
 
 .select_items_container label {
     white-space: nowrap;
+    width: 100vw;
 }
