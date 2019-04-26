@@ -12,10 +12,10 @@ import {
 } from 'date-fns';
 
 const defineds = {
-  startOfWeek: startOfWeek(new Date()),
-  endOfWeek: endOfWeek(new Date()),
-  startOfLastWeek: startOfWeek(addDays(new Date(), -7)),
-  endOfLastWeek: endOfWeek(addDays(new Date(), -7)),
+  startOfWeek: startOfWeek(new Date(), {weekStartsOn: 1}),
+  endOfWeek: endOfWeek(new Date(), {weekStartsOn: 1}),
+  startOfLastWeek: startOfWeek(addDays(new Date(), -7), {weekStartsOn: 1}),
+  endOfLastWeek: endOfWeek(addDays(new Date(), -7), {weekStartsOn: 1}),
   startOfToday: startOfDay(new Date()),
   endOfToday: endOfDay(new Date()),
   startOfYesterday: startOfDay(addDays(new Date(), -1)),
