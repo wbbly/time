@@ -118,3 +118,15 @@
     line-height: normal;
     color: #FFFFFF;
 }
+
+.export_button {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    font-family: "Open Sans";
+    font-size: 16px;
+    margin-left: 11px;
+    line-height: normal;
+    color: #FFFFFF;
+    cursor: pointer;
+}
