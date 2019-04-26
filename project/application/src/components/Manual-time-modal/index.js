@@ -14,9 +14,13 @@ class ManualTimeModal extends Component {
         selectProject: false,
         activeItem: '',
         startDate: '',
+        startDateChanged: false,
         startTime: '',
+        startTimeChanged: false,
         endDate: '',
+        endDateChanged: false,
         endTime: '',
+        endDateChanged: false,
     };
 
     getIssues() {
@@ -40,23 +44,19 @@ class ManualTimeModal extends Component {
     }
 
     changeData() {
-        const activeItemCopy = JSON.parse(JSON.stringify(this.state.activeItem));
         let changedItem = {};
 
         const startDatetimeNew = moment(
-            `${moment(this.state.startDate).format('YYYY-MM-DD')} ${moment(this.state.startTime).format('HH:mm:ss.ms')}`
+            `${moment(this.state.startDate).format('YYYY-MM-DD')} ${moment(this.state.startTime).format('HH:mm')}`
         );
-        if (
-            new Date(activeItemCopy.startDatetime).getTime() !==
-            new Date(startDatetimeNew.utc().toISOString()).getTime()
-        ) {
+        if (this.state.startDateChanged || this.state.startTimeChanged) {
             changedItem['startDatetime'] = startDatetimeNew.utc().toISOString();
         }
 
         const endDatetimeNew = moment(
-            `${moment(this.state.endDate).format('YYYY-MM-DD')} ${moment(this.state.endTime).format('HH:mm:ss.ms')}`
+            `${moment(this.state.endDate).format('YYYY-MM-DD')} ${moment(this.state.endTime).format('HH:mm')}`
         );
-        if (new Date(activeItemCopy.endDatetime).getTime() !== new Date(endDatetimeNew.utc().toISOString()).getTime()) {
+        if (this.state.endDateChanged || this.state.endTimeChanged) {
             changedItem['endDatetime'] = endDatetimeNew.utc().toISOString();
         }
 
@@ -69,7 +69,7 @@ class ManualTimeModal extends Component {
         changedItem['issue'] = encodeTimeEntryIssue((this.inputNameValue || {}).value || '');
         changedItem['projectId'] = this.state.activeProject.id;
 
-        fetch(AppConfig.apiURL + `timer/${activeItemCopy.id}`, {
+        fetch(AppConfig.apiURL + `timer/${this.state.activeItem.id}`, {
             method: 'PATCH',
             headers: {
                 Accept: 'application/json',
@@ -84,11 +84,11 @@ class ManualTimeModal extends Component {
                 return res.json();
             })
             .then(
-                result => {
+                () => {
                     this.getNewData();
                     this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
                 },
-                err => err.text().then(errorMessage => {})
+                err => err.text().then(_ => {})
             );
     }
 
@@ -138,19 +138,19 @@ class ManualTimeModal extends Component {
     };
 
     onChangeTime = time => {
-        this.setState({ startTime: time });
+        this.setState({ startTime: time, startTimeChanged: true });
     };
 
     onChangeDate = date => {
-        this.setState({ startDate: date });
+        this.setState({ startDate: date, startDateChanged: true });
     };
 
     onChangeTimeEnd = time => {
-        this.setState({ endTime: time });
+        this.setState({ endTime: time, endTimeChanged: true });
     };
 
     onChangeDateEnd = date => {
-        this.setState({ endDate: date });
+        this.setState({ endDate: date, endDateChanged: true });
     };
 
     render() {
