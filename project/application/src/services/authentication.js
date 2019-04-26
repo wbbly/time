@@ -1,17 +1,27 @@
+export const ROLES = {
+    ROLE_USER: 'e1f1f00c-abee-448c-b65d-cdd51bb042f1',
+    ROLE_ADMIN: '449bca08-9f3d-4956-a38e-7b5de27bdc73',
+};
+
 export function userLoggedIn() {
     return !!localStorage.getItem('user-object');
 }
 
-export function adminOrNot(email = '') {
+export function checkIsAdmin() {
     let object = JSON.parse(localStorage.getItem('user-object'));
     if (!object) {
         return;
     }
-    if (object.role.title === 'ROLE_ADMIN') {
-        return true;
-    } else {
-        return false;
-    }
+
+    return this.checkIsAdminByRole(object.role.title);
+}
+
+export function checkIsAdminByRole(role) {
+    return role === 'ROLE_ADMIN';
+}
+
+export function checkIsUserByRole(role) {
+    return role === 'ROLE_USER';
 }
 
 export function getUserId() {
@@ -37,12 +47,4 @@ export function getUserData() {
         username: storageItem.username,
         email: storageItem.email,
     };
-}
-
-export function getUserAdminRight() {
-    let storageItem = JSON.parse(localStorage.getItem('user-object'));
-    if (!storageItem) {
-        return;
-    }
-    return storageItem.role.title;
 }

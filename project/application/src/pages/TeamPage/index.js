@@ -6,8 +6,7 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import AddToTeamModal from '../../components/AddToTeamModal';
 import teamPageAction from '../../actions/TeamPageAction';
-import { userLoggedIn } from '../../services/authentication';
-import { adminOrNot } from '../../services/authentication';
+import { checkIsAdminByRole, checkIsUserByRole, userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
 
@@ -36,16 +35,16 @@ class TeamPage extends Component {
                 <td>{element.username}</td>
                 <td>{element.email}</td>
                 <td>
-                    {element.role.title !== 'ROLE_ADMIN' && (
+                    {checkIsUserByRole(element.role.title) && (
                         <div className="access_container">{element.role.title}</div>
                     )}
-                    {element.role.title === 'ROLE_ADMIN' && (
+                    {checkIsAdminByRole(element.role.title) && (
                         <div className="access_container red">{element.role.title}</div>
                     )}
                 </td>
                 <td>
                     <div>{element.is_active ? 'Active' : 'Not active'}</div>
-                    {adminOrNot() && (
+                    {checkIsAdmin() && (
                         <i onClick={e => this.openEditMiodal(element)} className="edit_button item_button" />
                     )}
                 </td>
@@ -76,7 +75,7 @@ class TeamPage extends Component {
                     <div className="team_page_header">
                         <div className="page_name">Team</div>
                         <div className="invite_container">
-                            {adminOrNot() && (
+                            {checkIsAdmin() && (
                                 <button
                                     onClick={e => {
                                         this.openAddUserModal();

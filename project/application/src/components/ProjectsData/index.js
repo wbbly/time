@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './style.css';
 import { convertMS } from '../../services/timeService';
 import EditProjectModal from '../EditProjectModal/index';
-import { getUserAdminRight } from '../../services/authentication';
+import { checkIsAdmin } from '../../services/authentication';
 
 export default class ProjectData extends Component {
     setEdiItem(item) {
@@ -28,9 +28,7 @@ export default class ProjectData extends Component {
                 <td>{item.name}</td>
                 <td>
                     {convertMS(item.totalTime)}
-                    {getUserAdminRight() === 'ROLE_ADMIN' && (
-                        <i className="edit_button" onClick={e => this.setEdiItem(item)} />
-                    )}
+                    {checkIsAdmin() && <i className="edit_button" onClick={e => this.setEdiItem(item)} />}
                 </td>
             </tr>
         ));

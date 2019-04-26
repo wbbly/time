@@ -5,15 +5,12 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { getUserId } from '../../services/authentication';
-
-const ROLE_USER = 'e1f1f00c-abee-448c-b65d-cdd51bb042f1';
-const ROLE_ADMIN = '449bca08-9f3d-4956-a38e-7b5de27bdc73';
+import { ROLES, checkIsAdminByRole, getUserId } from '../../services/authentication';
 
 class EditTeamModal extends Component {
     state = {
         id: '',
-        value: ROLE_USER,
+        value: ROLES.ROLE_USER,
         valueStatus: 'notActive',
     };
 
@@ -32,7 +29,7 @@ class EditTeamModal extends Component {
             body: JSON.stringify({
                 email: this.email.value,
                 username: this.name.value,
-                roleId: this.state.value === 'ROLE_ADMIN' ? ROLE_ADMIN : ROLE_USER,
+                roleId: checkIsAdminByRole(this.state.value) ? ROLES.ROLE_ADMIN : ROLES.ROLE_USER,
                 isActive: this.state.valueStatus === 'active' ? true : false,
             }),
         })

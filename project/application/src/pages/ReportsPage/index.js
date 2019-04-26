@@ -12,7 +12,7 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { userLoggedIn, getUserAdminRight } from '../../services/authentication';
+import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
 import { getParametersString, saveFile } from '../../services/apiSerivce';
 import {
@@ -151,7 +151,7 @@ class ReportsPage extends Component {
                             )}
                         </div>
                     </div>
-                    {getUserAdminRight() === 'ROLE_ADMIN' && (
+                    {checkIsAdmin() && (
                         <ReportsSearchBar
                             settedDate={{
                                 startDate: this.state.selectionRange.startDate,
