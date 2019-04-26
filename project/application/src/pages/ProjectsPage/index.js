@@ -9,7 +9,7 @@ import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
 import projectsPageAction from '../../actions/ProjectsActions';
 import { getProjectsV2ProjectPageUserParseFunction, getProjectsV2ProjectPageAdminParseFunction } from '../../queries';
-import { userLoggedIn, getUserAdminRight, getUserId } from '../../services/authentication';
+import { userLoggedIn, checkIsAdmin, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 class ProjectsPage extends Component {
@@ -20,7 +20,7 @@ class ProjectsPage extends Component {
     };
 
     getProjects = () => {
-        if (getUserAdminRight() === 'ROLE_ADMIN') {
+        if (checkIsAdmin()) {
             fetch(AppConfig.apiURL + 'project/admin-list', {
                 method: 'GET',
                 headers: {
@@ -85,7 +85,7 @@ class ProjectsPage extends Component {
                 <div className="data_container_projects_page">
                     <div className="projects_page_header">
                         <div className="projects_page_title">Projects</div>
-                        {getUserAdminRight() === 'ROLE_ADMIN' && (
+                        {checkIsAdmin() && (
                             <button
                                 className="create_project_button"
                                 onClick={e => projectsPageAction('TOGGLE_MODAL', { toggle: true })}

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import './style.css';
-import { AppConfig } from '../../config';
 
-const ROLE_USER = 'e1f1f00c-abee-448c-b65d-cdd51bb042f1';
-const ROLE_ADMIN = '449bca08-9f3d-4956-a38e-7b5de27bdc73';
+import { ROLES } from '../../services/authentication';
+import { AppConfig } from '../../config';
 
 class RegisterModal extends Component {
     addUser = (email, password, userName) => {
@@ -16,7 +15,7 @@ class RegisterModal extends Component {
             body: JSON.stringify({
                 email: email,
                 password: password,
-                roleId: ROLE_USER,
+                roleId: ROLES.ROLE_USER,
             }),
         })
             .then(res => {

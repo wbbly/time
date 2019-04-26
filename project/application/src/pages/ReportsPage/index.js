@@ -12,8 +12,9 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { userLoggedIn, getUserAdminRight } from '../../services/authentication';
+import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
+import { getParametersString, saveFile } from '../../services/apiSerivce';
 import {
     convertMS,
     convertDateToISOString,
@@ -150,7 +151,7 @@ class ReportsPage extends Component {
                             )}
                         </div>
                     </div>
-                    {getUserAdminRight() === 'ROLE_ADMIN' && (
+                    {checkIsAdmin() && (
                         <ReportsSearchBar
                             settedDate={{
                                 startDate: this.state.selectionRange.startDate,
@@ -300,19 +301,50 @@ class ReportsPage extends Component {
         return Object.keys(sumTimeEntriesByDay).map(date => sumTimeEntriesByDay[date]);
     }
 
+    export() {
+        let dateFrom = this.getYear(this.state.selectionRange.startDate),
+            dateTo = this.getYear(this.state.selectionRange.endDate);
+        let setUser =
+            !!this.props.setUser && !!this.props.setUser.length
+                ? getParametersString('userEmails', this.props.setUser)
+                : '';
+        let setProjectNames =
+            !!this.props.selectedProjects && !!this.props.selectedProjects.length
+                ? getParametersString('projectNames', this.props.selectedProjects)
+                : '';
+        fetch(
+            AppConfig.apiURL +
+                `report/export?timezoneOffset=${new Date().getTimezoneOffset()}&startDate=${convertDateToISOString(
+                    dateFrom
+                ).slice(0, -1)}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000 - 1).slice(0, -1)}${
+                    setUser ? `&${setUser}` : ''
+                }${setProjectNames ? `&${setProjectNames}` : ''}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                result => {
+                    saveFile(`${AppConfig.apiURL}${result.path}`);
+                },
+                err => err.text().then(_ => {})
+            );
+    }
+
     getDataUsers(
         dateFrom = this.getYear(this.state.selectionRange.startDate),
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
-        function getParametersString(name, arr) {
-            let pharam = [];
-            for (let i = 0; i < arr.length; i++) {
-                pharam.push(`${name}[]=${arr[i]}`);
-            }
-
-            return pharam.join('&');
-        }
-
         let setUser =
             !!this.props.setUser && !!this.props.setUser.length
                 ? getParametersString('userEmails', this.props.setUser)
