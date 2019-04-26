@@ -47,6 +47,36 @@
     padding-right: 12px;
 }
 
+.reports_by_projects_wrapper .projects_header .name,
+.reports_by_projects_wrapper .projects_container_project_data .name {
+    width: calc(100% - 500px);
+    padding-right: 25px;
+}
+
+.reports_by_projects_wrapper .projects_header .username,
+.reports_by_projects_wrapper .projects_container_project_data .username {
+    width: 300px;
+    text-align: left;
+}
+
+.reports_by_projects_wrapper .projects_header .time,
+.reports_by_projects_wrapper .projects_container_project_data .time {
+    width: 200px;
+    text-align: right;
+}
+
+.reports_by_projects_wrapper .projects_container_project_data .name {
+    line-height: 22px;
+    padding-right: 25px;
+}
+
+.reports_by_projects_wrapper .projects_container_project_data .username {
+    font-family: "Open Sans", sans-serif;
+    line-height: normal;
+    font-size: 16px;
+    color: #ffffff;
+}
+
 .reports_by_projects_wrapper .projects_container_project_data .time {
     font-family: "Open Sans", sans-serif;
     line-height: normal;

@@ -43,6 +43,7 @@ class ReportsByProjectsPage extends Component {
         let projectsItems = this.state.dataOfProject.map((item, index) => (
             <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
                 <div className="name">{this.getSlash(item.issue)}</div>
+                <div className="username">{item.user.username}</div>
                 <div className="time">
                     {moment(item.start_datetime).format('DD.MM.YYYY')} |{' '}
                     {moment(+moment(item.end_datetime) - +moment(item.start_datetime))
@@ -67,8 +68,9 @@ class ReportsByProjectsPage extends Component {
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">
                         <div className="projects_header">
-                            <div>Issue</div>
-                            <div>Time</div>
+                            <div className="name">Issue</div>
+                            <div className="username">Username</div>
+                            <div className="time">Time</div>
                         </div>
                         <div className="projects_container_project_data_container">{projectsItems}</div>
                     </div>
