@@ -14,7 +14,7 @@ import ProjectsContainer from '../../components/ProjectsContainer';
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
-import { getParametersString, saveFile } from '../../services/apiSerivce';
+import { getParametersString } from '../../services/apiService';
 import {
     convertMS,
     convertDateToISOString,
@@ -336,12 +336,21 @@ class ReportsPage extends Component {
                 }
                 return res.json();
             })
-            .then(
-                result => {
-                    saveFile(`${AppConfig.apiURL}${result.path}`);
-                },
-                err => err.text().then(_ => {})
-            );
+            .then(result => saveFile(`${AppConfig.apiURL}${result.path}`), err => err.text().then(_ => {}));
+    }
+
+    saveFile(url) {
+        const a = document.createElement('a');
+        a.setAttribute('id', 'file-report-button');
+
+        document.body.appendChild(a);
+        a.href = url;
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        setTimeout(() => {
+            a.remove();
+        }, 200);
     }
 
     getDataUsers(
