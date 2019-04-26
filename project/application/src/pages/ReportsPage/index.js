@@ -336,7 +336,7 @@ class ReportsPage extends Component {
                 }
                 return res.json();
             })
-            .then(result => saveFile(`${AppConfig.apiURL}${result.path}`), err => err.text().then(_ => {}));
+            .then(result => this.saveFile(`${AppConfig.apiURL}${result.path}`), err => err.text().then(_ => {}));
     }
 
     saveFile(url) {
