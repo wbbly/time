@@ -7,21 +7,21 @@ export function userLoggedIn() {
     return !!localStorage.getItem('user-object');
 }
 
-export function checkIsAdmin() {
-    let object = JSON.parse(localStorage.getItem('user-object'));
-    if (!object) {
-        return;
-    }
-
-    return this.checkIsAdminByRole(object.role.title);
-}
-
 export function checkIsAdminByRole(role) {
     return role === 'ROLE_ADMIN';
 }
 
 export function checkIsUserByRole(role) {
     return role === 'ROLE_USER';
+}
+
+export function checkIsAdmin() {
+    let object = JSON.parse(localStorage.getItem('user-object'));
+    if (!object) {
+        return;
+    }
+
+    return checkIsAdminByRole(object.role.title);
 }
 
 export function getUserId() {
