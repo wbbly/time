@@ -20,15 +20,18 @@
 
 .add_task {
     height: 50px;
-    width: calc(100% - 127px - 16px);
+    width: calc(100% - 127px - 280px);
     outline: none;
     padding-left: 16px;
     background-color: #4f4f4f;
     border-radius: 4px;
-    padding-right: 127px;
+    padding-right: 390px;
     font-size: 14px;
     border: 0;
     color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .add_task::-webkit-input-placeholder {
@@ -216,6 +219,13 @@ ul {
     align-items: center;
 }
 
+.wrapper_main_page .name_container .name {
+    max-width: calc(100% - 250px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .project_name {
     margin-left: 3%;
 }
@@ -255,7 +265,7 @@ ul {
 .name_container {
     display: flex;
     align-items: center;
-    width: 81%;
+    width: 100vw;
 }
 
 .timePassed {

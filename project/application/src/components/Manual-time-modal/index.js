@@ -175,9 +175,13 @@ class ManualTimeModal extends Component {
                         />
                         <div>
                             <span>Task name:</span>
-                            <input type="text" maxLength={110} ref={input => (this.inputNameValue = input)} />
+                            <input
+                                type="text"
+                                className="issue_edit_modal"
+                                ref={input => (this.inputNameValue = input)}
+                            />
                         </div>
-                        <div className=" project_select_edit_modal">
+                        <div className="project_select_edit_modal">
                             <span>Project:</span>
                             <input
                                 type="text"

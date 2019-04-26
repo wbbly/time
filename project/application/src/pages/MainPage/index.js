@@ -393,7 +393,6 @@ class MainPage extends Component {
                         <input
                             type="text"
                             className="add_task"
-                            maxLength="110"
                             placeholder="Add your task name"
                             ref={input => {
                                 this.mainTaskName = input;

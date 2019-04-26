@@ -61,10 +61,9 @@ class ReportsByProjectsPage extends Component {
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">
                         <div className="projects_header">
-                            <div>Project name</div>
+                            <div>Issue</div>
                             <div>Time</div>
                         </div>
-                        {' - '}
                         <div className="projects_container_project_data_container">{projectsItems}</div>
                     </div>
                 </div>
