@@ -90,7 +90,13 @@ class ManualTimeModal extends Component {
                     this.getNewData();
                     this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
                 },
-                err => err.text().then(_ => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 
@@ -118,7 +124,13 @@ class ManualTimeModal extends Component {
 
                     this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
                 },
-                err => err.text().then(errorMessage => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 

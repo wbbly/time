@@ -119,7 +119,13 @@ class ReportsByProjectsPage extends Component {
                     this.setState({ sumTime: this.getSumtime(data.project_v2[0].timer) });
                     this.setState({ countTasks: data.project_v2[0].timer.length });
                 },
-                err => err.text().then(errorMessage => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 }

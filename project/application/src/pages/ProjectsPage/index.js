@@ -40,7 +40,13 @@ class ProjectsPage extends Component {
                         this.setState({ etalonArr: data.projectV2 });
                         this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
                     },
-                    err => err.text().then(errorMessage => {})
+                    err => {
+                        if (err instanceof Response) {
+                            err.text().then(errorMessage => console.log(errorMessage));
+                        } else {
+                            console.log(err);
+                        }
+                    }
                 );
         } else {
             fetch(AppConfig.apiURL + `project/admin-list?userId=${getUserId()}`, {
@@ -62,7 +68,13 @@ class ProjectsPage extends Component {
                         this.setState({ etalonArr: data.projectV2 });
                         this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
                     },
-                    err => err.text().then(errorMessage => {})
+                    err => {
+                        if (err instanceof Response) {
+                            err.text().then(errorMessage => console.log(errorMessage));
+                        } else {
+                            console.log(err);
+                        }
+                    }
                 );
         }
     };

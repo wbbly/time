@@ -342,7 +342,13 @@ export default class ReportsSearchBar extends Component {
                     this.setState({ selectUersDataEtalon: data.user });
                     this.setState({ selectUserData: this.props.setUser });
                 },
-                err => err.text().then(errorMessage => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
         setTimeout(() => {
             this.setState({ projectsData: this.props.projectsData });

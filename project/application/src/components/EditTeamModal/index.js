@@ -44,10 +44,15 @@ class EditTeamModal extends Component {
                     this.closeModal();
                     this.props.getDataFromServer(teamPage);
                 },
-                err =>
-                    err.text().then(errorMessage => {
-                        alert(JSON.parse(errorMessage).message);
-                    })
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => {
+                            alert(JSON.parse(errorMessage).message);
+                        });
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     };
 

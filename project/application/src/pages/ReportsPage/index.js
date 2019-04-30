@@ -335,7 +335,16 @@ class ReportsPage extends Component {
                 }
                 return res.json();
             })
-            .then(result => this.saveFile(`${AppConfig.apiURL}${result.path}`), err => err.text().then(_ => {}));
+            .then(
+                result => this.saveFile(`${AppConfig.apiURL}${result.path}`),
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
+            );
     }
 
     saveFile(url) {
@@ -399,7 +408,13 @@ class ReportsPage extends Component {
                     this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
                     this.setState({ toggleChar: true });
                 },
-                err => err.text().then(_ => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
 
         fetch(
@@ -442,7 +457,13 @@ class ReportsPage extends Component {
                     );
                     this.setState({ toggleBar: true });
                 },
-                err => err.text().then(_ => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 
@@ -474,7 +495,13 @@ class ReportsPage extends Component {
                         );
                     }, 500);
                 },
-                err => err.text().then(_ => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 }

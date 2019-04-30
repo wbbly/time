@@ -55,15 +55,20 @@ export default class CreateProjectModal extends Component {
                     this.props.getProjects();
                     this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false });
                 },
-                err =>
-                    err.text().then(error => {
-                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
-                        if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                            alert('Project is already existed');
-                        } else {
-                            alert(`Project can't be created`);
-                        }
-                    })
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(error => {
+                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
+                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                                alert('Project is already existed');
+                            } else {
+                                alert(`Project can't be created`);
+                            }
+                        });
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 
@@ -138,7 +143,13 @@ export default class CreateProjectModal extends Component {
                     let data = result.data;
                     this.setState({ selectValue: data.project_color });
                 },
-                err => err.text().then(errorMessage => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 }

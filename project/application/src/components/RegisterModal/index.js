@@ -28,10 +28,15 @@ class RegisterModal extends Component {
                     alert('connect with admin to activate your account');
                     this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: false });
                 },
-                err =>
-                    err.text().then(errorMessage => {
-                        alert(JSON.parse(errorMessage).message);
-                    })
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => {
+                            alert(JSON.parse(errorMessage).message);
+                        });
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     };
 

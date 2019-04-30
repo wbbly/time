@@ -123,7 +123,13 @@ class TeamPage extends Component {
                     let data = result.data;
                     teamPage.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.user });
                 },
-                err => err.text().then(errorMessage => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 }

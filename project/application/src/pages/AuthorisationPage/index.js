@@ -41,10 +41,15 @@ class AuthorisationPage extends Component {
                     });
                     this.setState({ haveToken: true });
                 },
-                err =>
-                    err.text().then(errorMessage => {
-                        alert(JSON.parse(errorMessage).message);
-                    })
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => {
+                            alert(JSON.parse(errorMessage).message);
+                        });
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     };
 

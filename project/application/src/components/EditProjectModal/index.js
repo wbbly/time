@@ -62,15 +62,20 @@ export default class EditProjectModal extends Component {
                     this.props.getProjects();
                     this.closeModal();
                 },
-                err =>
-                    err.text().then(error => {
-                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
-                        if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                            alert('Project is already existed');
-                        } else {
-                            alert(`Project can't be created`);
-                        }
-                    })
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(error => {
+                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
+                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                                alert('Project is already existed');
+                            } else {
+                                alert(`Project can't be created`);
+                            }
+                        });
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 
@@ -147,7 +152,13 @@ export default class EditProjectModal extends Component {
                     let data = result.data;
                     this.setState({ selectValue: data.project_color });
                 },
-                err => err.text().then(errorMessage => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
 
         fetch(AppConfig.apiURL + `project/${this.props.editedProject.id}`, {
@@ -173,7 +184,13 @@ export default class EditProjectModal extends Component {
                     });
                     this.createProjectInput.value = data.project_v2[0].name;
                 },
-                err => err.text().then(errorMessage => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 }

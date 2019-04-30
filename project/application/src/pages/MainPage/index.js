@@ -99,7 +99,13 @@ class MainPage extends Component {
                                 data
                             );
                         },
-                        err => err.text().then(errorMessage => {})
+                        err => {
+                            if (err instanceof Response) {
+                                err.text().then(errorMessage => console.log(errorMessage));
+                            } else {
+                                console.log(err);
+                            }
+                        }
                     );
             } else if (!data) {
                 localStorage.removeItem('current-timer');
@@ -224,7 +230,13 @@ class MainPage extends Component {
                     result => {
                         this.getTimeForMainPage();
                     },
-                    err => err.text().then(errorMessage => {})
+                    err => {
+                        if (err instanceof Response) {
+                            err.text().then(errorMessage => console.log(errorMessage));
+                        } else {
+                            console.log(err);
+                        }
+                    }
                 );
         }
     }
@@ -477,7 +489,13 @@ class MainPage extends Component {
                     this.setState({ arrProjectsToModal: dataParsed.projectV2 });
                     this.setState({ arrProjectsEtalon: dataParsed.projectV2 });
                 },
-                err => err.text().then(errorMessage => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 
@@ -500,7 +518,13 @@ class MainPage extends Component {
                     let data = getTodayTimeEntriesParseFunction(result.data);
                     this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
                 },
-                err => err.text().then(errorMessage => {})
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
             );
     }
 
