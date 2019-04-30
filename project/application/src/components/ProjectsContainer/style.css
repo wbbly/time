@@ -66,4 +66,5 @@
     font-size: 22px;
     line-height: normal;
     color: #FFFFFF;
+    z-index: -1;
 }
