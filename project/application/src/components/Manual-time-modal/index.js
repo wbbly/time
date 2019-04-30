@@ -120,11 +120,6 @@ class ManualTimeModal extends Component {
             .then(
                 result => {
                     let data = getTodayTimeEntriesParseFunction(result.data);
-                    for (let i = 0; i < data.timerV2.length; i++) {
-                        const timeEntry = data.timerV2[i];
-                        timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
-                    }
-
                     this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
                 },
                 err => {
