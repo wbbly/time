@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.css';
-import { convertMS } from '../../services/timeService';
+import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import EditProjectModal from '../EditProjectModal/index';
 import { checkIsAdmin } from '../../services/authentication';
 
@@ -27,7 +27,7 @@ export default class ProjectData extends Component {
             <tr key={'table-header_' + index}>
                 <td>{item.name}</td>
                 <td>
-                    {convertMS(item.totalTime)}
+                    {getTimeDurationByGivenTimestamp(item.totalTime)}
                     {checkIsAdmin() && <i className="edit_button" onClick={e => this.setEdiItem(item)} />}
                 </td>
             </tr>

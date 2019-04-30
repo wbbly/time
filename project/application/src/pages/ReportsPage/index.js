@@ -16,7 +16,7 @@ import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import ReportsSearchBar from '../../components/reportsSearchBar';
 import { getParametersString } from '../../services/apiService';
 import {
-    convertMS,
+    getTimeDurationByGivenTimestamp,
     convertDateToISOString,
     convertDateToShiftedISOString,
     convertUTCDateToLocalISOString,
@@ -74,7 +74,7 @@ class ReportsPage extends Component {
         tooltips: {
             callbacks: {
                 label: function(tooltipItem) {
-                    return convertMS(tooltipItem.yLabel);
+                    return getTimeDurationByGivenTimestamp(tooltipItem.yLabel);
                 },
             },
         },
@@ -169,7 +169,7 @@ class ReportsPage extends Component {
                             <span className="total_time_name">Total</span>
                             <span className="total_time_time">
                                 {typeof this.state.totalUpChartTime === 'number'
-                                    ? convertMS(this.state.totalUpChartTime)
+                                    ? getTimeDurationByGivenTimestamp(this.state.totalUpChartTime)
                                     : '00:00:00'}
                             </span>
                             <span className="export_button" onClick={e => this.export()}>
@@ -242,7 +242,10 @@ class ReportsPage extends Component {
 
     getArrOfProjectsData(data) {
         const statsByProjects = [];
-        const statsByDates = this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate);
+        const statsByDates = this.getDatesListBetweenStartEndDates(
+            this.state.selectionRange.startDate,
+            this.state.selectionRange.endDate
+        );
         for (var i = 0; i < data.project_v2.length; i++) {
             const project = data.project_v2[i];
             let diff = 0;
@@ -267,7 +270,7 @@ class ReportsPage extends Component {
         return { statsByProjects, statsByDates };
     }
 
-    getDates(startDate, stopDate) {
+    getDatesListBetweenStartEndDates(startDate, stopDate) {
         let dateObj = {};
         let currentDate = moment(startDate);
         stopDate = moment(stopDate);
@@ -275,6 +278,7 @@ class ReportsPage extends Component {
             dateObj[`${moment(currentDate).format('YYYY-MM-DD')}`] = 0;
             currentDate = moment(currentDate).add(1, 'days');
         }
+
         return dateObj;
     }
 
@@ -318,7 +322,7 @@ class ReportsPage extends Component {
             AppConfig.apiURL +
                 `report/export?timezoneOffset=${new Date().getTimezoneOffset()}&startDate=${convertDateToISOString(
                     dateFrom
-                ).slice(0, -1)}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000 - 1).slice(0, -1)}${
+                )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000)}${
                     setUser ? `&${setUser}` : ''
                 }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
@@ -375,10 +379,9 @@ class ReportsPage extends Component {
                 : '';
         fetch(
             AppConfig.apiURL +
-                `project/reports-projects?startDate=${convertDateToISOString(dateFrom).slice(
-                    0,
-                    -1
-                )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000 - 1).slice(0, -1)}${
+                `project/reports-projects?startDate=${convertDateToISOString(
+                    dateFrom
+                )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000)}${
                     setUser ? `&${setUser}` : ''
                 }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
@@ -419,10 +422,9 @@ class ReportsPage extends Component {
 
         fetch(
             AppConfig.apiURL +
-                `timer/reports-list?startDate=${convertDateToISOString(dateFrom).slice(
-                    0,
-                    -1
-                )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000 - 1).slice(0, -1)}${
+                `timer/reports-list?startDate=${convertDateToISOString(
+                    dateFrom
+                )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000)}${
                     setUser ? `&${setUser}` : ''
                 }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
@@ -443,7 +445,10 @@ class ReportsPage extends Component {
                 result => {
                     let { timer_v2: timerV2 } = result.data;
                     const datePeriod = Object.keys(
-                        this.getDates(this.state.selectionRange.startDate, this.state.selectionRange.endDate)
+                        this.getDatesListBetweenStartEndDates(
+                            this.state.selectionRange.startDate,
+                            this.state.selectionRange.endDate
+                        )
                     );
 
                     const sumTimeEntriesByDay = this.getSumTimeEntriesByDay(datePeriod, timerV2);

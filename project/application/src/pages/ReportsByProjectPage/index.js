@@ -5,7 +5,11 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
-import { convertMS, convertDateToISOString, convertDateToShiftedISOString } from '../../services/timeService';
+import {
+    getTimeDurationByGivenTimestamp,
+    convertDateToISOString,
+    convertDateToShiftedISOString,
+} from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { userLoggedIn } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
@@ -46,9 +50,7 @@ class ReportsByProjectsPage extends Component {
                 <div className="username">{item.user.username}</div>
                 <div className="time">
                     {moment(item.start_datetime).format('DD.MM.YYYY')} |{' '}
-                    {moment(+moment(item.end_datetime) - +moment(item.start_datetime))
-                        .utc()
-                        .format('HH:mm:ss')}
+                    {getTimeDurationByGivenTimestamp(+moment(item.end_datetime) - +moment(item.start_datetime))}
                 </div>
             </div>
         ));
@@ -63,7 +65,7 @@ class ReportsByProjectsPage extends Component {
                         {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
                     </div>
                     <div className="header_name">Sum tasks: {this.state.countTasks}</div>
-                    <div className="header_name">Sum time: {convertMS(this.state.sumTime)}</div>
+                    <div className="header_name">Sum time: {getTimeDurationByGivenTimestamp(this.state.sumTime)}</div>
                 </div>
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">
@@ -86,10 +88,10 @@ class ReportsByProjectsPage extends Component {
             AppConfig.apiURL +
                 `project/reports-project?projectName=${projectName || ''}&startDate=${convertDateToISOString(
                     dateStart
-                ).slice(0, -1)}&endDate=${convertDateToShiftedISOString(endDate, 24 * 60 * 60 * 1000 - 1).slice(
-                    0,
-                    -1
-                )}&${getParametersString('userEmails', (userEmails || []).split(','))}`,
+                )}&endDate=${convertDateToShiftedISOString(endDate, 24 * 60 * 60 * 1000)}&${getParametersString(
+                    'userEmails',
+                    (userEmails || []).split(',')
+                )}`,
             {
                 method: 'GET',
                 headers: {

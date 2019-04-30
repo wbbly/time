@@ -11,10 +11,10 @@ import addTasks from '../../actions/MainPageAction';
 import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
-import { getProjectListRequest, getProjectListParseFunction, getTodayTimeEntriesParseFunction } from '../../queries';
+import { getProjectListParseFunction, getTodayTimeEntriesParseFunction } from '../../queries';
 import { userLoggedIn, getUserId } from '../../services/authentication';
 import { AppConfig } from '../../config';
-import { convertMS } from '../../services/timeService';
+import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 
 class MainPage extends Component {
@@ -23,10 +23,7 @@ class MainPage extends Component {
     TIMER_MANUAL_UPDATE_SUBSCRIPTION;
     state = {
         classToggle: true,
-        time: moment()
-            .set({ hour: 0, minute: 0, second: 0 })
-            .format('YYYY-MM-DD HH:mm:ss'),
-        date: moment().format('YYYY-MM-DD'),
+        time: null,
         seletedProject: {
             id: 'f339b6b6-d044-44f3-8887-684e112f7cfd',
             isActive: true,
@@ -189,18 +186,12 @@ class MainPage extends Component {
     timerStop() {
         this.getTimeForMainPage();
         localStorage.removeItem('current-timer');
-        this.setState(state => ({
-            classToggle: !state.classToggle,
-        }));
+        this.setState(state => ({ classToggle: !state.classToggle }));
         this.cleanMainField();
     }
 
     cleanMainField() {
-        this.setState({
-            time: moment()
-                .set({ hour: 0, minute: 0, second: 0 })
-                .format('YYYY-MM-DD HH:mm:ss'),
-        });
+        this.setState({ time: null });
         this.time.timeFinish = '';
         this.time.timeStart = '';
         setTimeout(() => {
@@ -227,9 +218,7 @@ class MainPage extends Component {
                     return res.json();
                 })
                 .then(
-                    result => {
-                        this.getTimeForMainPage();
-                    },
+                    result => this.getTimeForMainPage(),
                     err => {
                         if (err instanceof Response) {
                             err.text().then(errorMessage => console.log(errorMessage));
@@ -247,20 +236,9 @@ class MainPage extends Component {
             return;
         }
         this.time.timeStart = timer.timeStart;
-        let newTime = +moment().utc() - timer.timeStart;
-        let timeInArr = moment(newTime)
-            .utc()
-            .format('HH:mm:ss')
-            .split(':');
-        this.setState({
-            time: moment()
-                .set({ hour: timeInArr[0], minute: timeInArr[1], second: timeInArr[2] })
-                .format('YYYY-MM-DD HH:mm:ss'),
-        });
+        this.setState({ time: null });
         this.timerStart();
-        this.setState(state => ({
-            classToggle: false,
-        }));
+        this.setState(_ => ({ classToggle: false }));
         this.setOldTaskName(data);
     }
 
@@ -275,7 +253,7 @@ class MainPage extends Component {
     }
 
     getTimePassed(start, end) {
-        return convertMS(+moment(end) - +moment(start));
+        return getTimeDurationByGivenTimestamp(+moment(end) - +moment(start));
     }
 
     componentWillMount() {}
@@ -297,7 +275,7 @@ class MainPage extends Component {
                             <div>{moment(item.endDatetime).format('HH:mm')}</div>
                         </div>
                         <div className="timePassed">{this.getTimePassed(item.startDatetime, item.endDatetime)}</div>
-                        {moment(this.state.time).format('HH:mm:ss') === '00:00:00' && (
+                        {!this.state.time && (
                             <i
                                 className="small_play item_button"
                                 onClick={e => {
@@ -332,6 +310,7 @@ class MainPage extends Component {
         for (let i = 0; i < arr.length; i++) {
             sumTime += +moment(arr[i].endDatetime) - +moment(arr[i].startDatetime);
         }
+
         return getDateInString(sumTime);
     }
 
@@ -411,7 +390,9 @@ class MainPage extends Component {
                             }}
                             onKeyUp={e => this.timerUpdate()}
                         />
-                        <div className="time_container">{moment(this.state.time).format('HH:mm:ss')}</div>
+                        <div className="time_container">
+                            {this.state.time ? getTimeDurationByGivenTimestamp(+moment(this.state.time)) : '00:00:00'}
+                        </div>
                         <div>{this.getProject(this.state.seletedProject)}</div>
                         <i className="folder" onClick={e => this.projectListeToggle()}>
                             {this.state.projectListOpen && (

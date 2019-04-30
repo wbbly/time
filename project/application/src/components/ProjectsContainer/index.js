@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as moment from 'moment';
 import { Doughnut } from 'react-chartjs-2';
-import { convertMS } from '../../services/timeService';
+import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 
 import './style.css';
 
@@ -18,7 +18,9 @@ class ProjectsContainer extends Component {
             callbacks: {
                 label: function(tooltipItem, data) {
                     let label = data.labels[tooltipItem.index];
-                    let duration = convertMS(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+                    let duration = getTimeDurationByGivenTimestamp(
+                        data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
+                    );
 
                     return `${label}: ${duration}`;
                 },
@@ -54,7 +56,7 @@ class ProjectsContainer extends Component {
             >
                 <div className="projects_container_project_data">
                     <div className="name">{item.name}</div>
-                    <div className="time">{convertMS(item.duration)}</div>
+                    <div className="time">{getTimeDurationByGivenTimestamp(item.duration)}</div>
                 </div>
             </Link>
         ));
@@ -70,7 +72,7 @@ class ProjectsContainer extends Component {
                 </div>
                 <div className="chart">
                     <div className="total_time_tasks">
-                        {typeof datesValue === 'number' ? convertMS(datesValue) : ''}
+                        {typeof datesValue === 'number' ? getTimeDurationByGivenTimestamp(datesValue) : ''}
                     </div>
                     <Doughnut
                         data={this.props.dataDoughnutChat}
