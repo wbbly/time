@@ -82,16 +82,18 @@ class ReportsByProjectsPage extends Component {
     }
 
     componentDidMount() {
-        const { projectName, userEmails, dateStart, endDate } = this.props.match.params;
+        let { userEmails } = this.props.match.params;
+        userEmails = userEmails.indexOf('all') > -1 ? '' : userEmails;
+        const userEmailsList = userEmails.length ? userEmails.split(',') : [];
+        const { projectName, dateStart, endDate } = this.props.match.params;
 
         fetch(
             AppConfig.apiURL +
                 `project/reports-project?projectName=${projectName || ''}&startDate=${convertDateToISOString(
                     dateStart
-                )}&endDate=${convertDateToShiftedISOString(endDate, 24 * 60 * 60 * 1000)}&${getParametersString(
-                    'userEmails',
-                    (userEmails || []).split(',')
-                )}`,
+                )}&endDate=${convertDateToShiftedISOString(endDate, 24 * 60 * 60 * 1000)}${
+                    userEmailsList.length ? `&${getParametersString('userEmails', userEmailsList)}` : ''
+                }`,
             {
                 method: 'GET',
                 headers: {
@@ -117,9 +119,10 @@ class ReportsByProjectsPage extends Component {
                         }
                     }
 
-                    this.setState({ dataOfProject: data.project_v2[0].timer });
-                    this.setState({ sumTime: this.getSumtime(data.project_v2[0].timer) });
-                    this.setState({ countTasks: data.project_v2[0].timer.length });
+                    const timer = data.project_v2.length ? data.project_v2[0].timer : [];
+                    this.setState({ dataOfProject: timer });
+                    this.setState({ sumTime: this.getSumtime(timer) });
+                    this.setState({ countTasks: timer.length });
                 },
                 err => {
                     if (err instanceof Response) {

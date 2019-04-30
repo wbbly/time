@@ -46,9 +46,8 @@ class ProjectsContainer extends Component {
 
         let projectsItems = this.props.projectsArr.map((item, index) => (
             <Link
-                to={`/reports/detailed/projects/${item.name}/team/${this.props.usersArr.join(
-                    ','
-                )}/from/${this.getDateToLink(this.props.selectionRange.startDate)}/to/${this.getDateToLink(
+                to={`/reports/detailed/projects/${item.name}/team/${this.props.usersArr.join(',') ||
+                    'all'}/from/${this.getDateToLink(this.props.selectionRange.startDate)}/to/${this.getDateToLink(
                     this.props.selectionRange.endDate
                 )}`}
                 style={{ textDecoration: 'none' }}
