@@ -137,13 +137,13 @@ class MainPage extends Component {
         if (className === 'control_task_time_icons play') {
             const issue = (this.mainTaskName || {}).value || '';
             this.socket.emit('start-timer-v2', {
-                userId: JSON.parse(localStorage.getItem('user-object')).id,
+                userId: (JSON.parse(localStorage.getItem('user-object')) || {}).id,
                 issue: encodeTimeEntryIssue(issue),
                 projectId: setProjectId,
             });
         } else {
             this.socket.emit('stop-timer-v2', {
-                userId: JSON.parse(localStorage.getItem('user-object')).id,
+                userId: (JSON.parse(localStorage.getItem('user-object')) || {}).id,
             });
         }
     }
@@ -172,7 +172,7 @@ class MainPage extends Component {
             if (this.TIMER_LIVE_SUBSCRIPTION) {
                 const issue = (this.mainTaskName || {}).value || '';
                 this.socket.emit('update-timer-v2', {
-                    userId: JSON.parse(localStorage.getItem('user-object')).id,
+                    userId: (JSON.parse(localStorage.getItem('user-object')) || {}).id,
                     issue: encodeTimeEntryIssue(issue),
                     projectId: this.state.seletedProject.id,
                 });
@@ -481,13 +481,16 @@ class MainPage extends Component {
     }
 
     getTimeForMainPage() {
-        fetch(AppConfig.apiURL + `timer/user-list?userId=${JSON.parse(localStorage.getItem('user-object')).id}`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
+        fetch(
+            AppConfig.apiURL + `timer/user-list?userId=${(JSON.parse(localStorage.getItem('user-object')) || {}).id}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
             .then(res => {
                 if (!res.ok) {
                     throw res;

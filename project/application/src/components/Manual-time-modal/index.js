@@ -101,13 +101,16 @@ class ManualTimeModal extends Component {
     }
 
     getNewData() {
-        fetch(AppConfig.apiURL + `timer/user-list?userId=${JSON.parse(localStorage.getItem('user-object')).id}`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
+        fetch(
+            AppConfig.apiURL + `timer/user-list?userId=${(JSON.parse(localStorage.getItem('user-object')) || {}).id}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
             .then(res => {
                 if (!res.ok) {
                     throw res;
