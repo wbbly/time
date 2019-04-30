@@ -12,10 +12,16 @@ import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 import ManualTimeModal from '../../components/Manual-time-modal';
 import { createArayOfArrays } from './createArrayOfArraysFunction';
 import { getProjectListParseFunction, getTodayTimeEntriesParseFunction } from '../../queries';
-import { userLoggedIn, getUserId } from '../../services/authentication';
+import { userLoggedIn } from '../../services/authentication';
 import { AppConfig } from '../../config';
 import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import {
+    removeCurrentTimerFromLocalStorage,
+    setCurrentTimerToLocalStorage,
+} from '../../services/currentTimerStorageService';
+import { setServerClientTimediffToLocalStorage } from '../../services/serverClientTimediffStorageService';
 
 class MainPage extends Component {
     ONE_SECOND = 1000; // in ms
@@ -51,11 +57,11 @@ class MainPage extends Component {
             this.socket.emit(
                 'join-v2',
                 {
-                    userId: getUserId(),
+                    userId: getUserIdFromLocalStorage(),
                 },
                 _ => {
                     this.socket.emit('check-timer-v2', {
-                        userId: getUserId(),
+                        userId: getUserIdFromLocalStorage(),
                     });
                 }
             );
@@ -77,16 +83,13 @@ class MainPage extends Component {
                     })
                     .then(
                         result => {
-                            localStorage.setItem('server-client-timediff', +moment(result.timeISO) - +moment());
+                            setServerClientTimediffToLocalStorage(+moment(result.timeISO) - +moment());
                             data.issue = decodeTimeEntryIssue(data.issue);
-                            localStorage.setItem(
-                                'current-timer',
-                                JSON.stringify({
-                                    taskName: data.issue,
-                                    timeStart: +moment(data.startDatetime),
-                                    seletedProject: data.project,
-                                })
-                            );
+                            setCurrentTimerToLocalStorage({
+                                taskName: data.issue,
+                                timeStart: +moment(data.startDatetime),
+                                seletedProject: data.project,
+                            });
                             this.getTimeNow(
                                 {
                                     taskName: data.issue,
@@ -105,7 +108,7 @@ class MainPage extends Component {
                         }
                     );
             } else if (!data) {
-                localStorage.removeItem('current-timer');
+                removeCurrentTimerFromLocalStorage();
             }
         });
         this.socket.on('stop-timer-v2', data => {
@@ -137,13 +140,13 @@ class MainPage extends Component {
         if (className === 'control_task_time_icons play') {
             const issue = (this.mainTaskName || {}).value || '';
             this.socket.emit('start-timer-v2', {
-                userId: (JSON.parse(localStorage.getItem('user-object')) || {}).id,
+                userId: getUserIdFromLocalStorage(),
                 issue: encodeTimeEntryIssue(issue),
                 projectId: setProjectId,
             });
         } else {
             this.socket.emit('stop-timer-v2', {
-                userId: (JSON.parse(localStorage.getItem('user-object')) || {}).id,
+                userId: getUserIdFromLocalStorage(),
             });
         }
     }
@@ -172,7 +175,7 @@ class MainPage extends Component {
             if (this.TIMER_LIVE_SUBSCRIPTION) {
                 const issue = (this.mainTaskName || {}).value || '';
                 this.socket.emit('update-timer-v2', {
-                    userId: (JSON.parse(localStorage.getItem('user-object')) || {}).id,
+                    userId: getUserIdFromLocalStorage(),
                     issue: encodeTimeEntryIssue(issue),
                     projectId: this.state.seletedProject.id,
                 });
@@ -185,7 +188,7 @@ class MainPage extends Component {
 
     timerStop() {
         this.getTimeForMainPage();
-        localStorage.removeItem('current-timer');
+        removeCurrentTimerFromLocalStorage();
         this.setState(state => ({ classToggle: !state.classToggle }));
         this.cleanMainField();
     }
@@ -481,16 +484,13 @@ class MainPage extends Component {
     }
 
     getTimeForMainPage() {
-        fetch(
-            AppConfig.apiURL + `timer/user-list?userId=${(JSON.parse(localStorage.getItem('user-object')) || {}).id}`,
-            {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }
-        )
+        fetch(AppConfig.apiURL + `timer/user-list?userId=${getUserIdFromLocalStorage()}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
             .then(res => {
                 if (!res.ok) {
                     throw res;

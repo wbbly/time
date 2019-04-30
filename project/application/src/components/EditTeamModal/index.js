@@ -5,7 +5,8 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { ROLES, checkIsAdminByRole, getUserId } from '../../services/authentication';
+import { ROLES, checkIsAdminByRole } from '../../services/authentication';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 
 class EditTeamModal extends Component {
     state = {
@@ -23,7 +24,7 @@ class EditTeamModal extends Component {
             method: 'PATCH',
             headers: {
                 Accept: 'application/json',
-                'x-admin-id': getUserId(),
+                'x-admin-id': getUserIdFromLocalStorage(),
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({

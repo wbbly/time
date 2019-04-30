@@ -9,14 +9,13 @@ import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
 import projectsPageAction from '../../actions/ProjectsActions';
 import { getProjectsV2ProjectPageUserParseFunction, getProjectsV2ProjectPageAdminParseFunction } from '../../queries';
-import { userLoggedIn, checkIsAdmin, getUserId } from '../../services/authentication';
+import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { AppConfig } from '../../config';
 
 class ProjectsPage extends Component {
     state = {
         etalonArr: [],
-        activeEmail: '',
-        projectsTime: {},
     };
 
     getProjects = () => {
@@ -49,7 +48,7 @@ class ProjectsPage extends Component {
                     }
                 );
         } else {
-            fetch(AppConfig.apiURL + `project/admin-list?userId=${getUserId()}`, {
+            fetch(AppConfig.apiURL + `project/admin-list?userId=${getUserIdFromLocalStorage()}`, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -115,10 +114,8 @@ class ProjectsPage extends Component {
                     </div>
                     <div className="project_data_wrapper">
                         <ProjectData
-                            activeEmail={this.state.activeEmail}
                             tableInfo={tableData}
                             projectsPageAction={projectsPageAction}
-                            projectsTime={this.state.projectsTime}
                             editedProject={this.props.editedProject}
                             editProjectModal={this.props.editProjectModal}
                             getProjects={this.getProjects}
@@ -131,7 +128,6 @@ class ProjectsPage extends Component {
 
     componentDidMount() {
         this.getProjects();
-        this.setState({ activeEmail: localStorage.getItem('active_email') });
     }
 }
 

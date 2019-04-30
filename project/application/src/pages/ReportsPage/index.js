@@ -23,6 +23,7 @@ import {
     getCurrentDate,
     getDateTimestamp,
 } from '../../services/timeService';
+import { getUserTimezoneOffsetFromLocalStorage } from '../../services/userStorageService';
 import { AppConfig } from '../../config';
 
 class ReportsPage extends Component {
@@ -36,7 +37,6 @@ class ReportsPage extends Component {
             key: 'selection',
         },
         dateSelect: false,
-        selectUsersHeader: '',
         dateSelectUsers: false,
         selectUersData: [],
         selectUersDataEtalon: [],
@@ -308,6 +308,7 @@ class ReportsPage extends Component {
     }
 
     export() {
+        const timezoneOffset = getUserTimezoneOffsetFromLocalStorage();
         let dateFrom = this.getYear(this.state.selectionRange.startDate),
             dateTo = this.getYear(this.state.selectionRange.endDate);
         let setUser =
@@ -320,7 +321,7 @@ class ReportsPage extends Component {
                 : '';
         fetch(
             AppConfig.apiURL +
-                `report/export?timezoneOffset=${new Date().getTimezoneOffset()}&startDate=${convertDateToISOString(
+                `report/export?timezoneOffset=${timezoneOffset}&startDate=${convertDateToISOString(
                     dateFrom
                 )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000)}${
                     setUser ? `&${setUser}` : ''
@@ -474,7 +475,6 @@ class ReportsPage extends Component {
 
     componentDidMount() {
         this.setState({ selectionRange: this.props.timeRange });
-        this.setState({ selectUsersHeader: atob(localStorage.getItem('active_email')) });
         fetch(AppConfig.apiURL + `user/list`, {
             method: 'GET',
             headers: {

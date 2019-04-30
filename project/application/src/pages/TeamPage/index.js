@@ -12,9 +12,6 @@ import { AppConfig } from '../../config';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Access', 'Status'];
-    state = {
-        activeEmail: '',
-    };
 
     openAddUserModal() {
         this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: !this.props.createUserModal });
@@ -100,7 +97,6 @@ class TeamPage extends Component {
     }
 
     componentDidMount() {
-        this.setState({ activeEmail: localStorage.getItem('active_email') });
         this.getDataFromServer();
     }
 

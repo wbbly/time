@@ -6,6 +6,7 @@ import './style.css';
 import { getTodayTimeEntriesParseFunction } from '../../queries';
 import { getDate } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { AppConfig } from '../../config';
 
 class ManualTimeModal extends Component {
@@ -101,16 +102,13 @@ class ManualTimeModal extends Component {
     }
 
     getNewData() {
-        fetch(
-            AppConfig.apiURL + `timer/user-list?userId=${(JSON.parse(localStorage.getItem('user-object')) || {}).id}`,
-            {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }
-        )
+        fetch(AppConfig.apiURL + `timer/user-list?userId=${getUserIdFromLocalStorage()}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
             .then(res => {
                 if (!res.ok) {
                     throw res;

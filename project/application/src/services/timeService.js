@@ -1,5 +1,7 @@
 import * as moment from 'moment';
 
+import { getUserTimezoneOffsetFromLocalStorage } from './userStorageService';
+
 export function getTimeInSecondFromString(string) {
     let a = string.split(':');
     var seconds = +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
@@ -60,15 +62,19 @@ export function convertDateToShiftedISOString(date, shiftTimestamp) {
 }
 
 export function convertUTCDateToLocalISOString(date) {
+    const timezoneOffset = getUserTimezoneOffsetFromLocalStorage();
+
     return moment(date)
-        .subtract(new Date(date).getTimezoneOffset() * 60 * 1000)
+        .subtract(timezoneOffset)
         .utc()
         .toISOString();
 }
 
 export function convertUTCDateToShiftedLocalISOString(date, shiftTimestamp) {
+    const timezoneOffset = getUserTimezoneOffsetFromLocalStorage();
+
     return moment(date)
-        .subtract(new Date(date).getTimezoneOffset() * 60 * 1000)
+        .subtract(timezoneOffset)
         .add(shiftTimestamp, 'ms')
         .utc()
         .toISOString();

@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 
 import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
+import { getServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
 
 export function getDateInString(seconds) {
     if (!seconds) {
@@ -11,8 +12,7 @@ export function getDateInString(seconds) {
 }
 
 export function getTimeDiff(timeFrom, inString) {
-    let serverClientTimediff = localStorage.getItem('server-client-timediff');
-    serverClientTimediff = serverClientTimediff ? +serverClientTimediff : 0;
+    let serverClientTimediff = getServerClientTimediffFromLocalStorage();
     const timeDiff = +moment() - timeFrom + serverClientTimediff;
 
     return inString ? getTimeDurationByGivenTimestamp(+timeDiff) : moment(timeDiff).utc();

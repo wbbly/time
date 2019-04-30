@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 
 import './style.css';
 import { getTimeDiff } from '../../pages/MainPage/timeInSecondsFunction';
+import { removeUserFromLocalStorage } from '../../services/userStorageService';
+import {
+    removeCurrentTimerFromLocalStorage,
+    getCurrentTimerFromLocalStorage,
+} from '../../services/currentTimerStorageService';
+import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
 
 class LeftBar extends Component {
     ONE_SECOND = 1000; // in ms
@@ -21,8 +27,8 @@ class LeftBar extends Component {
     }
 
     getTimeNow() {
-        let timer = JSON.parse(localStorage.getItem('current-timer'));
-        if (!timer || !timer.timeStart) {
+        let timer = getCurrentTimerFromLocalStorage();
+        if (!timer.timeStart) {
             this.setState({ timer: '' });
 
             return;
@@ -38,8 +44,9 @@ class LeftBar extends Component {
     }
 
     logout() {
-        localStorage.removeItem('user-object');
-        localStorage.removeItem('current-timer');
+        removeUserFromLocalStorage();
+        removeCurrentTimerFromLocalStorage();
+        removeServerClientTimediffFromLocalStorage();
         window.location.href = window.location.origin;
     }
 

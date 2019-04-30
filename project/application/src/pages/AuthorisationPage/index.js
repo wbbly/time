@@ -3,7 +3,14 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import './index.css';
-import { userLoggedIn, getUserData } from '../../services/authentication';
+import { userLoggedIn } from '../../services/authentication';
+import {
+    setUserToLocalStorage,
+    getUserEmailFromLocalStorage,
+    removeUserFromLocalStorage,
+} from '../../services/userStorageService';
+import { removeCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
+import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
 import { AppConfig } from '../../config';
 import RegisterModal from '../../components/RegisterModal';
 import toggleRegisterModal from '../../actions/AuthorisationPageAction';
@@ -35,9 +42,9 @@ class AuthorisationPage extends Component {
             })
             .then(
                 result => {
-                    localStorage.setItem('user-object', JSON.stringify(result.user));
+                    setUserToLocalStorage(result.user);
                     this.props.reportsPageAction('SET_ACTIVE_USER', {
-                        data: [getUserData().email],
+                        data: [getUserEmailFromLocalStorage()],
                     });
                     this.setState({ haveToken: true });
                 },
@@ -57,6 +64,10 @@ class AuthorisationPage extends Component {
 
     render() {
         if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
+
+        removeUserFromLocalStorage();
+        removeCurrentTimerFromLocalStorage();
+        removeServerClientTimediffFromLocalStorage();
 
         return (
             <div className="wrapper_authorisation_page">
