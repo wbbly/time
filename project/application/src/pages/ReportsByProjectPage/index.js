@@ -18,8 +18,8 @@ import { AppConfig } from '../../config';
 class ReportsByProjectsPage extends Component {
     state = {
         dataOfProject: [],
-        sumTime: '',
-        countTasks: '',
+        totalTime: 0,
+        countTasks: 0,
     };
 
     getDateInPointsFormat(momentDate) {
@@ -33,12 +33,13 @@ class ReportsByProjectsPage extends Component {
         return item || '-';
     }
 
-    getSumtime(arr) {
-        let sumDate = 0;
+    getTotalTime(arr) {
+        let totalTime = 0;
         for (let i = 0; i < arr.length; i++) {
-            sumDate += +moment(arr[i].end_datetime) - +moment(arr[i].start_datetime);
+            totalTime += arr[i].durationTimestamp;
         }
-        return sumDate;
+
+        return totalTime;
     }
 
     render() {
@@ -50,7 +51,7 @@ class ReportsByProjectsPage extends Component {
                 <div className="username">{item.user.username}</div>
                 <div className="time">
                     {moment(item.start_datetime).format('DD.MM.YYYY')} |{' '}
-                    {getTimeDurationByGivenTimestamp(+moment(item.end_datetime) - +moment(item.start_datetime))}
+                    {getTimeDurationByGivenTimestamp(item.durationTimestamp)}
                 </div>
             </div>
         ));
@@ -65,7 +66,7 @@ class ReportsByProjectsPage extends Component {
                         {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
                     </div>
                     <div className="header_name">Sum tasks: {this.state.countTasks}</div>
-                    <div className="header_name">Sum time: {getTimeDurationByGivenTimestamp(this.state.sumTime)}</div>
+                    <div className="header_name">Sum time: {getTimeDurationByGivenTimestamp(this.state.totalTime)}</div>
                 </div>
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">
@@ -121,7 +122,7 @@ class ReportsByProjectsPage extends Component {
 
                     const timer = data.project_v2.length ? data.project_v2[0].timer : [];
                     this.setState({ dataOfProject: timer });
-                    this.setState({ sumTime: this.getSumtime(timer) });
+                    this.setState({ totalTime: this.getTotalTime(timer) });
                     this.setState({ countTasks: timer.length });
                 },
                 err => {
