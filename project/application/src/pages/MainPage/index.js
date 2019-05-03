@@ -503,7 +503,7 @@ class MainPage extends Component {
                     this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
                     const lastTimeEntry = data.timerV2[0] || {};
                     if (!this.TIMER_LIVE_SUBSCRIPTION && Object.keys(lastTimeEntry).length) {
-                        this.setActiveProject(lastTimeEntry.project);
+                        this.setState({ seletedProject: lastTimeEntry.project });
                     }
                 },
                 err => {
