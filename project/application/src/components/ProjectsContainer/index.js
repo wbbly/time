@@ -14,6 +14,11 @@ class ProjectsContainer extends Component {
         legend: {
             display: false,
         },
+        elements: {
+            arc: {
+                borderWidth: 0,
+            },
+        },
         tooltips: {
             callbacks: {
                 label: function(tooltipItem, data) {
