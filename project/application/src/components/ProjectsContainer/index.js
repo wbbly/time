@@ -16,8 +16,8 @@ class ProjectsContainer extends Component {
         },
         elements: {
             arc: {
-                borderWidth: 0
-            }
+                borderWidth: 0,
+            },
         },
         tooltips: {
             callbacks: {

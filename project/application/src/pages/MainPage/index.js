@@ -109,7 +109,6 @@ class MainPage extends Component {
                     );
             } else if (!data) {
                 removeCurrentTimerFromLocalStorage();
-                this.setActiveProject(createArayOfArrays(this.props.arrTasks)[0][0].project)
             }
         });
         this.socket.on('stop-timer-v2', data => {
@@ -502,6 +501,10 @@ class MainPage extends Component {
                 result => {
                     let data = getTodayTimeEntriesParseFunction(result.data);
                     this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
+                    const lastTimeEntry = data.timerV2[0] || {};
+                    if (!this.TIMER_LIVE_SUBSCRIPTION && Object.keys(lastTimeEntry).length) {
+                        this.setActiveProject(lastTimeEntry.project);
+                    }
                 },
                 err => {
                     if (err instanceof Response) {
