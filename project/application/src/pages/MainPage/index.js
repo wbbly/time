@@ -109,6 +109,7 @@ class MainPage extends Component {
                     );
             } else if (!data) {
                 removeCurrentTimerFromLocalStorage();
+                this.setActiveProject(createArayOfArrays(this.props.arrTasks)[0][0].project)
             }
         });
         this.socket.on('stop-timer-v2', data => {
