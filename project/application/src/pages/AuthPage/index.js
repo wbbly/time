@@ -13,10 +13,10 @@ import { removeCurrentTimerFromLocalStorage } from '../../services/currentTimerS
 import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
 import { AppConfig } from '../../config';
 import RegisterModal from '../../components/RegisterModal';
-import toggleRegisterModal from '../../actions/AuthorisationPageAction';
+import toggleRegisterModal from '../../actions/AuthPageAction';
 import reportsPageAction from '../../actions/ReportsPageAction';
 
-class AuthorisationPage extends Component {
+class AuthPage extends Component {
     state = {
         haveToken: false,
         authorisationModal: true,
@@ -71,9 +71,7 @@ class AuthorisationPage extends Component {
 
         return (
             <div className="wrapper_authorisation_page">
-                {this.props.authorisationPageReducer && (
-                    <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />
-                )}
+                {this.props.authPageReducer && <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />}
                 <i className="page_title" />
                 <div className="authorisation_window">
                     <div className="input_container">
@@ -112,7 +110,7 @@ class AuthorisationPage extends Component {
 
 const mapStateToProps = store => {
     return {
-        authorisationPageReducer: store.authorisationPageReducer.registerModal,
+        authPageReducer: store.authPageReducer.registerModal,
     };
 };
 
@@ -126,4 +124,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AuthorisationPage);
+)(AuthPage);

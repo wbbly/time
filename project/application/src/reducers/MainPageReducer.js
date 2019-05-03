@@ -3,9 +3,9 @@ const initialState = {
         classToggle: true,
         time: '',
         date: '',
-        arrTasks: [],
+        timeEntriesList: [],
     },
-    arrTasks: [],
+    timeEntriesList: [],
     editedItem: {
         date: '',
         id: null,
@@ -20,9 +20,9 @@ const initialState = {
 export function mainPageReducer(state = initialState, action) {
     switch (action.type) {
         case 'ADD_TASKS_ARR':
-            return { ...state, arrTasks: action.payload.arrTasks };
+            return { ...state, timeEntriesList: action.payload.timeEntriesList };
         case 'CHANGE_ARR':
-            return { ...state, arrTasks: action.payload.arrTasks };
+            return { ...state, timeEntriesList: action.payload.timeEntriesList };
         case 'SET_EDITED_ITEM':
             return { ...state, editedItem: action.payload.editedItem };
         default:

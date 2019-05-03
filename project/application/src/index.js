@@ -10,7 +10,7 @@ import ReportsPage from './pages/ReportsPage';
 import ProjectsPage from './pages/ProjectsPage';
 import TeamPage from './pages/TeamPage';
 import ReportsByProjectsPage from './pages/ReportsByProjectPage';
-import AuthorisationPage from './pages/AuthorisationPage';
+import AuthPage from './pages/AuthPage';
 
 ReactDOM.render(
     <Provider store={store}>
@@ -25,7 +25,7 @@ ReactDOM.render(
                     />
                     <Route path="/projects" component={ProjectsPage} />
                     <Route path="/team" component={TeamPage} />
-                    <Route path="/login" component={AuthorisationPage} />
+                    <Route path="/login" component={AuthPage} />
 
                     <Redirect from="/reports" to="/reports/summary" />
                     <Redirect from="/" to="/login" />

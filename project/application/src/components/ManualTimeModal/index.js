@@ -25,7 +25,7 @@ class ManualTimeModal extends Component {
     };
 
     getIssues() {
-        let items = this.props.arrProjects.map((item, index) => (
+        let items = this.props.projectList.map((item, index) => (
             <div
                 className="item_select_wrapper"
                 onClick={e => this.setProject(item)}
@@ -118,7 +118,7 @@ class ManualTimeModal extends Component {
             .then(
                 result => {
                     let data = getTodayTimeEntriesParseFunction(result.data);
-                    this.props.addTasksAction('ADD_TASKS_ARR', { arrTasks: data.timerV2 });
+                    this.props.addTasksAction('ADD_TASKS_ARR', { timeEntriesList: data.timerV2 });
                 },
                 err => {
                     if (err instanceof Response) {

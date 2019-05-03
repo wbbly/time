@@ -1,6 +1,22 @@
 import * as moment from 'moment';
 
 import { getUserTimezoneOffsetFromLocalStorage } from './userStorageService';
+import { getServerClientTimediffFromLocalStorage } from './serverClientTimediffStorageService';
+
+export function getDateInString(seconds) {
+    if (!seconds) {
+        return '-';
+    }
+
+    return getTimeDurationByGivenTimestamp(seconds);
+}
+
+export function getTimeDiff(timeFrom, inString) {
+    let serverClientTimediff = getServerClientTimediffFromLocalStorage();
+    const timeDiff = +moment() - timeFrom + serverClientTimediff;
+
+    return inString ? getTimeDurationByGivenTimestamp(+timeDiff) : moment(timeDiff).utc();
+}
 
 export function getTimeInSecondFromString(string) {
     let a = string.split(':');

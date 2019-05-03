@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import './style.css';
-import { getTimeDiff } from '../../pages/MainPage/timeInSecondsFunction';
+import { getTimeDiff } from '../../services/timeService';
 import { removeUserFromLocalStorage } from '../../services/userStorageService';
 import {
     removeCurrentTimerFromLocalStorage,
@@ -11,10 +11,10 @@ import {
 import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
 
 class LeftBar extends Component {
-    ONE_SECOND = 1000; // in ms
+    ONE_SECOND_PERIOD = 1000; // in ms
 
     componentDidMount() {
-        this.setState({ arrTasks: this.props.arrTasks });
+        this.setState({ timeEntriesList: this.props.timeEntriesList });
         this.activeSmalltimer();
     }
 
@@ -23,7 +23,7 @@ class LeftBar extends Component {
     };
 
     activeSmalltimer() {
-        setInterval(() => this.getTimeNow(), this.ONE_SECOND);
+        setInterval(() => this.getTimeNow(), this.ONE_SECOND_PERIOD);
     }
 
     getTimeNow() {
