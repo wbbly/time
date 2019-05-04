@@ -91,7 +91,7 @@ class ReportsPage extends Component {
     handleSelect = ranges => {
         this.setState({ selectionRange: ranges.selection });
         this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
-        this.getDataUsers(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
+        this.applySearch(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
     };
 
     getYear(date) {
@@ -153,14 +153,9 @@ class ReportsPage extends Component {
                     </div>
                     {checkIsAdmin() && (
                         <ReportsSearchBar
-                            settedDate={{
-                                startDate: this.state.selectionRange.startDate,
-                                endDate: this.state.selectionRange.endDate,
-                            }}
-                            projectsData={this.state.projectsData}
-                            getDataUsers={e => this.getDataUsers()}
-                            selectedProjects={this.props.selectedProjects}
-                            setUser={this.props.setUser}
+                            applySearch={e => this.applySearch()}
+                            inputProjectData={this.props.inputProjectData}
+                            inputUserData={this.props.inputUserData}
                             reportsPageAction={this.props.reportsPageAction}
                         />
                     )}
@@ -191,7 +186,7 @@ class ReportsPage extends Component {
                         <div className="projects_chart_container">
                             <ProjectsContainer
                                 selectionRange={this.props.timeRange}
-                                usersArr={this.props.setUser}
+                                usersArr={this.props.inputUserData}
                                 projectsArr={this.props.projectsArr}
                                 dataDoughnutChat={this.props.dataDoughnutChat}
                             />
@@ -311,20 +306,20 @@ class ReportsPage extends Component {
         const timezoneOffset = getUserTimezoneOffsetFromLocalStorage();
         let dateFrom = this.getYear(this.state.selectionRange.startDate),
             dateTo = this.getYear(this.state.selectionRange.endDate);
-        let setUser =
-            !!this.props.setUser && !!this.props.setUser.length
-                ? getParametersString('userEmails', this.props.setUser)
+        let inputUserData =
+            !!this.props.inputUserData && !!this.props.inputUserData.length
+                ? getParametersString('userEmails', this.props.inputUserData)
                 : '';
         let setProjectNames =
-            !!this.props.selectedProjects && !!this.props.selectedProjects.length
-                ? getParametersString('projectNames', this.props.selectedProjects)
+            !!this.props.inputProjectData && !!this.props.inputProjectData.length
+                ? getParametersString('projectNames', this.props.inputProjectData)
                 : '';
         fetch(
             AppConfig.apiURL +
                 `report/export?timezoneOffset=${timezoneOffset}&startDate=${convertDateToISOString(
                     dateFrom
                 )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000)}${
-                    setUser ? `&${setUser}` : ''
+                    inputUserData ? `&${inputUserData}` : ''
                 }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
                 method: 'GET',
@@ -366,24 +361,24 @@ class ReportsPage extends Component {
         }, 200);
     }
 
-    getDataUsers(
+    applySearch(
         dateFrom = this.getYear(this.state.selectionRange.startDate),
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
-        let setUser =
-            !!this.props.setUser && !!this.props.setUser.length
-                ? getParametersString('userEmails', this.props.setUser)
+        let inputUserData =
+            !!this.props.inputUserData && !!this.props.inputUserData.length
+                ? getParametersString('userEmails', this.props.inputUserData)
                 : '';
         let setProjectNames =
-            !!this.props.selectedProjects && !!this.props.selectedProjects.length
-                ? getParametersString('projectNames', this.props.selectedProjects)
+            !!this.props.inputProjectData && !!this.props.inputProjectData.length
+                ? getParametersString('projectNames', this.props.inputProjectData)
                 : '';
         fetch(
             AppConfig.apiURL +
                 `project/reports-projects?startDate=${convertDateToISOString(
                     dateFrom
                 )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000)}${
-                    setUser ? `&${setUser}` : ''
+                    inputUserData ? `&${inputUserData}` : ''
                 }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
                 method: 'GET',
@@ -426,7 +421,7 @@ class ReportsPage extends Component {
                 `timer/reports-list?startDate=${convertDateToISOString(
                     dateFrom
                 )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000)}${
-                    setUser ? `&${setUser}` : ''
+                    inputUserData ? `&${inputUserData}` : ''
                 }${setProjectNames ? `&${setProjectNames}` : ''}`,
             {
                 method: 'GET',
@@ -494,7 +489,7 @@ class ReportsPage extends Component {
                     this.setState({ selectUersData: data.user });
                     this.setState({ selectUersDataEtalon: data.user });
                     setTimeout(() => {
-                        this.getDataUsers(
+                        this.applySearch(
                             this.getYear(this.state.selectionRange.startDate),
                             this.getYear(this.state.selectionRange.endDate)
                         );
@@ -519,8 +514,8 @@ const mapStateToProps = store => {
         dataDoughnutChat: store.reportsPageReducer.dataDoughnutChat,
         dataFromServer: store.reportsPageReducer.dataFromServer,
         timeRange: store.reportsPageReducer.timeRange,
-        setUser: store.reportsPageReducer.setUser,
-        selectedProjects: store.reportsPageReducer.selectedProjects,
+        inputUserData: store.reportsPageReducer.inputUserData,
+        inputProjectData: store.reportsPageReducer.inputProjectData,
     };
 };
 

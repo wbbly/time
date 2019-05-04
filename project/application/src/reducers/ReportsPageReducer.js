@@ -11,7 +11,7 @@ const initialState = {
         key: 'selection',
         firstDayOfWeek: 1,
     },
-    setUser: [getUserEmailFromLocalStorage()],
+    inputUserData: [getUserEmailFromLocalStorage()],
     dataBarChat: {
         defaultFontColor: 'red',
         labels: [],
@@ -133,7 +133,7 @@ const initialState = {
         ],
     },
     dataFromServer: [],
-    selectedProjects: [],
+    inputProjectData: [],
 };
 
 export function reportsPageReducer(state = initialState, action) {
@@ -149,9 +149,9 @@ export function reportsPageReducer(state = initialState, action) {
         case 'SET_TIME':
             return { ...state, timeRange: action.payload.data };
         case 'SET_ACTIVE_USER':
-            return { ...state, setUser: action.payload.data };
+            return { ...state, inputUserData: action.payload.data };
         case 'SET_SELECTED_PROJECTS':
-            return { ...state, selectedProjects: action.payload.data };
+            return { ...state, inputProjectData: action.payload.data };
         default:
             return state;
     }

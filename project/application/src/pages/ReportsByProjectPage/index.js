@@ -138,7 +138,7 @@ class ReportsByProjectsPage extends Component {
 
 const mapStateToProps = store => {
     return {
-        setUser: store.reportsPageReducer.setUser,
+        inputUserData: store.reportsPageReducer.inputUserData,
     };
 };
 
