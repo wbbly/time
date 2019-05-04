@@ -117,15 +117,17 @@ class MainPage extends Component {
         this.setState({ timerPlayButtonLoader: true }, () => {
             if (className === 'control_task_time_icons play') {
                 const issue = (this.issueTargetElement || {}).value || '';
-                this.socketConnection.emit('start-timer-v2', {
-                    userId: getUserIdFromLocalStorage(),
-                    issue: encodeTimeEntryIssue(issue),
-                    projectId: projectId,
-                });
+                this.socketConnection &&
+                    this.socketConnection.emit('start-timer-v2', {
+                        userId: getUserIdFromLocalStorage(),
+                        issue: encodeTimeEntryIssue(issue),
+                        projectId: projectId,
+                    });
             } else {
-                this.socketConnection.emit('stop-timer-v2', {
-                    userId: getUserIdFromLocalStorage(),
-                });
+                this.socketConnection &&
+                    this.socketConnection.emit('stop-timer-v2', {
+                        userId: getUserIdFromLocalStorage(),
+                    });
             }
         });
     }
@@ -148,11 +150,12 @@ class MainPage extends Component {
         this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = setTimeout(() => {
             if (this.TIMER_LIVE_SUBSCRIPTION) {
                 const issue = (this.issueTargetElement || {}).value || '';
-                this.socketConnection.emit('update-timer-v2', {
-                    userId: getUserIdFromLocalStorage(),
-                    issue: encodeTimeEntryIssue(issue),
-                    projectId: this.state.seletedProject.id,
-                });
+                this.socketConnection &&
+                    this.socketConnection.emit('update-timer-v2', {
+                        userId: getUserIdFromLocalStorage(),
+                        issue: encodeTimeEntryIssue(issue),
+                        projectId: this.state.seletedProject.id,
+                    });
             }
 
             clearTimeout(this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
@@ -376,7 +379,7 @@ class MainPage extends Component {
     }
 
     componentWillUnmount() {
-        this.socketConnection.emit('leave');
+        this.socketConnection && this.socketConnection.emit('leave');
     }
 
     createTimeEntriesList(data) {
