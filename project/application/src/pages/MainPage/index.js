@@ -353,10 +353,11 @@ class MainPage extends Component {
             .then(
                 result => {
                     let dataParsed = getProjectListParseFunction(result);
+                    const projectV2 = dataParsed.projectV2.reverse();
                     this.setState({
-                        projectList: dataParsed.projectV2,
-                        projectListForModalWindow: dataParsed.projectV2,
-                        projectListInitial: dataParsed.projectV2,
+                        projectList: projectV2,
+                        projectListForModalWindow: projectV2,
+                        projectListInitial: projectV2,
                     });
                 },
                 err => {
