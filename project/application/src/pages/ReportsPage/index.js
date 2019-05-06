@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import * as moment from 'moment';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import * as rdrLocales from 'react-date-range/dist/locale';
 import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
@@ -135,6 +136,7 @@ class ReportsPage extends Component {
                             {this.state.dateSelect && (
                                 <div className="select_body" ref={div => (this.datePickerSelect = div)}>
                                     <DateRangePicker
+                                        locale={rdrLocales['enGB']}
                                         ranges={[
                                             {
                                                 startDate: this.state.selectionRange.startDate,
