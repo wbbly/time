@@ -6,7 +6,7 @@ import { ROLES } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 class AddToTeamModal extends Component {
-    addUser = (email, password, userName) => {
+    addUser = (email, password) => {
         fetch(AppConfig.apiURL + 'user/register', {
             method: 'POST',
             headers: {
@@ -16,7 +16,6 @@ class AddToTeamModal extends Component {
             body: JSON.stringify({
                 email: email,
                 password: password,
-                roleId: ROLES.ROLE_USER,
             }),
         })
             .then(res => {
@@ -31,10 +30,10 @@ class AddToTeamModal extends Component {
                         id: getTimestamp(),
                         username: this.email.value,
                         email: this.email.value,
-                        role: { title: 'ROLE_USER' },
+                        role: { title: ROLES.ROLE_USER },
                         is_active: false,
                     });
-                    // this.props.getData();
+
                     this.closeModal();
                 },
                 err => {

@@ -3,16 +3,20 @@ import './style.css';
 import { AppConfig } from '../../config';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { ROLES, checkIsAdminByRole } from '../../services/authentication';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 
+const USER_STATUS = {
+    ACTIVE: 'ACTIVE',
+    NOT_ACTIVE: 'NOT_ACTIVE',
+};
+
 class EditTeamModal extends Component {
     state = {
-        id: '',
+        id: null,
         value: ROLES.ROLE_USER,
-        valueStatus: 'notActive',
+        valueStatus: USER_STATUS.NOT_ACTIVE,
     };
 
     closeModal() {
@@ -30,8 +34,8 @@ class EditTeamModal extends Component {
             body: JSON.stringify({
                 email: this.email.value,
                 username: this.name.value,
-                roleId: checkIsAdminByRole(this.state.value) ? ROLES.ROLE_ADMIN : ROLES.ROLE_USER,
-                isActive: this.state.valueStatus === 'active' ? true : false,
+                role: checkIsAdminByRole(this.state.value) ? ROLES.ROLE_ADMIN : ROLES.ROLE_USER,
+                isActive: this.state.valueStatus === USER_STATUS.ACTIVE,
             }),
         })
             .then(res => {
@@ -93,18 +97,30 @@ class EditTeamModal extends Component {
                     <div className="edit_team_modal_input_container">
                         <div className="edit_team_modal_input_title">Role</div>
                         <RadioGroup onChange={this.handleChange} value={this.state.value}>
-                            <FormControlLabel value={'ROLE_ADMIN'} control={<Radio color="primary" />} label="Admin" />
-                            <FormControlLabel value={'ROLE_USER'} control={<Radio color="primary" />} label="User" />
+                            <FormControlLabel
+                                value={ROLES.ROLE_ADMIN}
+                                control={<Radio color="primary" />}
+                                label="Admin"
+                            />
+                            <FormControlLabel
+                                value={ROLES.ROLE_USER}
+                                control={<Radio color="primary" />}
+                                label="User"
+                            />
                         </RadioGroup>
                     </div>
                     <div className="edit_team_modal_input_container">
                         <div className="edit_team_modal_input_title">Status</div>
                         <RadioGroup onChange={this.handleChangeStatus} value={this.state.valueStatus}>
-                            <FormControlLabel value="active" control={<Radio color="primary" />} label="Active" />
                             <FormControlLabel
-                                value="notActive"
+                                value={USER_STATUS.ACTIVE}
                                 control={<Radio color="primary" />}
-                                label="Not Active"
+                                label="Active"
+                            />
+                            <FormControlLabel
+                                value={USER_STATUS.NOT_ACTIVE}
+                                control={<Radio color="primary" />}
+                                label="Not active"
                             />
                         </RadioGroup>
                     </div>
@@ -117,7 +133,7 @@ class EditTeamModal extends Component {
     componentDidMount() {
         this.setState({ value: this.props.editedUser.role.title });
         this.setState({ id: this.props.editedUser.id });
-        this.setState({ valueStatus: !this.props.editedUser.role.is_active ? 'active' : 'notActive' });
+        this.setState({ valueStatus: this.props.editedUser.is_active ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE });
         this.email.value = this.props.editedUser.email;
         this.name.value = this.props.editedUser.username;
     }

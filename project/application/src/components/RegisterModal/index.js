@@ -15,7 +15,6 @@ class RegisterModal extends Component {
             body: JSON.stringify({
                 email: email,
                 password: password,
-                roleId: ROLES.ROLE_USER,
             }),
         })
             .then(res => {
