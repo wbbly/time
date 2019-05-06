@@ -136,11 +136,10 @@ class ReportsPage extends Component {
                             {this.state.dateSelect && (
                                 <div className="select_body" ref={div => (this.datePickerSelect = div)}>
                                     <DateRangePicker
-                                        locale={rdrLocales['enGB']}
                                         ranges={[
                                             {
-                                                startDate: getCurrentDate(),
-                                                endDate: getCurrentDate(),
+                                                startDate: this.state.selectionRange.startDate,
+                                                endDate: this.state.selectionRange.endDate,
                                                 key: 'selection',
                                                 firstDayOfWeek: 1,
                                             },
