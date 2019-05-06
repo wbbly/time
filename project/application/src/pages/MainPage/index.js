@@ -442,18 +442,18 @@ class MainPage extends Component {
 
         return (
             <div className="wrapper_main_page">
-                {this.props.manualTimerModal.manualTimerModalToggle && (
-                    <ManualTimeModal
-                        timeEntriesList={this.props.timeEntriesList}
-                        editedItem={this.props.editedItem}
-                        projectList={this.state.projectListInitial}
-                        addTasksAction={this.props.addTasksAction}
-                        manualTimerModalAction={this.props.manualTimerModalAction}
-                    />
-                )}
                 <LeftBar />
                 <div className="data_container">
                     <div className="add_task_container">
+                        {this.props.manualTimerModal.manualTimerModalToggle && (
+                            <ManualTimeModal
+                                timeEntriesList={this.props.timeEntriesList}
+                                editedItem={this.props.editedItem}
+                                projectList={this.state.projectListInitial}
+                                addTasksAction={this.props.addTasksAction}
+                                manualTimerModalAction={this.props.manualTimerModalAction}
+                            />
+                        )}
                         <input
                             type="text"
                             className="add_task"

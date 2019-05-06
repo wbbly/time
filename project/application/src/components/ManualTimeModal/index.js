@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
+import {MuiThemeProvider, createMuiTheme, withStyles, StyledComponentProps, Theme} from '@material-ui/core/styles'
 import * as moment from 'moment';
 
 import './style.css';
@@ -21,7 +22,6 @@ class ManualTimeModal extends Component {
         endDate: '',
         endDateChanged: false,
         endTime: '',
-        endDateChanged: false,
     };
 
     getIssues() {
