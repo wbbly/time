@@ -139,8 +139,8 @@ class ReportsPage extends Component {
                                         locale={rdrLocales['enGB']}
                                         ranges={[
                                             {
-                                                startDate: getCurrentDate(),
-                                                endDate: getCurrentDate(),
+                                                startDate: this.state.selectionRange.startDate,
+                                                endDate: this.state.selectionRange.endDate,
                                                 key: 'selection',
                                                 firstDayOfWeek: 1,
                                             },
