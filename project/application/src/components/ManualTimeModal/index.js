@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
+import { MuiPickersUtilsProvider, TimePicker, DatePicker } from 'material-ui-pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import Grid from '@material-ui/core/Grid';
+import locale from 'date-fns/locale/en-GB';
 import * as moment from 'moment';
 
 import './style.css';
@@ -11,17 +14,16 @@ import { AppConfig } from '../../config';
 
 class ManualTimeModal extends Component {
     state = {
-        activeProject: '',
+        activeProject: null,
         selectProject: false,
-        activeItem: '',
-        startDate: '',
+        activeItem: null,
+        startDate: null,
         startDateChanged: false,
-        startTime: '',
+        startTime: null,
         startTimeChanged: false,
-        endDate: '',
+        endDate: null,
         endDateChanged: false,
-        endTime: '',
-        endDateChanged: false,
+        endTime: null,
     };
 
     getIssues() {
@@ -202,27 +204,35 @@ class ManualTimeModal extends Component {
                             <div className="margin_12">
                                 <span> Time start:</span>
                                 <div className="date_time">
-                                    <DateFormatInput value={startDate} onChange={this.onChangeDate} name="date-input" />
-                                    <TimeFormatInput
-                                        value={startTime}
-                                        onChange={e => this.onChangeTime(e)}
-                                        name="time-input"
-                                    />
+                                    <i className="calendar" />
+                                    <i className="clock" />
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                        <Grid container justify="space-between">
+                                            <DatePicker
+                                                value={startDate}
+                                                onChange={this.onChangeDate}
+                                                format={'dd.MM.yyyy'}
+                                            />
+                                            <TimePicker value={startTime} onChange={this.onChangeTime} />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
                                 </div>
                             </div>
                             <div className="margin_12">
                                 <span>Time end:</span>
                                 <div className="date_time">
-                                    <DateFormatInput
-                                        value={endDate}
-                                        onChange={this.onChangeDateEnd}
-                                        name="date-input"
-                                    />
-                                    <TimeFormatInput
-                                        value={endTime}
-                                        onChange={this.onChangeTimeEnd}
-                                        name="time-input"
-                                    />
+                                    <i className="calendar" />
+                                    <i className="clock" />
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                        <Grid container justify="space-between">
+                                            <DatePicker
+                                                value={endDate}
+                                                onChange={this.onChangeDateEnd}
+                                                format={'dd.MM.yyyy'}
+                                            />
+                                            <TimePicker value={endTime} onChange={this.onChangeTimeEnd} />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
                                 </div>
                             </div>
                         </div>
