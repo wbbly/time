@@ -180,6 +180,7 @@ input[type="time"],
 }
 
 .manual_time_modal_container .date_time {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -188,4 +189,28 @@ input[type="time"],
 
 .manual_time_modal_container input:hover {
     border-bottom: 2px solid rgba(0, 0, 0, 0.87);
+}
+
+i.calendar {
+    position: absolute;
+    z-index: 2;
+    left: 165px;
+    top: 12px;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/calendar-24px.svg") no-repeat center;
+}
+
+i.clock {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    top: 12px;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/clock-24px.svg") no-repeat center;
+}
+
+.manual_timer_modal_timepickers_container .date_time input {
+    border: 0;
 }

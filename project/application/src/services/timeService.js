@@ -5,7 +5,7 @@ import { getServerClientTimediffFromLocalStorage } from './serverClientTimediffS
 
 export function getDateInString(seconds) {
     if (!seconds) {
-        return '-';
+        return '00:00:00';
     }
 
     return getTimeDurationByGivenTimestamp(seconds);

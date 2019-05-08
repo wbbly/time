@@ -159,39 +159,42 @@ class ReportsPage extends Component {
                             reportsPageAction={this.props.reportsPageAction}
                         />
                     )}
-                    {this.state.toggleBar && this.state.toggleChar && (
-                        <div className="total_time_container">
-                            <span className="total_time_name">Total</span>
-                            <span className="total_time_time">
-                                {typeof this.state.totalUpChartTime === 'number'
-                                    ? getTimeDurationByGivenTimestamp(this.state.totalUpChartTime)
-                                    : '00:00:00'}
-                            </span>
-                            <span className="export_button" onClick={e => this.export()}>
-                                Export
-                            </span>
-                        </div>
-                    )}
-                    {this.state.toggleBar && this.state.toggleChar && (
-                        <div className="line_chart_container">
-                            <Bar
-                                ref={Bar => (this.barChart = Bar)}
-                                data={this.props.dataBarChat}
-                                height={50}
-                                options={this.lineChartOption}
-                            />
-                        </div>
-                    )}
-                    {this.state.toggleBar && this.state.toggleChar && (
-                        <div className="projects_chart_container">
-                            <ProjectsContainer
-                                selectionRange={this.props.timeRange}
-                                usersArr={this.props.inputUserData}
-                                projectsArr={this.props.projectsArr}
-                                dataDoughnutChat={this.props.dataDoughnutChat}
-                            />
-                        </div>
-                    )}
+                    {this.state.toggleBar &&
+                        this.state.toggleChar && (
+                            <div className="total_time_container">
+                                <span className="total_time_name">Total</span>
+                                <span className="total_time_time">
+                                    {typeof this.state.totalUpChartTime === 'number'
+                                        ? getTimeDurationByGivenTimestamp(this.state.totalUpChartTime)
+                                        : '00:00:00'}
+                                </span>
+                                <span className="export_button" onClick={e => this.export()}>
+                                    Export
+                                </span>
+                            </div>
+                        )}
+                    {this.state.toggleBar &&
+                        this.state.toggleChar && (
+                            <div className="line_chart_container">
+                                <Bar
+                                    ref={Bar => (this.barChart = Bar)}
+                                    data={this.props.dataBarChat}
+                                    height={50}
+                                    options={this.lineChartOption}
+                                />
+                            </div>
+                        )}
+                    {this.state.toggleBar &&
+                        this.state.toggleChar && (
+                            <div className="projects_chart_container">
+                                <ProjectsContainer
+                                    selectionRange={this.props.timeRange}
+                                    usersArr={this.props.inputUserData}
+                                    projectsArr={this.props.projectsArr}
+                                    dataDoughnutChat={this.props.dataDoughnutChat}
+                                />
+                            </div>
+                        )}
                 </div>
             </div>
         );
