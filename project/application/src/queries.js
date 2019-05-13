@@ -6,6 +6,7 @@ export function getProjectListParseFunction(result) {
         projectV2: [],
     };
     const { project_v2 } = result.data;
+    console.log(project_v2);
     for (let i = 0; i < project_v2.length; i++) {
         const item = project_v2[i];
         const { id, is_active: isActive, name, project_color: projectColor } = item;

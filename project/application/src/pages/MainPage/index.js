@@ -340,7 +340,7 @@ class MainPage extends Component {
     }
 
     getProjectList() {
-        fetch(AppConfig.apiURL + 'project/list', {
+        fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',

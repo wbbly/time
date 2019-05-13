@@ -3,6 +3,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 import './style.css';
 import { AppConfig } from '../../config';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 
 export default class ReportsSearchBar extends Component {
     state = {
@@ -365,7 +366,7 @@ export default class ReportsSearchBar extends Component {
                 }
             );
 
-        fetch(AppConfig.apiURL + `project/list`, {
+        fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
