@@ -20,7 +20,7 @@ class ProjectsPage extends Component {
 
     getProjects = () => {
         if (checkIsAdmin()) {
-            fetch(AppConfig.apiURL + 'project/admin-list', {
+            fetch(AppConfig.apiURL + `project/admin-list?userId=${getUserIdFromLocalStorage()}`, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -48,7 +48,7 @@ class ProjectsPage extends Component {
                     }
                 );
         } else {
-            fetch(AppConfig.apiURL + `project/admin-list?userId=${getUserIdFromLocalStorage()}`, {
+            fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',

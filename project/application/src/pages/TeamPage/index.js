@@ -6,12 +6,19 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import AddToTeamModal from '../../components/AddToTeamModal';
 import teamPageAction from '../../actions/TeamPageAction';
-import { checkIsAdminByRole, checkIsUserByRole, userLoggedIn, checkIsAdmin } from '../../services/authentication';
+import {
+    checkIsAdminByRole,
+    checkIsUserByRole,
+    userLoggedIn,
+    checkIsAdmin,
+    checkIsUserByCollaborationRole,
+} from '../../services/authentication';
 import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 
 class TeamPage extends Component {
-    headerItems = ['Name', 'E-mail', 'Access', 'Status'];
+    headerItems = ['Name', 'E-mail', 'Access', 'Team Access', 'Status'];
 
     openAddUserModal() {
         this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: !this.props.createUserModal });
@@ -29,18 +36,27 @@ class TeamPage extends Component {
         ));
         const items = programersArr.map((element, index) => (
             <tr key={'team-member_' + index}>
-                <td>{element.username}</td>
-                <td>{element.email}</td>
+                <td>{element.user[0].username}</td>
+                <td>{element.user[0].email}</td>
                 <td>
-                    {checkIsUserByRole(element.role.title) && (
-                        <div className="access_container">{element.role.title}</div>
+                    {console.log(element)}
+                    {checkIsUserByRole(element.user[0].role.title) && (
+                        <div className="access_container">{element.user[0].role.title}</div>
                     )}
-                    {checkIsAdminByRole(element.role.title) && (
+                    {checkIsAdminByRole(element.user[0].role.title) && (
+                        <div className="access_container red">{element.user[0].role.title}</div>
+                    )}
+                </td>
+                <td>
+                    {checkIsUserByCollaborationRole(element.role_collaboration.title) && (
+                        <div className="access_container">{element.role_collaboration.title}</div>
+                    )}
+                    {checkIsAdminByRole(element.role_collaboration.title) && (
                         <div className="access_container red">{element.role.title}</div>
                     )}
                 </td>
                 <td>
-                    <div>{element.is_active ? 'Active' : 'Not active'}</div>
+                    <div>{element.user[0].is_active ? 'Active' : 'Not active'}</div>
                     {checkIsAdmin() && (
                         <i onClick={e => this.openEditMiodal(element)} className="edit_button item_button" />
                     )}
@@ -101,32 +117,39 @@ class TeamPage extends Component {
     }
 
     getDataFromServer(teamPage = this) {
-        fetch(AppConfig.apiURL + `user/list`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let data = result.data;
-                    teamPage.props.teamPageAction('SET_TABLE_DATA', { programersArr: data.user });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
+        //Obtaining current team ID
+        fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res => {
+            res.json().then(res => {
+                let teamId = res.data.user_team[0].team.id;
+                //@TODO: Fetch Team Data > http://API/team/teamId/data
+                fetch(AppConfig.apiURL + `team/${teamId}/data`, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw res;
+                        }
+                        return res.json();
+                    })
+                    .then(
+                        result => {
+                            let data = result.data.team[0].team_users;
+                            teamPage.props.teamPageAction('SET_TABLE_DATA', { programersArr: data });
+                        },
+                        err => {
+                            if (err instanceof Response) {
+                                err.text().then(errorMessage => console.log(errorMessage));
+                            } else {
+                                console.log(err);
+                            }
+                        }
+                    );
+            });
+        });
     }
 }
 
