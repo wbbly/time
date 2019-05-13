@@ -39,7 +39,6 @@ class TeamPage extends Component {
                 <td>{element.user[0].username}</td>
                 <td>{element.user[0].email}</td>
                 <td>
-                    {console.log(element)}
                     {checkIsUserByRole(element.user[0].role.title) && (
                         <div className="access_container">{element.user[0].role.title}</div>
                     )}
