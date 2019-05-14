@@ -15,7 +15,7 @@ const USER_STATUS = {
 class EditTeamModal extends Component {
     state = {
         id: null,
-        value: ROLES.ROLE_USER,
+        value: ROLES.ROLE_MEMBER,
         valueStatus: USER_STATUS.NOT_ACTIVE,
     };
 
@@ -34,7 +34,7 @@ class EditTeamModal extends Component {
             body: JSON.stringify({
                 email: this.email.value,
                 username: this.name.value,
-                role: checkIsAdminByRole(this.state.value) ? ROLES.ROLE_ADMIN : ROLES.ROLE_USER,
+                role: checkIsAdminByRole(this.state.value) ? ROLES.ROLE_ADMIN : ROLES.ROLE_MEMBER,
                 isActive: this.state.valueStatus === USER_STATUS.ACTIVE,
             }),
         })
@@ -103,7 +103,7 @@ class EditTeamModal extends Component {
                                 label="Admin"
                             />
                             <FormControlLabel
-                                value={ROLES.ROLE_USER}
+                                value={ROLES.ROLE_MEMBER}
                                 control={<Radio color="primary" />}
                                 label="User"
                             />

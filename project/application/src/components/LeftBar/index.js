@@ -48,6 +48,7 @@ class LeftBar extends Component {
         removeUserFromLocalStorage();
         removeCurrentTimerFromLocalStorage();
         removeServerClientTimediffFromLocalStorage();
+        localStorage.removeItem('availableTeams');
         window.location.href = window.location.origin;
     }
 
@@ -81,11 +82,6 @@ class LeftBar extends Component {
                             <div className="links_text">team</div>
                         </div>
                     </Link>
-
-                    <div className="navigation_links">
-                        <i className="workspaces" />
-                        <div className="links_text">workspaces</div>
-                    </div>
                     <TeamSwitcher />
                 </div>
 

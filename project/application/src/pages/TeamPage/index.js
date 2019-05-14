@@ -6,20 +6,14 @@ import './style.css';
 import LeftBar from '../../components/LeftBar';
 import AddToTeamModal from '../../components/AddToTeamModal';
 import teamPageAction from '../../actions/TeamPageAction';
-import {
-    checkIsAdminByRole,
-    checkIsUserByRole,
-    userLoggedIn,
-    checkIsAdmin,
-    checkIsUserByCollaborationRole,
-} from '../../services/authentication';
+import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { Input } from '@material-ui/core';
 
 class TeamPage extends Component {
-    headerItems = ['Name', 'E-mail', 'Access', 'Team Access', 'Status'];
+    headerItems = ['Name', 'E-mail', 'Access', 'Status'];
     teamName = 'Loading...';
     teamId = '';
     changingName = false;
@@ -77,15 +71,7 @@ class TeamPage extends Component {
                 <td>{element.user[0].username}</td>
                 <td>{element.user[0].email}</td>
                 <td>
-                    {checkIsUserByRole(element.user[0].role.title) && (
-                        <div className="access_container">{element.user[0].role.title}</div>
-                    )}
-                    {checkIsAdminByRole(element.user[0].role.title) && (
-                        <div className="access_container red">{element.user[0].role.title}</div>
-                    )}
-                </td>
-                <td>
-                    {checkIsUserByCollaborationRole(element.role_collaboration.title) && (
+                    {checkIsMemberByRole(element.role_collaboration.title) && (
                         <div className="access_container">{element.role_collaboration.title}</div>
                     )}
                     {checkIsAdminByRole(element.role_collaboration.title) && (
@@ -94,9 +80,9 @@ class TeamPage extends Component {
                 </td>
                 <td>
                     <div>{element.user[0].is_active ? 'Active' : 'Not active'}</div>
-                    {checkIsAdmin() && (
+                    {/* {checkIsAdmin() && (
                         <i onClick={e => this.openEditMiodal(element)} className="edit_button item_button" />
-                    )}
+                    )} */}
                 </td>
             </tr>
         ));
@@ -133,7 +119,7 @@ class TeamPage extends Component {
                             )}
                         </div>
 
-                        <div className="invite_container">
+                        {/* <div className="invite_container">
                             {checkIsAdmin() && (
                                 <button
                                     onClick={e => {
@@ -143,7 +129,7 @@ class TeamPage extends Component {
                                     Add to team
                                 </button>
                             )}
-                        </div>
+                        </div> */}
                     </div>
                     <div className="team_page_data">
                         <table>

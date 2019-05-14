@@ -308,6 +308,7 @@ class MainPage extends Component {
 
     getUserTimeEntries() {
         return new Promise((resolve, reject) => {
+            //@TODO Add association w/ Teams
             fetch(AppConfig.apiURL + `timer/user-list?userId=${getUserIdFromLocalStorage()}`, {
                 method: 'GET',
                 headers: {
@@ -323,6 +324,7 @@ class MainPage extends Component {
                 })
                 .then(
                     result => {
+                        console.log(result);
                         const { timerV2: timeEntriesList } = getTodayTimeEntriesParseFunction(result.data);
                         this.props.addTasksAction('ADD_TASKS_ARR', { timeEntriesList });
                         resolve();
@@ -339,6 +341,7 @@ class MainPage extends Component {
         });
     }
 
+    //@TODO: Create association with team
     getProjectList() {
         fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
             method: 'GET',

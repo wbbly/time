@@ -30,7 +30,6 @@ class AddToTeamModal extends Component {
                         id: getTimestamp(),
                         username: this.email.value,
                         email: this.email.value,
-                        role: { title: ROLES.ROLE_USER },
                         is_active: false,
                     });
 

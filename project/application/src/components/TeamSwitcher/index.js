@@ -20,8 +20,10 @@ class TeamSwitcher extends Component {
         e.preventDefault();
         //@TODO: Send request to server to change current team & update info on front
         let teamId = e.target.getAttribute('data-id');
+        let teamName = e.target.getAttribute('data-name');
         this.setState({
             currentTeamId: teamId,
+            currentTeamName: teamName,
         });
 
         fetch(AppConfig.apiURL + `team/switch`, {
@@ -43,13 +45,19 @@ class TeamSwitcher extends Component {
 
     componentDidMount() {
         let teamsLocalData = localStorage.getItem('availableTeams');
-        let currentTeamLocalData = localStorage.getItem('currentTeamData');
-        if (teamsLocalData && currentTeamLocalData) {
+        if (teamsLocalData) {
             this.setState({
                 availableTeams: JSON.parse(teamsLocalData),
-                currentTeamId: currentTeamLocalData.id,
-                currentTeamName: currentTeamLocalData.name,
             });
+            //@TODO: Avoid extra queries to server
+            fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
+                res.json().then(response => {
+                    this.setState({
+                        currentTeamId: response.data.user_team[0].team.id,
+                        currentTeamName: response.data.user_team[0].team.name,
+                    });
+                })
+            );
         } else {
             fetch(AppConfig.apiURL + `user/${getUserIdFromLocalStorage()}/teams`)
                 .then(res => {
@@ -109,12 +117,18 @@ class TeamSwitcher extends Component {
             <div className="team_list">
                 <ul>
                     {this.state.availableTeams.map(team => {
+                        console.log(this.state.currentTeamId);
                         return this.state.currentTeamId === team.id ? (
-                            <li onClick={this.handleChange} data-id={team.id} className="selected">
+                            <li
+                                onClick={this.handleChange}
+                                data-id={team.id}
+                                data-name={team.name}
+                                className="selected"
+                            >
                                 {team.name}
                             </li>
                         ) : (
-                            <li onClick={this.handleChange} data-id={team.id}>
+                            <li onClick={this.handleChange} data-id={team.id} data-name={team.name}>
                                 {team.name}
                             </li>
                         );
