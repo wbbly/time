@@ -42,48 +42,66 @@ class TeamSwitcher extends Component {
     };
 
     componentDidMount() {
-        fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
-            res.json().then(response => {
-                this.setState({
-                    currentTeamId: response.data.user_team[0].team.id,
-                    currentTeamName: response.data.user_team[0].team.name,
-                });
-                console.log(this.state);
-            })
-        );
-        fetch(AppConfig.apiURL + `user/${getUserIdFromLocalStorage()}/teams`)
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                response => {
-                    let availableTeams = response.data.user_team;
-                    let availableTeamsParsed = [];
-                    availableTeams.map(item => {
-                        return availableTeamsParsed.push({
-                            id: item.team.id,
-                            name: item.team.name,
-                        });
-                    });
-
-                    console.log(availableTeamsParsed);
-                    this.setState({
-                        availableTeams: availableTeamsParsed,
-                    });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => {
-                            console.log(errorMessage);
-                        });
-                    } else {
-                        console.log(err);
+        let teamsLocalData = localStorage.getItem('availableTeams');
+        let currentTeamLocalData = localStorage.getItem('currentTeamData');
+        if (teamsLocalData && currentTeamLocalData) {
+            this.setState({
+                availableTeams: JSON.parse(teamsLocalData),
+                currentTeamId: currentTeamLocalData.id,
+                currentTeamName: currentTeamLocalData.name,
+            });
+        } else {
+            fetch(AppConfig.apiURL + `user/${getUserIdFromLocalStorage()}/teams`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw res;
                     }
-                }
-            );
+                    return res.json();
+                })
+                .then(
+                    response => {
+                        let availableTeams = response.data.user_team;
+                        let availableTeamsParsed = [];
+                        availableTeams.map(item => {
+                            return availableTeamsParsed.push({
+                                id: item.team.id,
+                                name: item.team.name,
+                            });
+                        });
+
+                        console.log(availableTeamsParsed);
+                        this.setState({
+                            availableTeams: availableTeamsParsed,
+                        });
+                        localStorage.setItem('availableTeams', JSON.stringify(availableTeamsParsed));
+
+                        fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
+                            res.json().then(response => {
+                                this.setState({
+                                    currentTeamId: response.data.user_team[0].team.id,
+                                    currentTeamName: response.data.user_team[0].team.name,
+                                });
+                                localStorage.setItem(
+                                    'currentTeamData',
+                                    JSON.stringify({
+                                        id: response.data.user_team[0].team.id,
+                                        name: response.data.user_team[0].team.name,
+                                    })
+                                );
+                            })
+                        );
+                    },
+                    err => {
+                        if (err instanceof Response) {
+                            err.text().then(errorMessage => {
+                                console.log(errorMessage);
+                            });
+                        } else {
+                            console.log(err);
+                        }
+                    }
+                );
+        }
     }
 
     render() {
