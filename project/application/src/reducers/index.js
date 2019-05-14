@@ -6,6 +6,7 @@ import { teamPageReducer } from './TeamPageReducer';
 import { reportsPageReducer } from './ReportsPageReducer';
 import { manualTimerModalReducer } from './ManualTimerModalReducer';
 import { authPageReducer } from './AuthPageReducer';
+import { teamReducer } from './TeamReducer';
 
 export const rootReducer = combineReducers({
     projectReducer,
@@ -14,4 +15,5 @@ export const rootReducer = combineReducers({
     reportsPageReducer,
     manualTimerModalReducer,
     authPageReducer,
+    teamReducer,
 });

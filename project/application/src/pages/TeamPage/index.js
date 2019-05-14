@@ -51,7 +51,7 @@ class TeamPage extends Component {
                         <div className="access_container">{element.role_collaboration.title}</div>
                     )}
                     {checkIsAdminByRole(element.role_collaboration.title) && (
-                        <div className="access_container red">{element.role.title}</div>
+                        <div className="access_container red">{element.role_collaboration.title}</div>
                     )}
                 </td>
                 <td>
@@ -158,6 +158,7 @@ const mapStateToProps = store => {
         createUserModal: store.teamPageReducer.createUserModal,
         editUserModal: store.teamPageReducer.editUserModal,
         editedUser: store.teamPageReducer.editedUser,
+        currentTeam: store.teamReducer.currentTeam,
     };
 };
 
