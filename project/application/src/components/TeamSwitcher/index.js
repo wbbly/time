@@ -14,15 +14,14 @@ class TeamSwitcher extends Component {
 
     constructor(props) {
         super(props);
-        this.selectRef = React.createRef();
     }
 
     handleChange = e => {
         e.preventDefault();
         //@TODO: Send request to server to change current team & update info on front
-
+        let teamId = e.target.getAttribute('data-id');
         this.setState({
-            currentTeamId: this.selectRef.current.value,
+            currentTeamId: teamId,
         });
 
         fetch(AppConfig.apiURL + `team/switch`, {
@@ -33,11 +32,11 @@ class TeamSwitcher extends Component {
             },
             body: JSON.stringify({
                 userId: getUserIdFromLocalStorage(),
-                teamId: this.selectRef.current.value,
+                teamId: teamId,
             }),
         }).then(res =>
             res.json().then(response => {
-                console.log(response);
+                window.location.reload(true);
             })
         );
     };
@@ -89,11 +88,21 @@ class TeamSwitcher extends Component {
 
     render() {
         return (
-            <select ref={this.selectRef} value={this.state.currentTeamId} onChange={e => this.handleChange(e)}>
-                {this.state.availableTeams.map(team => {
-                    return <option value={team.id}>{team.name}</option>;
-                })}
-            </select>
+            <div className="team_list">
+                <ul>
+                    {this.state.availableTeams.map(team => {
+                        return this.state.currentTeamId === team.id ? (
+                            <li onClick={this.handleChange} data-id={team.id} className="selected">
+                                {team.name}
+                            </li>
+                        ) : (
+                            <li onClick={this.handleChange} data-id={team.id}>
+                                {team.name}
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
         );
     }
 }

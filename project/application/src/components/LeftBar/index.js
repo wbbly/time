@@ -86,13 +86,7 @@ class LeftBar extends Component {
                         <i className="workspaces" />
                         <div className="links_text">workspaces</div>
                     </div>
-                    <div className="team_list">
-                        <ul>
-                            <li>Team 1</li>
-                            <li className="selected">Team 2</li>
-                            <li>Team 3</li>
-                        </ul>
-                    </div>
+                    <TeamSwitcher />
                 </div>
 
                 <div className="logout_container" onClick={e => this.logout()}>
