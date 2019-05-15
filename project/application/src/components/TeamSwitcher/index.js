@@ -25,6 +25,7 @@ class TeamSwitcher extends Component {
             currentTeamId: teamId,
             currentTeamName: teamName,
         });
+        localStorage.setItem('currentTeamData', JSON.stringify({ id: teamId, name: teamName }));
 
         fetch(AppConfig.apiURL + `team/switch`, {
             method: 'PATCH',
@@ -45,19 +46,13 @@ class TeamSwitcher extends Component {
 
     componentDidMount() {
         let teamsLocalData = localStorage.getItem('availableTeams');
+        let currentTeamData = JSON.parse(localStorage.getItem('currentTeamData'));
         if (teamsLocalData) {
             this.setState({
                 availableTeams: JSON.parse(teamsLocalData),
+                currentTeamName: currentTeamData.name,
+                currentTeamId: currentTeamData.id,
             });
-            //@TODO: Avoid extra queries to server
-            fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
-                res.json().then(response => {
-                    this.setState({
-                        currentTeamId: response.data.user_team[0].team.id,
-                        currentTeamName: response.data.user_team[0].team.name,
-                    });
-                })
-            );
         } else {
             fetch(AppConfig.apiURL + `user/${getUserIdFromLocalStorage()}/teams`)
                 .then(res => {
