@@ -12,7 +12,7 @@ export function getUserEmailFromLocalStorage() {
 
 export function getUserRoleTitleFromLocalStorage() {
     const title = (getUserFromLocalStorage().roleCollaboration || {}).title || '';
-    console.log(title);
+
     return title;
 }
 

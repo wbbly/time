@@ -324,7 +324,6 @@ class MainPage extends Component {
                 })
                 .then(
                     result => {
-                        console.log(result);
                         const { timerV2: timeEntriesList } = getTodayTimeEntriesParseFunction(result.data);
                         this.props.addTasksAction('ADD_TASKS_ARR', { timeEntriesList });
                         resolve();
@@ -343,42 +342,50 @@ class MainPage extends Component {
 
     //@TODO: Create association with team
     getProjectList() {
-        fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let dataParsed = getProjectListParseFunction(result);
-                    const projectV2 = dataParsed.projectV2.reverse();
-                    this.setState({
-                        projectList: projectV2,
-                        projectListForModalWindow: projectV2,
-                        projectListInitial: projectV2,
-                    });
+        return new Promise((resolve, reject) => {
+            fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
                 },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw res;
                     }
-                }
-            );
+                    return res.json();
+                })
+                .then(
+                    result => {
+                        let dataParsed = getProjectListParseFunction(result);
+                        const projectV2 = dataParsed.projectV2.reverse();
+                        this.setState({
+                            projectList: projectV2,
+                            projectListForModalWindow: projectV2,
+                            projectListInitial: projectV2,
+                        });
+                        this.defaultProject.id = projectV2[0].id;
+                        this.defaultProject.name = projectV2[0].name;
+                        this.defaultProject.projectColor.name = projectV2[0].projectColor.name;
+                        resolve(true);
+                    },
+                    err => {
+                        if (err instanceof Response) {
+                            err.text().then(errorMessage => console.log(errorMessage));
+                        } else {
+                            console.log(err);
+                        }
+                        resolve(true);
+                    }
+                );
+        });
     }
 
-    componentDidMount() {
-        this.getUserTimeEntries().then(_ => this.initSocketConnection(), _ => {});
-        this.getProjectList();
+    async componentDidMount() {
+        await this.getProjectList();
+        await this.getUserTimeEntries();
+        this.initSocketConnection();
     }
 
     componentWillUnmount() {

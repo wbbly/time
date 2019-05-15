@@ -81,7 +81,6 @@ class TeamPage extends Component {
 
     render() {
         let programersArr = this.props.programersArr;
-        console.log(programersArr);
         const headerItemsElements = this.headerItems.map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
         ));
