@@ -386,10 +386,8 @@ export default class ReportsSearchBar extends Component {
                     const inputProjectData = this.props.inputProjectData;
                     for (let i = 0; i < inputProjectData.length; i++) {
                         const inputProject = inputProjectData[i];
-                        console.log('inputProject', inputProject);
                         for (let j = 0; j < projects.length; j++) {
                             const currentProject = projects[j];
-                            console.log('currentProject', currentProject);
                             if (JSON.stringify(currentProject).indexOf(inputProject) > -1) {
                                 this.toggleProject(currentProject);
                                 break;

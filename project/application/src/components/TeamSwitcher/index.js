@@ -140,7 +140,6 @@ class TeamSwitcher extends Component {
             <div className="team_list">
                 <ul>
                     {this.state.availableTeams.map(team => {
-                        console.log(this.state.currentTeamId);
                         return this.state.currentTeamId === team.id ? (
                             <li
                                 onClick={this.handleChange}
