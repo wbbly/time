@@ -4,6 +4,12 @@ import { connect } from 'react-redux';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import teamAction from '../../actions/TeamAction';
+import {
+    getAvailableTeamsFromLocalStorage,
+    setAvailableTeamsToLocalStorage,
+    getCurrentTeamDataFromLocalStorage,
+    setCurrentTeamDataToLocalStorage,
+} from '../../services/teamStorageService';
 
 class TeamSwitcher extends Component {
     state = {
@@ -25,7 +31,7 @@ class TeamSwitcher extends Component {
             currentTeamId: teamId,
             currentTeamName: teamName,
         });
-        localStorage.setItem('currentTeamData', JSON.stringify({ id: teamId, name: teamName }));
+        setCurrentTeamDataToLocalStorage({ id: teamId, name: teamName });
 
         fetch(AppConfig.apiURL + `team/switch`, {
             method: 'PATCH',
@@ -45,11 +51,11 @@ class TeamSwitcher extends Component {
     };
 
     componentDidMount() {
-        let teamsLocalData = localStorage.getItem('availableTeams');
-        let currentTeamData = JSON.parse(localStorage.getItem('currentTeamData'));
+        let teamsLocalData = getAvailableTeamsFromLocalStorage();
+        let currentTeamData = getCurrentTeamDataFromLocalStorage();
         if (teamsLocalData) {
             this.setState({
-                availableTeams: JSON.parse(teamsLocalData),
+                availableTeams: teamsLocalData,
                 currentTeamName: currentTeamData.name,
                 currentTeamId: currentTeamData.id,
             });
@@ -76,7 +82,7 @@ class TeamSwitcher extends Component {
                         this.setState({
                             availableTeams: availableTeamsParsed,
                         });
-                        localStorage.setItem('availableTeams', JSON.stringify(availableTeamsParsed));
+                        setAvailableTeamsToLocalStorage(availableTeamsParsed);
 
                         fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
                             res.json().then(response => {
@@ -84,13 +90,10 @@ class TeamSwitcher extends Component {
                                     currentTeamId: response.data.user_team[0].team.id,
                                     currentTeamName: response.data.user_team[0].team.name,
                                 });
-                                localStorage.setItem(
-                                    'currentTeamData',
-                                    JSON.stringify({
-                                        id: response.data.user_team[0].team.id,
-                                        name: response.data.user_team[0].team.name,
-                                    })
-                                );
+                                setCurrentTeamDataToLocalStorage({
+                                    id: response.data.user_team[0].team.id,
+                                    name: response.data.user_team[0].team.name,
+                                });
                             })
                         );
                     },
