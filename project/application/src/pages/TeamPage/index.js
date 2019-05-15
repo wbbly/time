@@ -5,19 +5,27 @@ import { connect } from 'react-redux';
 import './style.css';
 import LeftBar from '../../components/LeftBar';
 import AddToTeamModal from '../../components/AddToTeamModal';
+import RenameTeamModal from '../../components/RenameTeamModal';
 import teamPageAction from '../../actions/TeamPageAction';
 import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
-import { Input } from '@material-ui/core';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Access', 'Status'];
-    teamName = 'Loading...';
-    teamId = '';
+
     changingName = false;
     teamNameRef = React.createRef();
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            renameModal: false,
+            teamName: 'Loading...',
+            teamId: '',
+        };
+    }
 
     nameInput = val => {
         return (
@@ -36,6 +44,12 @@ class TeamPage extends Component {
         this.props.teamPageAction('SET_EDIT_USER', { editedUser: item });
     }
 
+    openRenameModal() {
+        this.setState({
+            renameModal: true,
+        });
+    }
+
     renameTeam(e) {
         e.preventDefault();
         this.changingName = true;
@@ -50,15 +64,19 @@ class TeamPage extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                teamId: this.teamId,
+                teamId: this.state.teamId,
                 newName: this.teamNameRef.current.value,
             }),
-        }).then(res => {
-            res.json().then(response => {
-                this.changingName = false;
-                this.forceUpdate();
+        })
+            .then(res => {
+                res.json().then(response => {
+                    this.changingName = false;
+                    this.forceUpdate();
+                });
+            })
+            .catch(err => {
+                console.error(err);
             });
-        });
     }
 
     render() {
@@ -106,16 +124,41 @@ class TeamPage extends Component {
                         teamPage={this}
                     />
                 )}
+                {this.state.renameModal && (
+                    <RenameTeamModal
+                        teamId={this.state.teamId}
+                        refreshTeamName={() => {
+                            fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(
+                                res => {
+                                    res.json().then(response => {
+                                        this.setState({
+                                            teamName: response.data.user_team[0].team.name,
+                                            teamId: response.data.user_team[0].team.id,
+                                        });
+                                    });
+                                }
+                            );
+                        }}
+                        closeCallback={() =>
+                            this.setState({
+                                renameModal: false,
+                            })
+                        }
+                    />
+                )}
                 <LeftBar />
                 <div className="data_container_team_page">
                     <div className="team_page_header">
-                        <div className="page_name">
-                            {this.changingName ? this.nameInput(this.teamName) : this.teamName}
-
-                            {this.changingName ? (
-                                <button onClick={e => this.processRenameTeam(e)}>EDIT</button>
-                            ) : (
-                                <button onClick={e => this.renameTeam(e)}>EDIT</button>
+                        <div className="page_name">{this.state.teamName}</div>
+                        <div className="invite_container">
+                            {checkIsAdmin() && (
+                                <button
+                                    onClick={e => {
+                                        this.openRenameModal();
+                                    }}
+                                >
+                                    Rename Team
+                                </button>
                             )}
                         </div>
 
@@ -146,10 +189,13 @@ class TeamPage extends Component {
 
     componentDidMount() {
         this.getDataFromServer();
+        //@TODO Get Saved value from localStorage
         fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res => {
             res.json().then(response => {
-                this.teamName = response.data.user_team[0].team.name;
-                this.teamId = response.data.user_team[0].team.id;
+                this.setState({
+                    teamName: response.data.user_team[0].team.name,
+                    teamId: response.data.user_team[0].team.id,
+                });
             });
         });
     }

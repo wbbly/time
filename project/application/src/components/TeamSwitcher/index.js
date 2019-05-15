@@ -77,8 +77,6 @@ class TeamSwitcher extends Component {
                                 name: item.team.name,
                             });
                         });
-
-                        console.log(availableTeamsParsed);
                         this.setState({
                             availableTeams: availableTeamsParsed,
                         });
@@ -107,6 +105,33 @@ class TeamSwitcher extends Component {
                         }
                     }
                 );
+        }
+    }
+
+    componentDidUpdate() {
+        let hasDataInStorage = getAvailableTeamsFromLocalStorage();
+        if (!hasDataInStorage) {
+            fetch(AppConfig.apiURL + `user/${getUserIdFromLocalStorage()}/teams`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw res;
+                    }
+                    return res.json();
+                })
+                .then(response => {
+                    let availableTeams = response.data.user_team;
+                    let availableTeamsParsed = [];
+                    availableTeams.map(item => {
+                        return availableTeamsParsed.push({
+                            id: item.team.id,
+                            name: item.team.name,
+                        });
+                    });
+                    this.setState({
+                        availableTeams: availableTeamsParsed,
+                    });
+                    setAvailableTeamsToLocalStorage(availableTeamsParsed);
+                });
         }
     }
 

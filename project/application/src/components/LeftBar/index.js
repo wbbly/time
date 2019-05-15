@@ -10,6 +10,7 @@ import {
 } from '../../services/currentTimerStorageService';
 import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
 import TeamSwitcher from '../TeamSwitcher';
+import { getAvailableTeamsFromLocalStorage } from '../../services/teamStorageService';
 
 class LeftBar extends Component {
     ONE_SECOND_PERIOD = 1000; // in ms
@@ -82,7 +83,7 @@ class LeftBar extends Component {
                             <div className="links_text">team</div>
                         </div>
                     </Link>
-                    <TeamSwitcher />
+                    {getAvailableTeamsFromLocalStorage() ? <TeamSwitcher /> : <TeamSwitcher refresh={true} />}
                 </div>
 
                 <div className="logout_container" onClick={e => this.logout()}>
