@@ -27,7 +27,7 @@
     "prettier": "1.14.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "copy:libs": "cp -r libs/react-date-range node_modules",
     "test": "react-scripts test",

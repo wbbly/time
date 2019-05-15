@@ -6,6 +6,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { ROLES, checkIsAdminByRole } from '../../services/authentication';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
 
 const USER_STATUS = {
     ACTIVE: 'ACTIVE',
@@ -15,7 +16,7 @@ const USER_STATUS = {
 class EditTeamModal extends Component {
     state = {
         id: null,
-        value: ROLES.ROLE_USER,
+        value: ROLES.ROLE_MEMBER,
         valueStatus: USER_STATUS.NOT_ACTIVE,
     };
 
@@ -24,6 +25,8 @@ class EditTeamModal extends Component {
     }
 
     addUser = teamPage => {
+        let teamData = getCurrentTeamDataFromLocalStorage();
+        let teamId = teamData.id;
         fetch(AppConfig.apiURL + `user/${this.state.id}`, {
             method: 'PATCH',
             headers: {
@@ -34,8 +37,10 @@ class EditTeamModal extends Component {
             body: JSON.stringify({
                 email: this.email.value,
                 username: this.name.value,
-                role: checkIsAdminByRole(this.state.value) ? ROLES.ROLE_ADMIN : ROLES.ROLE_USER,
                 isActive: this.state.valueStatus === USER_STATUS.ACTIVE,
+                //@TODO Replace with REDUX once implemented
+                teamId: teamId,
+                roleName: this.state.value,
             }),
         })
             .then(res => {
@@ -103,7 +108,7 @@ class EditTeamModal extends Component {
                                 label="Admin"
                             />
                             <FormControlLabel
-                                value={ROLES.ROLE_USER}
+                                value={ROLES.ROLE_MEMBER}
                                 control={<Radio color="primary" />}
                                 label="User"
                             />
@@ -131,7 +136,6 @@ class EditTeamModal extends Component {
     }
 
     componentDidMount() {
-        this.setState({ value: this.props.editedUser.role.title });
         this.setState({ id: this.props.editedUser.id });
         this.setState({ valueStatus: this.props.editedUser.is_active ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE });
         this.email.value = this.props.editedUser.email;

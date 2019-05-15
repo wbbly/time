@@ -2,7 +2,7 @@ import { getUserFromLocalStorage, getUserRoleTitleFromLocalStorage } from './use
 
 export const ROLES = {
     ROLE_ADMIN: 'ROLE_ADMIN',
-    ROLE_USER: 'ROLE_USER',
+    ROLE_MEMBER: 'ROLE_MEMBER',
 };
 
 export function userLoggedIn() {
@@ -15,8 +15,8 @@ export function checkIsAdminByRole(role) {
     return role === ROLES.ROLE_ADMIN;
 }
 
-export function checkIsUserByRole(role) {
-    return role === ROLES.ROLE_USER;
+export function checkIsMemberByRole(role) {
+    return role === ROLES.ROLE_MEMBER;
 }
 
 export function checkIsAdmin() {

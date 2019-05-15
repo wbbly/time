@@ -5,6 +5,7 @@ import './style.css';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
 import { AppConfig } from '../../config';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 
 export default class CreateProjectModal extends Component {
     state = {
@@ -40,8 +41,11 @@ export default class CreateProjectModal extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: project.name,
-                projectColorId: project.colorProject.id,
+                project: {
+                    name: project.name,
+                    projectColorId: project.colorProject.id,
+                },
+                userId: getUserIdFromLocalStorage(),
             }),
         })
             .then(res => {

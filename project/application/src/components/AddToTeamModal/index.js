@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import './style.css';
 
 import { getTimestamp } from '../../services/timeService';
-import { ROLES } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 class AddToTeamModal extends Component {
-    addUser = (email, password) => {
+    addUser = email => {
         fetch(AppConfig.apiURL + 'user/register', {
             method: 'POST',
             headers: {
@@ -15,7 +14,7 @@ class AddToTeamModal extends Component {
             },
             body: JSON.stringify({
                 email: email,
-                password: password,
+                password: 'DUMMY_PASSWORD_TO_BE_GENERATED',
             }),
         })
             .then(res => {
@@ -30,7 +29,6 @@ class AddToTeamModal extends Component {
                         id: getTimestamp(),
                         username: this.email.value,
                         email: this.email.value,
-                        role: { title: ROLES.ROLE_USER },
                         is_active: false,
                     });
 
@@ -73,16 +71,6 @@ class AddToTeamModal extends Component {
                             type="text"
                             ref={input => {
                                 this.email = input;
-                            }}
-                            className="add_to_team_modal_input"
-                        />
-                    </div>
-                    <div className="add_to_team_modal_input_container">
-                        <div className="add_to_team_modal_input_title">Password</div>
-                        <input
-                            type="text"
-                            ref={input => {
-                                this.password = input;
                             }}
                             className="add_to_team_modal_input"
                         />

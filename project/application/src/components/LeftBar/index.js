@@ -9,6 +9,8 @@ import {
     getCurrentTimerFromLocalStorage,
 } from '../../services/currentTimerStorageService';
 import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
+import TeamSwitcher from '../TeamSwitcher';
+import { getAvailableTeamsFromLocalStorage } from '../../services/teamStorageService';
 
 class LeftBar extends Component {
     ONE_SECOND_PERIOD = 1000; // in ms
@@ -47,6 +49,7 @@ class LeftBar extends Component {
         removeUserFromLocalStorage();
         removeCurrentTimerFromLocalStorage();
         removeServerClientTimediffFromLocalStorage();
+        localStorage.removeItem('availableTeams');
         window.location.href = window.location.origin;
     }
 
@@ -80,18 +83,9 @@ class LeftBar extends Component {
                             <div className="links_text">team</div>
                         </div>
                     </Link>
-                    <div className="navigation_links">
-                        <i className="workspaces" />
-                        <div className="links_text">workspaces</div>
-                    </div>
-                    <div className="team_list">
-                        <ul>
-                            <li>Team 1</li>
-                            <li className="selected">Team 2</li>
-                            <li>Team 3</li>
-                        </ul>
-                    </div>
+                    {getAvailableTeamsFromLocalStorage() ? <TeamSwitcher /> : <TeamSwitcher refresh={true} />}
                 </div>
+
                 <div className="logout_container" onClick={e => this.logout()}>
                     <i className="logout" />
                     <span>Log out</span>

@@ -11,9 +11,9 @@ export function getUserEmailFromLocalStorage() {
 }
 
 export function getUserRoleTitleFromLocalStorage() {
-    const email = (getUserFromLocalStorage().role || {}).title || '';
-
-    return email;
+    const title = (getUserFromLocalStorage().roleCollaboration || {}).title || '';
+    console.log(title);
+    return title;
 }
 
 export function getUserTimezoneOffsetFromLocalStorage() {

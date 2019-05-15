@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './style.css';
 
-import { ROLES } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 class RegisterModal extends Component {
@@ -24,7 +23,7 @@ class RegisterModal extends Component {
             })
             .then(
                 result => {
-                    alert('connect with admin to activate your account');
+                    alert('Account has been created.');
                     this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: false });
                 },
                 err => {
