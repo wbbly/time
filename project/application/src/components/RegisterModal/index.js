@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './style.css';
 
-import { ROLES } from '../../services/authentication';
 import { AppConfig } from '../../config';
 
 class RegisterModal extends Component {

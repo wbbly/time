@@ -13,7 +13,7 @@ import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 
 class TeamPage extends Component {
-    headerItems = ['Name', 'E-mail', 'Access', 'Status'];
+    headerItems = ['Name', 'E-mail', 'Team Access', 'Wobbly Active Status'];
 
     changingName = false;
     teamNameRef = React.createRef();
@@ -81,6 +81,7 @@ class TeamPage extends Component {
 
     render() {
         let programersArr = this.props.programersArr;
+        console.log(programersArr);
         const headerItemsElements = this.headerItems.map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
         ));
@@ -98,9 +99,9 @@ class TeamPage extends Component {
                 </td>
                 <td>
                     <div>{element.user[0].is_active ? 'Active' : 'Not active'}</div>
-                    {/* {checkIsAdmin() && (
-                        <i onClick={e => this.openEditMiodal(element)} className="edit_button item_button" />
-                    )} */}
+                    {checkIsAdmin() && (
+                        <i onClick={e => this.openEditMiodal(element.user[0])} className="edit_button item_button" />
+                    )}
                 </td>
             </tr>
         ));
@@ -162,7 +163,7 @@ class TeamPage extends Component {
                             )}
                         </div>
 
-                        {/* <div className="invite_container">
+                        <div className="invite_container">
                             {checkIsAdmin() && (
                                 <button
                                     onClick={e => {
@@ -172,7 +173,7 @@ class TeamPage extends Component {
                                     Add to team
                                 </button>
                             )}
-                        </div> */}
+                        </div>
                     </div>
                     <div className="team_page_data">
                         <table>
