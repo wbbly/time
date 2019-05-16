@@ -21,11 +21,3 @@ export function setCurrentTeamDataToLocalStorage(data) {
 export function removeCurrentTeamDataFromLocalStorage() {
     localStorage.removeItem('currentTeamData');
 }
-
-export function setCurrentTeamAccessLevelToLocalStorage(data) {
-    localStorage.setItem('currentTeamAccess', JSON.stringify(data));
-}
-
-export function getCurrentTeamAccessLevelFromLocalStorage() {
-    return JSON.parse(localStorage.getItem('currentTeamAccess'));
-}

@@ -31,6 +31,7 @@ class TeamSwitcher extends Component {
             currentTeamId: teamId,
             currentTeamName: teamName,
         });
+
         setCurrentTeamDataToLocalStorage({ id: teamId, name: teamName });
 
         fetch(AppConfig.apiURL + `team/switch`, {
@@ -45,7 +46,21 @@ class TeamSwitcher extends Component {
             }),
         }).then(res =>
             res.json().then(response => {
-                window.location.reload(true);
+                fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
+                    res.json().then(response => {
+                        this.setState({
+                            currentTeamId: response.data.user_team[0].team.id,
+                            currentTeamName: response.data.user_team[0].team.name,
+                        });
+                        console.log(response);
+                        setCurrentTeamDataToLocalStorage({
+                            id: response.data.user_team[0].team.id,
+                            name: response.data.user_team[0].team.name,
+                            role: response.data.user_team[0].role_collaboration.title,
+                        });
+                        window.location.reload(true);
+                    })
+                );
             })
         );
     };
@@ -91,6 +106,7 @@ class TeamSwitcher extends Component {
                                 setCurrentTeamDataToLocalStorage({
                                     id: response.data.user_team[0].team.id,
                                     name: response.data.user_team[0].team.name,
+                                    role: response.data.user_team[0].role_collaboration.title,
                                 });
                             })
                         );

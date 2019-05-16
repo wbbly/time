@@ -67,19 +67,6 @@ class EditTeamModal extends Component {
             );
     };
 
-    checkRole() {
-        fetch(AppConfig.apiURL + `team/${this.props.teamId}/rolecheck/${this.props.editedUser.id}`).then(res =>
-            res.json().then(result => {
-                this.setState({
-                    currentRole:
-                        result.data.user_team[0].role_collaboration.title === ROLES.ROLE_ADMIN
-                            ? ROLES.ROLE_ADMIN
-                            : ROLES.ROLE_MEMBER,
-                });
-            })
-        );
-    }
-
     handleChange = event => {
         this.setState({ currentRole: event.target.value });
     };
@@ -150,12 +137,13 @@ class EditTeamModal extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.editedUser);
-        this.setState({ id: this.props.editedUser.id });
+        this.setState({
+            id: this.props.editedUser.id,
+            currentRole: this.props.editedUser.role,
+        });
         this.setState({ valueStatus: this.props.editedUser.is_active ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE });
         this.email.value = this.props.editedUser.email;
         this.name.value = this.props.editedUser.username;
-        this.checkRole();
     }
 }
 

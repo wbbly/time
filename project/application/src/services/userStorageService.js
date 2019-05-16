@@ -1,4 +1,4 @@
-import { getCurrentTeamAccessLevel, getCurrentTeamAccessLevelFromLocalStorage } from './teamStorageService';
+import { getCurrentTeamDataFromLocalStorage } from './teamStorageService';
 
 export function getUserIdFromLocalStorage() {
     const id = getUserFromLocalStorage().id;
@@ -13,9 +13,9 @@ export function getUserEmailFromLocalStorage() {
 }
 
 export function getUserRoleTitleFromLocalStorage() {
-    const accessData = getCurrentTeamAccessLevelFromLocalStorage();
-    const title = accessData.role_title;
-    return title;
+    const data = getCurrentTeamDataFromLocalStorage();
+
+    return data.role;
 }
 
 export function getUserTimezoneOffsetFromLocalStorage() {
