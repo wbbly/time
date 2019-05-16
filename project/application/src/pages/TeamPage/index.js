@@ -11,6 +11,10 @@ import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } f
 import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import {
+    setCurrentTeamDataToLocalStorage,
+    setCurrentTeamAccessLevelToLocalStorage,
+} from '../../services/teamStorageService';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Team Access', 'Wobbly Active Status'];
@@ -122,6 +126,7 @@ class TeamPage extends Component {
                         editedUser={this.props.editedUser}
                         getDataFromServer={this.getDataFromServer}
                         teamPage={this}
+                        teamId={this.state.teamId}
                     />
                 )}
                 {this.state.renameModal && (
@@ -192,6 +197,9 @@ class TeamPage extends Component {
         //@TODO Get Saved value from localStorage
         fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res => {
             res.json().then(response => {
+                setCurrentTeamAccessLevelToLocalStorage({
+                    role_title: response.data.user_team[0].role_collaboration.title,
+                });
                 this.setState({
                     teamName: response.data.user_team[0].team.name,
                     teamId: response.data.user_team[0].team.id,
