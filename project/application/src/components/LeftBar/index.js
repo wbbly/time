@@ -56,7 +56,10 @@ class LeftBar extends Component {
     render() {
         return (
             <div className="wrapper">
-                <i className="logo_small" />
+                <Link to="/timer">
+                    <i className="logo_small" />
+                </Link>
+
                 <div className="navigation_links_container">
                     <Link to="/timer" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
