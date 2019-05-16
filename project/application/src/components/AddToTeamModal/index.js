@@ -3,18 +3,21 @@ import './style.css';
 
 import { getTimestamp } from '../../services/timeService';
 import { AppConfig } from '../../config';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
 
 class AddToTeamModal extends Component {
     addUser = email => {
-        fetch(AppConfig.apiURL + 'user/register', {
+        fetch(AppConfig.apiURL + 'user/invite', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+                userId: getUserIdFromLocalStorage(),
+                teamId: getCurrentTeamDataFromLocalStorage().id,
                 email: email,
-                password: 'DUMMY_PASSWORD_TO_BE_GENERATED',
             }),
         })
             .then(res => {
@@ -25,12 +28,13 @@ class AddToTeamModal extends Component {
             })
             .then(
                 result => {
-                    this.props.programersArr.unshift({
-                        id: getTimestamp(),
-                        username: this.email.value,
-                        email: this.email.value,
-                        is_active: false,
-                    });
+                    // this.props.programersArr.unshift({
+                    //     id: getTimestamp(),
+                    //     username: this.email.value,
+                    //     email: this.email.value,
+                    //     is_active: false,
+                    // });
+                    if (result.success) alert('Invite has been sent!');
 
                     this.closeModal();
                 },
@@ -75,7 +79,7 @@ class AddToTeamModal extends Component {
                             className="add_to_team_modal_input"
                         />
                     </div>
-                    <button onClick={e => this.addUser(this.email.value, this.password.value)}>Add user</button>
+                    <button onClick={e => this.addUser(this.email.value)}>Add user</button>
                 </div>
             </div>
         );

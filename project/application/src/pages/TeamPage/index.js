@@ -174,7 +174,7 @@ class TeamPage extends Component {
                             )}
                         </div>
 
-                        {/* <div className="invite_container">
+                        <div className="invite_container">
                             {checkIsAdmin() && (
                                 <button
                                     onClick={e => {
@@ -184,7 +184,7 @@ class TeamPage extends Component {
                                     Add to team
                                 </button>
                             )}
-                        </div> */}
+                        </div>
                     </div>
                     <div className="team_page_data">
                         <table>
