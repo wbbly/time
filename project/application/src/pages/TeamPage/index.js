@@ -11,11 +11,8 @@ import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } f
 import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
-import {
-    setCurrentTeamDataToLocalStorage,
-    setCurrentTeamAccessLevelToLocalStorage,
-    getCurrentTeamDataFromLocalStorage,
-} from '../../services/teamStorageService';
+
+import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Team Access', 'Wobbly Active Status'];
@@ -203,7 +200,7 @@ class TeamPage extends Component {
         this.getDataFromServer();
         //@TODO Get Saved value from localStorage
         let teamData = getCurrentTeamDataFromLocalStorage();
-        console.log(teamData);
+
         this.setState({
             teamName: teamData.name,
             teamId: teamData.id,

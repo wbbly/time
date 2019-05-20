@@ -13,9 +13,10 @@ export function getUserEmailFromLocalStorage() {
 }
 
 export function getUserRoleTitleFromLocalStorage() {
-    const data = getCurrentTeamDataFromLocalStorage();
 
-    return data.role;
+    const role = getCurrentTeamDataFromLocalStorage().role || '';
+
+    return role;
 }
 
 export function getUserTimezoneOffsetFromLocalStorage() {
