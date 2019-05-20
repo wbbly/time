@@ -17,6 +17,7 @@ class AddToTeamModal extends Component {
             body: JSON.stringify({
                 userId: getUserIdFromLocalStorage(),
                 teamId: getCurrentTeamDataFromLocalStorage().id,
+                teamName: getCurrentTeamDataFromLocalStorage().name,
                 email: email,
             }),
         })
@@ -28,13 +29,22 @@ class AddToTeamModal extends Component {
             })
             .then(
                 result => {
-                    // this.props.programersArr.unshift({
-                    //     id: getTimestamp(),
-                    //     username: this.email.value,
-                    //     email: this.email.value,
-                    //     is_active: false,
-                    // });
-                    if (result.success) alert('Invite has been sent!');
+                    this.props.programersArr.unshift({
+                        role_collaboration: {
+                            title: 'ROLE_MEMBER',
+                        },
+                        user: [
+                            {
+                                id: result.invitedUserId,
+                                username: this.email.value,
+                                role: 'ROLE_MEMBER',
+                                email: this.email.value,
+                                is_active: true,
+                            },
+                        ],
+                    });
+
+                    if (result.invitedUserId) alert('Invite has been sent!');
 
                     this.closeModal();
                 },

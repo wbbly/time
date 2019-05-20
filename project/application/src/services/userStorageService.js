@@ -13,7 +13,6 @@ export function getUserEmailFromLocalStorage() {
 }
 
 export function getUserRoleTitleFromLocalStorage() {
-
     const role = getCurrentTeamDataFromLocalStorage().role || '';
 
     return role;
