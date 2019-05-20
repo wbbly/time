@@ -14,7 +14,7 @@ import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
 
 class TeamPage extends Component {
-    headerItems = ['Name', 'E-mail', 'Team Access', 'Wobbly Active Status'];
+    headerItems = ['Name', 'E-mail', 'Team Roles', 'Wobbly Access'];
 
     changingName = false;
     teamNameRef = React.createRef();
@@ -157,29 +157,30 @@ class TeamPage extends Component {
                 <LeftBar />
                 <div className="data_container_team_page">
                     <div className="team_page_header">
-                        <div className="page_name">{this.state.teamName}</div>
-                        <div className="invite_container">
-                            {checkIsAdmin() && (
-                                <button
-                                    onClick={e => {
-                                        this.openRenameModal();
-                                    }}
-                                >
-                                    Rename Team
-                                </button>
-                            )}
-                        </div>
-
-                        <div className="invite_container">
-                            {checkIsAdmin() && (
-                                <button
-                                    onClick={e => {
-                                        this.openAddUserModal();
-                                    }}
-                                >
-                                    Add to team
-                                </button>
-                            )}
+                        <div className="page_name">Team: {this.state.teamName}</div>
+                        <div className="team_page_main-controls">
+                            <div className="invite_container">
+                                {checkIsAdmin() && (
+                                    <button
+                                        onClick={e => {
+                                            this.openRenameModal();
+                                        }}
+                                    >
+                                        Rename team
+                                    </button>
+                                )}
+                            </div>
+                            <div className="invite_container">
+                                {checkIsAdmin() && (
+                                    <button
+                                        onClick={e => {
+                                            this.openAddUserModal();
+                                        }}
+                                    >
+                                        Invite to team
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <div className="team_page_data">

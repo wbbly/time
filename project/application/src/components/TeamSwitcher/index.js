@@ -26,35 +26,42 @@ class TeamSwitcher extends Component {
         e.preventDefault();
         let teamId = e.target.getAttribute('data-id');
 
-        fetch(AppConfig.apiURL + `team/switch`, {
-            method: 'PATCH',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userId: getUserIdFromLocalStorage(),
-                teamId: teamId,
-            }),
-        }).then(res =>
-            res.json().then(response => {
-                fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
-                    res.json().then(response => {
-                        this.setState({
-                            currentTeamId: response.data.user_team[0].team.id,
-                            currentTeamName: response.data.user_team[0].team.name,
-                        });
+        const currentTeamData = getCurrentTeamDataFromLocalStorage();
+        const currentTeamId = currentTeamData.id;
+        if (currentTeamId !== teamId) {
+            fetch(AppConfig.apiURL + `team/switch`, {
+                method: 'PATCH',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: getUserIdFromLocalStorage(),
+                    teamId: teamId,
+                }),
+            }).then(res =>
+                res.json().then(response => {
+                    fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
+                        res.json().then(response => {
+                            //
+                            // Not required while we refresh the page
+                            //
+                            // this.setState({
+                            //     currentTeamId: response.data.user_team[0].team.id,
+                            //     currentTeamName: response.data.user_team[0].team.name,
+                            // });
 
-                        setCurrentTeamDataToLocalStorage({
-                            id: response.data.user_team[0].team.id,
-                            name: response.data.user_team[0].team.name,
-                            role: response.data.user_team[0].role_collaboration.title,
-                        });
-                        window.location.reload(true);
-                    })
-                );
-            })
-        );
+                            setCurrentTeamDataToLocalStorage({
+                                id: response.data.user_team[0].team.id,
+                                name: response.data.user_team[0].team.name,
+                                role: response.data.user_team[0].role_collaboration.title,
+                            });
+                            window.location.reload(true);
+                        })
+                    );
+                })
+            );
+        }
     };
 
     componentDidMount() {
@@ -147,19 +154,21 @@ class TeamSwitcher extends Component {
         return (
             <div className="team_list">
                 <ul>
-                    {this.state.availableTeams.map(team => {
-                        return this.state.currentTeamId === team.id ? (
+                    {this.state.availableTeams.map((team, index) => {
+                        const title =
+                            this.state.currentTeamId === team.id ? `Default team` : `Set ${team.name} team as default`;
+
+                        return (
                             <li
+                                key={'team_list-item_' + index}
+                                title={title}
                                 onClick={this.handleChange}
                                 data-id={team.id}
                                 data-name={team.name}
-                                className="selected"
                             >
-                                {team.name}
-                            </li>
-                        ) : (
-                            <li onClick={this.handleChange} data-id={team.id} data-name={team.name}>
-                                {team.name}
+                                {this.state.availableTeams.length > 1 && this.state.currentTeamId === team.id
+                                    ? team.name + ' (default)'
+                                    : team.name}
                             </li>
                         );
                     })}

@@ -29,8 +29,13 @@
     color: #ffffff;
 }
 
+.team_page_main-controls {
+    display: flex;
+}
+
 .invite_container {
     position: relative;
+    padding-left: 25px;
 }
 
 .invite_container button {

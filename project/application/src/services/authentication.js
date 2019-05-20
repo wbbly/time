@@ -8,7 +8,7 @@ export const ROLES = {
 export function userLoggedIn() {
     const user = getUserFromLocalStorage();
 
-    return !!Object.keys(user).length && user.timezoneOffset;
+    return !!Object.keys(user).length && user.roleCollaborationId;
 }
 
 export function checkIsAdminByRole(role) {
