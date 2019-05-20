@@ -11,7 +11,6 @@ import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } f
 import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
-
 import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
 
 class TeamPage extends Component {
@@ -198,7 +197,6 @@ class TeamPage extends Component {
 
     componentDidMount() {
         this.getDataFromServer();
-        //@TODO Get Saved value from localStorage
         let teamData = getCurrentTeamDataFromLocalStorage();
 
         this.setState({
