@@ -18,7 +18,6 @@ class EditTeamModal extends Component {
         id: null,
         value: ROLES.ROLE_MEMBER,
         valueStatus: USER_STATUS.NOT_ACTIVE,
-        currentRole: ROLES.ROLE_MEMBER,
     };
 
     closeModal() {
@@ -68,7 +67,7 @@ class EditTeamModal extends Component {
     };
 
     handleChange = event => {
-        this.setState({ currentRole: event.target.value });
+        this.setState({ value: event.target.value });
     };
 
     handleChangeStatus = event => {
@@ -102,7 +101,7 @@ class EditTeamModal extends Component {
                     </div>
                     <div className="edit_team_modal_input_container">
                         <div className="edit_team_modal_input_title">Role</div>
-                        <RadioGroup onChange={this.handleChange} value={this.state.currentRole}>
+                        <RadioGroup onChange={this.handleChange} value={this.state.value}>
                             <FormControlLabel
                                 value={ROLES.ROLE_ADMIN}
                                 control={<Radio color="primary" />}
@@ -139,7 +138,7 @@ class EditTeamModal extends Component {
     componentDidMount() {
         this.setState({
             id: this.props.editedUser.id,
-            currentRole: this.props.editedUser.role,
+            value: this.props.editedUser.role,
         });
         this.setState({ valueStatus: this.props.editedUser.is_active ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE });
         this.email.value = this.props.editedUser.email;
