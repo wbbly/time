@@ -3,18 +3,23 @@ import './style.css';
 
 import { getTimestamp } from '../../services/timeService';
 import { AppConfig } from '../../config';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
+import { ROLES } from '../../services/authentication';
 
 class AddToTeamModal extends Component {
     addUser = email => {
-        fetch(AppConfig.apiURL + 'user/register', {
+        fetch(AppConfig.apiURL + 'user/invite', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+                userId: getUserIdFromLocalStorage(),
+                teamId: getCurrentTeamDataFromLocalStorage().id,
+                teamName: getCurrentTeamDataFromLocalStorage().name,
                 email: email,
-                password: 'DUMMY_PASSWORD_TO_BE_GENERATED',
             }),
         })
             .then(res => {
@@ -26,11 +31,21 @@ class AddToTeamModal extends Component {
             .then(
                 result => {
                     this.props.programersArr.unshift({
-                        id: getTimestamp(),
-                        username: this.email.value,
-                        email: this.email.value,
-                        is_active: false,
+                        role_collaboration: {
+                            title: ROLES.ROLE_MEMBER,
+                        },
+                        user: [
+                            {
+                                id: result.invitedUserId,
+                                username: this.email.value,
+                                role: ROLES.ROLE_MEMBER,
+                                email: this.email.value,
+                                is_active: true,
+                            },
+                        ],
                     });
+
+                    if (result.invitedUserId) alert('Invite has been sent!');
 
                     this.closeModal();
                 },
@@ -75,7 +90,7 @@ class AddToTeamModal extends Component {
                             className="add_to_team_modal_input"
                         />
                     </div>
-                    <button onClick={e => this.addUser(this.email.value, this.password.value)}>Add user</button>
+                    <button onClick={e => this.addUser(this.email.value)}>Add user</button>
                 </div>
             </div>
         );

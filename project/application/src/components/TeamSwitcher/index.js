@@ -44,6 +44,7 @@ class TeamSwitcher extends Component {
                             currentTeamId: response.data.user_team[0].team.id,
                             currentTeamName: response.data.user_team[0].team.name,
                         });
+
                         setCurrentTeamDataToLocalStorage({
                             id: response.data.user_team[0].team.id,
                             name: response.data.user_team[0].team.name,

@@ -170,7 +170,7 @@ class TeamPage extends Component {
                             )}
                         </div>
 
-                        {/* <div className="invite_container">
+                        <div className="invite_container">
                             {checkIsAdmin() && (
                                 <button
                                     onClick={e => {
@@ -180,7 +180,7 @@ class TeamPage extends Component {
                                     Add to team
                                 </button>
                             )}
-                        </div> */}
+                        </div>
                     </div>
                     <div className="team_page_data">
                         <table>
@@ -197,8 +197,8 @@ class TeamPage extends Component {
 
     componentDidMount() {
         this.getDataFromServer();
-        //@TODO Get Saved value from localStorage
         let teamData = getCurrentTeamDataFromLocalStorage();
+
         this.setState({
             teamName: teamData.name,
             teamId: teamData.id,
