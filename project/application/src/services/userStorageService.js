@@ -1,3 +1,5 @@
+import { getCurrentTeamDataFromLocalStorage } from './teamStorageService';
+
 export function getUserIdFromLocalStorage() {
     const id = getUserFromLocalStorage().id;
 
@@ -11,9 +13,9 @@ export function getUserEmailFromLocalStorage() {
 }
 
 export function getUserRoleTitleFromLocalStorage() {
-    const title = (getUserFromLocalStorage().roleCollaboration || {}).title || '';
+    const role = getCurrentTeamDataFromLocalStorage().role || '';
 
-    return title;
+    return role;
 }
 
 export function getUserTimezoneOffsetFromLocalStorage() {

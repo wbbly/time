@@ -11,6 +11,7 @@ import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } f
 import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Team Access', 'Wobbly Active Status'];
@@ -84,26 +85,32 @@ class TeamPage extends Component {
         const headerItemsElements = this.headerItems.map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
         ));
-        const items = programersArr.map((element, index) => (
-            <tr key={'team-member_' + index}>
-                <td>{element.user[0].username}</td>
-                <td>{element.user[0].email}</td>
-                <td>
-                    {checkIsMemberByRole(element.role_collaboration.title) && (
-                        <div className="access_container">{element.role_collaboration.title}</div>
-                    )}
-                    {checkIsAdminByRole(element.role_collaboration.title) && (
-                        <div className="access_container red">{element.role_collaboration.title}</div>
-                    )}
-                </td>
-                <td>
-                    <div>{element.user[0].is_active ? 'Active' : 'Not active'}</div>
-                    {checkIsAdmin() && (
-                        <i onClick={e => this.openEditMiodal(element.user[0])} className="edit_button item_button" />
-                    )}
-                </td>
-            </tr>
-        ));
+        const items = programersArr.map((element, index) => {
+            element.user[0].role = element.role_collaboration.title;
+            return (
+                <tr key={'team-member_' + index}>
+                    <td>{element.user[0].username}</td>
+                    <td>{element.user[0].email}</td>
+                    <td>
+                        {checkIsMemberByRole(element.role_collaboration.title) && (
+                            <div className="access_container">{element.role_collaboration.title}</div>
+                        )}
+                        {checkIsAdminByRole(element.role_collaboration.title) && (
+                            <div className="access_container red">{element.role_collaboration.title}</div>
+                        )}
+                    </td>
+                    <td>
+                        <div>{element.user[0].is_active ? 'Active' : 'Not active'}</div>
+                        {checkIsAdmin() && (
+                            <i
+                                onClick={e => this.openEditMiodal(element.user[0])}
+                                className="edit_button item_button"
+                            />
+                        )}
+                    </td>
+                </tr>
+            );
+        });
 
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
@@ -122,6 +129,7 @@ class TeamPage extends Component {
                         editedUser={this.props.editedUser}
                         getDataFromServer={this.getDataFromServer}
                         teamPage={this}
+                        teamId={this.state.teamId}
                     />
                 )}
                 {this.state.renameModal && (
@@ -190,13 +198,10 @@ class TeamPage extends Component {
     componentDidMount() {
         this.getDataFromServer();
         //@TODO Get Saved value from localStorage
-        fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res => {
-            res.json().then(response => {
-                this.setState({
-                    teamName: response.data.user_team[0].team.name,
-                    teamId: response.data.user_team[0].team.id,
-                });
-            });
+        let teamData = getCurrentTeamDataFromLocalStorage();
+        this.setState({
+            teamName: teamData.name,
+            teamId: teamData.id,
         });
     }
 

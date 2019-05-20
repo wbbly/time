@@ -15,6 +15,7 @@ import { AppConfig } from '../../config';
 import RegisterModal from '../../components/RegisterModal';
 import toggleRegisterModal from '../../actions/AuthPageAction';
 import reportsPageAction from '../../actions/ReportsPageAction';
+import { setCurrentTeamDataToLocalStorage } from '../../services/teamStorageService';
 
 class AuthPage extends Component {
     state = {
@@ -47,6 +48,15 @@ class AuthPage extends Component {
                         data: [getUserEmailFromLocalStorage()],
                     });
                     this.setState({ haveToken: true });
+                    fetch(AppConfig.apiURL + `team/current?userId=${result.user.id}`).then(res =>
+                        res.json().then(response => {
+                            setCurrentTeamDataToLocalStorage({
+                                id: response.data.user_team[0].team.id,
+                                name: response.data.user_team[0].team.name,
+                                role: response.data.user_team[0].role_collaboration.title,
+                            });
+                        })
+                    );
                 },
                 err => {
                     if (err instanceof Response) {
