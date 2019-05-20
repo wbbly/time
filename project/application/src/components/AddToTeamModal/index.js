@@ -5,6 +5,7 @@ import { getTimestamp } from '../../services/timeService';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
+import { ROLES } from '../../services/authentication';
 
 class AddToTeamModal extends Component {
     addUser = email => {
@@ -31,13 +32,13 @@ class AddToTeamModal extends Component {
                 result => {
                     this.props.programersArr.unshift({
                         role_collaboration: {
-                            title: 'ROLE_MEMBER',
+                            title: ROLES.ROLE_MEMBER,
                         },
                         user: [
                             {
                                 id: result.invitedUserId,
                                 username: this.email.value,
-                                role: 'ROLE_MEMBER',
+                                role: ROLES.ROLE_MEMBER,
                                 email: this.email.value,
                                 is_active: true,
                             },
