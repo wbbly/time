@@ -56,7 +56,7 @@ class TeamSwitcher extends Component {
                                 name: response.data.user_team[0].team.name,
                                 role: response.data.user_team[0].role_collaboration.title,
                             });
-                            window.location.reload(true);
+                            window.location.pathname = '/team';
                         })
                     );
                 })
