@@ -61,6 +61,8 @@ class TeamSwitcher extends Component {
                     );
                 })
             );
+        } else {
+            window.location.pathname = '/team';
         }
     };
 

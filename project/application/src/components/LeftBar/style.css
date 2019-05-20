@@ -136,12 +136,24 @@ a {
 }
 
 .logout_container {
+    bottom: 27px;
+    cursor: pointer;
+    position: absolute;
+    width: 100%;
+    z-index: inherit;
+    margin-bottom: 30px;
+}
+
+.logout_container div {
+    height: 28px;
+    padding-left: 21px;
     display: flex;
     align-items: center;
-    position: absolute;
-    bottom: 27px;
-    left: 23px;
-    cursor: pointer;
+    justify-content: start;
+}
+
+.logout_container:hover {
+    background: #4f4f4f;
 }
 
 .logout_container span {

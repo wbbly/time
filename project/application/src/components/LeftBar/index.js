@@ -90,8 +90,10 @@ class LeftBar extends Component {
                 </div>
 
                 <div className="logout_container" onClick={e => this.logout()}>
-                    <i className="logout" />
-                    <span>Log out</span>
+                    <div>
+                        <i className="logout" />
+                        <span>Log out</span>
+                    </div>
                 </div>
             </div>
         );
