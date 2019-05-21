@@ -11,7 +11,10 @@ import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } f
 import EditTeamModal from '../../components/EditTeamModal';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
-import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
+import {
+    getCurrentTeamDataFromLocalStorage,
+    setCurrentTeamDataToLocalStorage,
+} from '../../services/teamStorageService';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Team Roles', 'Wobbly Access'];
@@ -142,6 +145,12 @@ class TeamPage extends Component {
                                         this.setState({
                                             teamName: response.data.user_team[0].team.name,
                                             teamId: response.data.user_team[0].team.id,
+                                        });
+
+                                        setCurrentTeamDataToLocalStorage({
+                                            id: response.data.user_team[0].team.id,
+                                            name: response.data.user_team[0].team.name,
+                                            role: response.data.user_team[0].role_collaboration.title,
                                         });
                                     });
                                 }
