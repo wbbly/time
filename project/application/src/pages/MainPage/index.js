@@ -114,22 +114,28 @@ class MainPage extends Component {
     }
 
     timerPlayStopButtonAction(className, projectId) {
-        this.setState({ timerPlayButtonLoader: true }, () => {
-            if (className === 'control_task_time_icons play') {
-                const issue = (this.issueTargetElement || {}).value || '';
-                this.socketConnection &&
-                    this.socketConnection.emit('start-timer-v2', {
-                        userId: getUserIdFromLocalStorage(),
-                        issue: encodeTimeEntryIssue(issue),
-                        projectId: projectId,
-                    });
-            } else {
-                this.socketConnection &&
-                    this.socketConnection.emit('stop-timer-v2', {
-                        userId: getUserIdFromLocalStorage(),
-                    });
-            }
-        });
+        let issue = (this.issueTargetElement || {}).value || '';
+        issue = issue.trim();
+        if (issue.length) {
+            this.setState({ timerPlayButtonLoader: true }, () => {
+                if (className === 'control_task_time_icons play') {
+                    const issue = (this.issueTargetElement || {}).value || '';
+                    this.socketConnection &&
+                        this.socketConnection.emit('start-timer-v2', {
+                            userId: getUserIdFromLocalStorage(),
+                            issue: encodeTimeEntryIssue(issue),
+                            projectId: projectId,
+                        });
+                } else {
+                    this.socketConnection &&
+                        this.socketConnection.emit('stop-timer-v2', {
+                            userId: getUserIdFromLocalStorage(),
+                        });
+                }
+            });
+        } else {
+            alert(`Task name can't be empty`);
+        }
     }
 
     timerTickStart() {
@@ -206,11 +212,16 @@ class MainPage extends Component {
         );
     }
 
-    timerContinue(name, item) {
-        this.issueTargetElement.value = name;
-        this.setState({ seletedProject: item.project }, () =>
-            this.timerPlayStopButtonAction('control_task_time_icons play', item.project.id)
-        );
+    timerContinue(name = '', item) {
+        name = name.trim();
+        if (name.length) {
+            this.issueTargetElement.value = name;
+            this.setState({ seletedProject: item.project }, () =>
+                this.timerPlayStopButtonAction('control_task_time_icons play', item.project.id)
+            );
+        } else {
+            alert(`Task name can't be empty`);
+        }
     }
 
     getTimeEntriesTotalTime(items) {

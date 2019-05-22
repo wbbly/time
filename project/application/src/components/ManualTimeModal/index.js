@@ -71,36 +71,40 @@ class ManualTimeModal extends Component {
             return;
         }
 
-        changedItem['issue'] = encodeTimeEntryIssue((this.inputNameValue || {}).value || '');
-        changedItem['projectId'] = this.state.activeProject.id;
+        changedItem['issue'] = encodeTimeEntryIssue(((this.inputNameValue || {}).value || '').trim());
+        if (changedItem['issue'].length) {
+            changedItem['projectId'] = this.state.activeProject.id;
 
-        fetch(AppConfig.apiURL + `timer/${this.state.activeItem.id}`, {
-            method: 'PATCH',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(changedItem),
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                () => {
-                    this.getNewData();
-                    this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
+            fetch(AppConfig.apiURL + `timer/${this.state.activeItem.id}`, {
+                method: 'PATCH',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
                 },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
+                body: JSON.stringify(changedItem),
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw res;
                     }
-                }
-            );
+                    return res.json();
+                })
+                .then(
+                    () => {
+                        this.getNewData();
+                        this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
+                    },
+                    err => {
+                        if (err instanceof Response) {
+                            err.text().then(errorMessage => console.log(errorMessage));
+                        } else {
+                            console.log(err);
+                        }
+                    }
+                );
+        } else {
+            alert(`Task name can't be empty`);
+        }
     }
 
     getNewData() {
