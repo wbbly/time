@@ -50,7 +50,7 @@ class ReportsByProjectsPage extends Component {
                 <div className="name">{this.getSlash(item.issue)}</div>
                 <div className="username">{item.user.username}</div>
                 <div className="time">
-                    {moment(item.start_datetime).format('DD.MM.YYYY')} |{' '}
+                    {moment(item.startDatetime).format('DD.MM.YYYY')} |{' '}
                     {getTimeDurationByGivenTimestamp(item.durationTimestamp)}
                 </div>
             </div>
