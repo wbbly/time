@@ -26,6 +26,8 @@
     font-weight: normal;
     line-height: normal;
     font-size: 14px;
+    max-width: 125px;
+    overflow: hidden;
 }
 
 .team_list li.selected {
