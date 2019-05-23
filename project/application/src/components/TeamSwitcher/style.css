@@ -18,16 +18,20 @@
 
 .team_list ul li {
     color: #fff;
-    padding: 6px;
-    padding-left: 44px;
     cursor: pointer;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
     font-size: 14px;
+}
+
+.team_list ul li div.team_list-item {
+    padding: 6px;
+    padding-left: 44px;
     max-width: 125px;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .team_list li.selected {

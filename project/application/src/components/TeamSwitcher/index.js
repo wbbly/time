@@ -172,35 +172,38 @@ class TeamSwitcher extends Component {
                             this.state.currentTeamId === team.id ? `Default team` : `Set ${team.name} team as default`;
 
                         return (
-                            <li
-                                key={'team_list-item_' + index}
-                                title={title}
-                                onClick={this.handleChange}
-                                data-id={team.id}
-                                data-name={team.name}
-                            >
-                                {team.name + ' '}
-                                {this.state.availableTeams.length > 1 &&
-                                    this.state.currentTeamId === team.id && <b>(default)</b>}
+                            <li key={'team_list-item_' + index} title={title}>
+                                <div
+                                    className="team_list-item"
+                                    onClick={this.handleChange}
+                                    data-id={team.id}
+                                    data-name={team.name}
+                                >
+                                    {team.name + ' '}
+                                    {this.state.availableTeams.length > 1 &&
+                                        this.state.currentTeamId === team.id && <b>(default)</b>}
+                                </div>
                             </li>
                         );
                     })}
                     <li>
-                        <TeamAdd
-                            createTeamRequest={teamName => {
-                                fetch(AppConfig.apiURL + `team/add`, {
-                                    method: 'POST',
-                                    headers: {
-                                        Accept: 'application/json',
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                        userId: getUserIdFromLocalStorage(),
-                                        teamName,
-                                    }),
-                                }).then(res => (window.location.pathname = '/team'));
-                            }}
-                        />
+                        <div className="team_list-item">
+                            <TeamAdd
+                                createTeamRequest={teamName => {
+                                    fetch(AppConfig.apiURL + `team/add`, {
+                                        method: 'POST',
+                                        headers: {
+                                            Accept: 'application/json',
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                            userId: getUserIdFromLocalStorage(),
+                                            teamName,
+                                        }),
+                                    }).then(res => (window.location.pathname = '/team'));
+                                }}
+                            />
+                        </div>
                     </li>
                 </ul>
             </div>
