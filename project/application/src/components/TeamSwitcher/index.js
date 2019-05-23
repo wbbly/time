@@ -179,9 +179,9 @@ class TeamSwitcher extends Component {
                                 data-id={team.id}
                                 data-name={team.name}
                             >
-                                {this.state.availableTeams.length > 1 && this.state.currentTeamId === team.id
-                                    ? team.name + ' (default)'
-                                    : team.name}
+                                {team.name + ' '}
+                                {this.state.availableTeams.length > 1 &&
+                                    this.state.currentTeamId === team.id && <b>(default)</b>}
                             </li>
                         );
                     })}
