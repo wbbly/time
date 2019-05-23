@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
 
+// Services
+
+// Components
+
+// Actions
+
+// Queries
+
+// Config
+
+// Styles
 import './style.css';
 
 export default class CreateTeamModal extends Component {

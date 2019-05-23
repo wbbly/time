@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
-import './style.css';
 
-import { AppConfig } from '../../config';
+// Services
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
-import { getCurrentTeamDataFromLocalStorage } from '../../services/teamStorageService';
+import { getCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
 import { ROLES } from '../../services/authentication';
+
+// Components
+
+// Actions
+
+// Queries
+import { AppConfig } from '../../config';
+
+// Config
+
+// Styles
+import './style.css';
 
 class AddToTeamModal extends Component {
     addUser = email => {

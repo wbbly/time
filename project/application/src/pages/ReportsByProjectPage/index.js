@@ -1,19 +1,30 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-
-import './style.css';
-import LeftBar from '../../components/LeftBar';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
+
+// Services
 import {
     getTimeDurationByGivenTimestamp,
     convertDateToISOString,
     convertDateToShiftedISOString,
 } from '../../services/timeService';
-import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
+import { decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { userLoggedIn } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
+
+// Components
+import LeftBar from '../../components/LeftBar';
+
+// Actions
+
+// Queries
+
+// Config
 import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 class ReportsByProjectsPage extends Component {
     state = {

@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import './style.css';
-import teamAddPageAction from '../../actions/TeamAddPageAction';
+// Services
+
+// Components
 import CreateTeamModal from '../CreateTeamModal';
+
+// Actions
+import teamAddPageAction from '../../actions/TeamAddPageAction';
+
+// Queries
+
+// Config
+
+// Styles
+import './style.css';
 
 class TeamAdd extends Component {
     render() {

@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
-import './style.css';
 
+// Services
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
+
+// Components
+
+// Actions
+
+// Queries
+
+// Config
 import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 export default class EditProjectModal extends Component {
     state = {
@@ -65,7 +76,7 @@ export default class EditProjectModal extends Component {
                 err => {
                     if (err instanceof Response) {
                         err.text().then(error => {
-                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
+                            // const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
                             // if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
                             //     alert('Project is already existed');
                             // } else {

@@ -2,19 +2,31 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import './style.css';
-import LeftBar from '../../components/LeftBar';
-import AddToTeamModal from '../../components/AddToTeamModal';
-import RenameTeamModal from '../../components/RenameTeamModal';
-import teamPageAction from '../../actions/TeamPageAction';
+// Services
 import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } from '../../services/authentication';
-import EditTeamModal from '../../components/EditTeamModal';
-import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { removeAvailableTeamsFromLocalStorage } from '../../services/availableTeamsStorageService';
 import {
     getCurrentTeamDataFromLocalStorage,
     setCurrentTeamDataToLocalStorage,
-} from '../../services/teamStorageService';
+} from '../../services/currentTeamDataStorageService';
+
+// Components
+import LeftBar from '../../components/LeftBar';
+import AddToTeamModal from '../../components/AddToTeamModal';
+import RenameTeamModal from '../../components/RenameTeamModal';
+import EditTeamModal from '../../components/EditTeamModal';
+
+// Actions
+import teamPageAction from '../../actions/TeamPageAction';
+
+// Queries
+
+// Config
+import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 class TeamPage extends Component {
     headerItems = ['Name', 'E-mail', 'Team Roles', 'Wobbly Access'];
@@ -26,6 +38,7 @@ class TeamPage extends Component {
         super(props);
         this.state = {
             renameModal: false,
+            teamsUpdateTimestamp: null,
             teamName: 'Loading...',
             teamId: '',
         };
@@ -52,12 +65,6 @@ class TeamPage extends Component {
         this.setState({
             renameModal: true,
         });
-    }
-
-    renameTeam(e) {
-        e.preventDefault();
-        this.changingName = true;
-        this.forceUpdate();
     }
 
     processRenameTeam(e) {
@@ -138,23 +145,23 @@ class TeamPage extends Component {
                 {this.state.renameModal && (
                     <RenameTeamModal
                         teamId={this.state.teamId}
-                        refreshTeamName={() => {
-                            fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(
-                                res => {
-                                    res.json().then(response => {
-                                        this.setState({
-                                            teamName: response.data.user_team[0].team.name,
-                                            teamId: response.data.user_team[0].team.id,
-                                        });
+                        refreshTeamName={result => {
+                            const currentTeam = result.data.update_team.returning[0] || {};
+                            this.setState({
+                                teamId: currentTeam.id,
+                                teamName: currentTeam.name,
+                            });
 
-                                        setCurrentTeamDataToLocalStorage({
-                                            id: response.data.user_team[0].team.id,
-                                            name: response.data.user_team[0].team.name,
-                                            role: response.data.user_team[0].role_collaboration.title,
-                                        });
-                                    });
-                                }
-                            );
+                            const currentTeamDataFromLocalStorage = getCurrentTeamDataFromLocalStorage();
+                            setCurrentTeamDataToLocalStorage({
+                                id: currentTeam.id,
+                                name: currentTeam.name,
+                                role: currentTeamDataFromLocalStorage.role,
+                            });
+                            removeAvailableTeamsFromLocalStorage();
+                            this.setState({
+                                teamsUpdateTimestamp: new Date().getTime(),
+                            });
                         }}
                         closeCallback={() =>
                             this.setState({
@@ -163,7 +170,7 @@ class TeamPage extends Component {
                         }
                     />
                 )}
-                <LeftBar />
+                <LeftBar teamsUpdateTimestamp={this.state.teamsUpdateTimestamp} />
                 <div className="data_container_team_page">
                     <div className="team_page_header">
                         <div className="page_name">Team: {this.state.teamName}</div>
@@ -216,11 +223,9 @@ class TeamPage extends Component {
     }
 
     getDataFromServer(teamPage = this) {
-        //Obtaining current team ID
         fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res => {
             res.json().then(res => {
-                let teamId = res.data.user_team[0].team.id;
-                //@TODO: Fetch Team Data > http://API/team/teamId/data
+                let teamId = ((((res.data || {}).user_team || [])[0] || {}).team || {}).id;
                 fetch(AppConfig.apiURL + `team/${teamId}/data`, {
                     method: 'GET',
                     headers: {

@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import './style.css';
+// Services
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
-import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+
+// Components
+
+// Actions
+
+// Queries
+
+// Config
+import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 export default class CreateProjectModal extends Component {
     state = {

@@ -5,12 +5,23 @@ import Grid from '@material-ui/core/Grid';
 import locale from 'date-fns/locale/en-GB';
 import * as moment from 'moment';
 
-import './style.css';
-import { getTodayTimeEntriesParseFunction } from '../../queries';
+// Services
 import { getDate } from '../../services/timeService';
-import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
+import { encodeTimeEntryIssue } from '../../services/timeEntryService';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+
+// Components
+
+// Actions
+
+// Queries
+import { getTodayTimeEntriesParseFunction } from '../../queries';
+
+// Config
 import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 class ManualTimeModal extends Component {
     state = {

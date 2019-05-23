@@ -8,12 +8,8 @@ import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 
-import './style.css';
-import LeftBar from '../../components/LeftBar';
-import ProjectsContainer from '../../components/ProjectsContainer';
-import reportsPageAction from '../../actions/ReportsPageAction';
+// Services
 import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
-import ReportsSearchBar from '../../components/reportsSearchBar';
 import { getParametersString } from '../../services/apiService';
 import {
     getTimeDurationByGivenTimestamp,
@@ -24,7 +20,22 @@ import {
     getDateTimestamp,
 } from '../../services/timeService';
 import { getUserTimezoneOffsetFromLocalStorage } from '../../services/userStorageService';
+
+// Components
+import LeftBar from '../../components/LeftBar';
+import ProjectsContainer from '../../components/ProjectsContainer';
+import ReportsSearchBar from '../../components/reportsSearchBar';
+
+// Actions
+import reportsPageAction from '../../actions/ReportsPageAction';
+
+// Queries
+
+// Config
 import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 class ReportsPage extends Component {
     state = {

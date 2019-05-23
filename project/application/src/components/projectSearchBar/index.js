@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+// Services
+
+// Components
+
+// Actions
+
+// Queries
+
+// Config
+
+// Styles
 import './style.css';
 
 export default class ProjectSearchBar extends Component {

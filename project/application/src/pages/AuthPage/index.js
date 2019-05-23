@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import './index.css';
+// Services
 import { userLoggedIn } from '../../services/authentication';
 import {
     setUserToLocalStorage,
@@ -11,11 +11,22 @@ import {
 } from '../../services/userStorageService';
 import { removeCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
 import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
-import { AppConfig } from '../../config';
+import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamDataStorageService';
+
+// Components
 import RegisterModal from '../../components/RegisterModal';
+
+// Actions
 import toggleRegisterModal from '../../actions/AuthPageAction';
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { setCurrentTeamDataToLocalStorage } from '../../services/teamStorageService';
+
+// Queries
+
+// Config
+import { AppConfig } from '../../config';
+
+// Styles
+import './index.css';
 
 class AuthPage extends Component {
     state = {
@@ -50,10 +61,13 @@ class AuthPage extends Component {
                     this.setState({ haveToken: true });
                     fetch(AppConfig.apiURL + `team/current?userId=${result.user.id}`).then(res =>
                         res.json().then(response => {
+                            const currentTeam = response.data.user_team[0] || {};
+                            const currentTeamInfo = currentTeam.team || {};
+                            const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
                             setCurrentTeamDataToLocalStorage({
-                                id: response.data.user_team[0].team.id,
-                                name: response.data.user_team[0].team.name,
-                                role: response.data.user_team[0].role_collaboration.title,
+                                id: currentTeamInfo.id,
+                                name: currentTeamInfo.name,
+                                role: currentTeamRoleCollaboration.title,
                             });
                         })
                     );

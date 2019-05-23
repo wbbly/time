@@ -2,16 +2,27 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import './style.css';
+// Services
+import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+
+// Components
 import LeftBar from '../../components/LeftBar';
 import ProjectSearchBar from '../../components/projectSearchBar';
 import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
+
+// Actions
 import projectsPageAction from '../../actions/ProjectsActions';
+
+// Queries
 import { getProjectsV2ProjectPageUserParseFunction, getProjectsV2ProjectPageAdminParseFunction } from '../../queries';
-import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+
+// Config
 import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 class ProjectsPage extends Component {
     state = {

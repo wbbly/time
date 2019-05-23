@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
-import './style.css';
 
+// Services
+
+// Components
+
+// Actions
+
+// Queries
+
+// Config
 import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 class RegisterModal extends Component {
     addUser = (email, password, userName) => {

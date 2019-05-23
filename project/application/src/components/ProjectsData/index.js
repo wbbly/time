@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import './style.css';
+// Services
 import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
-import EditProjectModal from '../EditProjectModal/index';
 import { checkIsAdmin } from '../../services/authentication';
+
+// Components
+import EditProjectModal from '../EditProjectModal/index';
+
+// Actions
+
+// Queries
+
+// Config
+
+// Styles
+import './style.css';
 
 export default class ProjectData extends Component {
     setEdiItem(item) {

@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
-import './style.css';
 
+// Services
+
+// Components
+
+// Actions
+
+// Queries
+
+// Config
 import { AppConfig } from '../../config';
-import { removeAvailableTeamsFromLocalStorage } from '../../services/teamStorageService';
+
+// Styles
+import './style.css';
 
 export default class RenameTeamModal extends Component {
     state = {
-        isOpen: true,
         newTeamName: '',
     };
 
@@ -43,10 +52,8 @@ export default class RenameTeamModal extends Component {
                 })
                 .then(
                     result => {
-                        this.props.refreshTeamName();
-                        removeAvailableTeamsFromLocalStorage();
+                        this.props.refreshTeamName(result);
                         this.props.closeCallback();
-                        this.closeModal();
                     },
                     err => {
                         if (err instanceof Response) {
@@ -68,29 +75,22 @@ export default class RenameTeamModal extends Component {
         }
     }
 
-    closeModal = () => {
-        this.setState({
-            isOpen: false,
-        });
-    };
-
     render() {
-        if (!this.state.isOpen) return null;
         return (
-            <div className="wrapper_edit_team_modal">
-                <div className="edit_team_modal_background" />
-                <div className="edit_team_modal_container">
-                    <div className="edit_team_modal_header">
-                        <div className="edit_team_modal_header_title">Edit Team Name</div>
-                        <i className="edit_team_modal_header_close" onClick={e => this.closeModal()} />
+            <div className="wrapper_rename_team_modal">
+                <div className="rename_team_modal_background" />
+                <div className="rename_team_modal_container">
+                    <div className="rename_team_modal_header">
+                        <div className="rename_team_modal_header_title">Edit Team Name</div>
+                        <i className="rename_team_modal_header_close" onClick={e => this.props.closeCallback()} />
                     </div>
-                    <div className="edit_team_modal_data">
-                        <div className="edit_team_modal_data_input_container">
+                    <div className="rename_team_modal_data">
+                        <div className="rename_team_modal_data_input_container">
                             <input type="text" ref={this.teamNameRef} placeholder={'Team name...'} />
                         </div>
                     </div>
-                    <div className="edit_team_modal_button_container">
-                        <button className="edit_team_modal_button_container_button" onClick={e => this.renameTeam()}>
+                    <div className="rename_team_modal_button_container">
+                        <button className="rename_team_modal_button_container_button" onClick={e => this.renameTeam()}>
                             Rename Team
                         </button>
                     </div>

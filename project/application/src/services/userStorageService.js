@@ -1,4 +1,4 @@
-import { getCurrentTeamDataFromLocalStorage } from './teamStorageService';
+import { getCurrentTeamDataFromLocalStorage } from './currentTeamDataStorageService';
 
 export function getUserIdFromLocalStorage() {
     const id = getUserFromLocalStorage().id;

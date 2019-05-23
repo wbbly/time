@@ -2,8 +2,19 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as moment from 'moment';
 import { Doughnut } from 'react-chartjs-2';
+
+// Services
 import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 
+// Components
+
+// Actions
+
+// Queries
+
+// Config
+
+// Styles
 import './style.css';
 
 class ProjectsContainer extends Component {

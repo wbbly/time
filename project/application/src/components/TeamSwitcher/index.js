@@ -1,17 +1,30 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import './style.css';
-import { AppConfig } from '../../config';
+// Services
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
-import teamAction from '../../actions/TeamAction';
 import {
     getAvailableTeamsFromLocalStorage,
     setAvailableTeamsToLocalStorage,
+} from '../../services/availableTeamsStorageService';
+import {
     getCurrentTeamDataFromLocalStorage,
     setCurrentTeamDataToLocalStorage,
-} from '../../services/teamStorageService';
+} from '../../services/currentTeamDataStorageService';
+
+// Components
 import TeamAdd from '../TeamAdd';
+
+// Actions
+import teamAction from '../../actions/TeamAction';
+
+// Queries
+
+// Config
+import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 class TeamSwitcher extends Component {
     state = {
@@ -41,10 +54,13 @@ class TeamSwitcher extends Component {
                 res.json().then(response => {
                     fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
                         res.json().then(response => {
+                            const currentTeam = response.data.user_team[0] || {};
+                            const currentTeamInfo = currentTeam.team || {};
+                            const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
                             setCurrentTeamDataToLocalStorage({
-                                id: response.data.user_team[0].team.id,
-                                name: response.data.user_team[0].team.name,
-                                role: response.data.user_team[0].role_collaboration.title,
+                                id: currentTeamInfo.id,
+                                name: currentTeamInfo.name,
+                                role: currentTeamRoleCollaboration.title,
                             });
                             window.location.pathname = '/team';
                         })
@@ -139,6 +155,12 @@ class TeamSwitcher extends Component {
 
     componentDidMount() {
         this.getTeamsInfo();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.teamsUpdateTimestamp && this.props.teamsUpdateTimestamp !== prevProps.teamsUpdateTimestamp) {
+            this.getTeamsInfo();
+        }
     }
 
     render() {

@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import './style.css';
-import { AppConfig } from '../../config';
+// Services
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+
+// Components
+
+// Actions
+
+// Queries
+
+// Config
+import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 export default class ReportsSearchBar extends Component {
     state = {

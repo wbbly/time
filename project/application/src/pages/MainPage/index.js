@@ -4,12 +4,7 @@ import { connect } from 'react-redux';
 import openSocket from 'socket.io-client';
 import * as moment from 'moment';
 
-import './style.css';
-import { getProjectListParseFunction, getTodayTimeEntriesParseFunction } from '../../queries';
-import LeftBar from '../../components/LeftBar';
-import ManualTimeModal from '../../components/ManualTimeModal';
-import addTasks from '../../actions/MainPageAction';
-import manualTimerModalAction from '../../actions/ManualTimerModalAction';
+// Services
 import { userLoggedIn } from '../../services/authentication';
 import { getDateInString, getTimeDiff, getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
@@ -19,7 +14,23 @@ import {
     setCurrentTimerToLocalStorage,
 } from '../../services/currentTimerStorageService';
 import { setServerClientTimediffToLocalStorage } from '../../services/serverClientTimediffStorageService';
+
+// Components
+import LeftBar from '../../components/LeftBar';
+import ManualTimeModal from '../../components/ManualTimeModal';
+
+// Actions
+import addTasks from '../../actions/MainPageAction';
+import manualTimerModalAction from '../../actions/ManualTimerModalAction';
+
+// Queries
+import { getProjectListParseFunction, getTodayTimeEntriesParseFunction } from '../../queries';
+
+// Config
 import { AppConfig } from '../../config';
+
+// Styles
+import './style.css';
 
 class MainPage extends Component {
     ONE_SECOND_PERIOD = 1000; // in ms

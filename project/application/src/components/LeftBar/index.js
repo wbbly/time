@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import './style.css';
+// Services
 import { getTimeDiff } from '../../services/timeService';
 import { removeUserFromLocalStorage } from '../../services/userStorageService';
 import {
@@ -9,7 +9,20 @@ import {
     getCurrentTimerFromLocalStorage,
 } from '../../services/currentTimerStorageService';
 import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
+import { removeAvailableTeamsFromLocalStorage } from '../../services/availableTeamsStorageService';
+import { removeCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
+
+// Components
 import TeamSwitcher from '../TeamSwitcher';
+
+// Actions
+
+// Queries
+
+// Config
+
+// Styles
+import './style.css';
 
 class LeftBar extends Component {
     ONE_SECOND_PERIOD = 1000; // in ms
@@ -48,7 +61,8 @@ class LeftBar extends Component {
         removeUserFromLocalStorage();
         removeCurrentTimerFromLocalStorage();
         removeServerClientTimediffFromLocalStorage();
-        localStorage.removeItem('availableTeams');
+        removeAvailableTeamsFromLocalStorage();
+        removeCurrentTeamDataFromLocalStorage();
         window.location.href = window.location.origin;
     }
 
@@ -85,7 +99,7 @@ class LeftBar extends Component {
                             <div className="links_text">team</div>
                         </div>
                     </Link>
-                    <TeamSwitcher />
+                    <TeamSwitcher teamsUpdateTimestamp={this.props.teamsUpdateTimestamp} />
                 </div>
 
                 <div className="logout_container" onClick={e => this.logout()}>
