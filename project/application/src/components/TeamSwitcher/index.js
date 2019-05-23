@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import './style.css';
 import { AppConfig } from '../../config';
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import teamAction from '../../actions/TeamAction';
@@ -10,6 +11,7 @@ import {
     getCurrentTeamDataFromLocalStorage,
     setCurrentTeamDataToLocalStorage,
 } from '../../services/teamStorageService';
+import TeamAdd from '../TeamAdd';
 
 class TeamSwitcher extends Component {
     state = {
@@ -39,14 +41,6 @@ class TeamSwitcher extends Component {
                 res.json().then(response => {
                     fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
                         res.json().then(response => {
-                            //
-                            // Not required while we refresh the page
-                            //
-                            // this.setState({
-                            //     currentTeamId: response.data.user_team[0].team.id,
-                            //     currentTeamName: response.data.user_team[0].team.name,
-                            // });
-
                             setCurrentTeamDataToLocalStorage({
                                 id: response.data.user_team[0].team.id,
                                 name: response.data.user_team[0].team.name,
@@ -62,11 +56,11 @@ class TeamSwitcher extends Component {
         }
     };
 
-    componentDidMount() {
-        const availableTeamFromLocalStorage = getAvailableTeamsFromLocalStorage() || [];
+    getTeamsInfo() {
+        const availableTeamsFromLocalStorage = getAvailableTeamsFromLocalStorage() || [];
         const currentTeamDataFromLocalStorage = getCurrentTeamDataFromLocalStorage() || {};
         this.setState({
-            availableTeams: availableTeamFromLocalStorage,
+            availableTeams: availableTeamsFromLocalStorage,
             currentTeamName: currentTeamDataFromLocalStorage.name,
             currentTeamId: currentTeamDataFromLocalStorage.id,
         });
@@ -86,7 +80,7 @@ class TeamSwitcher extends Component {
                         name: item.team.name,
                     }));
 
-                    const availableTeamIdsFromLocalStorage = availableTeamFromLocalStorage.map(
+                    const availableTeamIdsFromLocalStorage = availableTeamsFromLocalStorage.map(
                         stateTeam => stateTeam.id
                     );
                     let differenceInAvailableTeamsFound =
@@ -143,6 +137,10 @@ class TeamSwitcher extends Component {
             );
     }
 
+    componentDidMount() {
+        this.getTeamsInfo();
+    }
+
     render() {
         return (
             <div className="team_list">
@@ -165,6 +163,23 @@ class TeamSwitcher extends Component {
                             </li>
                         );
                     })}
+                    <li>
+                        <TeamAdd
+                            createTeamRequest={teamName => {
+                                fetch(AppConfig.apiURL + `team/add`, {
+                                    method: 'POST',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        userId: getUserIdFromLocalStorage(),
+                                        teamName,
+                                    }),
+                                }).then(res => this.getTeamsInfo());
+                            }}
+                        />
+                    </li>
                 </ul>
             </div>
         );

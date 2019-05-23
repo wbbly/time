@@ -16,6 +16,7 @@
     width: 188px;
     background-color: #3b3b3b;
     box-shadow: 6px 0 20px rgba(0, 0, 0, 0.14);
+    z-index: 1;
 }
 
 .logo_small {
@@ -94,45 +95,6 @@ a {
 .navigation_links .timer_task {
     margin-left: 10px;
     color: white;
-}
-
-.team_list {
-    position: absolute;
-    width: 100%;
-    z-index: inherit;
-    margin-bottom: 30px;
-}
-
-.team_list ul {
-    padding-inline-start: 0;
-    padding-inline-end: 0;
-    padding-block-start: 0;
-    padding-block-end: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    margin-block-start: 0;
-    margin-block-end: 0;
-    background-color: #3b3b3b;
-}
-
-.team_list ul li {
-    color: #fff;
-    padding: 6px;
-    padding-left: 44px;
-    cursor: pointer;
-    font-family: "Open Sans", sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    line-height: normal;
-    font-size: 14px;
-}
-
-.team_list li.selected {
-    background:#333333;
-}
-
-.team_list li:hover {
-    background: #333333;
 }
 
 .logout_container {
