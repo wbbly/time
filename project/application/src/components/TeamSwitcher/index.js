@@ -198,7 +198,7 @@ class TeamSwitcher extends Component {
                                         userId: getUserIdFromLocalStorage(),
                                         teamName,
                                     }),
-                                }).then(res => this.getTeamsInfo());
+                                }).then(res => window.location.pathname = '/team');
                             }}
                         />
                     </li>
