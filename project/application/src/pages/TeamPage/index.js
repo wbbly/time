@@ -214,18 +214,27 @@ class TeamPage extends Component {
 
     componentDidMount() {
         this.getDataFromServer();
-        let teamData = getCurrentTeamDataFromLocalStorage();
-
-        this.setState({
-            teamName: teamData.name,
-            teamId: teamData.id,
-        });
     }
 
     getDataFromServer(teamPage = this) {
         fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res => {
             res.json().then(res => {
-                let teamId = ((((res.data || {}).user_team || [])[0] || {}).team || {}).id;
+                const currentTeam = res.data.user_team[0] || {};
+                const currentTeamInfo = currentTeam.team || {};
+                const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
+
+                const teamId = currentTeamInfo.id;
+                const teamName = currentTeamInfo.name;
+                this.setState({
+                    teamId,
+                    teamName,
+                });
+                setCurrentTeamDataToLocalStorage({
+                    id: teamId,
+                    name: teamName,
+                    role: currentTeamRoleCollaboration.title,
+                });
+
                 fetch(AppConfig.apiURL + `team/${teamId}/data`, {
                     method: 'GET',
                     headers: {
