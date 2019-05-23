@@ -18,10 +18,6 @@ class TeamSwitcher extends Component {
         availableTeams: [],
     };
 
-    constructor(props) {
-        super(props);
-    }
-
     handleChange = e => {
         e.preventDefault();
         let teamId = e.target.getAttribute('data-id');
@@ -67,89 +63,84 @@ class TeamSwitcher extends Component {
     };
 
     componentDidMount() {
-        let teamsLocalData = getAvailableTeamsFromLocalStorage();
-        let currentTeamData = getCurrentTeamDataFromLocalStorage();
-        if (teamsLocalData) {
-            this.setState({
-                availableTeams: teamsLocalData,
-                currentTeamName: currentTeamData.name,
-                currentTeamId: currentTeamData.id,
-            });
-        } else {
-            fetch(AppConfig.apiURL + `user/${getUserIdFromLocalStorage()}/teams`)
-                .then(res => {
-                    if (!res.ok) {
-                        throw res;
-                    }
-                    return res.json();
-                })
-                .then(
-                    response => {
-                        let availableTeams = response.data.user_team;
-                        let availableTeamsParsed = [];
-                        availableTeams.map(item => {
-                            return availableTeamsParsed.push({
-                                id: item.team.id,
-                                name: item.team.name,
-                            });
-                        });
-                        this.setState({
-                            availableTeams: availableTeamsParsed,
-                        });
-                        setAvailableTeamsToLocalStorage(availableTeamsParsed);
+        const availableTeamFromLocalStorage = getAvailableTeamsFromLocalStorage() || [];
+        const currentTeamDataFromLocalStorage = getCurrentTeamDataFromLocalStorage() || {};
+        this.setState({
+            availableTeams: availableTeamFromLocalStorage,
+            currentTeamName: currentTeamDataFromLocalStorage.name,
+            currentTeamId: currentTeamDataFromLocalStorage.id,
+        });
 
-                        fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
-                            res.json().then(response => {
-                                this.setState({
-                                    currentTeamId: response.data.user_team[0].team.id,
-                                    currentTeamName: response.data.user_team[0].team.name,
-                                });
-                                setCurrentTeamDataToLocalStorage({
-                                    id: response.data.user_team[0].team.id,
-                                    name: response.data.user_team[0].team.name,
-                                    role: response.data.user_team[0].role_collaboration.title,
-                                });
-                            })
-                        );
-                    },
-                    err => {
-                        if (err instanceof Response) {
-                            err.text().then(errorMessage => {
-                                console.log(errorMessage);
-                            });
-                        } else {
-                            console.log(err);
+        fetch(AppConfig.apiURL + `user/${getUserIdFromLocalStorage()}/teams`)
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res.json();
+            })
+            .then(
+                response => {
+                    let availableTeams = response.data.user_team;
+                    availableTeams = availableTeams.map(item => ({
+                        id: item.team.id,
+                        name: item.team.name,
+                    }));
+
+                    const availableTeamIdsFromLocalStorage = availableTeamFromLocalStorage.map(
+                        stateTeam => stateTeam.id
+                    );
+                    let differenceInAvailableTeamsFound =
+                        availableTeamIdsFromLocalStorage.length !== availableTeams.length;
+                    for (let i = 0; i < availableTeams.length; i++) {
+                        const availableTeam = availableTeams[i];
+                        if (availableTeamIdsFromLocalStorage.indexOf(availableTeam.id) === -1) {
+                            differenceInAvailableTeamsFound = true;
+                            break;
                         }
                     }
-                );
-        }
-    }
 
-    componentDidUpdate() {
-        let hasDataInStorage = getAvailableTeamsFromLocalStorage();
-        if (!hasDataInStorage) {
-            fetch(AppConfig.apiURL + `user/${getUserIdFromLocalStorage()}/teams`)
-                .then(res => {
-                    if (!res.ok) {
-                        throw res;
+                    if (differenceInAvailableTeamsFound) {
+                        this.setState({ availableTeams });
+                        setAvailableTeamsToLocalStorage(availableTeams);
                     }
-                    return res.json();
-                })
-                .then(response => {
-                    let availableTeams = response.data.user_team;
-                    let availableTeamsParsed = [];
-                    availableTeams.map(item => {
-                        return availableTeamsParsed.push({
-                            id: item.team.id,
-                            name: item.team.name,
+
+                    fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
+                        res.json().then(response => {
+                            const currentTeam = response.data.user_team[0] || {};
+                            const currentTeamInfo = currentTeam.team || {};
+                            const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
+                            let differenceInCurrentTeamFound = false;
+                            if (
+                                !currentTeamDataFromLocalStorage.id ||
+                                currentTeamDataFromLocalStorage.id !== currentTeamInfo.id
+                            ) {
+                                differenceInCurrentTeamFound = true;
+                            }
+
+                            if (differenceInCurrentTeamFound) {
+                                this.setState({
+                                    currentTeamId: currentTeamInfo.id,
+                                    currentTeamName: currentTeamInfo.name,
+                                });
+                                setCurrentTeamDataToLocalStorage({
+                                    id: currentTeamInfo.id,
+                                    name: currentTeamInfo.name,
+                                    role: currentTeamRoleCollaboration.title,
+                                });
+                            }
+                        })
+                    );
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => {
+                            console.log(errorMessage);
                         });
-                    });
-                    this.setState({
-                        availableTeams: availableTeamsParsed,
-                    });
-                    setAvailableTeamsToLocalStorage(availableTeamsParsed);
-                });
-        }
+                    } else {
+                        console.log(err);
+                    }
+                }
+            );
     }
 
     render() {
