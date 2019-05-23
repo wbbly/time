@@ -8,13 +8,12 @@
 
 .create_projects_modal_background {
     position: fixed;
-    background-color: gray;
+    background-color: rgba(89, 89, 89, 0.5);
     left: 0;
     right: 0;
     bottom: 0;
     top: 0;
     z-index: 1;
-    opacity: 0.5;
 }
 
 .create_projects_modal_container {
@@ -184,7 +183,7 @@
 
 .create_projects_modal_button_container {
     margin-top: 28px;
-    padding: 0 20px;
+    padding: 0;
     display: flex;
     justify-content: flex-end;
     padding-bottom: 19px;

@@ -29,14 +29,14 @@ export default class EditProjectModal extends Component {
     }
 
     changeProject() {
-        const project = addProjectPreProcessing(this.createProjectInput.value, this.state.selectedValue.id);
+        const project = addProjectPreProcessing(this.editProjectInput.value, this.state.selectedValue.id);
         if (!project) {
             return null;
         }
 
         let object = {
             id: this.state.projectId,
-            name: this.createProjectInput.value,
+            name: this.editProjectInput.value,
             colorProject: this.state.selectedValue.id,
         };
 
@@ -47,7 +47,7 @@ export default class EditProjectModal extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: this.createProjectInput.value,
+                name: this.editProjectInput.value,
                 projectColorId: this.state.selectedValue.id,
             }),
         })
@@ -66,11 +66,11 @@ export default class EditProjectModal extends Component {
                     if (err instanceof Response) {
                         err.text().then(error => {
                             const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
-                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                                alert('Project is already existed');
-                            } else {
-                                alert(`Project can't be created`);
-                            }
+                            // if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                            //     alert('Project is already existed');
+                            // } else {
+                            //     alert(`Project can't be edited`);
+                            // }
                         });
                     } else {
                         console.log(err);
@@ -91,42 +91,41 @@ export default class EditProjectModal extends Component {
         ));
 
         return (
-            <div className="edit_project_modal_wrapper">
-                <div className="edit_project_modal_background">
-                    <div className="edit_project_modal_container">
-                        <div className="create_projects_modal_header">
-                            <div className="create_projects_modal_header_title">Edit project</div>
-                            <i className="create_projects_modal_header_close" onClick={e => this.closeModal()} />
-                        </div>
-                        <div className="create_projects_modal_data">
-                            <div className="create_projects_modal_data_input_container">
-                                <input
-                                    type="text"
-                                    ref={input => {
-                                        this.createProjectInput = input;
-                                    }}
-                                    placeholder={'Project name...'}
-                                />
-                                <div
-                                    className="create_projects_modal_data_select_container"
-                                    onClick={e => this.toggleSelect()}
-                                >
-                                    <div className="select_main">
-                                        <div className={`circle ${this.state.selectedValue.name}`} />
-                                    </div>
-                                    <i className="vector" />
-                                    {this.state.listOpen && <div className="select_list">{selectItems}</div>}
+            <div className="wrapper_edit_projects_modal">
+                <div className="edit_projects_modal_background" />
+                <div className="edit_projects_modal_container">
+                    <div className="edit_projects_modal_header">
+                        <div className="edit_projects_modal_header_title">Edit project</div>
+                        <i className="edit_projects_modal_header_close" onClick={e => this.closeModal()} />
+                    </div>
+                    <div className="edit_projects_modal_data">
+                        <div className="edit_projects_modal_data_input_container">
+                            <input
+                                type="text"
+                                ref={input => {
+                                    this.editProjectInput = input;
+                                }}
+                                placeholder={'Project name...'}
+                            />
+                            <div
+                                className="edit_projects_modal_data_select_container"
+                                onClick={e => this.toggleSelect()}
+                            >
+                                <div className="select_main">
+                                    <div className={`circle ${this.state.selectedValue.name}`} />
                                 </div>
+                                <i className="vector" />
+                                {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                             </div>
                         </div>
-                        <div className="create_projects_modal_button_container">
-                            <button
-                                className="create_projects_modal_button_container_button"
-                                onClick={e => this.changeProject()}
-                            >
-                                Edit project
-                            </button>
-                        </div>
+                    </div>
+                    <div className="edit_projects_modal_button_container">
+                        <button
+                            className="edit_projects_modal_button_container_button"
+                            onClick={e => this.changeProject()}
+                        >
+                            Edit project
+                        </button>
                     </div>
                 </div>
             </div>
@@ -182,7 +181,7 @@ export default class EditProjectModal extends Component {
                         id: data.project_v2[0].project_color.id,
                         name: data.project_v2[0].project_color.name,
                     });
-                    this.createProjectInput.value = data.project_v2[0].name;
+                    this.editProjectInput.value = data.project_v2[0].name;
                 },
                 err => {
                     if (err instanceof Response) {
