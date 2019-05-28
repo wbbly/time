@@ -3,6 +3,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 // Services
 import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { getCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
 
 // Components
 
@@ -339,7 +340,8 @@ export default class ReportsSearchBar extends Component {
     componentDidMount() {
         this.userInputRef.value = this.props.inputUserData[0] || '';
         this.projectInputRef.value = this.props.inputProjectData[0] || '';
-        fetch(AppConfig.apiURL + `user/list`, {
+        const currentTeamData = getCurrentTeamDataFromLocalStorage();
+        fetch(AppConfig.apiURL + `team/${currentTeamData.id}/data`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -354,7 +356,8 @@ export default class ReportsSearchBar extends Component {
             })
             .then(
                 result => {
-                    let users = result.data.user;
+                    const teamUsers = result.data.team[0].team_users;
+                    const users = teamUsers.map(teamUser => teamUser.user[0]);
                     this.setState({ userDataEtalon: users });
                     const inputUserData = this.props.inputUserData;
                     for (let i = 0; i < inputUserData.length; i++) {
