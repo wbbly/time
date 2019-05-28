@@ -12,6 +12,7 @@ import {
 import { decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { userLoggedIn } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 
 // Components
 import LeftBar from '../../components/LeftBar';
@@ -110,6 +111,7 @@ class ReportsByProjectsPage extends Component {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
+                    'x-user-id': getUserIdFromLocalStorage(),
                     'Content-Type': 'application/json',
                 },
             }

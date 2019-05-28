@@ -19,7 +19,7 @@ import {
     getCurrentDate,
     getDateTimestamp,
 } from '../../services/timeService';
-import { getUserTimezoneOffsetFromLocalStorage } from '../../services/userStorageService';
+import { getUserTimezoneOffsetFromLocalStorage, getUserIdFromLocalStorage } from '../../services/userStorageService';
 
 // Components
 import LeftBar from '../../components/LeftBar';
@@ -339,6 +339,7 @@ class ReportsPage extends Component {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
+                    'x-user-id': getUserIdFromLocalStorage(),
                     'Content-Type': 'application/json',
                 },
             }
@@ -398,6 +399,7 @@ class ReportsPage extends Component {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
+                    'x-user-id': getUserIdFromLocalStorage(),
                     'Content-Type': 'application/json',
                 },
             }
@@ -441,6 +443,7 @@ class ReportsPage extends Component {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
+                    'x-user-id': getUserIdFromLocalStorage(),
                     'Content-Type': 'application/json',
                 },
             }
