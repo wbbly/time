@@ -29,7 +29,7 @@ import { AppConfig } from '../../config';
 import './style.css';
 
 class TeamPage extends Component {
-    headerItems = ['Name', 'E-mail', 'Team Roles', 'Wobbly Access'];
+    headerItems = ['Name', 'E-mail', 'Team Roles', 'Team Access'];
 
     changingName = false;
     teamNameRef = React.createRef();
@@ -56,7 +56,7 @@ class TeamPage extends Component {
         this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: !this.props.createUserModal });
     }
 
-    openEditMiodal(item) {
+    openEditModal(item) {
         this.props.teamPageAction('TOGGLE_EDIT_USER_MODAL', { editUserModal: true });
         this.props.teamPageAction('SET_EDIT_USER', { editedUser: item });
     }
@@ -95,27 +95,24 @@ class TeamPage extends Component {
         const headerItemsElements = this.headerItems.map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
         ));
-        const items = programersArr.map((element, index) => {
-            element.user[0].role = element.role_collaboration.title;
+        const items = programersArr.map((item, index) => {
+            const currentUser = item.user[0] || {};
+            const { username, email } = currentUser;
+            const role = item.role_collaboration.title;
+            const isActive = item.is_active;
+
             return (
                 <tr key={'team-member_' + index}>
-                    <td>{element.user[0].username}</td>
-                    <td>{element.user[0].email}</td>
+                    <td>{username}</td>
+                    <td>{email}</td>
                     <td>
-                        {checkIsMemberByRole(element.role_collaboration.title) && (
-                            <div className="access_container">{element.role_collaboration.title}</div>
-                        )}
-                        {checkIsAdminByRole(element.role_collaboration.title) && (
-                            <div className="access_container red">{element.role_collaboration.title}</div>
-                        )}
+                        {checkIsMemberByRole(role) && <div className="access_container">{role}</div>}
+                        {checkIsAdminByRole(role) && <div className="access_container red">{role}</div>}
                     </td>
                     <td>
-                        <div>{element.user[0].is_active ? 'Active' : 'Not active'}</div>
+                        <div>{isActive ? 'Active' : 'Not active'}</div>
                         {checkIsAdmin() && (
-                            <i
-                                onClick={e => this.openEditMiodal(element.user[0])}
-                                className="edit_button item_button"
-                            />
+                            <i onClick={e => this.openEditModal(item)} className="edit_button item_button" />
                         )}
                     </td>
                 </tr>

@@ -92,7 +92,7 @@ class EditTeamModal extends Component {
                 <div className="edit_team_modal_data">
                     <i onClick={e => this.closeModal()} />
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">Email</div>
+                        <div className="edit_team_modal_input_title">E-mail</div>
                         <input
                             type="text"
                             ref={input => {
@@ -112,7 +112,7 @@ class EditTeamModal extends Component {
                         />
                     </div>
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">Role</div>
+                        <div className="edit_team_modal_input_title">Team Role</div>
                         <RadioGroup onChange={this.handleChange} value={this.state.value}>
                             <FormControlLabel
                                 value={ROLES.ROLE_ADMIN}
@@ -127,7 +127,7 @@ class EditTeamModal extends Component {
                         </RadioGroup>
                     </div>
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">Status</div>
+                        <div className="edit_team_modal_input_title">Team Access</div>
                         <RadioGroup onChange={this.handleChangeStatus} value={this.state.valueStatus}>
                             <FormControlLabel
                                 value={USER_STATUS.ACTIVE}
@@ -148,13 +148,18 @@ class EditTeamModal extends Component {
     }
 
     componentDidMount() {
+        const currentUser = this.props.editedUser.user[0] || {};
+        const { id, username, email } = currentUser;
+        const role = this.props.editedUser.role_collaboration.title;
+        const isActive = this.props.editedUser.is_active;
+
         this.setState({
-            id: this.props.editedUser.id,
-            value: this.props.editedUser.role,
+            id,
+            value: role,
+            valueStatus: isActive ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE,
         });
-        this.setState({ valueStatus: this.props.editedUser.is_active ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE });
-        this.email.value = this.props.editedUser.email;
-        this.name.value = this.props.editedUser.username;
+        this.email.value = email;
+        this.name.value = username;
     }
 }
 
