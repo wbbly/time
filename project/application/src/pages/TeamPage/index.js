@@ -225,7 +225,7 @@ class TeamPage extends Component {
 
                 const teamId = currentTeamInfo.id;
                 const teamName = currentTeamInfo.name;
-                this.setState({
+                teamPage.setState({
                     teamId,
                     teamName,
                 });
