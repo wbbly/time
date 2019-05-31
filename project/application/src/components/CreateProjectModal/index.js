@@ -22,7 +22,7 @@ export default class CreateProjectModal extends Component {
     state = {
         selectedValue: {
             id: 'a642f337-9082-4f64-8ace-1d0e99fa7258',
-            name: 'blue',
+            name: 'green',
         },
         listOpen: false,
         selectValue: [],
