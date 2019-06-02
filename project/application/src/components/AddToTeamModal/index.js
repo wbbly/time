@@ -40,22 +40,25 @@ class AddToTeamModal extends Component {
             })
             .then(
                 result => {
-                    this.props.programersArr.unshift({
-                        role_collaboration: {
-                            title: ROLES.ROLE_MEMBER,
-                        },
-                        user: [
-                            {
-                                id: result.invitedUserId,
-                                username: this.email.value,
-                                role: ROLES.ROLE_MEMBER,
-                                email: this.email.value,
-                                is_active: true,
+                    if (result.invitedUserId) {
+                        this.props.programersArr.unshift({
+                            role_collaboration: {
+                                title: ROLES.ROLE_MEMBER,
                             },
-                        ],
-                    });
-
-                    if (result.invitedUserId) alert('Invite has been sent!');
+                            user: [
+                                {
+                                    id: result.invitedUserId[0].user_id,
+                                    username: this.email.value,
+                                    role: ROLES.ROLE_MEMBER,
+                                    email: this.email.value,
+                                    is_active: true,
+                                },
+                            ],
+                        });
+                        alert('Invite has been sent!');
+                    } else {
+                        alert('An error occured while sending an invite to the user!');
+                    }
 
                     this.closeModal();
                 },
