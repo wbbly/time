@@ -49,7 +49,8 @@ class ManualTimeModal extends Component {
                 <div className={`circle ${item.projectColor.name} margin_top_zero`} />
             </div>
         ));
-        return items.reverse();
+
+        return items;
     }
 
     setProject(project) {

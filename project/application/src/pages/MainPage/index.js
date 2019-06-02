@@ -362,7 +362,6 @@ class MainPage extends Component {
         });
     }
 
-    //@TODO: Create association with team
     getProjectList() {
         return new Promise((resolve, reject) => {
             fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
@@ -381,7 +380,7 @@ class MainPage extends Component {
                 .then(
                     result => {
                         let dataParsed = getProjectListParseFunction(result);
-                        const projectV2 = dataParsed.projectV2.reverse();
+                        const projectV2 = dataParsed.projectV2;
                         this.setState({
                             projectList: projectV2,
                             projectListForModalWindow: projectV2,

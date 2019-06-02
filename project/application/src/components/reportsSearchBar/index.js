@@ -395,7 +395,7 @@ export default class ReportsSearchBar extends Component {
             })
             .then(
                 result => {
-                    let projects = result.data.project_v2.reverse();
+                    let projects = result.data.project_v2;
                     this.setState({ projectDataEtalon: projects });
                     const inputProjectData = this.props.inputProjectData;
                     for (let i = 0; i < inputProjectData.length; i++) {
