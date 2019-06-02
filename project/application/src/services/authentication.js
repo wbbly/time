@@ -8,7 +8,7 @@ export const ROLES = {
 export function userLoggedIn() {
     const user = getUserFromLocalStorage();
 
-    return !!Object.keys(user).length;
+    return !!Object.keys(user).length && user.appVersion === 'v0.0.1'; // @TODO: replace with real application version
 }
 
 export function checkIsAdminByRole(role) {
