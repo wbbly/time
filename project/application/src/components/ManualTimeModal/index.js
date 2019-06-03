@@ -115,7 +115,7 @@ class ManualTimeModal extends Component {
                     }
                 );
         } else {
-            alert(`Task name can't be empty`);
+            alert(`Please input task name before saving the time tracking`);
         }
     }
 

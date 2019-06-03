@@ -145,7 +145,11 @@ class MainPage extends Component {
                 }
             });
         } else {
-            alert(`Task name can't be empty`);
+            alert(
+                `Please input task name before ${
+                    className === 'control_task_time_icons play' ? 'starting' : 'stopping'
+                } the time tracking`
+            );
         }
     }
 
@@ -231,7 +235,7 @@ class MainPage extends Component {
                 this.timerPlayStopButtonAction('control_task_time_icons play', item.project.id)
             );
         } else {
-            alert(`Task name can't be empty`);
+            alert(`Please input task name before starting the time tracking`);
         }
     }
 
