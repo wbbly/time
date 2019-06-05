@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
 // Services
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 
 // Components
 
@@ -40,6 +42,7 @@ export default class RenameTeamModal extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    userId: getUserIdFromLocalStorage(),
                     teamId: this.props.teamId,
                     newName: teamName,
                 }),
@@ -58,12 +61,12 @@ export default class RenameTeamModal extends Component {
                     err => {
                         if (err instanceof Response) {
                             err.text().then(error => {
-                                console.error(err);
-                                // if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                                //     alert('Project is already existed');
-                                // } else {
-                                //     alert(`Project can't be created`);
-                                // }
+                                const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
+                                if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                                    alert('Team is already existed');
+                                } else {
+                                    alert(`Team can't be renamed`);
+                                }
                             });
                         } else {
                             console.log(err);

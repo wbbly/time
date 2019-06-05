@@ -11,6 +11,7 @@ import {
     getCurrentTeamDataFromLocalStorage,
     setCurrentTeamDataToLocalStorage,
 } from '../../services/currentTeamDataStorageService';
+import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 
 // Components
 import TeamAdd from '../TeamAdd';
@@ -200,7 +201,35 @@ class TeamSwitcher extends Component {
                                             userId: getUserIdFromLocalStorage(),
                                             teamName,
                                         }),
-                                    }).then(res => (window.location.pathname = '/team'));
+                                    })
+                                        .then(res => {
+                                            if (!res.ok) {
+                                                throw res;
+                                            }
+                                        })
+                                        .then(
+                                            res => (window.location.pathname = '/team'),
+                                            err => {
+                                                if (err instanceof Response) {
+                                                    err.text().then(error => {
+                                                        const errorMessages = responseErrorsHandling.getErrorMessages(
+                                                            JSON.parse(error)
+                                                        );
+                                                        if (
+                                                            responseErrorsHandling.checkIsDuplicateError(
+                                                                errorMessages.join('\n')
+                                                            )
+                                                        ) {
+                                                            alert('Team is already existed');
+                                                        } else {
+                                                            alert(`Team can't be created`);
+                                                        }
+                                                    });
+                                                } else {
+                                                    console.log(err);
+                                                }
+                                            }
+                                        );
                                 }}
                             />
                         </div>

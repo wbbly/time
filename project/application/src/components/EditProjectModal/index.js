@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 // Services
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
+import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 
 // Components
 
@@ -57,8 +59,11 @@ export default class EditProjectModal extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: this.editProjectInput.value,
-                projectColorId: this.state.selectedValue.id,
+                project: {
+                    name: this.editProjectInput.value,
+                    projectColorId: this.state.selectedValue.id,
+                },
+                userId: getUserIdFromLocalStorage(),
             }),
         })
             .then(res => {
@@ -75,12 +80,12 @@ export default class EditProjectModal extends Component {
                 err => {
                     if (err instanceof Response) {
                         err.text().then(error => {
-                            // const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
-                            // if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                            //     alert('Project is already existed');
-                            // } else {
-                            //     alert(`Project can't be edited`);
-                            // }
+                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
+                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                                alert('Project is already existed');
+                            } else {
+                                alert(`Project can't be edited`);
+                            }
                         });
                     } else {
                         console.log(err);
