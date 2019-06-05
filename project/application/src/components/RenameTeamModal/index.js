@@ -42,7 +42,6 @@ export default class RenameTeamModal extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    userId: getUserIdFromLocalStorage(),
                     teamId: this.props.teamId,
                     newName: teamName,
                 }),

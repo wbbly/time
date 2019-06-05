@@ -67,29 +67,6 @@ class TeamPage extends Component {
         });
     }
 
-    processRenameTeam(e) {
-        fetch(AppConfig.apiURL + 'team/rename', {
-            method: 'PATCH',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                teamId: this.state.teamId,
-                newName: this.teamNameRef.current.value,
-            }),
-        })
-            .then(res => {
-                res.json().then(response => {
-                    this.changingName = false;
-                    this.forceUpdate();
-                });
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }
-
     render() {
         let programersArr = this.props.programersArr;
         const headerItemsElements = this.headerItems.map((element, index) => (
