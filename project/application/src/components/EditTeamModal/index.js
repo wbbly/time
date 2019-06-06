@@ -43,15 +43,14 @@ class EditTeamModal extends Component {
             method: 'PATCH',
             headers: {
                 Accept: 'application/json',
-                'x-admin-id': getUserIdFromLocalStorage(),
+                'x-user-id': getUserIdFromLocalStorage(),
+                'x-team-id': teamId,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 email: this.email.value,
                 username: this.name.value,
                 isActive: this.state.valueStatus === USER_STATUS.ACTIVE,
-                //@TODO Replace with REDUX once implemented
-                teamId: teamId,
                 roleName: this.state.value,
             }),
         })
