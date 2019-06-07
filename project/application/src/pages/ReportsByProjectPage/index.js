@@ -12,7 +12,7 @@ import {
 import { decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { userLoggedIn } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 import LeftBar from '../../components/LeftBar';
@@ -100,7 +100,7 @@ class ReportsByProjectsPage extends Component {
         const userEmailsList = userEmails.length ? userEmails.split(',') : [];
         const { projectName, dateStart, endDate } = this.props.match.params;
 
-        fetch(
+        apiCall(
             AppConfig.apiURL +
                 `project/reports-project?projectName=${projectName || ''}&startDate=${convertDateToISOString(
                     dateStart
@@ -110,42 +110,33 @@ class ReportsByProjectsPage extends Component {
             {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
-                    'x-user-id': getUserIdFromLocalStorage(),
                     'Content-Type': 'application/json',
                 },
             }
-        )
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let data = result.data;
-                    for (let i = 0; i < data.project_v2.length; i++) {
-                        const project = data.project_v2[i];
-                        for (let j = 0; j < project.timer.length; j++) {
-                            const timeEntry = project.timer[j];
-                            timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
-                        }
+        ).then(
+            result => {
+                let data = result.data;
+                for (let i = 0; i < data.project_v2.length; i++) {
+                    const project = data.project_v2[i];
+                    for (let j = 0; j < project.timer.length; j++) {
+                        const timeEntry = project.timer[j];
+                        timeEntry.issue = decodeTimeEntryIssue(timeEntry.issue);
                     }
+                }
 
-                    const timer = data.project_v2.length ? data.project_v2[0].timer : [];
-                    this.setState({ dataOfProject: timer });
-                    this.setState({ totalTime: this.getTotalTime(timer) });
-                    this.setState({ countTasks: timer.length });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
+                const timer = data.project_v2.length ? data.project_v2[0].timer : [];
+                this.setState({ dataOfProject: timer });
+                this.setState({ totalTime: this.getTotalTime(timer) });
+                this.setState({ countTasks: timer.length });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
                 }
-            );
+            }
+        );
     }
 }
 

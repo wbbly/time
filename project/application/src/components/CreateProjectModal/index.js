@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // Services
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 
@@ -45,10 +45,9 @@ export default class CreateProjectModal extends Component {
         if (!project) {
             return null;
         }
-        fetch(AppConfig.apiURL + `project/add`, {
+        apiCall(AppConfig.apiURL + `project/add`, {
             method: 'POST',
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -56,35 +55,27 @@ export default class CreateProjectModal extends Component {
                     name: project.name,
                     projectColorId: project.colorProject.id,
                 },
-                userId: getUserIdFromLocalStorage(),
             }),
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        }).then(
+            result => {
+                this.props.getProjects();
+                this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(error => {
+                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
+                        if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                            alert('Project is already existed');
+                        } else {
+                            alert(`Project can't be created`);
+                        }
+                    });
+                } else {
+                    console.log(err);
                 }
-                return res.json();
-            })
-            .then(
-                result => {
-                    this.props.getProjects();
-                    this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(error => {
-                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
-                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                                alert('Project is already existed');
-                            } else {
-                                alert(`Project can't be created`);
-                            }
-                        });
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
+            }
+        );
     }
 
     render() {
@@ -140,32 +131,24 @@ export default class CreateProjectModal extends Component {
     }
 
     componentDidMount() {
-        fetch(AppConfig.apiURL + `project-color/list`, {
+        apiCall(AppConfig.apiURL + `project-color/list`, {
             method: 'GET',
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        }).then(
+            result => {
+                let data = result.data;
+                this.setState({ selectValue: data.project_color });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
                 }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let data = result.data;
-                    this.setState({ selectValue: data.project_color });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
+            }
+        );
     }
 }
 

@@ -8,12 +8,13 @@ import * as moment from 'moment';
 import { userLoggedIn } from '../../services/authentication';
 import { getDateInString, getTimeDiff, getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import {
     removeCurrentTimerFromLocalStorage,
     setCurrentTimerToLocalStorage,
 } from '../../services/currentTimerStorageService';
 import { setServerClientTimediffToLocalStorage } from '../../services/serverClientTimediffStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 import LeftBar from '../../components/LeftBar';
@@ -67,49 +68,41 @@ class MainPage extends Component {
             this.socketConnection.emit(
                 'join-v2',
                 {
-                    userId: getUserIdFromLocalStorage(),
+                    token: `Bearer ${getTokenFromLocalStorage()}`,
                 },
                 _ => {
                     this.socketConnection.emit('check-timer-v2', {
-                        userId: getUserIdFromLocalStorage(),
+                        token: `Bearer ${getTokenFromLocalStorage()}`,
                     });
                 }
             );
         });
         this.socketConnection.on('check-timer-v2', data => {
             if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
-                fetch(AppConfig.apiURL + 'time/current', {
+                apiCall(AppConfig.apiURL + 'time/current', {
                     method: 'GET',
                     headers: {
-                        Accept: 'application/json',
                         'Content-Type': 'application/json',
                     },
-                })
-                    .then(res => {
-                        if (!res.ok) {
-                            throw res;
+                }).then(
+                    result => {
+                        setServerClientTimediffToLocalStorage(+moment(result.timeISO) - +moment());
+                        const currentTimer = {
+                            timeStart: +moment(data.startDatetime),
+                            issue: decodeTimeEntryIssue(data.issue),
+                            project: data.project,
+                        };
+                        setCurrentTimerToLocalStorage(currentTimer);
+                        this.timerStateUpdateWithSocketData(currentTimer);
+                    },
+                    err => {
+                        if (err instanceof Response) {
+                            err.text().then(errorMessage => console.log(errorMessage));
+                        } else {
+                            console.log(err);
                         }
-                        return res.json();
-                    })
-                    .then(
-                        result => {
-                            setServerClientTimediffToLocalStorage(+moment(result.timeISO) - +moment());
-                            const currentTimer = {
-                                timeStart: +moment(data.startDatetime),
-                                issue: decodeTimeEntryIssue(data.issue),
-                                project: data.project,
-                            };
-                            setCurrentTimerToLocalStorage(currentTimer);
-                            this.timerStateUpdateWithSocketData(currentTimer);
-                        },
-                        err => {
-                            if (err instanceof Response) {
-                                err.text().then(errorMessage => console.log(errorMessage));
-                            } else {
-                                console.log(err);
-                            }
-                        }
-                    );
+                    }
+                );
             } else if (!data) {
                 removeCurrentTimerFromLocalStorage();
                 const lastTimeEntry = this.props.timeEntriesList[0];
@@ -133,14 +126,14 @@ class MainPage extends Component {
                     const issue = (this.issueTargetElement || {}).value || '';
                     this.socketConnection &&
                         this.socketConnection.emit('start-timer-v2', {
-                            userId: getUserIdFromLocalStorage(),
+                            token: `Bearer ${getTokenFromLocalStorage()}`,
                             issue: encodeTimeEntryIssue(issue),
                             projectId: projectId,
                         });
                 } else {
                     this.socketConnection &&
                         this.socketConnection.emit('stop-timer-v2', {
-                            userId: getUserIdFromLocalStorage(),
+                            token: `Bearer ${getTokenFromLocalStorage()}`,
                         });
                 }
             });
@@ -173,7 +166,7 @@ class MainPage extends Component {
                 const issue = (this.issueTargetElement || {}).value || '';
                 this.socketConnection &&
                     this.socketConnection.emit('update-timer-v2', {
-                        userId: getUserIdFromLocalStorage(),
+                        token: `Bearer ${getTokenFromLocalStorage()}`,
                         issue: encodeTimeEntryIssue(issue),
                         projectId: this.state.seletedProject.id,
                     });
@@ -304,106 +297,82 @@ class MainPage extends Component {
     deleteTimeEntry(item) {
         let check = window.confirm('Do you really want to delete this time entry?');
         if (check) {
-            fetch(AppConfig.apiURL + `timer/${item.id}`, {
+            apiCall(AppConfig.apiURL + `timer/${item.id}`, {
                 method: 'DELETE',
                 headers: {
-                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-            })
-                .then(res => {
-                    if (!res.ok) {
-                        throw res;
+            }).then(
+                _ => {
+                    this.getUserTimeEntries().then(_ => {}, _ => {});
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
                     }
-                    return res.json();
-                })
-                .then(
-                    _ => {
-                        this.getUserTimeEntries().then(_ => {}, _ => {});
-                    },
-                    err => {
-                        if (err instanceof Response) {
-                            err.text().then(errorMessage => console.log(errorMessage));
-                        } else {
-                            console.log(err);
-                        }
-                    }
-                );
+                }
+            );
         }
     }
 
     getUserTimeEntries() {
         return new Promise((resolve, reject) => {
             //@TODO Add association w/ Teams
-            fetch(AppConfig.apiURL + `timer/user-list?userId=${getUserIdFromLocalStorage()}`, {
+            apiCall(AppConfig.apiURL + `timer/user-list`, {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-            })
-                .then(res => {
-                    if (!res.ok) {
-                        throw res;
+            }).then(
+                result => {
+                    const { timerV2: timeEntriesList } = getTodayTimeEntriesParseFunction(result.data);
+                    this.props.addTasksAction('ADD_TASKS_ARR', { timeEntriesList });
+                    resolve();
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
                     }
-                    return res.json();
-                })
-                .then(
-                    result => {
-                        const { timerV2: timeEntriesList } = getTodayTimeEntriesParseFunction(result.data);
-                        this.props.addTasksAction('ADD_TASKS_ARR', { timeEntriesList });
-                        resolve();
-                    },
-                    err => {
-                        if (err instanceof Response) {
-                            err.text().then(errorMessage => console.log(errorMessage));
-                        } else {
-                            console.log(err);
-                        }
-                        reject();
-                    }
-                );
+                    reject();
+                }
+            );
         });
     }
 
     getProjectList() {
         return new Promise((resolve, reject) => {
-            fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
+            apiCall(AppConfig.apiURL + `project/list`, {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-            })
-                .then(res => {
-                    if (!res.ok) {
-                        throw res;
+            }).then(
+                result => {
+                    let dataParsed = getProjectListParseFunction(result);
+                    const projectV2 = dataParsed.projectV2;
+                    this.setState({
+                        projectList: projectV2,
+                        projectListForModalWindow: projectV2,
+                        projectListInitial: projectV2,
+                    });
+                    this.defaultProject.id = projectV2[0].id;
+                    this.defaultProject.name = projectV2[0].name;
+                    this.defaultProject.projectColor.name = projectV2[0].projectColor.name;
+                    resolve(true);
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
                     }
-                    return res.json();
-                })
-                .then(
-                    result => {
-                        let dataParsed = getProjectListParseFunction(result);
-                        const projectV2 = dataParsed.projectV2;
-                        this.setState({
-                            projectList: projectV2,
-                            projectListForModalWindow: projectV2,
-                            projectListInitial: projectV2,
-                        });
-                        this.defaultProject.id = projectV2[0].id;
-                        this.defaultProject.name = projectV2[0].name;
-                        this.defaultProject.projectColor.name = projectV2[0].projectColor.name;
-                        resolve(true);
-                    },
-                    err => {
-                        if (err instanceof Response) {
-                            err.text().then(errorMessage => console.log(errorMessage));
-                        } else {
-                            console.log(err);
-                        }
-                        resolve(true);
-                    }
-                );
+                    resolve(true);
+                }
+            );
         });
     }
 

@@ -2,7 +2,7 @@ import * as moment from 'moment';
 
 import { getCurrentDate } from '../services/timeService';
 import { getTimeDurationByGivenTimestamp } from '../services/timeService';
-import { getUserEmailFromLocalStorage } from '../services/userStorageService';
+import { getLoggedUserEmail } from '../services/tokenStorageService';
 
 const initialState = {
     timeRange: {
@@ -11,7 +11,7 @@ const initialState = {
         key: 'selection',
         firstDayOfWeek: 1,
     },
-    inputUserData: [getUserEmailFromLocalStorage()],
+    inputUserData: [getLoggedUserEmail()],
     dataBarChat: {
         defaultFontColor: 'red',
         labels: [],

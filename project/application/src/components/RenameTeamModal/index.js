@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 // Services
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
+import { apiCall } from '../../services/apiService';
 
 // Components
 
@@ -35,43 +35,35 @@ export default class RenameTeamModal extends Component {
     renameTeam() {
         const teamName = (this.teamNameRef.current.value || '').trim();
         if (teamName.length) {
-            fetch(AppConfig.apiURL + `team/rename`, {
+            apiCall(AppConfig.apiURL + `team/rename`, {
                 method: 'PATCH',
                 headers: {
-                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     teamId: this.props.teamId,
                     newName: teamName,
                 }),
-            })
-                .then(res => {
-                    if (!res.ok) {
-                        throw res;
+            }).then(
+                result => {
+                    this.props.refreshTeamName(result);
+                    this.props.closeCallback();
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(error => {
+                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
+                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                                alert('Team is already existed');
+                            } else {
+                                alert(`Team can't be renamed`);
+                            }
+                        });
+                    } else {
+                        console.log(err);
                     }
-                    return res.json();
-                })
-                .then(
-                    result => {
-                        this.props.refreshTeamName(result);
-                        this.props.closeCallback();
-                    },
-                    err => {
-                        if (err instanceof Response) {
-                            err.text().then(error => {
-                                const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
-                                if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                                    alert('Team is already existed');
-                                } else {
-                                    alert(`Team can't be renamed`);
-                                }
-                            });
-                        } else {
-                            console.log(err);
-                        }
-                    }
-                );
+                }
+            );
         } else {
             alert("Project name can't be empty!");
         }

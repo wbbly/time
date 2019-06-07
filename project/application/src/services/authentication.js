@@ -1,4 +1,6 @@
-import { getUserFromLocalStorage, getUserRoleTitleFromLocalStorage } from './userStorageService';
+import { getLoggedUser, getLoggedUserRoleTitle } from './tokenStorageService';
+
+const APP_VERSION = 'v0.0.1';
 
 export const ROLES = {
     ROLE_ADMIN: 'ROLE_ADMIN',
@@ -6,9 +8,9 @@ export const ROLES = {
 };
 
 export function userLoggedIn() {
-    const user = getUserFromLocalStorage();
+    const user = getLoggedUser();
 
-    return !!Object.keys(user).length && user.appVersion === 'v0.0.1'; // @TODO: replace with real application version
+    return !!Object.keys(user).length && user.appVersion === APP_VERSION; // @TODO: replace with real application version
 }
 
 export function checkIsAdminByRole(role) {
@@ -20,5 +22,5 @@ export function checkIsMemberByRole(role) {
 }
 
 export function checkIsAdmin() {
-    return checkIsAdminByRole(getUserRoleTitleFromLocalStorage());
+    return checkIsAdminByRole(getLoggedUserRoleTitle());
 }

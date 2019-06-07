@@ -5,13 +5,17 @@ import { Redirect } from 'react-router-dom';
 // Services
 import { userLoggedIn } from '../../services/authentication';
 import {
-    setUserToLocalStorage,
-    getUserEmailFromLocalStorage,
-    removeUserFromLocalStorage,
-} from '../../services/userStorageService';
+    setTokenToLocalStorage,
+    getLoggedUserEmail,
+    removeTokenFromLocalStorage,
+} from '../../services/tokenStorageService';
 import { removeCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
 import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
-import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamDataStorageService';
+import {
+    setCurrentTeamDataToLocalStorage,
+    removeCurrentTeamDataFromLocalStorage,
+} from '../../services/currentTeamDataStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 import RegisterModal from '../../components/RegisterModal';
@@ -27,6 +31,7 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './index.css';
+import { removeAvailableTeamsFromLocalStorage } from '../../services/availableTeamsStorageService';
 
 class AuthPage extends Component {
     state = {
@@ -35,53 +40,47 @@ class AuthPage extends Component {
     };
 
     login = (email, password) => {
-        fetch(AppConfig.apiURL + 'user/login', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            }),
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    setUserToLocalStorage(result.user);
-                    this.props.reportsPageAction('SET_ACTIVE_USER', {
-                        data: [getUserEmailFromLocalStorage()],
-                    });
-                    this.setState({ haveToken: true });
-                    fetch(AppConfig.apiURL + `team/current?userId=${result.user.id}`).then(res =>
-                        res.json().then(response => {
-                            const currentTeam = response.data.user_team[0] || {};
-                            const currentTeamInfo = currentTeam.team || {};
-                            const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
-                            setCurrentTeamDataToLocalStorage({
-                                id: currentTeamInfo.id,
-                                name: currentTeamInfo.name,
-                                role: currentTeamRoleCollaboration.title,
-                            });
-                        })
-                    );
+        apiCall(
+            AppConfig.apiURL + 'user/login',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => {
-                            alert(JSON.parse(errorMessage).message);
-                        });
-                    } else {
-                        console.log(err);
-                    }
+                body: JSON.stringify({
+                    email,
+                    password,
+                }),
+            },
+            false
+        ).then(
+            result => {
+                setTokenToLocalStorage(result.token);
+                this.props.reportsPageAction('SET_ACTIVE_USER', {
+                    data: [getLoggedUserEmail()],
+                });
+                this.setState({ haveToken: true });
+                apiCall(AppConfig.apiURL + `team/current`).then(response => {
+                    const currentTeam = response.data.user_team[0] || {};
+                    const currentTeamInfo = currentTeam.team || {};
+                    const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
+                    setCurrentTeamDataToLocalStorage({
+                        id: currentTeamInfo.id,
+                        name: currentTeamInfo.name,
+                        role: currentTeamRoleCollaboration.title,
+                    });
+                });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => {
+                        alert(JSON.parse(errorMessage).message);
+                    });
+                } else {
+                    console.log(err);
                 }
-            );
+            }
+        );
     };
 
     componentWillMount() {}
@@ -89,9 +88,11 @@ class AuthPage extends Component {
     render() {
         if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
 
-        removeUserFromLocalStorage();
+        removeTokenFromLocalStorage();
         removeCurrentTimerFromLocalStorage();
         removeServerClientTimediffFromLocalStorage();
+        removeAvailableTeamsFromLocalStorage();
+        removeCurrentTeamDataFromLocalStorage();
 
         return (
             <div className="wrapper_authorisation_page">

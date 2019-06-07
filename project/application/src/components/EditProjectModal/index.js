@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 
 // Services
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
+import { apiCall } from '../../services/apiService';
 
 // Components
 
@@ -52,10 +52,9 @@ export default class EditProjectModal extends Component {
             colorProject: this.state.selectedValue.id,
         };
 
-        fetch(AppConfig.apiURL + `project/${object.id}`, {
+        apiCall(AppConfig.apiURL + `project/${object.id}`, {
             method: 'PATCH',
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -63,35 +62,27 @@ export default class EditProjectModal extends Component {
                     name: this.editProjectInput.value,
                     projectColorId: this.state.selectedValue.id,
                 },
-                userId: getUserIdFromLocalStorage(),
             }),
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        }).then(
+            result => {
+                this.props.getProjects();
+                this.closeModal();
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(error => {
+                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
+                        if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                            alert('Project is already existed');
+                        } else {
+                            alert(`Project can't be edited`);
+                        }
+                    });
+                } else {
+                    console.log(err);
                 }
-                return res.json();
-            })
-            .then(
-                result => {
-                    this.props.getProjects();
-                    this.closeModal();
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(error => {
-                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
-                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                                alert('Project is already existed');
-                            } else {
-                                alert(`Project can't be edited`);
-                            }
-                        });
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
+            }
+        );
     }
 
     closeModal = () => {
@@ -148,63 +139,47 @@ export default class EditProjectModal extends Component {
     }
 
     componentDidMount() {
-        fetch(AppConfig.apiURL + `project-color/list`, {
+        apiCall(AppConfig.apiURL + `project-color/list`, {
             method: 'GET',
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        }).then(
+            result => {
+                let data = result.data;
+                this.setState({ selectValue: data.project_color });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
                 }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let data = result.data;
-                    this.setState({ selectValue: data.project_color });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
+            }
+        );
 
-        fetch(AppConfig.apiURL + `project/${this.props.editedProject.id}`, {
+        apiCall(AppConfig.apiURL + `project/${this.props.editedProject.id}`, {
             method: 'GET',
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        }).then(
+            result => {
+                let data = result.data;
+                this.setState({ projectId: data.project_v2[0].id });
+                this.setItem({
+                    id: data.project_v2[0].project_color.id,
+                    name: data.project_v2[0].project_color.name,
+                });
+                this.editProjectInput.value = data.project_v2[0].name;
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
                 }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let data = result.data;
-                    this.setState({ projectId: data.project_v2[0].id });
-                    this.setItem({
-                        id: data.project_v2[0].project_color.id,
-                        name: data.project_v2[0].project_color.name,
-                    });
-                    this.editProjectInput.value = data.project_v2[0].name;
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
+            }
+        );
     }
 }

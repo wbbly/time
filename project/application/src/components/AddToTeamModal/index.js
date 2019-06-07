@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 // Services
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { getCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
+import { apiCall } from '../../services/apiService';
 import { ROLES } from '../../services/authentication';
 
 // Components
@@ -19,59 +19,50 @@ import './style.css';
 
 class AddToTeamModal extends Component {
     addUser = email => {
-        fetch(AppConfig.apiURL + 'user/invite', {
+        apiCall(AppConfig.apiURL + 'user/invite', {
             method: 'POST',
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                userId: getUserIdFromLocalStorage(),
                 teamId: getCurrentTeamDataFromLocalStorage().id,
                 teamName: getCurrentTeamDataFromLocalStorage().name,
                 email: email,
             }),
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    if (result.invitedUserId) {
-                        this.props.programersArr.unshift({
-                            role_collaboration: {
-                                title: ROLES.ROLE_MEMBER,
+        }).then(
+            result => {
+                if (result.invitedUserId) {
+                    this.props.programersArr.unshift({
+                        role_collaboration: {
+                            title: ROLES.ROLE_MEMBER,
+                        },
+                        user: [
+                            {
+                                id: result.invitedUserId[0].user_id,
+                                username: this.email.value,
+                                role: ROLES.ROLE_MEMBER,
+                                email: this.email.value,
+                                is_active: true,
                             },
-                            user: [
-                                {
-                                    id: result.invitedUserId[0].user_id,
-                                    username: this.email.value,
-                                    role: ROLES.ROLE_MEMBER,
-                                    email: this.email.value,
-                                    is_active: true,
-                                },
-                            ],
-                        });
-                        alert('Invite has been sent!');
-                    } else {
-                        alert('An error occured while sending an invite to the user!');
-                    }
-
-                    this.closeModal();
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => {
-                            alert(JSON.parse(errorMessage).message);
-                        });
-                    } else {
-                        console.log(err);
-                    }
+                        ],
+                    });
+                    alert('Invite has been sent!');
+                } else {
+                    alert('An error occured while sending an invite to the user!');
                 }
-            );
+
+                this.closeModal();
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => {
+                        alert(JSON.parse(errorMessage).message);
+                    });
+                } else {
+                    console.log(err);
+                }
+            }
+        );
     };
 
     closeModal() {

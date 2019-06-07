@@ -8,7 +8,7 @@ import * as moment from 'moment';
 // Services
 import { getDate } from '../../services/timeService';
 import { encodeTimeEntryIssue } from '../../services/timeEntryService';
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 
@@ -87,56 +87,16 @@ class ManualTimeModal extends Component {
         if (changedItem['issue'].length) {
             changedItem['projectId'] = this.state.activeProject.id;
 
-            fetch(AppConfig.apiURL + `timer/${this.state.activeItem.id}`, {
+            apiCall(AppConfig.apiURL + `timer/${this.state.activeItem.id}`, {
                 method: 'PATCH',
                 headers: {
-                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(changedItem),
-            })
-                .then(res => {
-                    if (!res.ok) {
-                        throw res;
-                    }
-                    return res.json();
-                })
-                .then(
-                    () => {
-                        this.getNewData();
-                        this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
-                    },
-                    err => {
-                        if (err instanceof Response) {
-                            err.text().then(errorMessage => console.log(errorMessage));
-                        } else {
-                            console.log(err);
-                        }
-                    }
-                );
-        } else {
-            alert(`Please input task name before saving the time tracking`);
-        }
-    }
-
-    getNewData() {
-        fetch(AppConfig.apiURL + `timer/user-list?userId=${getUserIdFromLocalStorage()}`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let data = getTodayTimeEntriesParseFunction(result.data);
-                    this.props.addTasksAction('ADD_TASKS_ARR', { timeEntriesList: data.timerV2 });
+            }).then(
+                () => {
+                    this.getNewData();
+                    this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
                 },
                 err => {
                     if (err instanceof Response) {
@@ -146,6 +106,30 @@ class ManualTimeModal extends Component {
                     }
                 }
             );
+        } else {
+            alert(`Please input task name before saving the time tracking`);
+        }
+    }
+
+    getNewData() {
+        apiCall(AppConfig.apiURL + `timer/user-list`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            result => {
+                let data = getTodayTimeEntriesParseFunction(result.data);
+                this.props.addTasksAction('ADD_TASKS_ARR', { timeEntriesList: data.timerV2 });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
+                }
+            }
+        );
     }
 
     toggleProjectsBar() {

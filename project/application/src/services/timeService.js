@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { getUserTimezoneOffsetFromLocalStorage } from './userStorageService';
+import { getLoggedUserTimezoneOffset } from './tokenStorageService';
 import { getServerClientTimediffFromLocalStorage } from './serverClientTimediffStorageService';
 
 export function getDateInString(seconds) {
@@ -78,7 +78,7 @@ export function convertDateToShiftedISOString(date, shiftTimestamp) {
 }
 
 export function convertUTCDateToLocalISOString(date) {
-    const timezoneOffset = getUserTimezoneOffsetFromLocalStorage();
+    const timezoneOffset = getLoggedUserTimezoneOffset();
 
     return moment(date)
         .subtract(timezoneOffset)
@@ -87,7 +87,7 @@ export function convertUTCDateToLocalISOString(date) {
 }
 
 export function convertUTCDateToShiftedLocalISOString(date, shiftTimestamp) {
-    const timezoneOffset = getUserTimezoneOffsetFromLocalStorage();
+    const timezoneOffset = getLoggedUserTimezoneOffset();
 
     return moment(date)
         .subtract(timezoneOffset)

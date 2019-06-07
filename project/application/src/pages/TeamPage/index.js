@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 
 // Services
 import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } from '../../services/authentication';
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { removeAvailableTeamsFromLocalStorage } from '../../services/availableTeamsStorageService';
 import {
     getCurrentTeamDataFromLocalStorage,
     setCurrentTeamDataToLocalStorage,
 } from '../../services/currentTeamDataStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 import LeftBar from '../../components/LeftBar';
@@ -191,51 +191,41 @@ class TeamPage extends Component {
     }
 
     getDataFromServer(teamPage = this) {
-        fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res => {
-            res.json().then(res => {
-                const currentTeam = res.data.user_team[0] || {};
-                const currentTeamInfo = currentTeam.team || {};
-                const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
+        apiCall(AppConfig.apiURL + `team/current`).then(res => {
+            const currentTeam = res.data.user_team[0] || {};
+            const currentTeamInfo = currentTeam.team || {};
+            const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
 
-                const teamId = currentTeamInfo.id;
-                const teamName = currentTeamInfo.name;
-                teamPage.setState({
-                    teamId,
-                    teamName,
-                });
-                setCurrentTeamDataToLocalStorage({
-                    id: teamId,
-                    name: teamName,
-                    role: currentTeamRoleCollaboration.title,
-                });
-
-                fetch(AppConfig.apiURL + `team/${teamId}/data`, {
-                    method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                })
-                    .then(res => {
-                        if (!res.ok) {
-                            throw res;
-                        }
-                        return res.json();
-                    })
-                    .then(
-                        result => {
-                            let data = result.data.team[0].team_users;
-                            teamPage.props.teamPageAction('SET_TABLE_DATA', { programersArr: data });
-                        },
-                        err => {
-                            if (err instanceof Response) {
-                                err.text().then(errorMessage => console.log(errorMessage));
-                            } else {
-                                console.log(err);
-                            }
-                        }
-                    );
+            const teamId = currentTeamInfo.id;
+            const teamName = currentTeamInfo.name;
+            teamPage.setState({
+                teamId,
+                teamName,
             });
+            setCurrentTeamDataToLocalStorage({
+                id: teamId,
+                name: teamName,
+                role: currentTeamRoleCollaboration.title,
+            });
+
+            apiCall(AppConfig.apiURL + `team/${teamId}/data`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(
+                result => {
+                    let data = result.data.team[0].team_users;
+                    teamPage.props.teamPageAction('SET_TABLE_DATA', { programersArr: data });
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
+                    }
+                }
+            );
         });
     }
 }

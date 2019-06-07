@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 
 // Services
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { getCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 
@@ -341,81 +341,65 @@ export default class ReportsSearchBar extends Component {
         this.userInputRef.value = this.props.inputUserData[0] || '';
         this.projectInputRef.value = this.props.inputProjectData[0] || '';
         const currentTeamData = getCurrentTeamDataFromLocalStorage();
-        fetch(AppConfig.apiURL + `team/${currentTeamData.id}/data`, {
+        apiCall(AppConfig.apiURL + `team/${currentTeamData.id}/data`, {
             method: 'GET',
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    const teamUsers = result.data.team[0].team_users;
-                    const users = teamUsers.map(teamUser => teamUser.user[0]);
-                    this.setState({ userDataEtalon: users });
-                    const inputUserData = this.props.inputUserData;
-                    for (let i = 0; i < inputUserData.length; i++) {
-                        const inputUser = inputUserData[i];
-                        for (let j = 0; j < users.length; j++) {
-                            const currentUser = users[j];
-                            if (JSON.stringify(currentUser).indexOf(inputUser) > -1) {
-                                this.toggleUser(currentUser);
-                                break;
-                            }
+        }).then(
+            result => {
+                const teamUsers = result.data.team[0].team_users;
+                const users = teamUsers.map(teamUser => teamUser.user[0]);
+                this.setState({ userDataEtalon: users });
+                const inputUserData = this.props.inputUserData;
+                for (let i = 0; i < inputUserData.length; i++) {
+                    const inputUser = inputUserData[i];
+                    for (let j = 0; j < users.length; j++) {
+                        const currentUser = users[j];
+                        if (JSON.stringify(currentUser).indexOf(inputUser) > -1) {
+                            this.toggleUser(currentUser);
+                            break;
                         }
                     }
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
                 }
-            );
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
+                }
+            }
+        );
 
-        fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
+        apiCall(AppConfig.apiURL + `project/list`, {
             method: 'GET',
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let projects = result.data.project_v2;
-                    this.setState({ projectDataEtalon: projects });
-                    const inputProjectData = this.props.inputProjectData;
-                    for (let i = 0; i < inputProjectData.length; i++) {
-                        const inputProject = inputProjectData[i];
-                        for (let j = 0; j < projects.length; j++) {
-                            const currentProject = projects[j];
-                            if (JSON.stringify(currentProject).indexOf(inputProject) > -1) {
-                                this.toggleProject(currentProject);
-                                break;
-                            }
+        }).then(
+            result => {
+                let projects = result.data.project_v2;
+                this.setState({ projectDataEtalon: projects });
+                const inputProjectData = this.props.inputProjectData;
+                for (let i = 0; i < inputProjectData.length; i++) {
+                    const inputProject = inputProjectData[i];
+                    for (let j = 0; j < projects.length; j++) {
+                        const currentProject = projects[j];
+                        if (JSON.stringify(currentProject).indexOf(inputProject) > -1) {
+                            this.toggleProject(currentProject);
+                            break;
                         }
                     }
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
                 }
-            );
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
+                }
+            }
+        );
     }
 }

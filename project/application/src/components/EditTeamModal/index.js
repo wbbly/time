@@ -5,8 +5,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 // Services
 import { ROLES } from '../../services/authentication';
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import { getCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 
@@ -39,13 +39,11 @@ class EditTeamModal extends Component {
     addUser = teamPage => {
         let teamData = getCurrentTeamDataFromLocalStorage();
         let teamId = teamData.id;
-        fetch(AppConfig.apiURL + `user/${this.state.id}`, {
+        apiCall(AppConfig.apiURL + `user/${this.state.id}`, {
             method: 'PATCH',
             headers: {
-                Accept: 'application/json',
-                'x-user-id': getUserIdFromLocalStorage(),
-                'x-team-id': teamId,
                 'Content-Type': 'application/json',
+                'x-team-id': teamId,
             },
             body: JSON.stringify({
                 email: this.email.value,
@@ -53,28 +51,21 @@ class EditTeamModal extends Component {
                 isActive: this.state.valueStatus === USER_STATUS.ACTIVE,
                 roleName: this.state.value,
             }),
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        }).then(
+            result => {
+                this.closeModal();
+                this.props.getDataFromServer(teamPage);
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => {
+                        alert(JSON.parse(errorMessage).message);
+                    });
+                } else {
+                    console.log(err);
                 }
-                return res.json();
-            })
-            .then(
-                result => {
-                    this.closeModal();
-                    this.props.getDataFromServer(teamPage);
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => {
-                            alert(JSON.parse(errorMessage).message);
-                        });
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
+            }
+        );
     };
 
     handleChange = event => {

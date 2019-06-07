@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Services
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
 import {
     getAvailableTeamsFromLocalStorage,
     setAvailableTeamsToLocalStorage,
@@ -12,6 +11,7 @@ import {
     setCurrentTeamDataToLocalStorage,
 } from '../../services/currentTeamDataStorageService';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
+import { apiCall } from '../../services/apiService';
 
 // Components
 import TeamAdd from '../TeamAdd';
@@ -41,33 +41,27 @@ class TeamSwitcher extends Component {
         const currentTeamData = getCurrentTeamDataFromLocalStorage();
         const currentTeamId = currentTeamData.id;
         if (currentTeamId !== teamId) {
-            fetch(AppConfig.apiURL + `team/switch`, {
+            apiCall(AppConfig.apiURL + `team/switch`, {
                 method: 'PATCH',
                 headers: {
-                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    userId: getUserIdFromLocalStorage(),
                     teamId: teamId,
                 }),
-            }).then(res =>
-                res.json().then(response => {
-                    fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
-                        res.json().then(response => {
-                            const currentTeam = response.data.user_team[0] || {};
-                            const currentTeamInfo = currentTeam.team || {};
-                            const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
-                            setCurrentTeamDataToLocalStorage({
-                                id: currentTeamInfo.id,
-                                name: currentTeamInfo.name,
-                                role: currentTeamRoleCollaboration.title,
-                            });
-                            window.location.pathname = '/team';
-                        })
-                    );
-                })
-            );
+            }).then(_ => {
+                apiCall(AppConfig.apiURL + `team/current`).then(response => {
+                    const currentTeam = response.data.user_team[0] || {};
+                    const currentTeamInfo = currentTeam.team || {};
+                    const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
+                    setCurrentTeamDataToLocalStorage({
+                        id: currentTeamInfo.id,
+                        name: currentTeamInfo.name,
+                        role: currentTeamRoleCollaboration.title,
+                    });
+                    window.location.pathname = '/team';
+                });
+            });
         } else {
             window.location.pathname = '/team';
         }
@@ -82,76 +76,64 @@ class TeamSwitcher extends Component {
             currentTeamId: currentTeamDataFromLocalStorage.id,
         });
 
-        fetch(AppConfig.apiURL + `user/${getUserIdFromLocalStorage()}/teams`)
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        apiCall(AppConfig.apiURL + `user/teams`).then(
+            response => {
+                let availableTeams = response.data.user_team;
+                availableTeams = availableTeams.map(item => ({
+                    id: item.team.id,
+                    name: item.team.name,
+                }));
+
+                const availableTeamIdsFromLocalStorage = availableTeamsFromLocalStorage.map(stateTeam => stateTeam.id);
+                let differenceInAvailableTeamsFound = availableTeamIdsFromLocalStorage.length !== availableTeams.length;
+                for (let i = 0; i < availableTeams.length; i++) {
+                    const availableTeam = availableTeams[i];
+                    if (availableTeamIdsFromLocalStorage.indexOf(availableTeam.id) === -1) {
+                        differenceInAvailableTeamsFound = true;
+                        break;
+                    }
                 }
-                return res.json();
-            })
-            .then(
-                response => {
-                    let availableTeams = response.data.user_team;
-                    availableTeams = availableTeams.map(item => ({
-                        id: item.team.id,
-                        name: item.team.name,
-                    }));
 
-                    const availableTeamIdsFromLocalStorage = availableTeamsFromLocalStorage.map(
-                        stateTeam => stateTeam.id
-                    );
-                    let differenceInAvailableTeamsFound =
-                        availableTeamIdsFromLocalStorage.length !== availableTeams.length;
-                    for (let i = 0; i < availableTeams.length; i++) {
-                        const availableTeam = availableTeams[i];
-                        if (availableTeamIdsFromLocalStorage.indexOf(availableTeam.id) === -1) {
-                            differenceInAvailableTeamsFound = true;
-                            break;
-                        }
+                if (differenceInAvailableTeamsFound) {
+                    this.setState({ availableTeams });
+                    setAvailableTeamsToLocalStorage(availableTeams);
+                }
+
+                apiCall(AppConfig.apiURL + `team/current`).then(response => {
+                    const currentTeam = response.data.user_team[0] || {};
+                    const currentTeamInfo = currentTeam.team || {};
+                    const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
+                    let differenceInCurrentTeamFound = false;
+                    if (
+                        !currentTeamDataFromLocalStorage.id ||
+                        currentTeamDataFromLocalStorage.id !== currentTeamInfo.id
+                    ) {
+                        differenceInCurrentTeamFound = true;
                     }
 
-                    if (differenceInAvailableTeamsFound) {
-                        this.setState({ availableTeams });
-                        setAvailableTeamsToLocalStorage(availableTeams);
-                    }
-
-                    fetch(AppConfig.apiURL + `team/current/?userId=${getUserIdFromLocalStorage()}`).then(res =>
-                        res.json().then(response => {
-                            const currentTeam = response.data.user_team[0] || {};
-                            const currentTeamInfo = currentTeam.team || {};
-                            const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
-                            let differenceInCurrentTeamFound = false;
-                            if (
-                                !currentTeamDataFromLocalStorage.id ||
-                                currentTeamDataFromLocalStorage.id !== currentTeamInfo.id
-                            ) {
-                                differenceInCurrentTeamFound = true;
-                            }
-
-                            if (differenceInCurrentTeamFound) {
-                                this.setState({
-                                    currentTeamId: currentTeamInfo.id,
-                                    currentTeamName: currentTeamInfo.name,
-                                });
-                                setCurrentTeamDataToLocalStorage({
-                                    id: currentTeamInfo.id,
-                                    name: currentTeamInfo.name,
-                                    role: currentTeamRoleCollaboration.title,
-                                });
-                            }
-                        })
-                    );
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => {
-                            console.log(errorMessage);
+                    if (differenceInCurrentTeamFound) {
+                        this.setState({
+                            currentTeamId: currentTeamInfo.id,
+                            currentTeamName: currentTeamInfo.name,
                         });
-                    } else {
-                        console.log(err);
+                        setCurrentTeamDataToLocalStorage({
+                            id: currentTeamInfo.id,
+                            name: currentTeamInfo.name,
+                            role: currentTeamRoleCollaboration.title,
+                        });
                     }
+                });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => {
+                        console.log(errorMessage);
+                    });
+                } else {
+                    console.log(err);
                 }
-            );
+            }
+        );
     }
 
     componentDidMount() {
@@ -191,45 +173,37 @@ class TeamSwitcher extends Component {
                         <div className="team_list-item">
                             <TeamAdd
                                 createTeamRequest={teamName => {
-                                    fetch(AppConfig.apiURL + `team/add`, {
+                                    apiCall(AppConfig.apiURL + `team/add`, {
                                         method: 'POST',
                                         headers: {
-                                            Accept: 'application/json',
                                             'Content-Type': 'application/json',
                                         },
                                         body: JSON.stringify({
-                                            userId: getUserIdFromLocalStorage(),
                                             teamName,
                                         }),
-                                    })
-                                        .then(res => {
-                                            if (!res.ok) {
-                                                throw res;
+                                    }).then(
+                                        res => (window.location.pathname = '/team'),
+                                        err => {
+                                            if (err instanceof Response) {
+                                                err.text().then(error => {
+                                                    const errorMessages = responseErrorsHandling.getErrorMessages(
+                                                        JSON.parse(error)
+                                                    );
+                                                    if (
+                                                        responseErrorsHandling.checkIsDuplicateError(
+                                                            errorMessages.join('\n')
+                                                        )
+                                                    ) {
+                                                        alert('Team is already existed');
+                                                    } else {
+                                                        alert(`Team can't be created`);
+                                                    }
+                                                });
+                                            } else {
+                                                console.log(err);
                                             }
-                                        })
-                                        .then(
-                                            res => (window.location.pathname = '/team'),
-                                            err => {
-                                                if (err instanceof Response) {
-                                                    err.text().then(error => {
-                                                        const errorMessages = responseErrorsHandling.getErrorMessages(
-                                                            JSON.parse(error)
-                                                        );
-                                                        if (
-                                                            responseErrorsHandling.checkIsDuplicateError(
-                                                                errorMessages.join('\n')
-                                                            )
-                                                        ) {
-                                                            alert('Team is already existed');
-                                                        } else {
-                                                            alert(`Team can't be created`);
-                                                        }
-                                                    });
-                                                } else {
-                                                    console.log(err);
-                                                }
-                                            }
-                                        );
+                                        }
+                                    );
                                 }}
                             />
                         </div>

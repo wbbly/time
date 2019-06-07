@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 // Services
+import { apiCall } from '../../services/apiService';
 
 // Components
 
@@ -16,37 +17,34 @@ import './style.css';
 
 class RegisterModal extends Component {
     addUser = (email, password, userName) => {
-        fetch(AppConfig.apiURL + 'user/register', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            }),
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-            })
-            .then(
-                result => {
-                    alert('Account has been created.');
-                    this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: false });
+        apiCall(
+            AppConfig.apiURL + 'user/register',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => {
-                            alert(JSON.parse(errorMessage).message);
-                        });
-                    } else {
-                        console.log(err);
-                    }
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            },
+            false
+        ).then(
+            result => {
+                alert('Account has been created.');
+                this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: false });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => {
+                        alert(JSON.parse(errorMessage).message);
+                    });
+                } else {
+                    console.log(err);
                 }
-            );
+            }
+        );
     };
 
     render() {

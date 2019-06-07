@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 // Services
 import { getTimeDiff } from '../../services/timeService';
-import { removeUserFromLocalStorage } from '../../services/userStorageService';
+import { removeTokenFromLocalStorage } from '../../services/tokenStorageService';
 import {
     removeCurrentTimerFromLocalStorage,
     getCurrentTimerFromLocalStorage,
@@ -58,7 +58,7 @@ class LeftBar extends Component {
     }
 
     logout() {
-        removeUserFromLocalStorage();
+        removeTokenFromLocalStorage();
         removeCurrentTimerFromLocalStorage();
         removeServerClientTimediffFromLocalStorage();
         removeAvailableTeamsFromLocalStorage();

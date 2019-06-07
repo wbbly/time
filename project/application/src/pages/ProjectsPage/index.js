@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Services
 import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
-import { getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 import LeftBar from '../../components/LeftBar';
@@ -31,61 +31,45 @@ class ProjectsPage extends Component {
 
     getProjects = () => {
         if (checkIsAdmin()) {
-            fetch(AppConfig.apiURL + `project/admin-list?userId=${getUserIdFromLocalStorage()}`, {
+            apiCall(AppConfig.apiURL + `project/admin-list`, {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-            })
-                .then(res => {
-                    if (!res.ok) {
-                        throw res;
+            }).then(
+                result => {
+                    let data = getProjectsV2ProjectPageAdminParseFunction(result.data);
+                    this.setState({ etalonArr: data.projectV2 });
+                    this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
                     }
-                    return res.json();
-                })
-                .then(
-                    result => {
-                        let data = getProjectsV2ProjectPageAdminParseFunction(result.data);
-                        this.setState({ etalonArr: data.projectV2 });
-                        this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
-                    },
-                    err => {
-                        if (err instanceof Response) {
-                            err.text().then(errorMessage => console.log(errorMessage));
-                        } else {
-                            console.log(err);
-                        }
-                    }
-                );
+                }
+            );
         } else {
-            fetch(AppConfig.apiURL + `project/list?userId=${getUserIdFromLocalStorage()}`, {
+            apiCall(AppConfig.apiURL + `project/list`, {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-            })
-                .then(res => {
-                    if (!res.ok) {
-                        throw res;
+            }).then(
+                result => {
+                    let data = getProjectsV2ProjectPageUserParseFunction(result.data);
+                    this.setState({ etalonArr: data.projectV2 });
+                    this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => console.log(errorMessage));
+                    } else {
+                        console.log(err);
                     }
-                    return res.json();
-                })
-                .then(
-                    result => {
-                        let data = getProjectsV2ProjectPageUserParseFunction(result.data);
-                        this.setState({ etalonArr: data.projectV2 });
-                        this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
-                    },
-                    err => {
-                        if (err instanceof Response) {
-                            err.text().then(errorMessage => console.log(errorMessage));
-                        } else {
-                            console.log(err);
-                        }
-                    }
-                );
+                }
+            );
         }
     };
 

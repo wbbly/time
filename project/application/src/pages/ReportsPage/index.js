@@ -19,7 +19,8 @@ import {
     getCurrentDate,
     getDateTimestamp,
 } from '../../services/timeService';
-import { getUserTimezoneOffsetFromLocalStorage, getUserIdFromLocalStorage } from '../../services/userStorageService';
+import { getLoggedUserTimezoneOffset } from '../../services/tokenStorageService';
+import { apiCall } from '../../services/apiService';
 
 // Components
 import LeftBar from '../../components/LeftBar';
@@ -317,7 +318,7 @@ class ReportsPage extends Component {
     }
 
     export() {
-        const timezoneOffset = getUserTimezoneOffsetFromLocalStorage();
+        const timezoneOffset = getLoggedUserTimezoneOffset();
         let dateFrom = this.getYear(this.state.selectionRange.startDate),
             dateTo = this.getYear(this.state.selectionRange.endDate);
         let inputUserData =
@@ -328,7 +329,7 @@ class ReportsPage extends Component {
             !!this.props.inputProjectData && !!this.props.inputProjectData.length
                 ? getParametersString('projectNames', this.props.inputProjectData)
                 : '';
-        fetch(
+        apiCall(
             AppConfig.apiURL +
                 `report/export?timezoneOffset=${timezoneOffset}&startDate=${convertDateToISOString(
                     dateFrom
@@ -338,28 +339,19 @@ class ReportsPage extends Component {
             {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
-                    'x-user-id': getUserIdFromLocalStorage(),
                     'Content-Type': 'application/json',
                 },
             }
-        )
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        ).then(
+            result => this.saveFile(`${AppConfig.apiURL}${result.path}`),
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
                 }
-                return res.json();
-            })
-            .then(
-                result => this.saveFile(`${AppConfig.apiURL}${result.path}`),
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
+            }
+        );
     }
 
     saveFile(url) {
@@ -388,7 +380,7 @@ class ReportsPage extends Component {
             !!this.props.inputProjectData && !!this.props.inputProjectData.length
                 ? getParametersString('projectNames', this.props.inputProjectData)
                 : '';
-        fetch(
+        apiCall(
             AppConfig.apiURL +
                 `project/reports-projects?startDate=${convertDateToISOString(
                     dateFrom
@@ -398,41 +390,32 @@ class ReportsPage extends Component {
             {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
-                    'x-user-id': getUserIdFromLocalStorage(),
                     'Content-Type': 'application/json',
                 },
             }
-        )
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        ).then(
+            result => {
+                let data = result.data;
+                const { project_v2: projectV2 } = data;
+                this.setState({ projectsData: projectV2 });
+
+                let dataToGraph = this.getArrOfProjectsData(data);
+                this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
+
+                let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
+                this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
+                this.setState({ toggleChar: true });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
                 }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let data = result.data;
-                    const { project_v2: projectV2 } = data;
-                    this.setState({ projectsData: projectV2 });
+            }
+        );
 
-                    let dataToGraph = this.getArrOfProjectsData(data);
-                    this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
-
-                    let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
-                    this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-                    this.setState({ toggleChar: true });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
-
-        fetch(
+        apiCall(
             AppConfig.apiURL +
                 `timer/reports-list?startDate=${convertDateToISOString(
                     dateFrom
@@ -442,84 +425,64 @@ class ReportsPage extends Component {
             {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
-                    'x-user-id': getUserIdFromLocalStorage(),
                     'Content-Type': 'application/json',
                 },
             }
-        )
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let { timer_v2: timerV2 } = result.data;
-                    const datePeriod = Object.keys(
-                        this.getDatesListBetweenStartEndDates(
-                            this.state.selectionRange.startDate,
-                            this.state.selectionRange.endDate
-                        )
-                    );
+        ).then(
+            result => {
+                let { timer_v2: timerV2 } = result.data;
+                const datePeriod = Object.keys(
+                    this.getDatesListBetweenStartEndDates(
+                        this.state.selectionRange.startDate,
+                        this.state.selectionRange.endDate
+                    )
+                );
 
-                    const sumTimeEntriesByDay = this.getSumTimeEntriesByDay(datePeriod, timerV2);
+                const sumTimeEntriesByDay = this.getSumTimeEntriesByDay(datePeriod, timerV2);
 
-                    this.props.reportsPageAction(
-                        'SET_LINE_GRAPH',
-                        this.setDataToGraph(
-                            this.props.dataBarChat,
-                            this.getLablesAndTime(datePeriod, sumTimeEntriesByDay)
-                        )
-                    );
-                    this.setState({ toggleBar: true });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
+                this.props.reportsPageAction(
+                    'SET_LINE_GRAPH',
+                    this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(datePeriod, sumTimeEntriesByDay))
+                );
+                this.setState({ toggleBar: true });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
                 }
-            );
+            }
+        );
     }
 
     componentDidMount() {
         this.setState({ selectionRange: this.props.timeRange });
-        fetch(AppConfig.apiURL + `user/list`, {
+        apiCall(AppConfig.apiURL + `user/list`, {
             method: 'GET',
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
+        }).then(
+            result => {
+                let data = result.data;
+                this.setState({ selectUersData: data.user });
+                this.setState({ selectUersDataEtalon: data.user });
+                setTimeout(() => {
+                    this.applySearch(
+                        this.getYear(this.state.selectionRange.startDate),
+                        this.getYear(this.state.selectionRange.endDate)
+                    );
+                }, 500);
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
                 }
-                return res.json();
-            })
-            .then(
-                result => {
-                    let data = result.data;
-                    this.setState({ selectUersData: data.user });
-                    this.setState({ selectUersDataEtalon: data.user });
-                    setTimeout(() => {
-                        this.applySearch(
-                            this.getYear(this.state.selectionRange.startDate),
-                            this.getYear(this.state.selectionRange.endDate)
-                        );
-                    }, 500);
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
+            }
+        );
     }
 }
 
