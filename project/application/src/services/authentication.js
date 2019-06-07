@@ -1,6 +1,6 @@
 import { getLoggedUser, getLoggedUserRoleTitle } from './tokenStorageService';
 
-const APP_VERSION = 'v0.0.1';
+const APP_VERSION = 'v1.0.1';
 
 export const ROLES = {
     ROLE_ADMIN: 'ROLE_ADMIN',
