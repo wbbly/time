@@ -1,11 +1,11 @@
 export function getAvailableTeamsFromLocalStorage() {
-    return JSON.parse(localStorage.getItem('availableTeams')) || [];
+    return JSON.parse(localStorage.getItem('teams')) || [];
 }
 
 export function setAvailableTeamsToLocalStorage(data) {
-    localStorage.setItem('availableTeams', JSON.stringify(data));
+    localStorage.setItem('teams', JSON.stringify(data));
 }
 
 export function removeAvailableTeamsFromLocalStorage() {
-    localStorage.removeItem('availableTeams');
+    localStorage.removeItem('teams');
 }

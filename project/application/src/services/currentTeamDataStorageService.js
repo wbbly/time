@@ -1,11 +1,11 @@
 export function getCurrentTeamDataFromLocalStorage() {
-    return JSON.parse(localStorage.getItem('currentTeamData')) || {};
+    return JSON.parse(localStorage.getItem('current-team')) || {};
 }
 
 export function setCurrentTeamDataToLocalStorage(data) {
-    localStorage.setItem('currentTeamData', JSON.stringify(data));
+    localStorage.setItem('current-team', JSON.stringify(data));
 }
 
 export function removeCurrentTeamDataFromLocalStorage() {
-    localStorage.removeItem('currentTeamData');
+    localStorage.removeItem('current-team');
 }
