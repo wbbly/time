@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 // Services
-import { getCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
 import { apiCall } from '../../services/apiService';
 import { ROLES } from '../../services/authentication';
 
@@ -25,8 +24,6 @@ class AddToTeamModal extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                teamId: getCurrentTeamDataFromLocalStorage().id,
-                teamName: getCurrentTeamDataFromLocalStorage().name,
                 email: email,
             }),
         }).then(

@@ -30,47 +30,25 @@ class ProjectsPage extends Component {
     };
 
     getProjects = () => {
-        if (checkIsAdmin()) {
-            apiCall(AppConfig.apiURL + `project/admin-list`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then(
-                result => {
-                    let data = getProjectsV2ProjectPageAdminParseFunction(result.data);
-                    this.setState({ etalonArr: data.projectV2 });
-                    this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
+        apiCall(AppConfig.apiURL + `project/list`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            result => {
+                let data = getProjectsV2ProjectPageUserParseFunction(result.data);
+                this.setState({ etalonArr: data.projectV2 });
+                this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
                 }
-            );
-        } else {
-            apiCall(AppConfig.apiURL + `project/list`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then(
-                result => {
-                    let data = getProjectsV2ProjectPageUserParseFunction(result.data);
-                    this.setState({ etalonArr: data.projectV2 });
-                    this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
-                },
-                err => {
-                    if (err instanceof Response) {
-                        err.text().then(errorMessage => console.log(errorMessage));
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
-        }
+            }
+        );
     };
 
     render() {

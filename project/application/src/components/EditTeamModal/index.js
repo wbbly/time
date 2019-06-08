@@ -5,7 +5,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 // Services
 import { ROLES } from '../../services/authentication';
-import { getCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
 import { apiCall } from '../../services/apiService';
 
 // Components
@@ -37,13 +36,10 @@ class EditTeamModal extends Component {
     }
 
     addUser = teamPage => {
-        let teamData = getCurrentTeamDataFromLocalStorage();
-        let teamId = teamData.id;
         apiCall(AppConfig.apiURL + `user/${this.state.id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'x-team-id': teamId,
             },
             body: JSON.stringify({
                 email: this.email.value,

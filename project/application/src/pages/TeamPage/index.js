@@ -208,7 +208,7 @@ class TeamPage extends Component {
                 role: currentTeamRoleCollaboration.title,
             });
 
-            apiCall(AppConfig.apiURL + `team/${teamId}/data`, {
+            apiCall(AppConfig.apiURL + `team/current/detailed-data`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

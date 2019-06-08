@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 
 // Services
-import { getCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
 import { apiCall } from '../../services/apiService';
 
 // Components
@@ -340,8 +339,7 @@ export default class ReportsSearchBar extends Component {
     componentDidMount() {
         this.userInputRef.value = this.props.inputUserData[0] || '';
         this.projectInputRef.value = this.props.inputProjectData[0] || '';
-        const currentTeamData = getCurrentTeamDataFromLocalStorage();
-        apiCall(AppConfig.apiURL + `team/${currentTeamData.id}/data`, {
+        apiCall(AppConfig.apiURL + `team/current/detailed-data`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
