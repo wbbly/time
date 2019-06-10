@@ -83,7 +83,9 @@ class AuthPage extends Component {
 
         return (
             <div className="wrapper_authorisation_page">
-                {this.props.authPageReducer.registerModal && <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />}
+                {this.props.authPageReducer.registerModal && (
+                    <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />
+                )}
                 {this.props.authPageReducer.forgotPasswordModal && (
                     <ForgotPasswordModal toggleRegisterModal={this.props.toggleRegisterModal} />
                 )}
