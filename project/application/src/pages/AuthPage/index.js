@@ -10,6 +10,7 @@ import { apiCall } from '../../services/apiService';
 
 // Components
 import RegisterModal from '../../components/RegisterModal';
+import ForgotPasswordModal from '../../components/ForgotPasswordModal';
 
 // Actions
 import toggleRegisterModal from '../../actions/AuthPageAction';
@@ -82,7 +83,10 @@ class AuthPage extends Component {
 
         return (
             <div className="wrapper_authorisation_page">
-                {this.props.authPageReducer && <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />}
+                {this.props.authPageReducer.registerModal && <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />}
+                {this.props.authPageReducer.forgotPasswordModal && (
+                    <ForgotPasswordModal toggleRegisterModal={this.props.toggleRegisterModal} />
+                )}
                 <i className="page_title" />
                 <div className="authorisation_window">
                     <div className="input_container">
@@ -133,7 +137,7 @@ class AuthPage extends Component {
 
 const mapStateToProps = store => {
     return {
-        authPageReducer: store.authPageReducer.registerModal,
+        authPageReducer: store.authPageReducer,
     };
 };
 
