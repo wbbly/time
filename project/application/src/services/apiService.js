@@ -1,8 +1,5 @@
-import { getTokenFromLocalStorage, removeTokenFromLocalStorage } from './tokenStorageService';
-import { removeCurrentTimerFromLocalStorage } from './currentTimerStorageService';
-import { removeServerClientTimediffFromLocalStorage } from './serverClientTimediffStorageService';
-import { removeAvailableTeamsFromLocalStorage } from './availableTeamsStorageService';
-import { removeCurrentTeamDataFromLocalStorage } from './currentTeamDataStorageService';
+import { getTokenFromLocalStorage } from './tokenStorageService';
+import { logoutByUnauthorized } from './authentication';
 
 export function getParametersString(name, params) {
     let pharam = [];
@@ -24,12 +21,7 @@ export function apiCall(url, params = { method: 'GET' }, withAuth = true) {
             .then(res => {
                 if (!res.ok) {
                     if (res.status === 401) {
-                        removeTokenFromLocalStorage();
-                        removeCurrentTimerFromLocalStorage();
-                        removeServerClientTimediffFromLocalStorage();
-                        removeAvailableTeamsFromLocalStorage();
-                        removeCurrentTeamDataFromLocalStorage();
-                        window.location.href = window.location.origin;
+                        return logoutByUnauthorized();
                     } else {
                         throw res;
                     }

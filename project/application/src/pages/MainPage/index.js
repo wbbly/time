@@ -5,7 +5,7 @@ import openSocket from 'socket.io-client';
 import * as moment from 'moment';
 
 // Services
-import { userLoggedIn } from '../../services/authentication';
+import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
 import { getDateInString, getTimeDiff, getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
@@ -114,6 +114,9 @@ class MainPage extends Component {
             clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
             this.TIMER_LIVE_SUBSCRIPTION = undefined;
             this.timerStop();
+        });
+        this.socketConnection.on('user-unauthorized', data => {
+            return logoutByUnauthorized();
         });
     }
 

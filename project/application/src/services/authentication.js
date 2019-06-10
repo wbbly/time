@@ -1,4 +1,8 @@
-import { getLoggedUser, getLoggedUserRoleTitle } from './tokenStorageService';
+import { getLoggedUser, getLoggedUserRoleTitle, removeTokenFromLocalStorage } from './tokenStorageService';
+import { removeCurrentTimerFromLocalStorage } from './currentTimerStorageService';
+import { removeServerClientTimediffFromLocalStorage } from './serverClientTimediffStorageService';
+import { removeAvailableTeamsFromLocalStorage } from './availableTeamsStorageService';
+import { removeCurrentTeamDataFromLocalStorage } from './currentTeamDataStorageService';
 
 const APP_VERSION = 'v1.0.2';
 
@@ -23,4 +27,18 @@ export function checkIsMemberByRole(role) {
 
 export function checkIsAdmin() {
     return checkIsAdminByRole(getLoggedUserRoleTitle());
+}
+
+export function logoutByUnauthorized(withRedirect = true) {
+    removeTokenFromLocalStorage();
+    removeCurrentTimerFromLocalStorage();
+    removeServerClientTimediffFromLocalStorage();
+    removeAvailableTeamsFromLocalStorage();
+    removeCurrentTeamDataFromLocalStorage();
+
+    if (withRedirect) {
+        window.location.href = window.location.origin;
+    }
+
+    return true;
 }

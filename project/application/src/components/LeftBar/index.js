@@ -3,14 +3,7 @@ import { Link } from 'react-router-dom';
 
 // Services
 import { getTimeDiff } from '../../services/timeService';
-import { removeTokenFromLocalStorage } from '../../services/tokenStorageService';
-import {
-    removeCurrentTimerFromLocalStorage,
-    getCurrentTimerFromLocalStorage,
-} from '../../services/currentTimerStorageService';
-import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
-import { removeAvailableTeamsFromLocalStorage } from '../../services/availableTeamsStorageService';
-import { removeCurrentTeamDataFromLocalStorage } from '../../services/currentTeamDataStorageService';
+import { getCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
 
 // Components
 import TeamSwitcher from '../TeamSwitcher';
@@ -23,6 +16,7 @@ import TeamSwitcher from '../TeamSwitcher';
 
 // Styles
 import './style.css';
+import { logoutByUnauthorized } from '../../services/authentication';
 
 class LeftBar extends Component {
     ONE_SECOND_PERIOD = 1000; // in ms
@@ -58,12 +52,7 @@ class LeftBar extends Component {
     }
 
     logout() {
-        removeTokenFromLocalStorage();
-        removeCurrentTimerFromLocalStorage();
-        removeServerClientTimediffFromLocalStorage();
-        removeAvailableTeamsFromLocalStorage();
-        removeCurrentTeamDataFromLocalStorage();
-        window.location.href = window.location.origin;
+        return logoutByUnauthorized();
     }
 
     render() {

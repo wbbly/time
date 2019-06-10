@@ -3,18 +3,9 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 // Services
-import { userLoggedIn } from '../../services/authentication';
-import {
-    setTokenToLocalStorage,
-    getLoggedUserEmail,
-    removeTokenFromLocalStorage,
-} from '../../services/tokenStorageService';
-import { removeCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
-import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
-import {
-    setCurrentTeamDataToLocalStorage,
-    removeCurrentTeamDataFromLocalStorage,
-} from '../../services/currentTeamDataStorageService';
+import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
+import { setTokenToLocalStorage, getLoggedUserEmail } from '../../services/tokenStorageService';
+import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamDataStorageService';
 import { apiCall } from '../../services/apiService';
 
 // Components
@@ -31,7 +22,6 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './index.css';
-import { removeAvailableTeamsFromLocalStorage } from '../../services/availableTeamsStorageService';
 
 class AuthPage extends Component {
     state = {
@@ -88,11 +78,7 @@ class AuthPage extends Component {
     render() {
         if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
 
-        removeTokenFromLocalStorage();
-        removeCurrentTimerFromLocalStorage();
-        removeServerClientTimediffFromLocalStorage();
-        removeAvailableTeamsFromLocalStorage();
-        removeCurrentTeamDataFromLocalStorage();
+        logoutByUnauthorized(false);
 
         return (
             <div className="wrapper_authorisation_page">
