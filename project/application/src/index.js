@@ -13,6 +13,7 @@ import ReportsPage from './pages/ReportsPage';
 import ProjectsPage from './pages/ProjectsPage';
 import TeamPage from './pages/TeamPage';
 import ReportsByProjectsPage from './pages/ReportsByProjectPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import AuthPage from './pages/AuthPage';
 
 toast.configure();
@@ -68,7 +69,7 @@ ReactDOM.render(
                     <Route path="/projects" component={ProjectsPage} />
                     <Route path="/team" component={TeamPage} />
                     <Route path="/login" component={AuthPage} />
-
+                    <Route path="/reset-password" component={ResetPasswordPage} />
                     <Redirect from="/reports" to="/reports/summary" />
                     <Redirect from="/" to="/login" />
                 </Switch>
