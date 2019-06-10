@@ -5,10 +5,10 @@ import { Redirect } from 'react-router-dom';
 // Services
 import { userLoggedIn } from '../../services/authentication';
 import {
-    setUserToLocalStorage,
-    getUserEmailFromLocalStorage,
-    removeUserFromLocalStorage,
-} from '../../services/userStorageService';
+    setTokenToLocalStorage,
+    getLoggedUserEmail,
+    removeTokenFromLocalStorage,
+} from '../../services/tokenStorageService';
 import { removeCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
 import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
 import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamDataStorageService';
@@ -96,7 +96,7 @@ class ResetPasswordPage extends Component {
     render() {
         if (this.state.redirect) return <Redirect to={'/timer'} />;
 
-        removeUserFromLocalStorage();
+        removeTokenFromLocalStorage();
         removeCurrentTimerFromLocalStorage();
         removeServerClientTimediffFromLocalStorage();
 
