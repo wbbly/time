@@ -105,14 +105,26 @@ class AuthPage extends Component {
                     >
                         Login
                     </button>
-                    <button
-                        className="registration_button"
-                        onClick={e => {
-                            this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: true });
-                        }}
-                    >
-                        Registration
-                    </button>
+                    <div className="passwords_buttons_container">
+                        <button
+                            className="registration_button"
+                            onClick={e => {
+                                this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: true });
+                            }}
+                        >
+                            Registration
+                        </button>
+                        <button
+                            className="registration_button"
+                            onClick={e => {
+                                this.props.toggleRegisterModal('TOGGLE_FORGOT_PASSWORD_MODAL', {
+                                    forgotPasswordModal: true,
+                                });
+                            }}
+                        >
+                            Forgot password?
+                        </button>
+                    </div>
                 </div>
             </div>
         );
