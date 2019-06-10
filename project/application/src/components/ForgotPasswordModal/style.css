@@ -1,0 +1,80 @@
+@font-face {
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
+}
+
+.forgot_password_modal_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+
+.forgot_password_modal_wrapper .add_to_team_modal_data {
+    position: relative;
+    width: calc(26% - 28px - 49px);
+    padding: 28px 49px 28px 28px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 34px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+}
+
+.forgot_password_modal_wrapper .add_to_team_modal_input_container {
+    text-align: left;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 14px;
+    margin-top: 23px;
+}
+
+.forgot_password_modal_wrapper .add_to_team_modal_input_container:nth-of-type(1) {
+    margin-top: 0;
+}
+
+.forgot_password_modal_wrapper .add_to_team_modal_input {
+    margin-top: 9px;
+    width: 100%;
+    padding-left: 24px;
+    height: 47px;
+    background: #ffffff;
+    border: 1px solid #828282;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.forgot_password_modal_wrapper input {
+    color: black;
+}
+
+.forgot_password_modal_wrapper button {
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    font-size: 14px;
+    color: #ffffff;
+    margin-top: 18px;
+    width: 100%;
+    height: 50px;
+    background: #27ae60;
+    border-radius: 5px;
+}
+
+.forgot_password_modal_wrapper i {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/forbidden-mark.svg") no-repeat center;
+    cursor: pointer;
+}
