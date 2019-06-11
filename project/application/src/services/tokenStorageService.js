@@ -20,6 +20,12 @@ export function getLoggedUserTimezoneOffset() {
     return timezoneOffset;
 }
 
+export function getLoggedUserName() {
+    const username = getLoggedUser().username || '';
+
+    return username;
+}
+
 export function getLoggedUser() {
     let user;
     try {
