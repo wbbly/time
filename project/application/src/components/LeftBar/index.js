@@ -7,7 +7,7 @@ import { getCurrentTimerFromLocalStorage } from '../../services/currentTimerStor
 
 // Components
 import TeamSwitcher from '../TeamSwitcher';
-import UserMenu from '../UserMenu'
+import UserMenu from '../UserMenu';
 
 // Actions
 

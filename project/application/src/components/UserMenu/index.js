@@ -5,7 +5,7 @@ import { getLoggedUserName } from '../../services/tokenStorageService';
 
 // Styles
 import './index.css';
-import {logoutByUnauthorized} from "../../services/authentication";
+import { logoutByUnauthorized } from '../../services/authentication';
 
 class UserMenu extends Component {
     render() {
