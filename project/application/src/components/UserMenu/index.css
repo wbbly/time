@@ -49,4 +49,27 @@
     line-height: normal;
     color: #FFFFFF;
     max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+i.profile_user {
+
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: -3px;
+    left: 140px;
+    background: url("../../images/icons/profile-user.svg") no-repeat center;
+}
+
+.user_settings_modal {
+    background-color: white;
+    border-radius: 4px;
+    position: absolute;
+    top: -5px;
+    left: 183px;
+    width: 150px;
 }
