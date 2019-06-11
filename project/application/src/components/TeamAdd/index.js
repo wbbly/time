@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 // Services
 
@@ -18,15 +18,15 @@ import './style.css';
 
 class TeamAdd extends Component {
     render() {
-        const { teamAddModalToggle, teamAddPageAction, createTeamRequest } = this.props;
+        const {teamAddModalToggle, teamAddPageAction, createTeamRequest} = this.props;
 
         return (
             <div>
                 {teamAddModalToggle && (
-                    <CreateTeamModal teamAddPageAction={teamAddPageAction} createTeamRequest={createTeamRequest} />
+                    <CreateTeamModal teamAddPageAction={teamAddPageAction} createTeamRequest={createTeamRequest}/>
                 )}
-                <span className="team_add" onClick={e => teamAddPageAction('TOGGLE_TEAM_ADD_MODAL', { toggle: true })}>
-                    Add team
+                <span className="team_add" onClick={e => teamAddPageAction('TOGGLE_TEAM_ADD_MODAL', {toggle: true})}>
+                   <i className="team_add_plus"/>
                 </span>
             </div>
         );
