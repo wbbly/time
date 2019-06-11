@@ -41,3 +41,7 @@
 .team_list li:hover {
     background: #333333;
 }
+
+.team_list li:last-of-type:hover {
+    background-color: #3b3b3b;
+}

@@ -3,3 +3,17 @@
     font-weight: 700;
     font-size: 1.1em;
 }
+
+.team_add .team_add_plus {
+    width: 33px;
+    height: 33px;
+    margin-left: 10px;
+    background: url("../../images/icons/plus (1).svg") no-repeat center;
+}
+
+
+.team_add_wrapper {
+    position: absolute;
+    top: 217px;
+    left: 78px;
+}
