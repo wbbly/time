@@ -9,7 +9,7 @@ import LeftBar from '../../components/LeftBar';
 import ChangePasswordModal from '../../components/ChangePasswordModal';
 
 //Services
-import { getLoggedUserId, getTokenFromLocalStorage } from '../../services/tokenStorageService';
+import { getLoggedUserId, getTokenFromLocalStorage, setTokenToLocalStorage } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
 
 //Config
@@ -32,7 +32,11 @@ class UserSetting extends Component {
                 username: username,
             }),
         }).then(
-            result => {},
+            result => {
+                if (result.token) {
+                    setTokenToLocalStorage(result.token)
+                }
+            },
             err => {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
