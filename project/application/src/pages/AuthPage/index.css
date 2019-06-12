@@ -1,96 +1,109 @@
 @font-face {
-    font-family: "Open Sans", sans-serif;
-    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
+    font-family: 'Open Sans', sans-serif;
+    src: url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap');
+}
+
+@font-face {
+    font-family: 'Roboto', sans-serif;
+    src: url('https://fonts.googleapis.com/css?family=Roboto:700&display=swap');
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
 }
 
 .wrapper_authorisation_page {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    line-height: normal;
+    font-size: 1.4rem;
+    
+    min-height: 100vh;
     background-color: #3b3b3b;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
 }
 
 .authorisation_window {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    padding: 2.2rem;
     background-color: #ffffff;
-    width: 284px;
-    padding: 22px;
-    z-index: 2;
+    width: 100%;
+    max-width: 31.3rem;
 }
 
 .input_container {
-    position: relative;
-    margin-top: 52px;
-}
-
-.authorisation_window .input_container:first-of-type {
-    margin-top: 28px;
+    display: flex;
+    flex-direction: column-reverse;
+    margin: 0 0 2rem 0;
 }
 
 .wrapper_authorisation_page input {
-    height: 47px;
-    width: calc(100% - 24px);
-    outline: none;
-    padding-left: 16px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    padding: 1.5rem;
     border: 1px solid #828282;
-    border-radius: 4px;
+    outline: none;
+    border-radius: 0.4rem;
     color: black;
-}
+    font-size: 1.4rem;
+    line-height: 1.9rem;
 
-.wrapper_authorisation_page input:focus {
-    border-color: #56ccf2;
 }
 
 .input_title {
-    font-family: "Open Sans", sans-serif;
-    font-weight: normal;
-    line-height: normal;
-    font-size: 14px;
+    margin: 0 0 1rem 0;
     color: #333333;
-    position: absolute;
-    top: -27px;
 }
 
 .wrapper_authorisation_page .login_button {
-    margin-top: 40px;
-    width: 100%;
-    height: 41px;
-    background: #27ae60;
-    border-radius: 5px;
+    font-family: 'Open Sans', sans-serif;  
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    padding: 1rem 0;
     color: white;
-    font-family: "Open Sans", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    line-height: normal;
-    font-size: 14px;
-    cursor: pointer;
+    border-radius: 0.5rem;
+    background: #27ae60;
+    margin: 0 0 3rem 0;
 }
 
 .page_title {
-    position: absolute;
-    width: 273px;
-    height: 64px;
+    width: 19.6rem;
+    height: 4.6rem;
     background: url("../../images/wobbly_logo.png") no-repeat center;
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-size: 271px;
+    background-size: cover;
+    margin: 0 0 5rem 0;
 }
 
 .wrapper_authorisation_page .registration_button {
-    margin-top: 12px;
-    font-family: "Open Sans", sans-serif;
     font-style: normal;
-    font-weight: bold;
-    line-height: normal;
-    font-size: 14px;
     cursor: pointer;
     color: blue;
     text-decoration: underline;
     background-color: white;
+
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    
+}
+
+@media (min-width: 768px) {
+    html {
+         font-size: 12px;
+    }
+}
+
+@media (min-width: 1024px) {
+    html {
+        font-size: 13px;
+    }
 }

@@ -3,6 +3,10 @@
     src: url("https://fonts.googleapis.com/css?family=Open+Sans");
 }
 
+html {
+    font-size: 10px;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -43,6 +47,7 @@ button {
 .mobile-support-toastr {
     background: #4f4f4f;
     color: #fff;
+    font-size: 16px;
     line-height: 22px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     padding: 15px;
