@@ -1,39 +1,38 @@
-import React, {Component} from 'react';
-import {connect} from "react-redux";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // Actions
-import userSettingAction from "../../actions/UserSettingAction";
+import userSettingAction from '../../actions/UserSettingAction';
 
 //Components
 import LeftBar from '../../components/LeftBar';
 import ChangePasswordModal from '../../components/ChangePasswordModal';
 
 //Services
-import { getLoggedUserId, getTokenFromLocalStorage } from '../../services/tokenStorageService'
+import { getLoggedUserId, getTokenFromLocalStorage } from '../../services/tokenStorageService';
+import { apiCall } from '../../services/apiService';
+
+//Config
+import { AppConfig } from '../../config';
 
 // Styles
 import './style.css';
-import {apiCall} from "../../services/apiService";
-import {AppConfig} from "../../config";
 
 class UserSetting extends Component {
-
     changeUserSetting = (username, userEmail) => {
         const USER_ID = getLoggedUserId();
         apiCall(AppConfig.apiURL + `user/${USER_ID}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `'Bearer ${getTokenFromLocalStorage()}'`,
+                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
             },
             body: JSON.stringify({
                 email: userEmail,
-                username: username
+                username: username,
             }),
         }).then(
-            result => {
-
-            },
+            result => {},
             err => {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
@@ -54,9 +53,10 @@ class UserSetting extends Component {
     render() {
         return (
             <div className="wrapper_user_setting_page">
-                {this.props.userSettingReducer.changePasswordModal &&
-                <ChangePasswordModal userSettingAction={this.props.userSettingAction}/>}
-                <LeftBar/>
+                {this.props.userSettingReducer.changePasswordModal && (
+                    <ChangePasswordModal userSettingAction={this.props.userSettingAction} />
+                )}
+                <LeftBar />
                 <div className="data_container">
                     <div className="header_user_setting">
                         <div>My Profile</div>
@@ -64,40 +64,35 @@ class UserSetting extends Component {
                     </div>
                     <div className="body_user_setting">
                         <div className="column">
-                            <i className="rectangle"></i>
+                            <i className="rectangle" />
                         </div>
                         <div className="column">
                             <div className="input_container">
-                                <div className="input_title">
-                                    Your name
-                                </div>
-                                <input ref={input => this.username = input} type="text"/>
+                                <div className="input_title">Your name</div>
+                                <input ref={input => (this.username = input)} type="text" />
                             </div>
                             <div className="input_container">
-                                <div className="input_title">
-                                    E-Mail
-                                </div>
-                                <input ref={input => this.userEmail= input} type="text"/>
+                                <div className="input_title">E-Mail</div>
+                                <input ref={input => (this.userEmail = input)} type="text" />
                             </div>
-                            <button onClick={e => this.changeUserSetting(this.username.value, this.userEmail.value)}>Save changes</button>
+                            <button onClick={e => this.changeUserSetting(this.username.value, this.userEmail.value)}>
+                                Save changes
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-
-        )
+        );
     }
 
     openChangePasswordModal() {
-        this.props.userSettingAction('TOGGLE_MODAL', true)
+        this.props.userSettingAction('TOGGLE_MODAL', true);
     }
-
-
 }
 
 const mapStateToProps = store => {
     return {
-        userSettingReducer: store.userSettingReducer
+        userSettingReducer: store.userSettingReducer,
     };
 };
 

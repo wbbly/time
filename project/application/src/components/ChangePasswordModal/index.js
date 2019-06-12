@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 // Services
-import {apiCall} from '../../services/apiService';
-import { getTokenFromLocalStorage } from '../../services/tokenStorageService'
+import { apiCall } from '../../services/apiService';
+import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 
 // Components
 
@@ -18,23 +18,22 @@ class ChangePasswordModal extends Component {
     addUser = (current, newP, newCopy) => {
         if (newP !== newCopy) {
             alert('new password not same');
-            return
+            return;
         }
         apiCall(AppConfig.apiURL + 'user/change-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `'Bearer ${getTokenFromLocalStorage()}'`,
-
+                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
             },
             body: JSON.stringify({
                 password: current,
-                newPassword: newP
+                newPassword: newP,
             }),
         }).then(
             result => {
                 alert("You've been successfully changed the password!");
-                this.closeModal()
+                this.closeModal();
             },
             err => {
                 if (err instanceof Response) {
@@ -55,11 +54,11 @@ class ChangePasswordModal extends Component {
     render() {
         return (
             <div className="wrapper_change_password_modal">
-                <div className="change_password_modal_background"/>
+                <div className="change_password_modal_background" />
                 <div className="change_password_modal_container">
                     <div className="change_password_modal_header">
                         <div className="change_password_modal_header_title">Change password</div>
-                        <i className="change_password_modal_header_close" onClick={e => this.closeModal()}/>
+                        <i className="change_password_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
                     <div className="change_password_modal_data">
                         <div className="change_password_modal_data_input_container">
@@ -97,7 +96,13 @@ class ChangePasswordModal extends Component {
                     <div className="change_password_modal_button_container">
                         <button
                             className="change_password_modal_button_container_button"
-                            onClick={e => this.addUser(this.currentPassword.value, this.newPassword.value, this.newPasswoerdCopy.value)}
+                            onClick={e =>
+                                this.addUser(
+                                    this.currentPassword.value,
+                                    this.newPassword.value,
+                                    this.newPasswoerdCopy.value
+                                )
+                            }
                         >
                             Save
                         </button>

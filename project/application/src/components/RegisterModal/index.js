@@ -16,6 +16,11 @@ import { AppConfig } from '../../config';
 import './style.css';
 
 class RegisterModal extends Component {
+
+    state = {
+        passwordVisible: true
+    };
+
     addUser = (email, password, userName) => {
         apiCall(
             AppConfig.apiURL + 'user/register',
@@ -46,12 +51,15 @@ class RegisterModal extends Component {
             }
         );
     };
+    changeVisible = () => {
+        this.setState({passwordVisible: !this.state.passwordVisible})
+    };
 
     render() {
         return (
             <div className="register_modal_wrapper">
                 <div className="add_to_team_modal_data">
-                    <i
+                    <i className="close"
                         onClick={e => this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: false })}
                     />
                     <div className="add_to_team_modal_input_container">
@@ -67,12 +75,13 @@ class RegisterModal extends Component {
                     <div className="add_to_team_modal_input_container">
                         <div className="add_to_team_modal_input_title">Password</div>
                         <input
-                            type="text"
+                            type={this.state.passwordVisible ? 'password' : 'text' }
                             ref={input => {
                                 this.password = input;
                             }}
                             className="add_to_team_modal_input"
                         />
+                        <i className="visible_password_eye" onClick={e => this.changeVisible()}></i>
                     </div>
                     <button onClick={e => this.addUser(this.email.value, this.password.value)}>Add user</button>
                 </div>

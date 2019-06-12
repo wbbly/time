@@ -1,16 +1,16 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 // Services
-import {getLoggedUserName} from '../../services/tokenStorageService';
+import { getLoggedUserName } from '../../services/tokenStorageService';
 
 // Styles
 import './index.css';
-import {logoutByUnauthorized} from '../../services/authentication';
+import { logoutByUnauthorized } from '../../services/authentication';
 
 class UserMenu extends Component {
     state = {
-        activeUserMenu: false
+        activeUserMenu: false,
     };
 
     render() {
@@ -20,20 +20,23 @@ class UserMenu extends Component {
                 <div className="logout_container">
                     <div className="user_name">
                         {username}
-                        <i className="profile_user" onClick={e => {
-                            this.togglUserMenu();
-                            document.addEventListener('click', this.closeDropdown);
-                        }}/>
+                        <i
+                            className="profile_user"
+                            onClick={e => {
+                                this.togglUserMenu();
+                                document.addEventListener('click', this.closeDropdown);
+                            }}
+                        />
                     </div>
                     {this.state.activeUserMenu && (
                         <div className="user_setting_modal" ref={div => (this.userSettingthModal = div)}>
                             <div className="user_setting_modal_item" onClick={e => this.logout()}>
-                                <i className="logout"/>
+                                <i className="logout" />
                                 <span>Log out</span>
                             </div>
-                            <Link to="/user-setting" style={{textDecoration: 'none'}}>
+                            <Link to="/user-setting" style={{ textDecoration: 'none' }}>
                                 <div className="user_setting_modal_item">
-                                    <i className="user_settings"/>
+                                    <i className="user_settings" />
                                     <span>Profile setting</span>
                                 </div>
                             </Link>
@@ -58,7 +61,7 @@ class UserMenu extends Component {
     };
 
     togglUserMenu() {
-        this.setState({activeUserMenu: !this.state.activeUserMenu});
+        this.setState({ activeUserMenu: !this.state.activeUserMenu });
     }
 
     logout() {

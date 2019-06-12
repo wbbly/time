@@ -68,7 +68,7 @@
     border-radius: 5px;
 }
 
-.register_modal_wrapper i {
+.register_modal_wrapper i.close {
     position: absolute;
     top: 7px;
     right: 7px;
@@ -77,4 +77,13 @@
     height: 24px;
     background: url("../../images/icons/forbidden-mark.svg") no-repeat center;
     cursor: pointer;
+}
+
+.register_modal_wrapper .visible_password_eye {
+    position: absolute;
+    right: 60px;
+    top: 167px;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/eye.svg") no-repeat center;
 }
