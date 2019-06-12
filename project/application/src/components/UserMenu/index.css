@@ -15,14 +15,11 @@
 
 .logout_container div {
     height: 28px;
+    padding: 4px 0;
     padding-left: 21px;
     display: flex;
     align-items: center;
     justify-content: start;
-}
-
-.logout_container:hover {
-    background: #4f4f4f;
 }
 
 .logout_container span {
@@ -39,6 +36,12 @@
     width: 15px;
     height: 15px;
     background: url("../../images/icons/logout.svg") no-repeat center;
+}
+
+.user_settings {
+    width: 15px;
+    height: 15px;
+    background: url("../../images/icons/cog-wheel-silhouette (2).svg") no-repeat center;
 }
 
 .wrapper_user_menu .user_name {
@@ -65,11 +68,22 @@ i.profile_user {
     background: url("../../images/icons/profile-user.svg") no-repeat center;
 }
 
-.user_settings_modal {
+.wrapper_user_menu .user_setting_modal {
+    display: block;
+    height: auto;
+    padding-left: 0;
     background-color: white;
     border-radius: 4px;
     position: absolute;
     top: -5px;
     left: 183px;
     width: 150px;
+}
+
+.user_setting_modal .user_setting_modal_item:hover {
+    background-color: #CECECE;
+}
+
+.user_setting_modal div span {
+    color: #000;
 }

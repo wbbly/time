@@ -15,6 +15,7 @@ import TeamPage from './pages/TeamPage';
 import ReportsByProjectsPage from './pages/ReportsByProjectPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import AuthPage from './pages/AuthPage';
+import UserSetting from './pages/UserSetting';
 
 toast.configure();
 
@@ -70,6 +71,7 @@ ReactDOM.render(
                     <Route path="/team" component={TeamPage} />
                     <Route path="/login" component={AuthPage} />
                     <Route path="/reset-password" component={ResetPasswordPage} />
+                    <Route path="/user-setting" component={UserSetting} />
                     <Redirect from="/reports" to="/reports/summary" />
                     <Redirect from="/" to="/login" />
                 </Switch>

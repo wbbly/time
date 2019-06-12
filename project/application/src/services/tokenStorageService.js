@@ -26,6 +26,18 @@ export function getLoggedUserName() {
     return username;
 }
 
+export function getLoggedUserId() {
+    const userId = getLoggedUser().id || '';
+
+    return userId;
+}
+
+export function getLoggedUserTeamId() {
+    const teamId = getLoggedUser().id || '';
+
+    return teamId;
+}
+
 export function getLoggedUser() {
     let user;
     try {
