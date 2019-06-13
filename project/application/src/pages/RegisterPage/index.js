@@ -142,7 +142,7 @@ class RegisterPage extends Component {
                     href="https://wobbly.me/terms.html"
                     className="register-block__link register-block__link--to-conditions"
                 >
-                    Terms and Conditions
+                    By registration you agree with Terms and Privacy policy
                 </a>
             </div>
         );
