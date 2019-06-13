@@ -120,12 +120,6 @@ class AuthPage extends Component {
                 >
                     Don't have an account yet? Sign up
                 </button>
-                <a
-                    href="https://wobbly.me/terms.html"
-                    className="register-block__link register-block__link--to-conditions"
-                >
-                    Terms and Conditions
-                </a>
             </div>
         );
     }
