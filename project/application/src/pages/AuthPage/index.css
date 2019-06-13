@@ -26,7 +26,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 2rem 2rem 0 2rem;
 }
 
 .authorisation_window {
@@ -36,6 +36,7 @@
     background-color: #ffffff;
     width: 100%;
     max-width: 31.3rem;
+    margin: 0 0 1rem 0;
 }
 
 .input_container {
@@ -71,7 +72,7 @@
     color: white;
     border-radius: 0.5rem;
     background: #27ae60;
-    margin: 0 0 3rem 0;
+    margin: 0 0 2rem 0;
 }
 
 .page_title {
@@ -79,31 +80,51 @@
     height: 4.6rem;
     background: url("../../images/wobbly_logo.png") no-repeat center;
     background-size: cover;
-    margin: 0 0 5rem 0;
+    margin: 0 0 2rem 0;
 }
 
-.wrapper_authorisation_page .registration_button {
+.wrapper_authorisation_page .forgot_password_button {
     font-style: normal;
     cursor: pointer;
-    color: blue;
-    text-decoration: underline;
+    color: #2D9CDB;
     background-color: white;
 
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     line-height: 1.9rem;
     
+}
+
+.wrapper_authorisation_page .register-block__button--to-login {
+    font-style: normal;
+    cursor: pointer;
+    color: #2D9CDB;
+    background: none;
+    padding: 1rem 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1.9rem;
+}
+
+.wrapper_authorisation_page .register-block__link--to-conditions {
+    display: block;
+    font-style: normal;
+    cursor: pointer;
+    color: #2D9CDB;
+    background: none;
+    padding: 1rem 0;
+    text-decoration: none;
+
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1.9rem;
 }
 
 @media (min-width: 768px) {
     html {
          font-size: 12px;
-    }
-}
-
-@media (min-width: 1024px) {
-    html {
-        font-size: 13px;
     }
 }

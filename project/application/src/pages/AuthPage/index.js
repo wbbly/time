@@ -76,6 +76,7 @@ class AuthPage extends Component {
     componentWillMount() {}
 
     render() {
+        const { history } = this.props
         if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
 
         logoutByUnauthorized(false);
@@ -106,14 +107,25 @@ class AuthPage extends Component {
                         Login
                     </button>
                     <button
-                        className="registration_button"
-                        onClick={e => {
-                            this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: true });
-                        }}
+                        className="forgot_password_button"
+                        onClick={e => {}}
                     >
-                        Registration
+                        Forgot your password?
                     </button>
                 </div>
+                <button
+                    onClick={e => history.push("/register")}
+                    className="register-block__button register-block__button--to-login"
+                    type="button"
+                >
+                    Don't have an account yet? Sign up
+                </button>
+                <a
+                    href="https://wobbly.me/terms.html"
+                    className="register-block__link register-block__link--to-conditions"
+                >
+                    Terms and Conditions
+                </a>
             </div>
         );
     }
