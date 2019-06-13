@@ -37,6 +37,7 @@
     width: 100%;
     max-width: 31.3rem;
     margin: 0 0 1rem 0;
+    border-radius: 0.4rem;
 }
 
 .input_container {
@@ -102,21 +103,6 @@
     color: #2D9CDB;
     background: none;
     padding: 1rem 0;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-    font-size: 1.6rem;
-    line-height: 1.9rem;
-}
-
-.wrapper_authorisation_page .register-block__link--to-conditions {
-    display: block;
-    font-style: normal;
-    cursor: pointer;
-    color: #2D9CDB;
-    background: none;
-    padding: 1rem 0;
-    text-decoration: none;
-
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
     font-size: 1.6rem;
