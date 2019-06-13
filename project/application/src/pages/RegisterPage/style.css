@@ -26,7 +26,8 @@
     background-color: #ffffff;
     width: 100%;
     max-width: 31.3rem;
-    margin: 0 0 1rem 0;
+    margin: 0 0 .8rem 0;
+    border-radius: 0.4rem;
 }
 
 .register-block .register-block__label {
@@ -64,10 +65,10 @@
     cursor: pointer;
     color: #2D9CDB;
     background: none;
-    padding: 1rem 0;
+    padding: .8rem 0;
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     line-height: 1.9rem;
 }
 
@@ -77,31 +78,19 @@
     cursor: pointer;
     color: #2D9CDB;
     background: none;
-    padding: 1rem 0;
+    padding: .8rem 0;
     text-decoration: none;
+    text-align: center;
+    max-width: 28rem;
 
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     line-height: 1.9rem;
 }
 
 @media (min-width: 768px) {
     html {
          font-size: 12px;
-    }
-
-    .register-block .register-block__logo {
-        margin: 0 0 5rem 0;
-    }
-
-    .register-block .register-block__form {
-        margin: 0 0 1.5rem 0;
-    }
-}
-
-@media (min-width: 1024px) {
-    html {
-        font-size: 13px;
     }
 }
