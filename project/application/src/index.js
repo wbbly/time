@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './index.css';
+import './fonts/icomoon/icomoon.css';
 import { store } from './store/configureStore';
 import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
