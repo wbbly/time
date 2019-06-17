@@ -1,0 +1,89 @@
+@font-face {
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
+}
+
+.logout_container {
+    left: 0;
+    bottom: 27px;
+    cursor: pointer;
+    position: absolute;
+    width: 100%;
+    z-index: inherit;
+    margin-bottom: 30px;
+}
+
+.logout_container div {
+    height: 28px;
+    padding: 4px 0;
+    padding-left: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.logout_container span {
+    margin-left: 7px;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: normal;
+    color: #FFFFFF
+}
+
+.logout {
+    width: 15px;
+    height: 15px;
+    background: url("../../images/icons/logout.svg") no-repeat center;
+}
+
+.user_settings {
+    width: 15px;
+    height: 15px;
+    background: url("../../images/icons/cog-wheel-silhouette (2).svg") no-repeat center;
+}
+
+.wrapper_user_menu .user_name {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: normal;
+    color: #FFFFFF;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+i.profile_user {
+
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: -3px;
+    left: 140px;
+    background: url("../../images/icons/profile-user.svg") no-repeat center;
+}
+
+.wrapper_user_menu .user_setting_modal {
+    display: block;
+    height: auto;
+    padding-left: 0;
+    background-color: white;
+    border-radius: 4px;
+    position: absolute;
+    top: -5px;
+    left: 183px;
+    width: 150px;
+}
+
+.user_setting_modal .user_setting_modal_item:hover {
+    background-color: #CECECE;
+}
+
+.user_setting_modal div span {
+    color: #000;
+}

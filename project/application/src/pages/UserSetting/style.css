@@ -1,0 +1,97 @@
+@font-face {
+    font-family: "Open Sans", sans-serif;
+    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
+}
+
+.wrapper_user_setting_page .data_container {
+    position: relative;
+    padding: 80px 148px 0;
+    width: calc(100% - 600px);
+    left: 188px;
+    background-color: #333;
+}
+
+.wrapper_user_setting_page .data_container .header_user_setting {
+    display: flex;
+    align-items: center;
+    font-family: Open Sans;
+    font-size: 36px;
+    line-height: 49px;
+    color: #FFFFFF;
+}
+
+.wrapper_user_setting_page .data_container .header_user_setting button {
+    width: 196px;
+    height: 45px;
+    margin-left: 27px;
+    border: 1px solid #27AE60;
+    border-radius: 4px;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 22px;
+    color: #FFFFFF;
+    background-color: transparent;
+}
+
+.wrapper_user_setting_page .data_container .body_user_setting {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 50px;
+}
+
+.wrapper_user_setting_page .data_container .body_user_setting .column:last-of-type {
+    margin-left: 26px;
+}
+
+.wrapper_user_setting_page .data_container .body_user_setting .input_container .input_title {
+    position: relative;
+    top: 0;
+    font-family: Open Sans;
+    font-size: 18px;
+    line-height: 25px;
+    color: #FFFFFF;
+}
+
+.wrapper_user_setting_page .data_container .body_user_setting .input_container input {
+    margin-top: 10px;
+    font-size: 16px;
+    line-height: 22px;
+    color: #D8D8D8;
+    width: 638px;
+    height: 45px;
+    background: #4F4F4F;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    border: 0;
+    padding-left: 18px;
+}
+
+.wrapper_user_setting_page .data_container .body_user_setting .input_container {
+    margin-top: -6px;
+}
+
+.wrapper_user_setting_page .data_container .body_user_setting .input_container:nth-last-of-type(1) {
+    margin-top: 11px;
+}
+
+.wrapper_user_setting_page .data_container .body_user_setting button {
+    width: 196px;
+    height: 45px;
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 22px;
+    color: #FFFFFF;
+    background: #27AE60;
+    border-radius: 4px;
+    margin-top: 31px;
+}
+
+.rectangle {
+    width: 150px;
+    height: 150px;
+    background: url("../../images/icons/Group 20.svg") no-repeat center;
+}

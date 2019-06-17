@@ -7,6 +7,7 @@ import { getCurrentTimerFromLocalStorage } from '../../services/currentTimerStor
 
 // Components
 import TeamSwitcher from '../TeamSwitcher';
+import UserMenu from '../UserMenu';
 
 // Actions
 
@@ -39,7 +40,7 @@ class LeftBar extends Component {
         if (!timer.timeStart) {
             this.setState({ timer: '' });
 
-            return;
+            return false;
         }
 
         this.setState({ timer: getTimeDiff(timer.timeStart, true) });
@@ -90,13 +91,7 @@ class LeftBar extends Component {
                     </Link>
                     <TeamSwitcher teamsUpdateTimestamp={this.props.teamsUpdateTimestamp} />
                 </div>
-
-                <div className="logout_container" onClick={e => this.logout()}>
-                    <div>
-                        <i className="logout" />
-                        <span>Log out</span>
-                    </div>
-                </div>
+                <UserMenu />
             </div>
         );
     }

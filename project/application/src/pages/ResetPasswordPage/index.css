@@ -86,11 +86,30 @@
     margin-top: 12px;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
-    font-weight: bold;
     line-height: normal;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
     color: blue;
     text-decoration: underline;
     background-color: white;
 }
+
+.wrapper_authorization_page .passwords_buttons_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.visible_password_eye {
+    position: absolute;
+    right: 24px;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/eye.svg") no-repeat center;
+}
+
+.visible_password_eye.new_password {
+    top: 14px;
+}
+
+

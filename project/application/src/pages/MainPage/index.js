@@ -204,7 +204,7 @@ class MainPage extends Component {
 
     timerStateUpdateWithSocketData(socketData) {
         if (!socketData || !socketData.timeStart) {
-            return;
+            return false;
         }
 
         if (!!this.issueTargetElement) {

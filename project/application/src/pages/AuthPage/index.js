@@ -10,6 +10,7 @@ import { apiCall } from '../../services/apiService';
 
 // Components
 import RegisterModal from '../../components/RegisterModal';
+import ForgotPasswordModal from '../../components/ForgotPasswordModal';
 
 // Actions
 import toggleRegisterModal from '../../actions/AuthPageAction';
@@ -26,7 +27,7 @@ import './index.css';
 class AuthPage extends Component {
     state = {
         haveToken: false,
-        authorisationModal: true,
+        authorizationModal: true,
     };
 
     login = (email, password) => {
@@ -81,10 +82,15 @@ class AuthPage extends Component {
         logoutByUnauthorized(false);
 
         return (
-            <div className="wrapper_authorisation_page">
-                {this.props.authPageReducer && <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />}
+            <div className="wrapper_authorization_page">
+                {this.props.authPageReducer.registerModal && (
+                    <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />
+                )}
+                {this.props.authPageReducer.forgotPasswordModal && (
+                    <ForgotPasswordModal toggleRegisterModal={this.props.toggleRegisterModal} />
+                )}
                 <i className="page_title" />
-                <div className="authorisation_window">
+                <div className="authorization_window">
                     <div className="input_container">
                         <input type="text" ref={input => (this.email = input)} placeholder="Add your login..." />
                         <div className="input_title">Login</div>
@@ -105,14 +111,26 @@ class AuthPage extends Component {
                     >
                         Login
                     </button>
-                    <button
-                        className="registration_button"
-                        onClick={e => {
-                            this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: true });
-                        }}
-                    >
-                        Registration
-                    </button>
+                    <div className="passwords_buttons_container">
+                        <button
+                            className="registration_button"
+                            onClick={e => {
+                                this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: true });
+                            }}
+                        >
+                            Registration
+                        </button>
+                        <button
+                            className="registration_button"
+                            onClick={e => {
+                                this.props.toggleRegisterModal('TOGGLE_FORGOT_PASSWORD_MODAL', {
+                                    forgotPasswordModal: true,
+                                });
+                            }}
+                        >
+                            Forgot password?
+                        </button>
+                    </div>
                 </div>
             </div>
         );
@@ -121,7 +139,7 @@ class AuthPage extends Component {
 
 const mapStateToProps = store => {
     return {
-        authPageReducer: store.authPageReducer.registerModal,
+        authPageReducer: store.authPageReducer,
     };
 };
 

@@ -117,10 +117,6 @@ a {
     justify-content: start;
 }
 
-.logout_container:hover {
-    background: #4f4f4f;
-}
-
 .logout_container span {
     margin-left: 7px;
     font-family: "Open Sans";
