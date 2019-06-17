@@ -3,15 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 // Services
-import { userLoggedIn } from '../../services/authentication';
-import {
-    setTokenToLocalStorage,
-    getLoggedUserEmail,
-    removeTokenFromLocalStorage,
-} from '../../services/tokenStorageService';
-import { removeCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
-import { removeServerClientTimediffFromLocalStorage } from '../../services/serverClientTimediffStorageService';
-import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamDataStorageService';
+import { logoutByUnauthorized } from '../../services/authentication';
 
 // Components
 import RegisterModal from '../../components/RegisterModal';
@@ -32,17 +24,18 @@ import './index.css';
 class ResetPasswordPage extends Component {
     state = {
         haveToken: false,
-        authorisationModal: true,
+        authorizationModal: true,
         passwordType: true,
         secondPasswordType: true,
         token: '',
         redirect: false,
     };
 
-    changePassword(password1, password2, token, resetPasswordPage) {
-        if (password1 !== password2) {
-            alert("The passwords you entered don't match");
-            return;
+    changePassword(password, newPassword, token, resetPasswordPage) {
+        if (password !== newPassword) {
+            alert("The passwords you entered don't match!");
+
+            return false;
         }
 
         fetch(AppConfig.apiURL + 'user/set-password', {
@@ -52,8 +45,8 @@ class ResetPasswordPage extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                token: token,
-                password: password1,
+                token,
+                password: newPassword,
             }),
         })
             .then(res => {
@@ -96,12 +89,10 @@ class ResetPasswordPage extends Component {
     render() {
         if (this.state.redirect) return <Redirect to={'/timer'} />;
 
-        removeTokenFromLocalStorage();
-        removeCurrentTimerFromLocalStorage();
-        removeServerClientTimediffFromLocalStorage();
+        logoutByUnauthorized(false);
 
         return (
-            <div className="wrapper_authorisation_page">
+            <div className="wrapper_authorization_page">
                 {this.props.authPageReducer.registerModal && (
                     <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />
                 )}
@@ -109,7 +100,7 @@ class ResetPasswordPage extends Component {
                     <ForgotPasswordModal toggleRegisterModal={this.props.toggleRegisterModal} />
                 )}
                 <i className="page_title" />
-                <div className="authorisation_window">
+                <div className="authorization_window">
                     <div className="input_container">
                         <input
                             type={this.checkVisible('passwordType')}

@@ -30,16 +30,16 @@ class UserMenu extends Component {
                     </div>
                     {this.state.activeUserMenu && (
                         <div className="user_setting_modal" ref={div => (this.userSettingthModal = div)}>
-                            <div className="user_setting_modal_item" onClick={e => this.logout()}>
-                                <i className="logout" />
-                                <span>Log out</span>
-                            </div>
                             <Link to="/user-setting" style={{ textDecoration: 'none' }}>
                                 <div className="user_setting_modal_item">
                                     <i className="user_settings" />
                                     <span>Profile setting</span>
                                 </div>
                             </Link>
+                            <div className="user_setting_modal_item" onClick={e => this.logout()}>
+                                <i className="logout" />
+                                <span>Log out</span>
+                            </div>
                         </div>
                     )}
                 </div>

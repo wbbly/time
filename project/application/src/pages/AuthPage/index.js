@@ -27,7 +27,7 @@ import './index.css';
 class AuthPage extends Component {
     state = {
         haveToken: false,
-        authorisationModal: true,
+        authorizationModal: true,
     };
 
     login = (email, password) => {
@@ -82,7 +82,7 @@ class AuthPage extends Component {
         logoutByUnauthorized(false);
 
         return (
-            <div className="wrapper_authorisation_page">
+            <div className="wrapper_authorization_page">
                 {this.props.authPageReducer.registerModal && (
                     <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />
                 )}
@@ -90,7 +90,7 @@ class AuthPage extends Component {
                     <ForgotPasswordModal toggleRegisterModal={this.props.toggleRegisterModal} />
                 )}
                 <i className="page_title" />
-                <div className="authorisation_window">
+                <div className="authorization_window">
                     <div className="input_container">
                         <input type="text" ref={input => (this.email = input)} placeholder="Add your login..." />
                         <div className="input_title">Login</div>

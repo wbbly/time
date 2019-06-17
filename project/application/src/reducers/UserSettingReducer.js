@@ -7,7 +7,6 @@ const initialState = {
 };
 
 export function userSettingReducer(state = initialState, action) {
-    console.log(action);
     switch (action.type) {
         case 'TOGGLE_MODAL':
             return { ...state, changePasswordModal: action.payload };

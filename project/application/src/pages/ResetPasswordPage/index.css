@@ -3,7 +3,7 @@
     src: url("https://fonts.googleapis.com/css?family=Open+Sans");
 }
 
-.wrapper_authorisation_page {
+.wrapper_authorization_page {
     position: fixed;
     left: 0;
     top: 0;
@@ -12,7 +12,7 @@
     background-color: #3b3b3b;
 }
 
-.authorisation_window {
+.authorization_window {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -28,11 +28,11 @@
     margin-top: 52px;
 }
 
-.authorisation_window .input_container:first-of-type {
+.authorization_window .input_container:first-of-type {
     margin-top: 28px;
 }
 
-.wrapper_authorisation_page input {
+.wrapper_authorization_page input {
     height: 47px;
     width: calc(100% - 24px);
     outline: none;
@@ -42,7 +42,7 @@
     color: black;
 }
 
-.wrapper_authorisation_page input:focus {
+.wrapper_authorization_page input:focus {
     border-color: #56ccf2;
 }
 
@@ -56,7 +56,7 @@
     top: -27px;
 }
 
-.wrapper_authorisation_page .login_button {
+.wrapper_authorization_page .login_button {
     margin-top: 40px;
     width: 100%;
     height: 41px;
@@ -82,7 +82,7 @@
     background-size: 271px;
 }
 
-.wrapper_authorisation_page .registration_button {
+.wrapper_authorization_page .registration_button {
     margin-top: 12px;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
@@ -94,7 +94,7 @@
     background-color: white;
 }
 
-.wrapper_authorisation_page .passwords_buttons_container {
+.wrapper_authorization_page .passwords_buttons_container {
     display: flex;
     align-items: center;
     justify-content: space-between;

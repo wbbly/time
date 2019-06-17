@@ -19,7 +19,7 @@ import { AppConfig } from '../../config';
 import './style.css';
 
 class UserSetting extends Component {
-    changeUserSetting = (username, userEmail) => {
+    changeUserSetting = (username, email) => {
         const USER_ID = getLoggedUserId();
         apiCall(AppConfig.apiURL + `user/${USER_ID}`, {
             method: 'PATCH',
@@ -28,13 +28,13 @@ class UserSetting extends Component {
                 Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
             },
             body: JSON.stringify({
-                email: userEmail,
-                username: username,
+                email,
+                username,
             }),
         }).then(
             result => {
                 if (result.token) {
-                    setTokenToLocalStorage(result.token)
+                    setTokenToLocalStorage(result.token);
                 }
             },
             err => {

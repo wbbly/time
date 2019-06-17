@@ -40,7 +40,7 @@ class LeftBar extends Component {
         if (!timer.timeStart) {
             this.setState({ timer: '' });
 
-            return;
+            return false;
         }
 
         this.setState({ timer: getTimeDiff(timer.timeStart, true) });

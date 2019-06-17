@@ -15,11 +15,13 @@ import { AppConfig } from '../../config';
 import './style.css';
 
 class ChangePasswordModal extends Component {
-    addUser = (current, newP, newCopy) => {
-        if (newP !== newCopy) {
-            alert('new password not same');
-            return;
+    addUser = (password, newPassword, newPasswordRepeat) => {
+        if (newPassword !== newPasswordRepeat) {
+            alert('The passwords are not the same!');
+
+            return false;
         }
+
         apiCall(AppConfig.apiURL + 'user/change-password', {
             method: 'POST',
             headers: {
@@ -27,8 +29,8 @@ class ChangePasswordModal extends Component {
                 Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
             },
             body: JSON.stringify({
-                password: current,
-                newPassword: newP,
+                password,
+                newPassword,
             }),
         }).then(
             result => {

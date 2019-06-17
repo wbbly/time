@@ -47,7 +47,7 @@ class TeamSwitcher extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    teamId: teamId,
+                    teamId,
                 }),
             }).then(_ => {
                 apiCall(AppConfig.apiURL + `team/current`).then(response => {

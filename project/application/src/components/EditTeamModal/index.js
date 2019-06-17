@@ -51,7 +51,7 @@ class EditTeamModal extends Component {
         }).then(
             result => {
                 if (result.token) {
-                    setTokenToLocalStorage(result.token)
+                    setTokenToLocalStorage(result.token);
                 }
                 this.closeModal();
                 this.props.getDataFromServer(teamPage);

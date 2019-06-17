@@ -20,7 +20,10 @@ import UserSetting from './pages/UserSetting';
 toast.configure();
 
 const addEvent = (object, type, callback) => {
-    if (object === null || typeof object === 'undefined') return;
+    if (object === null || typeof object === 'undefined') {
+        return false;
+    }
+
     if (object.addEventListener) {
         object.addEventListener(type, callback, false);
     } else if (object.attachEvent) {
