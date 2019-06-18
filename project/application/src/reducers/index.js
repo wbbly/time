@@ -8,7 +8,7 @@ import { manualTimerModalReducer } from './ManualTimerModalReducer';
 import { authPageReducer } from './AuthPageReducer';
 import { teamReducer } from './TeamReducer';
 import { teamAddReducer } from './TeamAddReducer';
-import ResponsiveReducer from './ResponsiveReducer';
+import responsiveReducer from './ResponsiveReducer';
 
 export const rootReducer = combineReducers({
     projectReducer,
@@ -19,5 +19,5 @@ export const rootReducer = combineReducers({
     authPageReducer,
     teamReducer,
     teamAddReducer,
-    ResponsiveReducer,
+    responsiveReducer,
 });
