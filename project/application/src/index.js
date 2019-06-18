@@ -17,6 +17,8 @@ import ReportsByProjectsPage from './pages/ReportsByProjectPage';
 import AuthPage from './pages/AuthPage';
 import RegisterPage from './pages/RegisterPage';
 
+import { setViewportSize } from './actions/ResponsiveActions';
+
 toast.configure();
 
 const addEvent = (object, type, callback) => {
@@ -54,6 +56,22 @@ const showMobileSupportToastr = () => {
 showMobileSupportToastr();
 addEvent(window, 'resize', event => {
     showMobileSupportToastr();
+});
+
+store.dispatch(
+    setViewportSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    })
+);
+
+addEvent(window, 'resize', event => {
+    store.dispatch(
+        setViewportSize({
+            width: window.innerWidth,
+            height: window.innerHeight,
+        })
+    );
 });
 
 ReactDOM.render(
