@@ -56,8 +56,9 @@ class LeftBar extends Component {
     }
 
     render() {
+        const { switchMenu } = this.props;
         return (
-            <div className="wrapper">
+            <div className="wrapper" onClick={switchMenu}>
                 <Link to="/timer">
                     <i className="logo_small" />
                 </Link>
