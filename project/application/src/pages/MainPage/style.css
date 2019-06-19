@@ -39,7 +39,6 @@
 
 /* end header */
 
-
 .wrapper_main_page {
     position: relative;
     font-family: "Open Sans", sans-serif;
@@ -48,8 +47,6 @@
     color: #ffffff;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    height: 100vh;
 }
 
 .data_container {
@@ -97,6 +94,7 @@
 
 .time_tracker_wrapper .ul {
     margin: 0 0 1rem 0;
+    position: relative;
 }
 
 .time_tracker_wrapper .ul:last-child {
@@ -107,7 +105,7 @@
     display: flex;
     padding: .5rem;
     font-size: 1.4rem;
-    line-height: 1.9rem;
+    line-height: 2rem;
     border-radius: 0.4rem;
 }
 
@@ -115,11 +113,6 @@
     flex-grow: 1;
     overflow: hidden;
     margin: 0 1rem 0 0;
-}
-
-.time_tracker_wrapper .time_container_history {
-    display: flex;
-    
 }
 
 .name_container .name {
@@ -134,20 +127,22 @@
 
 .time_container_history {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    color: #B8B8B8;
 }
 
 .time_container_history .time_now {
-    /* display: flex; */
     display: none;
     margin: 0 1rem 0 0;
 }
 
 .time_container_history .timePassed {
-    display: none;
-    margin: 0 1rem 0 0;
-    /* margin: 0; */
+    display: block;
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.6rem;
 }
 
 /* start old styles */
@@ -157,7 +152,6 @@
     height: 2rem;
     background: url("../../images/icons/small_play.svg") no-repeat center;
     cursor: pointer;
-    /* margin: 0 1rem 0 0; */
     margin: 0;
 }
 
@@ -172,16 +166,16 @@
 
 .edit_button {
     display: none;
-    width: 2rem;
-    height: 2rem;
+    width: 1.7rem;
+    height: 1.7rem;
     background: url("../../images/icons/baseline-create-24px.svg") no-repeat center;
     cursor: pointer;
     background-size: cover;
-    /* margin: 0 1rem 0 0; */
+    margin: 0 1rem 0 0;
 }
 
-.time_container_history .item_button {
-    display: none;
+.time_container_history .item_button .small_play {
+    display: block;
 }
 
 .wrapper_main_page .li:hover {
@@ -261,26 +255,16 @@ span.circle {
     width: 1.2rem;
     height: 1.2rem;
     border-radius: 50%;
-}
-
-
-.projects_modal_item_name {
-    margin-left: 7px;
-    font-family: "Open Sans", sans-serif;
-    font-style: normal;
-    line-height: normal;
-    font-size: 14px;
+    margin: 0 .5rem 0 0;
 }
 
 .add_task_container .active_project {
-    /* display: none; */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .add_task_container .folder {
-    /* display: none; */
     position: relative;
     width: 2.4rem;
     height: 2.4rem;
@@ -307,6 +291,7 @@ span.circle {
 
 .folder .projects_modal_wrapper {
     position: absolute;
+    z-index: 5;
     top: 30px;
     left: -210px;
     width: 245px;
@@ -395,7 +380,7 @@ span.circle {
     height: 32px;
 }
 
-.projects_modal_item_name {
+.folder .projects_modal_item_name {
     margin-left: 7px;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
@@ -416,6 +401,52 @@ span.circle {
 }
 
 /* end modal folder project */
+
+.mobile-play-button-large {
+    position: absolute;
+    cursor: pointer;
+    right: 1.5rem;
+    bottom: 4.5rem;
+    height: 6rem;
+    width: 6rem;
+    background-size: cover;
+    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.25);
+    border-radius: 50%;
+}
+
+.mobile-info-block-current-going-task {
+    position: relative;
+    padding: 1rem 7rem 2rem 2.4rem;
+    color: #FFFFFF;
+}
+
+.mobile-info-block-current-going-task__time {
+    font-size: 1.8rem;
+    line-height: 2.5rem;
+    text-align: center;
+}
+
+.mobile-info-block-current-going-task__name-task {
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: center;
+}
+
+.mobile-info-block-current-going-task__stop {
+    position: absolute;
+    right: 1.6rem;
+    top: calc(50% - (4.7rem / 2))
+}
+
+.mobile-info-block-current-going-task .stop {
+    display: block;
+    height: 4.7rem;
+    width: 4.7rem;
+    background-size: cover;
+}
 
 
 @media (min-width: 1024px) {
@@ -468,23 +499,23 @@ span.circle {
         display: block;
     }
 
-    /* .time_container_history {
+    .time_container_history {
         display: flex;
+        flex-direction: row;
+        color: #ffffff;
         justify-content: center;
         align-items: center;
-    } */
+    }
     
     .time_container_history .time_now {
         display: flex;
-        /* display: none; */
         margin: 0 1rem 0 0;
     }
     
     .time_container_history .timePassed {
-        /* display: none; */
         display: block;
         margin: 0 1rem 0 0;
-        /* margin: 0; */
+        font-size: 1.4rem;
     }
 
     .time_tracker_wrapper .name_container {
@@ -502,7 +533,24 @@ span.circle {
     }
     
     .name_container .project_name {
-        
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
+    .time_container_history .item_button {
+        display: none;
+    }
+
+    .small_play {
+        margin: 0 1rem 0 0;
+    }
+
+    .mobile-play-button-large {
+        display: none;
+    }
+
+    .mobile-info-block-current-going-task {
+        display: none;
+    }
 }
