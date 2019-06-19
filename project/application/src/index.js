@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './index.css';
+import './fonts/icomoon/icomoon.css';
 import { store } from './store/configureStore';
 import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
@@ -15,6 +16,8 @@ import TeamPage from './pages/TeamPage';
 import ReportsByProjectsPage from './pages/ReportsByProjectPage';
 import AuthPage from './pages/AuthPage';
 import RegisterPage from './pages/RegisterPage';
+
+import { setViewportSize } from './actions/ResponsiveActions';
 
 toast.configure();
 
@@ -53,6 +56,22 @@ const showMobileSupportToastr = () => {
 showMobileSupportToastr();
 addEvent(window, 'resize', event => {
     showMobileSupportToastr();
+});
+
+store.dispatch(
+    setViewportSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    })
+);
+
+addEvent(window, 'resize', event => {
+    store.dispatch(
+        setViewportSize({
+            width: window.innerWidth,
+            height: window.innerHeight,
+        })
+    );
 });
 
 ReactDOM.render(

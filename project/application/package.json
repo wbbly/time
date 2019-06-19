@@ -12,8 +12,11 @@
     "moment": "2.24.0",
     "prop-types": "15.6.2",
     "react": "16.7.0",
+    "react-burger-menu": "2.6.10",
     "react-chartjs-2": "2.7.4",
+    "react-custom-scrollbars": "4.2.1",
     "react-date-range": "1.0.0-beta",
+    "react-device-detect": "1.6.2",
     "react-dom": "16.7.0",
     "react-redux": "6.0.0",
     "react-router": "4.3.1",
@@ -25,7 +28,8 @@
   },
   "devDependencies": {
     "husky": "1.0.0-rc.14",
-    "prettier": "1.14.2"
+    "prettier": "1.14.2",
+    "redux-logger": "3.0.6"
   },
   "scripts": {
     "start": "PORT=3001 react-scripts start",

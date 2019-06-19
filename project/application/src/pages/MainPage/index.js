@@ -19,6 +19,9 @@ import { apiCall } from '../../services/apiService';
 // Components
 import LeftBar from '../../components/LeftBar';
 import ManualTimeModal from '../../components/ManualTimeModal';
+import { slide as Menu } from 'react-burger-menu';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { isSafari } from 'react-device-detect';
 
 // Actions
 import addTasks from '../../actions/MainPageAction';
@@ -60,6 +63,7 @@ class MainPage extends Component {
         projectListForModalWindow: [],
         projectListInitial: [],
         projectListIsOpen: false,
+        isShowMenu: false,
     };
 
     initSocketConnection() {
@@ -389,6 +393,12 @@ class MainPage extends Component {
         this.socketConnection && this.socketConnection.emit('leave');
     }
 
+    switchMenu = event => {
+        this.setState(state => ({
+            isShowMenu: !state.isShowMenu,
+        }));
+    };
+
     createTimeEntriesList(data) {
         let items = data.map((item, index) => (
             <div className="ul" key={'time-entries_' + index}>
@@ -433,6 +443,8 @@ class MainPage extends Component {
     }
 
     render() {
+        const { viewport } = this.props;
+        const { isShowMenu } = this.state;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         const buttonState = this.state.timerPlayButtonShow ? 'play' : 'stop';
@@ -446,9 +458,17 @@ class MainPage extends Component {
                 {this.createTimeEntriesList(arraysItem)}
             </div>
         ));
-
         return (
-            <div className="wrapper_main_page">
+            <div id="main_page" className="wrapper_main_page" style={{ height: viewport.height - 1 }}>
+                {viewport.width < 1024 && (
+                    <header className="main-header">
+                        <i className="main-header__small-logo" />
+                        <button onClick={this.switchMenu} className="main-header__show-menu-button">
+                            <span className={isShowMenu ? 'icon-close' : 'icon-menu'} />
+                        </button>
+                    </header>
+                )}
+
                 {this.props.manualTimerModal.manualTimerModalToggle && (
                     <ManualTimeModal
                         timeEntriesList={this.props.timeEntriesList}
@@ -458,7 +478,22 @@ class MainPage extends Component {
                         manualTimerModalAction={this.props.manualTimerModalAction}
                     />
                 )}
-                <LeftBar />
+
+                {viewport.width < 1024 ? (
+                    <Menu
+                        customBurgerIcon={false}
+                        customCrossIcon={false}
+                        left={true}
+                        width={'100%'}
+                        isOpen={isShowMenu}
+                        // burgerButtonClassName={'main-header__show-menu-button'}
+                    >
+                        <LeftBar viewport={viewport} switchMenu={this.switchMenu} />
+                    </Menu>
+                ) : (
+                    <LeftBar viewport={viewport} />
+                )}
+
                 <div className="data_container">
                     <div className="add_task_container">
                         <input
@@ -470,70 +505,104 @@ class MainPage extends Component {
                             }}
                             onKeyUp={e => this.timerUpdate()}
                         />
-                        <div className="time_container">
+                        <div className="wrapper-timer-mobile">
+                            {this.state.timerReadyToUse && (
+                                <div className="active_project">
+                                    <span
+                                        className={`projects_modal_item_circle ${
+                                            this.state.seletedProject.projectColor.name
+                                        }`}
+                                    />
+                                    <span className="projects_modal_item_name">{this.state.seletedProject.name}</span>
+                                </div>
+                            )}
+                            <i className="folder" onClick={e => this.projectListToggle()}>
+                                {this.state.projectListIsOpen && (
+                                    <div
+                                        className="projects_modal_wrapper"
+                                        ref={div => (this.projectListTargetElement = div)}
+                                    >
+                                        <div
+                                            className="projects_modal_wrapper_header"
+                                            onClick={event => {
+                                                event.stopPropagation();
+                                            }}
+                                        >
+                                            <input
+                                                placeholder="Find..."
+                                                type="text"
+                                                ref={input => (this.projectSearchTextTargetElement = input)}
+                                                onKeyUp={e =>
+                                                    this.findProjectByName(this.projectSearchTextTargetElement.value)
+                                                }
+                                                className="projects_modal_wrapper_search"
+                                            />
+                                        </div>
+                                        <div className="projects_modal_data_wrapper">
+                                            {this.state.projectListForModalWindow.map((item, index) => (
+                                                <div
+                                                    key={'timer-project-' + index}
+                                                    className="projects_modal_item"
+                                                    onClick={e => this.setActiveProject(item)}
+                                                >
+                                                    <div
+                                                        className={`projects_modal_item_circle ${
+                                                            item.projectColor.name
+                                                        }`}
+                                                    />
+                                                    <div className="projects_modal_item_name">{item.name}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </i>
+
+                            <div className="time_container">
+                                {this.state.timerDurationValue
+                                    ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
+                                    : '00:00:00'}
+                            </div>
+                            <i
+                                onClick={_ => {
+                                    this.state.timerReadyToUse &&
+                                        this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
+                                }}
+                                className={buttonClassName}
+                            />
+                        </div>
+                    </div>
+                    {isSafari ? (
+                        <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
+                    ) : (
+                        <Scrollbars>
+                            <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
+                        </Scrollbars>
+                    )}
+                </div>
+                {!this.state.timerDurationValue ? (
+                    <div className="play mobile-play-button-large" />
+                ) : (
+                    <div className="mobile-info-block-current-going-task">
+                        <div className="mobile-info-block-current-going-task__time">
                             {this.state.timerDurationValue
                                 ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
                                 : '00:00:00'}
                         </div>
-                        {this.state.timerReadyToUse && (
-                            <div className="active_project">
-                                <span
-                                    className={`projects_modal_item_circle ${
-                                        this.state.seletedProject.projectColor.name
-                                    }`}
-                                />
-                                <span className="projects_modal_item_name">{this.state.seletedProject.name}</span>
-                            </div>
-                        )}
-                        <i className="folder" onClick={e => this.projectListToggle()}>
-                            {this.state.projectListIsOpen && (
-                                <div
-                                    className="projects_modal_wrapper"
-                                    ref={div => (this.projectListTargetElement = div)}
-                                >
-                                    <div
-                                        className="projects_modal_wrapper_header"
-                                        onClick={event => {
-                                            event.stopPropagation();
-                                        }}
-                                    >
-                                        <input
-                                            placeholder="Find..."
-                                            type="text"
-                                            ref={input => (this.projectSearchTextTargetElement = input)}
-                                            onKeyUp={e =>
-                                                this.findProjectByName(this.projectSearchTextTargetElement.value)
-                                            }
-                                            className="projects_modal_wrapper_search"
-                                        />
-                                    </div>
-                                    <div className="projects_modal_data_wrapper">
-                                        {this.state.projectListForModalWindow.map((item, index) => (
-                                            <div
-                                                key={'timer-project-' + index}
-                                                className="projects_modal_item"
-                                                onClick={e => this.setActiveProject(item)}
-                                            >
-                                                <div
-                                                    className={`projects_modal_item_circle ${item.projectColor.name}`}
-                                                />
-                                                <div className="projects_modal_item_name">{item.name}</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </i>
-                        <i
-                            onClick={_ => {
+                        <div className="mobile-info-block-current-going-task__name-task">
+                            {(this.issueTargetElement || {}).value || ''}
+                        </div>
+                        <div
+                            className="mobile-info-block-current-going-task__stop"
+                            onClick={event => {
                                 this.state.timerReadyToUse &&
                                     this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
                             }}
-                            className={buttonClassName}
-                        />
+                        >
+                            <span className="stop" />
+                        </div>
                     </div>
-                    <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
-                </div>
+                )}
             </div>
         );
     }
@@ -544,6 +613,7 @@ const mapStateToProps = store => {
         timeEntriesList: store.mainPageReducer.timeEntriesList,
         editedItem: store.mainPageReducer.editedItem,
         manualTimerModal: store.manualTimerModalReducer,
+        viewport: store.responsiveReducer.viewport,
     };
 };
 
