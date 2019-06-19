@@ -459,7 +459,7 @@ class MainPage extends Component {
             </div>
         ));
         return (
-            <div id="main_page" className="wrapper_main_page">
+            <div id="main_page" className="wrapper_main_page" style={{ height: viewport.height - 1 }}>
                 {viewport.width < 1024 && (
                     <header className="main-header">
                         <i className="main-header__small-logo" />
@@ -580,6 +580,29 @@ class MainPage extends Component {
                         </Scrollbars>
                     )}
                 </div>
+                {!this.state.timerDurationValue ? (
+                    <div className="play mobile-play-button-large" />
+                ) : (
+                    <div className="mobile-info-block-current-going-task">
+                        <div className="mobile-info-block-current-going-task__time">
+                            {this.state.timerDurationValue
+                                ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
+                                : '00:00:00'}
+                        </div>
+                        <div className="mobile-info-block-current-going-task__name-task">
+                            {(this.issueTargetElement || {}).value || ''}
+                        </div>
+                        <div
+                            className="mobile-info-block-current-going-task__stop"
+                            onClick={event => {
+                                this.state.timerReadyToUse &&
+                                    this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
+                            }}
+                        >
+                            <span className="stop" />
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
