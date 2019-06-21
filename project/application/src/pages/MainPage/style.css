@@ -5,6 +5,11 @@
 
 /* start header */
 
+.empty-block {
+    width: 100%;
+    min-height: 6rem;
+}
+
 .main-header {
     display: flex;
     position: relative;
@@ -67,7 +72,6 @@
 
 .time_tracker_wrapper {
     background: #4F4F4F;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
     margin: 0 0 1rem 0;
     padding: 1rem;
 }
@@ -87,11 +91,6 @@
     margin: 0 0 1rem 0;
 }
 
-.time_tracker_wrapper .header .allTime {
-    
-}
-
-
 .time_tracker_wrapper .ul {
     margin: 0 0 1rem 0;
     position: relative;
@@ -102,11 +101,72 @@
 }
 
 .time_tracker_wrapper .li {
+    position: relative;
+    background-color: #4F4F4F;
+    z-index: 2;
+    left: 0;
     display: flex;
     padding: .5rem;
     font-size: 1.4rem;
     line-height: 2rem;
+    transition: .3s linear left;
+}
+
+.swipe .li {
+    left: -50%;
+}
+
+.edit {
+    position: absolute;
+    display: flex;
     border-radius: 0.4rem;
+    right: 0;
+    top: 0;
+    z-index: 1;
+    height: 100%;
+    width: 50%;
+    border: 1px solid #4f4f4f;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: 1.4rem;
+}
+
+.edit .edit_swipe {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #F2994A;
+    width: 50%;
+    height: 100%;
+}
+
+.edit .delete_swipe {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #EB5757;
+    width: 50%;
+    height: 100%;
+}
+
+.edit .edit-icon-swipe {
+    background: url("../../images/icons/edit-task-swipe.svg") no-repeat center center;
+    width: 1.9rem;
+    height: 1.9rem;
+    background-size: 1.9rem;
+    margin: 0 0 .5rem 0;
+}
+
+.edit .delete-icon-swipe {
+    background: url("../../images/icons/delete-task-swipe.svg") no-repeat center center;
+    width: 1.8rem;
+    height: 2rem;
+    background-size: cover;
+    margin: 0 0 .5rem 0;
 }
 
 .time_tracker_wrapper .name_container {
@@ -119,10 +179,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-}
-
-.name_container .project_name {
-    
 }
 
 .time_container_history {
@@ -178,12 +234,6 @@
     display: block;
 }
 
-.wrapper_main_page .li:hover {
-    
-    background-color: #333333;
-}
-
-
 span.circle {
     display: inline-block;
     margin-right: 0.5rem;
@@ -209,11 +259,8 @@ span.circle {
     background-color: pink;
 }
 
-
-/*  */
 .add_task_container {
     display: none;
-    /* display: flex; */
     justify-content: center;
     align-items: center;
     padding: 1rem;
@@ -246,16 +293,13 @@ span.circle {
     color: #ffffff;
 }
 
-.add_task_container .time_container {
-
-}
-
 .projects_modal_item_circle {
     display: inline-block;
     width: 1.2rem;
     height: 1.2rem;
     border-radius: 50%;
     margin: 0 .5rem 0 0;
+    vertical-align: middle;
 }
 
 .add_task_container .active_project {
@@ -274,9 +318,10 @@ span.circle {
 
 .add_task_container .control_task_time_icons {
     display: block;
-    width: 4.7rem;
-    height: 4.7rem;
+    width: 3rem;
+    height: 3rem;
     cursor: pointer;
+    background-size: 3rem;
 }
 
 .play {
@@ -389,13 +434,6 @@ span.circle {
     color: #000000;
 }
 
-.projects_modal_item_circle {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-}
-
 .projects_modal_item:hover {
     background-color: #e0e0e0;
 }
@@ -404,11 +442,12 @@ span.circle {
 
 .mobile-play-button-large {
     position: absolute;
+    z-index: 8;
     cursor: pointer;
-    right: 1.5rem;
-    bottom: 4.5rem;
-    height: 6rem;
-    width: 6rem;
+    right: 2.5rem;
+    bottom: 1.5rem;
+    height: 5rem;
+    width: 5rem;
     background-size: cover;
     box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.25);
     border-radius: 50%;
@@ -416,7 +455,7 @@ span.circle {
 
 .mobile-info-block-current-going-task {
     position: relative;
-    padding: 1rem 7rem 2rem 2.4rem;
+    padding: 0 7rem 1rem 2.4rem;
     color: #FFFFFF;
 }
 
@@ -438,21 +477,177 @@ span.circle {
 .mobile-info-block-current-going-task__stop {
     position: absolute;
     right: 1.6rem;
-    top: calc(50% - (4.7rem / 2))
+    top: calc(50% - (4.7rem / 2) - 0.5rem)
 }
 
 .mobile-info-block-current-going-task .stop {
     display: block;
     height: 4.7rem;
     width: 4.7rem;
-    background-size: cover;
+    background-size: 4.7rem;
 }
 
+/*  start block add task mobile */
+
+.wrapper-add-task-mobile {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(89, 89, 89, 0.5);
+}
+
+.add-task-mobile {
+    position: absolute;
+    z-index: 99;
+    bottom: 0;
+    display: block;
+    width: 100%;
+    border-radius: 1rem 1rem 0 0;
+    background-color: #ffffff;
+    padding: 4rem 2rem 2rem 2rem;
+}
+
+.add-task-mobile__label-input {
+    margin: 0 0 1rem 0;
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+}
+
+.add-task-mobile .add_task {
+    margin-bottom: 1rem;
+}
+
+.add-task-mobile__wrapper-serach {
+    position: relative;
+    margin: 0 0 1rem 0;
+}
+
+.projects_modal_item_circle_search {
+    position: absolute;
+    left: 1rem;
+    bottom: calc(50% - (.7rem / 2));
+    display: inline-block;
+    height: 0.7rem;
+    width: 0.7rem;
+    border-radius: 50%;
+}
+
+.add-task-mobile .projects_modal_wrapper_search {
+    padding-left: 2rem;
+}
+
+.add-task-mobile .projects_modal_item_circle {
+    height: 0.7rem;
+    width: 0.7rem;
+    margin: 0 .5rem 0 0;
+}
+
+.add-task-mobile .active_project {
+    outline: none;
+    background-color: #ffffff;
+    border: 1px solid #BCBCBC;
+    border-radius: 4px;
+    padding: 1rem 2rem;
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    width: 100%;
+}
+
+.add-task-mobile .projects_modal_data_wrapper {
+    margin-bottom: 1rem;
+    width: 100%;
+    color: #000000;
+    border: 1px solid #BCBCBC;
+    border-radius: 4px;
+    max-height: 13rem;
+    overflow-y: auto
+}
+
+.add-task-mobile .projects_modal_item {
+    padding: 0.5rem;
+    border-bottom: 1px solid #BCBCBC;
+}
+
+.add-task-mobile .projects_modal_item:last-child {
+    padding: 0.5rem;
+    border-bottom: none;
+}
+
+.add-task-mobile input {
+    outline: none;
+    background-color: #ffffff;
+    border: 1px solid #BCBCBC;
+    border-radius: 4px;
+    padding: 1rem 2rem;
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    width: 100%;
+}
+
+.add-task-mobile .icon-close-mobile {
+    position: absolute;
+    background: url("../../images/icons/close.svg") center center no-repeat;
+    background-size: cover;
+    height: 2.2rem;
+    width: 2.2rem;
+    right: 1.5rem;
+    top: 1.5rem;
+    font-size: 2rem;
+}
+
+.add-task-mobile .add_task {
+    margin: 0 0 1rem 0;
+}
+
+
+.add-task-mobile .add-task-button-mobile {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: #27AE60;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 0.4rem;
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 1.6rem;
+}
+
+.add-task-mobile .add-task-button-mobile-play {
+    display: inline-block;
+    vertical-align: bottom;
+    margin: 0 0 0 1rem;
+    background: url(../../images/icons/white-arrow.svg) center center no-repeat;
+    width: 1.5rem;
+    height: 1.8rem;
+    background-size: cover;
+
+}
+
+/*  end block add task mobile */
 
 @media (min-width: 1024px) {
 
     .wrapper_main_page {
         flex-direction: row;
+    }
+    
+    .wrapper_main_page .li:hover {
+        border-radius: 0.4rem;
+        background-color: #333333;
+    }
+
+    .data_container {
+        padding: 0 56px;
     }
 
     .add_task_container {
@@ -460,6 +655,9 @@ span.circle {
         flex-wrap: nowrap;
         justify-content: center;
         align-items: center;
+        padding: 0.6rem 1rem;
+        margin: 0 0 26px 0;
+        min-height: 4rem;
     }
     
     .wrapper-timer-mobile {
@@ -471,15 +669,15 @@ span.circle {
     }
 
     .wrapper-timer-mobile .active_project {
-        margin: 0 1rem 0 0;
+        margin: 0 .5rem 0 0;
     }
 
     .wrapper-timer-mobile .folder {
-        margin: 0 1rem 0 0;
+        margin: 0 .5rem 0 0;
     }
 
     .wrapper-timer-mobile .time_container {
-        /* margin: 0 1rem 0 0; */
+        margin: 0 .5rem 0 0;
     }
     
     .add_task_container .add_task {
@@ -518,6 +716,10 @@ span.circle {
         font-size: 1.4rem;
     }
 
+    .time_tracker_wrapper {
+        margin: 0 0 26px 0;
+    }
+
     .time_tracker_wrapper .name_container {
         display: flex;
         flex-grow: 1;
@@ -551,6 +753,14 @@ span.circle {
     }
 
     .mobile-info-block-current-going-task {
+        display: none;
+    }
+
+    .add-task-mobile {
+        display: none;
+    }
+
+    .empty-block {
         display: none;
     }
 }
