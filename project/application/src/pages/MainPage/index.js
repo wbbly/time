@@ -397,6 +397,11 @@ class MainPage extends Component {
     }
 
     switchMenu = event => {
+        if (this.swipedElement) {
+            if (this.swipedElement.className === 'ul swipe') {
+                this.swipedElement.click();
+            }
+        }
         this.setState(state => ({
             isShowMenu: !state.isShowMenu,
         }));
@@ -406,13 +411,11 @@ class MainPage extends Component {
         event.persist();
         const { viewport } = this.props;
         let target = event.currentTarget;
-
         if (viewport.width >= 1024) return;
         if (event.target.tagName === 'I') return;
         if (this.swipedElement && this.swipedElement !== target) {
             this.swipedElement.className = 'ul';
         }
-
         target.className === 'ul' ? (target.className = 'ul swipe') : (target.className = 'ul');
         this.swipedElement = target;
     };
@@ -442,8 +445,9 @@ class MainPage extends Component {
                                 onClick={event => {
                                     event.stopPropagation();
                                     if (this.swipedElement) {
-                                        if (this.swipedElement.className === 'ul') return;
-                                        this.swipedElement.click();
+                                        if (this.swipedElement.className === 'ul swipe') {
+                                            this.swipedElement.click();
+                                        }
                                     }
                                     this.state.timerReadyToUse && this.timerContinue(item.issue, item);
                                 }}
@@ -471,6 +475,11 @@ class MainPage extends Component {
                         className="edit_swipe"
                         onClick={event => {
                             event.stopPropagation();
+                            if (this.swipedElement) {
+                                if (this.swipedElement.className === 'ul swipe') {
+                                    this.swipedElement.click();
+                                }
+                            }
                             this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
                             this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
                         }}
@@ -482,6 +491,11 @@ class MainPage extends Component {
                         className="delete_swipe"
                         onClick={event => {
                             event.stopPropagation();
+                            if (this.swipedElement) {
+                                if (this.swipedElement.className === 'ul swipe') {
+                                    this.swipedElement.click();
+                                }
+                            }
                             this.deleteTimeEntry(item);
                         }}
                     >
