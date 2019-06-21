@@ -421,6 +421,7 @@ class MainPage extends Component {
     };
 
     createTimeEntriesList(data) {
+        const { viewport } = this.props;
         let items = data.map((item, index) => (
             <div className="ul" key={'time-entries_' + item.startDatetime} onClick={this.toggleSwipe}>
                 <div className="li">
@@ -470,39 +471,41 @@ class MainPage extends Component {
                         />
                     </div>
                 </div>
-                <div className="edit">
-                    <div
-                        className="edit_swipe"
-                        onClick={event => {
-                            event.stopPropagation();
-                            if (this.swipedElement) {
-                                if (this.swipedElement.className === 'ul swipe') {
-                                    this.swipedElement.click();
+                {viewport.width < 1024 && (
+                    <div className="edit">
+                        <div
+                            className="edit_swipe"
+                            onClick={event => {
+                                event.stopPropagation();
+                                if (this.swipedElement) {
+                                    if (this.swipedElement.className === 'ul swipe') {
+                                        this.swipedElement.click();
+                                    }
                                 }
-                            }
-                            this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
-                            this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
-                        }}
-                    >
-                        <i className="edit-icon-swipe" />
-                        Edit task
-                    </div>
-                    <div
-                        className="delete_swipe"
-                        onClick={event => {
-                            event.stopPropagation();
-                            if (this.swipedElement) {
-                                if (this.swipedElement.className === 'ul swipe') {
-                                    this.swipedElement.click();
+                                this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
+                            }}
+                        >
+                            <i className="edit-icon-swipe" />
+                            Edit task
+                        </div>
+                        <div
+                            className="delete_swipe"
+                            onClick={event => {
+                                event.stopPropagation();
+                                if (this.swipedElement) {
+                                    if (this.swipedElement.className === 'ul swipe') {
+                                        this.swipedElement.click();
+                                    }
                                 }
-                            }
-                            this.deleteTimeEntry(item);
-                        }}
-                    >
-                        <i className="delete-icon-swipe" />
-                        Delete task
+                                this.deleteTimeEntry(item);
+                            }}
+                        >
+                            <i className="delete-icon-swipe" />
+                            Delete task
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         ));
 
@@ -733,29 +736,30 @@ class MainPage extends Component {
                                             />
                                         </div>
                                     </div>
-                                    {this.state.isShowListProjectsMobile && (
-                                        <div className="projects_modal_data_wrapper">
-                                            {this.state.projectListForModalWindow.map((item, index) => (
-                                                <div
-                                                    key={'timer-project-' + index}
-                                                    className="projects_modal_item"
-                                                    onClick={e => {
-                                                        e.stopPropagation();
-                                                        this.projectSearchTextTargetElement.value = item.name;
-                                                        this.setActiveProject(item);
-                                                        this.setState({ isShowListProjectsMobile: false });
-                                                    }}
-                                                >
+                                    {this.state.isShowListProjectsMobile &&
+                                        this.state.projectListForModalWindow.length && (
+                                            <div className="projects_modal_data_wrapper">
+                                                {this.state.projectListForModalWindow.map((item, index) => (
                                                     <div
-                                                        className={`projects_modal_item_circle ${
-                                                            item.projectColor.name
-                                                        }`}
-                                                    />
-                                                    <div className="projects_modal_item_name">{item.name}</div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
+                                                        key={'timer-project-' + index}
+                                                        className="projects_modal_item"
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            this.projectSearchTextTargetElement.value = item.name;
+                                                            this.setActiveProject(item);
+                                                            this.setState({ isShowListProjectsMobile: false });
+                                                        }}
+                                                    >
+                                                        <div
+                                                            className={`projects_modal_item_circle ${
+                                                                item.projectColor.name
+                                                            }`}
+                                                        />
+                                                        <div className="projects_modal_item_name">{item.name}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                 </div>
                                 {!this.state.isShowListProjectsMobile && (
                                     <button
