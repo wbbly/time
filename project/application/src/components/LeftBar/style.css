@@ -72,7 +72,6 @@ i {
     display: flex;
     align-items: center;
     justify-content: start;
-    width: 167px;
     height: 28px;
     padding-left: 21px;
     margin-bottom: 10px;
@@ -95,6 +94,7 @@ a {
 
 .logout_container {
     z-index: inherit;
+    cursor: pointer;
 }
 
 .logout_container div {

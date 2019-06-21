@@ -68,6 +68,7 @@
     flex-grow: 1;
     overflow-x: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .time_tracker_wrapper {
@@ -199,7 +200,7 @@
     display: block;
     margin: 0;
     font-size: 1.2rem;
-    line-height: 1.6rem;
+    /* line-height: 1.6rem; */
 }
 
 /* start old styles */
@@ -218,7 +219,7 @@
     height: 2rem;
     background: url("../../images/icons/cancel.svg") no-repeat center;
     cursor: pointer;
-    margin: 0 1rem 0 0;
+    /* margin: 0 1rem 0 0; */
 }
 
 .edit_button {
@@ -240,7 +241,7 @@ span.circle {
     margin-right: 0.5rem;
     width: 0.8rem;
     height: 0.8rem;
-    border: 1px solid white;
+    /* border: 1px solid white; */
     border-radius: 50%;
 }
 
@@ -402,7 +403,6 @@ span.circle {
     font-weight: normal;
     line-height: normal;
     font-size: 14px;
-
     color: #767676;
 }
 
@@ -644,7 +644,8 @@ span.circle {
     }
 
     .time_tracker_wrapper .li {
-        padding: 1rem .5rem;
+        /* padding: 1rem 1rem; */
+        padding: 1rem 1rem 1rem 1.5rem;
         font-size: 1.4rem;
         line-height: 2rem;
         transition: .3s linear left;
@@ -731,6 +732,7 @@ span.circle {
 
     .time_tracker_wrapper {
         margin: 0 0 26px 0;
+        padding: 1rem;
     }
 
     .time_tracker_wrapper .name_container {
