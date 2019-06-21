@@ -73,7 +73,7 @@
 .time_tracker_wrapper {
     background: #4F4F4F;
     margin: 0 0 1rem 0;
-    padding: 1rem;
+    padding: 1rem 0 0 1rem;
 }
 
 .time_tracker_wrapper:last-child {
@@ -92,7 +92,7 @@
 }
 
 .time_tracker_wrapper .ul {
-    margin: 0 0 1rem 0;
+    /* margin: 0 0 1rem 0; */
     position: relative;
 }
 
@@ -106,7 +106,7 @@
     z-index: 2;
     left: 0;
     display: flex;
-    padding: .5rem;
+    padding: 1rem 2rem 1rem 1rem ;
     font-size: 1.4rem;
     line-height: 2rem;
     transition: .3s linear left;
@@ -636,6 +636,18 @@ span.circle {
 /*  end block add task mobile */
 
 @media (min-width: 1024px) {
+
+    .time_tracker_wrapper .ul {
+        margin: 0 0 1rem 0;
+        /* position: relative; */
+    }
+
+    .time_tracker_wrapper .li {
+        padding: 1rem .5rem;
+        font-size: 1.4rem;
+        line-height: 2rem;
+        transition: .3s linear left;
+    }
 
     .wrapper_main_page {
         flex-direction: row;

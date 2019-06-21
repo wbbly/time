@@ -6,7 +6,7 @@
 .wrapper {
     display: flex;
     flex-direction: column;
-    padding: 34px 0 5rem 0;
+    padding: 34px 0 7rem 0;
     height: inherit;
     background-color: #3b3b3b;
     box-shadow: 6px 0 20px rgba(0, 0, 0, 0.14);
