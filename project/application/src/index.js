@@ -35,7 +35,9 @@ const addEvent = (object, type, callback) => {
 let mobileSupportToastr;
 const mobileSupportToastrText = 'We were sorry! Wobbly not yet support mobile, but it should be done soon!';
 const showMobileSupportToastr = () => {
-    if (window.innerWidth <= 800) {
+    const { pathname } = window.location;
+    const arrayOfResponsiveRoutes = ['/timer', '/register', '/login', '/'];
+    if (window.innerWidth <= 1024 && arrayOfResponsiveRoutes.indexOf(pathname) === -1) {
         if (!mobileSupportToastr) {
             mobileSupportToastr = toast(mobileSupportToastrText, {
                 position: 'top-right',

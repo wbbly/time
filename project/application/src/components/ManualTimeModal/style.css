@@ -13,7 +13,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    z-index: 10;
 }
 
 .manual_time_modal_container {
@@ -122,7 +122,7 @@ input[type="time"],
     top: 50%;
 }
 
-.manual_time_modal_container .project_select_edit_modal i {
+.manual_time_modal_container .arrow_list_mobile {
     background: url("../../images/Polygon.svg") no-repeat center;
     position: absolute;
     top: 50%;
@@ -142,6 +142,7 @@ input[type="time"],
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
     overflow-y: scroll;
     z-index: 3;
+    color: #000000;
 }
 
 .manual_time_modal_container .projects_list .item_select_wrapper:hover .issue_name,
@@ -214,3 +215,186 @@ i.clock {
 .manual_timer_modal_timepickers_container .date_time input {
     border: 0;
 }
+
+/* START MOBILE STYLES */
+
+.manual_time_modal_wrapper--mobile {
+    color: black;
+}
+
+.manual_time_modal_wrapper--mobile .manual_time_modal_background {
+    align-items: flex-end;
+    
+}
+
+.manual_time_modal_wrapper--mobile .manual_time_modal_container {
+    width: 100%;
+
+    position: relative;
+    border-radius: 1rem 1rem 0 0;
+    background-color: #ffffff;
+    padding: 4rem 2rem 2rem 2rem;
+}
+
+.manual_time_modal_wrapper--mobile .create_projects_modal_header_close {
+    position: absolute;
+    background: url(/static/media/close.40ca4b83.svg) center center no-repeat;
+    background-size: cover;
+    height: 2.2rem;
+    width: 2.2rem;
+    right: 1.5rem;
+    top: 1.5rem;
+    left: auto;
+    font-size: 2rem;
+}
+
+.manual_time_modal_wrapper--mobile .task_name_edit_block {
+    margin: 0 0 1rem 0;
+}
+
+.manual_time_modal_wrapper--mobile span {
+    margin: 0 0 1rem 0;
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+    display: block;
+}
+
+.manual_time_modal_wrapper--mobile .issue_edit_modal {
+    outline: none;
+    background-color: #ffffff;
+    border: 1px solid #BCBCBC;
+    border-radius: 4px;
+    padding: 1rem 2rem;
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    width: 100%;
+    height: auto;
+}
+.manual_time_modal_wrapper--mobile .issue_edit_modal:hover {
+    border: 1px solid #BCBCBC;
+}
+
+.manual_time_modal_wrapper--mobile .project_select_edit_modal {
+
+}
+
+.manual_time_modal_wrapper--mobile .wrapper-input-block-mobile {
+    position: relative;
+    margin: 0 0 1rem 0;
+}
+
+.manual_time_modal_wrapper--mobile .project_select_edit_modal span {
+ 
+}
+
+.manual_time_modal_wrapper--mobile .project_select_edit_modal input {
+    outline: none;
+    background-color: #ffffff;
+    border: 1px solid #BCBCBC;
+    border-radius: 4px;
+    padding: 1rem 2rem;
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    width: 100%;
+    height: auto;
+
+    position: relative;
+    
+}
+
+.manual_time_modal_wrapper--mobile .wrapper-input-block-mobile .circle {
+    position: absolute;
+    left: 1rem;
+    bottom: calc(50% - (.7rem / 2));
+    display: inline-block;
+    height: 0.7rem;
+    width: 0.7rem;
+    border-radius: 50%;
+    right: auto;
+    top: auto;
+}
+
+.manual_time_modal_wrapper--mobile .arrow_list_mobile {
+    background: url(/static/media/Polygon.870fbb88.svg) no-repeat center;
+    position: absolute;
+    top: calc(50% - (.7rem / 2));
+    right: 1rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+    background-size: 1rem;
+    fill: #000;
+}
+
+.manual_time_modal_wrapper--mobile .projects_list {
+    position: static;
+    max-height: 13rem;
+    background-color: white;
+    box-shadow: none;
+    z-index: 3;
+
+    margin: 0 0 1rem 0;
+    width: 100%;
+    color: #000000;
+    border: 1px solid #BCBCBC;
+    border-radius: 4px;
+    overflow-y: auto;
+}
+
+.manual_time_modal_wrapper--mobile .item_select_wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-end;
+    height: 56px;
+    margin-top: 0;
+    border-radius: 4px;
+    padding: 0 24px;
+    cursor: pointer;
+
+    padding: 0.5rem;
+    border-bottom: 1px solid #BCBCBC;
+
+    height: 3.2rem;
+}
+
+.manual_time_modal_wrapper--mobile .issue_name {
+    
+}
+
+.manual_time_modal_wrapper--mobile .circle  {
+    position: static;
+    height: 0.7rem;
+    width: 0.7rem;
+    margin: 0 .5rem 0 0;
+
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+
+.manual_time_modal_wrapper--mobile .manual_timer_modal_button_container {
+    width: 100%;
+    margin: 0;
+}
+
+.manual_time_modal_wrapper--mobile .manual_timer_modal_button_container button {
+    display: block;
+    margin: 0;
+    width: 100%;
+    padding: 1rem;
+    background-color: #27AE60;
+    color: #ffffff;
+    border-radius: 0.4rem;
+}
+
+/* END MOBILE STYLES */

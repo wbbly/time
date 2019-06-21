@@ -21,7 +21,7 @@ import LeftBar from '../../components/LeftBar';
 import ManualTimeModal from '../../components/ManualTimeModal';
 import { slide as Menu } from 'react-burger-menu';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { isSafari } from 'react-device-detect';
+import { isSafari, isAndroid } from 'react-device-detect';
 
 // Actions
 import addTasks from '../../actions/MainPageAction';
@@ -64,6 +64,8 @@ class MainPage extends Component {
         projectListInitial: [],
         projectListIsOpen: false,
         isShowMenu: false,
+        isShowAddTaskMobile: false,
+        isShowListProjectsMobile: false,
     };
 
     initSocketConnection() {
@@ -162,6 +164,7 @@ class MainPage extends Component {
             () => this.setState({ timerDurationValue: getTimeDiff(this.state.timerStartTime) }),
             this.ONE_SECOND_PERIOD
         );
+        this.setState({ isShowAddTaskMobile: false });
     }
 
     timerUpdate() {
@@ -399,9 +402,24 @@ class MainPage extends Component {
         }));
     };
 
+    toggleSwipe = event => {
+        event.persist();
+        const { viewport } = this.props;
+        let target = event.currentTarget;
+
+        if (viewport.width >= 1024) return;
+        if (event.target.tagName === 'I') return;
+        if (this.swipedElement && this.swipedElement !== target) {
+            this.swipedElement.className = 'ul';
+        }
+
+        target.className === 'ul' ? (target.className = 'ul swipe') : (target.className = 'ul');
+        this.swipedElement = target;
+    };
+
     createTimeEntriesList(data) {
         let items = data.map((item, index) => (
-            <div className="ul" key={'time-entries_' + index}>
+            <div className="ul" key={'time-entries_' + item.startDatetime} onClick={this.toggleSwipe}>
                 <div className="li">
                     <div className="name_container">
                         <div className="name">{item.issue}</div>
@@ -421,19 +439,54 @@ class MainPage extends Component {
                         {!this.state.timerDurationValue && (
                             <i
                                 className="small_play item_button"
-                                onClick={e => {
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    if (this.swipedElement) {
+                                        if (this.swipedElement.className === 'ul') return;
+                                        this.swipedElement.click();
+                                    }
                                     this.state.timerReadyToUse && this.timerContinue(item.issue, item);
                                 }}
                             />
                         )}
                         <i
                             className="edit_button item_button"
-                            onClick={e => {
+                            onClick={event => {
+                                event.stopPropagation();
                                 this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
                                 this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
                             }}
                         />
-                        <i className="cancel item_button" onClick={e => this.deleteTimeEntry(item)} />
+                        <i
+                            className="cancel item_button"
+                            onClick={event => {
+                                event.stopPropagation();
+                                this.deleteTimeEntry(item);
+                            }}
+                        />
+                    </div>
+                </div>
+                <div className="edit">
+                    <div
+                        className="edit_swipe"
+                        onClick={event => {
+                            event.stopPropagation();
+                            this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                            this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
+                        }}
+                    >
+                        <i className="edit-icon-swipe" />
+                        Edit task
+                    </div>
+                    <div
+                        className="delete_swipe"
+                        onClick={event => {
+                            event.stopPropagation();
+                            this.deleteTimeEntry(item);
+                        }}
+                    >
+                        <i className="delete-icon-swipe" />
+                        Delete task
                     </div>
                 </div>
             </div>
@@ -486,7 +539,6 @@ class MainPage extends Component {
                         left={true}
                         width={'100%'}
                         isOpen={isShowMenu}
-                        // burgerButtonClassName={'main-header__show-menu-button'}
                     >
                         <LeftBar viewport={viewport} switchMenu={this.switchMenu} />
                     </Menu>
@@ -572,16 +624,29 @@ class MainPage extends Component {
                             />
                         </div>
                     </div>
-                    {isSafari ? (
-                        <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
+                    {isSafari || isAndroid ? (
+                        <div className="main_wrapper_tracker_items">
+                            {timeTrackerWrapperItems}
+                            {!this.state.timerDurationValue && <div className="empty-block" />}
+                        </div>
                     ) : (
                         <Scrollbars>
-                            <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
+                            <div className="main_wrapper_tracker_items">
+                                {timeTrackerWrapperItems}
+                                {!this.state.timerDurationValue && <div className="empty-block" />}
+                            </div>
                         </Scrollbars>
                     )}
                 </div>
+
+                {/* START BLOCK BUTTON PLAY AND STATUS CURRENT TASK MOBILE */}
                 {!this.state.timerDurationValue ? (
-                    <div className="play mobile-play-button-large" />
+                    !this.state.isShowAddTaskMobile && (
+                        <div
+                            className="play mobile-play-button-large"
+                            onClick={event => this.setState({ isShowAddTaskMobile: true })}
+                        />
+                    )
                 ) : (
                     <div className="mobile-info-block-current-going-task">
                         <div className="mobile-info-block-current-going-task__time">
@@ -595,6 +660,7 @@ class MainPage extends Component {
                         <div
                             className="mobile-info-block-current-going-task__stop"
                             onClick={event => {
+                                this.setState({ isShowAddTaskMobile: false });
                                 this.state.timerReadyToUse &&
                                     this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
                             }}
@@ -603,6 +669,99 @@ class MainPage extends Component {
                         </div>
                     </div>
                 )}
+                {/* END BLOCK BUTTON PLAY AND STATUS CURRENT TASK MOBILE */}
+
+                {/* START BLOCK ADD TASK MOBILE */}
+                {!this.state.timerDurationValue &&
+                    this.state.isShowAddTaskMobile && (
+                        <div className="wrapper-add-task-mobile">
+                            <div className="add-task-mobile">
+                                <div
+                                    className="icon-close-mobile"
+                                    onClick={event => this.setState({ isShowAddTaskMobile: false })}
+                                />
+                                <div className="add-task-mobile__label-input">Task name</div>
+                                <input
+                                    type="text"
+                                    className="add_task"
+                                    placeholder="Add your task name"
+                                    onChange={event => (this.issueTargetElement.value = event.target.value)}
+                                    onKeyUp={e => this.timerUpdate()}
+                                />
+                                <div
+                                    className="projects_modal_wrapper"
+                                    ref={div => (this.projectListTargetElement = div)}
+                                >
+                                    <div
+                                        className="projects_modal_wrapper_header"
+                                        onClick={event => {
+                                            event.stopPropagation();
+                                        }}
+                                    >
+                                        <div className="add-task-mobile__label-input">Search project</div>
+                                        <div className="add-task-mobile__wrapper-serach">
+                                            <input
+                                                placeholder="Find..."
+                                                type="text"
+                                                ref={input => (this.projectSearchTextTargetElement = input)}
+                                                defaultValue={this.state.seletedProject.name}
+                                                onKeyUp={e => {
+                                                    this.projectSearchTextTargetElement.value = e.target.value;
+                                                    this.findProjectByName(this.projectSearchTextTargetElement.value);
+                                                }}
+                                                onFocus={event => this.setState({ isShowListProjectsMobile: true })}
+                                                className="projects_modal_wrapper_search"
+                                            />
+                                            <span
+                                                className={`projects_modal_item_circle_search ${
+                                                    this.state.seletedProject.projectColor.name
+                                                }`}
+                                            />
+                                        </div>
+                                    </div>
+                                    {this.state.isShowListProjectsMobile && (
+                                        <div className="projects_modal_data_wrapper">
+                                            {this.state.projectListForModalWindow.map((item, index) => (
+                                                <div
+                                                    key={'timer-project-' + index}
+                                                    className="projects_modal_item"
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        this.projectSearchTextTargetElement.value = item.name;
+                                                        this.setActiveProject(item);
+                                                        this.setState({ isShowListProjectsMobile: false });
+                                                    }}
+                                                >
+                                                    <div
+                                                        className={`projects_modal_item_circle ${
+                                                            item.projectColor.name
+                                                        }`}
+                                                    />
+                                                    <div className="projects_modal_item_name">{item.name}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                                {!this.state.isShowListProjectsMobile && (
+                                    <button
+                                        className="add-task-button-mobile"
+                                        onClick={_ => {
+                                            this.state.timerReadyToUse &&
+                                                this.timerPlayStopButtonAction(
+                                                    buttonClassName,
+                                                    this.state.seletedProject.id
+                                                );
+                                        }}
+                                    >
+                                        Start timer
+                                        <span className="add-task-button-mobile-play" />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                {/* END BLOCK ADD TASK MOBILE */}
             </div>
         );
     }

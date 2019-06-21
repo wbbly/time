@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // Services
 import { apiCall } from '../../services/apiService';
@@ -80,7 +81,6 @@ class RegisterPage extends Component {
     onChangeHandler = event => {
         const { name, value } = event.target;
         this.setState(prevState => ({
-            ...prevState,
             inputs: {
                 ...prevState.inputs,
                 [name]: {
@@ -94,8 +94,16 @@ class RegisterPage extends Component {
     onSubmitHandler = event => {
         event.preventDefault();
         const { inputs } = this.state;
-        const userData = Object.keys(inputs).reduce((acc, curr) => ({ ...acc, [curr]: inputs[curr].value }), {});
-        if (userData.confirmPassword !== userData.password) return;
+        const userData = Object.keys(inputs).reduce((acc, curr) => {
+            if (curr === 'email') {
+                return { ...acc, [curr]: inputs[curr].value.toLowerCase() };
+            }
+            return { ...acc, [curr]: inputs[curr].value };
+        }, {});
+        if (userData.confirmPassword !== userData.password) {
+            alert('Wrong confirm password value');
+            return;
+        }
         this.addUser(userData);
     };
 
@@ -105,28 +113,48 @@ class RegisterPage extends Component {
     };
 
     render() {
-        const { inputs } = this.state;
+        const { email, password, confirmPassword } = this.state.inputs;
+        const { viewport } = this.props;
         return (
-            <div className="register-block">
+            <div className="register-block" style={{ height: viewport.height }}>
                 <i className="register-block__logo" />
                 <form className="register-block__form" onSubmit={this.onSubmitHandler}>
-                    {Object.keys(inputs).map(elem => {
-                        const { value, label, type, placeholder, name, required } = inputs[elem];
-                        return (
-                            <label className="register-block__label" key={elem}>
-                                {label}
-                                <input
-                                    className="register-block__input"
-                                    onChange={this.onChangeHandler}
-                                    name={name}
-                                    value={value}
-                                    type={type}
-                                    placeholder={placeholder}
-                                    required={required}
-                                />
-                            </label>
-                        );
-                    })}
+                    <label className="register-block__label">
+                        {email.label}
+                        <input
+                            className="register-block__input"
+                            onChange={this.onChangeHandler}
+                            name={email.name}
+                            value={email.value}
+                            type={email.type}
+                            placeholder={email.placeholder}
+                            required={email.required}
+                        />
+                    </label>
+                    <label className="register-block__label">
+                        {password.label}
+                        <input
+                            className="register-block__input"
+                            onChange={this.onChangeHandler}
+                            name={password.name}
+                            value={password.value}
+                            type={password.type}
+                            placeholder={password.placeholder}
+                            required={password.required}
+                        />
+                    </label>
+                    <label className="register-block__label">
+                        {confirmPassword.label}
+                        <input
+                            className="register-block__input"
+                            onChange={this.onChangeHandler}
+                            name={confirmPassword.name}
+                            value={confirmPassword.value}
+                            type={confirmPassword.type}
+                            placeholder={confirmPassword.placeholder}
+                            required={confirmPassword.required}
+                        />
+                    </label>
                     <button className="register-block__button register-block__button--submit" type="submit">
                         Register
                     </button>
@@ -149,4 +177,8 @@ class RegisterPage extends Component {
     }
 }
 
-export default RegisterPage;
+const mapStateToProps = state => ({
+    viewport: state.responsiveReducer.viewport,
+});
+
+export default connect(mapStateToProps)(RegisterPage);

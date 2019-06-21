@@ -5,7 +5,7 @@
 
 @font-face {
     font-family: 'Roboto', sans-serif;
-    src: url('https://fonts.googleapis.com/css?family=Roboto:700&display=swap');
+    src: url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
 }
 
 *,
@@ -19,8 +19,6 @@
     font-weight: 400;
     line-height: normal;
     font-size: 1.4rem;
-    
-    min-height: 100vh;
     background-color: #3b3b3b;
     display: flex;
     flex-direction: column;
