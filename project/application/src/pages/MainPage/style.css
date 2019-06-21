@@ -84,6 +84,7 @@
     display: flex;
     justify-content: space-between;
     color: #B8B8B8;
+    padding: 0 1rem 0 0;
 }
 
 .time_tracker_wrapper .header .date {
