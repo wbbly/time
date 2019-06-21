@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Grid from '@material-ui/core/Grid';
@@ -167,8 +168,10 @@ class ManualTimeModal extends Component {
 
     render() {
         const { startDate, startTime, endDate, endTime } = this.state;
+        const { viewport } = this.props;
+
         return (
-            <div className="manual_time_modal_wrapper">
+            <div className={viewport.width >= 1024 ? 'manual_time_modal_wrapper' : 'manual_time_modal_wrapper--mobile'}>
                 <div className="manual_time_modal_background">
                     <div className="manual_time_modal_container">
                         <i
@@ -177,7 +180,7 @@ class ManualTimeModal extends Component {
                                 this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
                             }}
                         />
-                        <div>
+                        <div className="task_name_edit_block">
                             <span>Task name:</span>
                             <input
                                 type="text"
@@ -187,63 +190,82 @@ class ManualTimeModal extends Component {
                         </div>
                         <div className="project_select_edit_modal">
                             <span>Project:</span>
-                            <input
-                                type="text"
-                                readOnly
-                                ref={input => (this.inputTaskName = input)}
-                                onClick={e => {
-                                    this.toggleProjectsBar();
-                                    document.addEventListener('click', this.closeDropdown);
-                                }}
-                            />
-                            <div className={`circle main_circle ${this.state.activeProject.projectColor.name}`} />
-                            <i />
-                            <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
+                            <div className="wrapper-input-block-mobile">
+                                <input
+                                    type="text"
+                                    readOnly
+                                    ref={input => (this.inputTaskName = input)}
+                                    onClick={e => {
+                                        this.toggleProjectsBar();
+                                        document.addEventListener('click', this.closeDropdown);
+                                    }}
+                                />
+                                <div className={`circle main_circle ${this.state.activeProject.projectColor.name}`} />
+                                <i className="arrow_list_mobile" />
+                            </div>
+                            {this.state.selectProject && (
+                                <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
+                            )}
                         </div>
-                        <div className="manual_timer_modal_timepickers_container">
-                            <div className="margin_12">
-                                <span> Time start:</span>
-                                <div className="date_time">
-                                    <i className="calendar" />
-                                    <i className="clock" />
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                                        <Grid container justify="space-between">
-                                            <DatePicker
-                                                value={startDate}
-                                                onChange={this.onChangeDate}
-                                                format={'dd.MM.yyyy'}
-                                            />
-                                            <TimePicker value={startTime} onChange={this.onChangeTime} />
-                                        </Grid>
-                                    </MuiPickersUtilsProvider>
+                        {viewport.width >= 1024 && (
+                            <div className="manual_timer_modal_timepickers_container">
+                                <div className="margin_12">
+                                    <span> Time start:</span>
+                                    <div className="date_time">
+                                        <i className="calendar" />
+                                        <i className="clock" />
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                            <Grid container justify="space-between">
+                                                <DatePicker
+                                                    value={startDate}
+                                                    onChange={this.onChangeDate}
+                                                    format={'dd.MM.yyyy'}
+                                                />
+                                                <TimePicker value={startTime} onChange={this.onChangeTime} />
+                                            </Grid>
+                                        </MuiPickersUtilsProvider>
+                                    </div>
+                                </div>
+                                <div className="margin_12">
+                                    <span>Time end:</span>
+                                    <div className="date_time">
+                                        <i className="calendar" />
+                                        <i className="clock" />
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                            <Grid container justify="space-between">
+                                                <DatePicker
+                                                    value={endDate}
+                                                    onChange={this.onChangeDateEnd}
+                                                    format={'dd.MM.yyyy'}
+                                                />
+                                                <TimePicker value={endTime} onChange={this.onChangeTimeEnd} />
+                                            </Grid>
+                                        </MuiPickersUtilsProvider>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="margin_12">
-                                <span>Time end:</span>
-                                <div className="date_time">
-                                    <i className="calendar" />
-                                    <i className="clock" />
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                                        <Grid container justify="space-between">
-                                            <DatePicker
-                                                value={endDate}
-                                                onChange={this.onChangeDateEnd}
-                                                format={'dd.MM.yyyy'}
-                                            />
-                                            <TimePicker value={endTime} onChange={this.onChangeTimeEnd} />
-                                        </Grid>
-                                    </MuiPickersUtilsProvider>
+                        )}
+                        {this.props.viewport.width < 1024 ? (
+                            !this.state.selectProject && (
+                                <div className="manual_timer_modal_button_container">
+                                    <button
+                                        className="create_projects_modal_button_container_button manual_time_button"
+                                        onClick={e => this.changeData()}
+                                    >
+                                        Change
+                                    </button>
                                 </div>
+                            )
+                        ) : (
+                            <div className="manual_timer_modal_button_container">
+                                <button
+                                    className="create_projects_modal_button_container_button manual_time_button"
+                                    onClick={e => this.changeData()}
+                                >
+                                    Change
+                                </button>
                             </div>
-                        </div>
-                        <div className="manual_timer_modal_button_container">
-                            <button
-                                className="create_projects_modal_button_container_button manual_time_button"
-                                onClick={e => this.changeData()}
-                            >
-                                Change
-                            </button>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -265,4 +287,8 @@ class ManualTimeModal extends Component {
     }
 }
 
-export default ManualTimeModal;
+const mapStateToProps = store => ({
+    viewport: store.responsiveReducer.viewport,
+});
+
+export default connect(mapStateToProps)(ManualTimeModal);
