@@ -8,6 +8,8 @@ import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 
+import { showMobileSupportToastr } from '../../App';
+
 // Services
 import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
@@ -457,6 +459,7 @@ class ReportsPage extends Component {
     }
 
     componentDidMount() {
+        showMobileSupportToastr();
         this.setState({ selectionRange: this.props.timeRange });
         apiCall(AppConfig.apiURL + `user/list`, {
             method: 'GET',
