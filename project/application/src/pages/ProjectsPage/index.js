@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { showMobileSupportToastr } from '../../App';
+
 // Services
 import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
@@ -100,7 +102,9 @@ class ProjectsPage extends Component {
     }
 
     componentDidMount() {
+        console.log('didmount');
         this.getProjects();
+        showMobileSupportToastr();
     }
 }
 

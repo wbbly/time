@@ -3,6 +3,8 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 
+import { showMobileSupportToastr } from '../../App';
+
 // Services
 import {
     getTimeDurationByGivenTimestamp,
@@ -95,6 +97,7 @@ class ReportsByProjectsPage extends Component {
     }
 
     componentDidMount() {
+        showMobileSupportToastr();
         let { userEmails } = this.props.match.params;
         userEmails = userEmails.indexOf('all') > -1 ? '' : userEmails;
         const userEmailsList = userEmails.length ? userEmails.split(',') : [];

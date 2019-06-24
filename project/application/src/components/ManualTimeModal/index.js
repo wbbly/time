@@ -168,7 +168,7 @@ class ManualTimeModal extends Component {
 
     render() {
         const { startDate, startTime, endDate, endTime } = this.state;
-        const { viewport } = this.props;
+        const { viewport, manualTimerModalAction } = this.props;
 
         return (
             <div className={viewport.width >= 1024 ? 'manual_time_modal_wrapper' : 'manual_time_modal_wrapper--mobile'}>
@@ -207,13 +207,13 @@ class ManualTimeModal extends Component {
                                 <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
                             )}
                         </div>
-                        {viewport.width >= 1024 && (
-                            <div className="manual_timer_modal_timepickers_container">
-                                <div className="margin_12">
-                                    <span> Time start:</span>
-                                    <div className="date_time">
-                                        <i className="calendar" />
-                                        <i className="clock" />
+                        <div className="manual_timer_modal_timepickers_container">
+                            <div className="margin_12">
+                                <span> Time start:</span>
+                                <div className="date_time">
+                                    {viewport.width >= 1024 && <i className="calendar" />}
+                                    <i className="clock" />
+                                    {viewport.width >= 1024 ? (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <Grid container justify="space-between">
                                                 <DatePicker
@@ -221,16 +221,23 @@ class ManualTimeModal extends Component {
                                                     onChange={this.onChangeDate}
                                                     format={'dd.MM.yyyy'}
                                                 />
+
                                                 <TimePicker value={startTime} onChange={this.onChangeTime} />
                                             </Grid>
                                         </MuiPickersUtilsProvider>
-                                    </div>
+                                    ) : (
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                            <TimePicker value={startTime} onChange={this.onChangeTime} />
+                                        </MuiPickersUtilsProvider>
+                                    )}
                                 </div>
-                                <div className="margin_12">
-                                    <span>Time end:</span>
-                                    <div className="date_time">
-                                        <i className="calendar" />
-                                        <i className="clock" />
+                            </div>
+                            <div className="margin_12">
+                                <span>Time end:</span>
+                                <div className="date_time">
+                                    {viewport.width >= 1024 && <i className="calendar" />}
+                                    <i className="clock" />
+                                    {viewport.width >= 1024 ? (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <Grid container justify="space-between">
                                                 <DatePicker
@@ -238,13 +245,18 @@ class ManualTimeModal extends Component {
                                                     onChange={this.onChangeDateEnd}
                                                     format={'dd.MM.yyyy'}
                                                 />
+
                                                 <TimePicker value={endTime} onChange={this.onChangeTimeEnd} />
                                             </Grid>
                                         </MuiPickersUtilsProvider>
-                                    </div>
+                                    ) : (
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                            <TimePicker value={endTime} onChange={this.onChangeTimeEnd} />
+                                        </MuiPickersUtilsProvider>
+                                    )}
                                 </div>
                             </div>
-                        )}
+                        </div>
                         {this.props.viewport.width < 1024 ? (
                             !this.state.selectProject && (
                                 <div className="manual_timer_modal_button_container">

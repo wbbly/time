@@ -82,7 +82,7 @@ class AuthPage extends Component {
         logoutByUnauthorized(false);
 
         return (
-            <div className="wrapper_authorisation_page" style={{ height: viewport.height }}>
+            <div className="wrapper_authorisation_page" style={{ height: viewport.height - 1 }}>
                 {this.props.authPageReducer && <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />}
                 <i className="page_title" />
                 <div className="authorisation_window">
