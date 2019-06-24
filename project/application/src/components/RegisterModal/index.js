@@ -21,6 +21,12 @@ class RegisterModal extends Component {
     };
 
     addUser = (email, password, userName) => {
+        if (email.indexOf('@') === -1) {
+            alert('you add wrong email,check it please');
+
+            return
+        }
+
         apiCall(
             AppConfig.apiURL + 'user/register',
             {
