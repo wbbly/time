@@ -147,6 +147,7 @@ class MainPage extends Component {
                 }
             });
         } else {
+            clearInterval(this.clickInterval);
             alert(
                 `Please input task name before ${
                     className === 'control_task_time_icons play' ? 'starting' : 'stopping'
@@ -634,8 +635,14 @@ class MainPage extends Component {
                             </div>
                             <i
                                 onClick={_ => {
-                                    this.state.timerReadyToUse &&
+                                    if (!this.state.timerReadyToUse) return;
+                                    this.clickInterval = setInterval(() => {
+                                        if (this.state.timerDurationValue) {
+                                            clearInterval(this.clickInterval);
+                                            return;
+                                        }
                                         this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
+                                    }, 100);
                                 }}
                                 className={buttonClassName}
                             />
@@ -765,11 +772,17 @@ class MainPage extends Component {
                                     <button
                                         className="add-task-button-mobile"
                                         onClick={_ => {
-                                            this.state.timerReadyToUse &&
+                                            if (!this.state.timerReadyToUse) return;
+                                            this.clickInterval = setInterval(() => {
+                                                if (this.state.timerDurationValue) {
+                                                    clearInterval(this.clickInterval);
+                                                    return;
+                                                }
                                                 this.timerPlayStopButtonAction(
                                                     buttonClassName,
                                                     this.state.seletedProject.id
                                                 );
+                                            }, 100);
                                         }}
                                     >
                                         Start timer
