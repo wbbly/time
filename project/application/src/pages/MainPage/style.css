@@ -491,6 +491,7 @@ span.circle {
 /*  start block add task mobile */
 
 .wrapper-add-task-mobile {
+    visibility: hidden;
     position: fixed;
     z-index: 2;
     top: 0;
@@ -498,6 +499,12 @@ span.circle {
     bottom: 0;
     left: 0;
     background-color: rgba(89, 89, 89, 0.5);
+
+}
+
+.wrapper-add-task-mobile--show {
+    visibility: visible;
+    animation: .3s slowVisibility;
 }
 
 .add-task-mobile {
@@ -566,17 +573,19 @@ span.circle {
     color: #000000;
     border: 1px solid #BCBCBC;
     border-radius: 4px;
-    max-height: 13rem;
+    max-height: 14.56rem;
     overflow-y: auto
 }
 
 .add-task-mobile .projects_modal_item {
-    padding: 0.5rem;
+    padding: 1.05rem 1rem;
+    line-height: 1.5rem;
+    height: auto;
     border-bottom: 1px solid #BCBCBC;
 }
 
 .add-task-mobile .projects_modal_item:last-child {
-    padding: 0.5rem;
+    /* padding: 1.05rem 1rem; */
     border-bottom: none;
 }
 
@@ -672,6 +681,7 @@ span.circle {
         padding: 0.6rem 1rem;
         margin: 0 0 26px 0;
         min-height: 4rem;
+        font-size: 1.6rem;
     }
     
     .wrapper-timer-mobile {
@@ -692,6 +702,7 @@ span.circle {
 
     .wrapper-timer-mobile .time_container {
         margin: 0 .5rem 0 0;
+        font-size: 1.6rem;
     }
     
     .add_task_container .add_task {

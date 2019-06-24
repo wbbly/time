@@ -218,8 +218,37 @@ i.clock {
 
 /* START MOBILE STYLES */
 
+@keyframes slowVisibility {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 .manual_time_modal_wrapper--mobile {
+    overflow: auto;
+    width: 100%;
+    position: relative;
+    z-index: 99;
     color: black;
+    animation: .3s slowVisibility;
+}
+
+.manual_time_modal_wrapper--mobile .date_time {
+    width: 100%;
+}
+
+.manual_time_modal_wrapper--mobile i.clock {
+    position: static;
+    margin-right: 2rem;
+}
+
+.manual_time_modal_wrapper--mobile .MuiInputBase-input-125 {
+    position: static;
+    height: auto;
 }
 
 .manual_time_modal_wrapper--mobile .manual_time_modal_background {
@@ -337,7 +366,7 @@ i.clock {
 
 .manual_time_modal_wrapper--mobile .projects_list {
     position: static;
-    max-height: 13rem;
+    max-height: 14.56rem;
     background-color: white;
     box-shadow: none;
     z-index: 3;
@@ -355,16 +384,20 @@ i.clock {
     flex-direction: row-reverse;
     align-items: center;
     justify-content: flex-end;
-    height: 56px;
     margin-top: 0;
     border-radius: 4px;
     padding: 0 24px;
     cursor: pointer;
 
-    padding: 0.5rem;
+    padding: 1.05rem;
     border-bottom: 1px solid #BCBCBC;
 
-    height: 3.2rem;
+    height: auto;
+    line-height: 1.5rem;
+}
+
+.manual_time_modal_wrapper--mobile .item_select_wrapper > .circle {
+    margin-bottom: 0.1rem;
 }
 
 .manual_time_modal_wrapper--mobile .issue_name {
@@ -395,6 +428,7 @@ i.clock {
     background-color: #27AE60;
     color: #ffffff;
     border-radius: 0.4rem;
+    margin-top: 1rem;
 }
 
 /* END MOBILE STYLES */
