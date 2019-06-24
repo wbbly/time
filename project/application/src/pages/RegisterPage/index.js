@@ -116,7 +116,7 @@ class RegisterPage extends Component {
         const { email, password, confirmPassword } = this.state.inputs;
         const { viewport } = this.props;
         return (
-            <div className="register-block" style={{ height: viewport.height }}>
+            <div className="register-block" style={{ height: viewport.height - 1 }}>
                 <i className="register-block__logo" />
                 <form className="register-block__form" onSubmit={this.onSubmitHandler}>
                     <label className="register-block__label">
