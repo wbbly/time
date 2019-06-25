@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import openSocket from 'socket.io-client';
 import * as moment from 'moment';
+import { showMobileSupportToastr } from '../../App';
 
 // Services
 import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
@@ -387,6 +388,7 @@ class MainPage extends Component {
     }
 
     async componentDidMount() {
+        showMobileSupportToastr();
         await this.getProjectList();
         await this.getUserTimeEntries();
         this.initSocketConnection();

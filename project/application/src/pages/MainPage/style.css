@@ -636,7 +636,7 @@ span.circle {
     display: inline-block;
     vertical-align: bottom;
     margin: 0 0 0 1rem;
-    background: url(../../images/icons/white-arrow.svg) center center no-repeat;
+    background: url("../../images/icons/white-arrow.svg") center center no-repeat;
     width: 1.5rem;
     height: 1.8rem;
     background-size: cover;
