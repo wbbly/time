@@ -78,6 +78,7 @@ i.profile_user {
     top: -5px;
     left: 183px;
     width: 150px;
+    z-index: 500;
 }
 
 .user_setting_modal .user_setting_modal_item:hover {

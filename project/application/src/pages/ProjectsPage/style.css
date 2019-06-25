@@ -14,6 +14,7 @@
     padding-left: 148px;
     padding-right: 56px;
     overflow-y: auto;
+    z-index: -1;
 }
 
 .projects_page_header {
