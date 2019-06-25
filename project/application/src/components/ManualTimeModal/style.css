@@ -183,6 +183,7 @@ input[type="time"],
 .manual_time_modal_container .date_time {
     position: relative;
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
     justify-content: space-between;
     width: calc(100% - 24px);
@@ -228,31 +229,64 @@ i.clock {
     }
 }
 
+div[role="dialog"] h2 {
+    font-size: 6rem;
+}
+
+div[role="dialog"] h6 {
+    font-size: 1.7rem;
+}
+
+div[role="dialog"] span {
+    font-size: 1.7rem;
+}
+
+div[role="dialog"] p {
+    font-size: 1.7rem;
+}
+
+.manual_time_modal_wrapper--mobile .manual_timer_modal_timepickers_container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.manual_time_modal_wrapper--mobile .margin_12 {
+    width: 47%;
+    margin: 0;
+    display: inline-block;
+}
+
 .manual_time_modal_wrapper--mobile {
     overflow: auto;
-    width: 100%;
-    position: relative;
-    z-index: 99;
+    /* width: 100%; */
+    /* position: relative; */
+    /* z-index: 99; */
     color: black;
-    animation: .3s slowVisibility;
+    /* animation: .3s slowVisibility; */
 }
 
 .manual_time_modal_wrapper--mobile .date_time {
     width: 100%;
 }
 
-.manual_time_modal_wrapper--mobile i.clock {
-    position: static;
-    margin-right: 2rem;
+.manual_time_modal_wrapper--mobile .date_time > div {
+    width: 100%;
 }
 
-.manual_time_modal_wrapper--mobile .MuiInputBase-input-125 {
+.manual_time_modal_wrapper--mobile i.clock {
+    position: absolute;
+    top: calc(50% - 12px)
+    /* margin-right: 2rem; */
+}
+
+/* .manual_time_modal_wrapper--mobile .MuiInputBase-input-125 {
     position: static;
     height: auto;
-}
+} */
 
 .manual_time_modal_wrapper--mobile .manual_time_modal_background {
     align-items: flex-end;
+    animation: .3s slowVisibility;
     
 }
 
@@ -267,7 +301,7 @@ i.clock {
 
 .manual_time_modal_wrapper--mobile .create_projects_modal_header_close {
     position: absolute;
-    background: url(/static/media/close.e4bc62a0.svg) center center no-repeat;
+    background: url("../../images/icons/close.svg") center center no-repeat;
     background-size: cover;
     height: 2.2rem;
     width: 2.2rem;
@@ -352,7 +386,7 @@ i.clock {
 }
 
 .manual_time_modal_wrapper--mobile .arrow_list_mobile {
-    background: url(/static/media/Polygon.870fbb88.svg) no-repeat center;
+    background: url("../../images/Polygon.svg") no-repeat center;
     position: absolute;
     top: calc(50% - (.7rem / 2));
     right: 1rem;
