@@ -67,9 +67,7 @@ class UserSetting extends Component {
                         <button onClick={e => this.openChangePasswordModal()}>Change password</button>
                     </div>
                     <div className="body_user_setting">
-                        <div className="column">
-                            {/*<i className="rectangle" />*/}
-                        </div>
+                        <div className="column">{/*<i className="rectangle" />*/}</div>
                         <div className="column">
                             <div className="input_container">
                                 <div className="input_title">Your name</div>
