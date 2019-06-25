@@ -48,8 +48,7 @@ class UserMenu extends Component {
 
     closeDropdown = e => {
         if (e.target.className === 'profile_user') {
-
-            return
+            return;
         }
         if (this.userSettingthModal && !this.userSettingthModal.contains(e.target)) {
             this.setState(
