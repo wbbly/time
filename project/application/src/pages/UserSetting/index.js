@@ -68,7 +68,7 @@ class UserSetting extends Component {
                     </div>
                     <div className="body_user_setting">
                         <div className="column">
-                            <i className="rectangle" />
+                            {/*<i className="rectangle" />*/}
                         </div>
                         <div className="column">
                             <div className="input_container">
