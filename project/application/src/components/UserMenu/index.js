@@ -24,7 +24,6 @@ class UserMenu extends Component {
                             className="profile_user"
                             onClick={e => {
                                 this.togglUserMenu();
-                                document.addEventListener('click', this.closeDropdown);
                             }}
                         />
                     </div>
@@ -48,6 +47,9 @@ class UserMenu extends Component {
     }
 
     closeDropdown = e => {
+        if (e.target.className === 'profile_user') {
+            return;
+        }
         if (this.userSettingthModal && !this.userSettingthModal.contains(e.target)) {
             this.setState(
                 {
@@ -60,9 +62,10 @@ class UserMenu extends Component {
         }
     };
 
-    togglUserMenu() {
+    togglUserMenu = e => {
+        document.addEventListener('click', this.closeDropdown);
         this.setState({ activeUserMenu: !this.state.activeUserMenu });
-    }
+    };
 
     logout() {
         return logoutByUnauthorized();
