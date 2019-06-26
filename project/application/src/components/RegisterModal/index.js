@@ -21,6 +21,19 @@ class RegisterModal extends Component {
     };
 
     addUser = (email, password, userName) => {
+        const R_EMAIL = new RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+        if (!R_EMAIL.test(email)) {
+            alert('you add wrong email,check it please');
+
+            return
+        }
+
+        if (!password.length) {
+            alert('Enter password please')
+
+            return
+        }
+
         apiCall(
             AppConfig.apiURL + 'user/register',
             {
@@ -65,7 +78,7 @@ class RegisterModal extends Component {
                     <div className="add_to_team_modal_input_container">
                         <div className="add_to_team_modal_input_title">Email</div>
                         <input
-                            type="text"
+                            type="email"
                             ref={input => {
                                 this.email = input;
                             }}
