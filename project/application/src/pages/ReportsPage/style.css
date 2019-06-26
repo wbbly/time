@@ -14,6 +14,7 @@
     padding-left: 148px;
     padding-right: 56px;
     overflow-y: scroll;
+    z-index: -1;
 }
 
 .data_container_reports_page .header {
