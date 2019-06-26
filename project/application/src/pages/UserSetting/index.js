@@ -9,7 +9,7 @@ import LeftBar from '../../components/LeftBar';
 import ChangePasswordModal from '../../components/ChangePasswordModal';
 
 //Services
-import { getLoggedUserId, getTokenFromLocalStorage, setTokenToLocalStorage } from '../../services/tokenStorageService';
+import { getLoggedUserId, getTokenFromLocalStorage, setTokenToLocalStorage, getLoggedUser } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
 
 //Config
@@ -35,6 +35,8 @@ class UserSetting extends Component {
             result => {
                 if (result.token) {
                     setTokenToLocalStorage(result.token);
+                    alert('your data has been updated');
+                    this.updateUserData()
                 }
             },
             err => {
@@ -50,8 +52,7 @@ class UserSetting extends Component {
     };
 
     componentDidMount() {
-        this.username.value = this.props.userSettingReducer.userName;
-        this.userEmail.value = this.props.userSettingReducer.userEmail;
+        this.setDataToForm()
     }
 
     render() {
@@ -89,6 +90,17 @@ class UserSetting extends Component {
 
     openChangePasswordModal() {
         this.props.userSettingAction('TOGGLE_MODAL', true);
+    }
+
+    setDataToForm = () => {
+        this.username.value = this.props.userSettingReducer.userName;
+        this.userEmail.value = this.props.userSettingReducer.userEmail;
+    };
+
+    updateUserData = () => {
+        const USER = getLoggedUser();
+        this.props.userSettingAction('CHANGE_NAME', USER.username);
+        this.props.userSettingAction('CHANGE_EMAIL', USER.email)
     }
 }
 
