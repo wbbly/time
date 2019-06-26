@@ -16,7 +16,7 @@ import './style.css';
 
 class ForgotPasswordModal extends Component {
     addUser = email => {
-        fetch(AppConfig.resetPassword + 'user/reset-password', {
+        fetch(AppConfig.apiURL + 'user/reset-password', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
