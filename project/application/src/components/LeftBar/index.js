@@ -56,12 +56,14 @@ class LeftBar extends Component {
     }
 
     render() {
-        const { switchMenu } = this.props;
+        const { switchMenu, isMobile, teamsUpdateTimestamp } = this.props;
         return (
             <div className="wrapper" onClick={switchMenu}>
-                <Link to="/timer">
-                    <i className="logo_small" />
-                </Link>
+                {!isMobile && (
+                    <Link to="/timer">
+                        <i className="logo_small" />
+                    </Link>
+                )}
 
                 <div className="navigation_links_container">
                     <Link to="/timer" style={{ textDecoration: 'none' }}>
@@ -71,7 +73,7 @@ class LeftBar extends Component {
                             <div className="timer_task">{this.visualTimer()}</div>
                         </div>
                     </Link>
-                    <Link to="/reports" style={{ textDecoration: 'none' }}>
+                    <Link to="/reports/summary" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="reports" />
                             <div className="links_text">reports</div>
@@ -89,7 +91,7 @@ class LeftBar extends Component {
                             <div className="links_text">team</div>
                         </div>
                     </Link>
-                    <TeamSwitcher teamsUpdateTimestamp={this.props.teamsUpdateTimestamp} />
+                    <TeamSwitcher isMobile={isMobile} teamsUpdateTimestamp={teamsUpdateTimestamp} />
                 </div>
 
                 <div className="logout_container" onClick={e => this.logout()}>
