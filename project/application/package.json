@@ -15,6 +15,7 @@
     "prop-types": "15.6.2",
     "react": "16.7.0",
     "react-chartjs-2": "2.7.4",
+    "react-custom-scrollbars": "4.2.1",
     "react-date-range": "1.0.0-beta",
     "react-device-detect": "1.6.2",
     "react-dom": "16.7.0",
