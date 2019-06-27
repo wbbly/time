@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 
 import { showMobileSupportToastr } from '../../App';
+
+// dependencies
+import classNames from 'classnames';
 
 // Services
 import {
@@ -16,9 +19,6 @@ import { userLoggedIn } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
 import { apiCall } from '../../services/apiService';
 
-// Components
-import LeftBar from '../../components/LeftBar';
-
 // Actions
 
 // Queries
@@ -27,7 +27,7 @@ import LeftBar from '../../components/LeftBar';
 import { AppConfig } from '../../config';
 
 // Styles
-import './style.css';
+import './style.scss';
 
 class ReportsByProjectsPage extends Component {
     state = {
@@ -57,6 +57,7 @@ class ReportsByProjectsPage extends Component {
     }
 
     render() {
+        const { isMobile } = this.props;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         let projectsItems = this.state.dataOfProject.map((item, index) => (
@@ -71,8 +72,11 @@ class ReportsByProjectsPage extends Component {
         ));
 
         return (
-            <div className="reports_by_projects_wrapper">
-                <LeftBar />
+            <div
+                className={classNames('reports_by_projects_wrapper', {
+                    'reports_by_projects_wrapper--mobile': isMobile,
+                })}
+            >
                 <div className="header">
                     <div className="header_name">
                         {this.props.match.params.projectName}:{' '}
@@ -143,10 +147,9 @@ class ReportsByProjectsPage extends Component {
     }
 }
 
-const mapStateToProps = store => {
-    return {
-        inputUserData: store.reportsPageReducer.inputUserData,
-    };
-};
+const mapStateToProps = store => ({
+    inputUserData: store.reportsPageReducer.inputUserData,
+    isMobile: store.responsiveReducer.isMobile,
+});
 
-export default connect(mapStateToProps)(ReportsByProjectsPage);
+export default withRouter(connect(mapStateToProps)(ReportsByProjectsPage));

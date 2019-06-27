@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 
 import { showMobileSupportToastr } from '../../App';
 
+// dependencies
+import classNames from 'classnames';
+
 // Services
 import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
 
 // Components
-import LeftBar from '../../components/LeftBar';
 import ProjectSearchBar from '../../components/projectSearchBar';
 import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
@@ -24,7 +26,7 @@ import { getProjectsV2ProjectPageUserParseFunction, getProjectsV2ProjectPageAdmi
 import { AppConfig } from '../../config';
 
 // Styles
-import './style.css';
+import './style.scss';
 
 class ProjectsPage extends Component {
     state = {
@@ -54,12 +56,16 @@ class ProjectsPage extends Component {
     };
 
     render() {
-        const { tableData, addNewProjectModalToggle, projectsPageAction } = this.props;
+        const { tableData, addNewProjectModalToggle, projectsPageAction, isMobile } = this.props;
 
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         return (
-            <div className="wrapper_projects_page">
+            <div
+                className={classNames('wrapper_projects_page', {
+                    'wrapper_projects_page--mobile': isMobile,
+                })}
+            >
                 {addNewProjectModalToggle && (
                     <CreateProjectModal
                         tableInfo={tableData}
@@ -67,7 +73,6 @@ class ProjectsPage extends Component {
                         getProjects={this.getProjects}
                     />
                 )}
-                <LeftBar />
                 <div className="data_container_projects_page">
                     <div className="projects_page_header">
                         <div className="projects_page_title">Projects</div>
@@ -102,7 +107,6 @@ class ProjectsPage extends Component {
     }
 
     componentDidMount() {
-        console.log('didmount');
         this.getProjects();
         showMobileSupportToastr();
     }
@@ -114,6 +118,7 @@ const mapStateToProps = store => {
         addNewProjectModalToggle: store.projectReducer.addNewProjectModalToggle,
         editedProject: store.projectReducer.editedProject,
         editProjectModal: store.projectReducer.editProjectModal,
+        isMobile: store.responsiveReducer.isMobile,
     };
 };
 
