@@ -1,0 +1,44 @@
+.wrapper-page-template {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .header {
+  }
+
+  .wrapper-main-content {
+    display: flex;
+    flex-grow: 1;
+    position: relative;
+    overflow: auto;
+  }
+
+  .aside {
+    position: static;
+    transition: 0.3s linear left;
+  }
+
+  .aside--hide {
+    width: 100%;
+    position: absolute;
+    z-index: 999;
+    height: 100%;
+    left: -100%;
+  }
+
+  .aside--show {
+    width: 100%;
+    position: absolute;
+    z-index: 999;
+    height: 100%;
+    left: 0;
+  }
+
+  .main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+}

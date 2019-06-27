@@ -10,6 +10,9 @@ import { Bar } from 'react-chartjs-2';
 
 import { showMobileSupportToastr } from '../../App';
 
+// dependencies
+import classNames from 'classnames';
+
 // Services
 import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
@@ -25,7 +28,6 @@ import { getLoggedUserTimezoneOffset } from '../../services/tokenStorageService'
 import { apiCall } from '../../services/apiService';
 
 // Components
-import LeftBar from '../../components/LeftBar';
 import ProjectsContainer from '../../components/ProjectsContainer';
 import ReportsSearchBar from '../../components/reportsSearchBar';
 
@@ -38,7 +40,7 @@ import reportsPageAction from '../../actions/ReportsPageAction';
 import { AppConfig } from '../../config';
 
 // Styles
-import './style.css';
+import './style.scss';
 
 class ReportsPage extends Component {
     state = {
@@ -131,11 +133,15 @@ class ReportsPage extends Component {
     };
 
     render() {
+        const { isMobile } = this.props;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         return (
-            <div className="wrapper_reports_page">
-                <LeftBar />
+            <div
+                className={classNames('wrapper_reports_page', {
+                    'wrapper_reports_page--mobile': isMobile,
+                })}
+            >
                 <div className="data_container_reports_page">
                     <div className="header">
                         <div className="header_name">Summary report</div>
@@ -489,18 +495,17 @@ class ReportsPage extends Component {
     }
 }
 
-const mapStateToProps = store => {
-    return {
-        dataBarChat: store.reportsPageReducer.dataBarChat,
-        lineChartOption: store.reportsPageReducer.lineChartOption,
-        projectsArr: store.reportsPageReducer.projectsArr,
-        dataDoughnutChat: store.reportsPageReducer.dataDoughnutChat,
-        dataFromServer: store.reportsPageReducer.dataFromServer,
-        timeRange: store.reportsPageReducer.timeRange,
-        inputUserData: store.reportsPageReducer.inputUserData,
-        inputProjectData: store.reportsPageReducer.inputProjectData,
-    };
-};
+const mapStateToProps = store => ({
+    dataBarChat: store.reportsPageReducer.dataBarChat,
+    lineChartOption: store.reportsPageReducer.lineChartOption,
+    projectsArr: store.reportsPageReducer.projectsArr,
+    dataDoughnutChat: store.reportsPageReducer.dataDoughnutChat,
+    dataFromServer: store.reportsPageReducer.dataFromServer,
+    timeRange: store.reportsPageReducer.timeRange,
+    inputUserData: store.reportsPageReducer.inputUserData,
+    inputProjectData: store.reportsPageReducer.inputProjectData,
+    isMobile: store.responsiveReducer.isMobile,
+});
 
 const mapDispatchToProps = dispatch => {
     return {
