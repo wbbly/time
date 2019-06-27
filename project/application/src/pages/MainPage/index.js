@@ -7,6 +7,8 @@ import { showMobileSupportToastr } from '../../App';
 
 // dependencies
 import classNames from 'classnames';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { BrowserView, isSafari, isIOS } from 'react-device-detect';
 
 // Services
 import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
@@ -618,10 +620,19 @@ class MainPage extends Component {
                             />
                         </div>
                     </div>
-                    <div className="main_wrapper_tracker_items">
-                        {timeTrackerWrapperItems}
-                        {!this.state.timerDurationValue && <div className="empty-block" />}
-                    </div>
+                    {BrowserView && !isSafari && !isIOS ? (
+                        <Scrollbars>
+                            <div className="main_wrapper_tracker_items">
+                                {timeTrackerWrapperItems}
+                                {!this.state.timerDurationValue && <div className="empty-block" />}
+                            </div>
+                        </Scrollbars>
+                    ) : (
+                        <div className="main_wrapper_tracker_items">
+                            {timeTrackerWrapperItems}
+                            {!this.state.timerDurationValue && <div className="empty-block" />}
+                        </div>
+                    )}
                 </div>
 
                 {/* START BLOCK BUTTON PLAY AND STATUS CURRENT TASK MOBILE */}
