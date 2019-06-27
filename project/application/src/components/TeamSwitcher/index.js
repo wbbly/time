@@ -147,6 +147,7 @@ class TeamSwitcher extends Component {
     }
 
     render() {
+        const { isMobile } = this.props;
         return (
             <div className="team_list">
                 <ul>
@@ -169,45 +170,47 @@ class TeamSwitcher extends Component {
                             </li>
                         );
                     })}
-                    <li>
-                        <div className="team_list-item">
-                            <TeamAdd
-                                createTeamRequest={teamName => {
-                                    apiCall(AppConfig.apiURL + `team/add`, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                        body: JSON.stringify({
-                                            teamName,
-                                        }),
-                                    }).then(
-                                        res => (window.location.pathname = '/team'),
-                                        err => {
-                                            if (err instanceof Response) {
-                                                err.text().then(error => {
-                                                    const errorMessages = responseErrorsHandling.getErrorMessages(
-                                                        JSON.parse(error)
-                                                    );
-                                                    if (
-                                                        responseErrorsHandling.checkIsDuplicateError(
-                                                            errorMessages.join('\n')
-                                                        )
-                                                    ) {
-                                                        alert('Team is already existed');
-                                                    } else {
-                                                        alert(`Team can't be created`);
-                                                    }
-                                                });
-                                            } else {
-                                                console.log(err);
+                    {!isMobile && (
+                        <li>
+                            <div className="team_list-item">
+                                <TeamAdd
+                                    createTeamRequest={teamName => {
+                                        apiCall(AppConfig.apiURL + `team/add`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                            body: JSON.stringify({
+                                                teamName,
+                                            }),
+                                        }).then(
+                                            res => (window.location.pathname = '/team'),
+                                            err => {
+                                                if (err instanceof Response) {
+                                                    err.text().then(error => {
+                                                        const errorMessages = responseErrorsHandling.getErrorMessages(
+                                                            JSON.parse(error)
+                                                        );
+                                                        if (
+                                                            responseErrorsHandling.checkIsDuplicateError(
+                                                                errorMessages.join('\n')
+                                                            )
+                                                        ) {
+                                                            alert('Team is already existed');
+                                                        } else {
+                                                            alert(`Team can't be created`);
+                                                        }
+                                                    });
+                                                } else {
+                                                    console.log(err);
+                                                }
                                             }
-                                        }
-                                    );
-                                }}
-                            />
-                        </div>
-                    </li>
+                                        );
+                                    }}
+                                />
+                            </div>
+                        </li>
+                    )}
                 </ul>
             </div>
         );
