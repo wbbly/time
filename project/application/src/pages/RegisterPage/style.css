@@ -88,9 +88,3 @@
     font-size: 1.6rem;
     line-height: 1.9rem;
 }
-
-@media (min-width: 768px) {
-    html {
-         font-size: 12px;
-    }
-}

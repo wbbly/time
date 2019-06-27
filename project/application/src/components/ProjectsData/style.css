@@ -1,11 +1,6 @@
-@font-face {
-    font-family: "Open Sans", sans-serif;
-    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
-}
-
 .project_data_wrapper {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
 }
 
 .project_data_wrapper table {
