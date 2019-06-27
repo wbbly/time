@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from './store/configureStore';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
@@ -11,10 +10,17 @@ import ReportsByProjectsPage from './pages/ReportsByProjectPage';
 import AuthPage from './pages/AuthPage';
 import RegisterPage from './pages/RegisterPage';
 
+import PageTemplate from './components/PageTemplate';
+
+// styles
+import 'normalize.css';
+import './App.scss';
+import './fonts/icomoon/icomoon.css';
+
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { setViewportSize } from './actions/ResponsiveActions';
+import * as responsiveActions from './actions/ResponsiveActions';
 
 const addEvent = (object, type, callback) => {
     if (object === null || typeof object === 'undefined') return;
@@ -26,22 +32,6 @@ const addEvent = (object, type, callback) => {
         object['on' + type] = callback;
     }
 };
-
-store.dispatch(
-    setViewportSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-    })
-);
-
-addEvent(window, 'resize', event => {
-    store.dispatch(
-        setViewportSize({
-            width: window.innerWidth,
-            height: window.innerHeight,
-        })
-    );
-});
 
 toast.configure();
 
@@ -78,31 +68,64 @@ addEvent(window, 'resize', event => {
 });
 
 class App extends Component {
+    setResponsiveReducer = () => {
+        const { setViewportSize, setIsMobile, isMobile } = this.props;
+        setViewportSize({
+            width: window.innerWidth,
+            height: window.innerHeight,
+        });
+
+        if (window.innerWidth >= 1024 && isMobile) {
+            setIsMobile(false);
+        }
+
+        if (window.innerWidth < 1024 && !isMobile) {
+            setIsMobile(true);
+        }
+    };
+
+    componentDidMount() {
+        this.setResponsiveReducer();
+        addEvent(window, 'resize', event => {
+            this.setResponsiveReducer();
+        });
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.setResponsiveReducer());
+    }
+
     render() {
         return (
-            <Provider store={store}>
-                <Router>
-                    <div>
-                        <Switch>
-                            <Route path="/timer" component={MainPage} />
-                            <Route path="/reports/summary" component={ReportsPage} />
-                            <Route
-                                path="/reports/detailed/projects/:projectName/team/:userEmails/from/:dateStart/to/:endDate/"
-                                component={ReportsByProjectsPage}
-                            />
-                            <Route path="/projects" component={ProjectsPage} />
-                            <Route path="/team" component={TeamPage} />
-                            <Route path="/login" component={AuthPage} />
-                            <Route path="/register" component={RegisterPage} />
+            <Switch>
+                <Route path="/timer" render={() => <PageTemplate content={MainPage} />} />
+                <Route path="/reports/summary" render={() => <PageTemplate content={ReportsPage} />} />
+                <Route path="/projects" render={() => <PageTemplate content={ProjectsPage} />} />
+                <Route path="/team" render={() => <PageTemplate content={TeamPage} />} />
+                <Route
+                    path="/reports/detailed/projects/:projectName/team/:userEmails/from/:dateStart/to/:endDate/"
+                    render={() => <PageTemplate content={ReportsByProjectsPage} />}
+                />
 
-                            <Redirect from="/reports" to="/reports/summary" />
-                            <Redirect from="/" to="/login" />
-                        </Switch>
-                    </div>
-                </Router>
-            </Provider>
+                <Route path="/login" component={AuthPage} />
+                <Route path="/register" component={RegisterPage} />
+                <Redirect from="/" to="/login" />
+            </Switch>
         );
     }
 }
 
-export default App;
+const mapStateToProps = state => ({
+    isMobile: state.responsiveReducer.isMobile,
+});
+
+const mapDispatchToProps = {
+    ...responsiveActions,
+};
+
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(App)
+);
