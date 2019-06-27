@@ -1,8 +1,3 @@
-@font-face {
-    font-family: "Open Sans", sans-serif;
-    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
-}
-
 .wrapper_create_team_modal {
     z-index: 1;
 }
@@ -14,7 +9,7 @@
     right: 0;
     bottom: 0;
     top: 0;
-    z-index: 1;
+    z-index: 5;
 }
 
 .create_team_modal_container {
@@ -23,7 +18,7 @@
     top: 50%;
     left: 50%;
     width: 945px;
-    z-index: 2;
+    z-index: 5;
     background: #ffffff;
     border: 1px solid #828282;
     box-sizing: border-box;

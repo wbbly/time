@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { showMobileSupportToastr } from '../../App';
+
+// dependencies
+import classNames from 'classnames';
+
 // Services
 import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import { removeAvailableTeamsFromLocalStorage } from '../../services/availableTeamsStorageService';
@@ -12,7 +17,6 @@ import {
 import { apiCall } from '../../services/apiService';
 
 // Components
-import LeftBar from '../../components/LeftBar';
 import AddToTeamModal from '../../components/AddToTeamModal';
 import RenameTeamModal from '../../components/RenameTeamModal';
 import EditTeamModal from '../../components/EditTeamModal';
@@ -26,31 +30,21 @@ import teamPageAction from '../../actions/TeamPageAction';
 import { AppConfig } from '../../config';
 
 // Styles
-import './style.css';
+import './style.scss';
 
 class TeamPage extends Component {
+    state = {
+        renameModal: false,
+        teamName: 'Loading...',
+        teamId: '',
+    };
+
     headerItems = ['Name', 'E-mail', 'Team Roles', 'Team Access'];
 
     changingName = false;
     teamNameRef = React.createRef();
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            renameModal: false,
-            teamsUpdateTimestamp: null,
-            teamName: 'Loading...',
-            teamId: '',
-        };
-    }
-
-    nameInput = val => {
-        return (
-            <React.Fragment>
-                <input ref={this.teamNameRef} type="text" placeholder={val} />
-            </React.Fragment>
-        );
-    };
+    nameInput = val => <input ref={this.teamNameRef} type="text" placeholder={val} />;
 
     openAddUserModal() {
         this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: !this.props.createUserModal });
@@ -68,6 +62,7 @@ class TeamPage extends Component {
     }
 
     render() {
+        const { isMobile, setTeamsUpdateTimestamp } = this.props;
         let programersArr = this.props.programersArr;
         const headerItemsElements = this.headerItems.map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
@@ -99,7 +94,11 @@ class TeamPage extends Component {
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         return (
-            <div className="wrapper_team_page">
+            <div
+                className={classNames('wrapper_team_page', {
+                    'wrapper_team_page--mobile': isMobile,
+                })}
+            >
                 {this.props.createUserModal && (
                     <AddToTeamModal
                         programersArr={this.props.programersArr}
@@ -133,9 +132,7 @@ class TeamPage extends Component {
                                 role: currentTeamDataFromLocalStorage.role,
                             });
                             removeAvailableTeamsFromLocalStorage();
-                            this.setState({
-                                teamsUpdateTimestamp: new Date().getTime(),
-                            });
+                            setTeamsUpdateTimestamp(new Date().getTime());
                         }}
                         closeCallback={() =>
                             this.setState({
@@ -144,7 +141,6 @@ class TeamPage extends Component {
                         }
                     />
                 )}
-                <LeftBar teamsUpdateTimestamp={this.state.teamsUpdateTimestamp} />
                 <div className="data_container_team_page">
                     <div className="team_page_header">
                         <div className="page_name">Team: {this.state.teamName}</div>
@@ -187,6 +183,7 @@ class TeamPage extends Component {
     }
 
     componentDidMount() {
+        showMobileSupportToastr();
         this.getDataFromServer();
     }
 
@@ -230,15 +227,14 @@ class TeamPage extends Component {
     }
 }
 
-const mapStateToProps = store => {
-    return {
-        programersArr: store.teamPageReducer.programersArr,
-        createUserModal: store.teamPageReducer.createUserModal,
-        editUserModal: store.teamPageReducer.editUserModal,
-        editedUser: store.teamPageReducer.editedUser,
-        currentTeam: store.teamReducer.currentTeam,
-    };
-};
+const mapStateToProps = store => ({
+    programersArr: store.teamPageReducer.programersArr,
+    createUserModal: store.teamPageReducer.createUserModal,
+    editUserModal: store.teamPageReducer.editUserModal,
+    editedUser: store.teamPageReducer.editedUser,
+    currentTeam: store.teamReducer.currentTeam,
+    isMobile: store.responsiveReducer.isMobile,
+});
 
 const mapDispatchToProps = dispatch => {
     return {

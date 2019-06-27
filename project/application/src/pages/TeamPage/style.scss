@@ -1,44 +1,41 @@
-@font-face {
-    font-family: "Open Sans", sans-serif;
-    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
-}
+.wrapper_team_page {
+  position: relative;
+  width: 100%;
+  height: 100%;
 
-.data_container_team_page {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 188px;
-    right: 0;
+  .data_container_team_page {
+    width: 100%;
+    height: 100%;
     background-color: #333333;
     padding-top: 47px;
     padding-left: 148px;
     padding-right: 148px;
     overflow-y: auto;
-}
+  }
 
-.team_page_header {
+  .team_page_header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
+  }
 
-.page_name {
+  .page_name {
     font-family: "Open Sans", sans-serif;
     line-height: normal;
     font-size: 36px;
     color: #ffffff;
-}
+  }
 
-.team_page_main-controls {
+  .team_page_main-controls {
     display: flex;
-}
+  }
 
-.invite_container {
+  .invite_container {
     position: relative;
     padding-left: 25px;
-}
+  }
 
-.invite_container button {
+  .invite_container button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,18 +50,18 @@
     background-color: #27ae60;
     outline: none;
     cursor: pointer;
-}
+  }
 
-.team_page_data {
+  .team_page_data {
     margin-top: 74px;
-}
+  }
 
-.team_page_data table {
+  .team_page_data table {
     width: 100%;
     border-spacing: inherit;
-}
+  }
 
-.team_page_data table th {
+  .team_page_data table th {
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -73,9 +70,9 @@
     text-align: left;
     color: #ffffff;
     border-bottom: 1px solid #bdbdbd;
-}
+  }
 
-.team_page_data table td {
+  .team_page_data table td {
     position: relative;
     height: 50px;
     font-family: "Open Sans", sans-serif;
@@ -84,9 +81,9 @@
     line-height: normal;
     font-size: 16px;
     color: #ffffff;
-}
+  }
 
-.team_page_data table .access_container {
+  .team_page_data table .access_container {
     width: 124px;
     height: 30px;
     background: #27ae60;
@@ -94,13 +91,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
+  }
 
-.team_page_data table .access_container.red {
+  .team_page_data table .access_container.red {
     background-color: red;
-}
+  }
 
-.wrapper_team_page .edit_button {
+  .edit_button {
     position: absolute;
     top: 21px;
     right: 8px;
@@ -109,7 +106,14 @@
     width: 15px;
     height: 15px;
     background: url("../../images/icons/baseline-create-24px.svg") no-repeat
-    center;
+      center;
     cursor: pointer;
     background-size: 20px;
+  }
+}
+
+.wrapper_team_page--mobile {
+  .data_container_team_page {
+    padding: 1rem;
+  }
 }

@@ -3,6 +3,10 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import openSocket from 'socket.io-client';
 import * as moment from 'moment';
+import { showMobileSupportToastr } from '../../App';
+
+// dependencies
+import classNames from 'classnames';
 
 // Services
 import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
@@ -17,7 +21,6 @@ import { setServerClientTimediffToLocalStorage } from '../../services/serverClie
 import { apiCall } from '../../services/apiService';
 
 // Components
-import LeftBar from '../../components/LeftBar';
 import ManualTimeModal from '../../components/ManualTimeModal';
 
 // Actions
@@ -31,7 +34,7 @@ import { getProjectListParseFunction, getTodayTimeEntriesParseFunction } from '.
 import { AppConfig } from '../../config';
 
 // Styles
-import './style.css';
+import './style.scss';
 
 class MainPage extends Component {
     ONE_SECOND_PERIOD = 1000; // in ms
@@ -60,6 +63,8 @@ class MainPage extends Component {
         projectListForModalWindow: [],
         projectListInitial: [],
         projectListIsOpen: false,
+        isShowAddTaskMobile: false,
+        isShowListProjectsMobile: false,
     };
 
     initSocketConnection() {
@@ -158,6 +163,7 @@ class MainPage extends Component {
             () => this.setState({ timerDurationValue: getTimeDiff(this.state.timerStartTime) }),
             this.ONE_SECOND_PERIOD
         );
+        this.setState({ isShowAddTaskMobile: false });
     }
 
     timerUpdate() {
@@ -380,6 +386,7 @@ class MainPage extends Component {
     }
 
     async componentDidMount() {
+        showMobileSupportToastr();
         await this.getProjectList();
         await this.getUserTimeEntries();
         this.initSocketConnection();
@@ -389,9 +396,23 @@ class MainPage extends Component {
         this.socketConnection && this.socketConnection.emit('leave');
     }
 
+    toggleSwipe = event => {
+        event.persist();
+        const { viewport } = this.props;
+        let target = event.currentTarget;
+        if (viewport.width >= 1024) return;
+        if (event.target.tagName === 'I') return;
+        if (this.swipedElement && this.swipedElement !== target) {
+            this.swipedElement.className = 'ul';
+        }
+        target.className === 'ul' ? (target.className = 'ul swipe') : (target.className = 'ul');
+        this.swipedElement = target;
+    };
+
     createTimeEntriesList(data) {
-        let items = data.map((item, index) => (
-            <div className="ul" key={'time-entries_' + index}>
+        const { viewport } = this.props;
+        let items = data.map(item => (
+            <div className="ul" key={item.id} onClick={this.toggleSwipe}>
                 <div className="li">
                     <div className="name_container">
                         <div className="name">{item.issue}</div>
@@ -411,28 +432,86 @@ class MainPage extends Component {
                         {!this.state.timerDurationValue && (
                             <i
                                 className="small_play item_button"
-                                onClick={e => {
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    if (this.swipedElement) {
+                                        if (this.swipedElement.className === 'ul swipe') {
+                                            this.swipedElement.click();
+                                        }
+                                    }
                                     this.state.timerReadyToUse && this.timerContinue(item.issue, item);
                                 }}
                             />
                         )}
                         <i
                             className="edit_button item_button"
-                            onClick={e => {
+                            onClick={event => {
+                                event.stopPropagation();
                                 this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
                                 this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
                             }}
                         />
-                        <i className="cancel item_button" onClick={e => this.deleteTimeEntry(item)} />
+                        <i
+                            className="cancel item_button"
+                            onClick={event => {
+                                event.stopPropagation();
+                                this.deleteTimeEntry(item);
+                            }}
+                        />
                     </div>
                 </div>
+                {viewport.width < 1024 && (
+                    <div className="edit">
+                        <div
+                            className="edit_swipe"
+                            onClick={event => {
+                                event.stopPropagation();
+                                if (this.swipedElement) {
+                                    if (this.swipedElement.className === 'ul swipe') {
+                                        this.swipedElement.click();
+                                    }
+                                }
+                                this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
+                            }}
+                        >
+                            <i className="edit-icon-swipe" />
+                            Edit task
+                        </div>
+                        <div
+                            className="delete_swipe"
+                            onClick={event => {
+                                event.stopPropagation();
+                                this.deleteTimeEntry(item);
+                            }}
+                        >
+                            <i className="delete-icon-swipe" />
+                            Delete task
+                        </div>
+                    </div>
+                )}
             </div>
         ));
 
         return items;
     }
 
+    checkSwipe = () => {
+        return this.swipedElement && this.swipedElement.className === 'ul swipe';
+    };
+
+    componentDidUpdate(prevProps, prevState) {
+        if (!prevProps.isShowMenu && this.props.isShowMenu && this.checkSwipe()) {
+            this.swipedElement.click();
+        }
+
+        if (this.state.isShowAddTaskMobile && this.checkSwipe()) {
+            this.swipedElement.click();
+        }
+    }
+
     render() {
+        const { isMobile } = this.props;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         const buttonState = this.state.timerPlayButtonShow ? 'play' : 'stop';
@@ -446,9 +525,12 @@ class MainPage extends Component {
                 {this.createTimeEntriesList(arraysItem)}
             </div>
         ));
-
         return (
-            <div className="wrapper_main_page">
+            <div
+                className={classNames('wrapper_main_page', {
+                    'wrapper_main_page--mobile': isMobile,
+                })}
+            >
                 {this.props.manualTimerModal.manualTimerModalToggle && (
                     <ManualTimeModal
                         timeEntriesList={this.props.timeEntriesList}
@@ -458,7 +540,6 @@ class MainPage extends Component {
                         manualTimerModalAction={this.props.manualTimerModalAction}
                     />
                 )}
-                <LeftBar />
                 <div className="data_container">
                     <div className="add_task_container">
                         <input
@@ -470,23 +551,134 @@ class MainPage extends Component {
                             }}
                             onKeyUp={e => this.timerUpdate()}
                         />
-                        <div className="time_container">
+                        <div className="wrapper-timer-mobile">
+                            {this.state.timerReadyToUse && (
+                                <div className="active_project">
+                                    <span
+                                        className={`projects_modal_item_circle ${
+                                            this.state.seletedProject.projectColor.name
+                                        }`}
+                                    />
+                                    <span className="projects_modal_item_name">{this.state.seletedProject.name}</span>
+                                </div>
+                            )}
+                            <i className="folder" onClick={e => this.projectListToggle()}>
+                                {this.state.projectListIsOpen && (
+                                    <div
+                                        className="projects_modal_wrapper"
+                                        ref={div => (this.projectListTargetElement = div)}
+                                    >
+                                        <div
+                                            className="projects_modal_wrapper_header"
+                                            onClick={event => {
+                                                event.stopPropagation();
+                                            }}
+                                        >
+                                            <input
+                                                placeholder="Find..."
+                                                type="text"
+                                                ref={input => (this.projectSearchTextTargetElement = input)}
+                                                onKeyUp={e =>
+                                                    this.findProjectByName(this.projectSearchTextTargetElement.value)
+                                                }
+                                                className="projects_modal_wrapper_search"
+                                            />
+                                        </div>
+                                        <div className="projects_modal_data_wrapper">
+                                            {this.state.projectListForModalWindow.map((item, index) => (
+                                                <div
+                                                    key={'timer-project-' + index}
+                                                    className="projects_modal_item"
+                                                    onClick={e => this.setActiveProject(item)}
+                                                >
+                                                    <div
+                                                        className={`projects_modal_item_circle ${
+                                                            item.projectColor.name
+                                                        }`}
+                                                    />
+                                                    <div className="projects_modal_item_name">{item.name}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </i>
+
+                            <div className="time_container">
+                                {this.state.timerDurationValue
+                                    ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
+                                    : '00:00:00'}
+                            </div>
+                            <i
+                                onClick={_ => {
+                                    this.state.timerReadyToUse &&
+                                        this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
+                                }}
+                                className={buttonClassName}
+                            />
+                        </div>
+                    </div>
+                    <div className="main_wrapper_tracker_items">
+                        {timeTrackerWrapperItems}
+                        {!this.state.timerDurationValue && <div className="empty-block" />}
+                    </div>
+                </div>
+
+                {/* START BLOCK BUTTON PLAY AND STATUS CURRENT TASK MOBILE */}
+                {!this.state.timerDurationValue ? (
+                    !this.state.isShowAddTaskMobile && (
+                        <div
+                            className="play mobile-play-button-large"
+                            onClick={event => this.setState({ isShowAddTaskMobile: true })}
+                        />
+                    )
+                ) : (
+                    <div className="mobile-info-block-current-going-task">
+                        <div className="mobile-info-block-current-going-task__time">
                             {this.state.timerDurationValue
                                 ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
                                 : '00:00:00'}
                         </div>
-                        {this.state.timerReadyToUse && (
-                            <div className="active_project">
-                                <span
-                                    className={`projects_modal_item_circle ${
-                                        this.state.seletedProject.projectColor.name
-                                    }`}
+                        <div className="mobile-info-block-current-going-task__name-task">
+                            {(this.issueTargetElement || {}).value || ''}
+                        </div>
+                        <div
+                            className="mobile-info-block-current-going-task__stop"
+                            onClick={event => {
+                                this.setState({ isShowAddTaskMobile: false });
+                                this.state.timerReadyToUse &&
+                                    this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
+                            }}
+                        >
+                            <span className="stop" />
+                        </div>
+                    </div>
+                )}
+                {/* END BLOCK BUTTON PLAY AND STATUS CURRENT TASK MOBILE */}
+
+                {/* START BLOCK ADD TASK MOBILE */}
+                {!this.state.timerDurationValue &&
+                    this.state.isShowAddTaskMobile && (
+                        <div
+                            className={
+                                !this.state.isShowAddTaskMobile
+                                    ? 'wrapper-add-task-mobile'
+                                    : 'wrapper-add-task-mobile wrapper-add-task-mobile--show'
+                            }
+                        >
+                            <div className="add-task-mobile">
+                                <div
+                                    className="icon-close-mobile"
+                                    onClick={event => this.setState({ isShowAddTaskMobile: false })}
                                 />
-                                <span className="projects_modal_item_name">{this.state.seletedProject.name}</span>
-                            </div>
-                        )}
-                        <i className="folder" onClick={e => this.projectListToggle()}>
-                            {this.state.projectListIsOpen && (
+                                <div className="add-task-mobile__label-input">Task name</div>
+                                <input
+                                    type="text"
+                                    className="add_task"
+                                    placeholder="Add your task name"
+                                    onChange={event => (this.issueTargetElement.value = event.target.value)}
+                                    onKeyUp={e => this.timerUpdate()}
+                                />
                                 <div
                                     className="projects_modal_wrapper"
                                     ref={div => (this.projectListTargetElement = div)}
@@ -497,43 +689,76 @@ class MainPage extends Component {
                                             event.stopPropagation();
                                         }}
                                     >
-                                        <input
-                                            placeholder="Find..."
-                                            type="text"
-                                            ref={input => (this.projectSearchTextTargetElement = input)}
-                                            onKeyUp={e =>
-                                                this.findProjectByName(this.projectSearchTextTargetElement.value)
-                                            }
-                                            className="projects_modal_wrapper_search"
-                                        />
+                                        <div className="add-task-mobile__label-input">Search project</div>
+                                        <div className="add-task-mobile__wrapper-serach">
+                                            <input
+                                                placeholder="Find..."
+                                                type="text"
+                                                ref={input => (this.projectSearchTextTargetElement = input)}
+                                                defaultValue={
+                                                    this.state.seletedProject ? this.state.seletedProject.name : ''
+                                                }
+                                                onKeyUp={e => {
+                                                    this.projectSearchTextTargetElement.value = e.target.value;
+                                                    this.findProjectByName(this.projectSearchTextTargetElement.value);
+                                                }}
+                                                onFocus={event => this.setState({ isShowListProjectsMobile: true })}
+                                                className="projects_modal_wrapper_search"
+                                                readOnly
+                                            />
+                                            <span
+                                                className={`projects_modal_item_circle_search ${
+                                                    this.state.seletedProject
+                                                        ? this.state.seletedProject.projectColor.name
+                                                        : ''
+                                                }`}
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="projects_modal_data_wrapper">
-                                        {this.state.projectListForModalWindow.map((item, index) => (
-                                            <div
-                                                key={'timer-project-' + index}
-                                                className="projects_modal_item"
-                                                onClick={e => this.setActiveProject(item)}
-                                            >
-                                                <div
-                                                    className={`projects_modal_item_circle ${item.projectColor.name}`}
-                                                />
-                                                <div className="projects_modal_item_name">{item.name}</div>
+                                    {this.state.isShowListProjectsMobile &&
+                                        this.state.projectListForModalWindow.length && (
+                                            <div className="projects_modal_data_wrapper">
+                                                {this.state.projectListForModalWindow.map((item, index) => (
+                                                    <div
+                                                        key={'timer-project-' + index}
+                                                        className="projects_modal_item"
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            this.projectSearchTextTargetElement.value = item.name;
+                                                            this.setActiveProject(item);
+                                                            this.setState({ isShowListProjectsMobile: false });
+                                                        }}
+                                                    >
+                                                        <div
+                                                            className={`projects_modal_item_circle ${
+                                                                item.projectColor.name
+                                                            }`}
+                                                        />
+                                                        <div className="projects_modal_item_name">{item.name}</div>
+                                                    </div>
+                                                ))}
                                             </div>
-                                        ))}
-                                    </div>
+                                        )}
                                 </div>
-                            )}
-                        </i>
-                        <i
-                            onClick={_ => {
-                                this.state.timerReadyToUse &&
-                                    this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
-                            }}
-                            className={buttonClassName}
-                        />
-                    </div>
-                    <div className="main_wrapper_tracker_items">{timeTrackerWrapperItems}</div>
-                </div>
+                                {!this.state.isShowListProjectsMobile && (
+                                    <button
+                                        className="add-task-button-mobile"
+                                        onClick={_ => {
+                                            this.state.timerReadyToUse &&
+                                                this.timerPlayStopButtonAction(
+                                                    buttonClassName,
+                                                    this.state.seletedProject.id
+                                                );
+                                        }}
+                                    >
+                                        Start timer
+                                        <span className="add-task-button-mobile-play" />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                {/* END BLOCK ADD TASK MOBILE */}
             </div>
         );
     }
@@ -544,6 +769,9 @@ const mapStateToProps = store => {
         timeEntriesList: store.mainPageReducer.timeEntriesList,
         editedItem: store.mainPageReducer.editedItem,
         manualTimerModal: store.manualTimerModalReducer,
+        viewport: store.responsiveReducer.viewport,
+        isShowMenu: store.responsiveReducer.isShowMenu,
+        isMobile: store.responsiveReducer.isMobile,
     };
 };
 

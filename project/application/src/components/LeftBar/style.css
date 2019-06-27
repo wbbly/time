@@ -1,47 +1,42 @@
-@font-face {
-    font-family: "Open Sans", sans-serif;
-    src: url("https://fonts.googleapis.com/css?family=Open+Sans");
-}
-
 .wrapper {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: start;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    height: 100%;
-    width: 188px;
+    padding: 34px 0 7rem 0;
     background-color: #3b3b3b;
     box-shadow: 6px 0 20px rgba(0, 0, 0, 0.14);
-}
 
-.wrapper_z-index-1 {
+    position: relative;
     z-index: 1;
+
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 }
 
 .logo_small {
     display: block;
-    width: 133px;
+    margin-bottom: 3.5rem;
     height: 26px;
     background: url("../../images/wobbly_logo.png") no-repeat center;
-    margin-top: 34px;
     background-size: 110px;
+}
+
+.team_list ul {
+    list-style: none;
 }
 
 i {
     display: block;
 }
 
-.navigation_links_container i {
+.navigation_links > i {
     width: 15px;
     height: 15px;
 }
 
 .navigation_links_container {
-    margin-top: 35px;
+    flex-grow: 1;
+    width: 100%;
 }
 
 .timer {
@@ -79,10 +74,9 @@ i {
     display: flex;
     align-items: center;
     justify-content: start;
-    width: 167px;
     height: 28px;
     padding-left: 21px;
-    margin-top: 10px;
+    margin-bottom: 10px;
     cursor: pointer;
 }
 
@@ -98,15 +92,12 @@ a {
 .navigation_links .timer_task {
     margin-left: 10px;
     color: white;
+    font-size: 1.6rem;
 }
 
 .logout_container {
-    bottom: 27px;
-    cursor: pointer;
-    position: absolute;
-    width: 100%;
     z-index: inherit;
-    margin-bottom: 30px;
+    cursor: pointer;
 }
 
 .logout_container div {
@@ -135,4 +126,15 @@ a {
     width: 15px;
     height: 15px;
     background: url("../../images/icons/logout.svg") no-repeat center;
+}
+
+@media (min-width: 1024px) {
+    .wrapper {
+        width: 188px;
+    }
+
+    /* .logo_small {
+        display: block;
+        margin-bottom: 3.5rem;
+    } */
 }

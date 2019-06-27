@@ -76,12 +76,13 @@ class AuthPage extends Component {
     componentWillMount() {}
 
     render() {
+        const { history, viewport } = this.props;
         if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
 
         logoutByUnauthorized(false);
 
         return (
-            <div className="wrapper_authorisation_page">
+            <div className="wrapper_authorisation_page" style={{ height: viewport.height - 1 }}>
                 {this.props.authPageReducer && <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />}
                 <i className="page_title" />
                 <div className="authorisation_window">
@@ -100,20 +101,20 @@ class AuthPage extends Component {
                     <button
                         className="login_button"
                         onClick={e => {
-                            this.login(this.email.value, this.password.value);
+                            this.login(this.email.value.toLocaleLowerCase(), this.password.value);
                         }}
                     >
                         Login
                     </button>
-                    <button
-                        className="registration_button"
-                        onClick={e => {
-                            this.props.toggleRegisterModal('TOGGLE_REGISTER_MODAL', { registerModal: true });
-                        }}
-                    >
-                        Registration
-                    </button>
+                    <button className="forgot_password_button">Forgot your password?</button>
                 </div>
+                <button
+                    onClick={e => history.push('/register')}
+                    className="register-block__button register-block__button--to-login"
+                    type="button"
+                >
+                    Don't have an account yet? Sign up
+                </button>
             </div>
         );
     }
@@ -122,6 +123,7 @@ class AuthPage extends Component {
 const mapStateToProps = store => {
     return {
         authPageReducer: store.authPageReducer.registerModal,
+        viewport: store.responsiveReducer.viewport,
     };
 };
 

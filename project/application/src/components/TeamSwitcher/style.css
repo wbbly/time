@@ -29,7 +29,7 @@
 .team_list ul li div.team_list-item {
     padding: 6px;
     padding-left: 44px;
-    max-width: 125px;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
