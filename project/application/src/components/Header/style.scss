@@ -1,0 +1,33 @@
+.main-header {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem 0;
+
+    .main-header__small-logo {
+        width: 7.7rem;
+        height: 1.8rem;
+        background: url("../../images/wobbly_logo.png") no-repeat center;
+        background-size: cover;
+    }
+    
+    .main-header__show-menu-button {
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+        height: 100%;
+        padding: 0 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: none;
+        outline: none;
+        border: none;
+    }
+    
+    .main-header__show-menu-button-icon {
+        color: #ffffff;
+        font-size: 2rem;
+    }
+}
