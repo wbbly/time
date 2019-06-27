@@ -1,0 +1,68 @@
+.wrapper_projects_page {
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  .data_container_projects_page {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #333333;
+    padding-top: 47px;
+    padding-left: 148px;
+    padding-right: 56px;
+    overflow-y: auto;
+  }
+
+  .projects_page_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .projects_page_title {
+    font-family: "Open Sans", sans-serif;
+    line-height: normal;
+    font-size: 36px;
+    color: #ffffff;
+  }
+
+  .create_project_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 208px;
+    height: 41px;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #27ae60;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .project_page_filters {
+    margin-top: 67px;
+  }
+
+  .project_data_wrapper {
+    margin-top: 6%;
+  }
+
+  .delete {
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/waste-bin.svg") no-repeat center;
+  }
+}
+
+.wrapper_projects_page--mobile {
+  .data_container_projects_page {
+    padding: 1rem;
+  }
+}
