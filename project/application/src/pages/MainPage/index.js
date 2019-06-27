@@ -412,7 +412,7 @@ class MainPage extends Component {
     };
 
     createTimeEntriesList(data) {
-        const { viewport } = this.props;
+        const { viewport, isMobile } = this.props;
         let items = data.map(item => (
             <div className="ul" key={item.id} onClick={this.toggleSwipe}>
                 <div className="li">
@@ -423,7 +423,19 @@ class MainPage extends Component {
                             <span>{item.project.name}</span>
                         </div>
                     </div>
-                    <div className="time_container_history">
+                    <div
+                        className="time_container_history"
+                        onClick={event => {
+                            event.stopPropagation();
+                            if (!isMobile && event.target.className !== 'small_play item_button') return;
+                            if (this.swipedElement) {
+                                if (this.swipedElement.className === 'ul swipe') {
+                                    this.swipedElement.click();
+                                }
+                            }
+                            this.state.timerReadyToUse && this.timerContinue(item.issue, item);
+                        }}
+                    >
                         <div className="time_now">
                             <div>{moment(item.startDatetime).format('HH:mm')}</div>-{' '}
                             <div>{moment(item.endDatetime).format('HH:mm')}</div>
@@ -431,20 +443,7 @@ class MainPage extends Component {
                         <div className="timePassed">
                             {getTimeDurationByGivenTimestamp(+moment(item.endDatetime) - +moment(item.startDatetime))}
                         </div>
-                        {!this.state.timerDurationValue && (
-                            <i
-                                className="small_play item_button"
-                                onClick={event => {
-                                    event.stopPropagation();
-                                    if (this.swipedElement) {
-                                        if (this.swipedElement.className === 'ul swipe') {
-                                            this.swipedElement.click();
-                                        }
-                                    }
-                                    this.state.timerReadyToUse && this.timerContinue(item.issue, item);
-                                }}
-                            />
-                        )}
+                        {!this.state.timerDurationValue && <i className="small_play item_button" />}
                         <i
                             className="edit_button item_button"
                             onClick={event => {
