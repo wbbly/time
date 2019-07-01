@@ -12,10 +12,10 @@
 }
 
 .register-block .register-block__logo {
-    width: 19.6rem;
-    height: 4.6rem;
-    background: url("../../images/wobbly_logo.png") no-repeat center;
-    background-size: cover;
+    width: 196px;
+    height: 46px;
+    background: url("../../images/wobbly_logo_auth.png") no-repeat center;
+    background-size: 196px 46px;
     margin: 0 0 2rem 0;
 }
 

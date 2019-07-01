@@ -14,6 +14,7 @@
     "normalize.css": "8.0.1",
     "prop-types": "15.6.2",
     "react": "16.7.0",
+    "react-app-polyfill": "1.0.1",
     "react-chartjs-2": "2.7.4",
     "react-custom-scrollbars": "4.2.1",
     "react-date-range": "1.0.0-beta",
@@ -52,7 +53,7 @@
   "browserslist": [
     ">0.2%",
     "not dead",
-    "not ie <= 11",
+    "not ie < 11",
     "not op_mini all"
   ]
 }
