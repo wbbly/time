@@ -85,6 +85,8 @@ class MainPage extends Component {
             );
         });
         this.socketConnection.on('check-timer-v2', data => {
+            // console.log('data', data);
+            // console.log('this.TIMER_MANUAL_UPDATE_SUBSCRIPTION', this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
             if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
                 apiCall(AppConfig.apiURL + 'time/current', {
                     method: 'GET',
@@ -93,6 +95,7 @@ class MainPage extends Component {
                     },
                 }).then(
                     result => {
+                        // console.log('start then');
                         setServerClientTimediffToLocalStorage(+moment(result.timeISO) - +moment());
                         const currentTimer = {
                             timeStart: +moment(data.startDatetime),
@@ -169,6 +172,9 @@ class MainPage extends Component {
     }
 
     timerUpdate() {
+        if (!this.state.timerDurationValue) return;
+        // console.log('timer_update');
+        // console.log('this.state.timerDurationValue', this.state.timerDurationValue)
         clearTimeout(this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
         this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = undefined;
 
@@ -186,6 +192,8 @@ class MainPage extends Component {
             clearTimeout(this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
             this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = undefined;
         }, this.ONE_SECOND_PERIOD);
+
+        // console.log('this.TIMER_MANUAL_UPDATE_SUBSCRIPTION', this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
     }
 
     timerStop() {
@@ -211,6 +219,7 @@ class MainPage extends Component {
     }
 
     timerStateUpdateWithSocketData(socketData) {
+        // console.log('work');
         if (!socketData || !socketData.timeStart) {
             return;
         }
@@ -512,6 +521,7 @@ class MainPage extends Component {
     }
 
     render() {
+        // console.log('render');
         const { isMobile } = this.props;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
@@ -550,7 +560,7 @@ class MainPage extends Component {
                             ref={input => {
                                 this.issueTargetElement = input;
                             }}
-                            onKeyUp={e => this.timerUpdate()}
+                            onChange={e => this.timerUpdate()}
                         />
                         <div className="wrapper-timer-mobile">
                             {this.state.timerReadyToUse && (
@@ -687,7 +697,7 @@ class MainPage extends Component {
                                     className="add_task"
                                     placeholder="Add your task name"
                                     onChange={event => (this.issueTargetElement.value = event.target.value)}
-                                    onKeyUp={e => this.timerUpdate()}
+                                    // onKeyUp={e => this.timerUpdate()}
                                 />
                                 <div
                                     className="projects_modal_wrapper"
