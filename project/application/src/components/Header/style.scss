@@ -6,16 +6,17 @@
     padding: 1.5rem 0;
 
     .main-header__small-logo {
-        width: 7.7rem;
-        height: 1.8rem;
-        background: url("../../images/wobbly_logo.png") no-repeat center;
-        background-size: cover;
+        width: 77px;
+        height: 18px;
+        background: url("../../images/wobbly_logo_header.png") no-repeat center;
+        background-size: 77px 18px;
     }
     
     .main-header__show-menu-button {
         cursor: pointer;
         position: absolute;
         right: 0;
+        top: 0;
         height: 100%;
         padding: 0 1.5rem;
         display: flex;

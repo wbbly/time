@@ -17,8 +17,8 @@
     display: block;
     margin-bottom: 3.5rem;
     height: 26px;
-    background: url("../../images/wobbly_logo.png") no-repeat center;
-    background-size: 110px;
+    background: url("../../images/wobbly_logo_sidebar.png") no-repeat center;
+    background-size: 111px;
 }
 
 .team_list ul {
