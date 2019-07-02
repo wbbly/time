@@ -730,6 +730,10 @@ span.circle {
     align-items: center;
   }
 
+  .name_container .project_name .project_name__name {
+    white-space: nowrap;
+  }
+
   .time_container_history .item_button {
     display: none;
   }

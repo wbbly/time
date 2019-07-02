@@ -29,7 +29,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: calc(100% - 40px);
     padding: 0 20px;
     border-bottom: 1px solid #bdbdbd;
     height: 63px;
@@ -52,8 +51,7 @@
 }
 
 .create_team_modal_data {
-    padding: 0 18px;
-    width: calc(100% - 40px);
+    padding: 0 20px;
 }
 
 .create_team_modal_data .create_team_modal_data_input_container {
@@ -65,11 +63,10 @@
 
 .create_team_modal_data .create_team_modal_data_input_container input {
     padding-left: 16px;
-    width: calc(100% - 80px - 16px);
+    width: 100%;
     height: 47px;
     border: 1px solid #828282;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+    border-radius: 4px;
     text-transform: none;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
@@ -179,7 +176,6 @@
 
 .create_team_modal_button_container {
     margin-top: 28px;
-    padding: 0 38px 20px;
     display: flex;
     justify-content: flex-end;
     padding-bottom: 19px;
@@ -188,7 +184,7 @@
 .create_team_modal_button_container_button {
     width: 177px;
     height: 41px;
-    margin-right: 22px;
+    margin-right: 20px;
     border: 0;
     background-color: #27ae60;
     font-family: "Open Sans", sans-serif;
