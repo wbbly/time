@@ -43,7 +43,7 @@
 
 .manual_time_modal_close {
     position: relative;
-    left: 99%;
+    left: 97%;
     top: -7px;
 }
 
@@ -95,6 +95,8 @@ input[type="time"],
 }
 
 .manual_time_modal_container .item_select_wrapper {
+    font-size: 1.6rem;
+    line-height: 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -409,6 +411,8 @@ div[role="dialog"] p {
 }
 
 .manual_time_modal_wrapper--mobile .item_select_wrapper {
+    font-size: 1.2rem;
+    line-height: 1.6rem;
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
