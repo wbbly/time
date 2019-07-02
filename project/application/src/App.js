@@ -68,7 +68,7 @@ addEvent(window, 'resize', event => {
 });
 
 class App extends Component {
-    setResponsiveReducer = () => {
+    setResponsiveReducer = event => {
         const { setViewportSize, setIsMobile, isMobile } = this.props;
         setViewportSize({
             width: window.innerWidth,
@@ -86,13 +86,11 @@ class App extends Component {
 
     componentDidMount() {
         this.setResponsiveReducer();
-        addEvent(window, 'resize', event => {
-            this.setResponsiveReducer();
-        });
+        addEvent(window, 'resize', this.setResponsiveReducer);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.setResponsiveReducer());
+        window.removeEventListener('resize', this.setResponsiveReducer);
     }
 
     render() {
