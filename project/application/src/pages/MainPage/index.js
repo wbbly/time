@@ -429,7 +429,7 @@ class MainPage extends Component {
                         <div className="name">{item.issue}</div>
                         <div className="project_name">
                             <span className={`circle ${item.project.projectColor.name}`} />
-                            <span>{item.project.name}</span>
+                            <span className="project_name__name">{item.project.name}</span>
                         </div>
                     </div>
                     <div
