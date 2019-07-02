@@ -119,7 +119,7 @@ class ResetPasswordPage extends Component {
                         <input
                             type={this.checkVisible('secondPasswordType')}
                             ref={input => (this.password2 = input)}
-                            placeholder="enter new password"
+                            placeholder="repeat new password"
                         />
                         <div className="input_title">Confirm password</div>
                         <i
