@@ -5,6 +5,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 // Services
 import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
+import { Trans } from 'react-i18next';
 
 // Components
 
@@ -80,8 +81,12 @@ class ProjectsContainer extends Component {
             <div className="projects_container_wrapper">
                 <div className="projects_container_projects">
                     <div className="projects_header">
-                        <div>Project name</div>
-                        <div>Time</div>
+                        <div>
+                            <Trans i18nKey="project_name">Project name</Trans>
+                        </div>
+                        <div>
+                            <Trans i18nKey="time">Time</Trans>
+                        </div>
                     </div>
                     <div className="projects_container_project_data_container">{projectsItems}</div>
                 </div>

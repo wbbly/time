@@ -7,6 +7,9 @@ import { userLoggedIn, logoutByUnauthorized } from '../../services/authenticatio
 import { setTokenToLocalStorage, getLoggedUserEmail } from '../../services/tokenStorageService';
 import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamDataStorageService';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import { setLangToStorage, getLangFromStorage} from '../../services/localesService';
+import i18n from './../../i18n';
 
 // Components
 import RegisterModal from '../../components/RegisterModal';
@@ -23,10 +26,15 @@ import { AppConfig } from '../../config';
 // Styles
 import './index.css';
 
+
 class AuthPage extends Component {
     state = {
         haveToken: false,
         authorisationModal: true,
+    };
+
+    changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     };
 
     login = (email, password) => {
@@ -75,8 +83,14 @@ class AuthPage extends Component {
 
     componentWillMount() {}
 
+    componentDidMount() {
+        this.changeLanguage(getLangFromStorage());
+        console.log(i18n.t('login'));
+    }
+
     render() {
-        const { history, viewport } = this.props;
+        console.log(this.props, 'withTranslation(\'translations\')');
+        const { history, viewport} = this.props;
         if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
 
         logoutByUnauthorized(false);
@@ -87,16 +101,20 @@ class AuthPage extends Component {
                 <i className="page_title" />
                 <div className="authorisation_window">
                     <div className="input_container">
-                        <input type="text" ref={input => (this.email = input)} placeholder="Add your login..." />
-                        <div className="input_title">Login</div>
+                        <input type="text" ref={input => (this.email = input)} placeholder={i18n.t('add_your_login')} />
+                        <div className="input_title">
+                            <Trans i18nKey="login">Login</Trans>
+                        </div>
                     </div>
                     <div className="input_container">
                         <input
                             type="password"
                             ref={input => (this.password = input)}
-                            placeholder="Add your password..."
+                            placeholder={i18n.t('add_your_password')}
                         />
-                        <div className="input_title">Password</div>
+                        <div className="input_title">
+                            <Trans i18nKey="password">Password</Trans>
+                        </div>
                     </div>
                     <button
                         className="login_button"
@@ -104,16 +122,18 @@ class AuthPage extends Component {
                             this.login(this.email.value.toLocaleLowerCase(), this.password.value);
                         }}
                     >
-                        Login
+                        <Trans i18nKey="enter">Login</Trans>
                     </button>
-                    <button className="forgot_password_button">Forgot your password?</button>
+                    <button className="forgot_password_button">
+                        <Trans i18nKey="forgot_your_password">Forgot your password</Trans>?
+                    </button>
                 </div>
                 <button
                     onClick={e => history.push('/register')}
                     className="register-block__button register-block__button--to-login"
                     type="button"
                 >
-                    Don't have an account yet? Sign up
+                    <Trans i18nKey="don't_have_an_account_yet">Don't have an account yet</Trans>? <Trans i18nKey="sign_up">Sign up</Trans>
                 </button>
             </div>
         );

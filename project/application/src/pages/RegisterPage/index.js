@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 // Services
 import { apiCall } from '../../services/apiService';
+import { getLangFromStorage } from '../../services/localesService';
+import i18n from './../../i18n';
 
 // Components
 
@@ -44,6 +46,10 @@ class RegisterPage extends Component {
                 required: true,
             },
         },
+    };
+
+    changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     };
 
     addUser = ({ email, password }) => {
@@ -111,6 +117,10 @@ class RegisterPage extends Component {
         const { history } = this.props;
         history.push('/login');
     };
+
+    componentDidMount() {
+        this.changeLanguage(getLangFromStorage())
+    }
 
     render() {
         const { email, password, confirmPassword } = this.state.inputs;

@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 
 // Styles
 import './style.css';
+import {Trans} from "react-i18next";
 
 export default class ProjectSearchBar extends Component {
     etalonTable = [];
@@ -46,7 +47,7 @@ export default class ProjectSearchBar extends Component {
                 </div>
                 <div className="project_search_bar_button_container">
                     <button className="project_search_bar_button" onClick={e => this.search()}>
-                        Apply
+                        <Trans i18nKey="apply"> Apply </Trans>
                     </button>
                 </div>
             </div>

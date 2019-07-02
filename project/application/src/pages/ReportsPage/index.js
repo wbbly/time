@@ -26,6 +26,9 @@ import {
 } from '../../services/timeService';
 import { getLoggedUserTimezoneOffset } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import { getLangFromStorage } from '../../services/localesService';
+import i18n from './../../i18n';
 
 // Components
 import ProjectsContainer from '../../components/ProjectsContainer';
@@ -96,6 +99,10 @@ class ReportsPage extends Component {
         },
     };
 
+    changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    };
+
     setDataToGraph(object, objectData) {
         let newObject = object;
         newObject.labels = objectData.labels;
@@ -144,7 +151,9 @@ class ReportsPage extends Component {
             >
                 <div className="data_container_reports_page">
                     <div className="header">
-                        <div className="header_name">Summary report</div>
+                        <div className="header_name">
+                           <Trans i18nKey="summary_report">Summary report</Trans>
+                        </div>
                         <div className="selects_container">
                             <div className="select_header" onClick={e => this.openCalendar()}>
                                 <span>
@@ -182,14 +191,16 @@ class ReportsPage extends Component {
                     {this.state.toggleBar &&
                         this.state.toggleChar && (
                             <div className="total_time_container">
-                                <span className="total_time_name">Total</span>
+                                <span className="total_time_name">
+                                   <Trans i18nKey="total">Total</Trans>
+                                </span>
                                 <span className="total_time_time">
                                     {typeof this.state.totalUpChartTime === 'number'
                                         ? getTimeDurationByGivenTimestamp(this.state.totalUpChartTime)
                                         : '00:00:00'}
                                 </span>
                                 <span className="export_button" onClick={e => this.export()}>
-                                    Export
+                                    <Trans i18nKey="export"> Export </Trans>
                                 </span>
                             </div>
                         )}
@@ -465,6 +476,7 @@ class ReportsPage extends Component {
     }
 
     componentDidMount() {
+        this.changeLanguage(getLangFromStorage());
         showMobileSupportToastr();
         this.setState({ selectionRange: this.props.timeRange });
         apiCall(AppConfig.apiURL + `user/list`, {

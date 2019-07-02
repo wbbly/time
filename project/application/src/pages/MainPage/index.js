@@ -21,6 +21,10 @@ import {
 } from '../../services/currentTimerStorageService';
 import { setServerClientTimediffToLocalStorage } from '../../services/serverClientTimediffStorageService';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import { getLangFromStorage } from '../../services/localesService';
+import i18n from './../../i18n';
+
 
 // Components
 import ManualTimeModal from '../../components/ManualTimeModal';
@@ -67,6 +71,10 @@ class MainPage extends Component {
         projectListIsOpen: false,
         isShowAddTaskMobile: false,
         isShowListProjectsMobile: false,
+    };
+
+    changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     };
 
     initSocketConnection() {
@@ -401,6 +409,7 @@ class MainPage extends Component {
         await this.getProjectList();
         await this.getUserTimeEntries();
         this.initSocketConnection();
+        this.changeLanguage(getLangFromStorage())
     }
 
     componentWillUnmount() {
@@ -531,7 +540,10 @@ class MainPage extends Component {
             <div className="time_tracker_wrapper" key={'time-entry-group_' + index}>
                 <div className="header">
                     <div className="date">{moment(arraysItem[0].startDatetime).format('DD.MM.YYYY')}</div>
-                    <div className="allTime">Total time: {this.getTimeEntriesTotalTime(arraysItem)}</div>
+                    <div className="allTime">
+                       <Trans i18nKey="total_time">Total time</Trans>:
+                        {this.getTimeEntriesTotalTime(arraysItem)}
+                    </div>
                 </div>
                 {this.createTimeEntriesList(arraysItem)}
             </div>
@@ -556,7 +568,7 @@ class MainPage extends Component {
                         <input
                             type="text"
                             className="add_task"
-                            placeholder="Add your task name"
+                            placeholder={i18n.t('add_your_task_name')}
                             ref={input => {
                                 this.issueTargetElement = input;
                             }}
@@ -586,7 +598,7 @@ class MainPage extends Component {
                                             }}
                                         >
                                             <input
-                                                placeholder="Find..."
+                                                placeholder={i18n.t('find')}
                                                 type="text"
                                                 ref={input => (this.projectSearchTextTargetElement = input)}
                                                 onKeyUp={e =>
@@ -695,7 +707,7 @@ class MainPage extends Component {
                                 <input
                                     type="text"
                                     className="add_task"
-                                    placeholder="Add your task name"
+                                    placeholder={i18n.t('add_your_task_name')}
                                     onChange={event => (this.issueTargetElement.value = event.target.value)}
                                     // onKeyUp={e => this.timerUpdate()}
                                 />
@@ -712,7 +724,7 @@ class MainPage extends Component {
                                         <div className="add-task-mobile__label-input">Search project</div>
                                         <div className="add-task-mobile__wrapper-serach">
                                             <input
-                                                placeholder="Find..."
+                                                placeholder={i18n.t('find')}
                                                 type="text"
                                                 ref={input => (this.projectSearchTextTargetElement = input)}
                                                 defaultValue={

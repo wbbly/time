@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 // Services
+import i18n from './../../i18n';
 
 // Components
 
@@ -65,7 +66,7 @@ export default class CreateTeamModal extends Component {
                                 ref={input => {
                                     this.createTeamInput = input;
                                 }}
-                                placeholder={'Team name...'}
+                                placeholder={i18n.t('team_name')}
                             />
                         </div>
                     </div>

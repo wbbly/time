@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // Services
 import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { checkIsAdmin } from '../../services/authentication';
+import { Trans } from 'react-i18next';
 
 // Components
 import EditProjectModal from '../EditProjectModal/index';
@@ -27,7 +28,7 @@ export default class ProjectData extends Component {
         const tableHeader = [
             {
                 key: 1,
-                value: 'Project name',
+                value: 'Project_name',
             },
             {
                 key: 2,
@@ -43,7 +44,7 @@ export default class ProjectData extends Component {
                 </td>
             </tr>
         ));
-        const tableHeaderElements = tableHeader.map((item, index) => <th key={'table-info_' + index}>{item.value}</th>);
+        const tableHeaderElements = tableHeader.map((item, index) => <th key={'table-info_' + index}><Trans i18nKey={item.value}>{item.value}</Trans></th>);
 
         return (
             <div className="project_data_wrapper">

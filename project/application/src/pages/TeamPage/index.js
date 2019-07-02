@@ -15,6 +15,9 @@ import {
     setCurrentTeamDataToLocalStorage,
 } from '../../services/currentTeamDataStorageService';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import { getLangFromStorage } from '../../services/localesService';
+import i18n from './../../i18n';
 
 // Components
 import AddToTeamModal from '../../components/AddToTeamModal';
@@ -39,12 +42,16 @@ class TeamPage extends Component {
         teamId: '',
     };
 
-    headerItems = ['Name', 'E-mail', 'Team Roles', 'Team Access'];
+    headerItems = ['name', 'E-mail', 'team_roles', 'team_access'];
 
     changingName = false;
     teamNameRef = React.createRef();
 
     nameInput = val => <input ref={this.teamNameRef} type="text" placeholder={val} />;
+
+    changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    };
 
     openAddUserModal() {
         this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: !this.props.createUserModal });
@@ -65,7 +72,9 @@ class TeamPage extends Component {
         const { isMobile, setTeamsUpdateTimestamp } = this.props;
         let programersArr = this.props.programersArr;
         const headerItemsElements = this.headerItems.map((element, index) => (
-            <th key={'team-group-header_' + index}>{element}</th>
+            <th key={'team-group-header_' + index}>
+                <Trans i18nKey="">{element}</Trans>
+            </th>
         ));
         const items = programersArr.map((item, index) => {
             const currentUser = item.user[0] || {};
@@ -143,7 +152,9 @@ class TeamPage extends Component {
                 )}
                 <div className="data_container_team_page">
                     <div className="team_page_header">
-                        <div className="page_name">Team: {this.state.teamName}</div>
+                        <div className="page_name">
+                            <Trans i18nKey="team_b">Team</Trans>: {this.state.teamName}
+                        </div>
                         <div className="team_page_main-controls">
                             <div className="invite_container">
                                 {checkIsAdmin() && (
@@ -152,7 +163,7 @@ class TeamPage extends Component {
                                             this.openRenameModal();
                                         }}
                                     >
-                                        Rename team
+                                        <Trans i18nKey="rename_team">Rename team</Trans>
                                     </button>
                                 )}
                             </div>
@@ -163,7 +174,7 @@ class TeamPage extends Component {
                                             this.openAddUserModal();
                                         }}
                                     >
-                                        Invite to team
+                                        <Trans i18nKey="invite_to_team"> Invite to team</Trans>
                                     </button>
                                 )}
                             </div>
@@ -183,6 +194,7 @@ class TeamPage extends Component {
     }
 
     componentDidMount() {
+        this.changeLanguage(getLangFromStorage());
         showMobileSupportToastr();
         this.getDataFromServer();
     }

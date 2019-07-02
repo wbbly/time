@@ -26,6 +26,7 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.css';
+import {Trans} from "react-i18next";
 
 class TeamSwitcher extends Component {
     state = {
@@ -163,7 +164,7 @@ class TeamSwitcher extends Component {
                                     data-id={team.id}
                                     data-name={team.name}
                                 >
-                                    {team.name + ' '}
+                                    <Trans i18nKey="my_team">{team.name + ' '}</Trans>
                                     {this.state.availableTeams.length > 1 &&
                                         this.state.currentTeamId === team.id && <b>(default)</b>}
                                 </div>

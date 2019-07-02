@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import i18n from './../../i18n';
 
 // Components
 
@@ -101,7 +103,9 @@ export default class EditProjectModal extends Component {
                 <div className="edit_projects_modal_background" />
                 <div className="edit_projects_modal_container">
                     <div className="edit_projects_modal_header">
-                        <div className="edit_projects_modal_header_title">Edit project</div>
+                        <div className="edit_projects_modal_header_title">
+                          <Trans i18nKey="edit_project">Edit project</Trans>
+                        </div>
                         <i className="edit_projects_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
                     <div className="edit_projects_modal_data">
@@ -111,7 +115,7 @@ export default class EditProjectModal extends Component {
                                 ref={input => {
                                     this.editProjectInput = input;
                                 }}
-                                placeholder={'Project name...'}
+                                placeholder={i18n.t('project_name')}
                             />
                             <div
                                 className="edit_projects_modal_data_select_container"
@@ -130,7 +134,7 @@ export default class EditProjectModal extends Component {
                             className="edit_projects_modal_button_container_button"
                             onClick={e => this.changeProject()}
                         >
-                            Edit project
+                            <Trans i18nKey="edit_project">Edit project</Trans>
                         </button>
                     </div>
                 </div>

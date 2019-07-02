@@ -10,6 +10,9 @@ import classNames from 'classnames';
 // Services
 import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import { getLangFromStorage } from '../../services/localesService';
+import i18n from './../../i18n';
 
 // Components
 import ProjectSearchBar from '../../components/projectSearchBar';
@@ -31,6 +34,10 @@ import './style.scss';
 class ProjectsPage extends Component {
     state = {
         etalonArr: [],
+    };
+
+    changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     };
 
     getProjects = () => {
@@ -75,13 +82,15 @@ class ProjectsPage extends Component {
                 )}
                 <div className="data_container_projects_page">
                     <div className="projects_page_header">
-                        <div className="projects_page_title">Projects</div>
+                        <div className="projects_page_title">
+                            <Trans i18nKey="projects"> Projects </Trans>
+                        </div>
                         {checkIsAdmin() && (
                             <button
                                 className="create_project_button"
                                 onClick={e => projectsPageAction('TOGGLE_MODAL', { toggle: true })}
                             >
-                                Create new project
+                                <Trans i18nKey="create_new_project">Create new project</Trans>
                             </button>
                         )}
                     </div>
@@ -109,6 +118,7 @@ class ProjectsPage extends Component {
     componentDidMount() {
         this.getProjects();
         showMobileSupportToastr();
+        this.changeLanguage(getLangFromStorage())
     }
 }
 

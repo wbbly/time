@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // Services
 import { apiCall } from '../../services/apiService';
 import { ROLES } from '../../services/authentication';
+import { Trans } from 'react-i18next';
 
 // Components
 
@@ -72,7 +73,9 @@ class AddToTeamModal extends Component {
                 <div className="add_user_modal_background" />
                 <div className="add_user_modal_container">
                     <div className="add_user_modal_header">
-                        <div className="add_user_modal_header_title">Invite to team</div>
+                        <div className="add_user_modal_header_title">
+                            <Trans i18nKey="invite_to_team"> Invite to team</Trans>
+                        </div>
                         <i className="add_user_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
                     <div className="add_user_modal_data">
@@ -91,7 +94,7 @@ class AddToTeamModal extends Component {
                             className="add_user_modal_button_container_button"
                             onClick={e => this.addUser(this.email.value)}
                         >
-                            Add user
+                            <Trans i18nKey="add_user">Add user</Trans>
                         </button>
                     </div>
                 </div>

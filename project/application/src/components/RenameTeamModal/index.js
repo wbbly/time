@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 // Services
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import i18n from './../../i18n';
 
 // Components
 
@@ -75,17 +77,20 @@ export default class RenameTeamModal extends Component {
                 <div className="rename_team_modal_background" />
                 <div className="rename_team_modal_container">
                     <div className="rename_team_modal_header">
-                        <div className="rename_team_modal_header_title">Edit Team Name</div>
+                        <div className="rename_team_modal_header_title">
+                            <Trans i18nKey="edit_team_name">Edit Team Name</Trans>
+                        </div>
                         <i className="rename_team_modal_header_close" onClick={e => this.props.closeCallback()} />
                     </div>
                     <div className="rename_team_modal_data">
                         <div className="rename_team_modal_data_input_container">
-                            <input type="text" ref={this.teamNameRef} placeholder={'Team name...'} />
+                            <input type="text" ref={this.teamNameRef}
+                                   placeholder={i18n.t('team_name')} />
                         </div>
                     </div>
                     <div className="rename_team_modal_button_container">
                         <button className="rename_team_modal_button_container_button" onClick={e => this.renameTeam()}>
-                            Rename Team
+                            <Trans i18nKey="rename_team">Rename Team</Trans>
                         </button>
                     </div>
                 </div>

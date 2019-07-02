@@ -6,6 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 // Services
 import { ROLES } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
 
 // Components
 
@@ -78,7 +79,9 @@ class EditTeamModal extends Component {
                 <div className="edit_team_modal_data">
                     <i onClick={e => this.closeModal()} />
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">E-mail</div>
+                        <div className="edit_team_modal_input_title">
+                            E-mail
+                        </div>
                         <input
                             type="text"
                             ref={input => {
@@ -88,7 +91,10 @@ class EditTeamModal extends Component {
                         />
                     </div>
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">Name</div>
+                        <div className="edit_team_modal_input_title">
+                            <Trans i18nKey="name">Name</Trans>
+
+                        </div>
                         <input
                             type="text"
                             ref={input => {
@@ -98,7 +104,10 @@ class EditTeamModal extends Component {
                         />
                     </div>
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">Team Role</div>
+                        <div className="edit_team_modal_input_title">
+                            <Trans i18nKey="team_roles">Team Role</Trans>
+
+                        </div>
                         <RadioGroup onChange={this.handleChange} value={this.state.value}>
                             <FormControlLabel
                                 value={ROLES.ROLE_ADMIN}
@@ -113,7 +122,9 @@ class EditTeamModal extends Component {
                         </RadioGroup>
                     </div>
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">Team Access</div>
+                        <div className="edit_team_modal_input_title">
+                           <Trans i18nKey="team_access">Team Access</Trans>
+                        </div>
                         <RadioGroup onChange={this.handleChangeStatus} value={this.state.valueStatus}>
                             <FormControlLabel
                                 value={USER_STATUS.ACTIVE}
@@ -127,7 +138,9 @@ class EditTeamModal extends Component {
                             />
                         </RadioGroup>
                     </div>
-                    <button onClick={e => this.addUser(this.props.teamPage)}>Edit user</button>
+                    <button onClick={e => this.addUser(this.props.teamPage)}>
+                        <Trans i18nKey="edit_user">Edit user</Trans>
+                    </button>
                 </div>
             </div>
         );

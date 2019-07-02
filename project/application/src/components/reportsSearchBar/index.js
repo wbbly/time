@@ -3,6 +3,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 // Services
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import i18n from './../../i18n';
 
 // Components
 
@@ -214,7 +216,7 @@ export default class ReportsSearchBar extends Component {
                             ref={div => (this.userInputRef = div)}
                         >
                             <div>
-                                User:&nbsp;
+                               <Trans i18nKey="user">User</Trans> :&nbsp;
                                 {this.state.userDataSelected.map((item, index) => (
                                     <span key={item.username + index}>
                                         {index === 0 ? item.username : `, ${item.username}`}
@@ -233,13 +235,13 @@ export default class ReportsSearchBar extends Component {
                                         this.findUser(this.state.userDataEtalon, this.smallSelectUserInputRef.value)
                                     }
                                     ref={input => (this.smallSelectUserInputRef = input)}
-                                    placeholder={'Find'}
+                                    placeholder={i18n.t('find')}
                                 />
                                 <div ref={div => (this.selectAllUsersRef = div)} onClick={_ => this.selectAllUsers()}>
-                                    Select all
+                                    <Trans i18nKey="select_all">Select all</Trans>
                                 </div>
                                 <div ref={div => (this.selectNoneUsersRef = div)} onClick={_ => this.selectNoneUsers()}>
-                                    Select none
+                                    <Trans i18nKey="select_none">Select none</Trans>
                                 </div>
                                 <i className="small_clear" onClick={_ => this.clearUserSearch()} />
                             </div>
@@ -271,7 +273,7 @@ export default class ReportsSearchBar extends Component {
                             ref={div => (this.projectInputRef = div)}
                         >
                             <div>
-                                Project:&nbsp;
+                                <Trans i18nKey="project">Project</Trans>:&nbsp;
                                 {this.state.projectDataSelected.map((item, index) => (
                                     <span key={item.name + index}>{index === 0 ? item.name : `, ${item.name}`}</span>
                                 ))}
@@ -291,19 +293,19 @@ export default class ReportsSearchBar extends Component {
                                         );
                                     }}
                                     ref={input => (this.smallSelectProjectInputRef = input)}
-                                    placeholder={'Find'}
+                                    placeholder={i18n.t('find')}
                                 />
                                 <div
                                     ref={div => (this.selectAllProjectsRef = div)}
                                     onClick={_ => this.selectAllProjects()}
                                 >
-                                    Select all
+                                    <Trans i18nKey="select_all"> Select all  </Trans>
                                 </div>
                                 <div
                                     ref={div => (this.selectNoneProjectsRef = div)}
                                     onClick={_ => this.selectNoneProjects()}
                                 >
-                                    Select none
+                                    <Trans i18nKey="select_none"> Select none </Trans>
                                 </div>
                                 <i className="small_clear" onClick={_ => this.clearProjectSearch()} />
                             </div>
@@ -329,7 +331,7 @@ export default class ReportsSearchBar extends Component {
                 </div>
                 <div className="reports_search_bar_button_container">
                     <button className="reports_search_bar_button" onClick={_ => this.applySearch()}>
-                        Apply
+                        <Trans i18nKey="apply">Apply</Trans>
                     </button>
                 </div>
             </div>

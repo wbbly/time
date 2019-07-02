@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 // Services
 import { getTimeDiff } from '../../services/timeService';
 import { getCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
+import { Trans } from 'react-i18next';
+
 
 // Components
 import TeamSwitcher from '../TeamSwitcher';
@@ -69,26 +71,34 @@ class LeftBar extends Component {
                     <Link to="/timer" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="timer" />
-                            <div className="links_text">timer</div>
+                            <div className="links_text">
+                                <Trans i18nKey="timer">timer</Trans>
+                            </div>
                             <div className="timer_task">{this.visualTimer()}</div>
                         </div>
                     </Link>
                     <Link to="/reports/summary" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="reports" />
-                            <div className="links_text">reports</div>
+                            <div className="links_text">
+                                <Trans i18nKey="reports">reports</Trans>
+                            </div>
                         </div>
                     </Link>
                     <Link to="/projects" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="projects" />
-                            <div className="links_text">projects</div>
+                            <div className="links_text">
+                                <Trans i18nKey="projects">projects</Trans>
+                            </div>
                         </div>
                     </Link>
                     <Link to="/team" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="team" />
-                            <div className="links_text">team</div>
+                            <div className="links_text">
+                                <Trans i18nKey="team">team</Trans>
+                            </div>
                         </div>
                     </Link>
                     <TeamSwitcher isMobile={isMobile} teamsUpdateTimestamp={teamsUpdateTimestamp} />
@@ -97,7 +107,9 @@ class LeftBar extends Component {
                 <div className="logout_container" onClick={e => this.logout()}>
                     <div>
                         <i className="logout" />
-                        <span>Log out</span>
+                        <span>
+                            <Trans i18nKey="log_out">Log out</Trans>
+                        </span>
                     </div>
                 </div>
             </div>

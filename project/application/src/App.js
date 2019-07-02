@@ -11,7 +11,6 @@ import AuthPage from './pages/AuthPage';
 import RegisterPage from './pages/RegisterPage';
 
 import PageTemplate from './components/PageTemplate';
-
 // styles
 import 'normalize.css';
 import './App.scss';
@@ -124,6 +123,6 @@ const mapDispatchToProps = {
 export default withRouter(
     connect(
         mapStateToProps,
-        mapDispatchToProps
+        mapDispatchToProps,
     )(App)
 );

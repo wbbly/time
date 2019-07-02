@@ -10,6 +10,8 @@ import * as moment from 'moment';
 import { getDate } from '../../services/timeService';
 import { encodeTimeEntryIssue } from '../../services/timeEntryService';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+
 
 // Components
 
@@ -181,7 +183,9 @@ class ManualTimeModal extends Component {
                             }}
                         />
                         <div className="task_name_edit_block">
-                            <span>Task name:</span>
+                            <span>
+                               <Trans i18nKey="task_name"> Task name</Trans> :
+                            </span>
                             <input
                                 type="text"
                                 className="issue_edit_modal"
@@ -189,7 +193,9 @@ class ManualTimeModal extends Component {
                             />
                         </div>
                         <div className="project_select_edit_modal">
-                            <span>Project:</span>
+                            <span>
+                               <Trans i18nKey="project">Project</Trans>:
+                            </span>
                             <div className="wrapper-input-block-mobile">
                                 <input
                                     type="text"
@@ -209,7 +215,9 @@ class ManualTimeModal extends Component {
                         </div>
                         <div className="manual_timer_modal_timepickers_container">
                             <div className="margin_12">
-                                <span> Time start:</span>
+                                <span>
+                                   <Trans i18nKey="time_start">Time start</Trans>:
+                                </span>
                                 <div className="date_time">
                                     {viewport.width >= 1024 && <i className="calendar" />}
                                     <i className="clock" />
@@ -233,7 +241,9 @@ class ManualTimeModal extends Component {
                                 </div>
                             </div>
                             <div className="margin_12">
-                                <span>Time end:</span>
+                                <span>
+                                    <Trans i18nKey="time_end">Time end</Trans>:
+                                </span>
                                 <div className="date_time">
                                     {viewport.width >= 1024 && <i className="calendar" />}
                                     <i className="clock" />
@@ -264,7 +274,7 @@ class ManualTimeModal extends Component {
                                         className="create_projects_modal_button_container_button manual_time_button"
                                         onClick={e => this.changeData()}
                                     >
-                                        Change
+                                       <Trans i18nKey="change">Change</Trans>
                                     </button>
                                 </div>
                             )
@@ -274,7 +284,7 @@ class ManualTimeModal extends Component {
                                     className="create_projects_modal_button_container_button manual_time_button"
                                     onClick={e => this.changeData()}
                                 >
-                                    Change
+                                    <Trans i18nKey="change">Change</Trans>
                                 </button>
                             </div>
                         )}

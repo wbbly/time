@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import i18n from './../../i18n';
+
 
 // Components
 
@@ -90,7 +93,9 @@ export default class CreateProjectModal extends Component {
                 <div className="create_projects_modal_background" />
                 <div className="create_projects_modal_container">
                     <div className="create_projects_modal_header">
-                        <div className="create_projects_modal_header_title">Create project</div>
+                        <div className="create_projects_modal_header_title">
+                            <Trans i18nKey="create_project">Create project</Trans>
+                        </div>
                         <i
                             className="create_projects_modal_header_close"
                             onClick={e => this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false })}
@@ -103,7 +108,7 @@ export default class CreateProjectModal extends Component {
                                 ref={input => {
                                     this.createProjectInput = input;
                                 }}
-                                placeholder={'Project name...'}
+                                placeholder={i18n.t('project_name')}
                             />
                             <div
                                 className="create_projects_modal_data_select_container"
@@ -122,7 +127,7 @@ export default class CreateProjectModal extends Component {
                             className="create_projects_modal_button_container_button"
                             onClick={e => this.addProject(this.props.tableInfo)}
                         >
-                            Create project
+                            <Trans i18nKey="create_project">Create project</Trans>
                         </button>
                     </div>
                 </div>

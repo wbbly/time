@@ -18,6 +18,9 @@ import { decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { userLoggedIn } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
 import { apiCall } from '../../services/apiService';
+import { Trans } from 'react-i18next';
+import { getLangFromStorage } from '../../services/localesService';
+import i18n from './../../i18n';
 
 // Actions
 
@@ -34,6 +37,10 @@ class ReportsByProjectsPage extends Component {
         dataOfProject: [],
         totalTime: 0,
         countTasks: 0,
+    };
+
+    changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     };
 
     getDateInPointsFormat(momentDate) {
@@ -83,15 +90,25 @@ class ReportsByProjectsPage extends Component {
                         {this.getDateInPointsFormat(this.props.match.params.dateStart)}
                         {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
                     </div>
-                    <div className="header_name">Sum tasks: {this.state.countTasks}</div>
-                    <div className="header_name">Sum time: {getTimeDurationByGivenTimestamp(this.state.totalTime)}</div>
+                    <div className="header_name">
+                       <Trans i18nKey="sum_tasks">Sum tasks</Trans> : {this.state.countTasks}
+                    </div>
+                    <div className="header_name">
+                        <Trans i18nKey="sum_time">Sum time</Trans>: {getTimeDurationByGivenTimestamp(this.state.totalTime)}
+                    </div>
                 </div>
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">
                         <div className="projects_header">
-                            <div className="name">Issue</div>
-                            <div className="username">Username</div>
-                            <div className="time">Time</div>
+                            <div className="name">
+                                <Trans i18nKey="issue">Issue</Trans>
+                            </div>
+                            <div className="username">
+                                <Trans i18nKey="username">Username</Trans>
+                            </div>
+                            <div className="time">
+                                <Trans i18nKey="Time">Time</Trans>
+                            </div>
                         </div>
                         <div className="projects_container_project_data_container">{projectsItems}</div>
                     </div>
@@ -101,6 +118,7 @@ class ReportsByProjectsPage extends Component {
     }
 
     componentDidMount() {
+        this.changeLanguage(getLangFromStorage());
         showMobileSupportToastr();
         let { userEmails } = this.props.match.params;
         userEmails = userEmails.indexOf('all') > -1 ? '' : userEmails;
