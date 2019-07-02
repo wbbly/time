@@ -104,7 +104,7 @@ export default class EditProjectModal extends Component {
                 <div className="edit_projects_modal_container">
                     <div className="edit_projects_modal_header">
                         <div className="edit_projects_modal_header_title">
-                          <Trans i18nKey="edit_project">Edit project</Trans>
+                            <Trans i18nKey="edit_project">Edit project</Trans>
                         </div>
                         <i className="edit_projects_modal_header_close" onClick={e => this.closeModal()} />
                     </div>

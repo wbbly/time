@@ -25,7 +25,6 @@ import { Trans } from 'react-i18next';
 import { getLangFromStorage } from '../../services/localesService';
 import i18n from './../../i18n';
 
-
 // Components
 import ManualTimeModal from '../../components/ManualTimeModal';
 
@@ -73,7 +72,7 @@ class MainPage extends Component {
         isShowListProjectsMobile: false,
     };
 
-    changeLanguage = (lng) => {
+    changeLanguage = lng => {
         i18n.changeLanguage(lng);
     };
 
@@ -409,7 +408,7 @@ class MainPage extends Component {
         await this.getProjectList();
         await this.getUserTimeEntries();
         this.initSocketConnection();
-        this.changeLanguage(getLangFromStorage())
+        this.changeLanguage(getLangFromStorage());
     }
 
     componentWillUnmount() {
@@ -541,8 +540,7 @@ class MainPage extends Component {
                 <div className="header">
                     <div className="date">{moment(arraysItem[0].startDatetime).format('DD.MM.YYYY')}</div>
                     <div className="allTime">
-                       <Trans i18nKey="total_time">Total time</Trans>:
-                        {this.getTimeEntriesTotalTime(arraysItem)}
+                        <Trans i18nKey="total_time">Total time</Trans>:{this.getTimeEntriesTotalTime(arraysItem)}
                     </div>
                 </div>
                 {this.createTimeEntriesList(arraysItem)}

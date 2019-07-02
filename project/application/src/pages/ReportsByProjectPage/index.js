@@ -39,7 +39,7 @@ class ReportsByProjectsPage extends Component {
         countTasks: 0,
     };
 
-    changeLanguage = (lng) => {
+    changeLanguage = lng => {
         i18n.changeLanguage(lng);
     };
 
@@ -91,10 +91,11 @@ class ReportsByProjectsPage extends Component {
                         {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
                     </div>
                     <div className="header_name">
-                       <Trans i18nKey="sum_tasks">Sum tasks</Trans> : {this.state.countTasks}
+                        <Trans i18nKey="sum_tasks">Sum tasks</Trans> : {this.state.countTasks}
                     </div>
                     <div className="header_name">
-                        <Trans i18nKey="sum_time">Sum time</Trans>: {getTimeDurationByGivenTimestamp(this.state.totalTime)}
+                        <Trans i18nKey="sum_time">Sum time</Trans>:{' '}
+                        {getTimeDurationByGivenTimestamp(this.state.totalTime)}
                     </div>
                 </div>
                 <div className="projects_container_wrapper">

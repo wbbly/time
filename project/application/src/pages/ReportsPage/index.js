@@ -99,7 +99,7 @@ class ReportsPage extends Component {
         },
     };
 
-    changeLanguage = (lng) => {
+    changeLanguage = lng => {
         i18n.changeLanguage(lng);
     };
 
@@ -152,7 +152,7 @@ class ReportsPage extends Component {
                 <div className="data_container_reports_page">
                     <div className="header">
                         <div className="header_name">
-                           <Trans i18nKey="summary_report">Summary report</Trans>
+                            <Trans i18nKey="summary_report">Summary report</Trans>
                         </div>
                         <div className="selects_container">
                             <div className="select_header" onClick={e => this.openCalendar()}>
@@ -192,7 +192,7 @@ class ReportsPage extends Component {
                         this.state.toggleChar && (
                             <div className="total_time_container">
                                 <span className="total_time_name">
-                                   <Trans i18nKey="total">Total</Trans>
+                                    <Trans i18nKey="total">Total</Trans>
                                 </span>
                                 <span className="total_time_time">
                                     {typeof this.state.totalUpChartTime === 'number'

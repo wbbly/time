@@ -48,7 +48,7 @@ class RegisterPage extends Component {
         },
     };
 
-    changeLanguage = (lng) => {
+    changeLanguage = lng => {
         i18n.changeLanguage(lng);
     };
 
@@ -119,7 +119,7 @@ class RegisterPage extends Component {
     };
 
     componentDidMount() {
-        this.changeLanguage(getLangFromStorage())
+        this.changeLanguage(getLangFromStorage());
     }
 
     render() {

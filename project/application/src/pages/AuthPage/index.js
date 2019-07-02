@@ -8,7 +8,7 @@ import { setTokenToLocalStorage, getLoggedUserEmail } from '../../services/token
 import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamDataStorageService';
 import { apiCall } from '../../services/apiService';
 import { Trans } from 'react-i18next';
-import { setLangToStorage, getLangFromStorage} from '../../services/localesService';
+import { setLangToStorage, getLangFromStorage } from '../../services/localesService';
 import i18n from './../../i18n';
 
 // Components
@@ -26,14 +26,13 @@ import { AppConfig } from '../../config';
 // Styles
 import './index.css';
 
-
 class AuthPage extends Component {
     state = {
         haveToken: false,
         authorisationModal: true,
     };
 
-    changeLanguage = (lng) => {
+    changeLanguage = lng => {
         i18n.changeLanguage(lng);
     };
 
@@ -89,8 +88,8 @@ class AuthPage extends Component {
     }
 
     render() {
-        console.log(this.props, 'withTranslation(\'translations\')');
-        const { history, viewport} = this.props;
+        console.log(this.props, "withTranslation('translations')");
+        const { history, viewport } = this.props;
         if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
 
         logoutByUnauthorized(false);
@@ -133,7 +132,8 @@ class AuthPage extends Component {
                     className="register-block__button register-block__button--to-login"
                     type="button"
                 >
-                    <Trans i18nKey="don't_have_an_account_yet">Don't have an account yet</Trans>? <Trans i18nKey="sign_up">Sign up</Trans>
+                    <Trans i18nKey="don't_have_an_account_yet">Don't have an account yet</Trans>?{' '}
+                    <Trans i18nKey="sign_up">Sign up</Trans>
                 </button>
             </div>
         );

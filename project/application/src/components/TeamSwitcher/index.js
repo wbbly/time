@@ -26,7 +26,7 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.css';
-import {Trans} from "react-i18next";
+import { Trans } from 'react-i18next';
 
 class TeamSwitcher extends Component {
     state = {

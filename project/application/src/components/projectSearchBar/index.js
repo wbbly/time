@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 
 // Styles
 import './style.css';
-import {Trans} from "react-i18next";
+import { Trans } from 'react-i18next';
 
 export default class ProjectSearchBar extends Component {
     etalonTable = [];

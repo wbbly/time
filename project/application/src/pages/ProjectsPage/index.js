@@ -36,7 +36,7 @@ class ProjectsPage extends Component {
         etalonArr: [],
     };
 
-    changeLanguage = (lng) => {
+    changeLanguage = lng => {
         i18n.changeLanguage(lng);
     };
 
@@ -118,7 +118,7 @@ class ProjectsPage extends Component {
     componentDidMount() {
         this.getProjects();
         showMobileSupportToastr();
-        this.changeLanguage(getLangFromStorage())
+        this.changeLanguage(getLangFromStorage());
     }
 }
 

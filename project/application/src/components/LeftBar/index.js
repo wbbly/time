@@ -6,7 +6,6 @@ import { getTimeDiff } from '../../services/timeService';
 import { getCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
 import { Trans } from 'react-i18next';
 
-
 // Components
 import TeamSwitcher from '../TeamSwitcher';
 

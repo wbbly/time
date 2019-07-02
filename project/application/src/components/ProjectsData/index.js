@@ -44,7 +44,11 @@ export default class ProjectData extends Component {
                 </td>
             </tr>
         ));
-        const tableHeaderElements = tableHeader.map((item, index) => <th key={'table-info_' + index}><Trans i18nKey={item.value}>{item.value}</Trans></th>);
+        const tableHeaderElements = tableHeader.map((item, index) => (
+            <th key={'table-info_' + index}>
+                <Trans i18nKey={item.value}>{item.value}</Trans>
+            </th>
+        ));
 
         return (
             <div className="project_data_wrapper">

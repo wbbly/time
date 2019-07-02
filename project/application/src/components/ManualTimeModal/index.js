@@ -12,7 +12,6 @@ import { encodeTimeEntryIssue } from '../../services/timeEntryService';
 import { apiCall } from '../../services/apiService';
 import { Trans } from 'react-i18next';
 
-
 // Components
 
 // Actions
@@ -184,7 +183,7 @@ class ManualTimeModal extends Component {
                         />
                         <div className="task_name_edit_block">
                             <span>
-                               <Trans i18nKey="task_name"> Task name</Trans> :
+                                <Trans i18nKey="task_name"> Task name</Trans> :
                             </span>
                             <input
                                 type="text"
@@ -194,7 +193,7 @@ class ManualTimeModal extends Component {
                         </div>
                         <div className="project_select_edit_modal">
                             <span>
-                               <Trans i18nKey="project">Project</Trans>:
+                                <Trans i18nKey="project">Project</Trans>:
                             </span>
                             <div className="wrapper-input-block-mobile">
                                 <input
@@ -216,7 +215,7 @@ class ManualTimeModal extends Component {
                         <div className="manual_timer_modal_timepickers_container">
                             <div className="margin_12">
                                 <span>
-                                   <Trans i18nKey="time_start">Time start</Trans>:
+                                    <Trans i18nKey="time_start">Time start</Trans>:
                                 </span>
                                 <div className="date_time">
                                     {viewport.width >= 1024 && <i className="calendar" />}
@@ -274,7 +273,7 @@ class ManualTimeModal extends Component {
                                         className="create_projects_modal_button_container_button manual_time_button"
                                         onClick={e => this.changeData()}
                                     >
-                                       <Trans i18nKey="change">Change</Trans>
+                                        <Trans i18nKey="change">Change</Trans>
                                     </button>
                                 </div>
                             )

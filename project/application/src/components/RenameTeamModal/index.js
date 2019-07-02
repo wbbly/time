@@ -84,8 +84,7 @@ export default class RenameTeamModal extends Component {
                     </div>
                     <div className="rename_team_modal_data">
                         <div className="rename_team_modal_data_input_container">
-                            <input type="text" ref={this.teamNameRef}
-                                   placeholder={i18n.t('team_name')} />
+                            <input type="text" ref={this.teamNameRef} placeholder={i18n.t('team_name')} />
                         </div>
                     </div>
                     <div className="rename_team_modal_button_container">

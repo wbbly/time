@@ -49,7 +49,7 @@ class TeamPage extends Component {
 
     nameInput = val => <input ref={this.teamNameRef} type="text" placeholder={val} />;
 
-    changeLanguage = (lng) => {
+    changeLanguage = lng => {
         i18n.changeLanguage(lng);
     };
 

@@ -216,7 +216,7 @@ export default class ReportsSearchBar extends Component {
                             ref={div => (this.userInputRef = div)}
                         >
                             <div>
-                               <Trans i18nKey="user">User</Trans> :&nbsp;
+                                <Trans i18nKey="user">User</Trans> :&nbsp;
                                 {this.state.userDataSelected.map((item, index) => (
                                     <span key={item.username + index}>
                                         {index === 0 ? item.username : `, ${item.username}`}
@@ -273,7 +273,8 @@ export default class ReportsSearchBar extends Component {
                             ref={div => (this.projectInputRef = div)}
                         >
                             <div>
-                                <Trans i18nKey="project">Project</Trans>:&nbsp;
+                                <Trans i18nKey="project">Project</Trans>
+                                :&nbsp;
                                 {this.state.projectDataSelected.map((item, index) => (
                                     <span key={item.name + index}>{index === 0 ? item.name : `, ${item.name}`}</span>
                                 ))}
@@ -299,7 +300,7 @@ export default class ReportsSearchBar extends Component {
                                     ref={div => (this.selectAllProjectsRef = div)}
                                     onClick={_ => this.selectAllProjects()}
                                 >
-                                    <Trans i18nKey="select_all"> Select all  </Trans>
+                                    <Trans i18nKey="select_all"> Select all </Trans>
                                 </div>
                                 <div
                                     ref={div => (this.selectNoneProjectsRef = div)}

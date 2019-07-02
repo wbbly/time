@@ -27,7 +27,7 @@ class TeamAdd extends Component {
                     <CreateTeamModal teamAddPageAction={teamAddPageAction} createTeamRequest={createTeamRequest} />
                 )}
                 <span className="team_add" onClick={e => teamAddPageAction('TOGGLE_TEAM_ADD_MODAL', { toggle: true })}>
-                   <Trans i18nKey="add_team">Add team</Trans>
+                    <Trans i18nKey="add_team">Add team</Trans>
                 </span>
             </div>
         );
