@@ -55,6 +55,8 @@
   }
 
   .projects_container_project_data .name {
+    text-overflow: ellipsis;
+    overflow: hidden;
     line-height: 22px;
     padding-right: 25px;
   }
