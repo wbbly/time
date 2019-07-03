@@ -21,6 +21,7 @@ import {
 } from '../../services/currentTimerStorageService';
 import { setServerClientTimediffToLocalStorage } from '../../services/serverClientTimediffStorageService';
 import { apiCall } from '../../services/apiService';
+import { changeDisplayingDateFormat } from '../../services/formatService'
 
 // Components
 import ManualTimeModal from '../../components/ManualTimeModal';
@@ -530,6 +531,7 @@ class MainPage extends Component {
     }
 
     render() {
+        console.log(this.props.format);
         // console.log('render');
         const { isMobile, vocabulary } = this.props;
         const { v_total_time, v_add_your_task_name, v_find, v_start_timer, v_task_name, v_search_project } = vocabulary;
@@ -540,10 +542,8 @@ class MainPage extends Component {
         let timeTrackerWrapperItems = this.splitProjectsByDates(this.props.timeEntriesList).map((arraysItem, index) => (
             <div className="time_tracker_wrapper" key={'time-entry-group_' + index}>
                 <div className="header">
-                    <div className="date">{moment(arraysItem[0].startDatetime).format('DD.MM.YYYY')}</div>
-                    <div className="allTime">
-                        {v_total_time}: {this.getTimeEntriesTotalTime(arraysItem)}
-                    </div>
+                    <div className="date">{changeDisplayingDateFormat(arraysItem[0].startDatetime, this.props.format.dateFormat)}</div>
+                    <div className="allTime">{v_total_time}: {this.getTimeEntriesTotalTime(arraysItem)}</div>
                 </div>
                 {this.createTimeEntriesList(arraysItem)}
             </div>
@@ -806,6 +806,7 @@ const mapStateToProps = store => {
         viewport: store.responsiveReducer.viewport,
         isShowMenu: store.responsiveReducer.isShowMenu,
         isMobile: store.responsiveReducer.isMobile,
+        format: store.formatReducer
     };
 };
 

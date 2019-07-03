@@ -26,6 +26,7 @@ import {
 } from '../../services/timeService';
 import { getLoggedUserTimezoneOffset } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
+import { changeDisplayingDateFormat } from '../../services/formatService';
 
 // Components
 import ProjectsContainer from '../../components/ProjectsContainer';
@@ -149,8 +150,8 @@ class ReportsPage extends Component {
                         <div className="selects_container">
                             <div className="select_header" onClick={e => this.openCalendar()}>
                                 <span>
-                                    {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} {' - '}
-                                    {moment(this.props.timeRange.endDate).format('DD.MM.YYYY')}
+                                    {changeDisplayingDateFormat(this.props.timeRange.startDate, this.props.format.dateFormat)} {' - '}
+                                    {changeDisplayingDateFormat(this.props.timeRange.endDate, this.props.format.dateFormat)}
                                 </span>
                                 <i className="arrow_down" />
                             </div>
@@ -507,6 +508,7 @@ const mapStateToProps = store => ({
     inputProjectData: store.reportsPageReducer.inputProjectData,
     isMobile: store.responsiveReducer.isMobile,
     vocabulary: store.languageReducer.vocabulary,
+    format: store.formatReducer
 });
 
 const mapDispatchToProps = dispatch => {

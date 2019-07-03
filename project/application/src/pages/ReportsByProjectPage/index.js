@@ -18,6 +18,7 @@ import { decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { userLoggedIn } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
 import { apiCall } from '../../services/apiService';
+import { changeDisplayingDateFormat } from '../../services/formatService';
 
 // Actions
 
@@ -65,7 +66,7 @@ class ReportsByProjectsPage extends Component {
                 <div className="name">{this.getSlash(item.issue)}</div>
                 <div className="username">{item.user.username}</div>
                 <div className="time">
-                    {moment(item.startDatetime).format('DD.MM.YYYY')} |{' '}
+                    {changeDisplayingDateFormat(item.startDatetime, this.props.format.dateFormat)} |{' '}
                     {getTimeDurationByGivenTimestamp(item.durationTimestamp)}
                 </div>
             </div>
@@ -80,8 +81,8 @@ class ReportsByProjectsPage extends Component {
                 <div className="header">
                     <div className="header_name">
                         {this.props.match.params.projectName}:{' '}
-                        {this.getDateInPointsFormat(this.props.match.params.dateStart)}
-                        {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
+                        {changeDisplayingDateFormat(this.props.match.params.dateStart, this.props.format.dateFormat)}
+                        {' - '} {changeDisplayingDateFormat(this.props.match.params.endDate, this.props.format.dateFormat)}
                     </div>
                     <div className="header_name">Sum tasks: {this.state.countTasks}</div>
                     <div className="header_name">Sum time: {getTimeDurationByGivenTimestamp(this.state.totalTime)}</div>
@@ -150,6 +151,7 @@ class ReportsByProjectsPage extends Component {
 const mapStateToProps = store => ({
     inputUserData: store.reportsPageReducer.inputUserData,
     isMobile: store.responsiveReducer.isMobile,
+    format: store.formatReducer
 });
 
 export default withRouter(connect(mapStateToProps)(ReportsByProjectsPage));
