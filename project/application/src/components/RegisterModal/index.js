@@ -21,17 +21,19 @@ class RegisterModal extends Component {
     };
 
     addUser = (email, password, userName) => {
-        const R_EMAIL = new RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+        const R_EMAIL = new RegExp(
+            /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+        );
         if (!R_EMAIL.test(email)) {
             alert('you add wrong email,check it please');
 
-            return
+            return;
         }
 
         if (!password.length) {
-            alert('Enter password please')
+            alert('Enter password please');
 
-            return
+            return;
         }
 
         apiCall(

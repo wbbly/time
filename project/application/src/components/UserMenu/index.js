@@ -20,7 +20,8 @@ class UserMenu extends Component {
                 <div className="logout_container">
                     <div className="user_name">
                         {username}
-                        <i  title="More option"
+                        <i
+                            title="More option"
                             className="profile_user"
                             onClick={e => {
                                 this.togglUserMenu();

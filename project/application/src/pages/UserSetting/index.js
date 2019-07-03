@@ -9,7 +9,12 @@ import LeftBar from '../../components/LeftBar';
 import ChangePasswordModal from '../../components/ChangePasswordModal';
 
 //Services
-import { getLoggedUserId, getTokenFromLocalStorage, setTokenToLocalStorage, getLoggedUser } from '../../services/tokenStorageService';
+import {
+    getLoggedUserId,
+    getTokenFromLocalStorage,
+    setTokenToLocalStorage,
+    getLoggedUser,
+} from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
 
 //Config
@@ -36,7 +41,7 @@ class UserSetting extends Component {
                 if (result.token) {
                     setTokenToLocalStorage(result.token);
                     alert('your data has been updated');
-                    this.updateUserData()
+                    this.updateUserData();
                 }
             },
             err => {
@@ -52,7 +57,7 @@ class UserSetting extends Component {
     };
 
     componentDidMount() {
-        this.setDataToForm()
+        this.setDataToForm();
     }
 
     render() {
@@ -100,8 +105,8 @@ class UserSetting extends Component {
     updateUserData = () => {
         const USER = getLoggedUser();
         this.props.userSettingAction('CHANGE_NAME', USER.username);
-        this.props.userSettingAction('CHANGE_EMAIL', USER.email)
-    }
+        this.props.userSettingAction('CHANGE_EMAIL', USER.email);
+    };
 }
 
 const mapStateToProps = store => {

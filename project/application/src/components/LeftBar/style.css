@@ -16,6 +16,7 @@
     width: 188px;
     background-color: #3b3b3b;
     box-shadow: 6px 0 20px rgba(0, 0, 0, 0.14);
+    z-index: 2;
 }
 
 .wrapper_z-index-1 {

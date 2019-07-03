@@ -91,7 +91,7 @@ class ChangePasswordModal extends Component {
                                 ref={input => {
                                     this.newPasswoerdCopy = input;
                                 }}
-                                placeholder={'New password again'}
+                                placeholder={'Repeat new password'}
                             />
                         </div>
                     </div>
