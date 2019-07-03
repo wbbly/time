@@ -42,6 +42,7 @@ class MainPage extends Component {
     ONE_SECOND_PERIOD = 1000; // in ms
     TIMER_LIVE_SUBSCRIPTION;
     TIMER_MANUAL_UPDATE_SUBSCRIPTION;
+    editingTaskName = false;
     socketConnection;
     issueTargetElement;
     projectListTargetElement;
@@ -70,6 +71,7 @@ class MainPage extends Component {
     };
 
     initSocketConnection() {
+        // console.log('this.initSocketConnection')
         this.socketConnection = openSocket(AppConfig.apiURL);
         this.socketConnection.on('connect', () => {
             this.socketConnection.emit(
@@ -85,9 +87,8 @@ class MainPage extends Component {
             );
         });
         this.socketConnection.on('check-timer-v2', data => {
-            // console.log('data', data);
-            // console.log('this.TIMER_MANUAL_UPDATE_SUBSCRIPTION', this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
             if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
+                // console.log('this.initSocketConnection WORKING')
                 apiCall(AppConfig.apiURL + 'time/current', {
                     method: 'GET',
                     headers: {
@@ -95,7 +96,6 @@ class MainPage extends Component {
                     },
                 }).then(
                     result => {
-                        // console.log('start then');
                         setServerClientTimediffToLocalStorage(+moment(result.timeISO) - +moment());
                         const currentTimer = {
                             timeStart: +moment(data.startDatetime),
@@ -131,6 +131,7 @@ class MainPage extends Component {
     }
 
     timerPlayStopButtonAction(className, projectId) {
+        // console.log('this.timerPlayStopButtonAction')
         let issue = (this.issueTargetElement || {}).value || '';
         issue = issue.trim();
         if (issue.length) {
@@ -160,6 +161,7 @@ class MainPage extends Component {
     }
 
     timerTickStart() {
+        // console.log('this.timerTickStart')
         clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
         this.TIMER_LIVE_SUBSCRIPTION = undefined;
 
@@ -172,9 +174,9 @@ class MainPage extends Component {
     }
 
     timerUpdate() {
+        // console.log('this.timerUpdate RUN')
         if (!this.state.timerDurationValue) return;
-        // console.log('timer_update');
-        // console.log('this.state.timerDurationValue', this.state.timerDurationValue)
+        // console.log('this.timerUpdate WORKING')
         clearTimeout(this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
         this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = undefined;
 
@@ -192,8 +194,6 @@ class MainPage extends Component {
             clearTimeout(this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
             this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = undefined;
         }, this.ONE_SECOND_PERIOD);
-
-        // console.log('this.TIMER_MANUAL_UPDATE_SUBSCRIPTION', this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
     }
 
     timerStop() {
@@ -219,12 +219,14 @@ class MainPage extends Component {
     }
 
     timerStateUpdateWithSocketData(socketData) {
-        // console.log('work');
+        // console.log('timerStateUpdateWithSocketData');
         if (!socketData || !socketData.timeStart) {
+            // console.log('timerStateUpdateWithSocketData STOP');
             return;
         }
 
-        if (!!this.issueTargetElement) {
+        if (!!this.issueTargetElement && !this.editingTaskName) {
+            // console.log('timerStateUpdateWithSocketData INPUT NEW VALUE');
             this.issueTargetElement.value = socketData.issue;
         }
 
@@ -561,6 +563,8 @@ class MainPage extends Component {
                                 this.issueTargetElement = input;
                             }}
                             onChange={e => this.timerUpdate()}
+                            onFocus={e => (this.editingTaskName = true)}
+                            onBlur={e => (this.editingTaskName = false)}
                         />
                         <div className="wrapper-timer-mobile">
                             {this.state.timerReadyToUse && (
