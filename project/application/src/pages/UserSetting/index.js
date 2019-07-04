@@ -98,14 +98,14 @@ class UserSetting extends Component {
     }
 
     setDataToForm = () => {
-        this.username.value = this.props.userSettingReducer.userName;
-        this.userEmail.value = this.props.userSettingReducer.userEmail;
+        this.updateUserData();
+
     };
 
     updateUserData = () => {
         const USER = getLoggedUser();
-        this.props.userSettingAction('CHANGE_NAME', USER.username);
-        this.props.userSettingAction('CHANGE_EMAIL', USER.email);
+        this.username.value = USER.username;
+        this.userEmail.value = USER.email;
     };
 }
 
