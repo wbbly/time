@@ -4,7 +4,7 @@ import ru_vocabulary from '../locales/ru';
 import * as types from '../actions/LanguageActions';
 
 const initialState = {
-    vocabulary: ru_vocabulary,
+    vocabulary: en_vocabulary,
 };
 
 export default (state = initialState, { type, payload }) => {
