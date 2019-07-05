@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 // dependencies
 import classNames from 'classnames';
 
 // actions
 import { switchMenu } from '../../actions/ResponsiveActions';
+import { switchLanguage } from '../../actions/LanguageActions';
 
 // components
 import LeftBar from '../../components/LeftBar';
@@ -24,29 +26,46 @@ class PageTemplate extends Component {
             teamsUpdateTimestamp,
         });
 
+    isAuthPage = () => {
+        const { match } = this.props;
+        const authRoutes = ['/', '/login', '/register'];
+        return authRoutes.indexOf(match.path) !== -1;
+    };
+
     render() {
         const { width, height } = this.props.viewport;
-        const { content: Content, switchMenu, isShowMenu, isMobile } = this.props;
+        const { content: Content, switchMenu, isShowMenu, isMobile, vocabulary, switchLanguage } = this.props;
         const { teamsUpdateTimestamp } = this.state;
         return (
             <div className="wrapper-page-template" style={{ width: width - 1, height: height - 1 }}>
-                {isMobile && <Header />}
+                {/* <button onClick={event => switchLanguage()} style={{ padding: '1rem 0', fontSize: '2rem' }}>
+                    switch language
+                </button> */}
+                {isMobile &&
+                    !this.isAuthPage() && (
+                        <header className="header">
+                            <Header />
+                        </header>
+                    )}
                 <div className="wrapper-main-content">
-                    <aside
-                        className={classNames('aside', {
-                            'aside--hide': !isShowMenu && width < 1024,
-                            'aside--show': isShowMenu && width < 1024,
-                        })}
-                    >
-                        <LeftBar
-                            teamsUpdateTimestamp={teamsUpdateTimestamp}
-                            isShowMenu={isShowMenu}
-                            switchMenu={switchMenu}
-                            isMobile={isMobile}
-                        />
-                    </aside>
+                    {!this.isAuthPage() && (
+                        <aside
+                            className={classNames('aside', {
+                                'aside--hide': !isShowMenu && isMobile,
+                                'aside--show': isShowMenu && isMobile,
+                            })}
+                        >
+                            <LeftBar
+                                teamsUpdateTimestamp={teamsUpdateTimestamp}
+                                isShowMenu={isShowMenu}
+                                switchMenu={switchMenu}
+                                isMobile={isMobile}
+                                vocabulary={vocabulary}
+                            />
+                        </aside>
+                    )}
                     <main className="main">
-                        <Content setTeamsUpdateTimestamp={this.setTeamsUpdateTimestamp} />
+                        <Content vocabulary={vocabulary} setTeamsUpdateTimestamp={this.setTeamsUpdateTimestamp} />
                     </main>
                 </div>
             </div>
@@ -58,13 +77,17 @@ const mapStateToProps = state => ({
     viewport: state.responsiveReducer.viewport,
     isShowMenu: state.responsiveReducer.isShowMenu,
     isMobile: state.responsiveReducer.isMobile,
+    vocabulary: state.languageReducer.vocabulary,
 });
 
 const mapDispatchToProps = {
     switchMenu,
+    switchLanguage,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(PageTemplate);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(PageTemplate)
+);
