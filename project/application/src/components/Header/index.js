@@ -15,21 +15,19 @@ class Header extends Component {
     render() {
         const { switchMenu, isShowMenu } = this.props;
         return (
-            <header className="header">
-                <div className="main-header">
-                    <Link to="/timer">
-                        <i className="main-header__small-logo" />
-                    </Link>
-                    <button onClick={switchMenu} className="main-header__show-menu-button">
-                        <span
-                            className={classNames('main-header__show-menu-button-icon', {
-                                'icon-close': isShowMenu,
-                                'icon-menu': !isShowMenu,
-                            })}
-                        />
-                    </button>
-                </div>
-            </header>
+            <div className="main-header">
+                <Link to="/timer">
+                    <i className="main-header__small-logo" />
+                </Link>
+                <button onClick={switchMenu} className="main-header__show-menu-button">
+                    <span
+                        className={classNames('main-header__show-menu-button-icon', {
+                            'icon-close': isShowMenu,
+                            'icon-menu': !isShowMenu,
+                        })}
+                    />
+                </button>
+            </div>
         );
     }
 }
