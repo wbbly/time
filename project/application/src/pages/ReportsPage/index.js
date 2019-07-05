@@ -133,7 +133,8 @@ class ReportsPage extends Component {
     };
 
     render() {
-        const { isMobile } = this.props;
+        const { isMobile, vocabulary } = this.props;
+        const { v_summary_report, v_total, v_export } = vocabulary;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         return (
@@ -144,7 +145,7 @@ class ReportsPage extends Component {
             >
                 <div className="data_container_reports_page">
                     <div className="header">
-                        <div className="header_name">Summary report</div>
+                        <div className="header_name">{v_summary_report}</div>
                         <div className="selects_container">
                             <div className="select_header" onClick={e => this.openCalendar()}>
                                 <span>
@@ -182,14 +183,14 @@ class ReportsPage extends Component {
                     {this.state.toggleBar &&
                         this.state.toggleChar && (
                             <div className="total_time_container">
-                                <span className="total_time_name">Total</span>
+                                <span className="total_time_name">{v_total}</span>
                                 <span className="total_time_time">
                                     {typeof this.state.totalUpChartTime === 'number'
                                         ? getTimeDurationByGivenTimestamp(this.state.totalUpChartTime)
                                         : '00:00:00'}
                                 </span>
                                 <span className="export_button" onClick={e => this.export()}>
-                                    Export
+                                    {v_export}
                                 </span>
                             </div>
                         )}
@@ -505,6 +506,7 @@ const mapStateToProps = store => ({
     inputUserData: store.reportsPageReducer.inputUserData,
     inputProjectData: store.reportsPageReducer.inputProjectData,
     isMobile: store.responsiveReducer.isMobile,
+    vocabulary: store.languageReducer.vocabulary,
 });
 
 const mapDispatchToProps = dispatch => {

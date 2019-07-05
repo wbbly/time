@@ -132,6 +132,8 @@ class MainPage extends Component {
 
     timerPlayStopButtonAction(className, projectId) {
         // console.log('this.timerPlayStopButtonAction')
+        const { vocabulary } = this.props;
+        const { v_a_task_name_before, v_a_starting, v_a_stopping, v_a_time_tracking } = vocabulary;
         let issue = (this.issueTargetElement || {}).value || '';
         issue = issue.trim();
         if (issue.length) {
@@ -153,9 +155,9 @@ class MainPage extends Component {
             });
         } else {
             alert(
-                `Please input task name before ${
-                    className === 'control_task_time_icons play' ? 'starting' : 'stopping'
-                } the time tracking`
+                `${v_a_task_name_before} ${
+                    className === 'control_task_time_icons play' ? v_a_starting : v_a_stopping
+                } ${v_a_time_tracking}`
             );
         }
     }
@@ -243,6 +245,8 @@ class MainPage extends Component {
     }
 
     timerContinue(name = '', item) {
+        const { vocabulary } = this.props;
+        const { v_a_task_name_before, v_a_starting, v_a_time_tracking } = vocabulary;
         name = name.trim();
         if (name.length) {
             this.issueTargetElement.value = name;
@@ -250,7 +254,7 @@ class MainPage extends Component {
                 this.timerPlayStopButtonAction('control_task_time_icons play', item.project.id)
             );
         } else {
-            alert(`Please input task name before starting the time tracking`);
+            alert(`${v_a_task_name_before} ${v_a_starting} ${v_a_time_tracking}`);
         }
     }
 
@@ -317,7 +321,9 @@ class MainPage extends Component {
     }
 
     deleteTimeEntry(item) {
-        let check = window.confirm('Do you really want to delete this time entry?');
+        const { vocabulary } = this.props;
+        const { v_a_task_delete } = vocabulary;
+        let check = window.confirm(v_a_task_delete);
         if (check) {
             apiCall(AppConfig.apiURL + `timer/${item.id}`, {
                 method: 'DELETE',
@@ -423,7 +429,8 @@ class MainPage extends Component {
     };
 
     createTimeEntriesList(data) {
-        const { viewport, isMobile } = this.props;
+        const { viewport, isMobile, vocabulary } = this.props;
+        const { v_edit_task, v_delete_task } = vocabulary;
         let items = data.map(item => (
             <div className="ul" key={item.id} onClick={this.toggleSwipe}>
                 <div className="li">
@@ -488,7 +495,7 @@ class MainPage extends Component {
                             }}
                         >
                             <i className="edit-icon-swipe" />
-                            Edit task
+                            {v_edit_task}
                         </div>
                         <div
                             className="delete_swipe"
@@ -498,7 +505,7 @@ class MainPage extends Component {
                             }}
                         >
                             <i className="delete-icon-swipe" />
-                            Delete task
+                            {v_delete_task}
                         </div>
                     </div>
                 )}
@@ -524,7 +531,8 @@ class MainPage extends Component {
 
     render() {
         // console.log('render');
-        const { isMobile } = this.props;
+        const { isMobile, vocabulary } = this.props;
+        const { v_total_time, v_add_your_task_name, v_find, v_start_timer, v_task_name, v_search_project } = vocabulary;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         const buttonState = this.state.timerPlayButtonShow ? 'play' : 'stop';
@@ -533,7 +541,9 @@ class MainPage extends Component {
             <div className="time_tracker_wrapper" key={'time-entry-group_' + index}>
                 <div className="header">
                     <div className="date">{moment(arraysItem[0].startDatetime).format('DD.MM.YYYY')}</div>
-                    <div className="allTime">Total time: {this.getTimeEntriesTotalTime(arraysItem)}</div>
+                    <div className="allTime">
+                        {v_total_time}: {this.getTimeEntriesTotalTime(arraysItem)}
+                    </div>
                 </div>
                 {this.createTimeEntriesList(arraysItem)}
             </div>
@@ -558,7 +568,7 @@ class MainPage extends Component {
                         <input
                             type="text"
                             className="add_task"
-                            placeholder="Add your task name"
+                            placeholder={v_add_your_task_name}
                             ref={input => {
                                 this.issueTargetElement = input;
                             }}
@@ -590,7 +600,7 @@ class MainPage extends Component {
                                             }}
                                         >
                                             <input
-                                                placeholder="Find..."
+                                                placeholder={`${v_find}...`}
                                                 type="text"
                                                 ref={input => (this.projectSearchTextTargetElement = input)}
                                                 onKeyUp={e =>
@@ -695,11 +705,11 @@ class MainPage extends Component {
                                     className="icon-close-mobile"
                                     onClick={event => this.setState({ isShowAddTaskMobile: false })}
                                 />
-                                <div className="add-task-mobile__label-input">Task name</div>
+                                <div className="add-task-mobile__label-input">{v_task_name}</div>
                                 <input
                                     type="text"
                                     className="add_task"
-                                    placeholder="Add your task name"
+                                    placeholder={v_add_your_task_name}
                                     onChange={event => (this.issueTargetElement.value = event.target.value)}
                                     // onKeyUp={e => this.timerUpdate()}
                                 />
@@ -713,10 +723,10 @@ class MainPage extends Component {
                                             event.stopPropagation();
                                         }}
                                     >
-                                        <div className="add-task-mobile__label-input">Search project</div>
+                                        <div className="add-task-mobile__label-input">{v_search_project}</div>
                                         <div className="add-task-mobile__wrapper-serach">
                                             <input
-                                                placeholder="Find..."
+                                                placeholder={`${v_find}...`}
                                                 type="text"
                                                 ref={input => (this.projectSearchTextTargetElement = input)}
                                                 defaultValue={
@@ -775,7 +785,7 @@ class MainPage extends Component {
                                                 );
                                         }}
                                     >
-                                        Start timer
+                                        {v_start_timer}
                                         <span className="add-task-button-mobile-play" />
                                     </button>
                                 )}

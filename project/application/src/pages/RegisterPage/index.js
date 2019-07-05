@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 // Services
 import { apiCall } from '../../services/apiService';
@@ -14,32 +14,26 @@ import { apiCall } from '../../services/apiService';
 import { AppConfig } from '../../config';
 
 // Styles
-import './style.css';
+import './style.scss';
 
 class RegisterPage extends Component {
     state = {
         inputs: {
             email: {
                 value: '',
-                label: 'E-mail',
                 type: 'email',
-                placeholder: 'Add your login...',
                 name: 'email',
                 required: true,
             },
             password: {
                 value: '',
-                label: 'Password',
                 type: 'password',
-                placeholder: 'Add your password...',
                 name: 'password',
                 required: true,
             },
             confirmPassword: {
                 value: '',
-                label: 'Confirm password',
                 type: 'password',
-                placeholder: 'Add your password...',
                 name: 'confirmPassword',
                 required: true,
             },
@@ -47,7 +41,8 @@ class RegisterPage extends Component {
     };
 
     addUser = ({ email, password }) => {
-        const { history } = this.props;
+        const { history, vocabulary } = this.props;
+        const { v_a_account_create } = vocabulary;
         apiCall(
             AppConfig.apiURL + 'user/register',
             {
@@ -63,7 +58,7 @@ class RegisterPage extends Component {
             false
         ).then(
             result => {
-                alert('Account has been created.');
+                alert(v_a_account_create);
                 history.push('/login');
             },
             err => {
@@ -92,6 +87,8 @@ class RegisterPage extends Component {
     };
 
     onSubmitHandler = event => {
+        const { vocabulary } = this.props;
+        const { v_a_confirm_password_error } = vocabulary;
         event.preventDefault();
         const { inputs } = this.state;
         const userData = Object.keys(inputs).reduce((acc, curr) => {
@@ -101,7 +98,7 @@ class RegisterPage extends Component {
             return { ...acc, [curr]: inputs[curr].value };
         }, {});
         if (userData.confirmPassword !== userData.password) {
-            alert('Wrong confirm password value');
+            alert(v_a_confirm_password_error);
             return;
         }
         this.addUser(userData);
@@ -114,49 +111,61 @@ class RegisterPage extends Component {
 
     render() {
         const { email, password, confirmPassword } = this.state.inputs;
-        const { viewport } = this.props;
+        const { vocabulary } = this.props;
+        const {
+            v_login,
+            v_add_your_login,
+            v_add_your_password,
+            v_password,
+            v_cofirm_password,
+            v_add_confirm_password,
+            v_register,
+            v_already_have_an_account,
+            v_log_in,
+            v_registration_terms_and_policy,
+        } = vocabulary;
         return (
-            <div className="register-block" style={{ height: viewport.height - 1 }}>
+            <div className="register-block">
                 <i className="register-block__logo" />
                 <form className="register-block__form" onSubmit={this.onSubmitHandler}>
                     <label className="register-block__label">
-                        {email.label}
+                        {v_login}
                         <input
                             className="register-block__input"
                             onChange={this.onChangeHandler}
                             name={email.name}
                             value={email.value}
                             type={email.type}
-                            placeholder={email.placeholder}
+                            placeholder={`${v_add_your_login}...`}
                             required={email.required}
                         />
                     </label>
                     <label className="register-block__label">
-                        {password.label}
+                        {v_password}
                         <input
                             className="register-block__input"
                             onChange={this.onChangeHandler}
                             name={password.name}
                             value={password.value}
                             type={password.type}
-                            placeholder={password.placeholder}
+                            placeholder={`${v_add_your_password}...`}
                             required={password.required}
                         />
                     </label>
                     <label className="register-block__label">
-                        {confirmPassword.label}
+                        {v_cofirm_password}
                         <input
                             className="register-block__input"
                             onChange={this.onChangeHandler}
                             name={confirmPassword.name}
                             value={confirmPassword.value}
                             type={confirmPassword.type}
-                            placeholder={confirmPassword.placeholder}
+                            placeholder={`${v_add_confirm_password}...`}
                             required={confirmPassword.required}
                         />
                     </label>
                     <button className="register-block__button register-block__button--submit" type="submit">
-                        Register
+                        {v_register}
                     </button>
                 </form>
                 <button
@@ -164,21 +173,17 @@ class RegisterPage extends Component {
                     className="register-block__button register-block__button--to-login"
                     type="button"
                 >
-                    Already have an account? Log in
+                    {v_already_have_an_account}? {v_log_in}
                 </button>
                 <a
                     href="https://wobbly.me/terms.html"
                     className="register-block__link register-block__link--to-conditions"
                 >
-                    By registration you agree with Terms and Privacy policy
+                    {v_registration_terms_and_policy}
                 </a>
             </div>
         );
     }
 }
 
-const mapStateToProps = state => ({
-    viewport: state.responsiveReducer.viewport,
-});
-
-export default connect(mapStateToProps)(RegisterPage);
+export default withRouter(RegisterPage);

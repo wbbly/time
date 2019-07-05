@@ -39,7 +39,11 @@ class TeamPage extends Component {
         teamId: '',
     };
 
-    headerItems = ['Name', 'E-mail', 'Team Roles', 'Team Access'];
+    headerItems = () => {
+        const { vocabulary } = this.props;
+        const { v_name, v_team_role, v_team_access } = vocabulary;
+        return [v_name, 'E-mail', v_team_role, v_team_access];
+    };
 
     changingName = false;
     teamNameRef = React.createRef();
@@ -62,9 +66,10 @@ class TeamPage extends Component {
     }
 
     render() {
-        const { isMobile, setTeamsUpdateTimestamp } = this.props;
+        const { isMobile, setTeamsUpdateTimestamp, vocabulary } = this.props;
+        const { v_team, v_rename_team, v_invite_to_team } = vocabulary;
         let programersArr = this.props.programersArr;
-        const headerItemsElements = this.headerItems.map((element, index) => (
+        const headerItemsElements = this.headerItems().map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
         ));
         const items = programersArr.map((item, index) => {
@@ -143,7 +148,9 @@ class TeamPage extends Component {
                 )}
                 <div className="data_container_team_page">
                     <div className="team_page_header">
-                        <div className="page_name">Team: {this.state.teamName}</div>
+                        <div className="page_name">
+                            {v_team}: {this.state.teamName}
+                        </div>
                         <div className="team_page_main-controls">
                             <div className="invite_container">
                                 {checkIsAdmin() && (
@@ -152,7 +159,7 @@ class TeamPage extends Component {
                                             this.openRenameModal();
                                         }}
                                     >
-                                        Rename team
+                                        {v_rename_team}
                                     </button>
                                 )}
                             </div>
@@ -163,7 +170,7 @@ class TeamPage extends Component {
                                             this.openAddUserModal();
                                         }}
                                     >
-                                        Invite to team
+                                        {v_invite_to_team}
                                     </button>
                                 )}
                             </div>
@@ -234,6 +241,7 @@ const mapStateToProps = store => ({
     editedUser: store.teamPageReducer.editedUser,
     currentTeam: store.teamReducer.currentTeam,
     isMobile: store.responsiveReducer.isMobile,
+    vocabulary: store.languageReducer.vocabulary,
 });
 
 const mapDispatchToProps = dispatch => {

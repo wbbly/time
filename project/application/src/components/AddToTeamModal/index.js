@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // Services
 import { apiCall } from '../../services/apiService';
@@ -18,6 +19,8 @@ import './style.css';
 
 class AddToTeamModal extends Component {
     addUser = email => {
+        const { vocabulary } = this.props;
+        const { v_a_invite_sent, v_a_invite_sent_error } = vocabulary;
         apiCall(AppConfig.apiURL + 'user/invite', {
             method: 'POST',
             headers: {
@@ -43,9 +46,9 @@ class AddToTeamModal extends Component {
                             },
                         ],
                     });
-                    alert('Invite has been sent!');
+                    alert(v_a_invite_sent);
                 } else {
-                    alert('An error occured while sending an invite to the user!');
+                    alert(v_a_invite_sent_error);
                 }
 
                 this.closeModal();
@@ -67,12 +70,14 @@ class AddToTeamModal extends Component {
     }
 
     render() {
+        const { vocabulary } = this.props;
+        const { v_invite_to_team, v_add_user } = vocabulary;
         return (
             <div className="wrapper_add_user_modal">
                 <div className="add_user_modal_background" />
                 <div className="add_user_modal_container">
                     <div className="add_user_modal_header">
-                        <div className="add_user_modal_header_title">Invite to team</div>
+                        <div className="add_user_modal_header_title">{v_invite_to_team}</div>
                         <i className="add_user_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
                     <div className="add_user_modal_data">
@@ -91,7 +96,7 @@ class AddToTeamModal extends Component {
                             className="add_user_modal_button_container_button"
                             onClick={e => this.addUser(this.email.value)}
                         >
-                            Add user
+                            {v_add_user}
                         </button>
                     </div>
                 </div>
@@ -100,4 +105,8 @@ class AddToTeamModal extends Component {
     }
 }
 
-export default AddToTeamModal;
+const mapStateToProps = state => ({
+    vocabulary: state.languageReducer.vocabulary,
+});
+
+export default connect(mapStateToProps)(AddToTeamModal);

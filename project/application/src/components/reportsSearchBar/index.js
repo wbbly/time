@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import Checkbox from '@material-ui/core/Checkbox';
 
 // Services
@@ -16,7 +18,7 @@ import { AppConfig } from '../../config';
 // Styles
 import './style.css';
 
-export default class ReportsSearchBar extends Component {
+class ReportsSearchBar extends Component {
     state = {
         toggleSelectUser: false,
         toggleSelectProject: false,
@@ -203,139 +205,6 @@ export default class ReportsSearchBar extends Component {
         this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: [] });
     }
 
-    render() {
-        return (
-            <div className="wrapper_reports_search_bar">
-                <div className="reports_search_bar_search_field_container select">
-                    <div className="reports_search_select_wrapper">
-                        <div
-                            className="reports_search_select_header"
-                            onClick={_ => this.openSelectUser()}
-                            ref={div => (this.userInputRef = div)}
-                        >
-                            <div>
-                                User:&nbsp;
-                                {this.state.userDataSelected.map((item, index) => (
-                                    <span key={item.username + index}>
-                                        {index === 0 ? item.username : `, ${item.username}`}
-                                    </span>
-                                ))}
-                            </div>
-                            <i className="arrow_down" />
-                        </div>
-                    </div>
-                    {this.state.toggleSelectUser && (
-                        <div className="select_body" ref={div => (this.selectListUsersRef = div)}>
-                            <div className="search_menu_select">
-                                <input
-                                    type="text"
-                                    onKeyUp={_ =>
-                                        this.findUser(this.state.userDataEtalon, this.smallSelectUserInputRef.value)
-                                    }
-                                    ref={input => (this.smallSelectUserInputRef = input)}
-                                    placeholder={'Find'}
-                                />
-                                <div ref={div => (this.selectAllUsersRef = div)} onClick={_ => this.selectAllUsers()}>
-                                    Select all
-                                </div>
-                                <div ref={div => (this.selectNoneUsersRef = div)} onClick={_ => this.selectNoneUsers()}>
-                                    Select none
-                                </div>
-                                <i className="small_clear" onClick={_ => this.clearUserSearch()} />
-                            </div>
-                            <div className="select_items_container">
-                                {this.state.userDataFiltered.map((item, index) => (
-                                    <div className="select_users_item" key={item.email + index}>
-                                        <label>
-                                            <Checkbox
-                                                color={'primary'}
-                                                value={item.email || ''}
-                                                checked={this.getCheckedUsers(item.email)}
-                                                onChange={_ => {
-                                                    this.toggleUser(item);
-                                                }}
-                                            />{' '}
-                                            <span className="select_users_item_username">{item.username}</span>
-                                        </label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-                <div className="reports_search_bar_search_field_container select">
-                    <div className="reports_search_select_wrapper">
-                        <div
-                            className="reports_search_select_header"
-                            onClick={_ => this.openSelectProject()}
-                            ref={div => (this.projectInputRef = div)}
-                        >
-                            <div>
-                                Project:&nbsp;
-                                {this.state.projectDataSelected.map((item, index) => (
-                                    <span key={item.name + index}>{index === 0 ? item.name : `, ${item.name}`}</span>
-                                ))}
-                            </div>
-                            <i className="arrow_down" />
-                        </div>
-                    </div>
-                    {this.state.toggleSelectProject && (
-                        <div className="select_body" ref={div => (this.selectListProjectsRef = div)}>
-                            <div className="search_menu_select">
-                                <input
-                                    type="text"
-                                    onKeyUp={_ => {
-                                        this.findProject(
-                                            this.state.projectDataEtalon,
-                                            this.smallSelectProjectInputRef.value
-                                        );
-                                    }}
-                                    ref={input => (this.smallSelectProjectInputRef = input)}
-                                    placeholder={'Find'}
-                                />
-                                <div
-                                    ref={div => (this.selectAllProjectsRef = div)}
-                                    onClick={_ => this.selectAllProjects()}
-                                >
-                                    Select all
-                                </div>
-                                <div
-                                    ref={div => (this.selectNoneProjectsRef = div)}
-                                    onClick={_ => this.selectNoneProjects()}
-                                >
-                                    Select none
-                                </div>
-                                <i className="small_clear" onClick={_ => this.clearProjectSearch()} />
-                            </div>
-                            <div className="select_items_container">
-                                {this.state.projectDataFiltered.map((item, index) => (
-                                    <div className="select_users_item" key={item.name + index}>
-                                        <label>
-                                            <Checkbox
-                                                color={'primary'}
-                                                value={item.name}
-                                                checked={this.getCheckedProjects(item.name)}
-                                                onChange={_ => {
-                                                    this.toggleProject(item);
-                                                }}
-                                            />{' '}
-                                            <span className="select_users_item_username">{item.name}</span>
-                                        </label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-                <div className="reports_search_bar_button_container">
-                    <button className="reports_search_bar_button" onClick={_ => this.applySearch()}>
-                        Apply
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
     componentDidMount() {
         this.userInputRef.value = this.props.inputUserData[0] || '';
         this.projectInputRef.value = this.props.inputProjectData[0] || '';
@@ -400,4 +269,147 @@ export default class ReportsSearchBar extends Component {
             }
         );
     }
+
+    render() {
+        const { vocabulary } = this.props;
+        const { v_user, v_project, v_find, v_select_all, v_select_none, v_apply } = vocabulary;
+        return (
+            <div className="wrapper_reports_search_bar">
+                <div className="reports_search_bar_search_field_container select">
+                    <div className="reports_search_select_wrapper">
+                        <div
+                            className="reports_search_select_header"
+                            onClick={_ => this.openSelectUser()}
+                            ref={div => (this.userInputRef = div)}
+                        >
+                            <div>
+                                {v_user}
+                                :&nbsp;
+                                {this.state.userDataSelected.map((item, index) => (
+                                    <span key={item.username + index}>
+                                        {index === 0 ? item.username : `, ${item.username}`}
+                                    </span>
+                                ))}
+                            </div>
+                            <i className="arrow_down" />
+                        </div>
+                    </div>
+                    {this.state.toggleSelectUser && (
+                        <div className="select_body" ref={div => (this.selectListUsersRef = div)}>
+                            <div className="search_menu_select">
+                                <input
+                                    type="text"
+                                    onKeyUp={_ =>
+                                        this.findUser(this.state.userDataEtalon, this.smallSelectUserInputRef.value)
+                                    }
+                                    ref={input => (this.smallSelectUserInputRef = input)}
+                                    placeholder={`${v_find}...`}
+                                />
+                                <div ref={div => (this.selectAllUsersRef = div)} onClick={_ => this.selectAllUsers()}>
+                                    {v_select_all}
+                                </div>
+                                <div ref={div => (this.selectNoneUsersRef = div)} onClick={_ => this.selectNoneUsers()}>
+                                    {v_select_none}
+                                </div>
+                                <i className="small_clear" onClick={_ => this.clearUserSearch()} />
+                            </div>
+                            <div className="select_items_container">
+                                {this.state.userDataFiltered.map((item, index) => (
+                                    <div className="select_users_item" key={item.email + index}>
+                                        <label>
+                                            <Checkbox
+                                                color={'primary'}
+                                                value={item.email || ''}
+                                                checked={this.getCheckedUsers(item.email)}
+                                                onChange={_ => {
+                                                    this.toggleUser(item);
+                                                }}
+                                            />{' '}
+                                            <span className="select_users_item_username">{item.username}</span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="reports_search_bar_search_field_container select">
+                    <div className="reports_search_select_wrapper">
+                        <div
+                            className="reports_search_select_header"
+                            onClick={_ => this.openSelectProject()}
+                            ref={div => (this.projectInputRef = div)}
+                        >
+                            <div>
+                                {v_project}
+                                :&nbsp;
+                                {this.state.projectDataSelected.map((item, index) => (
+                                    <span key={item.name + index}>{index === 0 ? item.name : `, ${item.name}`}</span>
+                                ))}
+                            </div>
+                            <i className="arrow_down" />
+                        </div>
+                    </div>
+                    {this.state.toggleSelectProject && (
+                        <div className="select_body" ref={div => (this.selectListProjectsRef = div)}>
+                            <div className="search_menu_select">
+                                <input
+                                    type="text"
+                                    onKeyUp={_ => {
+                                        this.findProject(
+                                            this.state.projectDataEtalon,
+                                            this.smallSelectProjectInputRef.value
+                                        );
+                                    }}
+                                    ref={input => (this.smallSelectProjectInputRef = input)}
+                                    placeholder={`${v_find}...`}
+                                />
+                                <div
+                                    ref={div => (this.selectAllProjectsRef = div)}
+                                    onClick={_ => this.selectAllProjects()}
+                                >
+                                    {v_select_all}
+                                </div>
+                                <div
+                                    ref={div => (this.selectNoneProjectsRef = div)}
+                                    onClick={_ => this.selectNoneProjects()}
+                                >
+                                    {v_select_none}
+                                </div>
+                                <i className="small_clear" onClick={_ => this.clearProjectSearch()} />
+                            </div>
+                            <div className="select_items_container">
+                                {this.state.projectDataFiltered.map((item, index) => (
+                                    <div className="select_users_item" key={item.name + index}>
+                                        <label>
+                                            <Checkbox
+                                                color={'primary'}
+                                                value={item.name}
+                                                checked={this.getCheckedProjects(item.name)}
+                                                onChange={_ => {
+                                                    this.toggleProject(item);
+                                                }}
+                                            />{' '}
+                                            <span className="select_users_item_username">{item.name}</span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="reports_search_bar_button_container">
+                    <button className="reports_search_bar_button" onClick={_ => this.applySearch()}>
+                        {v_apply}
+                    </button>
+                </div>
+            </div>
+        );
+    }
 }
+
+const mapStateToProps = state => ({
+    vocabulary: state.languageReducer.vocabulary,
+});
+
+export default connect(mapStateToProps)(ReportsSearchBar);

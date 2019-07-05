@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Services
@@ -18,7 +19,7 @@ import { AppConfig } from '../../config';
 // Styles
 import './style.css';
 
-export default class CreateProjectModal extends Component {
+class CreateProjectModal extends Component {
     state = {
         selectedValue: {
             id: 'a642f337-9082-4f64-8ace-1d0e99fa7258',
@@ -41,7 +42,9 @@ export default class CreateProjectModal extends Component {
     }
 
     addProject() {
-        const project = addProjectPreProcessing(this.createProjectInput.value, this.state.selectedValue);
+        const { vocabulary } = this.props;
+        const { v_a_project_existed, v_a_project_created_error } = vocabulary;
+        const project = addProjectPreProcessing(this.createProjectInput.value, this.state.selectedValue, vocabulary);
         if (!project) {
             return null;
         }
@@ -66,9 +69,9 @@ export default class CreateProjectModal extends Component {
                     err.text().then(error => {
                         const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
                         if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                            alert('Project is already existed');
+                            alert(v_a_project_existed);
                         } else {
-                            alert(`Project can't be created`);
+                            alert(v_a_project_created_error);
                         }
                     });
                 } else {
@@ -79,6 +82,9 @@ export default class CreateProjectModal extends Component {
     }
 
     render() {
+        const { vocabulary } = this.props;
+        const { v_create_project, v_project_name } = vocabulary;
+
         let selectItems = this.state.selectValue.map(value => (
             <div className={`item`} onClick={e => this.setItem(value)}>
                 <div className={`circle ${value.name}`} />
@@ -90,7 +96,7 @@ export default class CreateProjectModal extends Component {
                 <div className="create_projects_modal_background" />
                 <div className="create_projects_modal_container">
                     <div className="create_projects_modal_header">
-                        <div className="create_projects_modal_header_title">Create project</div>
+                        <div className="create_projects_modal_header_title">{v_create_project}</div>
                         <i
                             className="create_projects_modal_header_close"
                             onClick={e => this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false })}
@@ -103,7 +109,7 @@ export default class CreateProjectModal extends Component {
                                 ref={input => {
                                     this.createProjectInput = input;
                                 }}
-                                placeholder={'Project name...'}
+                                placeholder={`${v_project_name}...`}
                             />
                             <div
                                 className="create_projects_modal_data_select_container"
@@ -122,7 +128,7 @@ export default class CreateProjectModal extends Component {
                             className="create_projects_modal_button_container_button"
                             onClick={e => this.addProject(this.props.tableInfo)}
                         >
-                            Create project
+                            {v_create_project}
                         </button>
                     </div>
                 </div>
@@ -155,3 +161,9 @@ export default class CreateProjectModal extends Component {
 CreateProjectModal.propTypes = {
     tableInfo: PropTypes.array.isRequired,
 };
+
+const mapStateToProps = state => ({
+    vocabulary: state.languageReducer.vocabulary,
+});
+
+export default connect(mapStateToProps)(CreateProjectModal);

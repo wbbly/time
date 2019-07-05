@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as moment from 'moment';
 import { Doughnut } from 'react-chartjs-2';
@@ -49,6 +50,8 @@ class ProjectsContainer extends Component {
     }
 
     render() {
+        const { vocabulary } = this.props;
+        const { v_project_name, v_time } = vocabulary;
         let datesValue = '00:00:00';
         if (!!this.props.dataDoughnutChat.datasets[0].data.length) {
             datesValue = JSON.parse(
@@ -80,8 +83,8 @@ class ProjectsContainer extends Component {
             <div className="projects_container_wrapper">
                 <div className="projects_container_projects">
                     <div className="projects_header">
-                        <div>Project name</div>
-                        <div>Time</div>
+                        <div>{v_project_name}</div>
+                        <div>{v_time}</div>
                     </div>
                     <div className="projects_container_project_data_container">{projectsItems}</div>
                 </div>
@@ -101,4 +104,8 @@ class ProjectsContainer extends Component {
     }
 }
 
-export default ProjectsContainer;
+const mapStateToProps = state => ({
+    vocabulary: state.languageReducer.vocabulary,
+});
+
+export default connect(mapStateToProps)(ProjectsContainer);

@@ -56,7 +56,8 @@ class LeftBar extends Component {
     }
 
     render() {
-        const { switchMenu, isMobile, teamsUpdateTimestamp } = this.props;
+        const { switchMenu, isMobile, teamsUpdateTimestamp, vocabulary } = this.props;
+        const { v_timer, v_reports, v_projects, v_team, v_log_out } = vocabulary;
         return (
             <div className="wrapper" onClick={switchMenu}>
                 {!isMobile && (
@@ -69,26 +70,26 @@ class LeftBar extends Component {
                     <Link to="/timer" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="timer" />
-                            <div className="links_text">timer</div>
+                            <div className="links_text">{v_timer}</div>
                             <div className="timer_task">{this.visualTimer()}</div>
                         </div>
                     </Link>
                     <Link to="/reports/summary" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="reports" />
-                            <div className="links_text">reports</div>
+                            <div className="links_text">{v_reports}</div>
                         </div>
                     </Link>
                     <Link to="/projects" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="projects" />
-                            <div className="links_text">projects</div>
+                            <div className="links_text">{v_projects}</div>
                         </div>
                     </Link>
                     <Link to="/team" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="team" />
-                            <div className="links_text">team</div>
+                            <div className="links_text">{v_team}</div>
                         </div>
                     </Link>
                     <TeamSwitcher isMobile={isMobile} teamsUpdateTimestamp={teamsUpdateTimestamp} />
@@ -97,7 +98,7 @@ class LeftBar extends Component {
                 <div className="logout_container" onClick={e => this.logout()}>
                     <div>
                         <i className="logout" />
-                        <span>Log out</span>
+                        <span>{v_log_out}</span>
                     </div>
                 </div>
             </div>
