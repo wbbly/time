@@ -147,7 +147,8 @@ class TeamSwitcher extends Component {
     }
 
     render() {
-        const { isMobile } = this.props;
+        const { isMobile, vocabulary } = this.props;
+        const { v_a_team_existed, v_a_team_create_error } = vocabulary;
         return (
             <div className="team_list">
                 <ul>
@@ -196,9 +197,9 @@ class TeamSwitcher extends Component {
                                                                 errorMessages.join('\n')
                                                             )
                                                         ) {
-                                                            alert('Team is already existed');
+                                                            alert(v_a_team_existed);
                                                         } else {
-                                                            alert(`Team can't be created`);
+                                                            alert(v_a_team_create_error);
                                                         }
                                                     });
                                                 } else {
@@ -217,8 +218,9 @@ class TeamSwitcher extends Component {
     }
 }
 
-const mapStateToProps = store => ({
-    currentTeam: store.teamReducer.currentTeam,
+const mapStateToProps = state => ({
+    currentTeam: state.teamReducer.currentTeam,
+    vocabulary: state.languageReducer.vocabulary,
 });
 
 const mapDispatchToProps = dispatch => {

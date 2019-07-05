@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import PropTypes from 'prop-types';
 
 // Services
@@ -14,7 +16,7 @@ import PropTypes from 'prop-types';
 // Styles
 import './style.css';
 
-export default class ProjectSearchBar extends Component {
+class ProjectSearchBar extends Component {
     etalonTable = [];
 
     search() {
@@ -33,6 +35,8 @@ export default class ProjectSearchBar extends Component {
     }
 
     render() {
+        const { vocabulary } = this.props;
+        const { v_apply } = vocabulary;
         return (
             <div className="wrapper_project_search_bar">
                 <div className="project_search_bar_search_field_container">
@@ -46,7 +50,7 @@ export default class ProjectSearchBar extends Component {
                 </div>
                 <div className="project_search_bar_button_container">
                     <button className="project_search_bar_button" onClick={e => this.search()}>
-                        Apply
+                        {v_apply}
                     </button>
                 </div>
             </div>
@@ -61,3 +65,9 @@ export default class ProjectSearchBar extends Component {
 ProjectSearchBar.propTypes = {
     tableInfo: PropTypes.array.isRequired,
 };
+
+const mapStateToProps = state => ({
+    vocabulary: state.languageReducer.vocabulary,
+});
+
+export default connect(mapStateToProps)(ProjectSearchBar);

@@ -56,7 +56,8 @@ class ProjectsPage extends Component {
     };
 
     render() {
-        const { tableData, addNewProjectModalToggle, projectsPageAction, isMobile } = this.props;
+        const { tableData, addNewProjectModalToggle, projectsPageAction, isMobile, vocabulary } = this.props;
+        const { v_create_new_project, v_projects } = vocabulary;
 
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
@@ -75,13 +76,13 @@ class ProjectsPage extends Component {
                 )}
                 <div className="data_container_projects_page">
                     <div className="projects_page_header">
-                        <div className="projects_page_title">Projects</div>
+                        <div className="projects_page_title">{v_projects}</div>
                         {checkIsAdmin() && (
                             <button
                                 className="create_project_button"
                                 onClick={e => projectsPageAction('TOGGLE_MODAL', { toggle: true })}
                             >
-                                Create new project
+                                {v_create_new_project}
                             </button>
                         )}
                     </div>
@@ -119,6 +120,7 @@ const mapStateToProps = store => {
         editedProject: store.projectReducer.editedProject,
         editProjectModal: store.projectReducer.editProjectModal,
         isMobile: store.responsiveReducer.isMobile,
+        vocabulary: store.languageReducer.vocabulary,
     };
 };
 

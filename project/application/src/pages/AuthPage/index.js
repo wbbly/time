@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 
 // Services
 import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
@@ -9,10 +9,8 @@ import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamData
 import { apiCall } from '../../services/apiService';
 
 // Components
-import RegisterModal from '../../components/RegisterModal';
 
 // Actions
-import toggleRegisterModal from '../../actions/AuthPageAction';
 import reportsPageAction from '../../actions/ReportsPageAction';
 
 // Queries
@@ -26,7 +24,6 @@ import './index.css';
 class AuthPage extends Component {
     state = {
         haveToken: false,
-        authorisationModal: true,
     };
 
     login = (email, password) => {
@@ -76,27 +73,36 @@ class AuthPage extends Component {
     componentWillMount() {}
 
     render() {
-        const { history, viewport } = this.props;
+        const { history, vocabulary } = this.props;
+        const {
+            v_login,
+            v_add_your_login,
+            v_add_your_password,
+            v_password,
+            v_enter,
+            v_forgot_your_password,
+            v_dont_have_an_account_yet,
+            v_sign_up,
+        } = vocabulary;
         if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
 
         logoutByUnauthorized(false);
 
         return (
-            <div className="wrapper_authorisation_page" style={{ height: viewport.height - 1 }}>
-                {this.props.authPageReducer && <RegisterModal toggleRegisterModal={this.props.toggleRegisterModal} />}
+            <div className="wrapper_authorisation_page">
                 <i className="page_title" />
                 <div className="authorisation_window">
                     <div className="input_container">
-                        <input type="text" ref={input => (this.email = input)} placeholder="Add your login..." />
-                        <div className="input_title">Login</div>
+                        <input type="text" ref={input => (this.email = input)} placeholder={`${v_add_your_login}...`} />
+                        <div className="input_title">{v_login}</div>
                     </div>
                     <div className="input_container">
                         <input
                             type="password"
                             ref={input => (this.password = input)}
-                            placeholder="Add your password..."
+                            placeholder={`${v_add_your_password}...`}
                         />
-                        <div className="input_title">Password</div>
+                        <div className="input_title">{v_password}</div>
                     </div>
                     <button
                         className="login_button"
@@ -104,37 +110,29 @@ class AuthPage extends Component {
                             this.login(this.email.value.toLocaleLowerCase(), this.password.value);
                         }}
                     >
-                        Login
+                        {v_enter}
                     </button>
-                    <button className="forgot_password_button">Forgot your password?</button>
+                    <button className="forgot_password_button">{v_forgot_your_password}?</button>
                 </div>
                 <button
                     onClick={e => history.push('/register')}
                     className="register-block__button register-block__button--to-login"
                     type="button"
                 >
-                    Don't have an account yet? Sign up
+                    {v_dont_have_an_account_yet}? {v_sign_up}
                 </button>
             </div>
         );
     }
 }
 
-const mapStateToProps = store => {
-    return {
-        authPageReducer: store.authPageReducer.registerModal,
-        viewport: store.responsiveReducer.viewport,
-    };
-};
+const mapDispatchToProps = dispatch => ({
+    reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
+});
 
-const mapDispatchToProps = dispatch => {
-    return {
-        toggleRegisterModal: (actionType, action) => dispatch(toggleRegisterModal(actionType, action))[1],
-        reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
-    };
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AuthPage);
+export default withRouter(
+    connect(
+        null,
+        mapDispatchToProps
+    )(AuthPage)
+);

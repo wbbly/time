@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -72,7 +74,24 @@ class EditTeamModal extends Component {
         this.setState({ valueStatus: event.target.value });
     };
 
+    componentDidMount() {
+        const currentUser = this.props.editedUser.user[0] || {};
+        const { id, username, email } = currentUser;
+        const role = this.props.editedUser.role_collaboration.title;
+        const isActive = this.props.editedUser.is_active;
+
+        this.setState({
+            id,
+            value: role,
+            valueStatus: isActive ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE,
+        });
+        this.email.value = email;
+        this.name.value = username;
+    }
+
     render() {
+        const { vocabulary } = this.props;
+        const { v_name, v_team_role, v_team_access, v_edit_user } = vocabulary;
         return (
             <div className="edit_team_modal_wrapper">
                 <div className="edit_team_modal_data">
@@ -88,7 +107,7 @@ class EditTeamModal extends Component {
                         />
                     </div>
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">Name</div>
+                        <div className="edit_team_modal_input_title">{v_name}</div>
                         <input
                             type="text"
                             ref={input => {
@@ -98,7 +117,7 @@ class EditTeamModal extends Component {
                         />
                     </div>
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">Team Role</div>
+                        <div className="edit_team_modal_input_title">{v_team_role}</div>
                         <RadioGroup onChange={this.handleChange} value={this.state.value}>
                             <FormControlLabel
                                 value={ROLES.ROLE_ADMIN}
@@ -113,7 +132,7 @@ class EditTeamModal extends Component {
                         </RadioGroup>
                     </div>
                     <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">Team Access</div>
+                        <div className="edit_team_modal_input_title">{v_team_access}</div>
                         <RadioGroup onChange={this.handleChangeStatus} value={this.state.valueStatus}>
                             <FormControlLabel
                                 value={USER_STATUS.ACTIVE}
@@ -127,26 +146,15 @@ class EditTeamModal extends Component {
                             />
                         </RadioGroup>
                     </div>
-                    <button onClick={e => this.addUser(this.props.teamPage)}>Edit user</button>
+                    <button onClick={e => this.addUser(this.props.teamPage)}>{v_edit_user}</button>
                 </div>
             </div>
         );
     }
-
-    componentDidMount() {
-        const currentUser = this.props.editedUser.user[0] || {};
-        const { id, username, email } = currentUser;
-        const role = this.props.editedUser.role_collaboration.title;
-        const isActive = this.props.editedUser.is_active;
-
-        this.setState({
-            id,
-            value: role,
-            valueStatus: isActive ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE,
-        });
-        this.email.value = email;
-        this.name.value = username;
-    }
 }
 
-export default EditTeamModal;
+const mapStateToProps = state => ({
+    vocabulary: state.languageReducer.vocabulary,
+});
+
+export default connect(mapStateToProps)(EditTeamModal);
