@@ -56,3 +56,7 @@ button {
 .mobile-support-toastr .Toastify__toast-body {
     padding: 0 10px
 }
+
+.visible_password_eye {
+    cursor: pointer;
+}

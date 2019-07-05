@@ -61,6 +61,7 @@
 }
 
 .change_password_modal_data .change_password_modal_data_input_container {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,6 +70,7 @@
 
 .change_password_modal_data .change_password_modal_data_input_container input {
     padding-left: 16px;
+    padding-right: 48px;
     width: 100%;
     height: 47px;
     border: 1px solid #828282;
@@ -208,4 +210,12 @@
     height: 24px;
     margin-left: 5px;
     background: url("../../images/icons/Vector.svg") no-repeat center;
+}
+
+.visible_password_eye {
+    position: absolute;
+    right: 24px;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/eye.svg") no-repeat center;
 }
