@@ -150,8 +150,15 @@ class ReportsPage extends Component {
                         <div className="selects_container">
                             <div className="select_header" onClick={e => this.openCalendar()}>
                                 <span>
-                                    {changeDisplayingDateFormat(this.props.timeRange.startDate, this.props.format.dateFormat)} {' - '}
-                                    {changeDisplayingDateFormat(this.props.timeRange.endDate, this.props.format.dateFormat)}
+                                    {changeDisplayingDateFormat(
+                                        this.props.timeRange.startDate,
+                                        this.props.format.dateFormat
+                                    )}{' '}
+                                    {' - '}
+                                    {changeDisplayingDateFormat(
+                                        this.props.timeRange.endDate,
+                                        this.props.format.dateFormat
+                                    )}
                                 </span>
                                 <i className="arrow_down" />
                             </div>
@@ -187,7 +194,10 @@ class ReportsPage extends Component {
                                 <span className="total_time_name">{v_total}</span>
                                 <span className="total_time_time">
                                     {typeof this.state.totalUpChartTime === 'number'
-                                        ? getTimeDurationByGivenTimestamp(this.state.totalUpChartTime)
+                                        ? getTimeDurationByGivenTimestamp(
+                                              this.state.totalUpChartTime,
+                                              this.props.format.timeFormat
+                                          )
                                         : '00:00:00'}
                                 </span>
                                 <span className="export_button" onClick={e => this.export()}>
@@ -508,7 +518,7 @@ const mapStateToProps = store => ({
     inputProjectData: store.reportsPageReducer.inputProjectData,
     isMobile: store.responsiveReducer.isMobile,
     vocabulary: store.languageReducer.vocabulary,
-    format: store.formatReducer
+    format: store.formatDateTimeReducer,
 });
 
 const mapDispatchToProps = dispatch => {

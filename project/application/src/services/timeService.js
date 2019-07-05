@@ -53,15 +53,47 @@ export function changeDate(arr) {
     return newArr;
 }
 
-export function getTimeDurationByGivenTimestamp(milliseconds) {
-    let hour, minute, seconds;
-    seconds = Math.floor(milliseconds / 1000);
-    minute = Math.floor(seconds / 60);
-    seconds = seconds % 60;
-    hour = Math.floor(minute / 60);
-    minute = minute % 60;
+export function getTimeDurationByGivenTimestamp(milliseconds, timeFormat = localStorage.getItem('time_format')) {
+    if (timeFormat === 'improve') {
+        return improve(milliseconds);
+    } else if (timeFormat === 'decimal') {
+        return decimal(milliseconds);
+    } else if (timeFormat === 'classic') {
+        return classic(milliseconds);
+    }
 
-    return `${padTime(hour)}:${padTime(minute)}:${padTime(seconds)}`;
+    function decimal(time) {
+        let h = time / 1000 / 60 / 60;
+        return `${h.toFixed(2)} h`;
+    }
+
+    function classic(time) {
+        let hour, minute, seconds;
+        seconds = Math.floor(time / 1000);
+        minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        hour = Math.floor(minute / 60);
+        minute = minute % 60;
+
+        if (hour === 0 && minute === 0) {
+            return `${padTime(seconds)} s`;
+        } else if (hour === 0 && minute !== 0) {
+            return `${padTime(minute)}:${padTime(seconds)} min`;
+        } else if (hour !== 0) {
+            return `${padTime(hour)}:${padTime(minute)}:${padTime(seconds)}`;
+        }
+    }
+
+    function improve(time) {
+        let hour, minute, seconds;
+        seconds = Math.floor(time / 1000);
+        minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        hour = Math.floor(minute / 60);
+        minute = minute % 60;
+
+        return `${padTime(hour)}:${padTime(minute)}:${padTime(seconds)}`;
+    }
 }
 
 export function convertDateToISOString(date) {

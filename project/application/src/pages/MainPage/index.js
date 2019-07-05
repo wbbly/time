@@ -21,7 +21,7 @@ import {
 } from '../../services/currentTimerStorageService';
 import { setServerClientTimediffToLocalStorage } from '../../services/serverClientTimediffStorageService';
 import { apiCall } from '../../services/apiService';
-import { changeDisplayingDateFormat } from '../../services/formatService'
+import { changeDisplayingDateFormat } from '../../services/formatService';
 
 // Components
 import ManualTimeModal from '../../components/ManualTimeModal';
@@ -460,7 +460,10 @@ class MainPage extends Component {
                             <div>{moment(item.endDatetime).format('HH:mm')}</div>
                         </div>
                         <div className="timePassed">
-                            {getTimeDurationByGivenTimestamp(+moment(item.endDatetime) - +moment(item.startDatetime))}
+                            {getTimeDurationByGivenTimestamp(
+                                +moment(item.endDatetime) - +moment(item.startDatetime),
+                                this.props.format.timeFormat
+                            )}
                         </div>
                         {!this.state.timerDurationValue && <i className="small_play item_button" />}
                         <i
@@ -542,8 +545,12 @@ class MainPage extends Component {
         let timeTrackerWrapperItems = this.splitProjectsByDates(this.props.timeEntriesList).map((arraysItem, index) => (
             <div className="time_tracker_wrapper" key={'time-entry-group_' + index}>
                 <div className="header">
-                    <div className="date">{changeDisplayingDateFormat(arraysItem[0].startDatetime, this.props.format.dateFormat)}</div>
-                    <div className="allTime">{v_total_time}: {this.getTimeEntriesTotalTime(arraysItem)}</div>
+                    <div className="date">
+                        {changeDisplayingDateFormat(arraysItem[0].startDatetime, this.props.format.dateFormat)}
+                    </div>
+                    <div className="allTime">
+                        {v_total_time}: {this.getTimeEntriesTotalTime(arraysItem)}
+                    </div>
                 </div>
                 {this.createTimeEntriesList(arraysItem)}
             </div>
@@ -631,7 +638,10 @@ class MainPage extends Component {
 
                             <div className="time_container">
                                 {this.state.timerDurationValue
-                                    ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
+                                    ? getTimeDurationByGivenTimestamp(
+                                          +moment(this.state.timerDurationValue),
+                                          this.props.format.timeFormat
+                                      )
                                     : '00:00:00'}
                             </div>
                             <i
@@ -670,7 +680,10 @@ class MainPage extends Component {
                     <div className="mobile-info-block-current-going-task">
                         <div className="mobile-info-block-current-going-task__time">
                             {this.state.timerDurationValue
-                                ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
+                                ? getTimeDurationByGivenTimestamp(
+                                      +moment(this.state.timerDurationValue),
+                                      this.props.format.timeFormat
+                                  )
                                 : '00:00:00'}
                         </div>
                         <div className="mobile-info-block-current-going-task__name-task">
@@ -806,7 +819,7 @@ const mapStateToProps = store => {
         viewport: store.responsiveReducer.viewport,
         isShowMenu: store.responsiveReducer.isShowMenu,
         isMobile: store.responsiveReducer.isMobile,
-        format: store.formatReducer
+        format: store.formatDateTimeReducer,
     };
 };
 

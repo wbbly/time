@@ -38,7 +38,7 @@ export default class ProjectData extends Component {
             <tr key={'table-header_' + index}>
                 <td>{item.name}</td>
                 <td>
-                    {getTimeDurationByGivenTimestamp(item.totalTime)}
+                    {getTimeDurationByGivenTimestamp(item.totalTime, this.props.timeFormat)}
                     {checkIsAdmin() && <i className="edit_button" onClick={e => this.setEdiItem(item)} />}
                 </td>
             </tr>
@@ -64,6 +64,10 @@ export default class ProjectData extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    timeFormat: state.formatDateTimeReducer.timeFormat,
+});
 
 ProjectData.propTypes = {
     tableInfo: PropTypes.array.isRequired,

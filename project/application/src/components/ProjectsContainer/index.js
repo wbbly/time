@@ -74,7 +74,7 @@ class ProjectsContainer extends Component {
             >
                 <div className="projects_container_project_data">
                     <div className="name">{item.name}</div>
-                    <div className="time">{getTimeDurationByGivenTimestamp(item.duration)}</div>
+                    <div className="time">{getTimeDurationByGivenTimestamp(item.duration, this.props.timeFormat)}</div>
                 </div>
             </Link>
         ));
@@ -90,7 +90,9 @@ class ProjectsContainer extends Component {
                 </div>
                 <div className="chart">
                     <div className="total_time_tasks">
-                        {typeof datesValue === 'number' ? getTimeDurationByGivenTimestamp(datesValue) : ''}
+                        {typeof datesValue === 'number'
+                            ? getTimeDurationByGivenTimestamp(datesValue, this.props.timeFormat)
+                            : ''}
                     </div>
                     <Doughnut
                         data={this.props.dataDoughnutChat}
@@ -106,6 +108,7 @@ class ProjectsContainer extends Component {
 
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
+    timeFormat: state.formatDateTimeReducer.timeFormat,
 });
 
 export default connect(mapStateToProps)(ProjectsContainer);

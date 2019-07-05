@@ -67,7 +67,7 @@ class ReportsByProjectsPage extends Component {
                 <div className="username">{item.user.username}</div>
                 <div className="time">
                     {changeDisplayingDateFormat(item.startDatetime, this.props.format.dateFormat)} |{' '}
-                    {getTimeDurationByGivenTimestamp(item.durationTimestamp)}
+                    {getTimeDurationByGivenTimestamp(item.durationTimestamp, this.props.format.timeFormat)}
                 </div>
             </div>
         ));
@@ -82,10 +82,13 @@ class ReportsByProjectsPage extends Component {
                     <div className="header_name">
                         {this.props.match.params.projectName}:{' '}
                         {changeDisplayingDateFormat(this.props.match.params.dateStart, this.props.format.dateFormat)}
-                        {' - '} {changeDisplayingDateFormat(this.props.match.params.endDate, this.props.format.dateFormat)}
+                        {' - '}{' '}
+                        {changeDisplayingDateFormat(this.props.match.params.endDate, this.props.format.dateFormat)}
                     </div>
                     <div className="header_name">Sum tasks: {this.state.countTasks}</div>
-                    <div className="header_name">Sum time: {getTimeDurationByGivenTimestamp(this.state.totalTime)}</div>
+                    <div className="header_name">
+                        Sum time: {getTimeDurationByGivenTimestamp(this.state.totalTime, this.props.format.timeFormat)}
+                    </div>
                 </div>
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">
@@ -151,7 +154,7 @@ class ReportsByProjectsPage extends Component {
 const mapStateToProps = store => ({
     inputUserData: store.reportsPageReducer.inputUserData,
     isMobile: store.responsiveReducer.isMobile,
-    format: store.formatReducer
+    format: store.formatDateTimeReducer,
 });
 
 export default withRouter(connect(mapStateToProps)(ReportsByProjectsPage));

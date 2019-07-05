@@ -221,7 +221,9 @@ class ManualTimeModal extends Component {
                                                 <DatePicker
                                                     value={startDate}
                                                     onChange={this.onChangeDate}
-                                                    format={this.props.format.dateFormat.toLowerCase().replace('mm','MM')}
+                                                    format={this.props.format.dateFormat
+                                                        .toLowerCase()
+                                                        .replace('mm', 'MM')}
                                                 />
 
                                                 <TimePicker
@@ -253,7 +255,9 @@ class ManualTimeModal extends Component {
                                                 <DatePicker
                                                     value={endDate}
                                                     onChange={this.onChangeDateEnd}
-                                                    format={this.props.format.dateFormat.toLowerCase().replace('mm','MM')}
+                                                    format={this.props.format.dateFormat
+                                                        .toLowerCase()
+                                                        .replace('mm', 'MM')}
                                                 />
 
                                                 <TimePicker
@@ -321,7 +325,7 @@ const mapStateToProps = store => ({
     viewport: store.responsiveReducer.viewport,
     vocabulary: store.languageReducer.vocabulary,
     isMobile: store.responsiveReducer.isMobile,
-    format: store.formatReducer
+    format: store.formatDateTimeReducer,
 });
 
 export default connect(mapStateToProps)(ManualTimeModal);
