@@ -61,12 +61,6 @@ export const showMobileSupportToastr = () => {
     }
 };
 
-// showMobileSupportToastr();
-
-addEvent(window, 'resize', event => {
-    showMobileSupportToastr();
-});
-
 class App extends Component {
     setResponsiveReducer = event => {
         const { setViewportSize, setIsMobile, isMobile } = this.props;
@@ -87,10 +81,12 @@ class App extends Component {
     componentDidMount() {
         this.setResponsiveReducer();
         addEvent(window, 'resize', this.setResponsiveReducer);
+        addEvent(window, 'resize', showMobileSupportToastr);
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.setResponsiveReducer);
+        window.removeEventListener('resize', showMobileSupportToastr);
     }
 
     render() {
@@ -105,8 +101,9 @@ class App extends Component {
                     render={() => <PageTemplate content={ReportsByProjectsPage} />}
                 />
 
-                <Route path="/login" component={AuthPage} />
-                <Route path="/register" component={RegisterPage} />
+                <Route path="/login" render={() => <PageTemplate content={AuthPage} />} />
+                <Route path="/register" render={() => <PageTemplate content={RegisterPage} />} />
+
                 <Redirect from="/" to="/login" />
             </Switch>
         );
