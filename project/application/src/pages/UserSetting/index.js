@@ -99,7 +99,6 @@ class UserSetting extends Component {
 
     setDataToForm = () => {
         this.updateUserData();
-
     };
 
     updateUserData = () => {

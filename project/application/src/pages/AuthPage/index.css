@@ -34,12 +34,13 @@
 
 .wrapper_authorization_page input {
     height: 47px;
-    width: calc(100% - 24px);
+    width: calc(100% - 64px);
     outline: none;
     padding-left: 16px;
     border: 1px solid #828282;
     border-radius: 4px;
     color: black;
+    padding-right: 40px;
 }
 
 .wrapper_authorization_page input:focus {
@@ -94,3 +95,16 @@
     text-decoration: underline;
     background-color: white;
 }
+
+.visible_password_eye {
+    position: absolute;
+    right: 24px;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/eye.svg") no-repeat center;
+}
+
+.wrapper_authorization_page .visible_password_eye {
+    top: 14px;
+}
+

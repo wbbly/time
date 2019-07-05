@@ -87,7 +87,7 @@ class ResetPasswordPage extends Component {
     }
 
     render() {
-        if (this.state.redirect) return <Redirect to={'/timer'} />;
+        if (this.state.redirect) return <Redirect to={'/login'} />;
 
         logoutByUnauthorized(false);
 

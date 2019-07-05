@@ -28,6 +28,7 @@ class AuthPage extends Component {
     state = {
         haveToken: false,
         authorizationModal: true,
+        password: true,
     };
 
     login = (email, password) => {
@@ -74,6 +75,10 @@ class AuthPage extends Component {
         );
     };
 
+    toggleVisiblePassword() {
+        this.setState({password: !this.state.password})
+    }
+
     componentWillMount() {}
 
     render() {
@@ -97,11 +102,12 @@ class AuthPage extends Component {
                     </div>
                     <div className="input_container">
                         <input
-                            type="password"
+                            type={this.state.password ? 'password' : 'text'}
                             ref={input => (this.password = input)}
                             placeholder="Add your password..."
                         />
                         <div className="input_title">Password</div>
+                        <i className="visible_password_eye" onClick={ e => this.toggleVisiblePassword()}></i>
                     </div>
                     <button
                         className="login_button"
