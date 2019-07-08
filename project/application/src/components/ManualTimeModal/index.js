@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { getDate } from '../../services/timeService';
 import { encodeTimeEntryIssue } from '../../services/timeEntryService';
 import { apiCall } from '../../services/apiService';
+import { getTimeHoursFormat } from '../../services/formatService'
 
 // Components
 
@@ -170,7 +171,7 @@ class ManualTimeModal extends Component {
     render() {
         const { startDate, startTime, endDate, endTime } = this.state;
         const { vocabulary, isMobile, manualTimerModalAction } = this.props;
-        const { v_task_name, v_project, v_time_start, v_time_end, v_change, lang } = vocabulary;
+        const { v_task_name, v_project, v_time_start, v_time_end, v_change } = vocabulary;
 
         return (
             <div className={!isMobile ? 'manual_time_modal_wrapper' : 'manual_time_modal_wrapper--mobile'}>
@@ -227,7 +228,7 @@ class ManualTimeModal extends Component {
                                                 />
 
                                                 <TimePicker
-                                                    ampm={lang === 'en'}
+                                                    ampm={getTimeHoursFormat(this.props.format.timeHoursFormat)}
                                                     value={startTime}
                                                     onChange={this.onChangeTime}
                                                 />
@@ -236,7 +237,7 @@ class ManualTimeModal extends Component {
                                     ) : (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <TimePicker
-                                                ampm={lang === 'en'}
+                                                ampm={getTimeHoursFormat(this.props.format.timeHoursFormat)}
                                                 value={startTime}
                                                 onChange={this.onChangeTime}
                                             />
@@ -261,7 +262,7 @@ class ManualTimeModal extends Component {
                                                 />
 
                                                 <TimePicker
-                                                    ampm={lang === 'en'}
+                                                    ampm={getTimeHoursFormat(this.props.format.timeHoursFormat)}
                                                     value={endTime}
                                                     onChange={this.onChangeTimeEnd}
                                                 />
@@ -270,7 +271,7 @@ class ManualTimeModal extends Component {
                                     ) : (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <TimePicker
-                                                ampm={lang === 'en'}
+                                                ampm={getTimeHoursFormat(this.props.format.timeHoursFormat)}
                                                 value={endTime}
                                                 onChange={this.onChangeTimeEnd}
                                             />

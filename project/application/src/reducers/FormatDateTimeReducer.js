@@ -1,6 +1,7 @@
 const initialState = {
     dateFormat: localStorage.getItem('date_format') || 'DD.MM.YYYY',
     timeFormat: localStorage.getItem('time_format') || 'decimal',
+    timeHoursFormat: localStorage.getItem('time_hours_format') || '12h'
 };
 
 export function formatDateTimeReducer(state = initialState, action) {

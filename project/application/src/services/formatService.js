@@ -1,5 +1,9 @@
 import * as moment from 'moment';
 
+export function getTimeHoursFormat(timeFormat) {
+   return timeFormat === '12h'
+}
+
 export function changeDisplayingDateFormat(date, dateFormat) {
     let momentStringDate = dateStringFormatToMomentStringFormat(date);
 
