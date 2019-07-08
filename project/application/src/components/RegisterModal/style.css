@@ -26,6 +26,7 @@
 }
 
 .register_modal_wrapper .add_to_team_modal_input_container {
+    position: relative;
     text-align: left;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
@@ -79,10 +80,10 @@
     cursor: pointer;
 }
 
-.register_modal_wrapper .visible_password_eye {
+.register_modal_wrapper i.visible_password_eye {
     position: absolute;
-    right: 60px;
-    top: 167px;
+    right: 15px;
+    top: 40px ;
     width: 24px;
     height: 24px;
     background: url("../../images/icons/eye.svg") no-repeat center;
