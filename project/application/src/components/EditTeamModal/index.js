@@ -8,6 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 // Services
 import { ROLES } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
+import { setTokenToLocalStorage } from '../../services/tokenStorageService';
 
 // Components
 
@@ -51,6 +52,9 @@ class EditTeamModal extends Component {
             }),
         }).then(
             result => {
+                if (result.token) {
+                    setTokenToLocalStorage(result.token);
+                }
                 this.closeModal();
                 this.props.getDataFromServer(teamPage);
             },

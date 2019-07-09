@@ -7,6 +7,7 @@ import { getCurrentTimerFromLocalStorage } from '../../services/currentTimerStor
 
 // Components
 import TeamSwitcher from '../TeamSwitcher';
+import UserMenu from '../UserMenu';
 
 // Actions
 
@@ -39,7 +40,7 @@ class LeftBar extends Component {
         if (!timer.timeStart) {
             this.setState({ timer: '' });
 
-            return;
+            return false;
         }
 
         this.setState({ timer: getTimeDiff(timer.timeStart, true) });
@@ -57,50 +58,46 @@ class LeftBar extends Component {
 
     render() {
         const { switchMenu, isMobile, teamsUpdateTimestamp, vocabulary } = this.props;
-        const { v_timer, v_reports, v_projects, v_team, v_log_out } = vocabulary;
+        const { v_timer, v_reports, v_projects, v_team } = vocabulary;
         return (
-            <div className="wrapper" onClick={switchMenu}>
+            <div className="wrapper">
                 {!isMobile && (
-                    <Link to="/timer">
+                    <Link onClick={switchMenu} to="/timer">
                         <i className="logo_small" />
                     </Link>
                 )}
 
                 <div className="navigation_links_container">
-                    <Link to="/timer" style={{ textDecoration: 'none' }}>
+                    <Link onClick={switchMenu} to="/timer" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="timer" />
                             <div className="links_text">{v_timer}</div>
                             <div className="timer_task">{this.visualTimer()}</div>
                         </div>
                     </Link>
-                    <Link to="/reports/summary" style={{ textDecoration: 'none' }}>
+                    <Link onClick={switchMenu} to="/reports/summary" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="reports" />
                             <div className="links_text">{v_reports}</div>
                         </div>
                     </Link>
-                    <Link to="/projects" style={{ textDecoration: 'none' }}>
+                    <Link onClick={switchMenu} to="/projects" style={{ textDecoration: 'none' }}>
                         <div className="navigation_links">
                             <i className="projects" />
                             <div className="links_text">{v_projects}</div>
                         </div>
                     </Link>
-                    <Link to="/team" style={{ textDecoration: 'none' }}>
-                        <div className="navigation_links">
-                            <i className="team" />
-                            <div className="links_text">{v_team}</div>
-                        </div>
-                    </Link>
-                    <TeamSwitcher isMobile={isMobile} teamsUpdateTimestamp={teamsUpdateTimestamp} />
-                </div>
-
-                <div className="logout_container" onClick={e => this.logout()}>
-                    <div>
-                        <i className="logout" />
-                        <span>{v_log_out}</span>
+                    <div className="wrapper-position-add-team">
+                        <Link onClick={switchMenu} to="/team" style={{ textDecoration: 'none' }}>
+                            <div className="navigation_links">
+                                <i className="team" />
+                                <div className="links_text">{v_team}</div>
+                            </div>
+                        </Link>
+                        <TeamSwitcher isMobile={isMobile} teamsUpdateTimestamp={teamsUpdateTimestamp} />
                     </div>
                 </div>
+                <UserMenu switchMenu={switchMenu} />
             </div>
         );
     }

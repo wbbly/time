@@ -82,7 +82,7 @@ class ManualTimeModal extends Component {
 
         if (+startDatetimeNew > +endDatetimeNew) {
             alert(v_a_time_start_error);
-            return;
+            return false;
         }
 
         changedItem['issue'] = encodeTimeEntryIssue(((this.inputNameValue || {}).value || '').trim());

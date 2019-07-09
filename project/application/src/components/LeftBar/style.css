@@ -5,12 +5,13 @@
     background-color: #3b3b3b;
     box-shadow: 6px 0 20px rgba(0, 0, 0, 0.14);
 
-    position: relative;
+    position: inherit;
     z-index: 1;
 
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .logo_small {
@@ -95,24 +96,24 @@ a {
     font-size: 1.6rem;
 }
 
-.logout_container {
+/* .logout_container {
     z-index: inherit;
     cursor: pointer;
-}
+} */
 
-.logout_container div {
+/* .logout_container div {
     height: 28px;
     padding-left: 21px;
     display: flex;
     align-items: center;
     justify-content: start;
-}
+} */
 
-.logout_container:hover {
+/* .logout_container:hover {
     background: #4f4f4f;
-}
+} */
 
-.logout_container span {
+/* .logout_container span {
     margin-left: 7px;
     font-family: "Open Sans";
     font-style: normal;
@@ -120,17 +121,21 @@ a {
     font-size: 14px;
     line-height: normal;
     color: #FFFFFF
-}
+} */
 
-.logout {
+/* .logout {
     width: 15px;
     height: 15px;
     background: url("../../images/icons/logout.svg") no-repeat center;
-}
+} */
 
 @media (min-width: 1024px) {
     .wrapper {
         width: 188px;
+    }
+
+    .wrapper-position-add-team {
+        position: relative;
     }
 
     /* .logo_small {
