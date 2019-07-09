@@ -9,6 +9,9 @@ import TeamPage from './pages/TeamPage';
 import ReportsByProjectsPage from './pages/ReportsByProjectPage';
 import AuthPage from './pages/AuthPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPassword from './pages/ForgotPassword';
+import UserSettings from './pages/UserSettings';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 import PageTemplate from './components/PageTemplate';
 
@@ -23,7 +26,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as responsiveActions from './actions/ResponsiveActions';
 
 const addEvent = (object, type, callback) => {
-    if (object === null || typeof object === 'undefined') return;
+    if (object === null || typeof object === 'undefined') return false;
     if (object.addEventListener) {
         object.addEventListener(type, callback, false);
     } else if (object.attachEvent) {
@@ -90,21 +93,45 @@ class App extends Component {
     }
 
     render() {
+        const redirect = to => () => <Redirect to={to} />;
+
         return (
             <Switch>
-                <Route path="/timer" render={() => <PageTemplate content={MainPage} />} />
-                <Route path="/reports/summary" render={() => <PageTemplate content={ReportsPage} />} />
-                <Route path="/projects" render={() => <PageTemplate content={ProjectsPage} />} />
-                <Route path="/team" render={() => <PageTemplate content={TeamPage} />} />
+                <Route exact path="/" render={redirect('/login')} />
+
+                <Route exact path="/timer" render={() => <PageTemplate content={MainPage} />} />
+                <Route exact path="/reports/summary" render={() => <PageTemplate content={ReportsPage} />} />
+                <Route exact path="/projects" render={() => <PageTemplate content={ProjectsPage} />} />
+                <Route exact path="/team" render={() => <PageTemplate content={TeamPage} />} />
                 <Route
+                    exact
                     path="/reports/detailed/projects/:projectName/team/:userEmails/from/:dateStart/to/:endDate/"
                     render={() => <PageTemplate content={ReportsByProjectsPage} />}
                 />
 
-                <Route path="/login" render={() => <PageTemplate content={AuthPage} />} />
-                <Route path="/register" render={() => <PageTemplate content={RegisterPage} />} />
+                <Route exact path="/login" render={() => <PageTemplate hideSidebar hideHeader content={AuthPage} />} />
+                <Route
+                    exact
+                    path="/register"
+                    render={() => <PageTemplate hideSidebar hideHeader content={RegisterPage} />}
+                />
+                <Route
+                    exact
+                    path="/forgot-password"
+                    render={() => <PageTemplate hideSidebar hideHeader content={ForgotPassword} />}
+                />
+                <Route
+                    exact
+                    path="/reset-password"
+                    render={() => <PageTemplate hideSidebar hideHeader content={ResetPasswordPage} />}
+                />
+                <Route
+                    exact
+                    path="/user-settings"
+                    render={() => <PageTemplate content={UserSettings} />}
+                />
 
-                <Redirect from="/" to="/login" />
+                <Route render={() => <div>404 not found</div>} />
             </Switch>
         );
     }
