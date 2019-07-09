@@ -10,7 +10,7 @@ import * as moment from 'moment';
 import { getDate } from '../../services/timeService';
 import { encodeTimeEntryIssue } from '../../services/timeEntryService';
 import { apiCall } from '../../services/apiService';
-import { getTimeHoursFormat } from '../../services/formatService'
+import { getTimeHoursFormat } from '../../services/formatService';
 
 // Components
 

@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import * as rdrLocales from 'react-date-range/dist/locale';
-import { DateRangePicker } from 'react-date-range';
+import { DateRangePicker, defaultStaticRanges, createStaticRanges } from 'react-date-range';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 
@@ -26,7 +26,7 @@ import {
 } from '../../services/timeService';
 import { getLoggedUserTimezoneOffset } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
-import { changeDisplayingDateFormat } from '../../services/formatService';
+import { changeDisplayingDateFormat, getFirstDayOfWeek } from '../../services/formatService';
 
 // Components
 import ProjectsContainer from '../../components/ProjectsContainer';
@@ -42,6 +42,21 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
+
+
+
+import {
+    addDays,
+    endOfDay,
+    startOfDay,
+    startOfMonth,
+    endOfMonth,
+    addMonths,
+    startOfWeek,
+    endOfWeek,
+    isSameDay,
+    differenceInCalendarDays,
+} from 'date-fns';
 
 class ReportsPage extends Component {
     state = {
@@ -138,6 +153,69 @@ class ReportsPage extends Component {
         const { v_summary_report, v_total, v_export } = vocabulary;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
+        const defineds = {
+            startOfWeek: startOfWeek(new Date(), {weekStartsOn: getFirstDayOfWeek(this.props.format.startOfWeek)}),
+            endOfWeek: endOfWeek(new Date(), {weekStartsOn: getFirstDayOfWeek(this.props.format.startOfWeek)}),
+            startOfLastWeek: startOfWeek(addDays(new Date(), -7), {weekStartsOn: getFirstDayOfWeek(this.props.format.startOfWeek)}),
+            endOfLastWeek: endOfWeek(addDays(new Date(), -7),{weekStartsOn: getFirstDayOfWeek(this.props.format.startOfWeek)}),
+            startOfToday: startOfDay(new Date()),
+            endOfToday: endOfDay(new Date()),
+            startOfYesterday: startOfDay(addDays(new Date(), -1)),
+            endOfYesterday: endOfDay(addDays(new Date(), -1)),
+            startOfMonth: startOfMonth(new Date()),
+            endOfMonth: endOfMonth(new Date()),
+            startOfLastMonth: startOfMonth(addMonths(new Date(), -1)),
+            endOfLastMonth: endOfMonth(addMonths(new Date(), -1)),
+        };
+
+        const staticRanges = [
+            ...createStaticRanges([
+                {
+                    label: 'Today',
+                    range: () => ({
+                        startDate: defineds.startOfToday,
+                        endDate: defineds.endOfToday,
+                    }),
+                },
+                {
+                    label: 'Yesterday',
+                    range: () => ({
+                        startDate: defineds.startOfYesterday,
+                        endDate: defineds.endOfYesterday,
+                    }),
+                },
+
+                {
+                    label: 'This Week',
+                    range: () => ({
+                        startDate: defineds.startOfWeek,
+                        endDate: defineds.endOfWeek,
+                    }),
+                },
+                {
+                    label: 'Last Week',
+                    range: () => ({
+                        startDate: defineds.startOfLastWeek,
+                        endDate: defineds.endOfLastWeek,
+                    }),
+                },
+                {
+                    label: 'This Month',
+                    range: () => ({
+                        startDate: defineds.startOfMonth,
+                        endDate: defineds.endOfMonth,
+                    }),
+                },
+                {
+                    label: 'Last Month',
+                    range: () => ({
+                        startDate: defineds.startOfLastMonth,
+                        endDate: defineds.endOfLastMonth,
+                    }),
+                },
+            ])
+        ];
+
         return (
             <div
                 className={classNames('wrapper_reports_page', {
@@ -165,15 +243,18 @@ class ReportsPage extends Component {
                             {this.state.dateSelect && (
                                 <div className="select_body" ref={div => (this.datePickerSelect = div)}>
                                     <DateRangePicker
-                                        locale={rdrLocales['enGB']}
+                                        dateDisplayFormat={this.props.format.dateFormat}
+                                        locale={rdrLocales[getFirstDayOfWeek(this.props.format.startOfWeek) === 0 ? 'enUS' : 'enGB']}
+                                        firstDayOfWeek={'1'}
+                                        // enUS enGB
                                         ranges={[
                                             {
                                                 startDate: this.state.selectionRange.startDate,
                                                 endDate: this.state.selectionRange.endDate,
                                                 key: 'selection',
-                                                firstDayOfWeek: 1,
                                             },
                                         ]}
+                                        staticRanges = { staticRanges }
                                         onChange={this.handleSelect}
                                     />
                                 </div>
@@ -199,6 +280,7 @@ class ReportsPage extends Component {
                                               this.props.format.timeFormat
                                           )
                                         : '00:00:00'}
+
                                 </span>
                                 <span className="export_button" onClick={e => this.export()}>
                                     {v_export}

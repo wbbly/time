@@ -534,8 +534,6 @@ class MainPage extends Component {
     }
 
     render() {
-        console.log(this.props.format);
-        // console.log('render');
         const { isMobile, vocabulary } = this.props;
         const { v_total_time, v_add_your_task_name, v_find, v_start_timer, v_task_name, v_search_project } = vocabulary;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;

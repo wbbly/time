@@ -1,7 +1,11 @@
 import * as moment from 'moment';
 
 export function getTimeHoursFormat(timeFormat) {
-   return timeFormat === '12h'
+    return timeFormat === '12h';
+}
+
+export function getFirstDayOfWeek(firstDayWeek) {
+    return firstDayWeek === 'sun' ? 0 : 1
 }
 
 export function changeDisplayingDateFormat(date, dateFormat) {
