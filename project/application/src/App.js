@@ -125,11 +125,7 @@ class App extends Component {
                     path="/reset-password"
                     render={() => <PageTemplate hideSidebar hideHeader content={ResetPasswordPage} />}
                 />
-                <Route
-                    exact
-                    path="/user-settings"
-                    render={() => <PageTemplate content={UserSettings} />}
-                />
+                <Route exact path="/user-settings" render={() => <PageTemplate content={UserSettings} />} />
 
                 <Route render={() => <div>404 not found</div>} />
             </Switch>
