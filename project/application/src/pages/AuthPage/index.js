@@ -9,6 +9,7 @@ import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamData
 import { apiCall } from '../../services/apiService';
 
 // Components
+import Input from '../../components/BaseComponents/Input';
 
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
@@ -19,7 +20,7 @@ import reportsPageAction from '../../actions/ReportsPageAction';
 import { AppConfig } from '../../config';
 
 // Styles
-import './index.css';
+import './style.scss';
 
 class AuthPage extends Component {
     state = {
@@ -70,8 +71,6 @@ class AuthPage extends Component {
         );
     };
 
-    componentWillMount() {}
-
     render() {
         const { history, vocabulary } = this.props;
         const {
@@ -93,11 +92,15 @@ class AuthPage extends Component {
                 <i className="page_title" />
                 <div className="authorisation_window">
                     <div className="input_container">
-                        <input type="text" ref={input => (this.email = input)} placeholder={`${v_add_your_login}...`} />
+                        <input
+                            type="email"
+                            ref={input => (this.email = input)}
+                            placeholder={`${v_add_your_login}...`}
+                        />
                         <div className="input_title">{v_login}</div>
                     </div>
                     <div className="input_container">
-                        <input
+                        <Input
                             type="password"
                             ref={input => (this.password = input)}
                             placeholder={`${v_add_your_password}...`}
@@ -107,12 +110,14 @@ class AuthPage extends Component {
                     <button
                         className="login_button"
                         onClick={e => {
-                            this.login(this.email.value.toLocaleLowerCase(), this.password.value);
+                            this.login(this.email.value.toLocaleLowerCase(), this.password.state.value);
                         }}
                     >
                         {v_enter}
                     </button>
-                    <button className="forgot_password_button">{v_forgot_your_password}?</button>
+                    <button className="forgot_password_button" onClick={e => history.push('/forgot-password')}>
+                        {v_forgot_your_password}?
+                    </button>
                 </div>
                 <button
                     onClick={e => history.push('/register')}
