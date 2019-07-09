@@ -1,5 +1,25 @@
-.team_add {
-    text-decoration: underline;
-    font-weight: 700;
-    font-size: 1.1em;
+.team_add_wrapper {
+    position: absolute;
+    top: 0;
+    right: 21px;
+    cursor: pointer;
 }
+
+/* .team_add_wrapper:hover {
+    background-color: #4f4f4f;
+} */
+
+.team_add {
+    /* text-decoration: underline;
+    font-weight: 700;
+    font-size: 1.1em; */
+}
+
+.team_add .team_add_plus {
+    width: 28px;
+    height: 28px;
+    /* margin-left: 10px; */
+    background: url("../../images/icons/plus (1).svg") no-repeat center;
+}
+
+

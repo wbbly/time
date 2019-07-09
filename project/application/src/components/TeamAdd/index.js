@@ -21,12 +21,12 @@ class TeamAdd extends Component {
         const { teamAddModalToggle, teamAddPageAction, createTeamRequest } = this.props;
 
         return (
-            <div>
+            <div className="team_add_wrapper">
                 {teamAddModalToggle && (
                     <CreateTeamModal teamAddPageAction={teamAddPageAction} createTeamRequest={createTeamRequest} />
                 )}
                 <span className="team_add" onClick={e => teamAddPageAction('TOGGLE_TEAM_ADD_MODAL', { toggle: true })}>
-                    Add team
+                    <i className="team_add_plus" />
                 </span>
             </div>
         );
