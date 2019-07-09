@@ -26,15 +26,18 @@ class PageTemplate extends Component {
             teamsUpdateTimestamp,
         });
 
-    isAuthPage = () => {
-        const { match } = this.props;
-        const authRoutes = ['/', '/login', '/register'];
-        return authRoutes.indexOf(match.path) !== -1;
-    };
-
     render() {
         const { width, height } = this.props.viewport;
-        const { content: Content, switchMenu, isShowMenu, isMobile, vocabulary, switchLanguage } = this.props;
+        const {
+            content: Content,
+            switchMenu,
+            isShowMenu,
+            isMobile,
+            vocabulary,
+            hideSidebar,
+            hideHeader,
+            switchLanguage,
+        } = this.props;
         const { teamsUpdateTimestamp } = this.state;
         return (
             <div className="wrapper-page-template" style={{ width: width - 1, height: height - 1 }}>
@@ -42,13 +45,13 @@ class PageTemplate extends Component {
                     switch language
                 </button> */}
                 {isMobile &&
-                    !this.isAuthPage() && (
+                    !hideHeader && (
                         <header className="header">
                             <Header />
                         </header>
                     )}
                 <div className="wrapper-main-content">
-                    {!this.isAuthPage() && (
+                    {!hideSidebar && (
                         <aside
                             className={classNames('aside', {
                                 'aside--hide': !isShowMenu && isMobile,
