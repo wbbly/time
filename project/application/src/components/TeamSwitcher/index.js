@@ -47,7 +47,7 @@ class TeamSwitcher extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    teamId: teamId,
+                    teamId,
                 }),
             }).then(_ => {
                 apiCall(AppConfig.apiURL + `team/current`).then(response => {
@@ -171,48 +171,42 @@ class TeamSwitcher extends Component {
                             </li>
                         );
                     })}
-                    {!isMobile && (
-                        <li>
-                            <div className="team_list-item">
-                                <TeamAdd
-                                    createTeamRequest={teamName => {
-                                        apiCall(AppConfig.apiURL + `team/add`, {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                            },
-                                            body: JSON.stringify({
-                                                teamName,
-                                            }),
-                                        }).then(
-                                            res => (window.location.pathname = '/team'),
-                                            err => {
-                                                if (err instanceof Response) {
-                                                    err.text().then(error => {
-                                                        const errorMessages = responseErrorsHandling.getErrorMessages(
-                                                            JSON.parse(error)
-                                                        );
-                                                        if (
-                                                            responseErrorsHandling.checkIsDuplicateError(
-                                                                errorMessages.join('\n')
-                                                            )
-                                                        ) {
-                                                            alert(v_a_team_existed);
-                                                        } else {
-                                                            alert(v_a_team_create_error);
-                                                        }
-                                                    });
-                                                } else {
-                                                    console.log(err);
-                                                }
-                                            }
-                                        );
-                                    }}
-                                />
-                            </div>
-                        </li>
-                    )}
                 </ul>
+                {!isMobile && (
+                    <TeamAdd
+                        createTeamRequest={teamName => {
+                            apiCall(AppConfig.apiURL + `team/add`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    teamName,
+                                }),
+                            }).then(
+                                res => (window.location.pathname = '/team'),
+                                err => {
+                                    if (err instanceof Response) {
+                                        err.text().then(error => {
+                                            const errorMessages = responseErrorsHandling.getErrorMessages(
+                                                JSON.parse(error)
+                                            );
+                                            if (
+                                                responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))
+                                            ) {
+                                                alert(v_a_team_existed);
+                                            } else {
+                                                alert(v_a_team_create_error);
+                                            }
+                                        });
+                                    } else {
+                                        console.log(err);
+                                    }
+                                }
+                            );
+                        }}
+                    />
+                )}
             </div>
         );
     }
