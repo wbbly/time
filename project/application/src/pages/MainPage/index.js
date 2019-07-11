@@ -224,7 +224,7 @@ class MainPage extends Component {
         // console.log('timerStateUpdateWithSocketData');
         if (!socketData || !socketData.timeStart) {
             // console.log('timerStateUpdateWithSocketData STOP');
-            return;
+            return false;
         }
 
         if (!!this.issueTargetElement && !this.editingTaskName) {

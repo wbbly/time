@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { apiCall } from '../../services/apiService';
 
 // Components
+import Input from '../../components/BaseComponents/Input';
 
 // Actions
 
@@ -129,7 +130,7 @@ class RegisterPage extends Component {
                 <i className="register-block__logo" />
                 <form className="register-block__form" onSubmit={this.onSubmitHandler}>
                     <label className="register-block__label">
-                        {v_login}
+                        <span className="register-block__label-text">{v_login}</span>
                         <input
                             className="register-block__input"
                             onChange={this.onChangeHandler}
@@ -141,8 +142,8 @@ class RegisterPage extends Component {
                         />
                     </label>
                     <label className="register-block__label">
-                        {v_password}
-                        <input
+                        <span className="register-block__label-text">{v_password}</span>
+                        <Input
                             className="register-block__input"
                             onChange={this.onChangeHandler}
                             name={password.name}
@@ -153,8 +154,8 @@ class RegisterPage extends Component {
                         />
                     </label>
                     <label className="register-block__label">
-                        {v_cofirm_password}
-                        <input
+                        <span className="register-block__label-text">{v_cofirm_password}</span>
+                        <Input
                             className="register-block__input"
                             onChange={this.onChangeHandler}
                             name={confirmPassword.name}

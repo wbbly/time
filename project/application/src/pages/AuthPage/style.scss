@@ -1,19 +1,18 @@
 .wrapper_authorisation_page {
-    width: 100%;
-    height: 100%;
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 400;
-    line-height: normal;
-    font-size: 1.4rem;
-    background-color: #3b3b3b;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 2rem 0 2rem;
-}
+  width: 100%;
+  height: 100%;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  line-height: normal;
+  font-size: 1.4rem;
+  background-color: #3b3b3b;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 2rem 0 2rem;
 
-.authorisation_window {
+  .authorisation_window {
     display: flex;
     flex-direction: column;
     padding: 2.2rem;
@@ -22,16 +21,16 @@
     max-width: 31.3rem;
     margin: 0 0 1rem 0;
     border-radius: 0.4rem;
-}
+  }
 
-.input_container {
+  .input_container {
     display: flex;
     flex-direction: column-reverse;
     margin: 0 0 2rem 0;
-}
+  }
 
-.wrapper_authorisation_page input {
-    font-family: 'Open Sans', sans-serif;
+  input {
+    font-family: "Open Sans", sans-serif;
     font-weight: 400;
     padding: 1.5rem;
     border: 1px solid #828282;
@@ -40,16 +39,16 @@
     color: black;
     font-size: 1.4rem;
     line-height: 1.9rem;
-
 }
 
 .input_title {
+    position: static;
     margin: 0 0 1rem 0;
     color: #333333;
-}
+  }
 
-.wrapper_authorisation_page .login_button {
-    font-family: 'Open Sans', sans-serif;  
+  .login_button {
+    font-family: "Open Sans", sans-serif;
     font-weight: 700;
     font-size: 1.4rem;
     line-height: 1.9rem;
@@ -58,37 +57,37 @@
     border-radius: 0.5rem;
     background: #27ae60;
     margin: 0 0 2rem 0;
-}
+  }
 
-.page_title {
+  .page_title {
     width: 196px;
     height: 46px;
     background: url("../../images/wobbly_logo_auth.png") no-repeat center;
     background-size: 196px 46px;
     margin: 0 0 2rem 0;
-}
+  }
 
-.wrapper_authorisation_page .forgot_password_button {
+  .forgot_password_button {
     font-style: normal;
     cursor: pointer;
-    color: #2D9CDB;
+    color: #2d9cdb;
     background-color: white;
 
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
     font-weight: 700;
     font-size: 1.6rem;
     line-height: 1.9rem;
-    
-}
+  }
 
-.wrapper_authorisation_page .register-block__button--to-login {
+  .register-block__button--to-login {
     font-style: normal;
     cursor: pointer;
-    color: #2D9CDB;
+    color: #2d9cdb;
     background: none;
     padding: 1rem 0;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
     font-weight: 700;
     font-size: 1.6rem;
     line-height: 1.9rem;
+  }
 }

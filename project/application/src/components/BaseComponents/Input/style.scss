@@ -1,0 +1,18 @@
+.wrapper-base-input {
+  position: relative;
+
+  input {
+    width: 100%;
+  }
+
+  .wrapper-base-input__icon-eye {
+    cursor: pointer;
+    display: block;
+    position: absolute;
+    top: calc(50% - 12px);
+    right: 24px;
+    width: 24px;
+    height: 24px;
+    background: url("../../../images/icons/eye.svg") no-repeat 50%;
+  }
+}

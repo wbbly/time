@@ -1,5 +1,10 @@
 export default {
     lang: 'ru',
+
+    v_a_data_updated_ok: 'Ваши данные были обновлены',
+    v_a_change_password_great_ok: 'Великолепно! Теперь вы можете войти снова!',
+    v_a_change_password_ok: 'Вы успешно изменили пароль!',
+    v_a_password_same_error: 'Пароли не совпадают!',
     v_a_invite_sent: 'Приглашение отправлено!',
     v_a_invite_sent_error: 'Произошла ошибка при отправке приглашения пользователю!',
     v_a_project_existed: 'Проект уже существует',
@@ -20,6 +25,17 @@ export default {
     v_a_project_name_error: 'Название проекта не может быть пустым',
     v_a_task_delete: 'Вы действительно хотите удалить эту запись?',
 
+    v_cofirm_new_password: 'Подтвердите новый пароль',
+    v_current_password: 'Текущий пароль',
+    v_save_changes: 'Сохранить',
+    v_your_name: 'Имя',
+    v_my_profile: 'Профиль',
+    v_profile_settings: 'Настройки',
+    v_change_password: 'Изменить пароль',
+    v_new_password: 'Новый пароль',
+    v_send: 'Отправить',
+    v_check_email: 'Проверьте адрес электронной почты для сброса пароля',
+    v_enter_email: 'Введите email',
     v_create_team: 'Создать команду',
     v_search_project: 'Поиск проекта',
     v_start_timer: 'Запустить таймер',

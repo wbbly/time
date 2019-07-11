@@ -10,6 +10,7 @@ import { teamReducer } from './TeamReducer';
 import { teamAddReducer } from './TeamAddReducer';
 import responsiveReducer from './ResponsiveReducer';
 import languageReducer from './LanguageReducer';
+import { userSettingReducer } from './UserSettingReducer';
 
 export const rootReducer = combineReducers({
     projectReducer,
@@ -22,4 +23,5 @@ export const rootReducer = combineReducers({
     teamAddReducer,
     responsiveReducer,
     languageReducer,
+    userSettingReducer,
 });

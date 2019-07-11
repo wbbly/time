@@ -1,5 +1,10 @@
 export default {
     lang: 'en',
+
+    v_a_data_updated_ok: 'Your data has been updated',
+    v_a_change_password_great_ok: 'Great! You can sign in  now again!',
+    v_a_change_password_ok: "You've been successfully changed the password!",
+    v_a_password_same_error: 'The passwords are not the same!',
     v_a_invite_sent: 'Invite has been sent!',
     v_a_invite_sent_error: 'An error occured while sending an invite to the user!',
     v_a_project_existed: 'Project is already existed',
@@ -20,6 +25,17 @@ export default {
     v_a_project_name_error: "Project name can't be empty",
     v_a_task_delete: 'Do you really want to delete this time entry?',
 
+    v_cofirm_new_password: 'Confirm new password',
+    v_current_password: 'Current password',
+    v_save_changes: 'Save changes',
+    v_your_name: 'Your name',
+    v_my_profile: 'My Profile',
+    v_profile_settings: 'Profile setting',
+    v_change_password: 'Change password',
+    v_new_password: 'New password',
+    v_send: 'Send',
+    v_check_email: 'Check the email address for a password reset email',
+    v_enter_email: 'Add your email',
     v_create_team: 'Create team',
     v_search_project: 'Search project',
     v_start_timer: 'Start timer',
