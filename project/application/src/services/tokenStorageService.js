@@ -32,6 +32,12 @@ export function getLoggedUserId() {
     return userId;
 }
 
+export function getLoggedUserLanguage() {
+    const userLanguage = getLoggedUser().language || '';
+
+    return userLanguage;
+}
+
 export function getLoggedUser() {
     let user;
     try {
