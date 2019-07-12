@@ -15,6 +15,10 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 
 import PageTemplate from './components/PageTemplate';
 
+import { userLoggedIn } from './services/authentication';
+import { getLoggedUserLanguage } from './services/tokenStorageService';
+import { setLanguage } from './actions/LanguageActions';
+
 // styles
 import 'normalize.css';
 import './App.scss';
@@ -82,6 +86,10 @@ class App extends Component {
     };
 
     componentDidMount() {
+        const { setLanguage } = this.props;
+        if (userLoggedIn()) {
+            setLanguage(getLoggedUserLanguage());
+        }
         this.setResponsiveReducer();
         addEvent(window, 'resize', this.setResponsiveReducer);
         addEvent(window, 'resize', showMobileSupportToastr);
@@ -139,6 +147,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     ...responsiveActions,
+    setLanguage,
 };
 
 export default withRouter(

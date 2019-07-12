@@ -85,10 +85,16 @@ class TeamSwitcher extends Component {
                 }));
 
                 const availableTeamIdsFromLocalStorage = availableTeamsFromLocalStorage.map(stateTeam => stateTeam.id);
+                const availableTeamNamesFromLocalStorage = availableTeamsFromLocalStorage.map(
+                    stateTeam => stateTeam.name
+                );
                 let differenceInAvailableTeamsFound = availableTeamIdsFromLocalStorage.length !== availableTeams.length;
                 for (let i = 0; i < availableTeams.length; i++) {
                     const availableTeam = availableTeams[i];
-                    if (availableTeamIdsFromLocalStorage.indexOf(availableTeam.id) === -1) {
+                    if (
+                        availableTeamIdsFromLocalStorage.indexOf(availableTeam.id) === -1 ||
+                        availableTeamNamesFromLocalStorage.indexOf(availableTeam.name) === -1
+                    ) {
                         differenceInAvailableTeamsFound = true;
                         break;
                     }
@@ -106,7 +112,8 @@ class TeamSwitcher extends Component {
                     let differenceInCurrentTeamFound = false;
                     if (
                         !currentTeamDataFromLocalStorage.id ||
-                        currentTeamDataFromLocalStorage.id !== currentTeamInfo.id
+                        currentTeamDataFromLocalStorage.id !== currentTeamInfo.id ||
+                        currentTeamDataFromLocalStorage.name !== currentTeamInfo.name
                     ) {
                         differenceInCurrentTeamFound = true;
                     }
