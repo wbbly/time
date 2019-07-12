@@ -34,11 +34,13 @@ class RegisterPage extends Component {
                 value: '',
                 type: 'password',
                 name: 'password',
+                required: true,
             },
             confirmPassword: {
                 value: '',
                 type: 'password',
                 name: 'confirmPassword',
+                required: true,
             },
         },
     };
@@ -68,7 +70,8 @@ class RegisterPage extends Component {
             err => {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
-                        alert(JSON.parse(errorMessage).message);
+                        const textError = JSON.parse(errorMessage).message;
+                        alert(vocabulary[textError]);
                     });
                 } else {
                     console.log(err);
@@ -119,7 +122,6 @@ class RegisterPage extends Component {
     };
 
     render() {
-        console.log('this.props', this.props);
         const { validEmail } = this.state;
         const { email, password, confirmPassword } = this.state.inputs;
         const { vocabulary } = this.props;
@@ -140,7 +142,7 @@ class RegisterPage extends Component {
             <div className={classNames('register-block', { 'register-block--mobile': true })}>
                 <SwitchLanguage />
                 <i className="register-block__logo" />
-                <form className="register-block__form" onSubmit={this.onSubmitHandler} noValidate>
+                <form className="register-block__form" onSubmit={this.onSubmitHandler}>
                     <label className="register-block__label">
                         <span className="register-block__label-text">{v_login}</span>
                         <Input
@@ -164,6 +166,7 @@ class RegisterPage extends Component {
                                 name: password.name,
                                 value: password.value,
                                 type: password.type,
+                                required: password.required,
                                 placeholder: `${v_add_your_password}...`,
                             }}
                         />
@@ -177,6 +180,7 @@ class RegisterPage extends Component {
                                 name: confirmPassword.name,
                                 value: confirmPassword.value,
                                 type: confirmPassword.type,
+                                required: confirmPassword.required,
                                 placeholder: `${v_add_confirm_password}...`,
                             }}
                         />

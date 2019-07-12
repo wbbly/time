@@ -39,12 +39,14 @@ class AuthPage extends Component {
                 value: '',
                 type: 'password',
                 name: 'password',
+                required: true,
             },
         },
     };
 
     login = ({ email, password }) => {
-        const { setLanguage } = this.props;
+        const { setLanguage, vocabulary } = this.props;
+
         apiCall(
             AppConfig.apiURL + 'user/login',
             {
@@ -80,7 +82,8 @@ class AuthPage extends Component {
             err => {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
-                        alert(JSON.parse(errorMessage).message);
+                        const textError = JSON.parse(errorMessage).message;
+                        alert(vocabulary[textError]);
                     });
                 } else {
                     console.log(err);
@@ -141,7 +144,7 @@ class AuthPage extends Component {
             <div className="wrapper_authorisation_page">
                 <SwitchLanguage />
                 <i className="page_title" />
-                <form className="authorisation_window" onSubmit={this.onSubmitHandler} noValidate>
+                <form className="authorisation_window" onSubmit={this.onSubmitHandler}>
                     <label className="input_container">
                         <span className="input_title">{v_login}</span>
                         <Input
@@ -161,6 +164,7 @@ class AuthPage extends Component {
                             config={{
                                 type: password.type,
                                 name: password.name,
+                                required: password.required,
                                 value: password.value,
                                 onChange: this.onChangeHandler,
                                 placeholder: `${v_add_your_password}...`,

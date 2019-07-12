@@ -29,11 +29,13 @@ class ResetPasswordPage extends Component {
                 value: '',
                 type: 'password',
                 name: 'password',
+                required: true,
             },
             confirmPassword: {
                 value: '',
                 type: 'password',
                 name: 'confirmPassword',
+                required: true,
             },
         },
     };
@@ -73,7 +75,8 @@ class ResetPasswordPage extends Component {
                 err => {
                     if (err instanceof Response) {
                         err.text().then(errorMessage => {
-                            alert(JSON.parse(errorMessage).message);
+                            const textError = JSON.parse(errorMessage).message;
+                            alert(vocabulary[textError]);
                         });
                     } else {
                         console.log(err);
@@ -119,7 +122,7 @@ class ResetPasswordPage extends Component {
             <div className="wrapper_authorization_page">
                 <SwitchLanguage />
                 <i className="page_title" />
-                <form className="authorization_window" onSubmit={this.onSubmitHandler} noValidate>
+                <form className="authorization_window" onSubmit={this.onSubmitHandler}>
                     <label className="input_container">
                         <span className="input_title">{v_new_password}</span>
                         <Input
@@ -127,6 +130,7 @@ class ResetPasswordPage extends Component {
                                 value: password.value,
                                 placeholder: `${v_add_your_password}...`,
                                 type: password.type,
+                                required: password.required,
                                 name: password.name,
                                 onChange: this.onChangeHandler,
                             }}
@@ -139,6 +143,7 @@ class ResetPasswordPage extends Component {
                                 value: confirmPassword.value,
                                 placeholder: `${v_cofirm_password}...`,
                                 type: confirmPassword.type,
+                                required: password.required,
                                 name: confirmPassword.name,
                                 onChange: this.onChangeHandler,
                             }}
