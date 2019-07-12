@@ -119,9 +119,11 @@ class UserSetting extends Component {
 
         return (
             <div className={classNames('wrapper_user_setting_page', { 'wrapper_user_setting_page--mobile': isMobile })}>
-                {this.props.userSettingReducer.changePasswordModal && (
-                    <ChangePasswordModal userSettingAction={userSettingAction} />
-                )}
+                {Object.prototype.toString.call(this.props.userSettingReducer.changePasswordModal) ===
+                    '[object Boolean]' &&
+                    this.props.userSettingReducer.changePasswordModal && (
+                        <ChangePasswordModal userSettingAction={userSettingAction} />
+                    )}
                 <div className="data_container">
                     <div className="header_user_setting">
                         <div>{v_my_profile}</div>

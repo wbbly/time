@@ -105,7 +105,7 @@ export default {
     v_time: 'Время',
     v_create_project: 'Создать проект',
     v_log_out: 'Выход',
-    v_add_user: 'Добавить пользователя',
+    v_add_user: 'Добавить',
     v_invite_to_team: 'Пригласить в команду',
     v_team_role: 'Роль',
     v_edit_user: 'Редактировать пользователя',
