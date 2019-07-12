@@ -225,7 +225,6 @@ class ManualTimeModal extends Component {
                                                 />
 
                                                 <TimePicker
-                                                    ampm={lang === 'en'}
                                                     value={startTime}
                                                     onChange={this.onChangeTime}
                                                 />
@@ -234,7 +233,6 @@ class ManualTimeModal extends Component {
                                     ) : (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <TimePicker
-                                                ampm={lang === 'en'}
                                                 value={startTime}
                                                 onChange={this.onChangeTime}
                                             />
@@ -257,7 +255,6 @@ class ManualTimeModal extends Component {
                                                 />
 
                                                 <TimePicker
-                                                    ampm={lang === 'en'}
                                                     value={endTime}
                                                     onChange={this.onChangeTimeEnd}
                                                 />
@@ -266,7 +263,6 @@ class ManualTimeModal extends Component {
                                     ) : (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <TimePicker
-                                                ampm={lang === 'en'}
                                                 value={endTime}
                                                 onChange={this.onChangeTimeEnd}
                                             />

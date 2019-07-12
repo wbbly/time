@@ -101,7 +101,7 @@ export default {
     v_change: 'Изменить',
     v_create_new_project: 'Создать новый проект',
     v_apply: 'Применить',
-    v_edit_project: 'Редактировать проект',
+    v_edit_project: 'Редактировать',
     v_time: 'Время',
     v_create_project: 'Создать проект',
     v_log_out: 'Выход',
