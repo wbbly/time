@@ -1,5 +1,5 @@
 export default {
-    lang: 'ru',
+    lang: { short: 'ru', long: 'Russian' },
 
     v_a_data_updated_ok: 'Ваши данные были обновлены',
     v_a_change_password_great_ok: 'Великолепно! Теперь вы можете войти снова!',
@@ -24,7 +24,9 @@ export default {
     v_a_confirm_password_error: 'Неверное подтверждение пароля',
     v_a_project_name_error: 'Название проекта не может быть пустым',
     v_a_task_delete: 'Вы действительно хотите удалить эту запись?',
+    v_a_incorect_email: 'Неверно указан e-mail',
 
+    v_language: 'Язык',
     v_cofirm_new_password: 'Подтвердите новый пароль',
     v_current_password: 'Текущий пароль',
     v_save_changes: 'Сохранить',

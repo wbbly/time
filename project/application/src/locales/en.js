@@ -1,5 +1,5 @@
 export default {
-    lang: 'en',
+    lang: { short: 'en', long: 'English' },
 
     v_a_data_updated_ok: 'Your data has been updated',
     v_a_change_password_great_ok: 'Great! You can sign in  now again!',
@@ -24,7 +24,9 @@ export default {
     v_a_confirm_password_error: 'Wrong confirm password value',
     v_a_project_name_error: "Project name can't be empty",
     v_a_task_delete: 'Do you really want to delete this time entry?',
+    v_a_incorect_email: 'Incorrect e-mail',
 
+    v_language: 'Language',
     v_cofirm_new_password: 'Confirm new password',
     v_current_password: 'Current password',
     v_save_changes: 'Save changes',
