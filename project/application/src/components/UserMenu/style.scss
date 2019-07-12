@@ -13,9 +13,9 @@
   // margin-bottom: 30px;
 }
 
-// .logout_container:hover {
-//   background: #4f4f4f;
-// }
+.logout_container:hover {
+  background: #4f4f4f;
+}
 
 .logout_container div {
   height: 28px;
@@ -86,7 +86,7 @@ i.profile_user {
   background-color: white;
   border-radius: 4px;
   position: absolute;
-  bottom: 38px;
+  bottom: 20px;
   left: 183px;
   width: 150px;
   z-index: 15;
@@ -101,8 +101,14 @@ i.profile_user {
 }
 
 .wrapper_user_menu--mobile {
+  .logout_container {
+    position: relative;
+  }
+
   .user_setting_modal {
-    bottom: 3px;
-    left: 162px;
+    position: absolute;
+    bottom: 35px;
+    left: unset;
+    right: 21px;
   }
 }

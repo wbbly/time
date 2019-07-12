@@ -1,8 +1,17 @@
 .wrapper-base-input {
   position: relative;
+  width: 100%;
 
   input {
     width: 100%;
+  }
+
+  .wrapper-base-input__error-message {
+    margin: 0;
+    height: 1.6rem;
+    color: red;
+    font-size: 1.4rem !important;
+    line-height: 1.6rem;
   }
 
   .wrapper-base-input__icon-eye {
@@ -14,5 +23,11 @@
     width: 24px;
     height: 24px;
     background: url("../../../images/icons/eye.svg") no-repeat 50%;
+  }
+}
+
+.wrapper-base-input--error {
+  input {
+    border: 1px solid red !important;
   }
 }

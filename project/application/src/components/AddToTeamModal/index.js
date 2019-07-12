@@ -4,8 +4,10 @@ import { connect } from 'react-redux';
 // Services
 import { apiCall } from '../../services/apiService';
 import { ROLES } from '../../services/authentication';
+import { authValidation } from '../../services/validateService';
 
 // Components
+import Input from '../../components/BaseComponents/Input';
 
 // Actions
 
@@ -18,9 +20,22 @@ import { AppConfig } from '../../config';
 import './style.css';
 
 class AddToTeamModal extends Component {
-    addUser = email => {
+    state = {
+        validEmail: true,
+        inputs: {
+            email: {
+                value: '',
+                type: 'email',
+                name: 'email',
+            },
+        },
+    };
+
+    addUser = ({ email }) => {
         const { vocabulary } = this.props;
         const { v_a_invite_sent, v_a_invite_sent_error } = vocabulary;
+
+        const { inputs } = this.state;
         apiCall(AppConfig.apiURL + 'user/invite', {
             method: 'POST',
             headers: {
@@ -39,9 +54,9 @@ class AddToTeamModal extends Component {
                         user: [
                             {
                                 id: result.invitedUserId[0].user_id,
-                                username: this.email.value,
+                                username: inputs.email.value,
                                 role: ROLES.ROLE_MEMBER,
-                                email: this.email.value,
+                                email: inputs.email.value,
                                 is_active: true,
                             },
                         ],
@@ -69,9 +84,36 @@ class AddToTeamModal extends Component {
         this.props.teamPageAction('TOGGLE_ADD_USER_MODAL', { createUserModal: false });
     }
 
+    onSubmitHandler = event => {
+        event.preventDefault();
+        const { inputs } = this.state;
+        const userData = Object.keys(inputs).reduce((acc, curr) => ({ ...acc, [curr]: inputs[curr].value }), {});
+        if (authValidation('email', userData.email)) {
+            this.setState({ validEmail: false });
+            return;
+        }
+        this.setState({ validEmail: true });
+        this.addUser(userData);
+    };
+
+    onChangeHandler = event => {
+        const { name, value } = event.target;
+        this.setState(prevState => ({
+            inputs: {
+                ...prevState.inputs,
+                [name]: {
+                    ...prevState.inputs[name],
+                    value,
+                },
+            },
+        }));
+    };
+
     render() {
         const { vocabulary } = this.props;
         const { v_invite_to_team, v_add_user } = vocabulary;
+        const { validEmail, inputs } = this.state;
+        const { email } = inputs;
         return (
             <div className="wrapper_add_user_modal">
                 <div className="add_user_modal_background" />
@@ -80,25 +122,23 @@ class AddToTeamModal extends Component {
                         <div className="add_user_modal_header_title">{v_invite_to_team}</div>
                         <i className="add_user_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
-                    <div className="add_user_modal_data">
-                        <div className="add_user_modal_data_input_container">
-                            <input
-                                type="text"
-                                ref={input => {
-                                    this.email = input;
+                    <form className="add_user_modal_data" onSubmit={this.onSubmitHandler} noValidate>
+                        <label className="add_user_modal_data_input_container">
+                            <Input
+                                config={{
+                                    valid: validEmail,
+                                    type: email.type,
+                                    name: email.name,
+                                    value: email.value,
+                                    placeholder: 'Email...',
+                                    onChange: this.onChangeHandler,
                                 }}
-                                placeholder={'Email...'}
                             />
-                        </div>
-                    </div>
-                    <div className="add_user_modal_button_container">
-                        <button
-                            className="add_user_modal_button_container_button"
-                            onClick={e => this.addUser(this.email.value)}
-                        >
+                        </label>
+                        <button type="submit" className="add_user_modal_button_container_button">
                             {v_add_user}
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         );

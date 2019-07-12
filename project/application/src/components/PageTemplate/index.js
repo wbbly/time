@@ -7,7 +7,6 @@ import classNames from 'classnames';
 
 // actions
 import { switchMenu } from '../../actions/ResponsiveActions';
-import { switchLanguage } from '../../actions/LanguageActions';
 
 // components
 import LeftBar from '../../components/LeftBar';
@@ -27,7 +26,6 @@ class PageTemplate extends Component {
         });
 
     render() {
-        const { width, height } = this.props.viewport;
         const {
             content: Content,
             switchMenu,
@@ -36,14 +34,13 @@ class PageTemplate extends Component {
             vocabulary,
             hideSidebar,
             hideHeader,
-            switchLanguage,
+            viewport,
         } = this.props;
+        const { width, height } = viewport;
         const { teamsUpdateTimestamp } = this.state;
+
         return (
             <div className="wrapper-page-template" style={{ width: width - 1, height: height - 1 }}>
-                {/* <button onClick={event => switchLanguage()} style={{ padding: '1rem 0', fontSize: '2rem' }}>
-                    switch language
-                </button> */}
                 {isMobile &&
                     !hideHeader && (
                         <header className="header">
@@ -68,7 +65,11 @@ class PageTemplate extends Component {
                         </aside>
                     )}
                     <main className="main">
-                        <Content vocabulary={vocabulary} setTeamsUpdateTimestamp={this.setTeamsUpdateTimestamp} />
+                        <Content
+                            isMobile={isMobile}
+                            vocabulary={vocabulary}
+                            setTeamsUpdateTimestamp={this.setTeamsUpdateTimestamp}
+                        />
                     </main>
                 </div>
             </div>
@@ -85,7 +86,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     switchMenu,
-    switchLanguage,
 };
 
 export default withRouter(

@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 // Services
+import { authValidation } from '../../services/validateService';
 
 // Components
+import Input from '../../components/BaseComponents/Input';
+import SwitchLanguage from '../../components/SwitchLanguage';
 
 // Actions
 
@@ -16,7 +19,18 @@ import { AppConfig } from '../../config';
 import './style.scss';
 
 class ForgotPassword extends Component {
-    addUser = email => {
+    state = {
+        validEmail: true,
+        inputs: {
+            email: {
+                value: '',
+                type: 'email',
+                name: 'email',
+            },
+        },
+    };
+
+    addUser = ({ email }) => {
         const { history, vocabulary } = this.props;
         const { v_check_email } = vocabulary;
         fetch(AppConfig.apiURL + 'user/reset-password', {
@@ -37,7 +51,6 @@ class ForgotPassword extends Component {
             .then(
                 result => {
                     alert(v_check_email);
-                    // this.closeModal();
                     history.push('/login');
                 },
                 err => {
@@ -52,31 +65,64 @@ class ForgotPassword extends Component {
             );
     };
 
-    // closeModal() {
-    //     this.props.toggleRegisterModal('TOGGLE_FORGOT_PASSWORD_MODAL', { forgotPasswordModal: false });
-    // }
+    onSubmitHandler = event => {
+        event.preventDefault();
+        const { inputs } = this.state;
+        const userData = Object.keys(inputs).reduce((acc, curr) => {
+            if (curr === 'email') {
+                return { ...acc, [curr]: inputs[curr].value.toLowerCase() };
+            }
+            return { ...acc, [curr]: inputs[curr].value };
+        }, {});
+        if (authValidation('email', userData.email)) {
+            this.setState({ validEmail: false });
+            return;
+        }
+        this.setState({ validEmail: true });
+        this.addUser(userData);
+    };
+
+    onChangeHandler = event => {
+        const { name, value } = event.target;
+        this.setState(prevState => ({
+            inputs: {
+                ...prevState.inputs,
+                [name]: {
+                    ...prevState.inputs[name],
+                    value,
+                },
+            },
+        }));
+    };
 
     render() {
+        const { validEmail, inputs } = this.state;
+        const { email } = inputs;
+
         const { vocabulary } = this.props;
         const { v_send, v_enter_email } = vocabulary;
+
         return (
             <div className="forgot_password_modal_wrapper">
+                <SwitchLanguage />
                 <i className="page_title" />
-                <div className="add_to_team_modal_data">
-                    {/* <i onClick={e => this.closeModal()} /> */}
-                    <div className="add_to_team_modal_input_container">
-                        <div className="add_to_team_modal_input_title">Email</div>
-                        <input
-                            type="email"
-                            ref={input => {
-                                this.email = input;
+                <form className="add_to_team_modal_data" onSubmit={this.onSubmitHandler} noValidate>
+                    <label className="add_to_team_modal_input_container">
+                        <span className="add_to_team_modal_input_title">Email</span>
+                        <Input
+                            config={{
+                                valid: validEmail,
+                                type: email.type,
+                                name: email.name,
+                                value: email.value,
+                                onChange: this.onChangeHandler,
+                                placeholder: `${v_enter_email}...`,
+                                className: 'add_to_team_modal_input',
                             }}
-                            placeholder={`${v_enter_email}...`}
-                            className="add_to_team_modal_input"
                         />
-                    </div>
-                    <button onClick={e => this.addUser(this.email.value)}>{v_send}</button>
-                </div>
+                    </label>
+                    <button type="submit">{v_send}</button>
+                </form>
             </div>
         );
     }

@@ -1,34 +1,64 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import classNames from 'classnames';
 
 import './style.scss';
 
 class Input extends Component {
     state = {
-        type: 'password',
-        value: '',
+        typeInput: 'password',
     };
 
-    changeHandler = event => {
-        const { value } = event.target;
-        this.setState({
-            value,
-        });
-    };
-
-    switchType = event =>
+    switchPasswordVisibility = event =>
         this.setState(state => ({
-            type: state.type === 'password' ? 'test' : 'password',
+            typeInput: state.typeInput === 'password' ? 'test' : 'password',
         }));
 
     render() {
-        const { type, value } = this.state;
+        const { typeInput } = this.state;
+        const { config, vocabulary } = this.props;
+
+        const { v_a_incorect_email } = vocabulary;
+        const { valid = true, type, ...rest } = config;
+
+        let component = null;
+
+        switch (type) {
+            case 'password':
+                component = (
+                    <>
+                        <input {...rest} type={typeInput} />
+                        <span className="wrapper-base-input__icon-eye" onClick={this.switchPasswordVisibility} />
+                    </>
+                );
+                break;
+            case 'email':
+                component = (
+                    <>
+                        <input {...rest} type="email" />
+                        <p className="wrapper-base-input__error-message">{valid ? '' : v_a_incorect_email}</p>
+                    </>
+                );
+                break;
+
+            default:
+                component = (
+                    <>
+                        <input {...rest} type="text" />
+                    </>
+                );
+                break;
+        }
+
         return (
-            <div className="wrapper-base-input">
-                <input value={value} onChange={this.changeHandler} {...this.props} type={type} />
-                <span className="wrapper-base-input__icon-eye" onClick={this.switchType} />
-            </div>
+            <div className={classNames('wrapper-base-input', { 'wrapper-base-input--error': !valid })}>{component}</div>
         );
     }
 }
 
-export default Input;
+const mapStateToProps = state => ({
+    vocabulary: state.languageReducer.vocabulary,
+});
+
+export default connect(mapStateToProps)(Input);

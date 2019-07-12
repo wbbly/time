@@ -17,11 +17,32 @@ import { AppConfig } from '../../config';
 import './style.scss';
 
 class ChangePasswordModal extends Component {
-    addUser = (password, newPassword, newPasswordRepeat) => {
+    state = {
+        validEmail: true,
+        inputs: {
+            password: {
+                value: '',
+                type: 'password',
+                name: 'password',
+            },
+            newPassword: {
+                value: '',
+                type: 'password',
+                name: 'newPassword',
+            },
+            confirmNewPassword: {
+                value: '',
+                type: 'password',
+                name: 'confirmNewPassword',
+            },
+        },
+    };
+
+    addUser = ({ password, newPassword, confirmNewPassword }) => {
         const { vocabulary } = this.props;
         const { v_a_password_same_error, v_a_change_password_ok } = vocabulary;
 
-        if (newPassword !== newPasswordRepeat) {
+        if (newPassword !== confirmNewPassword) {
             alert(v_a_password_same_error);
 
             return false;
@@ -58,6 +79,26 @@ class ChangePasswordModal extends Component {
         this.props.userSettingAction('TOGGLE_MODAL', false);
     }
 
+    onSubmitHandler = event => {
+        event.preventDefault();
+        const { inputs } = this.state;
+        const userData = Object.keys(inputs).reduce((acc, curr) => ({ ...acc, [curr]: inputs[curr].value }), {});
+        this.addUser(userData);
+    };
+
+    onChangeHandler = event => {
+        const { name, value } = event.target;
+        this.setState(prevState => ({
+            inputs: {
+                ...prevState.inputs,
+                [name]: {
+                    ...prevState.inputs[name],
+                    value,
+                },
+            },
+        }));
+    };
+
     render() {
         const { vocabulary } = this.props;
         const {
@@ -67,65 +108,65 @@ class ChangePasswordModal extends Component {
             v_cofirm_new_password,
             v_save_changes,
         } = vocabulary;
+
+        const { inputs } = this.state;
+        const { password, newPassword, confirmNewPassword } = inputs;
         return (
             <div className="wrapper_change_password_modal">
                 <div className="change_password_modal_background" />
-                <div className="change_password_modal_container">
+                <form className="change_password_modal_container" onSubmit={this.onSubmitHandler} noValidate>
                     <div className="change_password_modal_header">
                         <div className="change_password_modal_header_title">{v_change_password}</div>
                         <i className="change_password_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
                     <div className="change_password_modal_data">
-                        <div className="change_password_modal_data_input_container">
+                        <label className="change_password_modal_data_input_container">
                             <Input
-                                type="password"
-                                ref={input => {
-                                    this.currentPassword = input;
+                                config={{
+                                    type: password.type,
+                                    name: password.name,
+                                    value: password.value,
+                                    onChange: this.onChangeHandler,
+                                    maxLength: '30',
+                                    placeholder: `${v_current_password}...`,
                                 }}
-                                maxLength="30"
-                                placeholder={`${v_current_password}...`}
                             />
-                        </div>
+                        </label>
                     </div>
                     <div className="change_password_modal_data">
-                        <div className="change_password_modal_data_input_container">
+                        <label className="change_password_modal_data_input_container">
                             <Input
-                                type="password"
-                                ref={input => {
-                                    this.newPassword = input;
+                                config={{
+                                    type: newPassword.type,
+                                    name: newPassword.name,
+                                    value: newPassword.value,
+                                    onChange: this.onChangeHandler,
+                                    maxLength: '30',
+                                    placeholder: `${v_new_password}...`,
                                 }}
-                                maxLength="30"
-                                placeholder={`${v_new_password}...`}
                             />
-                        </div>
+                        </label>
                     </div>
                     <div className="change_password_modal_data">
-                        <div className="change_password_modal_data_input_container">
+                        <label className="change_password_modal_data_input_container">
                             <Input
-                                type="password"
-                                ref={input => {
-                                    this.newPasswoerdCopy = input;
+                                config={{
+                                    type: confirmNewPassword.type,
+                                    name: confirmNewPassword.name,
+                                    value: confirmNewPassword.value,
+                                    onChange: this.onChangeHandler,
+                                    maxLength: '30',
+                                    placeholder: `${v_cofirm_new_password}...`,
                                 }}
-                                maxLength="30"
-                                placeholder={`${v_cofirm_new_password}...`}
                             />
-                        </div>
+                        </label>
                     </div>
                     <div className="change_password_modal_button_container">
-                        <button
-                            className="change_password_modal_button_container_button"
-                            onClick={e =>
-                                this.addUser(
-                                    this.currentPassword.state.value,
-                                    this.newPassword.state.value,
-                                    this.newPasswoerdCopy.state.value
-                                )
-                            }
-                        >
+                        <button type="submit" className="change_password_modal_button_container_button">
                             {v_save_changes}
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         );
     }

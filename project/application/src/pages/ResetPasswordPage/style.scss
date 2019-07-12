@@ -10,7 +10,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem 2rem 0 2rem;
+  padding: 2rem 2rem 2rem 2rem;
+  position: relative;
 
   .authorization_window {
     display: flex;
@@ -26,7 +27,7 @@
   .input_container {
     position: relative;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     margin: 0 0 2rem 0;
   }
 
@@ -78,7 +79,7 @@
     // background-size: 271px;
 
     width: 196px;
-    height: 46px;
+    min-height: 46px;
     background: url("../../images/wobbly_logo_auth.png") no-repeat center;
     background-size: 196px 46px;
     margin: 0 0 2rem 0;

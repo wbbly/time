@@ -85,11 +85,14 @@ class CreateProjectModal extends Component {
         const { vocabulary } = this.props;
         const { v_create_project, v_project_name } = vocabulary;
 
-        let selectItems = this.state.selectValue.map(value => (
-            <div className={`item`} onClick={e => this.setItem(value)}>
-                <div className={`circle ${value.name}`} />
-            </div>
-        ));
+        let selectItems = this.state.selectValue.map(value => {
+            const { id, name } = value;
+            return (
+                <div key={id} className={`item`} onClick={e => this.setItem(value)}>
+                    <div className={`circle ${name}`} />
+                </div>
+            );
+        });
 
         return (
             <div className="wrapper_create_projects_modal">

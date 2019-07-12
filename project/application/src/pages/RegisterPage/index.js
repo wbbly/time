@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
+import classNames from 'classnames';
+
 // Services
 import { apiCall } from '../../services/apiService';
+import { authValidation } from '../../services/validateService';
 
 // Components
 import Input from '../../components/BaseComponents/Input';
+import SwitchLanguage from '../../components/SwitchLanguage';
 
 // Actions
 
@@ -19,31 +23,29 @@ import './style.scss';
 
 class RegisterPage extends Component {
     state = {
+        validEmail: true,
         inputs: {
             email: {
                 value: '',
                 type: 'email',
                 name: 'email',
-                required: true,
             },
             password: {
                 value: '',
                 type: 'password',
                 name: 'password',
-                required: true,
             },
             confirmPassword: {
                 value: '',
                 type: 'password',
                 name: 'confirmPassword',
-                required: true,
             },
         },
     };
 
     addUser = ({ email, password }) => {
-        const { history, vocabulary } = this.props;
-        const { v_a_account_create } = vocabulary;
+        const { vocabulary } = this.props;
+        const { v_a_account_create, lang } = vocabulary;
         apiCall(
             AppConfig.apiURL + 'user/register',
             {
@@ -54,13 +56,14 @@ class RegisterPage extends Component {
                 body: JSON.stringify({
                     email,
                     password,
+                    language: lang.short,
                 }),
             },
             false
         ).then(
             result => {
                 alert(v_a_account_create);
-                history.push('/login');
+                this.toLoginPage();
             },
             err => {
                 if (err instanceof Response) {
@@ -88,9 +91,9 @@ class RegisterPage extends Component {
     };
 
     onSubmitHandler = event => {
+        event.preventDefault();
         const { vocabulary } = this.props;
         const { v_a_confirm_password_error } = vocabulary;
-        event.preventDefault();
         const { inputs } = this.state;
         const userData = Object.keys(inputs).reduce((acc, curr) => {
             if (curr === 'email') {
@@ -98,6 +101,11 @@ class RegisterPage extends Component {
             }
             return { ...acc, [curr]: inputs[curr].value };
         }, {});
+        if (authValidation('email', userData.email)) {
+            this.setState({ validEmail: false });
+            return;
+        }
+        this.setState({ validEmail: true });
         if (userData.confirmPassword !== userData.password) {
             alert(v_a_confirm_password_error);
             return;
@@ -111,6 +119,8 @@ class RegisterPage extends Component {
     };
 
     render() {
+        console.log('this.props', this.props);
+        const { validEmail } = this.state;
         const { email, password, confirmPassword } = this.state.inputs;
         const { vocabulary } = this.props;
         const {
@@ -125,44 +135,50 @@ class RegisterPage extends Component {
             v_log_in,
             v_registration_terms_and_policy,
         } = vocabulary;
+
         return (
-            <div className="register-block">
+            <div className={classNames('register-block', { 'register-block--mobile': true })}>
+                <SwitchLanguage />
                 <i className="register-block__logo" />
-                <form className="register-block__form" onSubmit={this.onSubmitHandler}>
+                <form className="register-block__form" onSubmit={this.onSubmitHandler} noValidate>
                     <label className="register-block__label">
                         <span className="register-block__label-text">{v_login}</span>
-                        <input
-                            className="register-block__input"
-                            onChange={this.onChangeHandler}
-                            name={email.name}
-                            value={email.value}
-                            type={email.type}
-                            placeholder={`${v_add_your_login}...`}
-                            required={email.required}
+                        <Input
+                            config={{
+                                valid: validEmail,
+                                className: 'register-block__input',
+                                onChange: this.onChangeHandler,
+                                name: email.name,
+                                value: email.value,
+                                type: email.type,
+                                placeholder: `${v_add_your_login}...`,
+                            }}
                         />
                     </label>
                     <label className="register-block__label">
                         <span className="register-block__label-text">{v_password}</span>
                         <Input
-                            className="register-block__input"
-                            onChange={this.onChangeHandler}
-                            name={password.name}
-                            value={password.value}
-                            type={password.type}
-                            placeholder={`${v_add_your_password}...`}
-                            required={password.required}
+                            config={{
+                                className: 'register-block__input',
+                                onChange: this.onChangeHandler,
+                                name: password.name,
+                                value: password.value,
+                                type: password.type,
+                                placeholder: `${v_add_your_password}...`,
+                            }}
                         />
                     </label>
                     <label className="register-block__label">
                         <span className="register-block__label-text">{v_cofirm_password}</span>
                         <Input
-                            className="register-block__input"
-                            onChange={this.onChangeHandler}
-                            name={confirmPassword.name}
-                            value={confirmPassword.value}
-                            type={confirmPassword.type}
-                            placeholder={`${v_add_confirm_password}...`}
-                            required={confirmPassword.required}
+                            config={{
+                                className: 'register-block__input',
+                                onChange: this.onChangeHandler,
+                                name: confirmPassword.name,
+                                value: confirmPassword.value,
+                                type: confirmPassword.type,
+                                placeholder: `${v_add_confirm_password}...`,
+                            }}
                         />
                     </label>
                     <button className="register-block__button register-block__button--submit" type="submit">

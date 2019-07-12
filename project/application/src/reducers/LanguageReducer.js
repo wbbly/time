@@ -7,19 +7,18 @@ const initialState = {
     vocabulary: en_vocabulary,
 };
 
+const setVocabulary = lang => {
+    if (lang === 'en') return en_vocabulary;
+    if (lang === 'ru') return ru_vocabulary;
+    return en_vocabulary;
+};
+
 export default (state = initialState, { type, payload }) => {
     switch (type) {
         case types.SET_LANGUAGE: {
             return {
                 ...state,
-                vocabulary: payload,
-            };
-        }
-
-        case types.SWITCH_LANGUAGE: {
-            return {
-                ...state,
-                vocabulary: state.vocabulary.lang === 'en' ? ru_vocabulary : en_vocabulary,
+                vocabulary: setVocabulary(payload),
             };
         }
 
