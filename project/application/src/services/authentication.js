@@ -4,7 +4,7 @@ import { removeServerClientTimediffFromLocalStorage } from './serverClientTimedi
 import { removeAvailableTeamsFromLocalStorage } from './availableTeamsStorageService';
 import { removeCurrentTeamDataFromLocalStorage } from './currentTeamDataStorageService';
 
-const APP_VERSION = 'v1.0.4';
+const APP_VERSION = 'v1.0.5';
 
 export const ROLES = {
     ROLE_ADMIN: 'ROLE_ADMIN',
