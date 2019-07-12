@@ -10,7 +10,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem 2rem 0 2rem;
+  padding: 5rem 2rem 2rem 2rem;
+  min-height: 538px;
+  position: relative;
 
   .authorisation_window {
     display: flex;
@@ -25,8 +27,12 @@
 
   .input_container {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     margin: 0 0 2rem 0;
+
+    &:first-child {
+      margin: 0 0 0.4rem 0;
+    }
   }
 
   input {
@@ -39,9 +45,9 @@
     color: black;
     font-size: 1.4rem;
     line-height: 1.9rem;
-}
+  }
 
-.input_title {
+  .input_title {
     position: static;
     margin: 0 0 1rem 0;
     color: #333333;
@@ -61,7 +67,7 @@
 
   .page_title {
     width: 196px;
-    height: 46px;
+    min-height: 46px;
     background: url("../../images/wobbly_logo_auth.png") no-repeat center;
     background-size: 196px 46px;
     margin: 0 0 2rem 0;
@@ -89,5 +95,11 @@
     font-weight: 700;
     font-size: 1.6rem;
     line-height: 1.9rem;
+  }
+}
+
+@media screen and (min-height: 650px) {
+  .wrapper_authorisation_page {
+    padding: 2rem;
   }
 }

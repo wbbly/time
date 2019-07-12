@@ -55,7 +55,8 @@
 
   .change_password_modal_data .change_password_modal_data_input_container {
     // position: relative;
-    // display: flex;
+    display: flex;
+    flex-direction: column;
     // align-items: center;
     // justify-content: center;
     margin-top: 28px;

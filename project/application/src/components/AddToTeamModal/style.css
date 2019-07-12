@@ -22,6 +22,7 @@
     border: 1px solid #828282;
     box-sizing: border-box;
     border-radius: 4px;
+    padding: 0 0 19px 0;
 }
 
 .add_user_modal_header {
@@ -51,6 +52,8 @@
 
 .add_user_modal_data {
     padding: 0 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .add_user_modal_data .add_user_modal_data_input_container {
@@ -173,17 +176,16 @@
     background-color: pink;
 }
 
-.add_user_modal_button_container {
+/* .add_user_modal_button_container {
     margin-top: 28px;
     display: flex;
     justify-content: flex-end;
     padding-bottom: 19px;
-}
+} */
 
 .add_user_modal_button_container_button {
     width: 177px;
     height: 41px;
-    margin-right: 20px;
     border: 0;
     background-color: #27ae60;
     font-family: "Open Sans", sans-serif;
@@ -194,6 +196,7 @@
     color: #ffffff;
     border-radius: 0;
     cursor: pointer;
+    align-self: flex-end;
 }
 
 .add_user_modal_container i.vector {

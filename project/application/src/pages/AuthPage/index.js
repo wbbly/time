@@ -4,15 +4,18 @@ import { Redirect, withRouter } from 'react-router-dom';
 
 // Services
 import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
-import { setTokenToLocalStorage, getLoggedUserEmail } from '../../services/tokenStorageService';
+import { setTokenToLocalStorage, getLoggedUserEmail, getLoggedUserLanguage } from '../../services/tokenStorageService';
 import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamDataStorageService';
 import { apiCall } from '../../services/apiService';
+import { authValidation } from '../../services/validateService';
 
 // Components
 import Input from '../../components/BaseComponents/Input';
+import SwitchLanguage from '../../components/SwitchLanguage';
 
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
+import { setLanguage } from '../../actions/LanguageActions';
 
 // Queries
 
@@ -25,9 +28,23 @@ import './style.scss';
 class AuthPage extends Component {
     state = {
         haveToken: false,
+        validEmail: true,
+        inputs: {
+            email: {
+                value: '',
+                type: 'email',
+                name: 'email',
+            },
+            password: {
+                value: '',
+                type: 'password',
+                name: 'password',
+            },
+        },
     };
 
-    login = (email, password) => {
+    login = ({ email, password }) => {
+        const { setLanguage } = this.props;
         apiCall(
             AppConfig.apiURL + 'user/login',
             {
@@ -44,6 +61,7 @@ class AuthPage extends Component {
         ).then(
             result => {
                 setTokenToLocalStorage(result.token);
+                setLanguage(getLoggedUserLanguage());
                 this.props.reportsPageAction('SET_ACTIVE_USER', {
                     data: [getLoggedUserEmail()],
                 });
@@ -71,7 +89,39 @@ class AuthPage extends Component {
         );
     };
 
+    onSubmitHandler = event => {
+        event.preventDefault();
+        const { inputs } = this.state;
+        const userData = Object.keys(inputs).reduce((acc, curr) => {
+            if (curr === 'email') {
+                return { ...acc, [curr]: inputs[curr].value.toLowerCase() };
+            }
+            return { ...acc, [curr]: inputs[curr].value };
+        }, {});
+        if (authValidation('email', userData.email)) {
+            this.setState({ validEmail: false });
+            return;
+        }
+        this.setState({ validEmail: true });
+        this.login(userData);
+    };
+
+    onChangeHandler = event => {
+        const { name, value } = event.target;
+        this.setState(prevState => ({
+            inputs: {
+                ...prevState.inputs,
+                [name]: {
+                    ...prevState.inputs[name],
+                    value,
+                },
+            },
+        }));
+    };
+
     render() {
+        const { validEmail, inputs } = this.state;
+        const { email, password } = inputs;
         const { history, vocabulary } = this.props;
         const {
             v_login,
@@ -89,36 +139,45 @@ class AuthPage extends Component {
 
         return (
             <div className="wrapper_authorisation_page">
+                <SwitchLanguage />
                 <i className="page_title" />
-                <div className="authorisation_window">
-                    <div className="input_container">
-                        <input
-                            type="email"
-                            ref={input => (this.email = input)}
-                            placeholder={`${v_add_your_login}...`}
-                        />
-                        <div className="input_title">{v_login}</div>
-                    </div>
-                    <div className="input_container">
+                <form className="authorisation_window" onSubmit={this.onSubmitHandler} noValidate>
+                    <label className="input_container">
+                        <span className="input_title">{v_login}</span>
                         <Input
-                            type="password"
-                            ref={input => (this.password = input)}
-                            placeholder={`${v_add_your_password}...`}
+                            config={{
+                                valid: validEmail,
+                                type: email.type,
+                                name: email.name,
+                                value: email.value,
+                                onChange: this.onChangeHandler,
+                                placeholder: `${v_add_your_login}...`,
+                            }}
                         />
-                        <div className="input_title">{v_password}</div>
-                    </div>
-                    <button
-                        className="login_button"
-                        onClick={e => {
-                            this.login(this.email.value.toLocaleLowerCase(), this.password.state.value);
-                        }}
-                    >
+                    </label>
+                    <label className="input_container">
+                        <span className="input_title">{v_password}</span>
+                        <Input
+                            config={{
+                                type: password.type,
+                                name: password.name,
+                                value: password.value,
+                                onChange: this.onChangeHandler,
+                                placeholder: `${v_add_your_password}...`,
+                            }}
+                        />
+                    </label>
+                    <button type="submit" className="login_button">
                         {v_enter}
                     </button>
-                    <button className="forgot_password_button" onClick={e => history.push('/forgot-password')}>
+                    <button
+                        type="button"
+                        className="forgot_password_button"
+                        onClick={e => history.push('/forgot-password')}
+                    >
                         {v_forgot_your_password}?
                     </button>
-                </div>
+                </form>
                 <button
                     onClick={e => history.push('/register')}
                     className="register-block__button register-block__button--to-login"
@@ -133,6 +192,7 @@ class AuthPage extends Component {
 
 const mapDispatchToProps = dispatch => ({
     reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
+    setLanguage: lang => dispatch(setLanguage(lang)),
 });
 
 export default withRouter(

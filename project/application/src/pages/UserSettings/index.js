@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import classNames from 'classnames';
+
 // Actions
 import userSettingAction from '../../actions/UserSettingAction';
 
 //Components
 import ChangePasswordModal from '../../components/ChangePasswordModal';
+import SwitchLanguage from '../../components/SwitchLanguage';
+import Input from '../../components/BaseComponents/Input';
 
 //Services
 import {
@@ -15,6 +19,7 @@ import {
     getLoggedUser,
 } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
+import { authValidation } from '../../services/validateService';
 
 //Config
 import { AppConfig } from '../../config';
@@ -23,9 +28,25 @@ import { AppConfig } from '../../config';
 import './style.scss';
 
 class UserSetting extends Component {
-    changeUserSetting = (username, email) => {
+    state = {
+        validEmail: true,
+        inputs: {
+            userName: {
+                value: '',
+                type: 'text',
+                name: 'userName',
+            },
+            email: {
+                value: '',
+                type: 'email',
+                name: 'email',
+            },
+        },
+    };
+
+    changeUserSetting = ({ userName, email }) => {
         const { vocabulary } = this.props;
-        const { v_a_data_updated_ok } = vocabulary;
+        const { v_a_data_updated_ok, lang } = vocabulary;
 
         const USER_ID = getLoggedUserId();
         apiCall(AppConfig.apiURL + `user/${USER_ID}`, {
@@ -36,7 +57,8 @@ class UserSetting extends Component {
             },
             body: JSON.stringify({
                 email,
-                username,
+                username: userName,
+                language: lang.short,
             }),
         }).then(
             result => {
@@ -58,15 +80,44 @@ class UserSetting extends Component {
         );
     };
 
+    onSubmitHandler = event => {
+        event.preventDefault();
+        const { inputs } = this.state;
+        const userData = Object.keys(inputs).reduce((acc, curr) => ({ ...acc, [curr]: inputs[curr].value }), {});
+        if (authValidation('email', userData.email)) {
+            this.setState({ validEmail: false });
+            return;
+        }
+        this.setState({ validEmail: true });
+        this.changeUserSetting(userData);
+    };
+
+    onChangeHandler = event => {
+        const { name, value } = event.target;
+        this.setState(prevState => ({
+            inputs: {
+                ...prevState.inputs,
+                [name]: {
+                    ...prevState.inputs[name],
+                    value,
+                },
+            },
+        }));
+    };
+
     componentDidMount() {
         this.setDataToForm();
     }
 
     render() {
-        const { vocabulary, userSettingAction } = this.props;
+        const { vocabulary, userSettingAction, isMobile } = this.props;
         const { v_my_profile, v_your_name, v_save_changes, v_change_password } = vocabulary;
+
+        const { validEmail, inputs } = this.state;
+        const { userName, email } = inputs;
+
         return (
-            <div className="wrapper_user_setting_page">
+            <div className={classNames('wrapper_user_setting_page', { 'wrapper_user_setting_page--mobile': isMobile })}>
                 {this.props.userSettingReducer.changePasswordModal && (
                     <ChangePasswordModal userSettingAction={userSettingAction} />
                 )}
@@ -77,19 +128,33 @@ class UserSetting extends Component {
                     </div>
                     <div className="body_user_setting">
                         <div className="column">{/*<i className="rectangle" />*/}</div>
-                        <div className="column">
-                            <div className="input_container">
-                                <div className="input_title">{v_your_name}</div>
-                                <input ref={input => (this.username = input)} type="text" />
-                            </div>
-                            <div className="input_container">
-                                <div className="input_title">E-Mail</div>
-                                <input ref={input => (this.userEmail = input)} type="text" />
-                            </div>
-                            <button onClick={e => this.changeUserSetting(this.username.value, this.userEmail.value)}>
-                                {v_save_changes}
-                            </button>
-                        </div>
+                        <form className="column" onSubmit={this.onSubmitHandler} noValidate>
+                            <label className="input_container">
+                                <span className="input_title">{v_your_name}</span>
+                                <Input
+                                    config={{
+                                        value: userName.value,
+                                        type: userName.type,
+                                        name: userName.name,
+                                        onChange: this.onChangeHandler,
+                                    }}
+                                />
+                            </label>
+                            <label className="input_container">
+                                <span className="input_title">E-Mail</span>
+                                <Input
+                                    config={{
+                                        valid: validEmail,
+                                        value: email.value,
+                                        type: email.type,
+                                        name: email.name,
+                                        onChange: this.onChangeHandler,
+                                    }}
+                                />
+                            </label>
+                            <SwitchLanguage dropdown />
+                            <button type="submit">{v_save_changes}</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -106,16 +171,27 @@ class UserSetting extends Component {
 
     updateUserData = () => {
         const USER = getLoggedUser();
-        this.username.value = USER.username;
-        this.userEmail.value = USER.email;
+        const { username, email } = USER;
+        this.setState(prevState => ({
+            inputs: {
+                ...prevState.inputs,
+                userName: {
+                    ...prevState.inputs.userName,
+                    value: username,
+                },
+                email: {
+                    ...prevState.inputs.email,
+                    value: email,
+                },
+            },
+        }));
     };
 }
 
-const mapStateToProps = store => {
-    return {
-        userSettingReducer: store.userSettingReducer,
-    };
-};
+const mapStateToProps = state => ({
+    userSettingReducer: state.userSettingReducer,
+    isMobile: state.responsiveReducer.isMobile,
+});
 
 const mapDispatchToProps = dispatch => {
     return {
