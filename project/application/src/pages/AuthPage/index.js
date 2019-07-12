@@ -39,7 +39,7 @@ class AuthPage extends Component {
                 value: '',
                 type: 'password',
                 name: 'password',
-                required: true
+                required: true,
             },
         },
     };

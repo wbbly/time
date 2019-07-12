@@ -34,13 +34,13 @@ class RegisterPage extends Component {
                 value: '',
                 type: 'password',
                 name: 'password',
-                required: true
+                required: true,
             },
             confirmPassword: {
                 value: '',
                 type: 'password',
                 name: 'confirmPassword',
-                required: true
+                required: true,
             },
         },
     };
