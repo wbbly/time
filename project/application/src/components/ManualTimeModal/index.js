@@ -224,18 +224,12 @@ class ManualTimeModal extends Component {
                                                     format={'dd.MM.yyyy'}
                                                 />
 
-                                                <TimePicker
-                                                    value={startTime}
-                                                    onChange={this.onChangeTime}
-                                                />
+                                                <TimePicker value={startTime} onChange={this.onChangeTime} />
                                             </Grid>
                                         </MuiPickersUtilsProvider>
                                     ) : (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                                            <TimePicker
-                                                value={startTime}
-                                                onChange={this.onChangeTime}
-                                            />
+                                            <TimePicker value={startTime} onChange={this.onChangeTime} />
                                         </MuiPickersUtilsProvider>
                                     )}
                                 </div>
@@ -254,18 +248,12 @@ class ManualTimeModal extends Component {
                                                     format={'dd.MM.yyyy'}
                                                 />
 
-                                                <TimePicker
-                                                    value={endTime}
-                                                    onChange={this.onChangeTimeEnd}
-                                                />
+                                                <TimePicker value={endTime} onChange={this.onChangeTimeEnd} />
                                             </Grid>
                                         </MuiPickersUtilsProvider>
                                     ) : (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                                            <TimePicker
-                                                value={endTime}
-                                                onChange={this.onChangeTimeEnd}
-                                            />
+                                            <TimePicker value={endTime} onChange={this.onChangeTimeEnd} />
                                         </MuiPickersUtilsProvider>
                                     )}
                                 </div>
