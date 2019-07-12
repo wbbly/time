@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import classNames from 'classnames';
+
 // Services
 import { getTimeDiff } from '../../services/timeService';
 import { getCurrentTimerFromLocalStorage } from '../../services/currentTimerStorageService';
@@ -16,7 +18,7 @@ import UserMenu from '../UserMenu';
 // Config
 
 // Styles
-import './style.css';
+import './style.scss';
 import { logoutByUnauthorized } from '../../services/authentication';
 
 class LeftBar extends Component {
@@ -60,7 +62,7 @@ class LeftBar extends Component {
         const { switchMenu, isMobile, teamsUpdateTimestamp, vocabulary } = this.props;
         const { v_timer, v_reports, v_projects, v_team } = vocabulary;
         return (
-            <div className="wrapper">
+            <div className={classNames('wrapper', { 'wrapper--mobile': isMobile })}>
                 {!isMobile && (
                     <Link onClick={switchMenu} to="/timer">
                         <i className="logo_small" />

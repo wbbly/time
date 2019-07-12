@@ -1,0 +1,154 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 34px 0 2rem 0;
+  background-color: #3b3b3b;
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.14);
+
+  position: inherit;
+  z-index: 1;
+
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.logo_small {
+  display: block;
+  margin-bottom: 3.5rem;
+  height: 26px;
+  background: url("../../images/wobbly_logo_sidebar.png") no-repeat center;
+  background-size: 111px;
+}
+
+.team_list ul {
+  list-style: none;
+}
+
+i {
+  display: block;
+}
+
+.navigation_links > i {
+  width: 15px;
+  height: 15px;
+}
+
+.navigation_links_container {
+  flex-grow: 1;
+  width: 100%;
+}
+
+.timer {
+  background: url("../../images/icons/clock.svg") no-repeat center;
+}
+
+.reports {
+  background: url("../../images/icons/newspaper.svg") no-repeat center;
+}
+
+.projects {
+  background: url("../../images/icons/folder.svg") no-repeat center;
+}
+
+.team {
+  background: url("../../images/icons/team.svg") no-repeat center;
+}
+
+.workspaces {
+  background: url("../../images/icons/arrow_down.svg") no-repeat center;
+}
+
+.links_text {
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+  color: #ffffff;
+  margin-left: 8px;
+  text-transform: capitalize;
+}
+
+.navigation_links {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  height: 28px;
+  padding-left: 21px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.navigation_links:hover {
+  background: #4f4f4f;
+}
+
+link,
+a {
+  outline: none;
+}
+
+.navigation_links .timer_task {
+  margin-left: 10px;
+  color: white;
+  font-size: 1.6rem;
+}
+
+/* .logout_container {
+    z-index: inherit;
+    cursor: pointer;
+} */
+
+/* .logout_container div {
+    height: 28px;
+    padding-left: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+} */
+
+/* .logout_container:hover {
+    background: #4f4f4f;
+} */
+
+/* .logout_container span {
+    margin-left: 7px;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: normal;
+    color: #FFFFFF
+} */
+
+/* .logout {
+    width: 15px;
+    height: 15px;
+    background: url("../../images/icons/logout.svg") no-repeat center;
+} */
+
+@media (min-width: 1024px) {
+  .wrapper {
+    width: 188px;
+  }
+
+  .wrapper-position-add-team {
+    position: relative;
+  }
+
+  /* .logo_small {
+        display: block;
+        margin-bottom: 3.5rem;
+    } */
+}
+
+.wrapper--mobile {
+  .navigation_links:hover,
+  li:hover,
+  .logout_container:hover,
+  .user_setting_modal_item:hover {
+    background: none;
+  }
+}
