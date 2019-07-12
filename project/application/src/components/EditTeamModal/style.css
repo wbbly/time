@@ -13,7 +13,7 @@
 
 .edit_team_modal_wrapper .edit_team_modal_data {
     position: relative;
-    width: calc(26% - 28px - 49px);
+    min-width: 350px;
     padding: 28px 28px 28px 28px;
     background-color: #ffffff;
     box-shadow: 0 4px 34px rgba(0, 0, 0, 0.25);
