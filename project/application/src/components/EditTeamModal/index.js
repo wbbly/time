@@ -39,6 +39,8 @@ class EditTeamModal extends Component {
     }
 
     addUser = teamPage => {
+        const { vocabulary } = this.props;
+
         apiCall(AppConfig.apiURL + `user/${this.state.id}`, {
             method: 'PATCH',
             headers: {
@@ -61,7 +63,8 @@ class EditTeamModal extends Component {
             err => {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
-                        alert(JSON.parse(errorMessage).message);
+                        const textError = JSON.parse(errorMessage).message;
+                        alert(vocabulary[textError]);
                     });
                 } else {
                     console.log(err);

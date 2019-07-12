@@ -56,7 +56,8 @@ class ForgotPassword extends Component {
                 err => {
                     if (err instanceof Response) {
                         err.text().then(errorMessage => {
-                            alert(JSON.parse(errorMessage).message);
+                            const textError = JSON.parse(errorMessage).message;
+                            alert(vocabulary[textError]);
                         });
                     } else {
                         console.log(err);
