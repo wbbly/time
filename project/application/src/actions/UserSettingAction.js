@@ -1,3 +1,5 @@
+export const SET_USER_DATA = 'SET_USER_DATA';
+
 export default function userSettingAction(actionType, action) {
     if (actionType === 'TOGGLE_MODAL') {
         return {
@@ -16,3 +18,8 @@ export default function userSettingAction(actionType, action) {
         };
     }
 }
+
+export const setUserDataAction = payload => ({
+    type: SET_USER_DATA,
+    payload,
+});
