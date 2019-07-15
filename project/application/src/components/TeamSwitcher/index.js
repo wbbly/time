@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import classNames from 'classnames';
+
 // Services
 import {
     getAvailableTeamsFromLocalStorage,
@@ -161,19 +163,23 @@ class TeamSwitcher extends Component {
                 <ul>
                     {this.state.availableTeams.map((team, index) => {
                         const title =
-                            this.state.currentTeamId === team.id ? `Default team` : `Set ${team.name} team as default`;
+                            this.state.currentTeamId === team.id ? `Active team` : `Set ${team.name} team as default`;
 
                         return (
                             <li key={'team_list-item_' + index} title={title}>
                                 <div
-                                    className="team_list-item"
+                                    className={classNames('team_list-item', {
+                                        active:
+                                            this.state.availableTeams.length > 1 &&
+                                            this.state.currentTeamId === team.id,
+                                    })}
                                     onClick={this.handleChange}
                                     data-id={team.id}
                                     data-name={team.name}
                                 >
                                     {team.name + ' '}
                                     {this.state.availableTeams.length > 1 &&
-                                        this.state.currentTeamId === team.id && <b>(default)</b>}
+                                        this.state.currentTeamId === team.id && <div className="active-point" />}
                                 </div>
                             </li>
                         );
