@@ -30,9 +30,10 @@ class UserMenu extends Component {
     }
 
     render() {
-        const { switchMenu, vocabulary, isMobile } = this.props;
+        const { switchMenu, vocabulary, isMobile, user } = this.props;
         const { v_log_out, v_profile_settings } = vocabulary;
-        const username = getLoggedUserName();
+
+        const { userName } = user;
         return (
             <div
                 className={classNames('wrapper_user_menu', { 'wrapper_user_menu--mobile': isMobile })}
@@ -41,7 +42,7 @@ class UserMenu extends Component {
                 }}
             >
                 <div className="logout_container">
-                    <div className="user_name">{username}</div>
+                    <div className="user_name">{userName}</div>
                     <i title="More option" className="profile_user" />
                     {this.state.activeUserMenu && (
                         <div className="user_setting_modal">
@@ -77,6 +78,7 @@ class UserMenu extends Component {
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     isMobile: state.responsiveReducer.isMobile,
+    user: state.userSettingReducer,
 });
 
 export default connect(mapStateToProps)(UserMenu);
