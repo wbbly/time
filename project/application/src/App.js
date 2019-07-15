@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import jwtDecode from 'jwt-decode';
+
 import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
 import ProjectsPage from './pages/ProjectsPage';
@@ -16,8 +18,9 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import PageTemplate from './components/PageTemplate';
 
 import { userLoggedIn } from './services/authentication';
-import { getLoggedUserLanguage } from './services/tokenStorageService';
+import { getLoggedUserLanguage, getTokenFromLocalStorage } from './services/tokenStorageService';
 import { setLanguage } from './actions/LanguageActions';
+import { setUserDataAction } from './actions/UserSettingAction';
 
 // styles
 import 'normalize.css';
@@ -86,9 +89,10 @@ class App extends Component {
     };
 
     componentDidMount() {
-        const { setLanguage } = this.props;
+        const { setLanguage, setUserDataAction } = this.props;
         if (userLoggedIn()) {
             setLanguage(getLoggedUserLanguage());
+            setUserDataAction(jwtDecode(getTokenFromLocalStorage()));
         }
         this.setResponsiveReducer();
         addEvent(window, 'resize', this.setResponsiveReducer);
@@ -148,6 +152,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     ...responsiveActions,
     setLanguage,
+    setUserDataAction,
 };
 
 export default withRouter(
