@@ -289,10 +289,17 @@ span.circle {
   height: 3.6rem;
   cursor: pointer;
   background-size: 3.6rem;
+  border-radius: 50%;
 }
 
 .play {
   background: url("../../images/icons/play.svg") no-repeat center;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.disabled-play {
+  background: url("../../images/icons/play-disabled.svg") no-repeat center;
+  box-shadow: none;
 }
 
 .stop {
@@ -677,7 +684,9 @@ span.circle {
   }
 
   .add_task_container .add_task::placeholder {
-    color: #ffffff;
+    // color: #ffffff;
+    color: #e0e0e0;
+    font-size: 16px;
   }
 
   .add_task_container .time_container {
