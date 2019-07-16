@@ -21,8 +21,8 @@ class ProjectSearchBar extends Component {
 
     search() {
         if (!!this.searchInput.value.length) {
-            let afterSearch = this.props.tableInfo.filter(
-                obj => obj.name.toLowerCase().includes(this.searchInput.value.toLowerCase())
+            let afterSearch = this.props.tableInfo.filter(obj =>
+                obj.name.toLowerCase().includes(this.searchInput.value.toLowerCase())
             );
             this.props.projectsPageAction('CHANGE_ARR', { tableData: afterSearch });
         } else {
