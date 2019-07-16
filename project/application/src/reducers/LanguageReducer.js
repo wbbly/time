@@ -4,6 +4,16 @@ import ru_vocabulary from '../locales/ru';
 import * as types from '../actions/LanguageActions';
 
 const initialState = {
+    languages: [
+        {
+            short: 'ru',
+            long: 'Russian',
+        },
+        {
+            short: 'en',
+            long: 'English',
+        },
+    ],
     vocabulary: en_vocabulary,
 };
 

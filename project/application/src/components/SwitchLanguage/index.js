@@ -9,8 +9,6 @@ import { setLanguage } from '../../actions/LanguageActions';
 // styles
 import './style.scss';
 
-const languages = [{ short: 'ru', long: 'Russian' }, { short: 'en', long: 'English' }];
-
 class SwitchLanguage extends Component {
     state = {
         isOpenDropdown: false,
@@ -33,7 +31,7 @@ class SwitchLanguage extends Component {
         this.setState({ isOpenDropdown: true });
     };
     render() {
-        const { dropdown, setLanguage, isMobile, vocabulary } = this.props;
+        const { dropdown, setLanguage, isMobile, vocabulary, languages } = this.props;
         const { isOpenDropdown } = this.state;
         const { v_language } = vocabulary;
 
@@ -91,6 +89,7 @@ class SwitchLanguage extends Component {
 
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
+    languages: state.languageReducer.languages,
     isMobile: state.responsiveReducer.isMobile,
 });
 

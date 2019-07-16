@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
 
+import jwtDecode from 'jwt-decode';
+
 // Services
 import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
 import { setTokenToLocalStorage, getLoggedUserEmail, getLoggedUserLanguage } from '../../services/tokenStorageService';
@@ -16,6 +18,7 @@ import SwitchLanguage from '../../components/SwitchLanguage';
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { setLanguage } from '../../actions/LanguageActions';
+import { setUserDataAction } from '../../actions/UserSettingAction';
 
 // Queries
 
@@ -45,7 +48,7 @@ class AuthPage extends Component {
     };
 
     login = ({ email, password }) => {
-        const { setLanguage, vocabulary } = this.props;
+        const { setLanguage, vocabulary, setUserDataAction } = this.props;
 
         apiCall(
             AppConfig.apiURL + 'user/login',
@@ -62,6 +65,7 @@ class AuthPage extends Component {
             false
         ).then(
             result => {
+                setUserDataAction(jwtDecode(result.token));
                 setTokenToLocalStorage(result.token);
                 setLanguage(getLoggedUserLanguage());
                 this.props.reportsPageAction('SET_ACTIVE_USER', {
@@ -197,6 +201,7 @@ class AuthPage extends Component {
 const mapDispatchToProps = dispatch => ({
     reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
     setLanguage: lang => dispatch(setLanguage(lang)),
+    setUserDataAction: payload => dispatch(setUserDataAction(payload)),
 });
 
 export default withRouter(

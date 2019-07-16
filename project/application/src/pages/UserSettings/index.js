@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import classNames from 'classnames';
+import jwtDecode from 'jwt-decode';
 
 // Actions
 import userSettingAction from '../../actions/UserSettingAction';
+import { setUserDataAction } from '../../actions/UserSettingAction';
 
 //Components
 import ChangePasswordModal from '../../components/ChangePasswordModal';
@@ -45,7 +47,7 @@ class UserSetting extends Component {
     };
 
     changeUserSetting = ({ userName, email }) => {
-        const { vocabulary } = this.props;
+        const { vocabulary, setUserDataAction } = this.props;
         const { v_a_data_updated_ok, lang } = vocabulary;
 
         const USER_ID = getLoggedUserId();
@@ -63,6 +65,7 @@ class UserSetting extends Component {
         }).then(
             result => {
                 if (result.token) {
+                    setUserDataAction(jwtDecode(result.token));
                     setTokenToLocalStorage(result.token);
                     alert(v_a_data_updated_ok);
                     this.updateUserData();
@@ -173,18 +176,18 @@ class UserSetting extends Component {
     };
 
     updateUserData = () => {
-        const USER = getLoggedUser();
-        const { username, email } = USER;
+        const { user } = this.props;
+        const { userEmail, userName } = user;
         this.setState(prevState => ({
             inputs: {
                 ...prevState.inputs,
                 userName: {
                     ...prevState.inputs.userName,
-                    value: username,
+                    value: userName,
                 },
                 email: {
                     ...prevState.inputs.email,
-                    value: email,
+                    value: userEmail,
                 },
             },
         }));
@@ -194,11 +197,13 @@ class UserSetting extends Component {
 const mapStateToProps = state => ({
     userSettingReducer: state.userSettingReducer,
     isMobile: state.responsiveReducer.isMobile,
+    user: state.userSettingReducer,
 });
 
 const mapDispatchToProps = dispatch => {
     return {
         userSettingAction: (actionType, action) => dispatch(userSettingAction(actionType, action))[1],
+        setUserDataAction: payload => dispatch(setUserDataAction(payload)),
     };
 };
 

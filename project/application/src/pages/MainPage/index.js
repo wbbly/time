@@ -59,7 +59,7 @@ class MainPage extends Component {
         timerPlayButtonShow: true,
         timerPlayButtonLoader: false,
         timerDurationValue: null,
-        timerStartTime: null,
+        timerStartTime: undefined,
         seletedProject: null,
         timeEntriesList: [],
         projectList: [],
@@ -207,7 +207,7 @@ class MainPage extends Component {
                         timerPlayButtonShow: !this.state.timerPlayButtonShow,
                         timerPlayButtonLoader: false,
                         timerDurationValue: null,
-                        timerStartTime: null,
+                        timerStartTime: undefined,
                     },
                     () => {
                         if (!!this.issueTargetElement) {
@@ -531,6 +531,26 @@ class MainPage extends Component {
 
     render() {
         // console.log('render');
+
+        // console.log('this.state.timerStartTime', this.state.timerStartTime);
+        // console.log('this.state.timerDurationValue', this.state.timerDurationValue);
+        // console.log(
+        //     'getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))',
+        //     getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
+        // );
+
+        // console.log('+moment()', +moment());
+        // console.log('getTimeDiff(null)', getTimeDiff(null));
+        // console.log('+moment(getTimeDiff(null))', +moment(getTimeDiff(null)));
+        // console.log(
+        //     'getTimeDurationByGivenTimestamp(+moment(getTimeDiff(null)))',
+        //     getTimeDurationByGivenTimestamp(+moment(getTimeDiff(null)))
+        // );
+        // console.log(
+        //     'getTimeDurationByGivenTimestamp(+moment(getTimeDiff(undefined)))',
+        //     getTimeDurationByGivenTimestamp(+moment(getTimeDiff(undefined)))
+        // );
+
         const { isMobile, vocabulary } = this.props;
         const { v_total_time, v_add_your_task_name, v_find, v_start_timer, v_task_name, v_search_project } = vocabulary;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
@@ -573,8 +593,20 @@ class MainPage extends Component {
                                 this.issueTargetElement = input;
                             }}
                             onChange={e => this.timerUpdate()}
-                            onFocus={e => (this.editingTaskName = true)}
-                            onBlur={e => (this.editingTaskName = false)}
+                            onFocus={e => {
+                                e.target.placeholder = '';
+                                this.editingTaskName = true;
+                            }}
+                            onBlur={e => {
+                                e.target.placeholder = v_add_your_task_name;
+                                this.editingTaskName = false;
+                            }}
+                            onKeyUp={event => {
+                                if (event.keyCode === 13 && !this.state.timerDurationValue) {
+                                    this.state.timerReadyToUse &&
+                                        this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
+                                }
+                            }}
                         />
                         <div className="wrapper-timer-mobile">
                             {this.state.timerReadyToUse && (
@@ -636,10 +668,13 @@ class MainPage extends Component {
                             </div>
                             <i
                                 onClick={_ => {
+                                    if (this.state.timerPlayButtonLoader) return;
                                     this.state.timerReadyToUse &&
                                         this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
                                 }}
-                                className={buttonClassName}
+                                className={classNames(buttonClassName, {
+                                    'disabled-play': this.state.timerPlayButtonLoader,
+                                })}
                             />
                         </div>
                     </div>
@@ -712,6 +747,12 @@ class MainPage extends Component {
                                     placeholder={v_add_your_task_name}
                                     onChange={event => (this.issueTargetElement.value = event.target.value)}
                                     // onKeyUp={e => this.timerUpdate()}
+                                    onFocus={e => {
+                                        e.target.placeholder = '';
+                                    }}
+                                    onBlur={e => {
+                                        e.target.placeholder = v_add_your_task_name;
+                                    }}
                                 />
                                 <div
                                     className="projects_modal_wrapper"
