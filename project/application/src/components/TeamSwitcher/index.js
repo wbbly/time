@@ -163,7 +163,7 @@ class TeamSwitcher extends Component {
                 <ul>
                     {this.state.availableTeams.map((team, index) => {
                         const title =
-                            this.state.currentTeamId === team.id ? `Active team` : `Set ${team.name} team as default`;
+                            this.state.currentTeamId === team.id ? `Active team` : `Set ${team.name} team as active`;
 
                         return (
                             <li key={'team_list-item_' + index} title={title}>
