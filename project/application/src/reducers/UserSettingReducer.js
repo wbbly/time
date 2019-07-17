@@ -1,17 +1,22 @@
-import { getLoggedUserName, getLoggedUserEmail } from '../services/tokenStorageService';
+import { getLoggedUserName, getLoggedUserEmail, getLoggedUser } from '../services/tokenStorageService';
 import * as types from '../actions/UserSettingAction';
+
+const { username: userName, email: userEmail, ...rest } = getLoggedUser();
 
 const initialState = {
     changePasswordModal: false,
-    userName: getLoggedUserName(),
-    userEmail: getLoggedUserEmail(),
+    // userName: getLoggedUserName(),
+    // userEmail: getLoggedUserEmail(),
 
-    appVersion: '',
-    exp: null,
-    iat: null,
-    id: '',
-    language: '',
-    timezoneOffset: null,
+    // appVersion: '',
+    // exp: null,
+    // iat: null,
+    // id: '',
+    // language: '',
+    // timezoneOffset: null,
+    userName,
+    userEmail,
+    ...rest,
 };
 
 export function userSettingReducer(state = initialState, action) {
@@ -23,17 +28,12 @@ export function userSettingReducer(state = initialState, action) {
         case 'CHANGE_NAME':
             return { ...state, userName: action.payload };
         case types.SET_USER_DATA:
-            const { username, email, appVersion, exp, iat, id, language, timezoneOffset } = action.payload;
+            const { username: userName, email: userEmail, ...rest } = action.payload;
             return {
                 ...state,
-                userName: username,
-                userEmail: email,
-                appVersion,
-                exp,
-                iat,
-                id,
-                language,
-                timezoneOffset,
+                userName,
+                userEmail,
+                ...rest,
             };
         default:
             return state;
