@@ -1,6 +1,14 @@
 export default {
     lang: { short: 'en', long: 'English' },
 
+    'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
+        'The adding worklog to Jira was completed with an error. Make sure that the access to Jira is correct and the name of the task is in the format "TASK_ID TASK_TITLE".',
+    'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': 'The current task has already been added to the Jira worklog.',
+
+    'ERROR.TIMER.JIRA_SYNC_SUCCESS': 'A test connection with Jira has been established.',
+    'ERROR.TIMER.JIRA_SYNC_FAILED':
+        'A test connection with Jira has not been established. Make sure the entered data is correct.',
+
     'SUCCESS.USER.RESET_EMAIL_CHECK': 'Check the mailbox for a password reset email.',
     'SUCCESS.USER.RESET_PASSWORD': "You've been successfully reset the password.",
     'SUCCESS.USER.PASSWORD_CHANGED': "You've been successfully changed the password.",

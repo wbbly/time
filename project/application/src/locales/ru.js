@@ -1,6 +1,14 @@
 export default {
     lang: { short: 'ru', long: 'Russian' },
 
+    'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
+        'Добавление ворклога в Jira было завершено с ошибкой. Убедитесь, что доступы к Jira верны и название задачи соотвествует формату "ИДЕНТИФИКАТОР_ЗАДАЧИ НАЗВАНИЕ_ЗАДАЧИ".',
+    'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': 'Текущая задачи уже была добавлена в ворклог Jira.',
+
+    'ERROR.TIMER.JIRA_SYNC_SUCCESS': 'Тестовое соединение с Jira было успешно установленно.',
+    'ERROR.TIMER.JIRA_SYNC_FAILED':
+        'Тестовое соединение с Jira не было установлено. Убедитесь, что введенные данные верны.',
+
     'SUCCESS.USER.RESET_EMAIL_CHECK': 'Проверьте почтовый ящик на наличие пароля для сброса пароля.',
     'SUCCESS.USER.RESET_PASSWORD': 'Вы успешно сбросили пароль.',
     'SUCCESS.USER.PASSWORD_CHANGED': 'Вы успешно изменили пароль.',
