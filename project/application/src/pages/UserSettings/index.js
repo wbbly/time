@@ -31,6 +31,8 @@ import './style.scss';
 
 class UserSetting extends Component {
     state = {
+        rotateArrowLoop: false,
+        userSetJiraSync: false,
         validEmail: true,
         inputs: {
             userName: {
@@ -43,10 +45,27 @@ class UserSetting extends Component {
                 type: 'email',
                 name: 'email',
             },
+            jiraUsername: {
+                value: '',
+                type: 'text',
+                name: 'jiraUsername',
+                required: true,
+            },
+            jiraPassword: {
+                value: '',
+                type: 'password',
+                name: 'jiraPassword',
+                required: true,
+            },
+            syncJiraStatus: {
+                checked: false,
+                type: 'checkbox',
+                name: 'syncJiraStatus',
+            },
         },
     };
 
-    changeUserSetting = ({ userName, email }) => {
+    changeUserSetting = ({ userName, email, tokenJira }) => {
         const { vocabulary, setUserDataAction } = this.props;
         const { v_a_data_updated_ok, lang } = vocabulary;
 
@@ -61,6 +80,7 @@ class UserSetting extends Component {
                 email,
                 username: userName,
                 language: lang.short,
+                tokenJira,
             }),
         }).then(
             result => {
@@ -69,6 +89,7 @@ class UserSetting extends Component {
                     setTokenToLocalStorage(result.token);
                     alert(v_a_data_updated_ok);
                     this.updateUserData();
+                    this.setState({ userSetJiraSync: false });
                 }
             },
             err => {
@@ -84,20 +105,41 @@ class UserSetting extends Component {
         );
     };
 
-    onSubmitHandler = event => {
+    onSubmitHandler = async event => {
         event.preventDefault();
-        const { inputs } = this.state;
-        const userData = Object.keys(inputs).reduce((acc, curr) => ({ ...acc, [curr]: inputs[curr].value }), {});
+        const { inputs, userSetJiraSync } = this.state;
+        const { jiraUsername, jiraPassword, syncJiraStatus } = inputs;
+
+        const userData = Object.keys(inputs).reduce((acc, curr) => {
+            if (curr === 'syncJiraStatus' || curr === 'jiraUsername' || curr === 'jiraPassword') return acc;
+            return { ...acc, [curr]: inputs[curr].value };
+        }, {});
         if (authValidation('email', userData.email)) {
             this.setState({ validEmail: false });
             return;
         }
         this.setState({ validEmail: true });
+        if (userSetJiraSync) {
+            userData.tokenJira = syncJiraStatus.checked ? btoa(`${jiraUsername.value}:${jiraPassword.value}`) : '';
+        }
         this.changeUserSetting(userData);
     };
 
     onChangeHandler = event => {
-        const { name, value } = event.target;
+        const { name, value, checked } = event.target;
+        if (name === 'syncJiraStatus') {
+            this.setState(prevState => ({
+                userSetJiraSync: true,
+                inputs: {
+                    ...prevState.inputs,
+                    [name]: {
+                        ...prevState.inputs[name],
+                        checked,
+                    },
+                },
+            }));
+            return;
+        }
         this.setState(prevState => ({
             inputs: {
                 ...prevState.inputs,
@@ -109,6 +151,37 @@ class UserSetting extends Component {
         }));
     };
 
+    verifyJiraAuth = () => {
+        this.setState({ rotateArrowLoop: true });
+        const { vocabulary } = this.props;
+
+        const { inputs } = this.state;
+        const { jiraUsername, jiraPassword } = inputs;
+
+        const tokenJira = btoa(`${jiraUsername.value}:${jiraPassword.value}`);
+
+        return apiCall(AppConfig.apiURL + `sync/jira/my-permissions?token=${tokenJira}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
+            },
+        }).then(
+            result => {
+                this.setState({ rotateArrowLoop: false });
+                alert(vocabulary[result.message]);
+                return true;
+            },
+            err => {
+                this.setState({ rotateArrowLoop: false });
+                err.text().then(text => {
+                    alert(vocabulary[JSON.parse(text).message]);
+                    return false;
+                });
+            }
+        );
+    };
+
     componentDidMount() {
         this.setDataToForm();
     }
@@ -117,8 +190,11 @@ class UserSetting extends Component {
         const { vocabulary, userSettingAction, isMobile } = this.props;
         const { v_my_profile, v_your_name, v_save_changes, v_change_password } = vocabulary;
 
-        const { validEmail, inputs } = this.state;
-        const { userName, email } = inputs;
+        const { validEmail, inputs, userSetJiraSync, rotateArrowLoop } = this.state;
+        const { userName, email, jiraUsername, jiraPassword, syncJiraStatus } = inputs;
+        const { checked } = syncJiraStatus;
+
+        // console.log('user', user);
 
         return (
             <div className={classNames('wrapper_user_setting_page', { 'wrapper_user_setting_page--mobile': isMobile })}>
@@ -134,7 +210,7 @@ class UserSetting extends Component {
                     </div>
                     <div className="body_user_setting">
                         <div className="column">{/*<i className="rectangle" />*/}</div>
-                        <form className="column" onSubmit={this.onSubmitHandler} noValidate>
+                        <form className="column" onSubmit={this.onSubmitHandler}>
                             <label className="input_container">
                                 <span className="input_title">{v_your_name}</span>
                                 <Input
@@ -159,6 +235,59 @@ class UserSetting extends Component {
                                 />
                             </label>
                             <SwitchLanguage dropdown />
+
+                            <div className="wrapper-jira-sync">
+                                <label className="input_container input_checkbox_jira">
+                                    <input
+                                        type={syncJiraStatus.type}
+                                        checked={syncJiraStatus.checked}
+                                        name={syncJiraStatus.name}
+                                        onChange={this.onChangeHandler}
+                                    />
+                                    <span className="input_title">Jira synchronization</span>
+                                </label>
+                                {checked &&
+                                    userSetJiraSync && (
+                                        <>
+                                            <label className="input_container">
+                                                <span className="input_title">Login</span>
+                                                <Input
+                                                    config={{
+                                                        value: jiraUsername.value,
+                                                        type: jiraUsername.type,
+                                                        name: jiraUsername.name,
+                                                        required: jiraUsername.required,
+                                                        onChange: this.onChangeHandler,
+                                                    }}
+                                                />
+                                            </label>
+                                            <label className="input_container">
+                                                <span className="input_title">
+                                                    Password
+                                                    <i
+                                                        onClick={event => {
+                                                            event.preventDefault();
+                                                            this.verifyJiraAuth();
+                                                        }}
+                                                        className={classNames('verify-arrow-loop', {
+                                                            'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
+                                                        })}
+                                                        title="Verify"
+                                                    />
+                                                </span>
+                                                <Input
+                                                    config={{
+                                                        value: jiraPassword.value,
+                                                        type: jiraPassword.type,
+                                                        name: jiraPassword.name,
+                                                        required: jiraPassword.required,
+                                                        onChange: this.onChangeHandler,
+                                                    }}
+                                                />
+                                            </label>
+                                        </>
+                                    )}
+                            </div>
                             <button type="submit">{v_save_changes}</button>
                         </form>
                     </div>
@@ -177,7 +306,7 @@ class UserSetting extends Component {
 
     updateUserData = () => {
         const { user } = this.props;
-        const { userEmail, userName } = user;
+        const { userEmail, userName, tokenJira } = user;
         this.setState(prevState => ({
             inputs: {
                 ...prevState.inputs,
@@ -188,6 +317,10 @@ class UserSetting extends Component {
                 email: {
                     ...prevState.inputs.email,
                     value: userEmail,
+                },
+                syncJiraStatus: {
+                    ...prevState.inputs.syncJiraStatus,
+                    checked: !!tokenJira,
                 },
             },
         }));
