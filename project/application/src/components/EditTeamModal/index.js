@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import jwtDecode from 'jwt-decode';
+
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -13,6 +15,7 @@ import { setTokenToLocalStorage } from '../../services/tokenStorageService';
 // Components
 
 // Actions
+import { setUserDataAction } from '../../actions/UserSettingAction';
 
 // Queries
 
@@ -39,7 +42,7 @@ class EditTeamModal extends Component {
     }
 
     addUser = teamPage => {
-        const { vocabulary } = this.props;
+        const { vocabulary, setUserDataAction } = this.props;
 
         apiCall(AppConfig.apiURL + `user/${this.state.id}`, {
             method: 'PATCH',
@@ -55,6 +58,7 @@ class EditTeamModal extends Component {
         }).then(
             result => {
                 if (result.token) {
+                    setUserDataAction(jwtDecode(result.token));
                     setTokenToLocalStorage(result.token);
                 }
                 this.closeModal();
@@ -164,4 +168,11 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
 });
 
-export default connect(mapStateToProps)(EditTeamModal);
+const mapDispatchToProps = {
+    setUserDataAction,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(EditTeamModal);
