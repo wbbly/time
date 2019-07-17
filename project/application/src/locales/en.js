@@ -1,8 +1,9 @@
 export default {
     lang: { short: 'en', long: 'English' },
 
+    'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD': 'The minimum task duration to add a worklog to Jira is 1 minute.',
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
-        'The adding worklog to Jira was completed with an error. Make sure that the access to Jira is correct and the name of the task is in the format "TASK_ID TASK_TITLE".',
+        'The adding worklog to Jira was completed with an error. Make sure that the access to Jira is correct and the name of the task is in the format "JIRA-1 Comment".',
     'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': 'The current task has already been added to the Jira worklog.',
 
     'ERROR.TIMER.JIRA_SYNC_SUCCESS': 'A test connection with Jira has been established.',
