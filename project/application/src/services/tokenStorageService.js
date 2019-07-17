@@ -1,7 +1,6 @@
 import * as jwtDecode from 'jwt-decode';
 
 import { getCurrentTeamDataFromLocalStorage } from './currentTeamDataStorageService';
-import { apiCall } from './apiService';
 import { AppConfig } from '../config';
 
 export function getLoggedUserEmail() {
@@ -55,7 +54,7 @@ export function getTokenFromLocalStorage() {
     const token = localStorage.getItem('token') || '';
     if (!token) {
         const message = `Action: getTokenFromLocalStorage, token: ${localStorage.getItem('token')}`;
-        apiCall(AppConfig.apiURL + 'email/send-alert', {
+        fetch(AppConfig.apiURL + 'email/send-alert', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,7 +71,7 @@ export function getTokenFromLocalStorage() {
 export function setTokenToLocalStorage(token) {
     if (!token) {
         const message = `Action: setTokenToLocalStorage, token: ${token}`;
-        apiCall(AppConfig.apiURL + 'email/send-alert', {
+        fetch(AppConfig.apiURL + 'email/send-alert', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

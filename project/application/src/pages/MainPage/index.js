@@ -131,7 +131,7 @@ class MainPage extends Component {
                 getTokenFromLocalStorage()
             )}`;
             console.log(message);
-            apiCall(AppConfig.apiURL + 'email/send-alert', {
+            fetch(AppConfig.apiURL + 'email/send-alert', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

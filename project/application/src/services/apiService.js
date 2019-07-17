@@ -26,7 +26,7 @@ export function apiCall(url, params = { method: 'GET' }, withAuth = true) {
                             getTokenFromLocalStorage()
                         )}, response: ${JSON.stringify(res)}`;
                         console.log(message);
-                        apiCall(AppConfig.apiURL + 'email/send-alert', {
+                        fetch(AppConfig.apiURL + 'email/send-alert', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
