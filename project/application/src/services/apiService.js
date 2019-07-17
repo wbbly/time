@@ -1,5 +1,6 @@
 import { getTokenFromLocalStorage } from './tokenStorageService';
 import { logoutByUnauthorized } from './authentication';
+import { AppConfig } from '../config';
 
 export function getParametersString(name, params) {
     let pharam = [];
@@ -21,7 +22,19 @@ export function apiCall(url, params = { method: 'GET' }, withAuth = true) {
             .then(res => {
                 if (!res.ok) {
                     if (res.status === 401) {
-                        return logoutByUnauthorized();
+                        const message = `Action: user-unauthorized api request, token: ${JSON.stringify(
+                            getTokenFromLocalStorage()
+                        )}, response: ${JSON.stringify(res)}`;
+                        console.log(message);
+                        apiCall(AppConfig.apiURL + 'email/send-alert', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                message,
+                            }),
+                        }).then(_ => logoutByUnauthorized(), _ => logoutByUnauthorized());
                     } else {
                         throw res;
                     }

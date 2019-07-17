@@ -127,7 +127,19 @@ class MainPage extends Component {
             this.timerStop();
         });
         this.socketConnection.on('user-unauthorized', data => {
-            return logoutByUnauthorized();
+            const message = `Action: user-unauthorized socket connection, token: ${JSON.stringify(
+                getTokenFromLocalStorage()
+            )}`;
+            console.log(message);
+            apiCall(AppConfig.apiURL + 'email/send-alert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message,
+                }),
+            }).then(_ => logoutByUnauthorized(), _ => logoutByUnauthorized());
         });
     }
 
