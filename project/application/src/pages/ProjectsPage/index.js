@@ -34,7 +34,7 @@ class ProjectsPage extends Component {
     };
 
     getProjects = () => {
-        apiCall(AppConfig.apiURL + `project/list`, {
+        apiCall(AppConfig.apiURL + `project/list?withTimerList=true`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
