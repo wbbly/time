@@ -24,6 +24,7 @@ import { apiCall } from '../../services/apiService';
 
 // Components
 import ManualTimeModal from '../../components/ManualTimeModal';
+import JiraIcon from '../../components/JiraIcon';
 
 // Actions
 import addTasks from '../../actions/MainPageAction';
@@ -441,88 +442,94 @@ class MainPage extends Component {
     };
 
     createTimeEntriesList(data) {
-        const { viewport, isMobile, vocabulary } = this.props;
+        const { viewport, isMobile, vocabulary, user } = this.props;
         const { v_edit_task, v_delete_task } = vocabulary;
-        let items = data.map(item => (
-            <div className="ul" key={item.id} onClick={this.toggleSwipe}>
-                <div className="li">
-                    <div className="name_container">
-                        <div className="name">{item.issue}</div>
-                        <div className="project_name">
-                            <span className={`circle ${item.project.projectColor.name}`} />
-                            <span className="project_name__name">{item.project.name}</span>
+        let items = data.map(item => {
+            const { syncJiraStatus } = item;
+            return (
+                <div className="ul" key={item.id} onClick={this.toggleSwipe}>
+                    <div className="li">
+                        <JiraIcon taskData={item} isSync={syncJiraStatus} />
+                        <div className="name_container">
+                            <div className="name">{item.issue}</div>
+                            <div className="project_name">
+                                <span className={`circle ${item.project.projectColor.name}`} />
+                                <span className="project_name__name">{item.project.name}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div
-                        className="time_container_history"
-                        onClick={event => {
-                            event.stopPropagation();
-                            if (!isMobile && event.target.className !== 'small_play item_button') return;
-                            if (this.swipedElement) {
-                                if (this.swipedElement.className === 'ul swipe') {
-                                    this.swipedElement.click();
-                                }
-                            }
-                            this.state.timerReadyToUse && this.timerContinue(item.issue, item);
-                        }}
-                    >
-                        <div className="time_now">
-                            <div>{moment(item.startDatetime).format('HH:mm')}</div>-{' '}
-                            <div>{moment(item.endDatetime).format('HH:mm')}</div>
-                        </div>
-                        <div className="timePassed">
-                            {getTimeDurationByGivenTimestamp(+moment(item.endDatetime) - +moment(item.startDatetime))}
-                        </div>
-                        {!this.state.timerDurationValue && <i className="small_play item_button" />}
-                        <i
-                            className="edit_button item_button"
-                            onClick={event => {
-                                event.stopPropagation();
-                                this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
-                                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
-                            }}
-                        />
-                        <i
-                            className="cancel item_button"
-                            onClick={event => {
-                                event.stopPropagation();
-                                this.deleteTimeEntry(item);
-                            }}
-                        />
-                    </div>
-                </div>
-                {viewport.width < 1024 && (
-                    <div className="edit">
                         <div
-                            className="edit_swipe"
+                            className="time_container_history"
                             onClick={event => {
                                 event.stopPropagation();
+                                if (!isMobile && event.target.className !== 'small_play item_button') return;
                                 if (this.swipedElement) {
                                     if (this.swipedElement.className === 'ul swipe') {
                                         this.swipedElement.click();
                                     }
                                 }
-                                this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
-                                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
+                                this.state.timerReadyToUse && this.timerContinue(item.issue, item);
                             }}
                         >
-                            <i className="edit-icon-swipe" />
-                            {v_edit_task}
-                        </div>
-                        <div
-                            className="delete_swipe"
-                            onClick={event => {
-                                event.stopPropagation();
-                                this.deleteTimeEntry(item);
-                            }}
-                        >
-                            <i className="delete-icon-swipe" />
-                            {v_delete_task}
+                            <div className="time_now">
+                                <div>{moment(item.startDatetime).format('HH:mm')}</div>-{' '}
+                                <div>{moment(item.endDatetime).format('HH:mm')}</div>
+                            </div>
+                            <div className="timePassed">
+                                {getTimeDurationByGivenTimestamp(
+                                    +moment(item.endDatetime) - +moment(item.startDatetime)
+                                )}
+                            </div>
+                            {!this.state.timerDurationValue && <i className="small_play item_button" />}
+                            <i
+                                className="edit_button item_button"
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                    this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
+                                }}
+                            />
+                            <i
+                                className="cancel item_button"
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    this.deleteTimeEntry(item);
+                                }}
+                            />
                         </div>
                     </div>
-                )}
-            </div>
-        ));
+                    {viewport.width < 1024 && (
+                        <div className="edit">
+                            <div
+                                className="edit_swipe"
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    if (this.swipedElement) {
+                                        if (this.swipedElement.className === 'ul swipe') {
+                                            this.swipedElement.click();
+                                        }
+                                    }
+                                    this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                    this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
+                                }}
+                            >
+                                <i className="edit-icon-swipe" />
+                                {v_edit_task}
+                            </div>
+                            <div
+                                className="delete_swipe"
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    this.deleteTimeEntry(item);
+                                }}
+                            >
+                                <i className="delete-icon-swipe" />
+                                {v_delete_task}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        });
 
         return items;
     }
@@ -580,6 +587,7 @@ class MainPage extends Component {
                 {this.createTimeEntriesList(arraysItem)}
             </div>
         ));
+
         return (
             <div
                 className={classNames('wrapper_main_page', {
@@ -859,6 +867,7 @@ const mapStateToProps = store => {
         viewport: store.responsiveReducer.viewport,
         isShowMenu: store.responsiveReducer.isShowMenu,
         isMobile: store.responsiveReducer.isMobile,
+        user: store.userSettingReducer,
     };
 };
 

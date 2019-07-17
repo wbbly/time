@@ -81,7 +81,14 @@ export function getTodayTimeEntriesParseFunction(data) {
     const { timer_v2 } = data;
     for (let i = 0; i < timer_v2.length; i++) {
         const item = timer_v2[i];
-        const { id, start_datetime: startDatetime, end_datetime: endDatetime, issue, project } = item;
+        const {
+            id,
+            start_datetime: startDatetime,
+            end_datetime: endDatetime,
+            issue,
+            project,
+            sync_jira_status: syncJiraStatus,
+        } = item;
         const { name: projectName, id: projectId, project_color: projectColor } = project;
         const { name: projectColorName } = projectColor;
         dataParsed.timerV2.push({
@@ -96,6 +103,7 @@ export function getTodayTimeEntriesParseFunction(data) {
                     name: projectColorName,
                 },
             },
+            syncJiraStatus,
         });
     }
 

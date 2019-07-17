@@ -1,0 +1,27 @@
+.wrapper-jira-icon {
+  min-width: 20px;
+  height: 20px;
+  margin-right: 1rem;
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &--rotate-jira {
+    animation: loop 2s infinite linear;
+  }
+
+  .jira-icon {
+    width: 16px;
+    height: 16px;
+    background: url("../../images/icons/jira-grey.svg") center no-repeat;
+    background-size: 16px 16px;
+  }
+
+  .jira-icon-is-sync {
+    background: url("../../images/icons/jira-blue.svg") center center no-repeat;
+    background-size: 16px 16px;
+  }
+}
