@@ -425,7 +425,7 @@ class MainPage extends Component {
     }
 
     componentWillUnmount() {
-        this.socketConnection && this.socketConnection.emit('leave');
+        this.socketConnection && this.socketConnection.emit('leave') && this.socketConnection.close();
     }
 
     toggleSwipe = event => {
