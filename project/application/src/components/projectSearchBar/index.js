@@ -21,7 +21,7 @@ class ProjectSearchBar extends Component {
 
     search() {
         if (!!this.searchInput.value.length) {
-            let afterSearch = this.props.tableInfo.filter(obj =>
+            let afterSearch = this.props.etalonArr.filter(obj =>
                 obj.name.toLowerCase().includes(this.searchInput.value.toLowerCase())
             );
             this.props.projectsPageAction('CHANGE_ARR', { tableData: afterSearch });
@@ -44,6 +44,7 @@ class ProjectSearchBar extends Component {
                     <input
                         onFocus={e => this.setDefaultArr()}
                         type="text"
+                        onKeyDown={e => (e.key === 'Enter' ? this.search() : null)}
                         ref={input => (this.searchInput = input)}
                         className="project_search_bar_search_field"
                     />
