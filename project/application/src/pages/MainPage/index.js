@@ -432,6 +432,7 @@ class MainPage extends Component {
     }
     onTouchMove = event => {
         const { swipeStart, swipePosition } = this.state;
+
         const touch = event.targetTouches[0];
         const left = touch.clientX - swipeStart;
         if (left < 0) {
@@ -441,6 +442,9 @@ class MainPage extends Component {
     };
     resetSwipe = target => {
         target.childNodes[0].style.left = '0';
+        target.removeEventListener('touchmove', this.onTouchMove);
+        target.removeEventListener('touchend', this.onTouchEnd);
+        this.setState({ currentSwipeTarget: undefined });
     };
     onTouchEnd = event => {
         const { swipePosition, currentSwipeTarget } = this.state;
@@ -449,7 +453,7 @@ class MainPage extends Component {
             event.currentTarget.childNodes[0].style.left = `-50%`;
         } else {
             this.resetSwipe(event.currentTarget);
-            this.setState({ currentSwipeTarget: undefined });
+            this.setState({ swipeStart: 0, swipePosition: 0 });
         }
         this.setState({ swipeStart: 0, swipePosition: 0 });
         event.currentTarget.removeEventListener('touchmove', this.onTouchMove);
@@ -459,10 +463,21 @@ class MainPage extends Component {
         event.persist();
         const { viewport } = this.props;
         const { currentSwipeTarget } = this.state;
-        if (currentSwipeTarget) {
-            this.resetSwipe(currentSwipeTarget);
+        if (viewport.width >= 1024) return;
+        if (event.target.tagName === 'I') return;
+        if (this.swipedElement && this.swipedElement !== target) {
+            this.swipedElement.className = 'ul';
         }
         let target = event.currentTarget;
+
+        if (event.targetTouches[0].clientX > event.currentTarget.offsetWidth / 2 && target === currentSwipeTarget) {
+            return;
+        }
+        if (currentSwipeTarget) {
+            this.resetSwipe(currentSwipeTarget);
+            this.setState({ currentSwipeTarget: undefined });
+        }
+
         this.setState({ currentSwipeTarget: target, swipeStart: event.targetTouches[0].clientX });
         if (viewport.width >= 1024) return;
         if (event.target.tagName === 'I') return;
@@ -472,9 +487,9 @@ class MainPage extends Component {
         target.addEventListener('touchmove', this.onTouchMove);
         target.addEventListener('touchend', this.onTouchEnd);
         this.swipedElement = target;
-        console.log(this.swipedElement);
         target.className === 'ul' ? (target.className = 'ul swipe') : (target.className = 'ul');
     };
+
     createTimeEntriesList(data) {
         const { viewport, isMobile, vocabulary, user } = this.props;
         const { v_edit_task, v_delete_task } = vocabulary;
@@ -544,6 +559,7 @@ class MainPage extends Component {
                                     }
                                     this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
                                     this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
+                                    this.resetSwipe(this.state.currentSwipeTarget);
                                 }}
                             >
                                 <i className="edit-icon-swipe" />
@@ -554,6 +570,7 @@ class MainPage extends Component {
                                 onClick={event => {
                                     event.stopPropagation();
                                     this.deleteTimeEntry(item);
+                                    this.resetSwipe(this.state.currentSwipeTarget);
                                 }}
                             >
                                 <i className="delete-icon-swipe" />
