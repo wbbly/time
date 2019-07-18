@@ -69,9 +69,10 @@ class MainPage extends Component {
         projectListIsOpen: false,
         isShowAddTaskMobile: false,
         isShowListProjectsMobile: false,
+        swipeStart: 0,
+        swipePosition: 0,
+        currentSwipeTarget: undefined,
     };
-    left = 0;
-    dragStartX = 0;
 
     initSocketConnection() {
         // console.log('this.initSocketConnection')
@@ -416,38 +417,49 @@ class MainPage extends Component {
         this.socketConnection && this.socketConnection.emit('leave') && this.socketConnection.close();
     }
     onTouchMove = event => {
+        const { swipeStart, swipePosition } = this.state;
         const touch = event.targetTouches[0];
-        const left = touch.clientX - this.dragStartX;
+        const left = touch.clientX - swipeStart;
         if (left < 0) {
-            this.left = left;
+            this.setState({ swipePosition: left });
         }
-        event.currentTarget.childNodes[0].style.left = `${this.left}px`;
+        event.currentTarget.childNodes[0].style.left = `${swipePosition}px`;
+    };
+    resetSwipe = target => {
+        target.childNodes[0].style.left = '0';
     };
     onTouchEnd = event => {
-        if (this.left < -100) {
+        const { swipePosition, currentSwipeTarget } = this.state;
+        const swipeEndpoint = event.currentTarget.offsetWidth / 5;
+        if (swipePosition < -swipeEndpoint && currentSwipeTarget) {
             event.currentTarget.childNodes[0].style.left = `-50%`;
         } else {
-            event.currentTarget.childNodes[0].style.left = '0';
+            this.resetSwipe(event.currentTarget);
+            this.setState({ currentSwipeTarget: undefined });
         }
-        this.left = this.dragStartX = 0;
-        this.dragStartX = 0;
+        this.setState({ swipeStart: 0, swipePosition: 0 });
         event.currentTarget.removeEventListener('touchmove', this.onTouchMove);
         event.currentTarget.removeEventListener('touchend', this.onTouchEnd);
     };
     toggleSwipe = event => {
         event.persist();
         const { viewport } = this.props;
+        const { currentSwipeTarget } = this.state;
+        if (currentSwipeTarget) {
+            this.resetSwipe(currentSwipeTarget);
+        }
         let target = event.currentTarget;
+        this.setState({ currentSwipeTarget: target, swipeStart: event.targetTouches[0].clientX });
         if (viewport.width >= 1024) return;
         if (event.target.tagName === 'I') return;
         if (this.swipedElement && this.swipedElement !== target) {
             this.swipedElement.className = 'ul';
         }
-        this.dragStartX = event.targetTouches[0].clientX;
-
         target.addEventListener('touchmove', this.onTouchMove);
         target.addEventListener('touchend', this.onTouchEnd);
         this.swipedElement = target;
+        console.log(this.swipedElement);
+        target.className === 'ul' ? (target.className = 'ul swipe') : (target.className = 'ul');
     };
     createTimeEntriesList(data) {
         const { viewport, isMobile, vocabulary, user } = this.props;
