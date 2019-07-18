@@ -70,6 +70,8 @@ class MainPage extends Component {
         isShowAddTaskMobile: false,
         isShowListProjectsMobile: false,
     };
+    left = 0;
+    dragStartX = 0;
 
     initSocketConnection() {
         // console.log('this.initSocketConnection')
@@ -427,7 +429,25 @@ class MainPage extends Component {
     componentWillUnmount() {
         this.socketConnection && this.socketConnection.emit('leave');
     }
-
+    onTouchMove = event => {
+        const touch = event.targetTouches[0];
+        const left = touch.clientX - this.dragStartX;
+        if (left < 0) {
+            this.left = left;
+        }
+        event.currentTarget.childNodes[0].style.left = `${this.left}px`;
+    };
+    onTouchEnd = event => {
+        if (this.left < -100) {
+            event.currentTarget.childNodes[0].style.left = `-50%`;
+        } else {
+            event.currentTarget.childNodes[0].style.left = '0';
+        }
+        this.left = this.dragStartX = 0;
+        this.dragStartX = 0;
+        event.currentTarget.removeEventListener('touchmove', this.onTouchMove);
+        event.currentTarget.removeEventListener('touchend', this.onTouchEnd);
+    };
     toggleSwipe = event => {
         event.persist();
         const { viewport } = this.props;
@@ -437,17 +457,19 @@ class MainPage extends Component {
         if (this.swipedElement && this.swipedElement !== target) {
             this.swipedElement.className = 'ul';
         }
-        target.className === 'ul' ? (target.className = 'ul swipe') : (target.className = 'ul');
+        this.dragStartX = event.targetTouches[0].clientX;
+
+        target.addEventListener('touchmove', this.onTouchMove);
+        target.addEventListener('touchend', this.onTouchEnd);
         this.swipedElement = target;
     };
-
     createTimeEntriesList(data) {
         const { viewport, isMobile, vocabulary, user } = this.props;
         const { v_edit_task, v_delete_task } = vocabulary;
         let items = data.map(item => {
             const { syncJiraStatus } = item;
             return (
-                <div className="ul" key={item.id} onClick={this.toggleSwipe}>
+                <div className="ul" key={item.id} onTouchStart={this.toggleSwipe}>
                     <div className="li">
                         <JiraIcon taskData={item} isSync={syncJiraStatus} />
                         <div className="name_container">
