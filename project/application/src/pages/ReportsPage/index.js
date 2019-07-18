@@ -136,7 +136,7 @@ class ReportsPage extends Component {
         const { isMobile, vocabulary } = this.props;
         const { v_summary_report, v_total, v_export } = vocabulary;
         if (!userLoggedIn()) return <Redirect to={'/login'} />;
-
+        
         return (
             <div
                 className={classNames('wrapper_reports_page', {
@@ -246,7 +246,7 @@ class ReportsPage extends Component {
     }
 
     changeDoughnutChat(chartObject, dataFromServer) {
-        let newObjectChart = chartObject;
+        let newObjectChart = Object.assign({}, chartObject)
         let labels = [];
         let dataTime = [];
         for (let i = 0; i < dataFromServer.length; i++) {
@@ -407,10 +407,10 @@ class ReportsPage extends Component {
                 let data = result.data;
                 const { project_v2: projectV2 } = data;
                 this.setState({ projectsData: projectV2 });
-
+                
                 let dataToGraph = this.getArrOfProjectsData(data);
                 this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
-
+                
                 let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
                 this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
                 this.setState({ toggleChar: true });
