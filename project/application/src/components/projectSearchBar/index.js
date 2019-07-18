@@ -21,7 +21,7 @@ class ProjectSearchBar extends Component {
 
     search() {
         if (this.searchInput.value.length) {
-            let afterSearch = this.props.tableInfo.filter(
+            let afterSearch = this.props.etalonArr.filter(
                 obj => obj.name.toLowerCase().indexOf(this.searchInput.value.toLowerCase().trim()) !== -1
             );
             this.props.projectsPageAction('CHANGE_ARR', { tableData: afterSearch });
@@ -31,7 +31,9 @@ class ProjectSearchBar extends Component {
     }
 
     setDefaultArr() {
-        this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
+        if (this.searchInput.value.length < 1) {
+            this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
+        }
     }
 
     render() {
