@@ -52,36 +52,11 @@ export function getLoggedUser() {
 
 export function getTokenFromLocalStorage() {
     const token = localStorage.getItem('token') || '';
-    if (!token) {
-        const message = `Action: getTokenFromLocalStorage, token: ${localStorage.getItem('token')}`;
-        fetch(AppConfig.apiURL + 'email/send-alert', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message,
-            }),
-        });
-    }
 
     return token;
 }
 
 export function setTokenToLocalStorage(token) {
-    if (!token) {
-        const message = `Action: setTokenToLocalStorage, token: ${token}`;
-        fetch(AppConfig.apiURL + 'email/send-alert', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message,
-            }),
-        });
-    }
-
     localStorage.setItem('token', token);
 }
 
