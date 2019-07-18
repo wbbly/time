@@ -44,7 +44,6 @@ class ProjectSearchBar extends Component {
                 <div className="project_search_bar_search_field_container">
                     <i className="magnifer" />
                     <input
-                        onFocus={e => this.setDefaultArr()}
                         onChange={e => this.setDefaultArr()}
                         type="text"
                         onKeyUp={e => (e.keyCode === 13 ? this.search() : null)}
