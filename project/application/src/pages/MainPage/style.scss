@@ -396,7 +396,8 @@ span.circle {
 .projects_modal_item {
   display: flex;
   align-items: center;
-  height: 32px;
+  // height: 32px;
+  padding: 7px 0;
 }
 
 .active_project > .projects_modal_item_name {
