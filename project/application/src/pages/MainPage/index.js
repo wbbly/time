@@ -126,12 +126,7 @@ class MainPage extends Component {
             this.TIMER_LIVE_SUBSCRIPTION = undefined;
             this.timerStop();
         });
-        this.socketConnection.on('user-unauthorized', data => {
-            const message = `Action: user-unauthorized socket connection, token: ${JSON.stringify(
-                getTokenFromLocalStorage()
-            )}`;
-            console.log(message);
-        });
+        this.socketConnection.on('user-unauthorized', data => logoutByUnauthorized());
     }
 
     timerPlayStopButtonAction(className, projectId) {

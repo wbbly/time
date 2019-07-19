@@ -22,10 +22,7 @@ export function apiCall(url, params = { method: 'GET' }, withAuth = true) {
             .then(res => {
                 if (!res.ok) {
                     if (res.status === 401) {
-                        const message = `Action: user-unauthorized api request, token: ${JSON.stringify(
-                            getTokenFromLocalStorage()
-                        )}, response: ${JSON.stringify(res)}`;
-                        console.log(message);
+                        logoutByUnauthorized();
                     } else {
                         throw res;
                     }
