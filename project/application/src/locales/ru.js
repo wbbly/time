@@ -5,7 +5,7 @@ export default {
         'Минимальное время для добавление ворклога в Jira составляет 1 минута.',
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
         'Добавление ворклога в Jira было завершено с ошибкой. Убедитесь, что доступы к Jira верны и название задачи соотвествует формату "JIRA-1 Comment".',
-    'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': 'Текущая задачи уже была добавлена в ворклог Jira.',
+    'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': 'Текущая задача уже была добавлена в ворклог Jira.',
 
     'ERROR.TIMER.JIRA_SYNC_SUCCESS': 'Тестовое соединение с Jira было успешно установленно.',
     'ERROR.TIMER.JIRA_SYNC_FAILED':

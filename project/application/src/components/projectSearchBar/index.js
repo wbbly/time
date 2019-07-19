@@ -20,9 +20,9 @@ class ProjectSearchBar extends Component {
     etalonTable = [];
 
     search() {
-        if (!!this.searchInput.value.length) {
-            let afterSearch = this.props.tableInfo.filter(obj =>
-                Object.values(obj).some(value => value === this.searchInput.value.toLowerCase())
+        if (this.searchInput.value.length) {
+            let afterSearch = this.props.etalonArr.filter(
+                obj => obj.name.toLowerCase().indexOf(this.searchInput.value.toLowerCase().trim()) !== -1
             );
             this.props.projectsPageAction('CHANGE_ARR', { tableData: afterSearch });
         } else {
@@ -31,7 +31,9 @@ class ProjectSearchBar extends Component {
     }
 
     setDefaultArr() {
-        this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
+        if (this.searchInput.value.length < 1) {
+            this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
+        }
     }
 
     render() {
@@ -42,8 +44,9 @@ class ProjectSearchBar extends Component {
                 <div className="project_search_bar_search_field_container">
                     <i className="magnifer" />
                     <input
-                        onFocus={e => this.setDefaultArr()}
+                        onChange={e => this.setDefaultArr()}
                         type="text"
+                        onKeyUp={e => (e.keyCode === 13 ? this.search() : null)}
                         ref={input => (this.searchInput = input)}
                         className="project_search_bar_search_field"
                     />

@@ -131,15 +131,6 @@ class MainPage extends Component {
                 getTokenFromLocalStorage()
             )}`;
             console.log(message);
-            apiCall(AppConfig.apiURL + 'email/send-alert', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message,
-                }),
-            }).then(_ => logoutByUnauthorized(), _ => logoutByUnauthorized());
         });
     }
 
@@ -425,7 +416,7 @@ class MainPage extends Component {
     }
 
     componentWillUnmount() {
-        this.socketConnection && this.socketConnection.emit('leave');
+        this.socketConnection && this.socketConnection.emit('leave') && this.socketConnection.close();
     }
 
     toggleSwipe = event => {

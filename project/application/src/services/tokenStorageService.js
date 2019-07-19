@@ -1,6 +1,7 @@
 import * as jwtDecode from 'jwt-decode';
 
 import { getCurrentTeamDataFromLocalStorage } from './currentTeamDataStorageService';
+import { AppConfig } from '../config';
 
 export function getLoggedUserEmail() {
     const email = getLoggedUser().email || '';
@@ -50,7 +51,9 @@ export function getLoggedUser() {
 }
 
 export function getTokenFromLocalStorage() {
-    return localStorage.getItem('token') || '';
+    const token = localStorage.getItem('token') || '';
+
+    return token;
 }
 
 export function setTokenToLocalStorage(token) {
