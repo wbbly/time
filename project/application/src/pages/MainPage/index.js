@@ -9,6 +9,7 @@ import { showMobileSupportToastr } from '../../App';
 import classNames from 'classnames';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { BrowserView, isSafari, isIOS } from 'react-device-detect';
+import Swipe from 'react-easy-swipe';
 
 // Services
 import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
@@ -69,9 +70,7 @@ class MainPage extends Component {
         projectListIsOpen: false,
         isShowAddTaskMobile: false,
         isShowListProjectsMobile: false,
-        swipeStart: 0,
-        swipePosition: 0,
-        currentSwipeTarget: undefined,
+        swipedTarget: undefined,
     };
 
     initSocketConnection() {
@@ -416,64 +415,35 @@ class MainPage extends Component {
     componentWillUnmount() {
         this.socketConnection && this.socketConnection.emit('leave') && this.socketConnection.close();
     }
-    onTouchMove = event => {
-        const { swipeStart, swipePosition } = this.state;
-
-        const touch = event.targetTouches[0];
-        const left = touch.clientX - swipeStart;
-        if (left < 0) {
-            this.setState({ swipePosition: left });
-        }
-        event.currentTarget.childNodes[0].style.left = `${swipePosition}px`;
-    };
-    resetSwipe = target => {
-        target.childNodes[0].style.left = '0';
-        target.removeEventListener('touchmove', this.onTouchMove);
-        target.removeEventListener('touchend', this.onTouchEnd);
-        this.setState({ currentSwipeTarget: undefined });
-    };
-    onTouchEnd = event => {
-        const { swipePosition, currentSwipeTarget } = this.state;
-        const swipeEndpoint = event.currentTarget.offsetWidth / 5;
-        if (swipePosition < -swipeEndpoint && currentSwipeTarget) {
-            event.currentTarget.childNodes[0].style.left = `-50%`;
-        } else {
-            this.resetSwipe(event.currentTarget);
-            this.setState({ swipeStart: 0, swipePosition: 0 });
-        }
-        this.setState({ swipeStart: 0, swipePosition: 0 });
-        event.currentTarget.removeEventListener('touchmove', this.onTouchMove);
-        event.currentTarget.removeEventListener('touchend', this.onTouchEnd);
-    };
     toggleSwipe = event => {
         event.persist();
         const { viewport } = this.props;
-        const { currentSwipeTarget } = this.state;
-        if (viewport.width >= 1024) return;
-        if (event.target.tagName === 'I') return;
-        if (this.swipedElement && this.swipedElement !== target) {
-            this.swipedElement.className = 'ul';
-        }
         let target = event.currentTarget;
-
-        if (event.targetTouches[0].clientX > event.currentTarget.offsetWidth / 2 && target === currentSwipeTarget) {
-            return;
-        }
-        if (currentSwipeTarget) {
-            this.resetSwipe(currentSwipeTarget);
-            this.setState({ currentSwipeTarget: undefined });
-        }
-
-        this.setState({ currentSwipeTarget: target, swipeStart: event.targetTouches[0].clientX });
         if (viewport.width >= 1024) return;
         if (event.target.tagName === 'I') return;
         if (this.swipedElement && this.swipedElement !== target) {
             this.swipedElement.className = 'ul';
         }
-        target.addEventListener('touchmove', this.onTouchMove);
-        target.addEventListener('touchend', this.onTouchEnd);
         this.swipedElement = target;
-        target.className === 'ul' ? (target.className = 'ul swipe') : (target.className = 'ul');
+        this.setState({ swipedTarget: target });
+    };
+    swipedElementClose = () => {
+        const { swipedTarget } = this.state;
+        swipedTarget.className = 'ul';
+    };
+    onSwipeMove = (position, event) => {
+        const { viewport, isMobile } = this.props;
+        const { swipedTarget } = this.state;
+        if (!isMobile) return;
+        if (
+            position.x < 0 &&
+            Math.abs(position.x) > viewport.width / 15 &&
+            Math.abs(position.y) < swipedTarget.offsetHeight / 2
+        ) {
+            swipedTarget.className = 'ul swipe';
+        } else {
+            swipedTarget.className = 'ul';
+        }
     };
 
     createTimeEntriesList(data) {
@@ -482,89 +452,96 @@ class MainPage extends Component {
         let items = data.map(item => {
             const { syncJiraStatus } = item;
             return (
-                <div className="ul" key={item.id} onTouchStart={this.toggleSwipe}>
-                    <div className="li">
-                        <JiraIcon taskData={item} isSync={syncJiraStatus} />
-                        <div className="name_container">
-                            <div className="name">{item.issue}</div>
-                            <div className="project_name">
-                                <span className={`circle ${item.project.projectColor.name}`} />
-                                <span className="project_name__name">{item.project.name}</span>
+                <Swipe onSwipeMove={this.onSwipeMove} key={item.id}>
+                    <div className="ul" onTouchStart={this.toggleSwipe}>
+                        <div className="li">
+                            <JiraIcon taskData={item} isSync={syncJiraStatus} />
+                            <div className="name_container">
+                                <div className="name">{item.issue}</div>
+                                <div className="project_name">
+                                    <span className={`circle ${item.project.projectColor.name}`} />
+                                    <span className="project_name__name">{item.project.name}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div
-                            className="time_container_history"
-                            onClick={event => {
-                                event.stopPropagation();
-                                if (!isMobile && event.target.className !== 'small_play item_button') return;
-                                if (this.swipedElement) {
-                                    if (this.swipedElement.className === 'ul swipe') {
-                                        this.swipedElement.click();
-                                    }
-                                }
-                                this.state.timerReadyToUse && this.timerContinue(item.issue, item);
-                            }}
-                        >
-                            <div className="time_now">
-                                <div>{moment(item.startDatetime).format('HH:mm')}</div>-{' '}
-                                <div>{moment(item.endDatetime).format('HH:mm')}</div>
-                            </div>
-                            <div className="timePassed">
-                                {getTimeDurationByGivenTimestamp(
-                                    +moment(item.endDatetime) - +moment(item.startDatetime)
-                                )}
-                            </div>
-                            {!this.state.timerDurationValue && <i className="small_play item_button" />}
-                            <i
-                                className="edit_button item_button"
-                                onClick={event => {
-                                    event.stopPropagation();
-                                    this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
-                                    this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
-                                }}
-                            />
-                            <i
-                                className="cancel item_button"
-                                onClick={event => {
-                                    event.stopPropagation();
-                                    this.deleteTimeEntry(item);
-                                }}
-                            />
-                        </div>
-                    </div>
-                    {viewport.width < 1024 && (
-                        <div className="edit">
                             <div
-                                className="edit_swipe"
+                                className="time_container_history"
                                 onClick={event => {
                                     event.stopPropagation();
+                                    if (!isMobile && event.target.className !== 'small_play item_button') return;
                                     if (this.swipedElement) {
                                         if (this.swipedElement.className === 'ul swipe') {
                                             this.swipedElement.click();
                                         }
                                     }
-                                    this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
-                                    this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: true });
-                                    this.resetSwipe(this.state.currentSwipeTarget);
+                                    this.state.timerReadyToUse && this.timerContinue(item.issue, item);
+                                    this.swipedElementClose();
                                 }}
                             >
-                                <i className="edit-icon-swipe" />
-                                {v_edit_task}
-                            </div>
-                            <div
-                                className="delete_swipe"
-                                onClick={event => {
-                                    event.stopPropagation();
-                                    this.deleteTimeEntry(item);
-                                    this.resetSwipe(this.state.currentSwipeTarget);
-                                }}
-                            >
-                                <i className="delete-icon-swipe" />
-                                {v_delete_task}
+                                <div className="time_now">
+                                    <div>{moment(item.startDatetime).format('HH:mm')}</div>-{' '}
+                                    <div>{moment(item.endDatetime).format('HH:mm')}</div>
+                                </div>
+                                <div className="timePassed">
+                                    {getTimeDurationByGivenTimestamp(
+                                        +moment(item.endDatetime) - +moment(item.startDatetime)
+                                    )}
+                                </div>
+                                {!this.state.timerDurationValue && <i className="small_play item_button" />}
+                                <i
+                                    className="edit_button item_button"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                        this.props.manualTimerModalAction('TOGGLE_MODAL', {
+                                            manualTimerModalToggle: true,
+                                        });
+                                    }}
+                                />
+                                <i
+                                    className="cancel item_button"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        this.deleteTimeEntry(item);
+                                    }}
+                                />
                             </div>
                         </div>
-                    )}
-                </div>
+                        {viewport.width < 1024 && (
+                            <div className="edit">
+                                <div
+                                    className="edit_swipe"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        if (this.swipedElement) {
+                                            if (this.swipedElement.className === 'ul swipe') {
+                                                this.swipedElement.click();
+                                            }
+                                        }
+                                        this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                        this.props.manualTimerModalAction('TOGGLE_MODAL', {
+                                            manualTimerModalToggle: true,
+                                        });
+                                        this.swipedElementClose();
+                                    }}
+                                >
+                                    <i className="edit-icon-swipe" />
+                                    {v_edit_task}
+                                </div>
+                                <div
+                                    className="delete_swipe"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        this.deleteTimeEntry(item);
+                                        this.swipedElementClose();
+                                    }}
+                                >
+                                    <i className="delete-icon-swipe" />
+                                    {v_delete_task}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </Swipe>
             );
         });
 
