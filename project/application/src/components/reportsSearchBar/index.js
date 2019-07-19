@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Checkbox from '@material-ui/core/Checkbox';
+import { createMuiTheme } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
 
 // Services
 import { apiCall } from '../../services/apiService';
@@ -17,6 +19,16 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.css';
+
+const materialTheme = createMuiTheme({
+    overrides: {
+        MuiSvgIcon: {
+            root: {
+                fontSize: '24px',
+            },
+        },
+    },
+});
 
 class ReportsSearchBar extends Component {
     state = {
@@ -317,14 +329,16 @@ class ReportsSearchBar extends Component {
                                 {this.state.userDataFiltered.map((item, index) => (
                                     <div className="select_users_item" key={item.email + index}>
                                         <label>
-                                            <Checkbox
-                                                color={'primary'}
-                                                value={item.email || ''}
-                                                checked={this.getCheckedUsers(item.email)}
-                                                onChange={_ => {
-                                                    this.toggleUser(item);
-                                                }}
-                                            />{' '}
+                                            <ThemeProvider theme={materialTheme}>
+                                                <Checkbox
+                                                    color={'primary'}
+                                                    value={item.email || ''}
+                                                    checked={this.getCheckedUsers(item.email)}
+                                                    onChange={_ => {
+                                                        this.toggleUser(item);
+                                                    }}
+                                                />
+                                            </ThemeProvider>{' '}
                                             <span className="select_users_item_username">{item.username}</span>
                                         </label>
                                     </div>
@@ -382,14 +396,16 @@ class ReportsSearchBar extends Component {
                                 {this.state.projectDataFiltered.map((item, index) => (
                                     <div className="select_users_item" key={item.name + index}>
                                         <label>
-                                            <Checkbox
-                                                color={'primary'}
-                                                value={item.name}
-                                                checked={this.getCheckedProjects(item.name)}
-                                                onChange={_ => {
-                                                    this.toggleProject(item);
-                                                }}
-                                            />{' '}
+                                            <ThemeProvider theme={materialTheme}>
+                                                <Checkbox
+                                                    color={'primary'}
+                                                    value={item.name}
+                                                    checked={this.getCheckedProjects(item.name)}
+                                                    onChange={_ => {
+                                                        this.toggleProject(item);
+                                                    }}
+                                                />
+                                            </ThemeProvider>{' '}
                                             <span className="select_users_item_username">{item.name}</span>
                                         </label>
                                     </div>

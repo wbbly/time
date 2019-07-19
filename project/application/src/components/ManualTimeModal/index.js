@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { MuiPickersUtilsProvider, TimePicker, DatePicker } from 'material-ui-pickers';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, DatePicker } from '@material-ui/pickers';
+import { createMuiTheme } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import Grid from '@material-ui/core/Grid';
 import locale from 'date-fns/locale/en-GB';
@@ -24,10 +26,53 @@ import { AppConfig } from '../../config';
 // Styles
 import './style.css';
 
+const materialTheme = createMuiTheme({
+    overrides: {
+        MuiInput: {
+            underline: {
+                '&:after': {
+                    borderBottom: '2px solid transparent',
+                },
+            },
+        },
+        MuiI: {
+            error: {
+                '&:after': {
+                    borderBottomColor: '#f44336 !mportant',
+                },
+            },
+        },
+        MuiFormControl: {
+            root: {
+                width: '200px',
+            },
+        },
+        MuiInputBase: {
+            root: {
+                padding: '0 10px 0 0',
+            },
+        },
+        MuiButtonBase: {
+            root: {
+                '&:hover': {
+                    backgroundColor: 'transparent !important',
+                },
+            },
+        },
+        MuiFormHelperText: {
+            root: {
+                display: 'none',
+            },
+        },
+    },
+});
+
 class ManualTimeModal extends Component {
     state = {
+        isOpenDropdown: false,
+        projectList: [],
         activeProject: null,
-        selectProject: false,
+        // selectProject: false,
         activeItem: null,
         startDate: null,
         startDateChanged: false,
@@ -39,7 +84,7 @@ class ManualTimeModal extends Component {
     };
 
     getIssues() {
-        let items = this.props.projectList.map((item, index) => (
+        let items = this.state.projectList.map((item, index) => (
             <div
                 className="item_select_wrapper"
                 onClick={e => this.setProject(item)}
@@ -134,22 +179,33 @@ class ManualTimeModal extends Component {
         );
     }
 
-    toggleProjectsBar() {
-        this.setState({ selectProject: !this.state.selectProject });
-    }
+    // toggleProjectsBar() {
+    //     this.setState(state => ({ selectProject: !state.selectProject }));
+    // }
 
-    closeDropdown = e => {
-        if (this.dropList && !this.dropList.contains(e.target)) {
-            this.setState(
-                {
-                    selectProject: false,
-                },
-                () => {
-                    document.removeEventListener('click', this.closeDropdown);
-                }
-            );
-        }
+    closeDropdown = event => {
+        if (event.target.className === 'input-project-name') return;
+        this.setState({ isOpenDropdown: false });
+        document.removeEventListener('click', this.closeDropdown);
     };
+
+    openDropdown = event => {
+        document.addEventListener('click', this.closeDropdown);
+        this.setState({ isOpenDropdown: true });
+    };
+
+    // closeDropdown = e => {
+    //     if (this.dropList && !this.dropList.contains(e.target)) {
+    //         this.setState(
+    //             {
+    //                 selectProject: false,
+    //             },
+    //             () => {
+    //                 document.removeEventListener('click', this.closeDropdown);
+    //             }
+    //         );
+    //     }
+    // };
 
     onChangeTime = time => {
         this.setState({ startTime: time, startTimeChanged: true });
@@ -167,11 +223,17 @@ class ManualTimeModal extends Component {
         this.setState({ endDate: date, endDateChanged: true });
     };
 
+    findProjectByName = value => {
+        let copyProjectList = JSON.parse(JSON.stringify(this.props.projectList)).filter(
+            item => item.name.toLowerCase().indexOf(value.toLowerCase().trim()) !== -1
+        );
+        this.setState({ projectList: copyProjectList });
+    };
+
     render() {
         const { startDate, startTime, endDate, endTime } = this.state;
         const { vocabulary, isMobile, manualTimerModalAction } = this.props;
-        const { v_task_name, v_project, v_time_start, v_time_end, v_change, lang } = vocabulary;
-
+        const { v_task_name, v_project, v_time_start, v_time_end, v_change, v_cancel, v_ok } = vocabulary;
         return (
             <div className={!isMobile ? 'manual_time_modal_wrapper' : 'manual_time_modal_wrapper--mobile'}>
                 <div className="manual_time_modal_background">
@@ -194,42 +256,67 @@ class ManualTimeModal extends Component {
                             <span>{v_project}:</span>
                             <div className="wrapper-input-block-mobile">
                                 <input
+                                    className="input-project-name"
+                                    readOnly={isMobile}
                                     type="text"
-                                    readOnly
                                     ref={input => (this.inputTaskName = input)}
                                     onClick={e => {
-                                        this.toggleProjectsBar();
-                                        document.addEventListener('click', this.closeDropdown);
+                                        this.openDropdown();
+                                        this.setState({ projectList: this.props.projectList });
+                                    }}
+                                    onBlur={e => {
+                                        this.inputTaskName.value = this.state.activeProject.name;
+                                    }}
+                                    onChange={e => {
+                                        if (isMobile) return;
+                                        this.findProjectByName(e.target.value);
                                     }}
                                 />
                                 <div className={`circle main_circle ${this.state.activeProject.projectColor.name}`} />
                                 <i className="arrow_list_mobile" />
                             </div>
-                            {this.state.selectProject && (
-                                <div className="projects_list">{this.state.selectProject && this.getIssues()}</div>
-                            )}
+                            {this.state.isOpenDropdown && <div className="projects_list">{this.getIssues()}</div>}
                         </div>
                         <div className="manual_timer_modal_timepickers_container">
                             <div className="margin_12">
                                 <span> {v_time_start}:</span>
                                 <div className="date_time">
                                     {!isMobile && <i className="calendar" />}
-                                    <i className="clock" />
+
                                     {!isMobile ? (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <Grid container justify="space-between">
                                                 <DatePicker
+                                                    cancelLabel={v_cancel}
+                                                    okLabel={v_ok}
                                                     value={startDate}
                                                     onChange={this.onChangeDate}
                                                     format={'dd.MM.yyyy'}
                                                 />
-
-                                                <TimePicker value={startTime} onChange={this.onChangeTime} />
+                                                <ThemeProvider theme={materialTheme}>
+                                                    <KeyboardTimePicker
+                                                        cancelLabel={v_cancel}
+                                                        okLabel={v_ok}
+                                                        ampm={false}
+                                                        keyboardIcon={<i className="clock" />}
+                                                        value={startTime}
+                                                        onChange={this.onChangeTime}
+                                                    />
+                                                </ThemeProvider>
                                             </Grid>
                                         </MuiPickersUtilsProvider>
                                     ) : (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                                            <TimePicker value={startTime} onChange={this.onChangeTime} />
+                                            <ThemeProvider theme={materialTheme}>
+                                                <KeyboardTimePicker
+                                                    cancelLabel={v_cancel}
+                                                    okLabel={v_ok}
+                                                    ampm={false}
+                                                    keyboardIcon={<i className="clock" />}
+                                                    value={startTime}
+                                                    onChange={this.onChangeTime}
+                                                />
+                                            </ThemeProvider>
                                         </MuiPickersUtilsProvider>
                                     )}
                                 </div>
@@ -238,29 +325,48 @@ class ManualTimeModal extends Component {
                                 <span>{v_time_end}:</span>
                                 <div className="date_time">
                                     {!isMobile && <i className="calendar" />}
-                                    <i className="clock" />
                                     {!isMobile ? (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <Grid container justify="space-between">
                                                 <DatePicker
+                                                    cancelLabel={v_cancel}
+                                                    okLabel={v_ok}
                                                     value={endDate}
                                                     onChange={this.onChangeDateEnd}
                                                     format={'dd.MM.yyyy'}
                                                 />
-
-                                                <TimePicker value={endTime} onChange={this.onChangeTimeEnd} />
+                                                <ThemeProvider theme={materialTheme}>
+                                                    <KeyboardTimePicker
+                                                        cancelLabel={v_cancel}
+                                                        okLabel={v_ok}
+                                                        invalidDateMessage=" "
+                                                        ampm={false}
+                                                        keyboardIcon={<i className="clock" />}
+                                                        value={endTime}
+                                                        onChange={this.onChangeTimeEnd}
+                                                    />
+                                                </ThemeProvider>
                                             </Grid>
                                         </MuiPickersUtilsProvider>
                                     ) : (
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                                            <TimePicker value={endTime} onChange={this.onChangeTimeEnd} />
+                                            <ThemeProvider theme={materialTheme}>
+                                                <KeyboardTimePicker
+                                                    cancelLabel={v_cancel}
+                                                    okLabel={v_ok}
+                                                    ampm={false}
+                                                    keyboardIcon={<i className="clock" />}
+                                                    value={endTime}
+                                                    onChange={this.onChangeTimeEnd}
+                                                />
+                                            </ThemeProvider>
                                         </MuiPickersUtilsProvider>
                                     )}
                                 </div>
                             </div>
                         </div>
                         {isMobile ? (
-                            !this.state.selectProject && (
+                            !this.state.isOpenDropdown && (
                                 <div className="manual_timer_modal_button_container">
                                     <button
                                         className="create_projects_modal_button_container_button manual_time_button"
@@ -297,6 +403,7 @@ class ManualTimeModal extends Component {
         this.setState({ startTime: getDate(this.props.editedItem.startDatetime) });
         this.setState({ endDate: getDate(this.props.editedItem.endDatetime) });
         this.setState({ endTime: getDate(this.props.editedItem.endDatetime) });
+        this.setState({ projectList: this.props.projectList });
         this.inputTaskName.value = this.props.editedItem.project.name;
     }
 }

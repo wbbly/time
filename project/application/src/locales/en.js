@@ -65,6 +65,8 @@ export default {
     v_a_task_delete: 'Do you really want to delete this time entry?',
     v_a_incorect_email: 'Incorrect e-mail',
 
+    v_ok: 'OK',
+    v_cancel: 'CANCEL',
     v_language: 'Language',
     v_cofirm_new_password: 'Confirm new password',
     v_current_password: 'Current password',

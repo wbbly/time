@@ -246,7 +246,7 @@ class ReportsPage extends Component {
     }
 
     changeDoughnutChat(chartObject, dataFromServer) {
-        let newObjectChart = chartObject;
+        let newObjectChart = Object.assign({}, chartObject);
         let labels = [];
         let dataTime = [];
         for (let i = 0; i < dataFromServer.length; i++) {
