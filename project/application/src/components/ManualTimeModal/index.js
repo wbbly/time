@@ -28,14 +28,28 @@ import './style.css';
 
 const materialTheme = createMuiTheme({
     overrides: {
+        MuiInput: {
+            underline: {
+                '&:after': {
+                    borderBottom: '2px solid transparent',
+                },
+            },
+        },
+        MuiI: {
+            error: {
+                '&:after': {
+                    borderBottomColor: '#f44336 !mportant',
+                },
+            },
+        },
         MuiFormControl: {
             root: {
                 width: '200px',
             },
         },
         MuiInputBase: {
-            input: {
-                width: '100px',
+            root: {
+                padding: '0 10px 0 0',
             },
         },
         MuiButtonBase: {
@@ -219,7 +233,7 @@ class ManualTimeModal extends Component {
     render() {
         const { startDate, startTime, endDate, endTime } = this.state;
         const { vocabulary, isMobile, manualTimerModalAction } = this.props;
-        const { v_task_name, v_project, v_time_start, v_time_end, v_change, lang } = vocabulary;
+        const { v_task_name, v_project, v_time_start, v_time_end, v_change, v_cancel, v_ok } = vocabulary;
         return (
             <div className={!isMobile ? 'manual_time_modal_wrapper' : 'manual_time_modal_wrapper--mobile'}>
                 <div className="manual_time_modal_background">
@@ -273,12 +287,16 @@ class ManualTimeModal extends Component {
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <Grid container justify="space-between">
                                                 <DatePicker
+                                                    cancelLabel={v_cancel}
+                                                    okLabel={v_ok}
                                                     value={startDate}
                                                     onChange={this.onChangeDate}
                                                     format={'dd.MM.yyyy'}
                                                 />
                                                 <ThemeProvider theme={materialTheme}>
                                                     <KeyboardTimePicker
+                                                        cancelLabel={v_cancel}
+                                                        okLabel={v_ok}
                                                         ampm={false}
                                                         keyboardIcon={<i className="clock" />}
                                                         value={startTime}
@@ -291,6 +309,8 @@ class ManualTimeModal extends Component {
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <ThemeProvider theme={materialTheme}>
                                                 <KeyboardTimePicker
+                                                    cancelLabel={v_cancel}
+                                                    okLabel={v_ok}
                                                     ampm={false}
                                                     keyboardIcon={<i className="clock" />}
                                                     value={startTime}
@@ -309,12 +329,16 @@ class ManualTimeModal extends Component {
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <Grid container justify="space-between">
                                                 <DatePicker
+                                                    cancelLabel={v_cancel}
+                                                    okLabel={v_ok}
                                                     value={endDate}
                                                     onChange={this.onChangeDateEnd}
                                                     format={'dd.MM.yyyy'}
                                                 />
                                                 <ThemeProvider theme={materialTheme}>
                                                     <KeyboardTimePicker
+                                                        cancelLabel={v_cancel}
+                                                        okLabel={v_ok}
                                                         invalidDateMessage=" "
                                                         ampm={false}
                                                         keyboardIcon={<i className="clock" />}
@@ -328,6 +352,8 @@ class ManualTimeModal extends Component {
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                                             <ThemeProvider theme={materialTheme}>
                                                 <KeyboardTimePicker
+                                                    cancelLabel={v_cancel}
+                                                    okLabel={v_ok}
                                                     ampm={false}
                                                     keyboardIcon={<i className="clock" />}
                                                     value={endTime}
