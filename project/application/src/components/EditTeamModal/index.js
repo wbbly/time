@@ -6,6 +6,8 @@ import jwtDecode from 'jwt-decode';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { createMuiTheme } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
 
 // Services
 import { ROLES } from '../../services/authentication';
@@ -24,6 +26,16 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.css';
+
+const materialTheme = createMuiTheme({
+    overrides: {
+        MuiSvgIcon: {
+            root: {
+                fontSize: '24px',
+            },
+        },
+    },
+});
 
 const USER_STATUS = {
     ACTIVE: 'ACTIVE',
@@ -129,33 +141,37 @@ class EditTeamModal extends Component {
                     </div>
                     <div className="edit_team_modal_input_container">
                         <div className="edit_team_modal_input_title">{v_team_role}</div>
-                        <RadioGroup onChange={this.handleChange} value={this.state.value}>
-                            <FormControlLabel
-                                value={ROLES.ROLE_ADMIN}
-                                control={<Radio color="primary" />}
-                                label="Admin"
-                            />
-                            <FormControlLabel
-                                value={ROLES.ROLE_MEMBER}
-                                control={<Radio color="primary" />}
-                                label="User"
-                            />
-                        </RadioGroup>
+                        <ThemeProvider theme={materialTheme}>
+                            <RadioGroup onChange={this.handleChange} value={this.state.value}>
+                                <FormControlLabel
+                                    value={ROLES.ROLE_ADMIN}
+                                    control={<Radio color="primary" />}
+                                    label="Admin"
+                                />
+                                <FormControlLabel
+                                    value={ROLES.ROLE_MEMBER}
+                                    control={<Radio color="primary" />}
+                                    label="User"
+                                />
+                            </RadioGroup>
+                        </ThemeProvider>
                     </div>
                     <div className="edit_team_modal_input_container">
                         <div className="edit_team_modal_input_title">{v_team_access}</div>
-                        <RadioGroup onChange={this.handleChangeStatus} value={this.state.valueStatus}>
-                            <FormControlLabel
-                                value={USER_STATUS.ACTIVE}
-                                control={<Radio color="primary" />}
-                                label="Active"
-                            />
-                            <FormControlLabel
-                                value={USER_STATUS.NOT_ACTIVE}
-                                control={<Radio color="primary" />}
-                                label="Not active"
-                            />
-                        </RadioGroup>
+                        <ThemeProvider theme={materialTheme}>
+                            <RadioGroup onChange={this.handleChangeStatus} value={this.state.valueStatus}>
+                                <FormControlLabel
+                                    value={USER_STATUS.ACTIVE}
+                                    control={<Radio color="primary" />}
+                                    label="Active"
+                                />
+                                <FormControlLabel
+                                    value={USER_STATUS.NOT_ACTIVE}
+                                    control={<Radio color="primary" />}
+                                    label="Not active"
+                                />
+                            </RadioGroup>
+                        </ThemeProvider>
                     </div>
                     <button onClick={e => this.addUser(this.props.teamPage)}>{v_edit_user}</button>
                 </div>
