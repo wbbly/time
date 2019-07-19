@@ -42,6 +42,8 @@ export default {
     'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED':
         'Вы не можете установить учетную запись владельца команды как неактивную.',
 
+    v_ok: 'ПРИМЕНИТЬ',
+    v_cancel: 'ОТМЕНА',
     v_a_data_updated_ok: 'Ваши данные были обновлены',
     v_a_change_password_great_ok: 'Великолепно! Теперь вы можете войти снова!',
     v_a_change_password_ok: 'Вы успешно изменили пароль!',
