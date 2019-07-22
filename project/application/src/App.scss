@@ -71,6 +71,17 @@ input:focus {
   .Toastify__close-button {
     color: #fff;
     opacity: 0.6;
+    transform: rotate(45deg);
+    visibility: hidden;
+    position: relative;
+
+    &::before {
+      content: '+';
+      position: absolute;
+      font-size: 20px;
+      font-weight: bolder;
+      visibility: visible;
+    }
   }
 
   .Toastify__toast-body {
