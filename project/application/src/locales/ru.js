@@ -68,6 +68,8 @@ export default {
     v_a_project_name_error: 'Название проекта не может быть пустым',
     v_a_task_delete: 'Вы действительно хотите удалить эту запись?',
     v_a_incorect_email: 'Неверно указан e-mail',
+    v_a_connection_problem: 'Потерняно интернет соединение',
+    v_a_connection_restored: 'Соединение восстановлено',
 
     v_language: 'Язык',
     v_cofirm_new_password: 'Подтвердите новый пароль',
