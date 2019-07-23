@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import jwtDecode from 'jwt-decode';
+// import jwtDecode from 'jwt-decode';
 
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -12,7 +12,7 @@ import { ThemeProvider } from '@material-ui/styles';
 // Services
 import { ROLES } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
-import { setTokenToLocalStorage } from '../../services/tokenStorageService';
+// import { setTokenToLocalStorage } from '../../services/tokenStorageService';
 
 // Components
 
@@ -56,7 +56,7 @@ class EditTeamModal extends Component {
     addUser = teamPage => {
         const { vocabulary, setUserDataAction } = this.props;
 
-        apiCall(AppConfig.apiURL + `user/${this.state.id}`, {
+        apiCall(AppConfig.apiURL + `user/${this.state.id}/team`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,9 +69,10 @@ class EditTeamModal extends Component {
             }),
         }).then(
             result => {
-                if (result.token) {
-                    setUserDataAction(jwtDecode(result.token));
-                    setTokenToLocalStorage(result.token);
+                if (result.mesage) {
+                    alert(vocabulary[result.mesage]);
+                } else {
+                    setUserDataAction(result);
                 }
                 this.closeModal();
                 this.props.getDataFromServer(teamPage);

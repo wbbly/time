@@ -84,13 +84,10 @@ class UserSetting extends Component {
             }),
         }).then(
             result => {
-                if (result.token) {
-                    setUserDataAction(jwtDecode(result.token));
-                    setTokenToLocalStorage(result.token);
-                    alert(v_a_data_updated_ok);
-                    this.updateUserData();
-                    this.setState({ userSetJiraSync: false });
-                }
+                setUserDataAction(result);
+                alert(v_a_data_updated_ok);
+                this.updateUserData();
+                this.setState({ userSetJiraSync: false });
             },
             err => {
                 if (err instanceof Response) {
@@ -183,7 +180,38 @@ class UserSetting extends Component {
     };
 
     componentDidMount() {
-        this.setDataToForm();
+        const { setUserDataAction } = this.props;
+
+        apiCall(AppConfig.apiURL + `user`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
+            },
+        }).then(result => {
+            setUserDataAction(result);
+            this.setDataToForm();
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.user !== this.props.user) {
+            this.setDataToForm();
+        }
+    }
+
+    componentWillUnmount() {
+        const { setUserDataAction } = this.props;
+
+        apiCall(AppConfig.apiURL + `user`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
+            },
+        }).then(result => {
+            setUserDataAction(result);
+        });
     }
 
     render() {
@@ -193,8 +221,6 @@ class UserSetting extends Component {
         const { validEmail, inputs, userSetJiraSync, rotateArrowLoop } = this.state;
         const { userName, email, jiraUsername, jiraPassword, syncJiraStatus } = inputs;
         const { checked } = syncJiraStatus;
-
-        // console.log('user', user);
 
         return (
             <div className={classNames('wrapper_user_setting_page', { 'wrapper_user_setting_page--mobile': isMobile })}>
