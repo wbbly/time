@@ -1,7 +1,16 @@
+@keyframes slowVisibility {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
 .modal-info {
   position: absolute;
-  top: 50px;
-  right: 55px;
+  top: 15px;
+  right: 15px;
   width: 350px;
   height: 85px;
   box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.21);
@@ -9,19 +18,27 @@
   background: white;
   color: #333333;
   font-family: Open Sans;
-  font-size: 18px;
   line-height: 25px;
   z-index: 2;
   display: flex;
-  transition: 0.3s linear right;
   cursor: pointer;
+  animation: slowVisibility 0.3s ease-in;
 
+  &::before {
+    content: "+";
+    position: absolute;
+    transform: rotate(45deg);
+    right: 5px;
+    font-weight: 800;
+    font-size: 16px;
+    opacity: 0.3;
+  }
   &--hidden {
     display: none;
-    right: -50%;
   }
   .modal-info-icon {
     width: 85px;
+    height: inherit;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,20 +46,25 @@
     box-shadow: 6px 0px 12px -1px rgba(0, 0, 0, 0.21);
 
     &--lost-connection {
-      background: #f2994a url("../../images/icons/no-wifi.svg") center center
-        no-repeat;
+      background: #f2994a;
     }
     &--connection-restored {
-        background: #27AE60 url("../../images/icons/wifi.svg") center center
-        no-repeat;
+      background: #27ae60;
     }
   }
   .modal-info-text {
-    width: 80%;
+    width: 265px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     line-height: 22px;
+
+    p {
+      padding: 10px;
+      margin: 0 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
   }
 }
