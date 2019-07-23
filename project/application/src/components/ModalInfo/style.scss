@@ -11,15 +11,14 @@
   position: absolute;
   top: 15px;
   right: 15px;
-  width: 350px;
+  max-width: 350px;
   height: 85px;
   box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.21);
   border-radius: 4px;
   background: white;
   color: #333333;
-  font-family: Open Sans;
   line-height: 25px;
-  z-index: 2;
+  z-index: 1000;
   display: flex;
   cursor: pointer;
   animation: slowVisibility 0.3s ease-in;
@@ -28,7 +27,7 @@
     content: "+";
     position: absolute;
     transform: rotate(45deg);
-    right: 5px;
+    right: 8px;
     font-weight: 800;
     font-size: 16px;
     opacity: 0.3;
@@ -36,9 +35,13 @@
   &--hidden {
     display: none;
   }
+  &--mobile {
+    width: calc(100% - 40px);
+    right: 20px;
+    max-width: 380px;
+  }
   .modal-info-icon {
     width: 85px;
-    height: inherit;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,6 +53,9 @@
     }
     &--connection-restored {
       background: #27ae60;
+    }
+    img {
+      padding: 15px;
     }
   }
   .modal-info-text {
@@ -63,7 +69,8 @@
     p {
       padding: 10px;
       margin: 0 0;
-      font-size: 16px;
+      font-size: 15px;
+      font-family: "Open Sans", sans-serif;
       font-weight: 600;
     }
   }
