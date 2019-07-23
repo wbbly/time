@@ -579,7 +579,6 @@ class MainPage extends Component {
     }
     showModalInfo = (text, type) => {
         this.setState({ showModal: true, modalInfoContent: { text, type } });
-        console.log(text, type);
     };
     hideModalInfo = () => {
         this.setState({ showModal: false });
