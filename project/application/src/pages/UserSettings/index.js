@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import classNames from 'classnames';
-import jwtDecode from 'jwt-decode';
 
 // Actions
 import userSettingAction from '../../actions/UserSettingAction';
@@ -14,12 +13,7 @@ import SwitchLanguage from '../../components/SwitchLanguage';
 import Input from '../../components/BaseComponents/Input';
 
 //Services
-import {
-    getLoggedUserId,
-    getTokenFromLocalStorage,
-    setTokenToLocalStorage,
-    getLoggedUser,
-} from '../../services/tokenStorageService';
+import { getLoggedUserId, getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
 import { authValidation } from '../../services/validateService';
 

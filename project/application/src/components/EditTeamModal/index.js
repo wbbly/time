@@ -12,7 +12,6 @@ import { ThemeProvider } from '@material-ui/styles';
 // Services
 import { ROLES } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
-// import { setTokenToLocalStorage } from '../../services/tokenStorageService';
 
 // Components
 
