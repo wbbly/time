@@ -11,14 +11,14 @@
   position: absolute;
   top: 15px;
   right: 15px;
-  width: 350px;
+  max-width: 350px;
   height: 85px;
   box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.21);
   border-radius: 4px;
   background: white;
   color: #333333;
   line-height: 25px;
-  z-index: 999;
+  z-index: 1000;
   display: flex;
   cursor: pointer;
   animation: slowVisibility 0.3s ease-in;
@@ -36,12 +36,9 @@
     display: none;
   }
   &--mobile {
-    max-height: 60px;
-    max-width: 230px;
-    font-size: 13px;
-    top: 15px;
-    left: 50%;
-    transform: translate(-50%);
+    width: calc(100% - 40px);
+    right: 20px;
+    max-width: 380px;
   }
   .modal-info-icon {
     width: 85px;

@@ -14,6 +14,7 @@ class ModalInfo extends Component {
             type: 'lost-connection',
         },
     };
+
     componentDidMount() {
         window.addEventListener('online', this.connectionRestore);
         window.addEventListener('offline', this.connectionLost);
@@ -23,14 +24,17 @@ class ModalInfo extends Component {
         window.removeEventListener('online', this.connectionRestore);
         window.removeEventListener('offline', this.connectionLost);
     }
+
     connectionRestore = e => {
         const { v_connection_restored } = this.props.vocabulary;
         this.showModalInfo(v_connection_restored, 'connection-restored');
     };
+
     connectionLost = e => {
         const { v_connection_problem } = this.props.vocabulary;
         this.showModalInfo(v_connection_problem, 'lost-connection');
     };
+
     showModalInfo = (text, type) => {
         this.setState({ showModal: true, modalInfoContent: { text, type } });
     };
@@ -43,6 +47,7 @@ class ModalInfo extends Component {
             },
         });
     };
+
     render() {
         const { showModal, modalInfoContent } = this.state;
         return (
@@ -55,11 +60,7 @@ class ModalInfo extends Component {
                 onClick={this.hideModalInfo}
             >
                 <div className={classNames('modal-info-icon', `modal-info-icon--${modalInfoContent.type}`)}>
-                    {modalInfoContent.type === 'lost-connection' ? (
-                        <img src={noConnection} />
-                    ) : modalInfoContent.type === 'connection-restored' ? (
-                        <img src={connectionRestored} />
-                    ) : null}
+                    <img src={modalInfoContent.type === 'lost-connection' ? noConnection : connectionRestored} />
                 </div>
                 <div className="modal-info-text">
                     <p>{modalInfoContent.text}</p>
