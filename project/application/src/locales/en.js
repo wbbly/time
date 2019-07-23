@@ -64,6 +64,8 @@ export default {
     v_a_project_name_error: "Project name can't be empty",
     v_a_task_delete: 'Do you really want to delete this time entry?',
     v_a_incorect_email: 'Incorrect e-mail',
+    v_a_connection_problem: 'Lost internet connection',
+    v_a_connection_restored: 'Internet connection restored',
 
     v_ok: 'OK',
     v_cancel: 'CANCEL',

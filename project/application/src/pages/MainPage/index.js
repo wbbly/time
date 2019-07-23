@@ -26,6 +26,7 @@ import { apiCall } from '../../services/apiService';
 // Components
 import ManualTimeModal from '../../components/ManualTimeModal';
 import JiraIcon from '../../components/JiraIcon';
+import ModalInfo from '../../components/ModalInfo';
 
 // Actions
 import addTasks from '../../actions/MainPageAction';
@@ -71,6 +72,8 @@ class MainPage extends Component {
         isShowAddTaskMobile: false,
         isShowListProjectsMobile: false,
         swipedTarget: undefined,
+        showModal: false,
+        modalInfoContent: {},
     };
 
     initSocketConnection() {
@@ -406,10 +409,17 @@ class MainPage extends Component {
     }
 
     async componentDidMount() {
+        const { v_a_connection_restored, v_a_connection_problem } = this.props.vocabulary;
         showMobileSupportToastr();
         await this.getProjectList();
         await this.getUserTimeEntries();
         this.initSocketConnection();
+        window.addEventListener('online', () => {
+            this.showModalInfo(v_a_connection_restored, 'connection-restored');
+        });
+        window.addEventListener('offline', () => {
+            this.showModalInfo(v_a_connection_problem, 'lost-connection');
+        });
     }
 
     componentWillUnmount() {
@@ -567,7 +577,12 @@ class MainPage extends Component {
             this.swipedElement.click();
         }
     }
-
+    showModalInfo = (text, type) => {
+        this.setState({ showModal: true, modalInfoContent: { text, type } });
+    };
+    hideModalInfo = () => {
+        this.setState({ showModal: false });
+    };
     render() {
         // console.log('render');
 
@@ -614,6 +629,14 @@ class MainPage extends Component {
                     'wrapper_main_page--mobile': isMobile,
                 })}
             >
+                {!isMobile && (
+                    <ModalInfo
+                        modalInfoText={this.state.modalInfoContent.text}
+                        modalInfoType={this.state.modalInfoContent.type}
+                        modalInfoVisible={this.state.showModal}
+                        onClick={this.hideModalInfo}
+                    />
+                )}
                 {this.props.manualTimerModal.manualTimerModalToggle && (
                     <ManualTimeModal
                         timeEntriesList={this.props.timeEntriesList}

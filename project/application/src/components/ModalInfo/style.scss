@@ -1,0 +1,48 @@
+.modal-info {
+  position: absolute;
+  top: 50px;
+  right: 55px;
+  width: 350px;
+  height: 85px;
+  box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.21);
+  border-radius: 4px;
+  background: white;
+  color: #333333;
+  font-family: Open Sans;
+  font-size: 18px;
+  line-height: 25px;
+  z-index: 2;
+  display: flex;
+  transition: 0.3s linear right;
+  cursor: pointer;
+
+  &--hidden {
+    display: none;
+    right: -50%;
+  }
+  .modal-info-icon {
+    width: 85px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px 0 0 4px;
+    box-shadow: 6px 0px 12px -1px rgba(0, 0, 0, 0.21);
+
+    &--lost-connection {
+      background: #f2994a url("../../images/icons/no-wifi.svg") center center
+        no-repeat;
+    }
+    &--connection-restored {
+        background: #27AE60 url("../../images/icons/wifi.svg") center center
+        no-repeat;
+    }
+  }
+  .modal-info-text {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    line-height: 22px;
+  }
+}
