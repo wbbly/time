@@ -11,6 +11,7 @@ import { switchMenu } from '../../actions/ResponsiveActions';
 // components
 import LeftBar from '../../components/LeftBar';
 import Header from '../../components/Header';
+import ModalInfo from '../../components/ModalInfo';
 
 // styles
 import './style.scss';
@@ -18,13 +19,44 @@ import './style.scss';
 class PageTemplate extends Component {
     state = {
         teamsUpdateTimestamp: null,
+        showModal: false,
+        modalInfoContent: {
+            type: 'lost-connection',
+        },
     };
+    componentDidMount() {
+        window.addEventListener('online', this.connectionRestore);
+        window.addEventListener('offline', this.connectionLost);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('online', this.connectionRestore);
+        window.removeEventListener('offline', this.connectionLost);
+    }
 
     setTeamsUpdateTimestamp = teamsUpdateTimestamp =>
         this.setState({
             teamsUpdateTimestamp,
         });
-
+    showModalInfo = (text, type) => {
+        this.setState({ showModal: true, modalInfoContent: { text, type } });
+    };
+    hideModalInfo = () => {
+        this.setState({
+            showModal: false,
+            modalInfoContent: {
+                type: 'lost-connection',
+            },
+        });
+    };
+    connectionRestore = e => {
+        const { v_connection_restored } = this.props.vocabulary;
+        this.showModalInfo(v_connection_restored, 'connection-restored');
+    };
+    connectionLost = e => {
+        const { v_connection_problem } = this.props.vocabulary;
+        this.showModalInfo(v_connection_problem, 'lost-connection');
+    };
     render() {
         const {
             content: Content,
@@ -47,6 +79,12 @@ class PageTemplate extends Component {
                             <Header />
                         </header>
                     )}
+                <ModalInfo
+                    modalInfoText={this.state.modalInfoContent.text}
+                    modalInfoType={this.state.modalInfoContent.type}
+                    modalInfoVisible={this.state.showModal}
+                    onClick={this.hideModalInfo}
+                />
                 <div className="wrapper-main-content">
                     {!hideSidebar && (
                         <aside
