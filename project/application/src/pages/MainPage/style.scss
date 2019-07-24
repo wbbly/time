@@ -263,8 +263,8 @@ span.circle {
 
 .projects_modal_item_circle {
   display: inline-block;
-  width: 1.2rem;
-  height: 1.2rem;
+  min-width: 1.2rem;
+  min-height: 1.2rem;
   border-radius: 50%;
   margin: 0 0.5rem 0 0;
   vertical-align: middle;
