@@ -479,9 +479,9 @@ class MainPage extends Component {
                                     if (this.swipedElement.className === 'ul swipe') {
                                         this.swipedElement.click();
                                     }
+                                    this.swipedElementClose();
                                 }
                                 this.state.timerReadyToUse && this.timerContinue(item.issue, item);
-                                this.swipedElementClose();
                             }}
                         >
                             <div className="time_now">
