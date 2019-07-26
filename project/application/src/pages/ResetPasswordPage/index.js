@@ -10,8 +10,6 @@ import Input from '../../components/BaseComponents/Input';
 import SwitchLanguage from '../../components/SwitchLanguage';
 
 // Actions
-import toggleRegisterModal from '../../actions/AuthPageAction';
-import reportsPageAction from '../../actions/ReportsPageAction';
 
 // Queries
 
@@ -106,6 +104,7 @@ class ResetPasswordPage extends Component {
     };
 
     componentDidMount() {
+        logoutByUnauthorized();
         this.setState({ token: this.props.location.search.substring(7) });
     }
 
@@ -115,8 +114,6 @@ class ResetPasswordPage extends Component {
 
         const { inputs } = this.state;
         const { password, confirmPassword } = inputs;
-
-        logoutByUnauthorized(false);
 
         return (
             <div className="wrapper_authorization_page">
@@ -162,16 +159,4 @@ const mapStateToProps = state => ({
     authPageReducer: state.authPageReducer,
 });
 
-const mapDispatchToProps = dispatch => {
-    return {
-        toggleRegisterModal: (actionType, action) => dispatch(toggleRegisterModal(actionType, action))[1],
-        reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
-    };
-};
-
-export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(ResetPasswordPage)
-);
+export default withRouter(connect(mapStateToProps)(ResetPasswordPage));
