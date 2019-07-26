@@ -141,6 +141,6 @@ export default {
     v_find: 'Поиск',
     v_team_name: 'Название команды',
     v_team_access: 'Доступ',
-    v_connection_problem: 'Потерняно интернет соединение',
+    v_connection_problem: 'Потеряно интернет соединение',
     v_connection_restored: 'Соединение восстановлено',
 };
