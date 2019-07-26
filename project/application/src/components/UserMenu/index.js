@@ -26,7 +26,7 @@ class UserMenu extends Component {
 
     render() {
         const { switchMenu, vocabulary, isMobile, user } = this.props;
-        const { v_log_out, v_profile_settings } = vocabulary;
+        const { v_log_out, v_profile_settings, v_more_option } = vocabulary;
 
         const { username: userName } = user;
         return (
@@ -38,7 +38,7 @@ class UserMenu extends Component {
             >
                 <div className="logout_container">
                     <div className="user_name">{userName}</div>
-                    <i title="More option" className="profile_user" />
+                    <i title={v_more_option} className="profile_user" />
                     {this.state.activeUserMenu && (
                         <div className="user_setting_modal">
                             <Link
