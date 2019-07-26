@@ -14,7 +14,7 @@ import { showMobileSupportToastr } from '../../App';
 import classNames from 'classnames';
 
 // Services
-import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
+import { checkIsAdmin } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
 import {
     getTimeDurationByGivenTimestamp,
@@ -24,7 +24,6 @@ import {
     getCurrentDate,
     getDateTimestamp,
 } from '../../services/timeService';
-import { getLoggedUserTimezoneOffset } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
 
 // Components
@@ -135,7 +134,7 @@ class ReportsPage extends Component {
     render() {
         const { isMobile, vocabulary } = this.props;
         const { v_summary_report, v_total, v_export } = vocabulary;
-        if (!userLoggedIn()) return <Redirect to={'/login'} />;
+        // if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         return (
             <div
@@ -327,7 +326,9 @@ class ReportsPage extends Component {
     }
 
     export() {
-        const timezoneOffset = getLoggedUserTimezoneOffset();
+        const { user } = this.props;
+        const { timezoneOffset } = user;
+
         let dateFrom = this.getYear(this.state.selectionRange.startDate),
             dateTo = this.getYear(this.state.selectionRange.endDate);
         let inputUserData =
@@ -507,6 +508,7 @@ const mapStateToProps = store => ({
     inputProjectData: store.reportsPageReducer.inputProjectData,
     isMobile: store.responsiveReducer.isMobile,
     vocabulary: store.languageReducer.vocabulary,
+    user: store.userReducer.user,
 });
 
 const mapDispatchToProps = dispatch => {

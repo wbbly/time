@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Actions
-import userSettingAction from '../../actions/UserSettingAction';
-import { setUserDataAction } from '../../actions/UserSettingAction';
+import { toggleModal, changeUserData } from '../../actions/UserActions';
 
 //Components
 import ChangePasswordModal from '../../components/ChangePasswordModal';
@@ -13,7 +12,7 @@ import SwitchLanguage from '../../components/SwitchLanguage';
 import Input from '../../components/BaseComponents/Input';
 
 //Services
-import { getLoggedUserId, getTokenFromLocalStorage } from '../../services/tokenStorageService';
+import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
 import { authValidation } from '../../services/validateService';
 
@@ -60,11 +59,12 @@ class UserSetting extends Component {
     };
 
     changeUserSetting = ({ userName, email, tokenJira }) => {
-        const { vocabulary, setUserDataAction } = this.props;
+        const { vocabulary, changeUserData, userReducer } = this.props;
         const { v_a_data_updated_ok, lang } = vocabulary;
 
-        const USER_ID = getLoggedUserId();
-        apiCall(AppConfig.apiURL + `user/${USER_ID}`, {
+        const { id } = userReducer.user;
+
+        apiCall(AppConfig.apiURL + `user/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ class UserSetting extends Component {
             }),
         }).then(
             result => {
-                setUserDataAction(result);
+                changeUserData(result);
                 alert(v_a_data_updated_ok);
                 this.updateUserData();
                 this.setState({ userSetJiraSync: false });
@@ -174,42 +174,18 @@ class UserSetting extends Component {
     };
 
     componentDidMount() {
-        const { setUserDataAction } = this.props;
-
-        apiCall(AppConfig.apiURL + `user`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
-            },
-        }).then(result => {
-            setUserDataAction(result);
-            this.setDataToForm();
-        });
+        this.setDataToForm();
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.user !== this.props.user) {
+        if (JSON.stringify(prevProps.userReducer.user) !== JSON.stringify(this.props.userReducer.user)) {
+            console.log('set user');
             this.setDataToForm();
         }
     }
 
-    componentWillUnmount() {
-        const { setUserDataAction } = this.props;
-
-        apiCall(AppConfig.apiURL + `user`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
-            },
-        }).then(result => {
-            setUserDataAction(result);
-        });
-    }
-
     render() {
-        const { vocabulary, userSettingAction, isMobile } = this.props;
+        const { vocabulary, isMobile, userReducer } = this.props;
         const { v_my_profile, v_your_name, v_save_changes, v_change_password } = vocabulary;
 
         const { validEmail, inputs, userSetJiraSync, rotateArrowLoop } = this.state;
@@ -218,11 +194,8 @@ class UserSetting extends Component {
 
         return (
             <div className={classNames('wrapper_user_setting_page', { 'wrapper_user_setting_page--mobile': isMobile })}>
-                {Object.prototype.toString.call(this.props.userSettingReducer.changePasswordModal) ===
-                    '[object Boolean]' &&
-                    this.props.userSettingReducer.changePasswordModal && (
-                        <ChangePasswordModal userSettingAction={userSettingAction} />
-                    )}
+                {Object.prototype.toString.call(userReducer.changePasswordModal) === '[object Boolean]' &&
+                    userReducer.changePasswordModal && <ChangePasswordModal />}
                 <div className="data_container">
                     <div className="header_user_setting">
                         <div>{v_my_profile}</div>
@@ -317,7 +290,7 @@ class UserSetting extends Component {
     }
 
     openChangePasswordModal() {
-        this.props.userSettingAction('TOGGLE_MODAL', true);
+        this.props.toggleModal(true);
     }
 
     setDataToForm = () => {
@@ -325,8 +298,8 @@ class UserSetting extends Component {
     };
 
     updateUserData = () => {
-        const { user } = this.props;
-        const { userEmail, userName, tokenJira } = user;
+        const { user } = this.props.userReducer;
+        const { email: userEmail, username: userName, tokenJira } = user;
         this.setState(prevState => ({
             inputs: {
                 ...prevState.inputs,
@@ -348,16 +321,13 @@ class UserSetting extends Component {
 }
 
 const mapStateToProps = state => ({
-    userSettingReducer: state.userSettingReducer,
+    userReducer: state.userReducer,
     isMobile: state.responsiveReducer.isMobile,
-    user: state.userSettingReducer,
 });
 
-const mapDispatchToProps = dispatch => {
-    return {
-        userSettingAction: (actionType, action) => dispatch(userSettingAction(actionType, action))[1],
-        setUserDataAction: payload => dispatch(setUserDataAction(payload)),
-    };
+const mapDispatchToProps = {
+    toggleModal,
+    changeUserData,
 };
 
 export default connect(
