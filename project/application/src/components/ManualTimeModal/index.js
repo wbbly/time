@@ -74,7 +74,6 @@ class ManualTimeModal extends Component {
         isOpenDropdown: false,
         projectList: [],
         activeProject: null,
-        // selectProject: false,
         activeItem: null,
         startDate: null,
         startDateChanged: false,
@@ -107,7 +106,7 @@ class ManualTimeModal extends Component {
     }
 
     changeData() {
-        const { vocabulary } = this.props;
+        const { vocabulary, manualTimerModalAction } = this.props;
         const { v_a_time_start_error, v_a_task_name_error } = vocabulary;
         let changedItem = {};
 
@@ -145,7 +144,7 @@ class ManualTimeModal extends Component {
             }).then(
                 () => {
                     this.getNewData();
-                    this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
+                    manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
                 },
                 err => {
                     if (err instanceof Response) {
@@ -181,10 +180,6 @@ class ManualTimeModal extends Component {
         );
     }
 
-    // toggleProjectsBar() {
-    //     this.setState(state => ({ selectProject: !state.selectProject }));
-    // }
-
     closeDropdown = event => {
         if (event.target.className === 'input-project-name') return;
         this.setState({ isOpenDropdown: false });
@@ -195,19 +190,6 @@ class ManualTimeModal extends Component {
         document.addEventListener('click', this.closeDropdown);
         this.setState({ isOpenDropdown: true });
     };
-
-    // closeDropdown = e => {
-    //     if (this.dropList && !this.dropList.contains(e.target)) {
-    //         this.setState(
-    //             {
-    //                 selectProject: false,
-    //             },
-    //             () => {
-    //                 document.removeEventListener('click', this.closeDropdown);
-    //             }
-    //         );
-    //     }
-    // };
 
     onChangeTime = time => {
         this.setState({ startTime: time, startTimeChanged: true });
@@ -243,7 +225,7 @@ class ManualTimeModal extends Component {
                         <i
                             className="create_projects_modal_header_close manual_time_modal_close"
                             onClick={e => {
-                                this.props.manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
+                                manualTimerModalAction('TOGGLE_MODAL', { manualTimerModalToggle: false });
                             }}
                         />
                         <div className="task_name_edit_block">
