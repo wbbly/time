@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { showMobileSupportToastr } from '../../App';
@@ -8,7 +7,7 @@ import { showMobileSupportToastr } from '../../App';
 import classNames from 'classnames';
 
 // Services
-import { userLoggedIn, checkIsAdmin } from '../../services/authentication';
+import { checkIsAdmin } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
 
 // Components
@@ -58,8 +57,6 @@ class ProjectsPage extends Component {
     render() {
         const { tableData, addNewProjectModalToggle, projectsPageAction, isMobile, vocabulary } = this.props;
         const { v_create_new_project, v_projects } = vocabulary;
-
-        if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         return (
             <div

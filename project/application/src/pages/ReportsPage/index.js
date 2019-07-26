@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import * as moment from 'moment';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -134,7 +133,6 @@ class ReportsPage extends Component {
     render() {
         const { isMobile, vocabulary } = this.props;
         const { v_summary_report, v_total, v_export } = vocabulary;
-        // if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         return (
             <div
