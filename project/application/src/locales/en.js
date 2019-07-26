@@ -65,6 +65,10 @@ export default {
     v_a_task_delete: 'Do you really want to delete this time entry?',
     v_a_incorect_email: 'Incorrect e-mail',
 
+    v_more_option: 'More option',
+    v_active_team: 'Active team',
+    v_set: 'Set',
+    v_team_is_active: 'team as active',
     v_ok: 'OK',
     v_cancel: 'CANCEL',
     v_language: 'Language',

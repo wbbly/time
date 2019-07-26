@@ -157,13 +157,15 @@ class TeamSwitcher extends Component {
 
     render() {
         const { isMobile, vocabulary } = this.props;
-        const { v_a_team_existed, v_a_team_create_error } = vocabulary;
+        const { v_a_team_existed, v_a_team_create_error, v_active_team, v_set, v_team_is_active } = vocabulary;
         return (
             <div className="team_list">
                 <ul>
                     {this.state.availableTeams.map((team, index) => {
                         const title =
-                            this.state.currentTeamId === team.id ? `Active team` : `Set ${team.name} team as active`;
+                            this.state.currentTeamId === team.id
+                                ? `${v_active_team}`
+                                : `${v_set} ${team.name} ${v_team_is_active}`;
 
                         return (
                             <li key={'team_list-item_' + index} title={title}>
