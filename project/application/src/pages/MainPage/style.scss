@@ -147,6 +147,15 @@
   white-space: nowrap;
   overflow: hidden;
 }
+.name_container .project_name {
+  display: flex;
+  align-items: center;
+}
+.project_name .project_name__name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
 .time_container_history {
   display: flex;
@@ -205,8 +214,8 @@
 span.circle {
   display: inline-block;
   margin-right: 0.5rem;
-  width: 0.8rem;
-  height: 0.8rem;
+  min-width: 0.8rem;
+  min-height: 0.8rem;
   /* border: 1px solid white; */
   border-radius: 50%;
 }
