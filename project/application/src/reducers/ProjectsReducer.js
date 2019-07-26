@@ -26,6 +26,8 @@ export function projectReducer(state = initialState, action) {
             return { ...state, editedProject: action.payload.tableData };
         case 'TOGGLE_EDIT_PROJECT_MODAL':
             return { ...state, editProjectModal: action.payload.tableData };
+        case 'RESET_ALL':
+            return initialState;
         default:
             return state;
     }
