@@ -206,7 +206,7 @@ const SpinnerIcon = () => (
                 calcMode="linear"
                 values="0 50 50;360 50 50"
                 keyTimes="0;1"
-                dur="1s"
+                dur="0.5s"
                 begin="0s"
                 repeatCount="indefinite"
             />
