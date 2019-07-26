@@ -2,7 +2,6 @@ import * as moment from 'moment';
 
 import { getCurrentDate } from '../services/timeService';
 import { getTimeDurationByGivenTimestamp } from '../services/timeService';
-import { getLoggedUserEmail } from '../services/tokenStorageService';
 
 const initialState = {
     timeRange: {
@@ -11,7 +10,7 @@ const initialState = {
         key: 'selection',
         firstDayOfWeek: 1,
     },
-    inputUserData: [getLoggedUserEmail()],
+    inputUserData: [],
     dataBarChat: {
         defaultFontColor: 'red',
         labels: [],
@@ -152,6 +151,8 @@ export function reportsPageReducer(state = initialState, action) {
             return { ...state, inputUserData: action.payload.data };
         case 'SET_SELECTED_PROJECTS':
             return { ...state, inputProjectData: action.payload.data };
+        case 'RESET_ALL':
+            return initialState;
         default:
             return state;
     }

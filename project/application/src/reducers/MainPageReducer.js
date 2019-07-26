@@ -25,6 +25,8 @@ export function mainPageReducer(state = initialState, action) {
             return { ...state, timeEntriesList: action.payload.timeEntriesList };
         case 'SET_EDITED_ITEM':
             return { ...state, editedItem: action.payload.editedItem };
+        case 'RESET_ALL':
+            return initialState;
         default:
             return state;
     }

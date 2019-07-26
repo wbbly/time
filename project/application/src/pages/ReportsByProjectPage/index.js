@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 
@@ -15,7 +15,6 @@ import {
     convertDateToShiftedISOString,
 } from '../../services/timeService';
 import { decodeTimeEntryIssue } from '../../services/timeEntryService';
-import { userLoggedIn } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
 import { apiCall } from '../../services/apiService';
 
@@ -58,7 +57,6 @@ class ReportsByProjectsPage extends Component {
 
     render() {
         const { isMobile } = this.props;
-        if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         let projectsItems = this.state.dataOfProject.map((item, index) => (
             <div className="projects_container_project_data" key={'projects_container_project_data' + index}>

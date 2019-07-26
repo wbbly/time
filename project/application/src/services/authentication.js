@@ -1,8 +1,13 @@
-import { getLoggedUser, getLoggedUserRoleTitle, removeTokenFromLocalStorage } from './tokenStorageService';
+import jwtDecode from 'jwt-decode';
+
+import { getLoggedUserRoleTitle, getTokenFromLocalStorage, removeTokenFromLocalStorage } from './tokenStorageService';
 import { removeCurrentTimerFromLocalStorage } from './currentTimerStorageService';
 import { removeServerClientTimediffFromLocalStorage } from './serverClientTimediffStorageService';
 import { removeAvailableTeamsFromLocalStorage } from './availableTeamsStorageService';
 import { removeCurrentTeamDataFromLocalStorage } from './currentTeamDataStorageService';
+
+import { store } from '../store/configureStore';
+import { resetAll } from '../actions/UserActions';
 
 const APP_VERSION = 'v1.0.5';
 
@@ -11,11 +16,17 @@ export const ROLES = {
     ROLE_MEMBER: 'ROLE_MEMBER',
 };
 
-export function userLoggedIn() {
-    const user = getLoggedUser();
+export const checkAppVersion = () => {
+    const token = getTokenFromLocalStorage();
 
-    return !!Object.keys(user).length && user.appVersion === APP_VERSION; // @TODO: replace with real application version
-}
+    try {
+        const { appVersion } = jwtDecode(token);
+
+        return APP_VERSION === appVersion;
+    } catch (error) {
+        return false;
+    }
+};
 
 export function checkIsAdminByRole(role) {
     return role === ROLES.ROLE_ADMIN;
@@ -29,16 +40,11 @@ export function checkIsAdmin() {
     return checkIsAdminByRole(getLoggedUserRoleTitle());
 }
 
-export function logoutByUnauthorized(withRedirect = true) {
+export function logoutByUnauthorized() {
     removeTokenFromLocalStorage();
     removeCurrentTimerFromLocalStorage();
     removeServerClientTimediffFromLocalStorage();
     removeAvailableTeamsFromLocalStorage();
     removeCurrentTeamDataFromLocalStorage();
-
-    if (withRedirect) {
-        window.location.href = window.location.origin;
-    }
-
-    return true;
+    store.dispatch(resetAll());
 }

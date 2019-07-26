@@ -4,35 +4,22 @@ import 'react-app-polyfill/stable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { store } from './store/configureStore';
 
-import { apiCall } from './services/apiService';
-import { getTokenFromLocalStorage } from './services/tokenStorageService';
-import { AppConfig } from './config';
-import { setUserDataAction } from './actions/UserSettingAction';
+import createBrowserHistory from 'history/createBrowserHistory';
 
 import * as serviceWorker from './serviceWorker';
 
 import App from './App';
 
-if (getTokenFromLocalStorage()) {
-    apiCall(AppConfig.apiURL + `user`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
-        },
-    }).then(result => {
-        store.dispatch(setUserDataAction(result));
-    });
-}
+export const history = createBrowserHistory();
 
 ReactDOM.render(
     <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
             <App />
-        </BrowserRouter>
+        </Router>
     </Provider>,
     document.getElementById('root')
 );

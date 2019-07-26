@@ -2,12 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
 
-import jwtDecode from 'jwt-decode';
-
 // Services
-import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
-import { setTokenToLocalStorage, getLoggedUserEmail, getLoggedUserLanguage } from '../../services/tokenStorageService';
-import { setCurrentTeamDataToLocalStorage } from '../../services/currentTeamDataStorageService';
+import { setTokenToLocalStorage, getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
 import { authValidation } from '../../services/validateService';
 
@@ -17,8 +13,6 @@ import SwitchLanguage from '../../components/SwitchLanguage';
 
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
-import { setLanguage } from '../../actions/LanguageActions';
-import { setUserDataAction } from '../../actions/UserSettingAction';
 
 // Queries
 
@@ -48,7 +42,7 @@ class AuthPage extends Component {
     };
 
     login = ({ email, password }) => {
-        const { setLanguage, vocabulary, setUserDataAction } = this.props;
+        const { vocabulary } = this.props;
 
         apiCall(
             AppConfig.apiURL + 'user/login',
@@ -65,23 +59,8 @@ class AuthPage extends Component {
             false
         ).then(
             result => {
-                setUserDataAction(jwtDecode(result.token));
                 setTokenToLocalStorage(result.token);
-                setLanguage(getLoggedUserLanguage());
-                this.props.reportsPageAction('SET_ACTIVE_USER', {
-                    data: [getLoggedUserEmail()],
-                });
                 this.setState({ haveToken: true });
-                apiCall(AppConfig.apiURL + `team/current`).then(response => {
-                    const currentTeam = response.data.user_team[0] || {};
-                    const currentTeamInfo = currentTeam.team || {};
-                    const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
-                    setCurrentTeamDataToLocalStorage({
-                        id: currentTeamInfo.id,
-                        name: currentTeamInfo.name,
-                        role: currentTeamRoleCollaboration.title,
-                    });
-                });
             },
             err => {
                 if (err instanceof Response) {
@@ -127,7 +106,7 @@ class AuthPage extends Component {
     };
 
     render() {
-        const { validEmail, inputs } = this.state;
+        const { validEmail, inputs, haveToken } = this.state;
         const { email, password } = inputs;
         const { history, vocabulary } = this.props;
         const {
@@ -140,9 +119,8 @@ class AuthPage extends Component {
             v_dont_have_an_account_yet,
             v_sign_up,
         } = vocabulary;
-        if (userLoggedIn() || this.state.haveToken) return <Redirect to={'/timer'} />;
 
-        logoutByUnauthorized(false);
+        if (haveToken || getTokenFromLocalStorage()) return <Redirect to={'/timer'} />;
 
         return (
             <div className="wrapper_authorisation_page">
@@ -200,8 +178,6 @@ class AuthPage extends Component {
 
 const mapDispatchToProps = dispatch => ({
     reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
-    setLanguage: lang => dispatch(setLanguage(lang)),
-    setUserDataAction: payload => dispatch(setUserDataAction(payload)),
 });
 
 export default withRouter(

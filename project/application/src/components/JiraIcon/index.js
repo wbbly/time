@@ -60,13 +60,8 @@ class JiraIcon extends Component {
 }
 
 const mapStatetToProps = state => ({
-    user: state.userSettingReducer,
+    user: state.userReducer.user,
     vocabulary: state.languageReducer.vocabulary,
 });
 
-const mapDispatchToProps = {};
-
-export default connect(
-    mapStatetToProps,
-    mapDispatchToProps
-)(JiraIcon);
+export default connect(mapStatetToProps)(JiraIcon);

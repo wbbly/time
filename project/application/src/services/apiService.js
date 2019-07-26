@@ -1,6 +1,5 @@
 import { getTokenFromLocalStorage } from './tokenStorageService';
 import { logoutByUnauthorized } from './authentication';
-import { AppConfig } from '../config';
 
 export function getParametersString(name, params) {
     let pharam = [];
@@ -18,18 +17,19 @@ export function apiCall(url, params = { method: 'GET' }, withAuth = true) {
     }
 
     return new Promise((resolve, reject) => {
-        fetch(url, params)
-            .then(res => {
+        fetch(url, params).then(
+            res => {
                 if (!res.ok) {
                     if (res.status === 401) {
                         logoutByUnauthorized();
-                    } else {
-                        throw res;
                     }
+
+                    return reject(res);
                 }
 
-                return res.json();
-            })
-            .then(res => resolve(res), err => reject(err));
+                return resolve(res.json());
+            },
+            err => reject(err)
+        );
     });
 }

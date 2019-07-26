@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import openSocket from 'socket.io-client';
 import * as moment from 'moment';
@@ -12,7 +11,7 @@ import { BrowserView, isSafari, isIOS } from 'react-device-detect';
 import Swipe from 'react-easy-swipe';
 
 // Services
-import { userLoggedIn, logoutByUnauthorized } from '../../services/authentication';
+import { logoutByUnauthorized } from '../../services/authentication';
 import { getDateInString, getTimeDiff, getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
@@ -74,7 +73,6 @@ class MainPage extends Component {
     };
 
     initSocketConnection() {
-        // console.log('this.initSocketConnection')
         this.socketConnection = openSocket(AppConfig.apiURL);
         this.socketConnection.on('connect', () => {
             this.socketConnection.emit(
@@ -91,7 +89,6 @@ class MainPage extends Component {
         });
         this.socketConnection.on('check-timer-v2', data => {
             if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
-                // console.log('this.initSocketConnection WORKING')
                 apiCall(AppConfig.apiURL + 'time/current', {
                     method: 'GET',
                     headers: {
@@ -132,7 +129,6 @@ class MainPage extends Component {
     }
 
     timerPlayStopButtonAction(className, projectId) {
-        // console.log('this.timerPlayStopButtonAction')
         const { vocabulary } = this.props;
         const { v_a_task_name_before, v_a_starting, v_a_stopping, v_a_time_tracking } = vocabulary;
         let issue = (this.issueTargetElement || {}).value || '';
@@ -164,7 +160,6 @@ class MainPage extends Component {
     }
 
     timerTickStart() {
-        // console.log('this.timerTickStart')
         clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
         this.TIMER_LIVE_SUBSCRIPTION = undefined;
 
@@ -177,9 +172,7 @@ class MainPage extends Component {
     }
 
     timerUpdate() {
-        // console.log('this.timerUpdate RUN')
         if (!this.state.timerDurationValue) return;
-        // console.log('this.timerUpdate WORKING')
         clearTimeout(this.TIMER_MANUAL_UPDATE_SUBSCRIPTION);
         this.TIMER_MANUAL_UPDATE_SUBSCRIPTION = undefined;
 
@@ -222,14 +215,11 @@ class MainPage extends Component {
     }
 
     timerStateUpdateWithSocketData(socketData) {
-        // console.log('timerStateUpdateWithSocketData');
         if (!socketData || !socketData.timeStart) {
-            // console.log('timerStateUpdateWithSocketData STOP');
             return false;
         }
 
         if (!!this.issueTargetElement && !this.editingTaskName) {
-            // console.log('timerStateUpdateWithSocketData INPUT NEW VALUE');
             this.issueTargetElement.value = socketData.issue;
         }
 
@@ -455,7 +445,7 @@ class MainPage extends Component {
     };
 
     createTimeEntriesList(data) {
-        const { viewport, isMobile, vocabulary, user } = this.props;
+        const { viewport, isMobile, vocabulary } = this.props;
         const { v_edit_task, v_delete_task } = vocabulary;
         let items = data.map(item => {
             const { syncJiraStatus } = item;
@@ -568,30 +558,8 @@ class MainPage extends Component {
         }
     }
     render() {
-        // console.log('render');
-
-        // console.log('this.state.timerStartTime', this.state.timerStartTime);
-        // console.log('this.state.timerDurationValue', this.state.timerDurationValue);
-        // console.log(
-        //     'getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))',
-        //     getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
-        // );
-
-        // console.log('+moment()', +moment());
-        // console.log('getTimeDiff(null)', getTimeDiff(null));
-        // console.log('+moment(getTimeDiff(null))', +moment(getTimeDiff(null)));
-        // console.log(
-        //     'getTimeDurationByGivenTimestamp(+moment(getTimeDiff(null)))',
-        //     getTimeDurationByGivenTimestamp(+moment(getTimeDiff(null)))
-        // );
-        // console.log(
-        //     'getTimeDurationByGivenTimestamp(+moment(getTimeDiff(undefined)))',
-        //     getTimeDurationByGivenTimestamp(+moment(getTimeDiff(undefined)))
-        // );
-
         const { isMobile, vocabulary } = this.props;
         const { v_total_time, v_add_your_task_name, v_find, v_start_timer, v_task_name, v_search_project } = vocabulary;
-        if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         const buttonState = this.state.timerPlayButtonShow ? 'play' : 'stop';
         const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
@@ -785,7 +753,6 @@ class MainPage extends Component {
                                     className="add_task"
                                     placeholder={v_add_your_task_name}
                                     onChange={event => (this.issueTargetElement.value = event.target.value)}
-                                    // onKeyUp={e => this.timerUpdate()}
                                     onFocus={e => {
                                         e.target.placeholder = '';
                                     }}
@@ -886,7 +853,6 @@ const mapStateToProps = store => {
         viewport: store.responsiveReducer.viewport,
         isShowMenu: store.responsiveReducer.isShowMenu,
         isMobile: store.responsiveReducer.isMobile,
-        user: store.userSettingReducer,
     };
 };
 

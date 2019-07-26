@@ -9,6 +9,7 @@ import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import Input from '../../components/BaseComponents/Input';
 
 // Actions
+import { toggleModal } from '../../actions/UserActions';
 
 // Config
 import { AppConfig } from '../../config';
@@ -77,7 +78,7 @@ class ChangePasswordModal extends Component {
     };
 
     closeModal() {
-        this.props.userSettingAction('TOGGLE_MODAL', false);
+        this.props.toggleModal(false);
     }
 
     onSubmitHandler = event => {
@@ -177,4 +178,11 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
 });
 
-export default connect(mapStateToProps)(ChangePasswordModal);
+const mapDispatchToProps = {
+    toggleModal,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ChangePasswordModal);

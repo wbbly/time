@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import jwtDecode from 'jwt-decode';
+import PrivateRoute from './components/CustomRoutes/PrivateRoute';
 
 import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
@@ -16,11 +16,6 @@ import UserSettings from './pages/UserSettings';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 
 import PageTemplate from './components/PageTemplate';
-
-import { userLoggedIn } from './services/authentication';
-import { getLoggedUserLanguage, getTokenFromLocalStorage } from './services/tokenStorageService';
-import { setLanguage } from './actions/LanguageActions';
-import { setUserDataAction } from './actions/UserSettingAction';
 
 // styles
 import 'normalize.css';
@@ -89,11 +84,6 @@ class App extends Component {
     };
 
     componentDidMount() {
-        const { setLanguage, setUserDataAction } = this.props;
-        if (userLoggedIn()) {
-            setLanguage(getLoggedUserLanguage());
-            setUserDataAction(jwtDecode(getTokenFromLocalStorage()));
-        }
         this.setResponsiveReducer();
         addEvent(window, 'resize', this.setResponsiveReducer);
         addEvent(window, 'resize', showMobileSupportToastr);
@@ -111,15 +101,16 @@ class App extends Component {
             <Switch>
                 <Route exact path="/" render={redirect('/login')} />
 
-                <Route exact path="/timer" render={() => <PageTemplate content={MainPage} />} />
-                <Route exact path="/reports/summary" render={() => <PageTemplate content={ReportsPage} />} />
-                <Route exact path="/projects" render={() => <PageTemplate content={ProjectsPage} />} />
-                <Route exact path="/team" render={() => <PageTemplate content={TeamPage} />} />
-                <Route
+                <PrivateRoute exact path="/timer" render={() => <PageTemplate content={MainPage} />} />
+                <PrivateRoute exact path="/reports/summary" render={() => <PageTemplate content={ReportsPage} />} />
+                <PrivateRoute exact path="/projects" render={() => <PageTemplate content={ProjectsPage} />} />
+                <PrivateRoute exact path="/team" render={() => <PageTemplate content={TeamPage} />} />
+                <PrivateRoute
                     exact
                     path="/reports/detailed/projects/:projectName/team/:userEmails/from/:dateStart/to/:endDate/"
                     render={() => <PageTemplate content={ReportsByProjectsPage} />}
                 />
+                <PrivateRoute exact path="/user-settings" render={() => <PageTemplate content={UserSettings} />} />
 
                 <Route exact path="/login" render={() => <PageTemplate hideSidebar hideHeader content={AuthPage} />} />
                 <Route
@@ -137,7 +128,6 @@ class App extends Component {
                     path="/reset-password"
                     render={() => <PageTemplate hideSidebar hideHeader content={ResetPasswordPage} />}
                 />
-                <Route exact path="/user-settings" render={() => <PageTemplate content={UserSettings} />} />
 
                 <Route render={() => <div>404 not found</div>} />
             </Switch>
@@ -151,8 +141,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     ...responsiveActions,
-    setLanguage,
-    setUserDataAction,
 };
 
 export default withRouter(

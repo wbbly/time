@@ -15,6 +15,8 @@ export function teamPageReducer(state = initialState, action) {
             return { ...state, editUserModal: action.payload.editUserModal };
         case 'SET_EDIT_USER':
             return { ...state, editedUser: action.payload.editedUser };
+        case 'RESET_ALL':
+            return initialState;
         default:
             return state;
     }

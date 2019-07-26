@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { showMobileSupportToastr } from '../../App';
@@ -8,7 +7,7 @@ import { showMobileSupportToastr } from '../../App';
 import classNames from 'classnames';
 
 // Services
-import { checkIsAdminByRole, checkIsMemberByRole, userLoggedIn, checkIsAdmin } from '../../services/authentication';
+import { checkIsAdminByRole, checkIsMemberByRole, checkIsAdmin } from '../../services/authentication';
 import { removeAvailableTeamsFromLocalStorage } from '../../services/availableTeamsStorageService';
 import {
     getCurrentTeamDataFromLocalStorage,
@@ -95,8 +94,6 @@ class TeamPage extends Component {
                 </tr>
             );
         });
-
-        if (!userLoggedIn()) return <Redirect to={'/login'} />;
 
         return (
             <div

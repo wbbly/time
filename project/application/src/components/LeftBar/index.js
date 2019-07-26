@@ -19,7 +19,6 @@ import UserMenu from '../UserMenu';
 
 // Styles
 import './style.scss';
-import { logoutByUnauthorized } from '../../services/authentication';
 
 class LeftBar extends Component {
     ONE_SECOND_PERIOD = 1000; // in ms
@@ -52,10 +51,6 @@ class LeftBar extends Component {
         if (!!this.state.timer && window.location.pathname !== '/timer') {
             return this.state.timer;
         }
-    }
-
-    logout() {
-        return logoutByUnauthorized();
     }
 
     render() {
