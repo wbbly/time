@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Services
-import { getLoggedUserName } from '../../services/tokenStorageService';
 
 // Styles
 import './style.scss';
@@ -25,15 +24,11 @@ class UserMenu extends Component {
         this.setState({ activeUserMenu: true });
     };
 
-    logout() {
-        return logoutByUnauthorized();
-    }
-
     render() {
         const { switchMenu, vocabulary, isMobile, user } = this.props;
         const { v_log_out, v_profile_settings } = vocabulary;
 
-        const { userName } = user;
+        const { username: userName } = user;
         return (
             <div
                 className={classNames('wrapper_user_menu', { 'wrapper_user_menu--mobile': isMobile })}
@@ -58,12 +53,7 @@ class UserMenu extends Component {
                                     <span>{v_profile_settings}</span>
                                 </div>
                             </Link>
-                            <div
-                                className="user_setting_modal_item"
-                                onClick={e => {
-                                    this.logout();
-                                }}
-                            >
+                            <div className="user_setting_modal_item" onClick={e => logoutByUnauthorized()}>
                                 <i className="logout" />
                                 <span>{v_log_out}</span>
                             </div>
@@ -78,7 +68,7 @@ class UserMenu extends Component {
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     isMobile: state.responsiveReducer.isMobile,
-    user: state.userSettingReducer,
+    user: state.userReducer.user,
 });
 
 export default connect(mapStateToProps)(UserMenu);

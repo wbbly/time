@@ -16,7 +16,7 @@ import { apiCall } from '../../services/apiService';
 // Components
 
 // Actions
-import { setUserDataAction } from '../../actions/UserSettingAction';
+import { changeUserData } from '../../actions/UserActions';
 
 // Queries
 
@@ -53,7 +53,7 @@ class EditTeamModal extends Component {
     }
 
     addUser = teamPage => {
-        const { vocabulary, setUserDataAction } = this.props;
+        const { vocabulary, changeUserData } = this.props;
 
         apiCall(AppConfig.apiURL + `user/${this.state.id}/team`, {
             method: 'PATCH',
@@ -71,7 +71,7 @@ class EditTeamModal extends Component {
                 if (result.mesage) {
                     alert(vocabulary[result.mesage]);
                 } else {
-                    setUserDataAction(result);
+                    changeUserData(result);
                 }
                 this.closeModal();
                 this.props.getDataFromServer(teamPage);
@@ -185,7 +185,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    setUserDataAction,
+    changeUserData,
 };
 
 export default connect(
