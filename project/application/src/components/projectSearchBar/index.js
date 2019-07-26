@@ -59,10 +59,6 @@ class ProjectSearchBar extends Component {
             </div>
         );
     }
-
-    componentWillUnmount() {
-        this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
-    }
 }
 
 ProjectSearchBar.propTypes = {
