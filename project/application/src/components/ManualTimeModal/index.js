@@ -113,10 +113,14 @@ class ManualTimeModal extends Component {
         let changedItem = {};
 
         const startDatetimeNew = moment(
-            `${moment(this.state.startDate).format('YYYY-MM-DD')} ${moment(this.state.startTime).format('HH:mm')}`
+            `${moment(this.state.startDate).format('YYYY-MM-DD')} ${
+                this.state.startTime ? moment(this.state.startTime).format('HH:mm') : '00:00'
+            }`
         );
         const endDatetimeNew = moment(
-            `${moment(this.state.endDate).format('YYYY-MM-DD')} ${moment(this.state.endTime).format('HH:mm')}`
+            `${moment(this.state.endDate).format('YYYY-MM-DD')} ${
+                this.state.endTime ? moment(this.state.endTime).format('HH:mm') : '00:00'
+            }`
         );
         if (
             this.state.startDateChanged ||
@@ -128,7 +132,7 @@ class ManualTimeModal extends Component {
             changedItem['endDatetime'] = endDatetimeNew.utc().toISOString();
         }
 
-        if (+startDatetimeNew > +endDatetimeNew) {
+        if (+startDatetimeNew >= +endDatetimeNew) {
             alert(v_a_time_start_error);
             return false;
         }
