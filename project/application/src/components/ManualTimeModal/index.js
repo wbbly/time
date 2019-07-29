@@ -82,6 +82,8 @@ class ManualTimeModal extends Component {
         endDate: null,
         endDateChanged: false,
         endTime: null,
+        validTime: true,
+        validTimeEnd: true,
     };
 
     getIssues() {
@@ -192,6 +194,7 @@ class ManualTimeModal extends Component {
     };
 
     onChangeTime = time => {
+        isNaN(time) ? this.setState({ validTime: false }) : this.setState({ validTime: true });
         this.setState({ startTime: time, startTimeChanged: true });
     };
 
@@ -200,6 +203,7 @@ class ManualTimeModal extends Component {
     };
 
     onChangeTimeEnd = time => {
+        isNaN(time) ? this.setState({ validTimeEnd: false }) : this.setState({ validTimeEnd: true });
         this.setState({ endTime: time, endTimeChanged: true });
     };
 
@@ -353,6 +357,7 @@ class ManualTimeModal extends Component {
                             !this.state.isOpenDropdown && (
                                 <div className="manual_timer_modal_button_container">
                                     <button
+                                        disabled={!this.state.validTime || !this.state.validTimeEnd}
                                         className="create_projects_modal_button_container_button manual_time_button"
                                         onClick={e => this.changeData()}
                                     >
@@ -363,6 +368,7 @@ class ManualTimeModal extends Component {
                         ) : (
                             <div className="manual_timer_modal_button_container">
                                 <button
+                                    disabled={!this.state.validTime || !this.state.validTimeEnd}
                                     className="create_projects_modal_button_container_button manual_time_button"
                                     onClick={e => this.changeData()}
                                 >
