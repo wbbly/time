@@ -20,6 +20,12 @@ const sortUserTeams = (a, b) => {
     return 0;
 };
 
+const sortTeamDetailedData = (a, b) => {
+    if (a.user[0].username.toLowerCase() < b.user[0].username.toLowerCase()) return -1;
+    if (a.user[0].username.toLowerCase() > b.user[0].username.toLowerCase()) return 1;
+    return 0;
+};
+
 const initialState = {
     userTeams: {
         data: [
@@ -154,11 +160,12 @@ export default (state = initialState, { type, payload, error }) => {
         }
 
         case GET_CURRENT_TEAM_DETAILED_DATA_REQUEST_SUCCESS: {
+            console.log('payload', payload);
             return {
                 ...state,
                 currentTeamDetailedData: {
                     ...state.currentTeamDetailedData,
-                    data: payload,
+                    data: payload.sort(sortTeamDetailedData),
                     error: null,
                     isFetching: false,
                     isInitialFetching: false,
