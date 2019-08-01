@@ -179,7 +179,6 @@ class UserSetting extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (JSON.stringify(prevProps.userReducer.user) !== JSON.stringify(this.props.userReducer.user)) {
-            console.log('set user');
             this.setDataToForm();
         }
     }
