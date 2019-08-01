@@ -13,7 +13,7 @@ import { showMobileSupportToastr } from '../../App';
 import classNames from 'classnames';
 
 // Services
-import { checkIsAdmin } from '../../services/authentication';
+import { checkIsAdminByRole } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
 import {
     getTimeDurationByGivenTimestamp,
@@ -28,6 +28,7 @@ import { apiCall } from '../../services/apiService';
 // Components
 import ProjectsContainer from '../../components/ProjectsContainer';
 import ReportsSearchBar from '../../components/reportsSearchBar';
+import { Loading } from '../../components/Loading';
 
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
@@ -42,6 +43,7 @@ import './style.scss';
 
 class ReportsPage extends Component {
     state = {
+        isInitialFetching: true,
         toggleBar: false,
         toggleChar: false,
         projectsArr: [],
@@ -131,90 +133,94 @@ class ReportsPage extends Component {
     };
 
     render() {
-        const { isMobile, vocabulary } = this.props;
+        const { isMobile, vocabulary, currentTeam } = this.props;
         const { v_summary_report, v_total, v_export } = vocabulary;
 
+        const { isInitialFetching } = this.state;
+
         return (
-            <div
-                className={classNames('wrapper_reports_page', {
-                    'wrapper_reports_page--mobile': isMobile,
-                })}
-            >
-                <div className="data_container_reports_page">
-                    <div className="header">
-                        <div className="header_name">{v_summary_report}</div>
-                        <div className="selects_container">
-                            <div className="select_header" onClick={e => this.openCalendar()}>
-                                <span>
-                                    {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} {' - '}
-                                    {moment(this.props.timeRange.endDate).format('DD.MM.YYYY')}
-                                </span>
-                                <i className="arrow_down" />
+            <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
+                <div
+                    className={classNames('wrapper_reports_page', {
+                        'wrapper_reports_page--mobile': isMobile,
+                    })}
+                >
+                    <div className="data_container_reports_page">
+                        <div className="header">
+                            <div className="header_name">{v_summary_report}</div>
+                            <div className="selects_container">
+                                <div className="select_header" onClick={e => this.openCalendar()}>
+                                    <span>
+                                        {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} {' - '}
+                                        {moment(this.props.timeRange.endDate).format('DD.MM.YYYY')}
+                                    </span>
+                                    <i className="arrow_down" />
+                                </div>
+                                {this.state.dateSelect && (
+                                    <div className="select_body" ref={div => (this.datePickerSelect = div)}>
+                                        <DateRangePicker
+                                            locale={rdrLocales['enGB']}
+                                            ranges={[
+                                                {
+                                                    startDate: this.state.selectionRange.startDate,
+                                                    endDate: this.state.selectionRange.endDate,
+                                                    key: 'selection',
+                                                    firstDayOfWeek: 1,
+                                                },
+                                            ]}
+                                            onChange={this.handleSelect}
+                                        />
+                                    </div>
+                                )}
                             </div>
-                            {this.state.dateSelect && (
-                                <div className="select_body" ref={div => (this.datePickerSelect = div)}>
-                                    <DateRangePicker
-                                        locale={rdrLocales['enGB']}
-                                        ranges={[
-                                            {
-                                                startDate: this.state.selectionRange.startDate,
-                                                endDate: this.state.selectionRange.endDate,
-                                                key: 'selection',
-                                                firstDayOfWeek: 1,
-                                            },
-                                        ]}
-                                        onChange={this.handleSelect}
+                        </div>
+                        {checkIsAdminByRole(currentTeam.data.role) && (
+                            <ReportsSearchBar
+                                applySearch={e => this.applySearch()}
+                                inputProjectData={this.props.inputProjectData}
+                                inputUserData={this.props.inputUserData}
+                                reportsPageAction={this.props.reportsPageAction}
+                            />
+                        )}
+                        {this.state.toggleBar &&
+                            this.state.toggleChar && (
+                                <div className="total_time_container">
+                                    <span className="total_time_name">{v_total}</span>
+                                    <span className="total_time_time">
+                                        {typeof this.state.totalUpChartTime === 'number'
+                                            ? getTimeDurationByGivenTimestamp(this.state.totalUpChartTime)
+                                            : '00:00:00'}
+                                    </span>
+                                    <span className="export_button" onClick={e => this.export()}>
+                                        {v_export}
+                                    </span>
+                                </div>
+                            )}
+                        {this.state.toggleBar &&
+                            this.state.toggleChar && (
+                                <div className="line_chart_container">
+                                    <Bar
+                                        ref={Bar => (this.barChart = Bar)}
+                                        data={this.props.dataBarChat}
+                                        height={50}
+                                        options={this.lineChartOption}
                                     />
                                 </div>
                             )}
-                        </div>
+                        {this.state.toggleBar &&
+                            this.state.toggleChar && (
+                                <div className="projects_chart_container">
+                                    <ProjectsContainer
+                                        selectionRange={this.props.timeRange}
+                                        usersArr={this.props.inputUserData}
+                                        projectsArr={this.props.projectsArr}
+                                        dataDoughnutChat={this.props.dataDoughnutChat}
+                                    />
+                                </div>
+                            )}
                     </div>
-                    {checkIsAdmin() && (
-                        <ReportsSearchBar
-                            applySearch={e => this.applySearch()}
-                            inputProjectData={this.props.inputProjectData}
-                            inputUserData={this.props.inputUserData}
-                            reportsPageAction={this.props.reportsPageAction}
-                        />
-                    )}
-                    {this.state.toggleBar &&
-                        this.state.toggleChar && (
-                            <div className="total_time_container">
-                                <span className="total_time_name">{v_total}</span>
-                                <span className="total_time_time">
-                                    {typeof this.state.totalUpChartTime === 'number'
-                                        ? getTimeDurationByGivenTimestamp(this.state.totalUpChartTime)
-                                        : '00:00:00'}
-                                </span>
-                                <span className="export_button" onClick={e => this.export()}>
-                                    {v_export}
-                                </span>
-                            </div>
-                        )}
-                    {this.state.toggleBar &&
-                        this.state.toggleChar && (
-                            <div className="line_chart_container">
-                                <Bar
-                                    ref={Bar => (this.barChart = Bar)}
-                                    data={this.props.dataBarChat}
-                                    height={50}
-                                    options={this.lineChartOption}
-                                />
-                            </div>
-                        )}
-                    {this.state.toggleBar &&
-                        this.state.toggleChar && (
-                            <div className="projects_chart_container">
-                                <ProjectsContainer
-                                    selectionRange={this.props.timeRange}
-                                    usersArr={this.props.inputUserData}
-                                    projectsArr={this.props.projectsArr}
-                                    dataDoughnutChat={this.props.dataDoughnutChat}
-                                />
-                            </div>
-                        )}
                 </div>
-            </div>
+            </Loading>
         );
     }
 
@@ -412,9 +418,10 @@ class ReportsPage extends Component {
 
                 let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
                 this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-                this.setState({ toggleChar: true });
+                this.setState({ toggleChar: true, isInitialFetching: false });
             },
             err => {
+                this.setState({ isInitialFetching: false });
                 if (err instanceof Response) {
                     err.text().then(errorMessage => console.log(errorMessage));
                 } else {
@@ -507,6 +514,7 @@ const mapStateToProps = store => ({
     isMobile: store.responsiveReducer.isMobile,
     vocabulary: store.languageReducer.vocabulary,
     user: store.userReducer.user,
+    currentTeam: store.teamReducer.currentTeam,
 });
 
 const mapDispatchToProps = dispatch => {
