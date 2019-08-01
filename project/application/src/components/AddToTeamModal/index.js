@@ -50,7 +50,7 @@ class AddToTeamModal extends Component {
                 if (result.invitedUserId) {
                     alert(v_a_invite_sent);
                     addInvitedUserToCurrentTeamDetailedDataAction({
-                        is_active: true,
+                        is_active: false,
                         role_collaboration: {
                             title: ROLES.ROLE_MEMBER,
                         },
