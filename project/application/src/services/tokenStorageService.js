@@ -1,11 +1,3 @@
-import { getCurrentTeamDataFromLocalStorage } from './currentTeamDataStorageService';
-
-export function getLoggedUserRoleTitle() {
-    const role = getCurrentTeamDataFromLocalStorage().role;
-
-    return role;
-}
-
 export function getTokenFromLocalStorage() {
     const token = localStorage.getItem('token') || '';
 
