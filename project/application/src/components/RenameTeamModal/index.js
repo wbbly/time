@@ -8,6 +8,7 @@ import { apiCall } from '../../services/apiService';
 // Components
 
 // Actions
+import { getUserTeamsAction, getCurrentTeamAction } from '../../actions/TeamActions';
 
 // Queries
 
@@ -18,23 +19,13 @@ import { AppConfig } from '../../config';
 import './style.css';
 
 class RenameTeamModal extends Component {
-    state = {
-        newTeamName: '',
-    };
-
     constructor(props) {
         super(props);
         this.teamNameRef = React.createRef();
     }
 
-    setItem(value) {
-        this.setState({
-            selectedValue: value,
-        });
-    }
-
     renameTeam() {
-        const { vocabulary } = this.props;
+        const { vocabulary, currentTeam, getUserTeamsAction, getCurrentTeamAction } = this.props;
         const { v_a_team_existed, v_a_team_rename_error, v_a_team_name_empty_error } = vocabulary;
         const teamName = (this.teamNameRef.current.value || '').trim();
         if (teamName.length) {
@@ -44,12 +35,13 @@ class RenameTeamModal extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    teamId: this.props.teamId,
+                    teamId: currentTeam.data.id,
                     newName: teamName,
                 }),
             }).then(
                 result => {
-                    this.props.refreshTeamName(result);
+                    getUserTeamsAction();
+                    getCurrentTeamAction();
                     this.props.closeCallback();
                 },
                 err => {
@@ -101,6 +93,15 @@ class RenameTeamModal extends Component {
 
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
+    currentTeam: state.teamReducer.currentTeam,
 });
 
-export default connect(mapStateToProps)(RenameTeamModal);
+const mapDispatchToProps = {
+    getUserTeamsAction,
+    getCurrentTeamAction,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(RenameTeamModal);
