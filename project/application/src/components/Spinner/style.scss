@@ -1,10 +1,24 @@
 .wrapper-spinner {
-  height: 100vh;
-  width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
+
+  &--full-screen {
+    height: 100vh;
+    width: 100vw;
+  }
+
+  &--parent-size {
+    height: 100%;
+    width: 100%;
+  }
+
+  &--inline {
+    height: auto;
+    width: auto;
+  }
 
   .wobbly-logo-icon {
     width: 125px;
