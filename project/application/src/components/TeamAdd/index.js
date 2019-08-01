@@ -18,13 +18,11 @@ import './style.css';
 
 class TeamAdd extends Component {
     render() {
-        const { teamAddModalToggle, teamAddPageAction, createTeamRequest } = this.props;
+        const { teamAddModalToggle, teamAddPageAction } = this.props;
 
         return (
             <div className="team_add_wrapper">
-                {teamAddModalToggle && (
-                    <CreateTeamModal teamAddPageAction={teamAddPageAction} createTeamRequest={createTeamRequest} />
-                )}
+                {teamAddModalToggle && <CreateTeamModal teamAddPageAction={teamAddPageAction} />}
                 <span className="team_add" onClick={e => teamAddPageAction('TOGGLE_TEAM_ADD_MODAL', { toggle: true })}>
                     <i className="team_add_plus" />
                 </span>
