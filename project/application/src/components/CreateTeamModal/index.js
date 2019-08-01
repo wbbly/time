@@ -1,26 +1,67 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 // Services
+import { apiCall } from '../../services/apiService';
+import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 
 // Components
 
 // Actions
+import { getCurrentTeamAction, getUserTeamsAction, getCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
 
 // Queries
 
 // Config
+import { AppConfig } from '../../config';
 
 // Styles
 import './style.css';
 
 class CreateTeamModal extends Component {
     addTeam() {
-        const { vocabulary } = this.props;
-        const { v_a_team_name_empty_error } = vocabulary;
+        const {
+            vocabulary,
+            getUserTeamsAction,
+            getCurrentTeamAction,
+            getCurrentTeamDetailedDataAction,
+            history,
+        } = this.props;
+        const { v_a_team_name_empty_error, v_a_team_existed, v_a_team_create_error } = vocabulary;
         const createTeam = (this.createTeamInput.value || '').trim();
         if (createTeam.length) {
-            this.props.createTeamRequest(createTeam);
+            // this.props.createTeamRequest(createTeam);
+            apiCall(AppConfig.apiURL + `team/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    teamName: createTeam,
+                }),
+            }).then(
+                res => {
+                    getUserTeamsAction();
+                    getCurrentTeamAction();
+                    getCurrentTeamDetailedDataAction();
+                    history.push('/team');
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(error => {
+                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
+                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                                alert(v_a_team_existed);
+                            } else {
+                                alert(v_a_team_create_error);
+                            }
+                        });
+                    } else {
+                        console.log(err);
+                    }
+                }
+            );
             this.closeModal();
         } else {
             alert(v_a_team_name_empty_error);
@@ -90,4 +131,15 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
 });
 
-export default connect(mapStateToProps)(CreateTeamModal);
+const mapDispatchToProps = {
+    getUserTeamsAction,
+    getCurrentTeamAction,
+    getCurrentTeamDetailedDataAction,
+};
+
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(CreateTeamModal)
+);
