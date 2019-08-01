@@ -54,7 +54,7 @@ class LeftBar extends Component {
     }
 
     render() {
-        const { switchMenu, isMobile, teamsUpdateTimestamp, vocabulary } = this.props;
+        const { switchMenu, isMobile, vocabulary } = this.props;
         const { v_timer, v_reports, v_projects, v_team } = vocabulary;
         return (
             <div className={classNames('wrapper', { 'wrapper--mobile': isMobile })}>
@@ -91,7 +91,7 @@ class LeftBar extends Component {
                                 <div className="links_text">{v_team}</div>
                             </div>
                         </Link>
-                        <TeamSwitcher isMobile={isMobile} teamsUpdateTimestamp={teamsUpdateTimestamp} />
+                        <TeamSwitcher isMobile={isMobile} />
                     </div>
                 </div>
                 <UserMenu switchMenu={switchMenu} />
