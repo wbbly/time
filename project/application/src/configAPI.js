@@ -21,11 +21,43 @@ export const getUserData = () =>
         method: 'GET',
     });
 
+export const getUserTeams = () =>
+    instance({
+        url: '/user/teams',
+        method: 'GET',
+    });
+
 export const getCurrentTeam = () =>
     instance({
         url: '/team/current',
         method: 'GET',
     });
+
+export const addTeam = ({ teamName }) =>
+    instance({
+        url: '/team/add',
+        method: 'POST',
+        data: {
+            teamName,
+        },
+    });
+
+export const getCurrentTeamDetailedData = () =>
+    instance({
+        url: '/team/current/detailed-data',
+        method: 'GET',
+    });
+
+export const switchTeam = ({ teamId }) =>
+    instance({
+        url: '/team/switch',
+        method: 'PATCH',
+        data: {
+            teamId,
+        },
+    });
+
+// UNUSED AXIOS REQUESTS
 
 export const userInvite = ({ email }) =>
     instance({
@@ -124,42 +156,12 @@ export const renameTeam = ({ teamId, newName }) =>
         },
     });
 
-export const getCurrentTeamDetailedData = () =>
-    instance({
-        url: '/team/current/detailed-data',
-        method: 'GET',
-    });
-
 export const getProjectList = (withTimerList = false) =>
     instance({
         url: '/project/list',
         method: 'GET',
         params: {
             withTimerList,
-        },
-    });
-
-export const switchTeam = ({ teamId }) =>
-    instance({
-        url: '/team/switch',
-        method: 'PATCH',
-        data: {
-            teamId,
-        },
-    });
-
-export const getTeams = () =>
-    instance({
-        url: '/user/teams',
-        method: 'GET',
-    });
-
-export const addTeam = ({ teamName }) =>
-    instance({
-        url: '/team/add',
-        method: 'POST',
-        data: {
-            teamName,
         },
     });
 
