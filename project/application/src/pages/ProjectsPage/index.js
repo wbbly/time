@@ -7,13 +7,14 @@ import { showMobileSupportToastr } from '../../App';
 import classNames from 'classnames';
 
 // Services
-import { checkIsAdmin } from '../../services/authentication';
+import { checkIsAdminByRole } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
 
 // Components
 import ProjectSearchBar from '../../components/projectSearchBar';
 import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
+import { Loading } from '../../components/Loading';
 
 // Actions
 import projectsPageAction from '../../actions/ProjectsActions';
@@ -29,10 +30,11 @@ import './style.scss';
 
 class ProjectsPage extends Component {
     state = {
+        isInitialFetching: true,
         etalonArr: [],
     };
 
-    getProjects = () => {
+    getProjects = () =>
         apiCall(AppConfig.apiURL + `project/list?withTimerList=true`, {
             method: 'GET',
             headers: {
@@ -52,61 +54,72 @@ class ProjectsPage extends Component {
                 }
             }
         );
-    };
 
     render() {
-        const { tableData, addNewProjectModalToggle, projectsPageAction, isMobile, vocabulary } = this.props;
+        const {
+            tableData,
+            addNewProjectModalToggle,
+            projectsPageAction,
+            isMobile,
+            vocabulary,
+            currentTeam,
+        } = this.props;
         const { v_create_new_project, v_projects } = vocabulary;
 
+        const { isInitialFetching } = this.state;
+
         return (
-            <div
-                className={classNames('wrapper_projects_page', {
-                    'wrapper_projects_page--mobile': isMobile,
-                })}
-            >
-                {addNewProjectModalToggle && (
-                    <CreateProjectModal
-                        tableInfo={tableData}
-                        projectsPageAction={projectsPageAction}
-                        getProjects={this.getProjects}
-                    />
-                )}
-                <div className="data_container_projects_page">
-                    <div className="projects_page_header">
-                        <div className="projects_page_title">{v_projects}</div>
-                        {checkIsAdmin() && (
-                            <button
-                                className="create_project_button"
-                                onClick={e => projectsPageAction('TOGGLE_MODAL', { toggle: true })}
-                            >
-                                {v_create_new_project}
-                            </button>
-                        )}
-                    </div>
-                    <div className="project_page_filters">
-                        <ProjectSearchBar
-                            tableInfo={this.props.tableData}
-                            etalonArr={this.state.etalonArr}
-                            projectsPageAction={projectsPageAction}
-                        />
-                    </div>
-                    <div className="project_data_wrapper">
-                        <ProjectData
+            <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
+                <div
+                    className={classNames('wrapper_projects_page', {
+                        'wrapper_projects_page--mobile': isMobile,
+                    })}
+                >
+                    {addNewProjectModalToggle && (
+                        <CreateProjectModal
                             tableInfo={tableData}
                             projectsPageAction={projectsPageAction}
-                            editedProject={this.props.editedProject}
-                            editProjectModal={this.props.editProjectModal}
                             getProjects={this.getProjects}
                         />
+                    )}
+                    <div className="data_container_projects_page">
+                        <div className="projects_page_header">
+                            <div className="projects_page_title">{v_projects}</div>
+                            {checkIsAdminByRole(currentTeam.data.role) && (
+                                <button
+                                    className="create_project_button"
+                                    onClick={e => projectsPageAction('TOGGLE_MODAL', { toggle: true })}
+                                >
+                                    {v_create_new_project}
+                                </button>
+                            )}
+                        </div>
+                        <div className="project_page_filters">
+                            <ProjectSearchBar
+                                tableInfo={this.props.tableData}
+                                etalonArr={this.state.etalonArr}
+                                projectsPageAction={projectsPageAction}
+                            />
+                        </div>
+                        <div className="project_data_wrapper">
+                            <ProjectData
+                                tableInfo={tableData}
+                                projectsPageAction={projectsPageAction}
+                                editedProject={this.props.editedProject}
+                                editProjectModal={this.props.editProjectModal}
+                                getProjects={this.getProjects}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Loading>
         );
     }
 
-    componentDidMount() {
-        this.getProjects();
+    async componentDidMount() {
         showMobileSupportToastr();
+        await this.getProjects();
+        this.setState({ isInitialFetching: false });
     }
 }
 
@@ -118,6 +131,7 @@ const mapStateToProps = store => {
         editProjectModal: store.projectReducer.editProjectModal,
         isMobile: store.responsiveReducer.isMobile,
         vocabulary: store.languageReducer.vocabulary,
+        currentTeam: store.teamReducer.currentTeam,
     };
 };
 

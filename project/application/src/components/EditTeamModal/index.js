@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-// import jwtDecode from 'jwt-decode';
-
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -17,6 +15,7 @@ import { apiCall } from '../../services/apiService';
 
 // Actions
 import { changeUserData } from '../../actions/UserActions';
+import { getCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
 
 // Queries
 
@@ -52,8 +51,8 @@ class EditTeamModal extends Component {
         this.props.teamPageAction('TOGGLE_EDIT_USER_MODAL', { editUserModal: false });
     }
 
-    addUser = teamPage => {
-        const { vocabulary, changeUserData } = this.props;
+    addUser = () => {
+        const { vocabulary, changeUserData, getCurrentTeamDetailedDataAction } = this.props;
 
         apiCall(AppConfig.apiURL + `user/${this.state.id}/team`, {
             method: 'PATCH',
@@ -74,7 +73,7 @@ class EditTeamModal extends Component {
                     changeUserData(result);
                 }
                 this.closeModal();
-                this.props.getDataFromServer(teamPage);
+                getCurrentTeamDetailedDataAction();
             },
             err => {
                 if (err instanceof Response) {
@@ -173,7 +172,7 @@ class EditTeamModal extends Component {
                             </RadioGroup>
                         </ThemeProvider>
                     </div>
-                    <button onClick={e => this.addUser(this.props.teamPage)}>{v_edit_user}</button>
+                    <button onClick={e => this.addUser()}>{v_edit_user}</button>
                 </div>
             </div>
         );
@@ -186,6 +185,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     changeUserData,
+    getCurrentTeamDetailedDataAction,
 };
 
 export default connect(

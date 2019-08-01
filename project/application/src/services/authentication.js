@@ -1,10 +1,8 @@
 import jwtDecode from 'jwt-decode';
 
-import { getLoggedUserRoleTitle, getTokenFromLocalStorage, removeTokenFromLocalStorage } from './tokenStorageService';
+import { getTokenFromLocalStorage, removeTokenFromLocalStorage } from './tokenStorageService';
 import { removeCurrentTimerFromLocalStorage } from './currentTimerStorageService';
 import { removeServerClientTimediffFromLocalStorage } from './serverClientTimediffStorageService';
-import { removeAvailableTeamsFromLocalStorage } from './availableTeamsStorageService';
-import { removeCurrentTeamDataFromLocalStorage } from './currentTeamDataStorageService';
 
 import { store } from '../store/configureStore';
 import { resetAll } from '../actions/UserActions';
@@ -36,15 +34,9 @@ export function checkIsMemberByRole(role) {
     return role === ROLES.ROLE_MEMBER;
 }
 
-export function checkIsAdmin() {
-    return checkIsAdminByRole(getLoggedUserRoleTitle());
-}
-
 export function logoutByUnauthorized() {
     removeTokenFromLocalStorage();
     removeCurrentTimerFromLocalStorage();
     removeServerClientTimediffFromLocalStorage();
-    removeAvailableTeamsFromLocalStorage();
-    removeCurrentTeamDataFromLocalStorage();
     store.dispatch(resetAll());
 }

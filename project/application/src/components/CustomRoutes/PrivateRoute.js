@@ -3,6 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { getUserDataAction, checkUserDataAction } from '../../actions/UserActions';
+import { getUserTeamsAction, getCurrentTeamAction } from '../../actions/TeamActions';
 import { checkAppVersion, logoutByUnauthorized } from '../../services/authentication';
 
 import { Loading } from '../Loading';
@@ -19,12 +20,14 @@ class PrivateRoute extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { checkUserDataAction } = this.props;
+        const { checkUserDataAction, getUserTeamsAction, getCurrentTeamAction } = this.props;
 
         if (!checkAppVersion()) return logoutByUnauthorized();
 
         if (prevProps.location.pathname !== this.props.location.pathname) {
             checkUserDataAction();
+            getUserTeamsAction();
+            getCurrentTeamAction();
         }
     }
 
@@ -36,7 +39,7 @@ class PrivateRoute extends Component {
                 {...rest}
                 render={props => {
                     return isInitialFetching || isFetching || user ? (
-                        <Loading flag={isInitialFetching || isFetching} children={render} />
+                        <Loading flag={isInitialFetching || isFetching} children={render()} />
                     ) : (
                         <Redirect to="/login" />
                     );
@@ -55,6 +58,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     getUserDataAction,
     checkUserDataAction,
+    getUserTeamsAction,
+    getCurrentTeamAction,
 };
 
 export default connect(

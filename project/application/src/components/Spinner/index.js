@@ -1,5 +1,7 @@
 import React from 'react';
 
+import classNames from 'classnames';
+
 import './style.scss';
 
 const LogoIcon = () => (
@@ -214,11 +216,19 @@ const SpinnerIcon = () => (
     </svg>
 );
 
-const Spinner = () => (
-    <div className="wrapper-spinner">
-        <LogoIcon />
-        <SpinnerIcon />
-    </div>
-);
+const Spinner = ({ withLogo = true, mode = 'fullScreen' }) => {
+    return (
+        <div
+            className={classNames('wrapper-spinner', {
+                'wrapper-spinner--full-screen': mode === 'fullScreen',
+                'wrapper-spinner--parent-size': mode === 'parentSize',
+                'wrapper-spinner--inline': mode === 'inline',
+            })}
+        >
+            {withLogo && <LogoIcon />}
+            <SpinnerIcon />
+        </div>
+    );
+};
 
 export default Spinner;

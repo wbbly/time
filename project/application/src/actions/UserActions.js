@@ -1,12 +1,13 @@
 import { getUserData, getCurrentTeam } from '../configAPI';
 
 // Services
-import { setCurrentTeamDataToLocalStorage } from '../services/currentTeamDataStorageService';
+// import { setCurrentTeamDataToLocalStorage } from '../services/currentTeamDataStorageService';
 import { logoutByUnauthorized } from '../services/authentication';
 
 // Actions
 import reportsPageAction from './ReportsPageAction';
 import { setLanguage } from './LanguageActions';
+import { getUserTeamsAction, getCurrentTeamAction, getCurrentTeamDetailedDataAction } from './TeamActions';
 
 export const GET_USER_DATA_REQUEST = 'GET_USER_DATA_REQUEST';
 export const GET_USER_DATA_REQUEST_SUCCESS = 'GET_USER_DATA_REQUEST_SUCCESS';
@@ -61,17 +62,6 @@ export const getUserDataAction = () => async dispatch => {
         const { data } = await getUserData();
         const { language } = data;
 
-        const { data: currentTeamResponse } = await getCurrentTeam();
-
-        const currentTeam = currentTeamResponse.data.user_team[0] || {};
-        const currentTeamInfo = currentTeam.team || {};
-        const currentTeamRoleCollaboration = currentTeam.role_collaboration || {};
-        setCurrentTeamDataToLocalStorage({
-            id: currentTeamInfo.id,
-            name: currentTeamInfo.name,
-            role: currentTeamRoleCollaboration.title,
-        });
-
         dispatch(
             reportsPageAction('SET_ACTIVE_USER', {
                 data: [data.email],
@@ -80,6 +70,9 @@ export const getUserDataAction = () => async dispatch => {
 
         dispatch(setLanguage(language));
         dispatch(getUserDataRequestSuccess(data));
+        dispatch(getUserTeamsAction());
+        dispatch(getCurrentTeamAction());
+        dispatch(getCurrentTeamDetailedDataAction());
     } catch (error) {
         logoutByUnauthorized();
         dispatch(getUserDataRequestFail(error));
