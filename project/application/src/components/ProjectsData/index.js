@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Services
 import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
-import { checkIsAdmin } from '../../services/authentication';
+import { checkIsAdminByRole } from '../../services/authentication';
 
 // Components
 import EditProjectModal from '../EditProjectModal/index';
@@ -17,13 +18,15 @@ import EditProjectModal from '../EditProjectModal/index';
 // Styles
 import './style.css';
 
-export default class ProjectData extends Component {
+class ProjectData extends Component {
     setEdiItem(item) {
         this.props.projectsPageAction('SET_EDIT_PROJECT', { tableData: item });
         this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', { tableData: true });
     }
 
     render() {
+        const { currentTeam } = this.props;
+
         const tableHeader = [
             {
                 key: 1,
@@ -39,7 +42,9 @@ export default class ProjectData extends Component {
                 <td>{item.name}</td>
                 <td>
                     {getTimeDurationByGivenTimestamp(item.totalTime)}
-                    {checkIsAdmin() && <i className="edit_button" onClick={e => this.setEdiItem(item)} />}
+                    {checkIsAdminByRole(currentTeam.data.role) && (
+                        <i className="edit_button" onClick={e => this.setEdiItem(item)} />
+                    )}
                 </td>
             </tr>
         ));
@@ -68,3 +73,9 @@ export default class ProjectData extends Component {
 ProjectData.propTypes = {
     tableInfo: PropTypes.array.isRequired,
 };
+
+const mapStateToProps = state => ({
+    currentTeam: state.teamReducer.currentTeam,
+});
+
+export default connect(mapStateToProps)(ProjectData);
