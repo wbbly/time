@@ -10,6 +10,7 @@ import { authValidation } from '../../services/validateService';
 import Input from '../../components/BaseComponents/Input';
 
 // Actions
+import { addInvitedUserToCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
 
 // Queries
 import { AppConfig } from '../../config';
@@ -32,10 +33,10 @@ class AddToTeamModal extends Component {
     };
 
     addUser = ({ email }) => {
-        const { vocabulary } = this.props;
+        const { vocabulary, addInvitedUserToCurrentTeamDetailedDataAction } = this.props;
         const { v_a_invite_sent, v_a_invite_sent_error } = vocabulary;
-
         const { inputs } = this.state;
+
         apiCall(AppConfig.apiURL + 'user/invite', {
             method: 'POST',
             headers: {
@@ -47,21 +48,20 @@ class AddToTeamModal extends Component {
         }).then(
             result => {
                 if (result.invitedUserId) {
-                    this.props.programersArr.unshift({
+                    alert(v_a_invite_sent);
+                    addInvitedUserToCurrentTeamDetailedDataAction({
+                        is_active: true,
                         role_collaboration: {
                             title: ROLES.ROLE_MEMBER,
                         },
                         user: [
                             {
+                                email: inputs.email.value,
                                 id: result.invitedUserId[0].user_id,
                                 username: inputs.email.value,
-                                role: ROLES.ROLE_MEMBER,
-                                email: inputs.email.value,
-                                is_active: true,
                             },
                         ],
                     });
-                    alert(v_a_invite_sent);
                 } else {
                     alert(v_a_invite_sent_error);
                 }
@@ -150,4 +150,11 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
 });
 
-export default connect(mapStateToProps)(AddToTeamModal);
+const mapDispatchToProps = {
+    addInvitedUserToCurrentTeamDetailedDataAction,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AddToTeamModal);
