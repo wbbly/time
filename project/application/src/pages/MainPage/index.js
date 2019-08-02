@@ -15,11 +15,6 @@ import { logoutByUnauthorized } from '../../services/authentication';
 import { getDateInString, getTimeDiff, getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
-import {
-    removeCurrentTimerFromLocalStorage,
-    setCurrentTimerToLocalStorage,
-} from '../../services/currentTimerStorageService';
-import { setServerClientTimediffToLocalStorage } from '../../services/serverClientTimediffStorageService';
 import { apiCall } from '../../services/apiService';
 
 // Components
@@ -28,7 +23,11 @@ import JiraIcon from '../../components/JiraIcon';
 import { Loading } from '../../components/Loading';
 
 // Actions
-import addTasks from '../../actions/MainPageAction';
+import addTasks, {
+    setCurrentTimerAction,
+    resetCurrentTimerAction,
+    setServerClientTimediffAction,
+} from '../../actions/MainPageAction';
 import manualTimerModalAction from '../../actions/ManualTimerModalAction';
 
 // Queries
@@ -75,6 +74,8 @@ class MainPage extends Component {
     };
 
     initSocketConnection() {
+        const { setCurrentTimerAction, resetCurrentTimerAction, setServerClientTimediffAction } = this.props;
+
         this.socketConnection = openSocket(AppConfig.apiURL);
         this.socketConnection.on('connect', () => {
             this.socketConnection.emit(
@@ -89,6 +90,7 @@ class MainPage extends Component {
                 }
             );
         });
+
         this.socketConnection.on('check-timer-v2', data => {
             if (data && typeof this.TIMER_MANUAL_UPDATE_SUBSCRIPTION === 'undefined') {
                 apiCall(AppConfig.apiURL + 'time/current', {
@@ -98,13 +100,13 @@ class MainPage extends Component {
                     },
                 }).then(
                     result => {
-                        setServerClientTimediffToLocalStorage(+moment(result.timeISO) - +moment());
+                        setServerClientTimediffAction(+moment(result.timeISO) - +moment());
                         const currentTimer = {
                             timeStart: +moment(data.startDatetime),
                             issue: decodeTimeEntryIssue(data.issue),
                             project: data.project,
                         };
-                        setCurrentTimerToLocalStorage(currentTimer);
+                        setCurrentTimerAction(currentTimer);
                         this.timerStateUpdateWithSocketData(currentTimer);
                     },
                     err => {
@@ -116,7 +118,7 @@ class MainPage extends Component {
                     }
                 );
             } else if (!data) {
-                removeCurrentTimerFromLocalStorage();
+                resetCurrentTimerAction();
                 const lastTimeEntry = this.props.timeEntriesList[0];
                 const seletedProject = lastTimeEntry ? lastTimeEntry.project : this.defaultProject;
                 this.setState({ seletedProject, timerReadyToUse: true });
@@ -195,7 +197,9 @@ class MainPage extends Component {
     }
 
     timerStop() {
-        removeCurrentTimerFromLocalStorage();
+        const { resetCurrentTimerAction } = this.props;
+
+        resetCurrentTimerAction();
         this.getUserTimeEntries().then(
             _ => {
                 this.setState(
@@ -881,6 +885,9 @@ const mapDispatchToProps = dispatch => {
     return {
         addTasksAction: (actionType, action) => dispatch(addTasks(actionType, action))[1],
         manualTimerModalAction: (actionType, action) => dispatch(manualTimerModalAction(actionType, action))[1],
+        setCurrentTimerAction: payload => dispatch(setCurrentTimerAction(payload)),
+        resetCurrentTimerAction: () => dispatch(resetCurrentTimerAction()),
+        setServerClientTimediffAction: payload => dispatch(setServerClientTimediffAction(payload)),
     };
 };
 
