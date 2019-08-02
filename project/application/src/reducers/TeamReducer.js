@@ -160,7 +160,6 @@ export default (state = initialState, { type, payload, error }) => {
         }
 
         case GET_CURRENT_TEAM_DETAILED_DATA_REQUEST_SUCCESS: {
-            console.log('payload', payload);
             return {
                 ...state,
                 currentTeamDetailedData: {

@@ -1,8 +1,6 @@
 import jwtDecode from 'jwt-decode';
 
 import { getTokenFromLocalStorage, removeTokenFromLocalStorage } from './tokenStorageService';
-import { removeCurrentTimerFromLocalStorage } from './currentTimerStorageService';
-import { removeServerClientTimediffFromLocalStorage } from './serverClientTimediffStorageService';
 
 import { store } from '../store/configureStore';
 import { resetAll } from '../actions/UserActions';
@@ -36,7 +34,5 @@ export function checkIsMemberByRole(role) {
 
 export function logoutByUnauthorized() {
     removeTokenFromLocalStorage();
-    removeCurrentTimerFromLocalStorage();
-    removeServerClientTimediffFromLocalStorage();
     store.dispatch(resetAll());
 }
