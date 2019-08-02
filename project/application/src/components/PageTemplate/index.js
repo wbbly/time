@@ -17,15 +17,6 @@ import ModalInfo from '../../components/ModalInfo';
 import './style.scss';
 
 class PageTemplate extends Component {
-    // state = {
-    //     teamsUpdateTimestamp: null,
-    // };
-
-    // setTeamsUpdateTimestamp = teamsUpdateTimestamp =>
-    //     this.setState({
-    //         teamsUpdateTimestamp,
-    //     });
-
     render() {
         const {
             content: Content,
@@ -38,7 +29,6 @@ class PageTemplate extends Component {
             viewport,
         } = this.props;
         const { width, height } = viewport;
-        // const { teamsUpdateTimestamp } = this.state;
 
         return (
             <div className="wrapper-page-template" style={{ width: width - 1, height: height - 1 }}>
@@ -58,7 +48,6 @@ class PageTemplate extends Component {
                             })}
                         >
                             <LeftBar
-                                // teamsUpdateTimestamp={teamsUpdateTimestamp}
                                 isShowMenu={isShowMenu}
                                 switchMenu={switchMenu}
                                 isMobile={isMobile}
@@ -67,11 +56,7 @@ class PageTemplate extends Component {
                         </aside>
                     )}
                     <main className="main">
-                        <Content
-                            isMobile={isMobile}
-                            vocabulary={vocabulary}
-                            // setTeamsUpdateTimestamp={this.setTeamsUpdateTimestamp}
-                        />
+                        <Content isMobile={isMobile} vocabulary={vocabulary} />
                     </main>
                 </div>
             </div>
