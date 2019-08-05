@@ -58,7 +58,7 @@ class UserSetting extends Component {
         },
     };
 
-    changeUserSetting = ({ userName, email, tokenJira }) => {
+    changeUserSetting = data => {
         const { vocabulary, changeUserData, userReducer } = this.props;
         const { v_a_data_updated_ok, lang } = vocabulary;
 
@@ -71,10 +71,8 @@ class UserSetting extends Component {
                 Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
             },
             body: JSON.stringify({
-                email,
-                username: userName,
+                ...data,
                 language: lang.short,
-                tokenJira,
             }),
         }).then(
             result => {
@@ -96,7 +94,7 @@ class UserSetting extends Component {
         );
     };
 
-    onSubmitHandler = async event => {
+    onSubmitHandler = event => {
         event.preventDefault();
         const { inputs, userSetJiraSync } = this.state;
         const { jiraUsername, jiraPassword, syncJiraStatus } = inputs;
