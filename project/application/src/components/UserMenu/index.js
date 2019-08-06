@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
+import { AppConfig } from '../../config';
+
 // Services
 
 // Styles
@@ -38,7 +40,17 @@ class UserMenu extends Component {
             >
                 <div className="logout_container">
                     <div className="user_name">{userName}</div>
-                    <i title={v_more_option} className="profile_user" />
+                    {user.avatar ? (
+                        <div
+                            id="avatar-img-small"
+                            style={{
+                                backgroundImage: `url("${AppConfig.apiURL}${user.avatar}")`,
+                            }}
+                            title={v_more_option}
+                        />
+                    ) : (
+                        <i title={v_more_option} className="profile_user" />
+                    )}
                     {this.state.activeUserMenu && (
                         <div className="user_setting_modal">
                             <Link
