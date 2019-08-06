@@ -40,6 +40,7 @@ export default {
     'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED':
         "You can't be able to set the team owner's account as inactive.",
 
+    v_a_avatar_upload_error: 'Loading error! The download file is not an image or its size exceeds 1 Mb.',
     v_a_data_updated_ok: 'Your data has been updated',
     v_a_change_password_great_ok: 'Great! You can sign in  now again!',
     v_a_change_password_ok: "You've been successfully changed the password!",
@@ -65,6 +66,9 @@ export default {
     v_a_task_delete: 'Do you really want to delete this time entry?',
     v_a_incorect_email: 'Incorrect e-mail',
 
+    v_upload_image: 'Upload image',
+    v_delete_image: 'Delete image',
+    v_phone: 'Phone',
     v_more_option: 'More option',
     v_active_team: 'Active team',
     v_set: 'Set',

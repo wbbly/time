@@ -68,6 +68,18 @@
   margin-right: 10px;
 }
 
+#avatar-img-small {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+}
+
 i.profile_user {
   display: block;
   min-width: 24px;
