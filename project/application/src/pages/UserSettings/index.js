@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 
 import classNames from 'classnames';
 
+import ReactPhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/dist/style.css';
+
 // Actions
 import { toggleModal, changeUserData } from '../../actions/UserActions';
 
@@ -10,6 +13,7 @@ import { toggleModal, changeUserData } from '../../actions/UserActions';
 import ChangePasswordModal from '../../components/ChangePasswordModal';
 import SwitchLanguage from '../../components/SwitchLanguage';
 import Input from '../../components/BaseComponents/Input';
+import Avatar from '../../components/AvatarEditor';
 
 //Services
 import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
@@ -27,6 +31,9 @@ class UserSetting extends Component {
         rotateArrowLoop: false,
         userSetJiraSync: false,
         validEmail: true,
+        phone: {
+            value: '',
+        },
         inputs: {
             userName: {
                 value: '',
@@ -58,9 +65,16 @@ class UserSetting extends Component {
         },
     };
 
+    checkValidPhone = phone => {
+        let withPlus = phone.split('')[0] === '+' ? phone : `+${phone}`;
+        return withPlus.toString().length > 5 ? withPlus : '';
+    };
+
     changeUserSetting = data => {
         const { vocabulary, changeUserData, userReducer } = this.props;
         const { v_a_data_updated_ok, lang } = vocabulary;
+
+        const { phone } = this.state;
 
         const { id } = userReducer.user;
 
@@ -72,6 +86,7 @@ class UserSetting extends Component {
             },
             body: JSON.stringify({
                 ...data,
+                phone: this.checkValidPhone(phone.value),
                 language: lang.short,
             }),
         }).then(
@@ -183,9 +198,9 @@ class UserSetting extends Component {
 
     render() {
         const { vocabulary, isMobile, userReducer } = this.props;
-        const { v_my_profile, v_your_name, v_save_changes, v_change_password } = vocabulary;
+        const { v_my_profile, v_your_name, v_save_changes, v_change_password, v_phone } = vocabulary;
 
-        const { validEmail, inputs, userSetJiraSync, rotateArrowLoop } = this.state;
+        const { validEmail, inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
         const { userName, email, jiraUsername, jiraPassword, syncJiraStatus } = inputs;
         const { checked } = syncJiraStatus;
 
@@ -199,8 +214,8 @@ class UserSetting extends Component {
                         <button onClick={e => this.openChangePasswordModal()}>{v_change_password}</button>
                     </div>
                     <div className="body_user_setting">
-                        <div className="column">{/*<i className="rectangle" />*/}</div>
-                        <form className="column" onSubmit={this.onSubmitHandler}>
+                        <Avatar />
+                        <form className="column column-inputs" onSubmit={this.onSubmitHandler}>
                             <label className="input_container">
                                 <span className="input_title">{v_your_name}</span>
                                 <Input
@@ -224,6 +239,22 @@ class UserSetting extends Component {
                                     }}
                                 />
                             </label>
+                            <div className="input_container_phone">
+                                <span className="input_title">{v_phone}</span>
+                                <ReactPhoneInput
+                                    defaultCountry="ua"
+                                    countryCodeEditable={false}
+                                    placeholder=""
+                                    value={phone.value}
+                                    onChange={(value, data) => {
+                                        this.setState({
+                                            phone: {
+                                                value: value.replace(/[- )(]/g, ''),
+                                            },
+                                        });
+                                    }}
+                                />
+                            </div>
                             <SwitchLanguage dropdown />
 
                             <div className="wrapper-jira-sync">
@@ -296,8 +327,11 @@ class UserSetting extends Component {
 
     updateUserData = () => {
         const { user } = this.props.userReducer;
-        const { email: userEmail, username: userName, tokenJira } = user;
+        const { email: userEmail, username: userName, tokenJira, phone } = user;
         this.setState(prevState => ({
+            phone: {
+                value: phone ? phone : '+380',
+            },
             inputs: {
                 ...prevState.inputs,
                 userName: {
