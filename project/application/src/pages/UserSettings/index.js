@@ -70,7 +70,7 @@ class UserSetting extends Component {
         return withPlus.toString().length > 5 ? withPlus : '';
     };
 
-    changeUserSetting = data => {
+    changeUserSetting = ({ userName: username, ...rest }) => {
         const { vocabulary, changeUserData, userReducer } = this.props;
         const { v_a_data_updated_ok, lang } = vocabulary;
 
@@ -85,7 +85,8 @@ class UserSetting extends Component {
                 Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
             },
             body: JSON.stringify({
-                ...data,
+                ...rest,
+                username,
                 phone: this.checkValidPhone(phone.value),
                 language: lang.short,
             }),
