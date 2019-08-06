@@ -42,12 +42,8 @@ export default {
     'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED':
         'Вы не можете установить учетную запись владельца команды как неактивную.',
 
-    v_more_option: 'Больше опций',
-    v_active_team: 'Активная команда',
-    v_set: 'Установить',
-    v_team_is_active: 'команду активной',
-    v_ok: 'ПРИМЕНИТЬ',
-    v_cancel: 'ОТМЕНА',
+    v_a_avatar_upload_error:
+        'Ошибка загрузки! Загружаемый файл не является изображением или его размер превышает 1 Мб.',
     v_a_data_updated_ok: 'Ваши данные были обновлены',
     v_a_change_password_great_ok: 'Великолепно! Теперь вы можете войти снова!',
     v_a_change_password_ok: 'Вы успешно изменили пароль!',
@@ -73,6 +69,15 @@ export default {
     v_a_task_delete: 'Вы действительно хотите удалить эту запись?',
     v_a_incorect_email: 'Неверно указан e-mail',
 
+    v_upload_image: 'Загрузить изображение',
+    v_delete_image: 'Удалить изображение',
+    v_phone: 'Телефон',
+    v_more_option: 'Больше опций',
+    v_active_team: 'Активная команда',
+    v_set: 'Установить',
+    v_team_is_active: 'команду активной',
+    v_ok: 'ПРИМЕНИТЬ',
+    v_cancel: 'ОТМЕНА',
     v_language: 'Язык',
     v_cofirm_new_password: 'Подтвердите новый пароль',
     v_current_password: 'Текущий пароль',
