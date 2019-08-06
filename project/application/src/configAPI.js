@@ -57,6 +57,19 @@ export const switchTeam = ({ teamId }) =>
         },
     });
 
+export const setAvatar = (id, data) =>
+    instance({
+        url: `/user/${id}/avatar`,
+        method: 'POST',
+        data,
+    });
+
+export const deleteAvatar = id =>
+    instance({
+        url: `/user/${id}/avatar`,
+        method: 'DELETE',
+    });
+
 // UNUSED AXIOS REQUESTS
 
 export const userInvite = ({ email }) =>
