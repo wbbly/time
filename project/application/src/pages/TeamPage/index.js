@@ -112,7 +112,7 @@ class TeamPage extends Component {
                         {checkIsAdminByRole(role) && <div className="access_container red">{role}</div>}
                     </td>
                     <td>
-                        <div>{isActive ? 'Active' : 'Not active'}</div>
+                        <div className="team-access-container">{isActive ? 'Active' : 'Not active'}</div>
                         {checkIsAdminByRole(currentTeam.data.role) && (
                             <i onClick={e => this.openEditModal(item)} className="edit_button item_button" />
                         )}

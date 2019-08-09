@@ -10,6 +10,7 @@ import { AppConfig } from '../../config';
 // Styles
 import './style.scss';
 import { logoutByUnauthorized } from '../../services/authentication';
+import defaultLogo from '../../images/icons/Group 20.svg';
 
 class UserMenu extends Component {
     state = {
@@ -49,7 +50,7 @@ class UserMenu extends Component {
                             title={v_more_option}
                         />
                     ) : (
-                        <i title={v_more_option} className="profile_user" />
+                        <img src={defaultLogo} id="avatar-img-small" /> 
                     )}
                     {this.state.activeUserMenu && (
                         <div className="user_setting_modal">
