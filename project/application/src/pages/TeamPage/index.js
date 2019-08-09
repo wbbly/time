@@ -22,6 +22,7 @@ import teamPageAction from '../../actions/TeamPageAction';
 // Queries
 
 // Config
+import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
@@ -90,13 +91,13 @@ class TeamPage extends Component {
                                     onMouseLeave={this.hideBigAvatar}
                                     className="avatar-small"
                                     style={{
-                                        backgroundImage: `url(https://api.wobbly.me.lazy-ants.com/${avatar})`,
+                                        backgroundImage: `url(${AppConfig.apiURL}${avatar})`,
                                     }}
                                 />
                                 <div
                                     className="avatar-big"
                                     style={{
-                                        backgroundImage: `url(https://api.wobbly.me.lazy-ants.com/${avatar})`,
+                                        backgroundImage: `url(${AppConfig.apiURL}${avatar})`,
                                     }}
                                 />
                             </>
