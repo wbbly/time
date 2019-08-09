@@ -121,6 +121,9 @@
   .team_page_data table .access_container.red {
     background-color: red;
   }
+  .team_page_data table .team-access-container {
+    min-width: 110px;
+  }
 
   .edit_button {
     display: block;
