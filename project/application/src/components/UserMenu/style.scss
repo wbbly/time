@@ -49,7 +49,7 @@
 .user_settings {
   width: 15px;
   height: 15px;
-  background: url("../../images/icons/cog-wheel-silhouette (2).svg") no-repeat
+  background: url("../../images/icons/cog-wheel-silhouette.svg") no-repeat
     center;
 }
 
@@ -78,6 +78,10 @@
   background-repeat: no-repeat;
   background-position: top center;
   background-size: cover;
+}
+.default-logo {
+  width: 24px;
+  border-radius: 50%;
 }
 
 i.profile_user {
