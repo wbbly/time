@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import defaultLogo from '../../images/icons/Group 20.svg';
 
 import { showMobileSupportToastr } from '../../App';
 
@@ -33,8 +34,8 @@ class TeamPage extends Component {
 
     headerItems = () => {
         const { vocabulary } = this.props;
-        const { v_name, v_team_role, v_team_access } = vocabulary;
-        return [v_name, 'E-mail', v_team_role, v_team_access];
+        const { v_name, v_team_role, v_team_access, v_phone } = vocabulary;
+        return [v_name, v_phone, 'E-mail', v_team_role, v_team_access];
     };
 
     changingName = false;
@@ -57,6 +58,14 @@ class TeamPage extends Component {
         });
     }
 
+    showBigAvatar = event => {
+        event.target.nextSibling.style.transform = 'scale(1)';
+    };
+
+    hideBigAvatar = event => {
+        event.target.nextSibling.style.transform = 'scale(0)';
+    };
+
     render() {
         const { isMobile, vocabulary, currentTeamDetailedData, currentTeam, switchTeam } = this.props;
         const { v_team, v_rename_team, v_invite_to_team } = vocabulary;
@@ -65,13 +74,38 @@ class TeamPage extends Component {
         ));
         const items = currentTeamDetailedData.data.map((item, index) => {
             const currentUser = item.user[0] || {};
-            const { username, email } = currentUser;
+            const { username, email, phone, avatar } = currentUser;
             const role = item.role_collaboration.title;
             const isActive = item.is_active;
 
             return (
                 <tr key={item.user[0].id}>
-                    <td>{username}</td>
+                    <td className="user-container">
+                        {!avatar ? (
+                            <img src={defaultLogo} className="avatar-small" />
+                        ) : (
+                            <>
+                                <div
+                                    onMouseEnter={this.showBigAvatar}
+                                    onMouseLeave={this.hideBigAvatar}
+                                    className="avatar-small"
+                                    style={{
+                                        backgroundImage: `url(https://api.wobbly.me.lazy-ants.com/${avatar})`,
+                                    }}
+                                />
+                                <div
+                                    className="avatar-big"
+                                    style={{
+                                        backgroundImage: `url(https://api.wobbly.me.lazy-ants.com/${avatar})`,
+                                    }}
+                                />
+                            </>
+                        )}
+                        <span>{username}</span>
+                    </td>
+                    <td className="phone_container">
+                        {phone ? phone.replace(/(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 ($2) $3 $4 $5') : '-'}
+                    </td>
                     <td>{email}</td>
                     <td>
                         {checkIsMemberByRole(role) && <div className="access_container">{role}</div>}
