@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { AppConfig } from '../../config';
 
 // Default avatar
-import dafaultAvatarImg from '../../images/icons/Group 20.svg';
+import dafaultAvatarImg from '../../images/icons/Group20.svg';
 
 // Actions
 import { setUserAvatarAction, deleteUserAvatarAction } from '../../actions/UserActions';
