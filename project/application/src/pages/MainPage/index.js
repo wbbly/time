@@ -125,6 +125,8 @@ class MainPage extends Component {
             }
         });
         this.socketConnection.on('stop-timer-v2', data => {
+            document.title = `Wobbly - time tracker for teams`;
+            document.querySelectorAll('[rel="shortcut icon"]')[0].href = '/favicon.png';
             clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
             this.TIMER_LIVE_SUBSCRIPTION = undefined;
             this.timerStop();
