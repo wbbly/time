@@ -9,11 +9,11 @@ export function getDateInString(seconds) {
     return getTimeDurationByGivenTimestamp(seconds);
 }
 
-export function getTimeDiff(timeFrom, inString) {
+export function getTimeDiff(timeFrom, inString, currentTimer) {
     const { serverClientTimediff } = store.getState().mainPageReducer;
     const timeDiff = +moment() - timeFrom + serverClientTimediff;
 
-    return inString ? getTimeDurationByGivenTimestamp(+timeDiff) : moment(timeDiff).utc();
+    return inString ? getTimeDurationByGivenTimestamp(+timeDiff, true, currentTimer.issue) : moment(timeDiff).utc();
 }
 
 export function getTimeInSecondFromString(string) {
@@ -51,14 +51,17 @@ export function changeDate(arr) {
     return newArr;
 }
 
-export function getTimeDurationByGivenTimestamp(milliseconds) {
+export function getTimeDurationByGivenTimestamp(milliseconds, global = false, issue) {
     let hour, minute, seconds;
     seconds = Math.floor(milliseconds / 1000);
     minute = Math.floor(seconds / 60);
     seconds = seconds % 60;
     hour = Math.floor(minute / 60);
     minute = minute % 60;
-
+    if (global) {
+        document.querySelectorAll('[rel="shortcut icon"]')[0].href = '/favicon-active.png';
+        document.title = `${padTime(hour)}:${padTime(minute)}:${padTime(seconds)} ${issue}`;
+    }
     return `${padTime(hour)}:${padTime(minute)}:${padTime(seconds)}`;
 }
 
