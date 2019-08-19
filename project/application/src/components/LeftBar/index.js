@@ -87,9 +87,9 @@ class LeftBar extends Component {
             }
         });
         this.socketConnection.on('stop-timer-v2', data => {
+            resetCurrentTimerAction();
             document.title = `Wobbly - time tracker for teams`;
             document.querySelectorAll('[rel="shortcut icon"]')[0].href = '/favicon.png';
-            resetCurrentTimerAction();
         });
         this.socketConnection.on('user-unauthorized', data => logoutByUnauthorized());
     };
@@ -128,11 +128,14 @@ class LeftBar extends Component {
             return false;
         }
 
-        this.setState({ timer: getTimeDiff(currentTimer.timeStart, true, currentTimer) });
+        this.setState({ timer: getTimeDiff(currentTimer.timeStart, true) });
     }
 
     visualTimer() {
+        const { currentTimer } = this.props;
         if (!!this.state.timer && window.location.pathname !== '/timer') {
+            document.querySelectorAll('[rel="shortcut icon"]')[0].href = '/favicon-active.png';
+            document.title = `${this.state.timer} ${currentTimer.issue} • ${currentTimer.project.name}`;
             return this.state.timer;
         }
     }

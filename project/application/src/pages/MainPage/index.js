@@ -71,6 +71,7 @@ class MainPage extends Component {
         isShowAddTaskMobile: false,
         isShowListProjectsMobile: false,
         swipedTarget: undefined,
+        currentTimer: null,
     };
 
     initSocketConnection() {
@@ -106,6 +107,7 @@ class MainPage extends Component {
                             issue: decodeTimeEntryIssue(data.issue),
                             project: data.project,
                         };
+                        this.setState({ currentTimer });
                         setCurrentTimerAction(currentTimer);
                         this.timerStateUpdateWithSocketData(currentTimer);
                     },
@@ -125,8 +127,6 @@ class MainPage extends Component {
             }
         });
         this.socketConnection.on('stop-timer-v2', data => {
-            document.title = `Wobbly - time tracker for teams`;
-            document.querySelectorAll('[rel="shortcut icon"]')[0].href = '/favicon.png';
             clearInterval(this.TIMER_LIVE_SUBSCRIPTION);
             this.TIMER_LIVE_SUBSCRIPTION = undefined;
             this.timerStop();
@@ -200,7 +200,7 @@ class MainPage extends Component {
 
     timerStop() {
         const { resetCurrentTimerAction } = this.props;
-
+        this.setState({ currentTimer: null });
         resetCurrentTimerAction();
         this.getUserTimeEntries().then(
             _ => {
@@ -220,6 +220,8 @@ class MainPage extends Component {
             },
             _ => {}
         );
+        document.title = `Wobbly - time tracker for teams`;
+        document.querySelectorAll('[rel="shortcut icon"]')[0].href = '/favicon.png';
     }
 
     timerStateUpdateWithSocketData(socketData) {
@@ -454,6 +456,17 @@ class MainPage extends Component {
             target.className = 'ul';
         }
     };
+
+    visualTimer() {
+        const { currentTimer, timerDurationValue } = this.state;
+        if (currentTimer) {
+            document.querySelectorAll('[rel="shortcut icon"]')[0].href = '/favicon-active.png';
+            document.title = `${getTimeDurationByGivenTimestamp(+moment(timerDurationValue))} ${currentTimer.issue} • ${
+                currentTimer.project.name
+            }`;
+        }
+        return getTimeDurationByGivenTimestamp(+moment(timerDurationValue));
+    }
 
     createTimeEntriesList(data) {
         const { viewport, isMobile, vocabulary } = this.props;
@@ -690,9 +703,7 @@ class MainPage extends Component {
                                 </i>
 
                                 <div className="time_container">
-                                    {this.state.timerDurationValue
-                                        ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
-                                        : '00:00:00'}
+                                    {this.state.timerDurationValue ? this.visualTimer() : '00:00:00'}
                                 </div>
                                 <i
                                     onClick={_ => {
@@ -735,9 +746,7 @@ class MainPage extends Component {
                     ) : (
                         <div className="mobile-info-block-current-going-task">
                             <div className="mobile-info-block-current-going-task__time">
-                                {this.state.timerDurationValue
-                                    ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
-                                    : '00:00:00'}
+                                {this.state.timerDurationValue ? this.visualTimer() : '00:00:00'}
                             </div>
                             <div className="mobile-info-block-current-going-task__name-task">
                                 {(this.issueTargetElement || {}).value || ''}
