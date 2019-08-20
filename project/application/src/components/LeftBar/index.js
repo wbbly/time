@@ -12,6 +12,7 @@ import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
 import { decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { logoutByUnauthorized } from '../../services/authentication';
+import { updatePageTitle } from '../../services/pageTitleService';
 
 // Components
 import TeamSwitcher from '../TeamSwitcher';
@@ -130,8 +131,13 @@ class LeftBar extends Component {
     }
 
     visualTimer() {
-        if (!!this.state.timer && window.location.pathname !== '/timer') {
-            return this.state.timer;
+        if (window.location.pathname !== '/timer') {
+            const duration = this.state.timer || '';
+            const issue = this.props.currentTimer.issue || '';
+            const project = (this.props.currentTimer.project || {}).name || '';
+            updatePageTitle(duration, issue, project);
+
+            return duration;
         }
     }
 

@@ -16,6 +16,7 @@ import { getDateInString, getTimeDiff, getTimeDurationByGivenTimestamp } from '.
 import { encodeTimeEntryIssue, decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import { apiCall } from '../../services/apiService';
+import { updatePageTitle } from '../../services/pageTitleService';
 
 // Components
 import ManualTimeModal from '../../components/ManualTimeModal';
@@ -453,6 +454,15 @@ class MainPage extends Component {
         }
     };
 
+    visualTimer() {
+        const duration = getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue)) || '';
+        const issue = (this.issueTargetElement || {}).value || '';
+        const project = (this.state.seletedProject || {}).name || '';
+        updatePageTitle(duration, issue, project);
+
+        return duration || '00:00:00';
+    }
+
     createTimeEntriesList(data) {
         const { viewport, isMobile, vocabulary } = this.props;
         const { v_edit_task, v_delete_task } = vocabulary;
@@ -687,11 +697,7 @@ class MainPage extends Component {
                                     )}
                                 </i>
 
-                                <div className="time_container">
-                                    {this.state.timerDurationValue
-                                        ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
-                                        : '00:00:00'}
-                                </div>
+                                <div className="time_container">{this.visualTimer()}</div>
                                 <i
                                     onClick={_ => {
                                         if (this.state.timerPlayButtonLoader) return;
@@ -732,11 +738,7 @@ class MainPage extends Component {
                         )
                     ) : (
                         <div className="mobile-info-block-current-going-task">
-                            <div className="mobile-info-block-current-going-task__time">
-                                {this.state.timerDurationValue
-                                    ? getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue))
-                                    : '00:00:00'}
-                            </div>
+                            <div className="mobile-info-block-current-going-task__time">{this.visualTimer()}</div>
                             <div className="mobile-info-block-current-going-task__name-task">
                                 {(this.issueTargetElement || {}).value || ''}
                             </div>
