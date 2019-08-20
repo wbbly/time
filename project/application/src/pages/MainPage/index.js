@@ -494,7 +494,8 @@ class MainPage extends Component {
                             }}
                         >
                             <div className="time_now">
-                                <div>{moment(item.startDatetime).format('HH:mm')}</div>-{' '}
+                                <div>{moment(item.startDatetime).format('HH:mm')}</div>
+                                <span>&nbsp;-&nbsp;</span>
                                 <div>{moment(item.endDatetime).format('HH:mm')}</div>
                             </div>
                             <div className="timePassed">
