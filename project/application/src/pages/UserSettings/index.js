@@ -65,9 +65,10 @@ class UserSetting extends Component {
         },
     };
 
-    checkValidPhone = phone => {
-        let withPlus = phone.split('')[0] === '+' ? phone : `+${phone}`;
-        return withPlus.toString().length > 5 ? withPlus : '';
+    checkValidPhone = (phone, code) => {
+        let editedPhone = phone.replace(code, code + ' ');
+
+        return editedPhone.split('')[0] === '+' ? editedPhone : `+${editedPhone}`;
     };
 
     changeUserSetting = ({ userName: username, ...rest }) => {
@@ -87,7 +88,7 @@ class UserSetting extends Component {
             body: JSON.stringify({
                 ...rest,
                 username,
-                phone: this.checkValidPhone(phone.value),
+                phone: phone.value,
                 language: lang.short,
             }),
         }).then(
@@ -204,7 +205,6 @@ class UserSetting extends Component {
         const { validEmail, inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
         const { userName, email, jiraUsername, jiraPassword, syncJiraStatus } = inputs;
         const { checked } = syncJiraStatus;
-
         return (
             <div className={classNames('wrapper_user_setting_page', { 'wrapper_user_setting_page--mobile': isMobile })}>
                 {Object.prototype.toString.call(userReducer.changePasswordModal) === '[object Boolean]' &&
@@ -245,12 +245,14 @@ class UserSetting extends Component {
                                 <ReactPhoneInput
                                     defaultCountry="ua"
                                     countryCodeEditable={false}
+                                    autoFormat={false}
                                     placeholder=""
+                                    inputExtraProps={{ value: phone.value }}
                                     value={phone.value}
                                     onChange={(value, data) => {
                                         this.setState({
                                             phone: {
-                                                value: value.replace(/[- )(]/g, ''),
+                                                value: this.checkValidPhone(value, data.dialCode),
                                             },
                                         });
                                     }}
