@@ -66,9 +66,14 @@ class UserSetting extends Component {
     };
 
     checkValidPhone = (phone, code) => {
-        let editedPhone = phone.replace(code, code + ' ');
+        const phoneWithoutCode = phone.replace(code, '');
+        if (phoneWithoutCode.length) {
+            let editedPhone = `${code.charAt(0) === '+' ? code : '+' + code} ${phoneWithoutCode}`;
 
-        return editedPhone.split('')[0] === '+' ? editedPhone : `+${editedPhone}`;
+            return editedPhone;
+        }
+
+        return '';
     };
 
     changeUserSetting = ({ userName: username, ...rest }) => {
