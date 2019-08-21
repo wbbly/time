@@ -455,12 +455,12 @@ class MainPage extends Component {
     };
 
     visualTimer() {
-        const duration = getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue)) || '';
+        const duration = getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue)) || '00:00:00';
         const issue = (this.issueTargetElement || {}).value || '';
         const project = (this.state.seletedProject || {}).name || '';
-        updatePageTitle(duration, issue, project);
+        updatePageTitle(duration === '00:00:00' ? null : duration, issue, project);
 
-        return duration || '00:00:00';
+        return duration;
     }
 
     createTimeEntriesList(data) {

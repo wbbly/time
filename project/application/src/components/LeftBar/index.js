@@ -135,7 +135,7 @@ class LeftBar extends Component {
             const duration = this.state.timer || '';
             const issue = this.props.currentTimer.issue || '';
             const project = (this.props.currentTimer.project || {}).name || '';
-            updatePageTitle(duration, issue, project);
+            updatePageTitle(!duration ? null : duration, issue, project);
 
             return duration;
         }
