@@ -66,14 +66,15 @@ class UserSetting extends Component {
     };
 
     checkValidPhone = (phone, code) => {
-        const phoneWithoutCode = phone.replace(code, '');
+        const phoneWithoutPlus = phone.charAt(0) === '+' ? phone.substr(1) : phone;
+        const phoneWithoutCode = phoneWithoutPlus.replace(code, '');
         if (phoneWithoutCode.length) {
-            let editedPhone = `${code.charAt(0) === '+' ? code : '+' + code} ${phoneWithoutCode}`;
+            let editedPhone = `+${code} ${phoneWithoutCode}`;
 
             return editedPhone;
         }
 
-        return '';
+        return `+${code}`;
     };
 
     changeUserSetting = ({ userName: username, ...rest }) => {
@@ -93,7 +94,7 @@ class UserSetting extends Component {
             body: JSON.stringify({
                 ...rest,
                 username,
-                phone: phone.value,
+                phone: (phone.value || '').trim().indexOf(' ') > -1 ? phone.value : '',
                 language: lang.short,
             }),
         }).then(
