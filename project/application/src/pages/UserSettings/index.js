@@ -25,6 +25,7 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
+import SwitchJiraType from '../../components/SwitchJiraType';
 
 class UserSetting extends Component {
     state = {
@@ -44,6 +45,15 @@ class UserSetting extends Component {
                 value: '',
                 type: 'email',
                 name: 'email',
+            },
+            jiraURL: {
+                value: '',
+                type: 'text',
+                name: 'jiraURL',
+                required: true,
+            },
+            jiraType: {
+                value: '',
             },
             jiraUsername: {
                 value: '',
@@ -119,11 +129,20 @@ class UserSetting extends Component {
 
     onSubmitHandler = event => {
         event.preventDefault();
+        const { vocabulary } = this.props;
+
         const { inputs, userSetJiraSync } = this.state;
-        const { jiraUsername, jiraPassword, syncJiraStatus } = inputs;
+        const { jiraUsername, jiraPassword, syncJiraStatus, jiraURL, jiraType } = inputs;
 
         const userData = Object.keys(inputs).reduce((acc, curr) => {
-            if (curr === 'syncJiraStatus' || curr === 'jiraUsername' || curr === 'jiraPassword') return acc;
+            if (
+                curr === 'syncJiraStatus' ||
+                curr === 'jiraUsername' ||
+                curr === 'jiraPassword' ||
+                curr === 'jiraURL' ||
+                curr === 'jiraType'
+            )
+                return acc;
             return { ...acc, [curr]: inputs[curr].value };
         }, {});
         if (authValidation('email', userData.email)) {
@@ -131,8 +150,24 @@ class UserSetting extends Component {
             return;
         }
         this.setState({ validEmail: true });
+
         if (userSetJiraSync) {
-            userData.tokenJira = syncJiraStatus.checked ? btoa(`${jiraUsername.value}:${jiraPassword.value}`) : '';
+            if (syncJiraStatus.checked) {
+                userData.tokenJira = '';
+                try {
+                    userData.tokenJira = btoa(`${jiraUsername.value}:${jiraPassword.value}`);
+                } catch (e) {
+                    alert(vocabulary['ERROR.TIMER.JIRA_SYNC_FAILED']);
+                    return false;
+                }
+
+                userData.urlJira = jiraURL.value;
+                userData.typeJira = jiraType.value;
+            } else {
+                userData.tokenJira = '';
+                userData.urlJira = '';
+                userData.typeJira = '';
+            }
         }
         this.changeUserSetting(userData);
     };
@@ -162,17 +197,33 @@ class UserSetting extends Component {
             },
         }));
     };
-
+    selectedJiraType = value => {
+        this.setState(prevState => ({
+            inputs: {
+                ...prevState.inputs,
+                jiraType: {
+                    value,
+                },
+            },
+        }));
+    };
     verifyJiraAuth = () => {
         this.setState({ rotateArrowLoop: true });
         const { vocabulary } = this.props;
 
         const { inputs } = this.state;
-        const { jiraUsername, jiraPassword } = inputs;
+        const { jiraUsername, jiraPassword, jiraURL } = inputs;
 
-        const tokenJira = btoa(`${jiraUsername.value}:${jiraPassword.value}`);
+        let tokenJira;
+        try {
+            tokenJira = btoa(`${jiraUsername.value}:${jiraPassword.value}`);
+        } catch (e) {
+            alert(vocabulary['ERROR.TIMER.JIRA_SYNC_FAILED']);
+            this.setState({ rotateArrowLoop: false });
+            return false;
+        }
 
-        return apiCall(AppConfig.apiURL + `sync/jira/my-permissions?token=${tokenJira}`, {
+        return apiCall(AppConfig.apiURL + `sync/jira/my-permissions?token=${tokenJira}&urlJira=${jiraURL.value}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -209,7 +260,7 @@ class UserSetting extends Component {
         const { v_my_profile, v_your_name, v_save_changes, v_change_password, v_phone } = vocabulary;
 
         const { validEmail, inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
-        const { userName, email, jiraUsername, jiraPassword, syncJiraStatus } = inputs;
+        const { userName, email, jiraUsername, jiraPassword, syncJiraStatus, jiraURL, jiraType } = inputs;
         const { checked } = syncJiraStatus;
         return (
             <div className={classNames('wrapper_user_setting_page', { 'wrapper_user_setting_page--mobile': isMobile })}>
@@ -222,7 +273,29 @@ class UserSetting extends Component {
                     </div>
                     <div className="body_user_setting">
                         <Avatar />
-                        <form className="column column-inputs" onSubmit={this.onSubmitHandler}>
+                        <form
+                            autocomplete="new-password"
+                            className="column column-inputs"
+                            onSubmit={this.onSubmitHandler}
+                        >
+                            <input
+                                autocomplete="new-password"
+                                className="fakecredentials"
+                                type="text"
+                                name="fakeusernameremembered"
+                            />
+                            <input
+                                autocomplete="new-password"
+                                className="fakecredentials"
+                                type="email"
+                                name="fakeuseremailremembered"
+                            />
+                            <input
+                                autocomplete="new-password"
+                                className="fakecredentials"
+                                type="password"
+                                name="fakepasswordremembered"
+                            />
                             <label className="input_container">
                                 <span className="input_title">{v_your_name}</span>
                                 <Input
@@ -279,6 +352,23 @@ class UserSetting extends Component {
                                 {checked &&
                                     userSetJiraSync && (
                                         <>
+                                            <SwitchJiraType
+                                                dropdown
+                                                onSelect={this.selectedJiraType}
+                                                selectedType={jiraType.value}
+                                            />
+                                            <label className="input_container">
+                                                <span className="input_title">Jira url</span>
+                                                <Input
+                                                    config={{
+                                                        value: jiraURL.value,
+                                                        type: jiraURL.type,
+                                                        name: jiraURL.name,
+                                                        required: jiraURL.required,
+                                                        onChange: this.onChangeHandler,
+                                                    }}
+                                                />
+                                            </label>
                                             <label className="input_container">
                                                 <span className="input_title">Login</span>
                                                 <Input
@@ -305,6 +395,18 @@ class UserSetting extends Component {
                                                         title="Verify"
                                                     />
                                                 </span>
+                                                {jiraType.value === 'cloud' && (
+                                                    <span className="input_subtitle">
+                                                        (Log in to{' '}
+                                                        <a
+                                                            href="https://id.atlassian.com/manage/api-tokens"
+                                                            target="_blank"
+                                                        >
+                                                            https://id.atlassian.com/manage/api-tokens
+                                                        </a>{' '}
+                                                        to get the API token)
+                                                    </span>
+                                                )}
                                                 <Input
                                                     config={{
                                                         value: jiraPassword.value,
