@@ -37,8 +37,8 @@ export default {
 	    'ERROR.USER.UPDATE_USER_FAILED': 'Beim Aktualisieren der Benutzerdaten ist ein Fehler aufgetreten.',
 	    'ERROR.USER.UPDATE_USER_ROLE_FAILED': 'Sie habe nicht die notwendige Berechtigung, um die Rolle in Ihrem Team zu ändern.',
 	    'ERROR.USER.UPDATE_TEAM_OWNER_ROLE_FAILED': 'Sie habe nicht die notwendige Berechtigung, um die Rolle des Teambesitzers zu ändern.',
-	    'ERROR.USER.UPDATE_ACTIVE_STATUS_FAILED': "Sie können Ihr Konto in Ihrem eigenen Team nicht inaktiv setzen.",
-	    'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED': "Sie können das Team-Besitzerkonto nicht inaktiv setzen.",
+	    'ERROR.USER.UPDATE_ACTIVE_STATUS_FAILED': 'Sie können Ihr Konto in Ihrem eigenen Team nicht inaktiv setzen.',
+	    'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED': 'Sie können das Team-Besitzerkonto nicht inaktiv setzen.',
 
 		v_a_avatar_upload_error:
 	        'Fehler beim Laden! Die hochgeladene Datei ist entweder kein Bild oder größer als 1 MB.',
@@ -61,7 +61,7 @@ export default {
 	    v_a_starting: 'starten',
 	    v_a_stopping: 'stoppen',
 	    v_a_time_tracking: 'Zeiterfassung',
-	    v_a_account_create: "Konto erstellt",
+	    v_a_account_create: 'Konto erstellt',
 	    v_a_confirm_password_error: 'Ungültige Passwortbestätigung',
 	    v_a_project_name_error: 'Projektname darf nicht leer sein',
 	    v_a_task_delete: 'Möchten Sie diesen Eintrag wirklich löschen?',
