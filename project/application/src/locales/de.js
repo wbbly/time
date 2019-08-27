@@ -5,7 +5,8 @@ export default {
         'Die Mindestzeit für das Hinzufügen von Worklog in Jira beträgt 1 Minute.',
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
         'Beim Hinzufügen des Arbeitsprotokolls ins Jira ist ein Fehler aufgetreten. Stellen Sie sicher, dass der Zugriff auf Jira korrekt ist und der Aufgabenname dem Format "JIRA-1-Kommentar" entspricht. ',
-    'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': 'Die aktuelle Aufgabe wurde bereits zu Jiras Arbeitsprotokoll hinzugefügt.',
+    'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED':
+        'Die aktuelle Aufgabe wurde bereits zu Jiras Arbeitsprotokoll hinzugefügt.',
 
     'ERROR.TIMER.JIRA_SYNC_SUCCESS': 'Testverbindung mit Jira wurde erfolgreich hergestellt.',
     'ERROR.TIMER.JIRA_SYNC_FAILED':
@@ -25,7 +26,8 @@ export default {
     'ERROR.TIMER.UPDATE_FAILED': 'Beim Aktualisieren des Timers ist ein Fehler aufgetreten.',
     'ERROR.TIMER.DELETE_FAILED': 'Beim Löschen des Timers ist ein Fehler aufgetreten',
     'ERROR.USER.NOT_MEMBER': 'Der Benutzer ist gehört noch nicht zu einem Team.',
-    'ERROR.USER.RESET_EMAIL_FAILED': 'Beim Senden einer E-Mail zum Zurücksetzen des Passworts ist ein Fehler aufgetreten.',
+    'ERROR.USER.RESET_EMAIL_FAILED':
+        'Beim Senden einer E-Mail zum Zurücksetzen des Passworts ist ein Fehler aufgetreten.',
     'ERROR.USER.CURRENT_PASSWORD_WRONG': 'Das aktuelle Passwort ist falsch.',
     'ERROR.USER.CHANGE_PASSWORD_FAILED': 'Beim Ändern des Passworts ist ein Fehler aufgetreten.',
     'ERROR.USER.EMAIL_PASSWORD_WRONG': 'Ungültige E-Mail-Adresse oder Passwort.',
@@ -35,12 +37,14 @@ export default {
     'ERROR.USER.CREATE_USER_FAILED': 'Beim Anlegen des Benutzers ist ein Fehler aufgetreten.',
     'ERROR.USER.UPDATE_USER_PERMISSIONS_DENIED': 'Sie haben keine Berechtigung, die Benutzerdaten zu aktualisieren.',
     'ERROR.USER.UPDATE_USER_FAILED': 'Beim Aktualisieren der Benutzerdaten ist ein Fehler aufgetreten.',
-    'ERROR.USER.UPDATE_USER_ROLE_FAILED': 'Sie habe nicht die notwendige Berechtigung, um die Rolle in Ihrem Team zu ändern.',
-    'ERROR.USER.UPDATE_TEAM_OWNER_ROLE_FAILED': 'Sie habe nicht die notwendige Berechtigung, um die Rolle des Teambesitzers zu ändern.',
+    'ERROR.USER.UPDATE_USER_ROLE_FAILED':
+        'Sie habe nicht die notwendige Berechtigung, um die Rolle in Ihrem Team zu ändern.',
+    'ERROR.USER.UPDATE_TEAM_OWNER_ROLE_FAILED':
+        'Sie habe nicht die notwendige Berechtigung, um die Rolle des Teambesitzers zu ändern.',
     'ERROR.USER.UPDATE_ACTIVE_STATUS_FAILED': 'Sie können Ihr Konto in Ihrem eigenen Team nicht inaktiv setzen.',
     'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED': 'Sie können das Team-Besitzerkonto nicht inaktiv setzen.',
 
-	v_a_avatar_upload_error: 'Fehler beim Laden! Die hochgeladene Datei ist entweder kein Bild oder größer als 1 MB.',
+    v_a_avatar_upload_error: 'Fehler beim Laden! Die hochgeladene Datei ist entweder kein Bild oder größer als 1 MB.',
     v_a_data_updated_ok: 'Ihre Daten wurden aktualisiert',
     v_a_change_password_great_ok: 'Großartig! Sie können sich nun mit dem neuen Passwort einloggen! ',
     v_a_change_password_ok: 'Sie haben das Passwort erfolgreich geändert!',
@@ -93,7 +97,8 @@ export default {
     v_edit_task: 'Ändern',
     v_delete_task: 'Löschen',
     v_add_confirm_password: 'Passwort bestätigen',
-    v_registration_terms_and_policy: 'Durch die Registrierung stimmen Sie den Bedingungen und Datenschutzbestimmungen zu',
+    v_registration_terms_and_policy:
+        'Durch die Registrierung stimmen Sie den Bedingungen und Datenschutzbestimmungen zu',
     v_log_in: 'Login',
     v_login: 'Benutzername',
     v_register: 'Registrieren',

@@ -126,8 +126,8 @@ class RegisterPage extends Component {
         const { email, password, confirmPassword } = this.state.inputs;
         const { vocabulary } = this.props;
         const {
-            v_login,
-            v_add_your_login,
+            v_email,
+            v_add_your_email,
             v_add_your_password,
             v_password,
             v_cofirm_password,
@@ -144,7 +144,7 @@ class RegisterPage extends Component {
                 <i className="register-block__logo" />
                 <form className="register-block__form" onSubmit={this.onSubmitHandler}>
                     <label className="register-block__label">
-                        <span className="register-block__label-text">{v_login}</span>
+                        <span className="register-block__label-text">{v_email}</span>
                         <Input
                             config={{
                                 valid: validEmail,
@@ -153,7 +153,7 @@ class RegisterPage extends Component {
                                 name: email.name,
                                 value: email.value,
                                 type: email.type,
-                                placeholder: `${v_add_your_login}...`,
+                                placeholder: `${v_add_your_email}...`,
                             }}
                         />
                     </label>
