@@ -110,8 +110,8 @@ class AuthPage extends Component {
         const { email, password } = inputs;
         const { history, vocabulary } = this.props;
         const {
-            v_login,
-            v_add_your_login,
+            v_email,
+            v_add_your_email,
             v_add_your_password,
             v_password,
             v_enter,
@@ -128,7 +128,7 @@ class AuthPage extends Component {
                 <i className="page_title" />
                 <form className="authorisation_window" onSubmit={this.onSubmitHandler}>
                     <label className="input_container">
-                        <span className="input_title">{v_login}</span>
+                        <span className="input_title">{v_email}</span>
                         <Input
                             config={{
                                 valid: validEmail,
@@ -136,7 +136,7 @@ class AuthPage extends Component {
                                 name: email.name,
                                 value: email.value,
                                 onChange: this.onChangeHandler,
-                                placeholder: `${v_add_your_login}...`,
+                                placeholder: `${v_add_your_email}...`,
                             }}
                         />
                     </label>
