@@ -18,6 +18,7 @@ import { Loading } from '../../components/Loading';
 
 // Actions
 import teamPageAction from '../../actions/TeamPageAction';
+import { getCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
 
 // Queries
 
@@ -193,7 +194,9 @@ class TeamPage extends Component {
     }
 
     componentDidMount() {
+        const { getCurrentTeamDetailedDataAction } = this.props;
         showMobileSupportToastr();
+        getCurrentTeamDetailedDataAction();
     }
 }
 
@@ -211,6 +214,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => {
     return {
         teamPageAction: (actionType, action) => dispatch(teamPageAction(actionType, action))[1],
+        getCurrentTeamDetailedDataAction: () => dispatch(getCurrentTeamDetailedDataAction()),
     };
 };
 
