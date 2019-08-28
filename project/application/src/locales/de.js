@@ -89,7 +89,8 @@ export default {
     v_change_password: 'Passwort ändern',
     v_neues_kennwort: 'Neues Kennwort',
     v_send: 'Senden',
-    v_check_email: 'Überprüfen Sie die E-Mail-Adresse, um das Passwort zurückzusetzen',
+    v_check_email:
+        'Wenn Sie sich mit dieser E-Mail Adresse bei Woobly bereits registriert haben, erhalten Sie in Kürze eine E-Mail mit der Anleitung zum Zurücksetzen des Passworts',
     v_enter_email: 'E-Mail-Adresse eingeben',
     v_create_team: 'Ein Team erstellen',
     v_search_project: 'Nach einem Projekt suchen',
