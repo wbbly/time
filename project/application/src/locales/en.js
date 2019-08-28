@@ -85,7 +85,7 @@ export default {
     v_change_password: 'Change password',
     v_new_password: 'New password',
     v_send: 'Send',
-    v_check_email: 'Check the email address for a password reset email',
+    v_check_email: 'If your email is registered in Wobbly check your mail and follow the instructions in the letter',
     v_enter_email: 'Add your email',
     v_create_team: 'Create team',
     v_search_project: 'Search project',

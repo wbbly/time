@@ -88,7 +88,7 @@ export default {
     v_change_password: 'Изменить пароль',
     v_new_password: 'Новый пароль',
     v_send: 'Отправить',
-    v_check_email: 'Проверьте адрес электронной почты для сброса пароля',
+    v_check_email: 'Если ваш email зарегистрирован в Wobbly проверьте вашу почту и следуйте инструкции в письме',
     v_enter_email: 'Введите email',
     v_create_team: 'Создать команду',
     v_search_project: 'Поиск проекта',
