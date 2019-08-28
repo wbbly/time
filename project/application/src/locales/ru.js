@@ -152,4 +152,6 @@ export default {
     v_team_access: 'Доступ',
     v_connection_problem: 'Потеряно интернет соединение',
     v_connection_restored: 'Соединение восстановлено',
+    v_active: 'Активный',
+    v_not_active: 'Не активен',
 };

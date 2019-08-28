@@ -149,4 +149,6 @@ export default {
     v_team_access: 'Team Access',
     v_connection_problem: 'Lost internet connection',
     v_connection_restored: 'Internet connection restored',
+    v_active: 'Active',
+    v_not_active: 'Not active',
 };

@@ -113,7 +113,7 @@ class EditTeamModal extends Component {
 
     render() {
         const { vocabulary } = this.props;
-        const { v_name, v_team_role, v_team_access, v_edit_user } = vocabulary;
+        const { v_name, v_team_role, v_team_access, v_edit_user, v_active, v_not_active } = vocabulary;
         return (
             <div className="edit_team_modal_wrapper">
                 <div className="edit_team_modal_data">
@@ -162,12 +162,12 @@ class EditTeamModal extends Component {
                                 <FormControlLabel
                                     value={USER_STATUS.ACTIVE}
                                     control={<Radio color="primary" />}
-                                    label="Active"
+                                    label={v_active}
                                 />
                                 <FormControlLabel
                                     value={USER_STATUS.NOT_ACTIVE}
                                     control={<Radio color="primary" />}
-                                    label="Not active"
+                                    label={v_not_active}
                                 />
                             </RadioGroup>
                         </ThemeProvider>
