@@ -14,11 +14,11 @@ class SwitchLanguage extends Component {
         isOpenDropdown: false,
     };
 
-    isActive = (language, dropdown = false) => {
+    isActive = language => {
         const { vocabulary } = this.props;
         const { lang } = vocabulary;
 
-        return dropdown ? lang.long : lang.short === language;
+        return lang.short === language;
     };
 
     closeDropdown = event => {
@@ -33,7 +33,7 @@ class SwitchLanguage extends Component {
     render() {
         const { dropdown, setLanguage, isMobile, vocabulary, languages } = this.props;
         const { isOpenDropdown } = this.state;
-        const { v_language } = vocabulary;
+        const { v_language, lang } = vocabulary;
 
         return (
             <div
@@ -47,7 +47,7 @@ class SwitchLanguage extends Component {
                     <>
                         <div className="wrapper-switch-language__title">{v_language}:</div>
                         <div className="wrapper-switch-language__select" onClick={this.openDropdown}>
-                            {this.isActive(null, dropdown)}
+                            <span>{lang.long}</span>
 
                             {isOpenDropdown && (
                                 <div className="wrapper-switch-language__list">
