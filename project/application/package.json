@@ -41,7 +41,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "copy:libs": "cp -r libs/react-date-range node_modules",
+    "copy:libs": "cp -r libs/* node_modules",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.js\""
