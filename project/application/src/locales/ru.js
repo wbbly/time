@@ -154,4 +154,12 @@ export default {
     v_connection_restored: 'Соединение восстановлено',
     v_active: 'Активный',
     v_not_active: 'Не активен',
+    v_today: 'Сегодня',
+    v_yesterday: 'Вчера',
+    v_thisWeek: 'Текущая неделя',
+    v_lastWeek: 'Прошлая неделя',
+    v_thisMonth: 'Текущий месяц',
+    v_lastMonth: 'Прошлый месяц',
+    v_days_up_to_today: 'дней до сегодня',
+    v_days_starting_today: 'дней от сегодня',
 };

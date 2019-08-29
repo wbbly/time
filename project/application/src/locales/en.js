@@ -151,4 +151,12 @@ export default {
     v_connection_restored: 'Internet connection restored',
     v_active: 'Active',
     v_not_active: 'Not active',
+    v_today: 'Today',
+    v_yesterday: 'Yesterday',
+    v_thisWeek: 'This week',
+    v_lastWeek: 'Last week',
+    v_thisMonth: 'This month',
+    v_lastMonth: 'Last month',
+    v_days_up_to_today: 'days up to today',
+    v_days_starting_today: 'days starting today',
 };
