@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import * as moment from 'moment';
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
-import * as rdrLocales from 'react-date-range/dist/locale';
+
 import { DateRangePicker } from 'react-date-range';
+import { enGB, ru, de } from 'react-date-range/src/locale';
+import { staticRanges, inputRanges } from './ranges';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 
@@ -40,6 +43,12 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
+
+const localeMap = {
+    ru: ru,
+    en: enGB,
+    de: de,
+};
 
 class ReportsPage extends Component {
     state = {
@@ -134,7 +143,20 @@ class ReportsPage extends Component {
 
     render() {
         const { isMobile, vocabulary, currentTeam } = this.props;
-        const { v_summary_report, v_total, v_export } = vocabulary;
+        const {
+            v_summary_report,
+            v_total,
+            v_export,
+            v_today,
+            v_yesterday,
+            v_thisWeek,
+            v_lastWeek,
+            v_thisMonth,
+            v_lastMonth,
+            v_days_up_to_today,
+            v_days_starting_today,
+            lang,
+        } = vocabulary;
 
         const { isInitialFetching } = this.state;
 
@@ -159,7 +181,7 @@ class ReportsPage extends Component {
                                 {this.state.dateSelect && (
                                     <div className="select_body" ref={div => (this.datePickerSelect = div)}>
                                         <DateRangePicker
-                                            locale={rdrLocales['enGB']}
+                                            locale={localeMap[lang.short]}
                                             ranges={[
                                                 {
                                                     startDate: this.state.selectionRange.startDate,
@@ -168,6 +190,15 @@ class ReportsPage extends Component {
                                                     firstDayOfWeek: 1,
                                                 },
                                             ]}
+                                            staticRanges={staticRanges(
+                                                v_today,
+                                                v_yesterday,
+                                                v_thisWeek,
+                                                v_lastWeek,
+                                                v_thisMonth,
+                                                v_lastMonth
+                                            )}
+                                            inputRanges={inputRanges(v_days_up_to_today, v_days_starting_today)}
                                             onChange={this.handleSelect}
                                         />
                                     </div>

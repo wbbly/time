@@ -274,24 +274,24 @@ class UserSetting extends Component {
                     <div className="body_user_setting">
                         <Avatar />
                         <form
-                            autocomplete="new-password"
+                            autoComplete="new-password"
                             className="column column-inputs"
                             onSubmit={this.onSubmitHandler}
                         >
                             <input
-                                autocomplete="new-password"
+                                autoComplete="new-password"
                                 className="fakecredentials"
                                 type="text"
                                 name="fakeusernameremembered"
                             />
                             <input
-                                autocomplete="new-password"
+                                autoComplete="new-password"
                                 className="fakecredentials"
                                 type="email"
                                 name="fakeuseremailremembered"
                             />
                             <input
-                                autocomplete="new-password"
+                                autoComplete="new-password"
                                 className="fakecredentials"
                                 type="password"
                                 name="fakepasswordremembered"
