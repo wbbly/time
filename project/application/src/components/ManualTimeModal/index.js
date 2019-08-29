@@ -5,7 +5,9 @@ import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import Grid from '@material-ui/core/Grid';
-import locale from 'date-fns/locale/en-GB';
+import enLocale from 'date-fns/locale/en-GB';
+import deLocale from 'date-fns/locale/de';
+import ruLocale from 'date-fns/locale/ru';
 import * as moment from 'moment';
 
 // Services
@@ -25,6 +27,12 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.css';
+
+const localeMap = {
+    en: enLocale,
+    ru: ruLocale,
+    de: deLocale,
+};
 
 const materialTheme = createMuiTheme({
     overrides: {
@@ -225,7 +233,7 @@ class ManualTimeModal extends Component {
     render() {
         const { startDate, startTime, endDate, endTime } = this.state;
         const { vocabulary, isMobile, manualTimerModalAction } = this.props;
-        const { v_task_name, v_project, v_time_start, v_time_end, v_change, v_cancel, v_ok } = vocabulary;
+        const { v_task_name, v_project, v_time_start, v_time_end, v_change, v_cancel, v_ok, lang } = vocabulary;
         return (
             <div className={!isMobile ? 'manual_time_modal_wrapper' : 'manual_time_modal_wrapper--mobile'}>
                 <div className="manual_time_modal_background">
@@ -276,7 +284,7 @@ class ManualTimeModal extends Component {
                                     {!isMobile && <i className="calendar" />}
 
                                     {!isMobile ? (
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={localeMap[lang.short]}>
                                             <Grid container justify="space-between">
                                                 <DatePicker
                                                     cancelLabel={v_cancel}
@@ -298,7 +306,7 @@ class ManualTimeModal extends Component {
                                             </Grid>
                                         </MuiPickersUtilsProvider>
                                     ) : (
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={localeMap[lang.short]}>
                                             <ThemeProvider theme={materialTheme}>
                                                 <KeyboardTimePicker
                                                     cancelLabel={v_cancel}
@@ -318,7 +326,7 @@ class ManualTimeModal extends Component {
                                 <div className="date_time">
                                     {!isMobile && <i className="calendar" />}
                                     {!isMobile ? (
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={localeMap[lang.short]}>
                                             <Grid container justify="space-between">
                                                 <DatePicker
                                                     cancelLabel={v_cancel}
@@ -341,7 +349,7 @@ class ManualTimeModal extends Component {
                                             </Grid>
                                         </MuiPickersUtilsProvider>
                                     ) : (
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={localeMap[lang.short]}>
                                             <ThemeProvider theme={materialTheme}>
                                                 <KeyboardTimePicker
                                                     cancelLabel={v_cancel}
