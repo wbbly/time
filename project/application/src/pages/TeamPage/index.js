@@ -70,7 +70,7 @@ class TeamPage extends Component {
 
     render() {
         const { isMobile, vocabulary, currentTeamDetailedData, currentTeam, switchTeam } = this.props;
-        const { v_team, v_rename_team, v_invite_to_team } = vocabulary;
+        const { v_team, v_rename_team, v_invite_to_team, v_active, v_not_active } = vocabulary;
         const headerItemsElements = this.headerItems().map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
         ));
@@ -112,7 +112,7 @@ class TeamPage extends Component {
                         {checkIsAdminByRole(role) && <div className="access_container red">{role}</div>}
                     </td>
                     <td>
-                        <div className="team-access-container">{isActive ? 'Active' : 'Not active'}</div>
+                        <div className="team-access-container">{isActive ? v_active : v_not_active}</div>
                         {checkIsAdminByRole(currentTeam.data.role) && (
                             <i onClick={e => this.openEditModal(item)} className="edit_button item_button" />
                         )}
