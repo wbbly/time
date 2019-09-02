@@ -11,13 +11,13 @@ export default {
     'ERROR.TIMER.JIRA_SYNC_FAILED':
         'Тестовое соединение с Jira не было установлено. Убедитесь, что введенные данные верны.',
 
-    'SUCCESS.USER.RESET_EMAIL_CHECK': 'Проверьте почтовый ящик на наличие пароля для сброса пароля.',
+    'SUCCESS.USER.RESET_EMAIL_CHECK': 'Проверьте почтовый ящик на наличие кода для сброса пароля.',
     'SUCCESS.USER.RESET_PASSWORD': 'Вы успешно сбросили пароль.',
     'SUCCESS.USER.PASSWORD_CHANGED': 'Вы успешно изменили пароль.',
     'SUCCESS.USER.UPDATE_USER': 'Пользователь был успешно обновлен.',
     'ERROR.CHECK_REQUEST_PARAMS': 'Внутренняя ошибка при отправке запроса на сервер.',
     'ERROR.INTERNAL': 'Извините, что-то пошло не так. Пожалуйста, попробуйте позже.',
-    'ERROR.NOT_AUTHORIZED': 'Не авторизованный запрос.',
+    'ERROR.NOT_AUTHORIZED': 'Неавторизованный запросю',
     'ERROR.PROJECT.UPDATE_FAILED': 'Произошла ошибка при обновлении проекта.',
     'ERROR.TEAM.CREATE_FAILED': 'Не удалось создать команду.',
     'ERROR.TEAM.SWITCH_FAILED': 'Произошла ошибка при переключении команды.',
