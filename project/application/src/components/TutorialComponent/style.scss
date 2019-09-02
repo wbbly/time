@@ -1,0 +1,114 @@
+.tutorial-container {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  background: #333;
+}
+.tutorial-wrapper {
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "Open Sans";
+  overflow: hidden;
+}
+.swiped-elem {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: left 1s ease;
+}
+.slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  color: white;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-size: 100% 100%;
+}
+.slide-title {
+  text-align: center;
+  width: 100%;
+}
+.slide-title h1 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 33px;
+}
+.slide-title p {
+  font-style: normal;
+  font-size: 15px;
+  font-weight: 600;
+}
+.skip-link {
+  position: absolute;
+  top: 0;
+  font-size: 14px;
+  color: white;
+  top: 6%;
+  right: 4%;
+}
+.instruction {
+  position: absolute;
+  display: flex;
+}
+.instruction p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  padding-right: 10px;
+  text-align: center;
+}
+.swiped {
+  left: -100%;
+}
+.arrow-tutorial {
+  background: url("../../images/icons/Arrow.svg") no-repeat center;
+  background-size: cover;
+  height: 50px;
+  width: 50px;
+}
+.slide-title button {
+  width: 70%;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.9rem;
+  padding: 1rem 0;
+  color: white;
+  border-radius: 0.5rem;
+  background: #27ae60;
+  margin-top: 2rem;
+}
+.arrow-back {
+  background: url("../../images/icons/arrow-back.svg") no-repeat center;
+  background-size: contain;
+  height: 24px;
+  position: absolute;
+  top: 8.3%;
+  left: 4%;
+  width: 24px;
+}
+@media screen and(min-width: 414px) {
+  .tutorial-wrapper {
+    width: 414px;
+    left: 50%;
+    transform: translate(-50%);
+  }
+}
+@media screen and(min-height: 820px) {
+  .tutorial-wrapper {
+    height: 820px;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%);
+    transform: translate(-50%, -50%);
+  }
+}
