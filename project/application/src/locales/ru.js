@@ -17,7 +17,7 @@ export default {
     'SUCCESS.USER.UPDATE_USER': 'Пользователь был успешно обновлен.',
     'ERROR.CHECK_REQUEST_PARAMS': 'Внутренняя ошибка при отправке запроса на сервер.',
     'ERROR.INTERNAL': 'Извините, что-то пошло не так. Пожалуйста, попробуйте позже.',
-    'ERROR.NOT_AUTHORIZED': 'Неавторизованный запросю',
+    'ERROR.NOT_AUTHORIZED': 'Неавторизованный запрос.',
     'ERROR.PROJECT.UPDATE_FAILED': 'Произошла ошибка при обновлении проекта.',
     'ERROR.TEAM.CREATE_FAILED': 'Не удалось создать команду.',
     'ERROR.TEAM.SWITCH_FAILED': 'Произошла ошибка при переключении команды.',
