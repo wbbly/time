@@ -1,8 +1,7 @@
 export default {
     lang: { short: 'uk', long: 'Ukraine' },
 
-    'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD':
-        'Мінімальний час для додавання ворклогу в Jira становить 1 хвилина.',
+    'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD': 'Мінімальний час для додавання ворклогу в Jira становить 1 хвилина.',
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
         'Додавання ворклогу в Jira закінчилось помилково. Переконайтеся будь ласк, що доступи до Jira вірні та назва задачі відповідає формату "JIRA-1 Comment".',
     'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': 'Поточна задача вже була додана до ворклогу Jira.',
@@ -42,8 +41,7 @@ export default {
     'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED':
         'Ви не можете встановити обліковий запис власника команди як неактивний.',
 
-    v_a_avatar_upload_error:
-        'Помилка завантаження! Завантажений файл не є зображенням або його розмір перевищує 1 Мб.',
+    v_a_avatar_upload_error: 'Помилка завантаження! Завантажений файл не є зображенням або його розмір перевищує 1 Мб.',
     v_a_data_updated_ok: 'Ваші дані були оновлені',
     v_a_change_password_great_ok: 'Чудово! Тепер ви можете увійти знову!',
     v_a_change_password_ok: 'Ви успішно змінили пароль!',
@@ -131,7 +129,7 @@ export default {
     v_team_role: 'Роль',
     v_edit_user: 'Редагувати користувача',
     v_name: "Ім'я",
-    v_edit_team_name: "Змінити назву команди",
+    v_edit_team_name: 'Змінити назву команди',
     v_rename_team: "Змінити ім'я",
     v_team_roles: 'Ролі',
     v_summary_report: 'Загальний звіт',
@@ -152,8 +150,8 @@ export default {
     v_team_access: 'Доступ',
     v_connection_problem: "Втрачено інтернет з'єднання",
     v_connection_restored: "З'єднання відновлено",
-    v_active: 'Доступ дозволено',
-    v_not_active: 'Доступ заборонено',
+    v_active: 'Дозволено',
+    v_not_active: 'Заборонено',
     v_today: 'Сьогодні',
     v_yesterday: 'Вчора',
     v_thisWeek: 'Поточний тиждень',

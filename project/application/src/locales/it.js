@@ -1,7 +1,8 @@
 export default {
     lang: { short: 'it', long: 'Italian' },
 
-    'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD': "La durata minima del compito, per aggiungere un 'worklog' a Jira, è di 1 minuto.",
+    'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD':
+        "La durata minima del compito, per aggiungere un 'worklog' a Jira, è di 1 minuto.",
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
         "L'aggiunta del 'worklog' a Jira è stata completata con un errore. Assicurati che l'accesso a Jira sia corretto e che il nome del compito sia nel formato 'JIRA-1 Commento'.",
     'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': "Il compito è stato già aggiunto al 'worklog' di Jira.",
@@ -10,7 +11,8 @@ export default {
     'ERROR.TIMER.JIRA_SYNC_FAILED':
         'Non è stato possibile stabilire una connessione di test con Jira. Assicurarsi che i dati inseriti siano corretti.',
 
-    'SUCCESS.USER.RESET_EMAIL_CHECK': 'Controlla la casella di posta, una mail per il reset della password è stata inviata.',
+    'SUCCESS.USER.RESET_EMAIL_CHECK':
+        'Controlla la casella di posta, una mail per il reset della password è stata inviata.',
     'SUCCESS.USER.RESET_PASSWORD': 'La tua password è stata cambiata con successo.',
     'SUCCESS.USER.PASSWORD_CHANGED': 'La tua password è stata cambiata con successo.',
     'SUCCESS.USER.UPDATE_USER': "L'utente è stato aggiornato",
@@ -40,7 +42,8 @@ export default {
     'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED':
         'Non puoi impostare l’account del proprietario del team come inattivo.',
 
-    v_a_avatar_upload_error: 'Errore di caricamento! Il file caricato non è un immagine o la sua dimensione supera  1 Mb',
+    v_a_avatar_upload_error:
+        'Errore di caricamento! Il file caricato non è un immagine o la sua dimensione supera  1 Mb',
     v_a_data_updated_ok: 'I tuoi dati sono stati aggiornati',
     v_a_change_password_great_ok: 'Fantastico! Ora puoi accedere nuovamente!',
     v_a_change_password_ok: 'Hai cambiato la password con successo!',
@@ -85,7 +88,8 @@ export default {
     v_change_password: 'Cambia password',
     v_new_password: 'Nuova password',
     v_send: 'Invia',
-    v_check_email: 'Se la tua mail è registrata in Wobbly controlla la tua casella di posta e segui le istruzioni riportate nella mail',
+    v_check_email:
+        'Se la tua mail è registrata in Wobbly controlla la tua casella di posta e segui le istruzioni riportate nella mail',
     v_enter_email: 'Inserisci la tua email',
     v_create_team: 'Crea team',
     v_search_project: 'Cerca progetto',
@@ -146,11 +150,11 @@ export default {
     v_add_your_task_name: "Aggiungi il nome dell'attività",
     v_find: 'Trova',
     v_team_name: 'Nome del team',
-    v_team_access: 'Accesso al team',
+    v_team_access: 'Accesso',
     v_connection_problem: 'Connessione Internet persa',
     v_connection_restored: 'Connessione a Internet ripristinata',
-    v_active: 'Accesso garantito',
-    v_not_active: 'Accesso negato',
+    v_active: 'Garantito',
+    v_not_active: 'Negato',
     v_today: 'Oggi',
     v_yesterday: 'Ieri',
     v_thisWeek: 'Questa settimana',
