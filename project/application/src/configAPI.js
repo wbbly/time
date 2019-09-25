@@ -70,6 +70,15 @@ export const deleteAvatar = id =>
         method: 'DELETE',
     });
 
+export const tutorialChecked = (id, key) =>
+    instance({
+        url: `user/${id}`,
+        method: 'PATCH',
+        data: {
+            onboardingMobile: key,
+        },
+    });
+
 // UNUSED AXIOS REQUESTS
 
 export const userInvite = ({ email }) =>

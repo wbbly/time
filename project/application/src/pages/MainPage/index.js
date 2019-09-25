@@ -39,6 +39,7 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
+import TutorialComponent from '../../components/TutorialComponent';
 
 class MainPage extends Component {
     ONE_SECOND_PERIOD = 1000; // in ms
@@ -578,9 +579,9 @@ class MainPage extends Component {
         }
     }
     render() {
-        const { isMobile, vocabulary } = this.props;
+        const { isMobile, vocabulary, userReducer, viewport } = this.props;
         const { v_total_time, v_add_your_task_name, v_find, v_start_timer, v_task_name, v_search_project } = vocabulary;
-
+        const { user } = userReducer;
         const { isInitialFetching } = this.state;
 
         const buttonState = this.state.timerPlayButtonShow ? 'play' : 'stop';
@@ -599,243 +600,94 @@ class MainPage extends Component {
 
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
-                <div
-                    className={classNames('wrapper_main_page', {
-                        'wrapper_main_page--mobile': isMobile,
-                    })}
-                >
-                    {this.props.manualTimerModal.manualTimerModalToggle && (
-                        <ManualTimeModal
-                            timeEntriesList={this.props.timeEntriesList}
-                            editedItem={this.props.editedItem}
-                            projectList={this.state.projectListInitial}
-                            addTasksAction={this.props.addTasksAction}
-                            manualTimerModalAction={this.props.manualTimerModalAction}
-                        />
-                    )}
-                    <div className="data_container">
-                        <div className="add_task_container">
-                            <input
-                                type="text"
-                                className="add_task"
-                                placeholder={v_add_your_task_name}
-                                ref={input => {
-                                    this.issueTargetElement = input;
-                                }}
-                                onChange={e => this.timerUpdate()}
-                                onFocus={e => {
-                                    e.target.placeholder = '';
-                                    this.editingTaskName = true;
-                                }}
-                                onBlur={e => {
-                                    e.target.placeholder = v_add_your_task_name;
-                                    this.editingTaskName = false;
-                                }}
-                                onKeyUp={event => {
-                                    if (event.keyCode === 13 && !this.state.timerDurationValue) {
-                                        this.state.timerReadyToUse &&
-                                            this.timerPlayStopButtonAction(
-                                                buttonClassName,
-                                                this.state.seletedProject.id
-                                            );
-                                    }
-                                }}
+                {!user.onboardingMobile && isMobile ? (
+                    <TutorialComponent />
+                ) : (
+                    <div
+                        className={classNames('wrapper_main_page', {
+                            'wrapper_main_page--mobile': isMobile,
+                        })}
+                    >
+                        {this.props.manualTimerModal.manualTimerModalToggle && (
+                            <ManualTimeModal
+                                timeEntriesList={this.props.timeEntriesList}
+                                editedItem={this.props.editedItem}
+                                projectList={this.state.projectListInitial}
+                                addTasksAction={this.props.addTasksAction}
+                                manualTimerModalAction={this.props.manualTimerModalAction}
                             />
-                            <div className="wrapper-timer-mobile">
-                                {this.state.timerReadyToUse && (
-                                    <div className="active_project">
-                                        <span
-                                            className={`projects_modal_item_circle ${
-                                                this.state.seletedProject.projectColor.name
-                                            }`}
-                                        />
-                                        <span className="projects_modal_item_name">
-                                            {this.state.seletedProject.name}
-                                        </span>
-                                    </div>
-                                )}
-                                <i className="folder" onClick={e => this.projectListToggle()}>
-                                    {this.state.projectListIsOpen && (
-                                        <div
-                                            className="projects_modal_wrapper"
-                                            ref={div => (this.projectListTargetElement = div)}
-                                        >
-                                            <div
-                                                className="projects_modal_wrapper_header"
-                                                onClick={event => {
-                                                    event.stopPropagation();
-                                                }}
-                                            >
-                                                <input
-                                                    placeholder={`${v_find}...`}
-                                                    type="text"
-                                                    ref={input => (this.projectSearchTextTargetElement = input)}
-                                                    onKeyUp={e =>
-                                                        this.findProjectByName(
-                                                            this.projectSearchTextTargetElement.value
-                                                        )
-                                                    }
-                                                    className="projects_modal_wrapper_search"
-                                                />
-                                            </div>
-                                            <div className="projects_modal_data_wrapper">
-                                                {this.state.projectListForModalWindow.map((item, index) => (
-                                                    <div
-                                                        key={'timer-project-' + index}
-                                                        className="projects_modal_item"
-                                                        onClick={e => this.setActiveProject(item)}
-                                                    >
-                                                        <div
-                                                            className={`projects_modal_item_circle ${
-                                                                item.projectColor.name
-                                                            }`}
-                                                        />
-                                                        <div className="projects_modal_item_name">{item.name}</div>
-                                                    </div>
-                                                ))}
-                                            </div>
+                        )}
+                        <div className="data_container">
+                            <div className="add_task_container">
+                                <input
+                                    type="text"
+                                    className="add_task"
+                                    placeholder={v_add_your_task_name}
+                                    ref={input => {
+                                        this.issueTargetElement = input;
+                                    }}
+                                    onChange={e => this.timerUpdate()}
+                                    onFocus={e => {
+                                        e.target.placeholder = '';
+                                        this.editingTaskName = true;
+                                    }}
+                                    onBlur={e => {
+                                        e.target.placeholder = v_add_your_task_name;
+                                        this.editingTaskName = false;
+                                    }}
+                                    onKeyUp={event => {
+                                        if (event.keyCode === 13 && !this.state.timerDurationValue) {
+                                            this.state.timerReadyToUse &&
+                                                this.timerPlayStopButtonAction(
+                                                    buttonClassName,
+                                                    this.state.seletedProject.id
+                                                );
+                                        }
+                                    }}
+                                />
+                                <div className="wrapper-timer-mobile">
+                                    {this.state.timerReadyToUse && (
+                                        <div className="active_project">
+                                            <span
+                                                className={`projects_modal_item_circle ${
+                                                    this.state.seletedProject.projectColor.name
+                                                }`}
+                                            />
+                                            <span className="projects_modal_item_name">
+                                                {this.state.seletedProject.name}
+                                            </span>
                                         </div>
                                     )}
-                                </i>
-
-                                <div className="time_container">{this.visualTimer()}</div>
-                                <i
-                                    onClick={_ => {
-                                        if (this.state.timerPlayButtonLoader) return;
-                                        this.state.timerReadyToUse &&
-                                            this.timerPlayStopButtonAction(
-                                                buttonClassName,
-                                                this.state.seletedProject.id
-                                            );
-                                    }}
-                                    className={classNames(buttonClassName, {
-                                        'disabled-play': this.state.timerPlayButtonLoader,
-                                    })}
-                                />
-                            </div>
-                        </div>
-                        {BrowserView && !isSafari && !isIOS ? (
-                            <Scrollbars>
-                                <div className="main_wrapper_tracker_items">
-                                    {timeTrackerWrapperItems}
-                                    {!this.state.timerDurationValue && <div className="empty-block" />}
-                                </div>
-                            </Scrollbars>
-                        ) : (
-                            <div className="main_wrapper_tracker_items">
-                                {timeTrackerWrapperItems}
-                                {!this.state.timerDurationValue && <div className="empty-block" />}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* START BLOCK BUTTON PLAY AND STATUS CURRENT TASK MOBILE */}
-                    {!this.state.timerDurationValue ? (
-                        !this.state.isShowAddTaskMobile && (
-                            <div
-                                className="play mobile-play-button-large"
-                                onClick={event => this.setState({ isShowAddTaskMobile: true })}
-                            />
-                        )
-                    ) : (
-                        <div className="mobile-info-block-current-going-task">
-                            <div className="mobile-info-block-current-going-task__time">{this.visualTimer()}</div>
-                            <div className="mobile-info-block-current-going-task__name-task">
-                                {(this.issueTargetElement || {}).value || ''}
-                            </div>
-                            <div
-                                className="mobile-info-block-current-going-task__stop"
-                                onClick={event => {
-                                    this.setState({ isShowAddTaskMobile: false });
-                                    this.state.timerReadyToUse &&
-                                        this.timerPlayStopButtonAction(buttonClassName, this.state.seletedProject.id);
-                                }}
-                            >
-                                <span className="stop" />
-                            </div>
-                        </div>
-                    )}
-                    {/* END BLOCK BUTTON PLAY AND STATUS CURRENT TASK MOBILE */}
-
-                    {/* START BLOCK ADD TASK MOBILE */}
-                    {!this.state.timerDurationValue &&
-                        this.state.isShowAddTaskMobile && (
-                            <div
-                                className={
-                                    !this.state.isShowAddTaskMobile
-                                        ? 'wrapper-add-task-mobile'
-                                        : 'wrapper-add-task-mobile wrapper-add-task-mobile--show'
-                                }
-                            >
-                                <div className="add-task-mobile">
-                                    <div
-                                        className="icon-close-mobile"
-                                        onClick={event => this.setState({ isShowAddTaskMobile: false })}
-                                    />
-                                    <div className="add-task-mobile__label-input">{v_task_name}</div>
-                                    <input
-                                        type="text"
-                                        className="add_task"
-                                        placeholder={v_add_your_task_name}
-                                        onChange={event => (this.issueTargetElement.value = event.target.value)}
-                                        onFocus={e => {
-                                            e.target.placeholder = '';
-                                        }}
-                                        onBlur={e => {
-                                            e.target.placeholder = v_add_your_task_name;
-                                        }}
-                                    />
-                                    <div
-                                        className="projects_modal_wrapper"
-                                        ref={div => (this.projectListTargetElement = div)}
-                                    >
-                                        <div
-                                            className="projects_modal_wrapper_header"
-                                            onClick={event => {
-                                                event.stopPropagation();
-                                            }}
-                                        >
-                                            <div className="add-task-mobile__label-input">{v_search_project}</div>
-                                            <div className="add-task-mobile__wrapper-serach">
-                                                <input
-                                                    placeholder={`${v_find}...`}
-                                                    type="text"
-                                                    ref={input => (this.projectSearchTextTargetElement = input)}
-                                                    defaultValue={
-                                                        this.state.seletedProject ? this.state.seletedProject.name : ''
-                                                    }
-                                                    onKeyUp={e => {
-                                                        this.projectSearchTextTargetElement.value = e.target.value;
-                                                        this.findProjectByName(
-                                                            this.projectSearchTextTargetElement.value
-                                                        );
+                                    <i className="folder" onClick={e => this.projectListToggle()}>
+                                        {this.state.projectListIsOpen && (
+                                            <div
+                                                className="projects_modal_wrapper"
+                                                ref={div => (this.projectListTargetElement = div)}
+                                            >
+                                                <div
+                                                    className="projects_modal_wrapper_header"
+                                                    onClick={event => {
+                                                        event.stopPropagation();
                                                     }}
-                                                    onFocus={event => this.setState({ isShowListProjectsMobile: true })}
-                                                    className="projects_modal_wrapper_search"
-                                                    readOnly
-                                                />
-                                                <span
-                                                    className={`projects_modal_item_circle_search ${
-                                                        this.state.seletedProject
-                                                            ? this.state.seletedProject.projectColor.name
-                                                            : ''
-                                                    }`}
-                                                />
-                                            </div>
-                                        </div>
-                                        {this.state.isShowListProjectsMobile &&
-                                            this.state.projectListForModalWindow.length && (
+                                                >
+                                                    <input
+                                                        placeholder={`${v_find}...`}
+                                                        type="text"
+                                                        ref={input => (this.projectSearchTextTargetElement = input)}
+                                                        onKeyUp={e =>
+                                                            this.findProjectByName(
+                                                                this.projectSearchTextTargetElement.value
+                                                            )
+                                                        }
+                                                        className="projects_modal_wrapper_search"
+                                                    />
+                                                </div>
                                                 <div className="projects_modal_data_wrapper">
                                                     {this.state.projectListForModalWindow.map((item, index) => (
                                                         <div
                                                             key={'timer-project-' + index}
                                                             className="projects_modal_item"
-                                                            onClick={e => {
-                                                                e.stopPropagation();
-                                                                this.projectSearchTextTargetElement.value = item.name;
-                                                                this.setActiveProject(item);
-                                                                this.setState({ isShowListProjectsMobile: false });
-                                                            }}
+                                                            onClick={e => this.setActiveProject(item)}
                                                         >
                                                             <div
                                                                 className={`projects_modal_item_circle ${
@@ -846,28 +698,191 @@ class MainPage extends Component {
                                                         </div>
                                                     ))}
                                                 </div>
-                                            )}
+                                            </div>
+                                        )}
+                                    </i>
+
+                                    <div className="time_container">{this.visualTimer()}</div>
+                                    <i
+                                        onClick={_ => {
+                                            if (this.state.timerPlayButtonLoader) return;
+                                            this.state.timerReadyToUse &&
+                                                this.timerPlayStopButtonAction(
+                                                    buttonClassName,
+                                                    this.state.seletedProject.id
+                                                );
+                                        }}
+                                        className={classNames(buttonClassName, {
+                                            'disabled-play': this.state.timerPlayButtonLoader,
+                                        })}
+                                    />
+                                </div>
+                            </div>
+                            {BrowserView && !isSafari && !isIOS ? (
+                                <Scrollbars>
+                                    <div className="main_wrapper_tracker_items">
+                                        {timeTrackerWrapperItems}
+                                        {!this.state.timerDurationValue && <div className="empty-block" />}
                                     </div>
-                                    {!this.state.isShowListProjectsMobile && (
-                                        <button
-                                            className="add-task-button-mobile"
-                                            onClick={_ => {
-                                                this.state.timerReadyToUse &&
-                                                    this.timerPlayStopButtonAction(
-                                                        buttonClassName,
-                                                        this.state.seletedProject.id
-                                                    );
-                                            }}
-                                        >
-                                            {v_start_timer}
-                                            <span className="add-task-button-mobile-play" />
-                                        </button>
-                                    )}
+                                </Scrollbars>
+                            ) : (
+                                <div className="main_wrapper_tracker_items">
+                                    {timeTrackerWrapperItems}
+                                    {!this.state.timerDurationValue && <div className="empty-block" />}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* START BLOCK BUTTON PLAY AND STATUS CURRENT TASK MOBILE */}
+                        {!this.state.timerDurationValue ? (
+                            !this.state.isShowAddTaskMobile && (
+                                <div
+                                    className="play mobile-play-button-large"
+                                    onClick={event => this.setState({ isShowAddTaskMobile: true })}
+                                />
+                            )
+                        ) : (
+                            <div className="mobile-info-block-current-going-task">
+                                <div className="mobile-info-block-current-going-task__time">{this.visualTimer()}</div>
+                                <div className="mobile-info-block-current-going-task__name-task">
+                                    {(this.issueTargetElement || {}).value || ''}
+                                </div>
+                                <div
+                                    className="mobile-info-block-current-going-task__stop"
+                                    onClick={event => {
+                                        this.setState({ isShowAddTaskMobile: false });
+                                        this.state.timerReadyToUse &&
+                                            this.timerPlayStopButtonAction(
+                                                buttonClassName,
+                                                this.state.seletedProject.id
+                                            );
+                                    }}
+                                >
+                                    <span className="stop" />
                                 </div>
                             </div>
                         )}
-                    {/* END BLOCK ADD TASK MOBILE */}
-                </div>
+                        {/* END BLOCK BUTTON PLAY AND STATUS CURRENT TASK MOBILE */}
+
+                        {/* START BLOCK ADD TASK MOBILE */}
+                        {!this.state.timerDurationValue &&
+                            this.state.isShowAddTaskMobile && (
+                                <div
+                                    className={
+                                        !this.state.isShowAddTaskMobile
+                                            ? 'wrapper-add-task-mobile'
+                                            : 'wrapper-add-task-mobile wrapper-add-task-mobile--show'
+                                    }
+                                >
+                                    <div className="add-task-mobile">
+                                        <div
+                                            className="icon-close-mobile"
+                                            onClick={event => this.setState({ isShowAddTaskMobile: false })}
+                                        />
+                                        <div className="add-task-mobile__label-input">{v_task_name}</div>
+                                        <input
+                                            type="text"
+                                            className="add_task"
+                                            placeholder={v_add_your_task_name}
+                                            onChange={event => (this.issueTargetElement.value = event.target.value)}
+                                            onFocus={e => {
+                                                e.target.placeholder = '';
+                                            }}
+                                            onBlur={e => {
+                                                e.target.placeholder = v_add_your_task_name;
+                                            }}
+                                        />
+                                        <div
+                                            className="projects_modal_wrapper"
+                                            ref={div => (this.projectListTargetElement = div)}
+                                        >
+                                            <div
+                                                className="projects_modal_wrapper_header"
+                                                onClick={event => {
+                                                    event.stopPropagation();
+                                                }}
+                                            >
+                                                <div className="add-task-mobile__label-input">{v_search_project}</div>
+                                                <div className="add-task-mobile__wrapper-serach">
+                                                    <input
+                                                        placeholder={`${v_find}...`}
+                                                        type="text"
+                                                        ref={input => (this.projectSearchTextTargetElement = input)}
+                                                        defaultValue={
+                                                            this.state.seletedProject
+                                                                ? this.state.seletedProject.name
+                                                                : ''
+                                                        }
+                                                        onKeyUp={e => {
+                                                            this.projectSearchTextTargetElement.value = e.target.value;
+                                                            this.findProjectByName(
+                                                                this.projectSearchTextTargetElement.value
+                                                            );
+                                                        }}
+                                                        onFocus={event =>
+                                                            this.setState({ isShowListProjectsMobile: true })
+                                                        }
+                                                        className="projects_modal_wrapper_search"
+                                                        readOnly
+                                                    />
+                                                    <span
+                                                        className={`projects_modal_item_circle_search ${
+                                                            this.state.seletedProject
+                                                                ? this.state.seletedProject.projectColor.name
+                                                                : ''
+                                                        }`}
+                                                    />
+                                                </div>
+                                            </div>
+                                            {this.state.isShowListProjectsMobile &&
+                                                this.state.projectListForModalWindow.length && (
+                                                    <div className="projects_modal_data_wrapper">
+                                                        {this.state.projectListForModalWindow.map((item, index) => (
+                                                            <div
+                                                                key={'timer-project-' + index}
+                                                                className="projects_modal_item"
+                                                                onClick={e => {
+                                                                    e.stopPropagation();
+                                                                    this.projectSearchTextTargetElement.value =
+                                                                        item.name;
+                                                                    this.setActiveProject(item);
+                                                                    this.setState({ isShowListProjectsMobile: false });
+                                                                }}
+                                                            >
+                                                                <div
+                                                                    className={`projects_modal_item_circle ${
+                                                                        item.projectColor.name
+                                                                    }`}
+                                                                />
+                                                                <div className="projects_modal_item_name">
+                                                                    {item.name}
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                        </div>
+                                        {!this.state.isShowListProjectsMobile && (
+                                            <button
+                                                className="add-task-button-mobile"
+                                                onClick={_ => {
+                                                    this.state.timerReadyToUse &&
+                                                        this.timerPlayStopButtonAction(
+                                                            buttonClassName,
+                                                            this.state.seletedProject.id
+                                                        );
+                                                }}
+                                            >
+                                                {v_start_timer}
+                                                <span className="add-task-button-mobile-play" />
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        {/* END BLOCK ADD TASK MOBILE */}
+                    </div>
+                )}
             </Loading>
         );
     }
@@ -881,6 +896,7 @@ const mapStateToProps = store => {
         viewport: store.responsiveReducer.viewport,
         isShowMenu: store.responsiveReducer.isShowMenu,
         isMobile: store.responsiveReducer.isMobile,
+        userReducer: store.userReducer,
     };
 };
 
