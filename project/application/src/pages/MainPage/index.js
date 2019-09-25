@@ -600,7 +600,7 @@ class MainPage extends Component {
 
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
-                {user.onboardingMobile && isMobile ? (
+                {!user.onboardingMobile && isMobile ? (
                     <TutorialComponent />
                 ) : (
                     <div
