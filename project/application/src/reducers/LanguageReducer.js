@@ -1,6 +1,8 @@
 import en_vocabulary from '../locales/en';
 import ru_vocabulary from '../locales/ru';
 import de_vocabulary from '../locales/de';
+import uk_vocabulary from '../locales/uk'
+import it_vocabulary from '../locales/it'
 
 import * as types from '../actions/LanguageActions';
 
@@ -18,6 +20,14 @@ const initialState = {
             short: 'de',
             long: 'Deutsch',
         },
+        {
+            short: 'uk',
+            long: 'Ukraine',
+        },
+        {
+            short: 'it',
+            long: 'Italian',
+        },
     ],
     vocabulary: en_vocabulary,
 };
@@ -26,6 +36,8 @@ const setVocabulary = lang => {
     if (lang === 'en') return en_vocabulary;
     if (lang === 'ru') return ru_vocabulary;
     if (lang === 'de') return de_vocabulary;
+    if (lang === 'uk') return uk_vocabulary;
+    if (lang === 'it') return it_vocabulary;
     return en_vocabulary;
 };
 
