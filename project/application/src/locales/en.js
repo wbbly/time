@@ -159,4 +159,6 @@ export default {
     v_lastMonth: 'Last month',
     v_days_up_to_today: 'days until today',
     v_days_starting_today: 'days starting today',
+    v_jira_synchronization: 'Jira synchronization',
+    v_type: 'type',
 };

@@ -163,4 +163,5 @@ export default {
     v_lastMonth: 'Lo scorso mese',
     v_days_up_to_today: 'giorni fino ad oggi',
     v_days_starting_today: 'giorni da oggi',
+    v_jira_synchronization: 'Jira sincronizzazione',
 };

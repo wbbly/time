@@ -81,6 +81,7 @@ export default {
     v_cancel: 'Abbrechen',
     v_language: 'Sprache',
     v_cofirm_new_password: 'Neues Passwort bestätigen',
+    v_new_password: 'Neues Passwort ',
     v_current_password: 'Aktuelles Passwort',
     v_save_changes: 'Speichern',
     v_Ihr_Name: 'Name',
@@ -167,4 +168,6 @@ export default {
     v_lastMonth: 'Letzter Monat',
     v_days_up_to_today: 'Tage bis heute',
     v_days_starting_today: 'Tage nach heute',
+    v_jira_synchronization: 'Jira synchronisation',
+    v_type: 'art'
 };

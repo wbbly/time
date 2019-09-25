@@ -160,4 +160,6 @@ export default {
     v_lastMonth: 'Минулий місяць',
     v_days_up_to_today: 'днів до сьогодні',
     v_days_starting_today: 'днів від сьогодні',
+    v_jira_synchronization: 'Jira синхронізація',
+    v_type: 'тип',
 };

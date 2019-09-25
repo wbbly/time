@@ -162,4 +162,6 @@ export default {
     v_lastMonth: 'Прошлый месяц',
     v_days_up_to_today: 'дней до сегодня',
     v_days_starting_today: 'дней от сегодня',
+    v_jira_synchronization: 'Jira синхронизация',
+    v_type: 'тип',
 };
