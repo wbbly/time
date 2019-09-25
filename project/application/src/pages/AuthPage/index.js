@@ -9,7 +9,7 @@ import { authValidation } from '../../services/validateService';
 
 // Components
 import Input from '../../components/BaseComponents/Input';
-import SwitchLanguage from '../../components/SwitchLanguage';
+import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
 
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
@@ -124,7 +124,9 @@ class AuthPage extends Component {
 
         return (
             <div className="wrapper_authorisation_page">
-                <SwitchLanguage />
+                <div className="fixed_right_corner" >
+                    <SwitchLanguageLogin  dropdown/>
+                </div>
                 <i className="page_title" />
                 <form className="authorisation_window" onSubmit={this.onSubmitHandler}>
                     <label className="input_container">

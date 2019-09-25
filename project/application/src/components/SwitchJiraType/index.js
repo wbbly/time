@@ -44,7 +44,7 @@ class SwitchJiraType extends Component {
         this.props.onSelect(jiraType[0].type);
     }
     render() {
-        const { dropdown, isMobile } = this.props;
+        const { dropdown, isMobile, v_type } = this.props;
         const { isOpenDropdown, selectedItem } = this.state;
 
         return (
@@ -55,7 +55,7 @@ class SwitchJiraType extends Component {
                     'wrapper-switch-type--mobile': isMobile,
                 })}
             >
-                <div className="wrapper-switch-type__title">Jira type</div>
+                <div className="wrapper-switch-type__title">Jira {v_type}</div>
                 <div className="wrapper-switch-type__select" onClick={this.openDropdown}>
                     {selectedItem.name}
 
