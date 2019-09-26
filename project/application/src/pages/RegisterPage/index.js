@@ -120,7 +120,20 @@ class RegisterPage extends Component {
         const { history } = this.props;
         history.push('/login');
     };
-
+    componentDidMount() {
+        if (window.location.href.indexOf('email') > 0) {
+            let emailInput = window.location.href.split('=');
+            this.setState(prevState => ({
+                inputs: {
+                    ...prevState.inputs,
+                    email: {
+                        ...prevState.inputs.email,
+                        value: emailInput[emailInput.length - 1],
+                    },
+                },
+            }));
+        }
+    }
     render() {
         const { validEmail } = this.state;
         const { email, password, confirmPassword } = this.state.inputs;
