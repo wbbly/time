@@ -1,8 +1,8 @@
 import en_vocabulary from '../locales/en';
 import ru_vocabulary from '../locales/ru';
 import de_vocabulary from '../locales/de';
-import uk_vocabulary from '../locales/uk'
-import it_vocabulary from '../locales/it'
+import uk_vocabulary from '../locales/uk';
+import it_vocabulary from '../locales/it';
 
 import * as types from '../actions/LanguageActions';
 
@@ -52,8 +52,12 @@ export default (state = initialState, { type, payload }) => {
 
         default: {
             state.languages.sort((a, b) => {
-                if(a.long < b.long) { return -1; }
-                if(a.long > b.long) { return 1; }
+                if (a.long < b.long) {
+                    return -1;
+                }
+                if (a.long > b.long) {
+                    return 1;
+                }
                 return 0;
             });
             return state;

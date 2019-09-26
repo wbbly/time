@@ -169,5 +169,5 @@ export default {
     v_days_up_to_today: 'Tage bis heute',
     v_days_starting_today: 'Tage nach heute',
     v_jira_synchronization: 'Jira synchronisation',
-    v_type: 'art'
+    v_type: 'art',
 };
