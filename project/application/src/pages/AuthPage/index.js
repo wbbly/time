@@ -124,8 +124,8 @@ class AuthPage extends Component {
 
         return (
             <div className="wrapper_authorisation_page">
-                <div className="fixed_right_corner" >
-                    <SwitchLanguageLogin  dropdown/>
+                <div className="fixed_right_corner">
+                    <SwitchLanguageLogin dropdown />
                 </div>
                 <i className="page_title" />
                 <form className="authorisation_window" onSubmit={this.onSubmitHandler}>

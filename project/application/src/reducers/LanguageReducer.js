@@ -40,8 +40,12 @@ export default (state = initialState, { type, payload }) => {
 
         default: {
             state.languages.sort((a, b) => {
-                if(a.long < b.long) { return -1; }
-                if(a.long > b.long) { return 1; }
+                if (a.long < b.long) {
+                    return -1;
+                }
+                if (a.long > b.long) {
+                    return 1;
+                }
                 return 0;
             });
             return state;

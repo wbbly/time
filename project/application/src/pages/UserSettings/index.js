@@ -257,7 +257,17 @@ class UserSetting extends Component {
 
     render() {
         const { vocabulary, isMobile, userReducer } = this.props;
-        const { v_my_profile, v_your_name, v_save_changes, v_change_password, v_phone, v_jira_synchronization, v_log_in, v_password, v_type } = vocabulary;
+        const {
+            v_my_profile,
+            v_your_name,
+            v_save_changes,
+            v_change_password,
+            v_phone,
+            v_jira_synchronization,
+            v_log_in,
+            v_password,
+            v_type,
+        } = vocabulary;
 
         const { validEmail, inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
         const { userName, email, jiraUsername, jiraPassword, syncJiraStatus, jiraURL, jiraType } = inputs;
