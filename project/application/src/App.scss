@@ -89,6 +89,10 @@ input:focus {
   }
 }
 
+.fixed_right_corner {
+  z-index: 20;
+}
+
 // @media (min-width: 1024px) {
 //     html {
 //         font-size: 12px;
