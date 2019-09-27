@@ -9,7 +9,7 @@ import { authValidation } from '../../services/validateService';
 
 // Components
 import Input from '../../components/BaseComponents/Input';
-import SwitchLanguage from '../../components/SwitchLanguage';
+import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
 
 // Actions
 
@@ -153,7 +153,9 @@ class RegisterPage extends Component {
 
         return (
             <div className={classNames('register-block', { 'register-block--mobile': true })}>
-                <SwitchLanguage />
+                <div className="fixed_right_corner">
+                    <SwitchLanguageLogin dropdown />
+                </div>
                 <i className="register-block__logo" />
                 <form className="register-block__form" onSubmit={this.onSubmitHandler}>
                     <label className="register-block__label">
