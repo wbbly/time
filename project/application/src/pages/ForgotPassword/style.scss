@@ -9,6 +9,11 @@
   height: 100%;
   position: relative;
 
+  .fixed_right_corner {
+    position: fixed;
+    top: 0;
+    right: 14px;
+  }
   .page_title {
     width: 196px;
     min-height: 46px;

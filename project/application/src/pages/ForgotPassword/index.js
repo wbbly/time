@@ -6,7 +6,7 @@ import { authValidation } from '../../services/validateService';
 
 // Components
 import Input from '../../components/BaseComponents/Input';
-import SwitchLanguage from '../../components/SwitchLanguage';
+import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
 
 // Actions
 
@@ -103,7 +103,9 @@ class ForgotPassword extends Component {
 
         return (
             <div className="forgot_password_modal_wrapper">
-                <SwitchLanguage />
+                <div className="fixed_right_corner">
+                    <SwitchLanguageLogin dropdown />
+                </div>
                 <i className="page_title" />
                 <form className="add_to_team_modal_data" onSubmit={this.onSubmitHandler} noValidate>
                     <label className="add_to_team_modal_input_container">
