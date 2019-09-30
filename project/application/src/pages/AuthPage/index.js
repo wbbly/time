@@ -60,6 +60,7 @@ class AuthPage extends Component {
         ).then(
             result => {
                 setTokenToLocalStorage(result.token);
+                document.cookie = 'isAuthWobbly=true; path=/; domain=.wobbly.me;';
                 this.setState({ haveToken: true });
             },
             err => {

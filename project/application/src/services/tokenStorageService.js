@@ -10,4 +10,5 @@ export function setTokenToLocalStorage(token) {
 
 export function removeTokenFromLocalStorage() {
     localStorage.removeItem('token');
+    document.cookie = 'isAuthWobbly=false; path=/; domain=.wobbly.me;';
 }
