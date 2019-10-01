@@ -161,4 +161,7 @@ export default {
     v_days_starting_today: 'days starting today',
     v_jira_synchronization: 'Jira synchronization',
     v_type: 'type',
+    v_chart_label_total: 'Total hours by date',
+    v_enter_to: 'Log in to',
+    v_to_get_token: 'to get the API token',
 };

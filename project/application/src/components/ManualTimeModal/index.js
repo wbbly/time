@@ -8,6 +8,8 @@ import Grid from '@material-ui/core/Grid';
 import enLocale from 'date-fns/locale/en-GB';
 import deLocale from 'date-fns/locale/de';
 import ruLocale from 'date-fns/locale/ru';
+import itLocale from 'date-fns/locale/it';
+import uaLocale from 'date-fns/locale/uk';
 import * as moment from 'moment';
 
 // Services
@@ -32,6 +34,8 @@ const localeMap = {
     en: enLocale,
     ru: ruLocale,
     de: deLocale,
+    it: itLocale,
+    uk: uaLocale,
 };
 
 const materialTheme = createMuiTheme({
