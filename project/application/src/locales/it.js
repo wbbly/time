@@ -164,4 +164,7 @@ export default {
     v_days_up_to_today: 'giorni fino ad oggi',
     v_days_starting_today: 'giorni da oggi',
     v_jira_synchronization: 'Jira sincronizzazione',
+    v_chart_label_total: 'Totale ore per data',
+    v_enter_to: 'Accedere',
+    v_to_get_token: 'per ottenere il token Api',
 };

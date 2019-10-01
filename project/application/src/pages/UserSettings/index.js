@@ -267,6 +267,8 @@ class UserSetting extends Component {
             v_log_in,
             v_password,
             v_type,
+            v_enter_to,
+            v_to_get_token,
         } = vocabulary;
 
         const { validEmail, inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
@@ -408,14 +410,14 @@ class UserSetting extends Component {
                                                 </span>
                                                 {jiraType.value === 'cloud' && (
                                                     <span className="input_subtitle">
-                                                        (Log in to{' '}
+                                                        ({v_enter_to}{' '}
                                                         <a
                                                             href="https://id.atlassian.com/manage/api-tokens"
                                                             target="_blank"
                                                         >
                                                             https://id.atlassian.com/manage/api-tokens
                                                         </a>{' '}
-                                                        to get the API token)
+                                                        {v_to_get_token})
                                                     </span>
                                                 )}
                                                 <Input

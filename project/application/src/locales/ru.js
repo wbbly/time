@@ -164,4 +164,7 @@ export default {
     v_days_starting_today: 'дней от сегодня',
     v_jira_synchronization: 'Jira синхронизация',
     v_type: 'тип',
+    v_chart_label_total: 'Всего часов по дате',
+    v_enter_to: 'Ввойдите в',
+    v_to_get_token: 'для получения Api токена',
 };

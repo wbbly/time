@@ -47,8 +47,8 @@
 }
 
 .user_settings {
-  width: 15px;
-  height: 15px;
+  min-width: 15px;
+  min-height: 15px;
   background: url("../../images/icons/cog-wheel-silhouette.svg") no-repeat
     center;
 }
@@ -104,7 +104,7 @@ i.profile_user {
   position: absolute;
   bottom: 20px;
   left: 183px;
-  width: 150px;
+  min-width: 150px;
   z-index: 15;
 }
 

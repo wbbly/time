@@ -170,4 +170,7 @@ export default {
     v_days_starting_today: 'Tage nach heute',
     v_jira_synchronization: 'Jira synchronisation',
     v_type: 'art',
+    v_chart_label_total: 'Gesamtstunden nach Datum',
+    v_enter_to: 'Einloggen in',
+    v_to_get_token: 'um das API-Token zu erhalten',
 };

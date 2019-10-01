@@ -79,7 +79,7 @@ export default {
     v_language: 'Мова',
     v_cofirm_new_password: 'Підтвердіть новий пароль',
     v_current_password: 'Поточний пароль',
-    v_save_changes: 'Pберегти',
+    v_save_changes: 'Зберегти',
     v_your_name: "Ім'я",
     v_my_profile: 'Профіль',
     v_profile_settings: 'Налаштування',
@@ -162,4 +162,7 @@ export default {
     v_days_starting_today: 'днів від сьогодні',
     v_jira_synchronization: 'Jira синхронізація',
     v_type: 'тип',
+    v_chart_label_total: 'Всього годин за дату',
+    v_enter_to: 'Увійдіть у',
+    v_to_get_token: 'для отримання Api токену',
 };

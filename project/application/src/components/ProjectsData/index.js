@@ -25,16 +25,17 @@ class ProjectData extends Component {
     }
 
     render() {
-        const { currentTeam } = this.props;
+        const { currentTeam, vocabulary } = this.props;
+        const { v_project_name, v_time } = vocabulary;
 
         const tableHeader = [
             {
                 key: 1,
-                value: 'Project name',
+                value: v_project_name,
             },
             {
                 key: 2,
-                value: 'Time',
+                value: v_time,
             },
         ];
         const tableInfoElements = this.props.tableInfo.map((item, index) => (
@@ -76,6 +77,7 @@ ProjectData.propTypes = {
 
 const mapStateToProps = state => ({
     currentTeam: state.teamReducer.currentTeam,
+    vocabulary: state.languageReducer.vocabulary,
 });
 
 export default connect(mapStateToProps)(ProjectData);

@@ -2,10 +2,15 @@ import React, { Component } from 'react';
 import * as moment from 'moment';
 
 import { DateRangePicker } from 'react-date-range';
-import { enGB, ru, de } from 'react-date-range/src/locale';
+import { enGB, ru, de, it, ua } from 'react-date-range/src/locale';
 import { staticRanges, inputRanges } from './ranges';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
+import 'moment/locale/uk';
+import 'moment/locale/ru';
+import 'moment/locale/it';
+import 'moment/locale/en-gb';
+import 'moment/locale/de';
 
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
@@ -48,6 +53,8 @@ const localeMap = {
     ru: ru,
     en: enGB,
     de: de,
+    it: it,
+    uk: ua,
 };
 
 class ReportsPage extends Component {
@@ -106,10 +113,12 @@ class ReportsPage extends Component {
     };
 
     setDataToGraph(object, objectData) {
+        const { vocabulary } = this.props;
+        const { v_chart_label_total } = vocabulary;
         let newObject = object;
         newObject.labels = objectData.labels;
         newObject.datasets[0].data = objectData.timeArr;
-
+        newObject.datasets[0].label = v_chart_label_total;
         return newObject;
     }
 
@@ -262,6 +271,7 @@ class ReportsPage extends Component {
         };
         for (let i = 0; i < labels.length; i++) {
             finishData.labels.push(moment(labels[i]).format('ddd DD.MM'));
+            console.log(moment(labels[i]).format('ddd DD.MM'));
         }
 
         if (time.length) {
@@ -446,7 +456,6 @@ class ReportsPage extends Component {
 
                 let dataToGraph = this.getArrOfProjectsData(data);
                 this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
-
                 let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
                 this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
                 this.setState({ toggleChar: true, isInitialFetching: false });
@@ -503,6 +512,9 @@ class ReportsPage extends Component {
     }
 
     componentDidMount() {
+        const { vocabulary } = this.props;
+        const { lang } = vocabulary;
+        moment.locale(lang.short);
         showMobileSupportToastr();
         this.setState({ selectionRange: this.props.timeRange });
         apiCall(AppConfig.apiURL + `user/list`, {
