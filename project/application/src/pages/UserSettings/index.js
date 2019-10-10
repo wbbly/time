@@ -334,7 +334,7 @@ class UserSetting extends Component {
                             <div className="input_container_phone">
                                 <span className="input_title">{v_phone}</span>
                                 <ReactPhoneInput
-                                    defaultCountry="ua"
+                                    defaultCountry="de"
                                     countryCodeEditable={false}
                                     autoFormat={false}
                                     placeholder=""
@@ -454,7 +454,7 @@ class UserSetting extends Component {
         const { email: userEmail, username: userName, tokenJira, phone } = user;
         this.setState(prevState => ({
             phone: {
-                value: phone ? phone : '+380',
+                value: phone ? phone : '+49',
             },
             inputs: {
                 ...prevState.inputs,

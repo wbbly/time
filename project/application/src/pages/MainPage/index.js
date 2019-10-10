@@ -580,23 +580,39 @@ class MainPage extends Component {
     }
     render() {
         const { isMobile, vocabulary, userReducer, viewport } = this.props;
-        const { v_total_time, v_add_your_task_name, v_find, v_start_timer, v_task_name, v_search_project } = vocabulary;
+        const {
+            lang,
+            v_total_time,
+            v_add_your_task_name,
+            v_find,
+            v_start_timer,
+            v_task_name,
+            v_search_project,
+        } = vocabulary;
         const { user } = userReducer;
         const { isInitialFetching } = this.state;
 
         const buttonState = this.state.timerPlayButtonShow ? 'play' : 'stop';
         const buttonClassName = ['control_task_time_icons', buttonState].join(' ');
-        let timeTrackerWrapperItems = this.splitProjectsByDates(this.props.timeEntriesList).map((arraysItem, index) => (
-            <div className="time_tracker_wrapper" key={'time-entry-group_' + index}>
-                <div className="header">
-                    <div className="date">{moment(arraysItem[0].startDatetime).format('DD.MM.YYYY')}</div>
-                    <div className="allTime">
-                        {v_total_time}: {this.getTimeEntriesTotalTime(arraysItem)}
+        let timeTrackerWrapperItems = this.splitProjectsByDates(this.props.timeEntriesList).map((arraysItem, index) => {
+            const day = moment(arraysItem[0].startDatetime)
+                .locale(lang.short)
+                .format('dddd');
+            const toUpperCaseFirstLetter = day[0].toUpperCase() + day.slice(1);
+            return (
+                <div className="time_tracker_wrapper" key={'time-entry-group_' + index}>
+                    <div className="header">
+                        <div className="date">{`${toUpperCaseFirstLetter}, ${moment(arraysItem[0].startDatetime).format(
+                            'DD.MM.YYYY'
+                        )}`}</div>
+                        <div className="allTime">
+                            {v_total_time}: {this.getTimeEntriesTotalTime(arraysItem)}
+                        </div>
                     </div>
+                    {this.createTimeEntriesList(arraysItem)}
                 </div>
-                {this.createTimeEntriesList(arraysItem)}
-            </div>
-        ));
+            );
+        });
 
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
@@ -897,6 +913,7 @@ const mapStateToProps = store => {
         isShowMenu: store.responsiveReducer.isShowMenu,
         isMobile: store.responsiveReducer.isMobile,
         userReducer: store.userReducer,
+        languages: store.languageReducer.languages,
     };
 };
 
