@@ -57,7 +57,7 @@ class SwitchJiraType extends Component {
             >
                 <div className="wrapper-switch-type__title">Jira {v_type}</div>
                 <div className="wrapper-switch-type__select" onClick={this.openDropdown}>
-                    {selectedItem.name}
+                    <span>{selectedItem.name}</span>
 
                     {isOpenDropdown && (
                         <div className="wrapper-switch-type__list">
