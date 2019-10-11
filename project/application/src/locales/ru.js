@@ -1,6 +1,7 @@
 export default {
     lang: { short: 'ru', long: 'Russian' },
 
+    'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Учетная запись пользователя уже существует.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD':
         'Минимальное время для добавление ворклога в Jira составляет 1 минута.',
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
@@ -97,6 +98,7 @@ export default {
     v_delete_task: 'Удалить',
     v_add_confirm_password: 'Подтвердите пароль',
     v_registration_terms_and_policy: 'При регистрации вы соглашаетесь с условиями и политикой конфиденциальности',
+    v_login: 'Логин',
     v_log_in: 'Войти',
     v_email: 'Электронная почта',
     v_register: 'Зарегистрироваться',
@@ -167,4 +169,6 @@ export default {
     v_chart_label_total: 'Всего часов по дате',
     v_enter_to: 'Ввойдите в',
     v_to_get_token: 'для получения Api токена',
+    v_login_with: 'Ввойти через',
+    v_or: 'или',
 };

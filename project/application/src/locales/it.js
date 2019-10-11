@@ -1,6 +1,7 @@
 export default {
     lang: { short: 'it', long: 'Italian' },
 
+    'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Account utente già esistente.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD':
         "La durata minima del compito, per aggiungere un 'worklog' a Jira, è di 1 minuto.",
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
@@ -98,6 +99,7 @@ export default {
     v_delete_task: 'Elimina compito',
     v_add_confirm_password: 'Conferma la tua password',
     v_registration_terms_and_policy: 'Registrandoti accetti i Termini e la politica sulla Privacy',
+    v_login: 'Accesso',
     v_log_in: 'Accedi',
     v_email: 'Email',
     v_register: 'Registrati',
@@ -167,4 +169,6 @@ export default {
     v_chart_label_total: 'Totale ore per data',
     v_enter_to: 'Accedere',
     v_to_get_token: 'per ottenere il token Api',
+    v_login_with: 'Entra con',
+    v_or: 'o',
 };
