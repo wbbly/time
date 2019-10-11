@@ -22,6 +22,7 @@
     "react-device-detect": "1.6.2",
     "react-dom": "16.8.0",
     "react-easy-swipe": "0.0.18",
+    "react-facebook-login": "4.1.1",
     "react-phone-input-2": "2.9.4",
     "react-redux": "6.0.0",
     "react-router": "4.3.1",
@@ -39,7 +40,7 @@
     "node-sass": "4.12.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "HTTPS=true react-scripts start",
     "build": "react-scripts build",
     "copy:libs": "cp -r libs/* node_modules",
     "test": "react-scripts test",
