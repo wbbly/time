@@ -721,7 +721,11 @@ class MainPage extends Component {
                                     <div className="time_container">{this.visualTimer()}</div>
                                     <i
                                         onClick={_ => {
-                                            if (this.state.timerPlayButtonLoader) return;
+                                            if (
+                                                this.state.timerPlayButtonLoader ||
+                                                this.TIMER_MANUAL_UPDATE_SUBSCRIPTION
+                                            )
+                                                return;
                                             this.state.timerReadyToUse &&
                                                 this.timerPlayStopButtonAction(
                                                     buttonClassName,
