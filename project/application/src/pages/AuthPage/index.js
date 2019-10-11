@@ -10,6 +10,7 @@ import { authValidation } from '../../services/validateService';
 // Components
 import Input from '../../components/BaseComponents/Input';
 import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
+import FacebookButton from '../../components/FacebookButton';
 
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
@@ -40,6 +41,11 @@ class AuthPage extends Component {
             },
         },
     };
+
+    setHaveToken = () =>
+        this.setState({
+            haveToken: true,
+        });
 
     login = ({ email, password }) => {
         const { vocabulary } = this.props;
@@ -119,6 +125,7 @@ class AuthPage extends Component {
             v_forgot_your_password,
             v_dont_have_an_account_yet,
             v_sign_up,
+            v_or,
         } = vocabulary;
 
         if (haveToken || getTokenFromLocalStorage()) return <Redirect to={'/timer'} />;
@@ -159,6 +166,8 @@ class AuthPage extends Component {
                     <button type="submit" className="login_button">
                         {v_enter}
                     </button>
+                    <div className={'or'}>{v_or}</div>
+                    <FacebookButton setHaveToken={this.setHaveToken} login={this.login} />
                     <button
                         type="button"
                         className="forgot_password_button"
