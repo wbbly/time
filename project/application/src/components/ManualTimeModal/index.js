@@ -51,7 +51,7 @@ const materialTheme = createMuiTheme({
             root: {
                 '&$error': {
                     '&:after': {
-                        borderBottomColor: '#f44336 !mportant',
+                        borderBottomColor: '#f44336 !important',
                     },
                 },
             },
