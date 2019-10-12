@@ -15,6 +15,17 @@ const instance = axios.create({
     },
 });
 
+export const loginWithFacebook = ({ email = '', id, name: username }) =>
+    instance({
+        url: '/user/login-fb',
+        method: 'POST',
+        data: {
+            email,
+            id,
+            username,
+        },
+    });
+
 export const getUserData = () =>
     instance({
         url: '/user',

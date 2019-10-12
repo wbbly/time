@@ -1,6 +1,7 @@
 export default {
     lang: { short: 'de', long: 'Deutsch' },
 
+    'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Benutzerkonto existiert bereits.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD':
         'Die Mindestzeit für das Hinzufügen von Worklog in Jira beträgt 1 Minute.',
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
@@ -101,8 +102,8 @@ export default {
     v_add_confirm_password: 'Passwort bestätigen',
     v_registration_terms_and_policy:
         'Durch die Registrierung stimmen Sie den Bedingungen und Datenschutzbestimmungen zu',
-    v_log_in: 'Login',
     v_login: 'Benutzername',
+    v_log_in: 'Login',
     v_email: 'E-Mail',
     v_register: 'Registrieren',
     v_password: 'Passwort',
@@ -173,4 +174,6 @@ export default {
     v_chart_label_total: 'Gesamtstunden nach Datum',
     v_enter_to: 'Einloggen in',
     v_to_get_token: 'um das API-Token zu erhalten',
+    v_login_with: 'Einloggen mit',
+    v_or: 'oder',
 };

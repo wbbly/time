@@ -1,6 +1,7 @@
 export default {
     lang: { short: 'uk', long: 'Ukraine' },
 
+    'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Обліковий запис користувача вже існує.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD': 'Мінімальний час для додавання ворклогу в Jira становить 1 хвилина.',
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':
         'Додавання ворклогу в Jira закінчилось помилково. Переконайтеся будь ласк, що доступи до Jira вірні та назва задачі відповідає формату "JIRA-1 Comment".',
@@ -95,6 +96,7 @@ export default {
     v_delete_task: 'Видалити',
     v_add_confirm_password: 'Підтвердіть пароль',
     v_registration_terms_and_policy: 'При реєстрації ви погоджуєтеся з умовами та політикою конфіденційності',
+    v_login: 'Логін',
     v_log_in: 'Увійти',
     v_email: 'Електронна пошта',
     v_register: 'Зареєструватися',
@@ -165,4 +167,6 @@ export default {
     v_chart_label_total: 'Всього годин за дату',
     v_enter_to: 'Увійдіть у',
     v_to_get_token: 'для отримання Api токену',
+    v_login_with: 'Увійти через',
+    v_or: 'або',
 };

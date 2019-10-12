@@ -14,6 +14,7 @@ import ChangePasswordModal from '../../components/ChangePasswordModal';
 import SwitchLanguage from '../../components/SwitchLanguage';
 import Input from '../../components/BaseComponents/Input';
 import Avatar from '../../components/AvatarEditor';
+// import SelectDateTimeBlock from "../../components/SelectDateTimeBlock"
 
 //Services
 import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
@@ -163,10 +164,12 @@ class UserSetting extends Component {
 
                 userData.urlJira = jiraURL.value;
                 userData.typeJira = jiraType.value;
+                userData.loginJira = jiraUsername.value;
             } else {
                 userData.tokenJira = '';
                 userData.urlJira = '';
                 userData.typeJira = '';
+                userData.loginJira = '';
             }
         }
         this.changeUserSetting(userData);
@@ -269,6 +272,7 @@ class UserSetting extends Component {
             v_type,
             v_enter_to,
             v_to_get_token,
+            v_login,
         } = vocabulary;
 
         const { validEmail, inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
@@ -350,6 +354,7 @@ class UserSetting extends Component {
                                 />
                             </div>
                             <SwitchLanguage dropdown />
+                            {/* <SelectDateTimeBlock /> */}
 
                             <div className="wrapper-jira-sync">
                                 <label className="input_container input_checkbox_jira">
@@ -383,7 +388,7 @@ class UserSetting extends Component {
                                                 />
                                             </label>
                                             <label className="input_container">
-                                                <span className="input_title">{v_log_in}</span>
+                                                <span className="input_title">{v_login}</span>
                                                 <Input
                                                     config={{
                                                         value: jiraUsername.value,
@@ -397,16 +402,18 @@ class UserSetting extends Component {
                                             <label className="input_container">
                                                 <span className="input_title">
                                                     {v_password}
-                                                    <i
-                                                        onClick={event => {
-                                                            event.preventDefault();
-                                                            this.verifyJiraAuth();
-                                                        }}
-                                                        className={classNames('verify-arrow-loop', {
-                                                            'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
-                                                        })}
-                                                        title="Verify"
-                                                    />
+                                                    {jiraPassword.value && (
+                                                        <i
+                                                            onClick={event => {
+                                                                event.preventDefault();
+                                                                this.verifyJiraAuth();
+                                                            }}
+                                                            className={classNames('verify-arrow-loop', {
+                                                                'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
+                                                            })}
+                                                            title="Verify"
+                                                        />
+                                                    )}
                                                 </span>
                                                 {jiraType.value === 'cloud' && (
                                                     <span className="input_subtitle">
@@ -422,6 +429,7 @@ class UserSetting extends Component {
                                                 )}
                                                 <Input
                                                     config={{
+                                                        placeholder: '********************',
                                                         value: jiraPassword.value,
                                                         type: jiraPassword.type,
                                                         name: jiraPassword.name,
@@ -451,7 +459,7 @@ class UserSetting extends Component {
 
     updateUserData = () => {
         const { user } = this.props.userReducer;
-        const { email: userEmail, username: userName, tokenJira, phone } = user;
+        const { email: userEmail, username: userName, tokenJira, phone, urlJira, typeJira, loginJira } = user;
         this.setState(prevState => ({
             phone: {
                 value: phone ? phone : '+49',
@@ -465,6 +473,17 @@ class UserSetting extends Component {
                 email: {
                     ...prevState.inputs.email,
                     value: userEmail,
+                },
+                jiraType: {
+                    value: typeJira || '',
+                },
+                jiraURL: {
+                    ...prevState.inputs.jiraURL,
+                    value: urlJira || '',
+                },
+                jiraUsername: {
+                    ...prevState.inputs.jiraUsername,
+                    value: loginJira || '',
                 },
                 syncJiraStatus: {
                     ...prevState.inputs.syncJiraStatus,
