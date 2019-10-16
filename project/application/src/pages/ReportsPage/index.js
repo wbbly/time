@@ -75,7 +75,7 @@ class ReportsPage extends Component {
         projectsData: [],
         totalUpChartTime: '',
     };
-    lineChartOption = {
+    lineChartOption = durationTimeFormat => ({
         scales: {
             xAxes: [
                 {
@@ -106,11 +106,11 @@ class ReportsPage extends Component {
         tooltips: {
             callbacks: {
                 label: function(tooltipItem) {
-                    return getTimeDurationByGivenTimestamp(tooltipItem.yLabel);
+                    return getTimeDurationByGivenTimestamp(tooltipItem.yLabel, durationTimeFormat);
                 },
             },
         },
-    };
+    });
 
     setDataToGraph(object, objectData) {
         const { vocabulary } = this.props;
@@ -151,7 +151,7 @@ class ReportsPage extends Component {
     };
 
     render() {
-        const { isMobile, vocabulary, currentTeam } = this.props;
+        const { isMobile, vocabulary, currentTeam, dateFormat, firstDayOfWeek, durationTimeFormat } = this.props;
         const {
             v_summary_report,
             v_total,
@@ -169,6 +169,9 @@ class ReportsPage extends Component {
 
         const { isInitialFetching } = this.state;
 
+        const customLocale = localeMap[lang.short];
+        customLocale.options.weekStartsOn = firstDayOfWeek;
+
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
                 <div
@@ -182,21 +185,21 @@ class ReportsPage extends Component {
                             <div className="selects_container">
                                 <div className="select_header" onClick={e => this.openCalendar()}>
                                     <span>
-                                        {moment(this.props.timeRange.startDate).format('DD.MM.YYYY')} {' - '}
-                                        {moment(this.props.timeRange.endDate).format('DD.MM.YYYY')}
+                                        {moment(this.props.timeRange.startDate).format(dateFormat)} {' - '}
+                                        {moment(this.props.timeRange.endDate).format(dateFormat)}
                                     </span>
                                     <i className="arrow_down" />
                                 </div>
                                 {this.state.dateSelect && (
                                     <div className="select_body" ref={div => (this.datePickerSelect = div)}>
                                         <DateRangePicker
-                                            locale={localeMap[lang.short]}
+                                            locale={customLocale}
+                                            dateDisplayFormat={dateFormat}
                                             ranges={[
                                                 {
                                                     startDate: this.state.selectionRange.startDate,
                                                     endDate: this.state.selectionRange.endDate,
                                                     key: 'selection',
-                                                    firstDayOfWeek: 1,
                                                 },
                                             ]}
                                             staticRanges={staticRanges(
@@ -205,9 +208,14 @@ class ReportsPage extends Component {
                                                 v_thisWeek,
                                                 v_lastWeek,
                                                 v_thisMonth,
-                                                v_lastMonth
+                                                v_lastMonth,
+                                                firstDayOfWeek
                                             )}
-                                            inputRanges={inputRanges(v_days_up_to_today, v_days_starting_today)}
+                                            inputRanges={inputRanges(
+                                                v_days_up_to_today,
+                                                v_days_starting_today,
+                                                firstDayOfWeek
+                                            )}
                                             onChange={this.handleSelect}
                                         />
                                     </div>
@@ -228,8 +236,11 @@ class ReportsPage extends Component {
                                     <span className="total_time_name">{v_total}</span>
                                     <span className="total_time_time">
                                         {typeof this.state.totalUpChartTime === 'number'
-                                            ? getTimeDurationByGivenTimestamp(this.state.totalUpChartTime)
-                                            : '00:00:00'}
+                                            ? getTimeDurationByGivenTimestamp(
+                                                  this.state.totalUpChartTime,
+                                                  durationTimeFormat
+                                              )
+                                            : getTimeDurationByGivenTimestamp(0, durationTimeFormat)}
                                     </span>
                                     <span className="export_button" onClick={e => this.export()}>
                                         {v_export}
@@ -243,7 +254,7 @@ class ReportsPage extends Component {
                                         ref={Bar => (this.barChart = Bar)}
                                         data={this.props.dataBarChat}
                                         height={50}
-                                        options={this.lineChartOption}
+                                        options={this.lineChartOption(durationTimeFormat)}
                                     />
                                 </div>
                             )}
@@ -265,13 +276,15 @@ class ReportsPage extends Component {
     }
 
     getLablesAndTime(labels, time) {
+        const { dateFormat } = this.props;
+        const deletedYearFromString = str => (str[0] === 'Y' ? str.slice(5, 10) : str.slice(0, 5));
+
         let finishData = {
             labels: [],
             timeArr: [],
         };
         for (let i = 0; i < labels.length; i++) {
-            finishData.labels.push(moment(labels[i]).format('ddd DD.MM'));
-            console.log(moment(labels[i]).format('ddd DD.MM'));
+            finishData.labels.push(moment(labels[i]).format(`ddd ${deletedYearFromString(dateFormat)}`));
         }
 
         if (time.length) {
@@ -558,6 +571,9 @@ const mapStateToProps = store => ({
     vocabulary: store.languageReducer.vocabulary,
     user: store.userReducer.user,
     currentTeam: store.teamReducer.currentTeam,
+    dateFormat: store.userReducer.dateFormat,
+    firstDayOfWeek: store.userReducer.firstDayOfWeek,
+    durationTimeFormat: store.userReducer.durationTimeFormat,
 });
 
 const mapDispatchToProps = dispatch => {

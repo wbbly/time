@@ -25,7 +25,7 @@ class ProjectData extends Component {
     }
 
     render() {
-        const { currentTeam, vocabulary } = this.props;
+        const { currentTeam, vocabulary, durationTimeFormat } = this.props;
         const { v_project_name, v_time } = vocabulary;
 
         const tableHeader = [
@@ -42,7 +42,7 @@ class ProjectData extends Component {
             <tr key={'table-header_' + index}>
                 <td>{item.name}</td>
                 <td>
-                    {getTimeDurationByGivenTimestamp(item.totalTime)}
+                    {getTimeDurationByGivenTimestamp(item.totalTime, durationTimeFormat)}
                     {checkIsAdminByRole(currentTeam.data.role) && (
                         <i className="edit_button" onClick={e => this.setEdiItem(item)} />
                     )}
@@ -78,6 +78,7 @@ ProjectData.propTypes = {
 const mapStateToProps = state => ({
     currentTeam: state.teamReducer.currentTeam,
     vocabulary: state.languageReducer.vocabulary,
+    durationTimeFormat: state.userReducer.durationTimeFormat,
 });
 
 export default connect(mapStateToProps)(ProjectData);

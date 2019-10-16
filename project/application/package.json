@@ -40,7 +40,7 @@
     "node-sass": "4.12.0"
   },
   "scripts": {
-    "start": "HTTPS=true react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "copy:libs": "cp -r libs/* node_modules",
     "test": "react-scripts test",

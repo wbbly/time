@@ -85,7 +85,7 @@ export default {
     v_new_password: 'Neues Passwort ',
     v_current_password: 'Aktuelles Passwort',
     v_save_changes: 'Speichern',
-    v_Ihr_Name: 'Name',
+    v_your_name: 'Name',
     v_my_profile: 'Profil',
     v_profile_settings: 'Einstellungen',
     v_change_password: 'Passwort ändern',
@@ -176,4 +176,8 @@ export default {
     v_to_get_token: 'um das API-Token zu erhalten',
     v_login_with: 'Einloggen mit',
     v_or: 'oder',
+    v_date_format: 'Datumsformat',
+    v_first_day_of_week: 'Erster Tag der Woche',
+    v_time_format: 'Zeitformat',
+    v_duration_display_format: 'Anzeigeformat für die Dauer',
 };

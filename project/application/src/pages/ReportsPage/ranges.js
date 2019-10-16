@@ -11,11 +11,11 @@ import {
     differenceInCalendarDays,
 } from 'date-fns';
 
-const defineds = {
-    startOfWeek: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    endOfWeek: endOfWeek(new Date(), { weekStartsOn: 1 }),
-    startOfLastWeek: startOfWeek(addDays(new Date(), -7), { weekStartsOn: 1 }),
-    endOfLastWeek: endOfWeek(addDays(new Date(), -7), { weekStartsOn: 1 }),
+const defineds = weekStartsOn => ({
+    startOfWeek: startOfWeek(new Date(), { weekStartsOn }),
+    endOfWeek: endOfWeek(new Date(), { weekStartsOn }),
+    startOfLastWeek: startOfWeek(addDays(new Date(), -7), { weekStartsOn }),
+    endOfLastWeek: endOfWeek(addDays(new Date(), -7), { weekStartsOn }),
     startOfToday: startOfDay(new Date()),
     endOfToday: endOfDay(new Date()),
     startOfYesterday: startOfDay(addDays(new Date(), -1)),
@@ -24,7 +24,7 @@ const defineds = {
     endOfMonth: endOfMonth(new Date()),
     startOfLastMonth: startOfMonth(addMonths(new Date(), -1)),
     endOfLastMonth: endOfMonth(addMonths(new Date(), -1)),
-};
+});
 
 const staticRangeHandler = {
     range: {},
@@ -38,66 +38,66 @@ function createStaticRanges(ranges) {
     return ranges.map(range => ({ ...staticRangeHandler, ...range }));
 }
 
-export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, lastMonth) =>
+export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, lastMonth, weekStartsOn) =>
     createStaticRanges([
         {
             label: today,
             range: () => ({
-                startDate: defineds.startOfToday,
-                endDate: defineds.endOfToday,
+                startDate: defineds(weekStartsOn).startOfToday,
+                endDate: defineds(weekStartsOn).endOfToday,
             }),
         },
         {
             label: yesterday,
             range: () => ({
-                startDate: defineds.startOfYesterday,
-                endDate: defineds.endOfYesterday,
+                startDate: defineds(weekStartsOn).startOfYesterday,
+                endDate: defineds(weekStartsOn).endOfYesterday,
             }),
         },
 
         {
             label: thisWeek,
             range: () => ({
-                startDate: defineds.startOfWeek,
-                endDate: defineds.endOfWeek,
+                startDate: defineds(weekStartsOn).startOfWeek,
+                endDate: defineds(weekStartsOn).endOfWeek,
             }),
         },
         {
             label: lastWeek,
             range: () => ({
-                startDate: defineds.startOfLastWeek,
-                endDate: defineds.endOfLastWeek,
+                startDate: defineds(weekStartsOn).startOfLastWeek,
+                endDate: defineds(weekStartsOn).endOfLastWeek,
             }),
         },
         {
             label: thisMonth,
             range: () => ({
-                startDate: defineds.startOfMonth,
-                endDate: defineds.endOfMonth,
+                startDate: defineds(weekStartsOn).startOfMonth,
+                endDate: defineds(weekStartsOn).endOfMonth,
             }),
         },
         {
             label: lastMonth,
             range: () => ({
-                startDate: defineds.startOfLastMonth,
-                endDate: defineds.endOfLastMonth,
+                startDate: defineds(weekStartsOn).startOfLastMonth,
+                endDate: defineds(weekStartsOn).endOfLastMonth,
             }),
         },
     ]);
 
-export const inputRanges = (daysUpToToday, daysStartingToday) => [
+export const inputRanges = (daysUpToToday, daysStartingToday, weekStartsOn) => [
     {
         label: daysUpToToday,
         range(value) {
             return {
-                startDate: addDays(defineds.startOfToday, (Math.max(Number(value), 1) - 1) * -1),
-                endDate: defineds.endOfToday,
+                startDate: addDays(defineds(weekStartsOn).startOfToday, (Math.max(Number(value), 1) - 1) * -1),
+                endDate: defineds(weekStartsOn).endOfToday,
             };
         },
         getCurrentValue(range) {
-            if (!isSameDay(range.endDate, defineds.endOfToday)) return '-';
+            if (!isSameDay(range.endDate, defineds(weekStartsOn).endOfToday)) return '-';
             if (!range.startDate) return '∞';
-            return differenceInCalendarDays(defineds.endOfToday, range.startDate) + 1;
+            return differenceInCalendarDays(defineds(weekStartsOn).endOfToday, range.startDate) + 1;
         },
     },
     {
@@ -110,9 +110,9 @@ export const inputRanges = (daysUpToToday, daysStartingToday) => [
             };
         },
         getCurrentValue(range) {
-            if (!isSameDay(range.startDate, defineds.startOfToday)) return '-';
+            if (!isSameDay(range.startDate, defineds(weekStartsOn).startOfToday)) return '-';
             if (!range.endDate) return '∞';
-            return differenceInCalendarDays(range.endDate, defineds.startOfToday) + 1;
+            return differenceInCalendarDays(range.endDate, defineds(weekStartsOn).startOfToday) + 1;
         },
     },
 ];

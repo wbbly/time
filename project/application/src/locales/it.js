@@ -171,4 +171,8 @@ export default {
     v_to_get_token: 'per ottenere il token Api',
     v_login_with: 'Entra con',
     v_or: 'o',
+    v_date_format: 'Formato data',
+    v_first_day_of_week: 'Primo giorno della settimana',
+    v_time_format: 'Formato orario',
+    v_duration_display_format: 'Formato di visualizzazione della durata',
 };

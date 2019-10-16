@@ -1,0 +1,61 @@
+.time-format {
+  width: 30%;
+  font-size: 1.8rem;
+  line-height: 2.5rem;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 10px 0 0;
+
+  .time-format__title {
+    color: #fff;
+    margin: 0 0 1rem 0;
+  }
+
+  .time-format_select {
+    min-width: 12rem;
+    position: relative;
+    padding: 1.1rem 3rem 1.1rem 1.8rem;
+    border-radius: 0.4rem;
+    background: #4f4f4f;
+    font-size: 1.5rem;
+    line-height: 2.2rem;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    color: #d8d8d8;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .time-format__list {
+    position: absolute;
+    z-index: 15;
+    width: 100%;
+    right: 0;
+    top: 110%;
+    border-radius: 0.4rem;
+    background: #4f4f4f;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .time-format__list-item {
+    padding: 0.5rem 0.5rem 0.5rem 1.3rem;
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #333333;
+    }
+  }
+
+  .time-format__icon-arrow {
+    position: absolute;
+    top: 18px;
+    right: 10px;
+    height: 7px;
+    width: 11px;
+    background: url("../../images/icons/arrow_down.svg") no-repeat center;
+  }
+}

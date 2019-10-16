@@ -197,6 +197,20 @@
     }
   }
 
+  .user-settings__date-time-format-block {
+    display: flex;
+    flex-direction: column;
+    min-width: 100%;
+
+    .user-settings__date-time-format-block--row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      min-width: 100%;
+      margin: 0 0 16px 0;
+    }
+  }
+
   .wrapper-jira-sync {
     .input_checkbox_jira {
       display: flex;

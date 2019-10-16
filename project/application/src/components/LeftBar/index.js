@@ -120,14 +120,14 @@ class LeftBar extends Component {
     }
 
     getTimeNow() {
-        const { currentTimer } = this.props;
+        const { currentTimer, durationTimeFormat } = this.props;
         if (!currentTimer.timeStart) {
             this.setState({ timer: '' });
 
             return false;
         }
 
-        this.setState({ timer: getTimeDiff(currentTimer.timeStart, true) });
+        this.setState({ timer: getTimeDiff(currentTimer.timeStart, true, durationTimeFormat) });
     }
 
     visualTimer() {
@@ -190,6 +190,7 @@ class LeftBar extends Component {
 
 const mapStateToProps = state => ({
     currentTimer: state.mainPageReducer.currentTimer,
+    durationTimeFormat: state.userReducer.durationTimeFormat,
 });
 
 const mapDispatchToProps = {

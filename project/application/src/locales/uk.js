@@ -169,4 +169,8 @@ export default {
     v_to_get_token: 'для отримання Api токену',
     v_login_with: 'Увійти через',
     v_or: 'або',
+    v_date_format: 'Формат дати',
+    v_first_day_of_week: 'Перший день тижня',
+    v_time_format: 'Формат часу',
+    v_duration_display_format: 'Формат відображення тривалості',
 };

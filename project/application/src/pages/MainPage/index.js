@@ -257,13 +257,13 @@ class MainPage extends Component {
         }
     }
 
-    getTimeEntriesTotalTime(items) {
+    getTimeEntriesTotalTime(items, durationTimeFormat) {
         let totalTime = 0;
         for (let i = 0; i < items.length; i++) {
             totalTime += +moment(items[i].endDatetime) - +moment(items[i].startDatetime);
         }
 
-        return getDateInString(totalTime);
+        return getDateInString(totalTime, durationTimeFormat);
     }
 
     projectListToggle() {
@@ -456,16 +456,20 @@ class MainPage extends Component {
     };
 
     visualTimer() {
-        const duration = getTimeDurationByGivenTimestamp(+moment(this.state.timerDurationValue)) || '00:00:00';
+        const { durationTimeFormat } = this.props;
+        const duration = getTimeDurationByGivenTimestamp(
+            +moment(this.state.timerDurationValue) || 0,
+            durationTimeFormat
+        );
         const issue = (this.issueTargetElement || {}).value || '';
         const project = (this.state.seletedProject || {}).name || '';
-        updatePageTitle(duration === '00:00:00' ? null : duration, issue, project);
+        updatePageTitle(!this.state.timerDurationValue ? null : duration, issue, project);
 
         return duration;
     }
 
     createTimeEntriesList(data) {
-        const { viewport, isMobile, vocabulary } = this.props;
+        const { viewport, isMobile, vocabulary, durationTimeFormat, timeFormat } = this.props;
         const { v_edit_task, v_delete_task } = vocabulary;
         let items = data.map(item => {
             const { syncJiraStatus } = item;
@@ -495,13 +499,16 @@ class MainPage extends Component {
                             }}
                         >
                             <div className="time_now">
-                                <div>{moment(item.startDatetime).format('HH:mm')}</div>
+                                <div>
+                                    {moment(item.startDatetime).format(`HH:mm ${timeFormat === '12' ? 'a' : ''}`)}
+                                </div>
                                 <span>&nbsp;-&nbsp;</span>
-                                <div>{moment(item.endDatetime).format('HH:mm')}</div>
+                                <div>{moment(item.endDatetime).format(`HH:mm ${timeFormat === '12' ? 'a' : ''}`)}</div>
                             </div>
                             <div className="timePassed">
                                 {getTimeDurationByGivenTimestamp(
-                                    +moment(item.endDatetime) - +moment(item.startDatetime)
+                                    +moment(item.endDatetime) - +moment(item.startDatetime),
+                                    durationTimeFormat
                                 )}
                             </div>
                             {!this.state.timerDurationValue && <i className="small_play item_button" />}
@@ -579,7 +586,7 @@ class MainPage extends Component {
         }
     }
     render() {
-        const { isMobile, vocabulary, userReducer, viewport } = this.props;
+        const { isMobile, vocabulary, userReducer, viewport, dateFormat, durationTimeFormat } = this.props;
         const {
             lang,
             v_total_time,
@@ -603,10 +610,10 @@ class MainPage extends Component {
                 <div className="time_tracker_wrapper" key={'time-entry-group_' + index}>
                     <div className="header">
                         <div className="date">{`${toUpperCaseFirstLetter}, ${moment(arraysItem[0].startDatetime).format(
-                            'DD.MM.YYYY'
+                            dateFormat
                         )}`}</div>
                         <div className="allTime">
-                            {v_total_time}: {this.getTimeEntriesTotalTime(arraysItem)}
+                            {v_total_time}: {this.getTimeEntriesTotalTime(arraysItem, durationTimeFormat)}
                         </div>
                     </div>
                     {this.createTimeEntriesList(arraysItem)}
@@ -918,6 +925,9 @@ const mapStateToProps = store => {
         isMobile: store.responsiveReducer.isMobile,
         userReducer: store.userReducer,
         languages: store.languageReducer.languages,
+        dateFormat: store.userReducer.dateFormat,
+        timeFormat: store.userReducer.timeFormat,
+        durationTimeFormat: store.userReducer.durationTimeFormat,
     };
 };
 

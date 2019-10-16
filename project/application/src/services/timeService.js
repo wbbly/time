@@ -1,19 +1,19 @@
 import * as moment from 'moment';
 import { store } from '../store/configureStore';
 
-export function getDateInString(seconds) {
+export function getDateInString(seconds, durationTimeFormat) {
     if (!seconds) {
-        return '00:00:00';
+        return getTimeDurationByGivenTimestamp(0, durationTimeFormat);
     }
 
-    return getTimeDurationByGivenTimestamp(seconds);
+    return getTimeDurationByGivenTimestamp(seconds, durationTimeFormat);
 }
 
-export function getTimeDiff(timeFrom, inString) {
+export function getTimeDiff(timeFrom, inString, durationTimeFormat) {
     const { serverClientTimediff } = store.getState().mainPageReducer;
     const timeDiff = +moment() - timeFrom + serverClientTimediff;
 
-    return inString ? getTimeDurationByGivenTimestamp(+timeDiff) : moment(timeDiff).utc();
+    return inString ? getTimeDurationByGivenTimestamp(+timeDiff, durationTimeFormat) : moment(timeDiff).utc();
 }
 
 export function getTimeInSecondFromString(string) {
@@ -51,15 +51,47 @@ export function changeDate(arr) {
     return newArr;
 }
 
-export function getTimeDurationByGivenTimestamp(milliseconds) {
-    let hour, minute, seconds;
-    seconds = Math.floor(milliseconds / 1000);
-    minute = Math.floor(seconds / 60);
-    seconds = seconds % 60;
-    hour = Math.floor(minute / 60);
-    minute = minute % 60;
+export function getTimeDurationByGivenTimestamp(milliseconds, durationTimeFormat = 'improved') {
+    const decimal = time => {
+        let h = time / 1000 / 60 / 60;
+        return `${h.toFixed(2)} h`;
+    };
 
-    return `${padTime(hour)}:${padTime(minute)}:${padTime(seconds)}`;
+    const classic = time => {
+        let hour, minute, seconds;
+        seconds = Math.floor(time / 1000);
+        minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        hour = Math.floor(minute / 60);
+        minute = minute % 60;
+
+        if (hour === 0 && minute === 0) {
+            return `${padTime(seconds)} s`;
+        } else if (hour === 0 && minute !== 0) {
+            return `${padTime(minute)}:${padTime(seconds)} min`;
+        } else if (hour !== 0) {
+            return `${padTime(hour)}:${padTime(minute)}:${padTime(seconds)}`;
+        }
+    };
+
+    const improved = time => {
+        let hour, minute, seconds;
+        seconds = Math.floor(time / 1000);
+        minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        hour = Math.floor(minute / 60);
+        minute = minute % 60;
+
+        return `${padTime(hour)}:${padTime(minute)}:${padTime(seconds)}`;
+    };
+
+    if (durationTimeFormat === 'improved') {
+        return improved(milliseconds);
+    } else if (durationTimeFormat === 'decimal') {
+        return decimal(milliseconds);
+    } else if (durationTimeFormat === 'classic') {
+        return classic(milliseconds);
+    }
 }
 
 export function convertDateToISOString(date) {
