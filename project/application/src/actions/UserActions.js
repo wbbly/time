@@ -18,6 +18,30 @@ export const SET_USER_AVATAR_REQUEST_FAIL = 'SET_USER_AVATAR_REQUEST_FAIL';
 export const RESET_ALL = 'RESET_ALL';
 export const CHANGE_USER_DATA = 'CHANGE_USER_DATA';
 export const TOGGLE_MODAL = 'TOGGLE_MODAL';
+export const SET_DATE_FORMAT = 'SET_DATE_FORMAT';
+export const SET_TIME_FORMAT = 'SET_TIME_FORMAT';
+export const SET_FIRST_DAY_OF_WEEK = 'SET_FIRST_DAY_OF_WEEK';
+export const SET_DURATION_TIME_FORMAT = 'SET_DURATION_TIME_FORMAT';
+
+export const setDurationTimeFormat = payload => ({
+    type: SET_DURATION_TIME_FORMAT,
+    payload,
+});
+
+export const setFirstDayOfWeek = payload => ({
+    type: SET_FIRST_DAY_OF_WEEK,
+    payload,
+});
+
+export const setTimeFormat = payload => ({
+    type: SET_TIME_FORMAT,
+    payload,
+});
+
+export const setDateFormat = payload => ({
+    type: SET_DATE_FORMAT,
+    payload,
+});
 
 const getUserDataRequest = () => ({
     type: GET_USER_DATA_REQUEST,

@@ -9,7 +9,23 @@ import {
     RESET_ALL,
     CHANGE_USER_DATA,
     TOGGLE_MODAL,
+    SET_DATE_FORMAT,
+    SET_TIME_FORMAT,
+    SET_FIRST_DAY_OF_WEEK,
+    SET_DURATION_TIME_FORMAT,
 } from '../actions/UserActions';
+
+const initialDateFormat = 'DD.MM.YYYY';
+const dateFormat = localStorage.getItem('dateFormat') || initialDateFormat;
+
+const initialTimeFormat = '24';
+const timeFormat = localStorage.getItem('timeFormat') || initialTimeFormat;
+
+const initialFirstDayOfWeek = 1;
+const firstDayOfWeek = localStorage.getItem('firstDayOfWeek') || initialFirstDayOfWeek;
+
+const initialDurationTimeFormat = 'improved';
+const durationTimeFormat = localStorage.getItem('durationTimeFormat') || initialDurationTimeFormat;
 
 const initialState = {
     changePasswordModal: false,
@@ -19,12 +35,40 @@ const initialState = {
         isFetching: false,
         error: null,
     },
+    dateFormat,
+    timeFormat,
+    firstDayOfWeek,
+    durationTimeFormat,
     isFetching: false,
     isInitialFetching: true,
 };
 
 export default (state = initialState, { type, payload }) => {
     switch (type) {
+        case SET_DURATION_TIME_FORMAT:
+            return {
+                ...state,
+                durationTimeFormat: payload,
+            };
+
+        case SET_FIRST_DAY_OF_WEEK:
+            return {
+                ...state,
+                firstDayOfWeek: payload,
+            };
+
+        case SET_TIME_FORMAT:
+            return {
+                ...state,
+                timeFormat: payload,
+            };
+
+        case SET_DATE_FORMAT:
+            return {
+                ...state,
+                dateFormat: payload,
+            };
+
         case GET_USER_DATA_REQUEST:
             return {
                 ...state,

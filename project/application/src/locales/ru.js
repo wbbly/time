@@ -171,4 +171,8 @@ export default {
     v_to_get_token: 'для получения Api токена',
     v_login_with: 'Ввойти через',
     v_or: 'или',
+    v_date_format: 'Формат даты',
+    v_first_day_of_week: 'Первый день недели',
+    v_time_format: 'Формат времени',
+    v_duration_display_format: 'Формат отображения длительности',
 };

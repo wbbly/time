@@ -56,15 +56,15 @@ class ReportsByProjectsPage extends Component {
     }
 
     render() {
-        const { isMobile } = this.props;
+        const { isMobile, dateFormat, durationTimeFormat } = this.props;
 
         let projectsItems = this.state.dataOfProject.map((item, index) => (
             <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
                 <div className="name">{this.getSlash(item.issue)}</div>
                 <div className="username">{item.user.username}</div>
                 <div className="time">
-                    {moment(item.startDatetime).format('DD.MM.YYYY')} |{' '}
-                    {getTimeDurationByGivenTimestamp(item.durationTimestamp)}
+                    {moment(item.startDatetime).format(dateFormat)} |{' '}
+                    {getTimeDurationByGivenTimestamp(item.durationTimestamp, durationTimeFormat)}
                 </div>
             </div>
         ));
@@ -78,11 +78,13 @@ class ReportsByProjectsPage extends Component {
                 <div className="header">
                     <div className="header_name">
                         {this.props.match.params.projectName}:{' '}
-                        {this.getDateInPointsFormat(this.props.match.params.dateStart)}
-                        {' - '} {this.getDateInPointsFormat(this.props.match.params.endDate)}
+                        {moment(this.props.match.params.dateStart).format(dateFormat)}
+                        {' - '} {moment(this.props.match.params.endDate).format(dateFormat)}
                     </div>
                     <div className="header_name">Sum tasks: {this.state.countTasks}</div>
-                    <div className="header_name">Sum time: {getTimeDurationByGivenTimestamp(this.state.totalTime)}</div>
+                    <div className="header_name">
+                        Sum time: {getTimeDurationByGivenTimestamp(this.state.totalTime, durationTimeFormat)}
+                    </div>
                 </div>
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">
@@ -148,6 +150,8 @@ class ReportsByProjectsPage extends Component {
 const mapStateToProps = store => ({
     inputUserData: store.reportsPageReducer.inputUserData,
     isMobile: store.responsiveReducer.isMobile,
+    dateFormat: store.userReducer.dateFormat,
+    durationTimeFormat: store.userReducer.durationTimeFormat,
 });
 
 export default withRouter(connect(mapStateToProps)(ReportsByProjectsPage));

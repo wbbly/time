@@ -19,7 +19,7 @@ import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import './style.css';
 
 class ProjectsContainer extends Component {
-    doughnutOptions = {
+    doughnutOptions = durationTimeFormat => ({
         title: {
             display: false,
         },
@@ -36,21 +36,22 @@ class ProjectsContainer extends Component {
                 label: function(tooltipItem, data) {
                     let label = data.labels[tooltipItem.index];
                     let duration = getTimeDurationByGivenTimestamp(
-                        data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
+                        data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index],
+                        durationTimeFormat
                     );
 
                     return `${label}: ${duration}`;
                 },
             },
         },
-    };
+    });
 
     getDateToLink(momentDate) {
         return moment(momentDate).format('YYYY-MM-DD');
     }
 
     render() {
-        const { vocabulary } = this.props;
+        const { vocabulary, durationTimeFormat } = this.props;
         const { v_project_name, v_time } = vocabulary;
         let datesValue = '00:00:00';
         if (!!this.props.dataDoughnutChat.datasets[0].data.length) {
@@ -74,7 +75,7 @@ class ProjectsContainer extends Component {
             >
                 <div className="projects_container_project_data">
                     <div className="name">{item.name}</div>
-                    <div className="time">{getTimeDurationByGivenTimestamp(item.duration)}</div>
+                    <div className="time">{getTimeDurationByGivenTimestamp(item.duration, durationTimeFormat)}</div>
                 </div>
             </Link>
         ));
@@ -90,11 +91,13 @@ class ProjectsContainer extends Component {
                 </div>
                 <div className="chart">
                     <div className="total_time_tasks">
-                        {typeof datesValue === 'number' ? getTimeDurationByGivenTimestamp(datesValue) : ''}
+                        {typeof datesValue === 'number'
+                            ? getTimeDurationByGivenTimestamp(datesValue, durationTimeFormat)
+                            : getTimeDurationByGivenTimestamp(0, durationTimeFormat)}
                     </div>
                     <Doughnut
                         data={this.props.dataDoughnutChat}
-                        options={this.doughnutOptions}
+                        options={this.doughnutOptions(durationTimeFormat)}
                         width={303}
                         height={303}
                     />
@@ -106,6 +109,7 @@ class ProjectsContainer extends Component {
 
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
+    durationTimeFormat: state.userReducer.durationTimeFormat,
 });
 
 export default connect(mapStateToProps)(ProjectsContainer);

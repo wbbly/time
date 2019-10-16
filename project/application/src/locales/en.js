@@ -168,4 +168,8 @@ export default {
     v_to_get_token: 'to get the API token',
     v_login_with: 'Login with',
     v_or: 'or',
+    v_date_format: 'Date format',
+    v_first_day_of_week: 'First day of week',
+    v_time_format: 'Time format',
+    v_duration_display_format: 'Duration display format',
 };

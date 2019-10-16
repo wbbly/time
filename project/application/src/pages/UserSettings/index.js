@@ -14,7 +14,10 @@ import ChangePasswordModal from '../../components/ChangePasswordModal';
 import SwitchLanguage from '../../components/SwitchLanguage';
 import Input from '../../components/BaseComponents/Input';
 import Avatar from '../../components/AvatarEditor';
-// import SelectDateTimeBlock from "../../components/SelectDateTimeBlock"
+import SelectDateFormat from '../../components/SelectDateFormat';
+import SelectTimeFormat from '../../components/SelectTimeFormat';
+import SelectFirstDayOfWeek from '../../components/SelectFirstDayOfWeek';
+import SelectDurationTimeFormat from '../../components/SelectDurationTimeFormat';
 
 //Services
 import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
@@ -354,8 +357,16 @@ class UserSetting extends Component {
                                 />
                             </div>
                             <SwitchLanguage dropdown />
-                            {/* <SelectDateTimeBlock /> */}
-
+                            <div className="user-settings__date-time-format-block">
+                                <div className="user-settings__date-time-format-block--row">
+                                    <SelectDateFormat />
+                                    <SelectFirstDayOfWeek />
+                                </div>
+                                <div className="user-settings__date-time-format-block--row">
+                                    <SelectTimeFormat />
+                                    <SelectDurationTimeFormat />
+                                </div>
+                            </div>
                             <div className="wrapper-jira-sync">
                                 <label className="input_container input_checkbox_jira">
                                     <input

@@ -58,8 +58,9 @@
 
 .total_time_tasks {
     position: absolute;
-    top: 135px;
-    left: 36%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: bold;
