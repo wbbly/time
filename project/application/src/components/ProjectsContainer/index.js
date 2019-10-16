@@ -93,7 +93,7 @@ class ProjectsContainer extends Component {
                     <div className="total_time_tasks">
                         {typeof datesValue === 'number'
                             ? getTimeDurationByGivenTimestamp(datesValue, durationTimeFormat)
-                            : getTimeDurationByGivenTimestamp(0, durationTimeFormat)}
+                            : ''}
                     </div>
                     <Doughnut
                         data={this.props.dataDoughnutChat}

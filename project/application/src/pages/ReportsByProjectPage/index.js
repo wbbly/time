@@ -56,7 +56,8 @@ class ReportsByProjectsPage extends Component {
     }
 
     render() {
-        const { isMobile, dateFormat, durationTimeFormat } = this.props;
+        const { isMobile, dateFormat, durationTimeFormat, vocabulary } = this.props;
+        const { v_issue, v_user_name, v_time, v_sum_tasks, v_sum_time } = vocabulary;
 
         let projectsItems = this.state.dataOfProject.map((item, index) => (
             <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
@@ -81,17 +82,19 @@ class ReportsByProjectsPage extends Component {
                         {moment(this.props.match.params.dateStart).format(dateFormat)}
                         {' - '} {moment(this.props.match.params.endDate).format(dateFormat)}
                     </div>
-                    <div className="header_name">Sum tasks: {this.state.countTasks}</div>
                     <div className="header_name">
-                        Sum time: {getTimeDurationByGivenTimestamp(this.state.totalTime, durationTimeFormat)}
+                        {v_sum_tasks}: {this.state.countTasks}
+                    </div>
+                    <div className="header_name">
+                        {v_sum_time}: {getTimeDurationByGivenTimestamp(this.state.totalTime, durationTimeFormat)}
                     </div>
                 </div>
                 <div className="projects_container_wrapper">
                     <div className="projects_container_projects">
                         <div className="projects_header">
-                            <div className="name">Issue</div>
-                            <div className="username">Username</div>
-                            <div className="time">Time</div>
+                            <div className="name">{v_issue}</div>
+                            <div className="username">{v_user_name}</div>
+                            <div className="time">{v_time}</div>
                         </div>
                         <div className="projects_container_project_data_container">{projectsItems}</div>
                     </div>
@@ -152,6 +155,7 @@ const mapStateToProps = store => ({
     isMobile: store.responsiveReducer.isMobile,
     dateFormat: store.userReducer.dateFormat,
     durationTimeFormat: store.userReducer.durationTimeFormat,
+    vocabulary: store.languageReducer.vocabulary,
 });
 
 export default withRouter(connect(mapStateToProps)(ReportsByProjectsPage));

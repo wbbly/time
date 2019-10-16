@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, NavLink, withRouter } from 'react-router-dom';
 
 import classNames from 'classnames';
 import openSocket from 'socket.io-client';
@@ -153,32 +153,56 @@ class LeftBar extends Component {
                 )}
 
                 <div className="navigation_links_container">
-                    <Link onClick={switchMenu} to="/timer" style={{ textDecoration: 'none' }}>
+                    <NavLink
+                        activeClassName="active-link"
+                        onClick={switchMenu}
+                        to="/timer"
+                        style={{ textDecoration: 'none' }}
+                    >
                         <div className="navigation_links">
                             <i className="timer" />
                             <div className="links_text">{v_timer}</div>
                             <div className="timer_task">{this.visualTimer()}</div>
                         </div>
-                    </Link>
-                    <Link onClick={switchMenu} to="/reports/summary" style={{ textDecoration: 'none' }}>
+                    </NavLink>
+                    <NavLink
+                        activeClassName="active-link"
+                        isActive={() => {
+                            const { match } = this.props;
+                            return match.path.indexOf('/reports') >= 0;
+                        }}
+                        onClick={switchMenu}
+                        to="/reports/summary"
+                        style={{ textDecoration: 'none' }}
+                    >
                         <div className="navigation_links">
                             <i className="reports" />
                             <div className="links_text">{v_reports}</div>
                         </div>
-                    </Link>
-                    <Link onClick={switchMenu} to="/projects" style={{ textDecoration: 'none' }}>
+                    </NavLink>
+                    <NavLink
+                        activeClassName="active-link"
+                        onClick={switchMenu}
+                        to="/projects"
+                        style={{ textDecoration: 'none' }}
+                    >
                         <div className="navigation_links">
                             <i className="projects" />
                             <div className="links_text">{v_projects}</div>
                         </div>
-                    </Link>
+                    </NavLink>
                     <div className="wrapper-position-add-team">
-                        <Link onClick={switchMenu} to="/team" style={{ textDecoration: 'none' }}>
+                        <NavLink
+                            activeClassName="active-link"
+                            onClick={switchMenu}
+                            to="/team"
+                            style={{ textDecoration: 'none' }}
+                        >
                             <div className="navigation_links">
                                 <i className="team" />
                                 <div className="links_text">{v_team}</div>
                             </div>
-                        </Link>
+                        </NavLink>
                         <TeamSwitcher isMobile={isMobile} />
                     </div>
                 </div>

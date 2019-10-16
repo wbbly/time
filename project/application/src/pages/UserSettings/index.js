@@ -31,6 +31,8 @@ import { AppConfig } from '../../config';
 import './style.scss';
 import SwitchJiraType from '../../components/SwitchJiraType';
 
+const fakePassword = '8d8ae757-81ca-408f-a0b8-00d1e9f9923f';
+
 class UserSetting extends Component {
     state = {
         rotateArrowLoop: false,
@@ -251,6 +253,21 @@ class UserSetting extends Component {
         );
     };
 
+    checkFakePassword = () => {
+        const { inputs } = this.state;
+        if (inputs.jiraPassword.value === fakePassword) {
+            this.setState(prevState => ({
+                inputs: {
+                    ...prevState.inputs,
+                    jiraPassword: {
+                        ...prevState.inputs.jiraPassword,
+                        value: '',
+                    },
+                },
+            }));
+        }
+    };
+
     componentDidMount() {
         this.setDataToForm();
     }
@@ -439,8 +456,9 @@ class UserSetting extends Component {
                                                     </span>
                                                 )}
                                                 <Input
+                                                    checkFakePassword={this.checkFakePassword}
                                                     config={{
-                                                        placeholder: '********************',
+                                                        onFocus: this.checkFakePassword,
                                                         value: jiraPassword.value,
                                                         type: jiraPassword.type,
                                                         name: jiraPassword.name,
@@ -495,6 +513,10 @@ class UserSetting extends Component {
                 jiraUsername: {
                     ...prevState.inputs.jiraUsername,
                     value: loginJira || '',
+                },
+                jiraPassword: {
+                    ...prevState.inputs.jiraPassword,
+                    value: fakePassword,
                 },
                 syncJiraStatus: {
                     ...prevState.inputs.syncJiraStatus,
