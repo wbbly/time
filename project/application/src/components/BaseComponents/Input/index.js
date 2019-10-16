@@ -17,7 +17,7 @@ class Input extends Component {
 
     render() {
         const { typeInput } = this.state;
-        const { config, vocabulary } = this.props;
+        const { config, vocabulary, checkFakePassword = () => {} } = this.props;
 
         const { v_a_incorect_email } = vocabulary;
         const { valid = true, type, ...rest } = config;
@@ -29,7 +29,13 @@ class Input extends Component {
                 component = (
                     <>
                         <input {...rest} type={typeInput} />
-                        <span className="wrapper-base-input__icon-eye" onClick={this.switchPasswordVisibility} />
+                        <span
+                            className="wrapper-base-input__icon-eye"
+                            onClick={event => {
+                                this.switchPasswordVisibility();
+                                checkFakePassword();
+                            }}
+                        />
                     </>
                 );
                 break;
