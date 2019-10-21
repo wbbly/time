@@ -500,10 +500,12 @@ class MainPage extends Component {
                         >
                             <div className="time_now">
                                 <div>
-                                    {moment(item.startDatetime).format(`HH:mm ${timeFormat === '12' ? 'a' : ''}`)}
+                                    {moment(item.startDatetime).format(`${timeFormat === '12' ? 'h:mm a' : 'HH:mm'}`)}
                                 </div>
                                 <span>&nbsp;-&nbsp;</span>
-                                <div>{moment(item.endDatetime).format(`HH:mm ${timeFormat === '12' ? 'a' : ''}`)}</div>
+                                <div>
+                                    {moment(item.endDatetime).format(`${timeFormat === '12' ? 'h:mm a' : 'HH:mm'}`)}
+                                </div>
                             </div>
                             <div className="timePassed">
                                 {getTimeDurationByGivenTimestamp(
