@@ -160,6 +160,7 @@ export default {
     v_lastWeek: 'Минулий тиждень',
     v_thisMonth: 'Поточний місяць',
     v_lastMonth: 'Минулий місяць',
+    v_this_year: 'Цього року',
     v_days_up_to_today: 'днів до сьогодні',
     v_days_starting_today: 'днів від сьогодні',
     v_jira_synchronization: 'Jira синхронізація',
@@ -173,4 +174,5 @@ export default {
     v_first_day_of_week: 'Перший день тижня',
     v_time_format: 'Формат часу',
     v_duration_display_format: 'Формат відображення тривалості',
+    v_switch_team_to_the: 'Команда змінилася на',
 };

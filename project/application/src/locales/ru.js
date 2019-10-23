@@ -162,6 +162,7 @@ export default {
     v_lastWeek: 'Прошлая неделя',
     v_thisMonth: 'Текущий месяц',
     v_lastMonth: 'Прошлый месяц',
+    v_this_year: 'В этом году',
     v_days_up_to_today: 'дней до сегодня',
     v_days_starting_today: 'дней от сегодня',
     v_jira_synchronization: 'Jira синхронизация',
@@ -175,4 +176,5 @@ export default {
     v_first_day_of_week: 'Первый день недели',
     v_time_format: 'Формат времени',
     v_duration_display_format: 'Формат отображения длительности',
+    v_switch_team_to_the: 'Команда изменилась на',
 };

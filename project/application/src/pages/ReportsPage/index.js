@@ -162,6 +162,7 @@ class ReportsPage extends Component {
             v_lastWeek,
             v_thisMonth,
             v_lastMonth,
+            v_this_year,
             v_days_up_to_today,
             v_days_starting_today,
             lang,
@@ -209,6 +210,7 @@ class ReportsPage extends Component {
                                                 v_lastWeek,
                                                 v_thisMonth,
                                                 v_lastMonth,
+                                                v_this_year,
                                                 firstDayOfWeek
                                             )}
                                             inputRanges={inputRanges(

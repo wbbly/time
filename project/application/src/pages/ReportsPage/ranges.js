@@ -4,6 +4,8 @@ import {
     startOfDay,
     startOfMonth,
     endOfMonth,
+    startOfYear,
+    endOfYear,
     addMonths,
     startOfWeek,
     endOfWeek,
@@ -24,6 +26,8 @@ const defineds = weekStartsOn => ({
     endOfMonth: endOfMonth(new Date()),
     startOfLastMonth: startOfMonth(addMonths(new Date(), -1)),
     endOfLastMonth: endOfMonth(addMonths(new Date(), -1)),
+    startOfYear: startOfYear(new Date()),
+    endOfYear: endOfYear(new Date()),
 });
 
 const staticRangeHandler = {
@@ -38,7 +42,7 @@ function createStaticRanges(ranges) {
     return ranges.map(range => ({ ...staticRangeHandler, ...range }));
 }
 
-export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, lastMonth, weekStartsOn) =>
+export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, lastMonth, thisYear, weekStartsOn) =>
     createStaticRanges([
         {
             label: today,
@@ -81,6 +85,13 @@ export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, la
             range: () => ({
                 startDate: defineds(weekStartsOn).startOfLastMonth,
                 endDate: defineds(weekStartsOn).endOfLastMonth,
+            }),
+        },
+        {
+            label: thisYear,
+            range: () => ({
+                startDate: defineds().startOfYear,
+                endDate: defineds().endOfYear,
             }),
         },
     ]);
