@@ -70,7 +70,7 @@ class ReportsByProjectsPage extends Component {
             </div>
         ));
         let projectsItemsMobile = this.state.dataOfProject.map((item, index) => (
-            <div className="projects_container_project_data" key={'projects_container_project_data' + index} >
+            <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
                 <div className="reports-by-project-list">
                     <span className="project-list-title">{v_issue}:</span>
                     <span>{this.getSlash(item.issue)}</span>
@@ -113,16 +113,20 @@ class ReportsByProjectsPage extends Component {
                         {v_sum_time}: {getTimeDurationByGivenTimestamp(this.state.totalTime, durationTimeFormat)}
                     </div>
                 </div>
-                {!isMobile ? <div className="projects_container_wrapper">
-                    <div className="projects_container_projects">
-                        <div className="projects_header">
-                            <div className="name">{v_issue}</div>
-                            <div className="username">{v_user_name}</div>
-                            <div className="time">{v_time}</div>
+                {!isMobile ? (
+                    <div className="projects_container_wrapper">
+                        <div className="projects_container_projects">
+                            <div className="projects_header">
+                                <div className="name">{v_issue}</div>
+                                <div className="username">{v_user_name}</div>
+                                <div className="time">{v_time}</div>
+                            </div>
+                            <div className="projects_container_project_data_container">{projectsItems}</div>
                         </div>
-                        <div className="projects_container_project_data_container">{projectsItems}</div>
                     </div>
-                </div> : <div className="projects_container_project_data_container">{projectsItemsMobile}</div>}
+                ) : (
+                    <div className="projects_container_project_data_container">{projectsItemsMobile}</div>
+                )}
             </div>
         );
     }
