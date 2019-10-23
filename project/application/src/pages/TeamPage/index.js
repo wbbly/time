@@ -28,6 +28,11 @@ import { AppConfig } from '../../config';
 // Styles
 import './style.scss';
 
+const roleMap = {
+    ROLE_ADMIN: 'Admin',
+    ROLE_MEMBER: 'Member',
+};
+
 class TeamPage extends Component {
     state = {
         renameModal: false,
@@ -108,8 +113,8 @@ class TeamPage extends Component {
                     <td className="phone_container">{phone ? phone : '-'}</td>
                     <td>{email}</td>
                     <td>
-                        {checkIsMemberByRole(role) && <div className="access_container">{role}</div>}
-                        {checkIsAdminByRole(role) && <div className="access_container red">{role}</div>}
+                        {checkIsMemberByRole(role) && <div className="access_container">{roleMap[role]}</div>}
+                        {checkIsAdminByRole(role) && <div className="access_container red">{roleMap[role]}</div>}
                     </td>
                     <td>
                         <div className="team-access-container">{isActive ? v_active : v_not_active}</div>

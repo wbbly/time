@@ -35,6 +35,35 @@ const ConnectionRestoredSVG = () => (
     </svg>
 );
 
+const TeamSwitchedIcon = () => (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M7.62806 9.48251C10.2423 9.48251 12.3616 7.35978 12.3616 4.74126C12.3616 2.12273 10.2423 0 7.62806 0C5.0138 0 2.89453 2.12273 2.89453 4.74126C2.89453 7.35978 5.0138 9.48251 7.62806 9.48251Z"
+            fill="white"
+        />
+        <path
+            d="M2.3472 26.0962H2.81665V35.5004C2.81665 36.7938 3.87289 37.8514 5.16385 37.8514H10.093C11.3839 37.8514 12.4402 36.7938 12.4402 35.5004V34.9522C12.0099 34.1289 11.736 33.1889 11.736 32.2093V19.9056C11.736 17.5153 13.1835 15.4386 15.2568 14.5374V13.5969C15.2568 12.3039 14.2006 11.2459 12.9096 11.2459H2.3472C1.05624 11.2459 0 12.3039 0 13.5969V23.7456C0 25.0387 1.01712 26.0962 2.3472 26.0962Z"
+            fill="white"
+        />
+        <path
+            d="M40.4108 9.48251C43.025 9.48251 45.1443 7.35978 45.1443 4.74126C45.1443 2.12273 43.025 0 40.4108 0C37.7965 0 35.6772 2.12273 35.6772 4.74126C35.6772 7.35978 37.7965 9.48251 40.4108 9.48251Z"
+            fill="white"
+        />
+        <path
+            d="M32.7429 13.5576V14.4981C34.8167 15.3993 36.2637 17.476 36.2637 19.8663V32.1308C36.2637 33.1104 36.029 34.0508 35.56 34.8737V35.4223C35.56 36.7153 36.6158 37.7733 37.9072 37.7733H42.8363C44.1273 37.7733 45.1835 36.7153 45.1835 35.4223V26.0181H45.6525C46.9439 26.0181 47.9997 24.9602 47.9997 23.6671V13.5576C47.9997 12.2646 46.9439 11.2066 45.6525 11.2066H35.0901C33.7996 11.2066 32.7429 12.2642 32.7429 13.5576Z"
+            fill="white"
+        />
+        <path
+            d="M15.2959 19.9051V23.7452V32.2089C15.2959 33.502 16.3521 34.5599 17.6431 34.5599H18.5429V45.649C18.5429 46.9421 19.5991 48 20.8901 48H27.1884C28.4794 48 29.5356 46.9421 29.5356 45.649V34.5208H30.4354C31.7263 34.5208 32.7826 33.4632 32.7826 32.1697V23.7456V19.9055C32.7826 18.6125 31.7263 17.5545 30.4354 17.5545H17.6431C16.313 17.5541 15.2959 18.6125 15.2959 19.9051Z"
+            fill="white"
+        />
+        <path
+            d="M24.0197 15.5953C27.0229 15.5953 29.4574 13.1568 29.4574 10.1487C29.4574 7.14066 27.0229 4.70215 24.0197 4.70215C21.0166 4.70215 18.582 7.14066 18.582 10.1487C18.582 13.1568 21.0166 15.5953 24.0197 15.5953Z"
+            fill="white"
+        />
+    </svg>
+);
+
 class ModalInfo extends Component {
     state = {
         showModal: false,
@@ -61,6 +90,12 @@ class ModalInfo extends Component {
         this.showModalInfo(v_connection_problem, 'lost-connection');
     };
 
+    teamSwitched = e => {
+        const { currentTeam, vocabulary } = this.props;
+        const { v_switch_team_to_the } = vocabulary;
+        this.showModalInfo(`${v_switch_team_to_the} ${currentTeam.data.name}`, 'team-switched');
+    };
+
     showModalInfo = (text, type) => {
         this.setState({ showModal: true, modalInfoContent: { text, type } });
     };
@@ -71,6 +106,13 @@ class ModalInfo extends Component {
             modalInfoContent: {},
         });
     };
+
+    componentDidUpdate(prevProps, prevState) {
+        const { currentTeam } = this.props;
+        if (prevProps.currentTeam.data.name && currentTeam.data.name !== prevProps.currentTeam.data.name) {
+            this.teamSwitched();
+        }
+    }
 
     render() {
         const { showModal, modalInfoContent } = this.state;
@@ -84,7 +126,9 @@ class ModalInfo extends Component {
                 onClick={this.hideModalInfo}
             >
                 <div className={classNames('modal-info-icon', `modal-info-icon--${modalInfoContent.type}`)}>
-                    {modalInfoContent.type === 'lost-connection' ? <NoConnectionSVG /> : <ConnectionRestoredSVG />}
+                    {modalInfoContent.type === 'lost-connection' && <NoConnectionSVG />}
+                    {modalInfoContent.type === 'connection-restored' && <ConnectionRestoredSVG />}
+                    {modalInfoContent.type === 'team-switched' && <TeamSwitchedIcon />}
                 </div>
                 <div className="modal-info-text">
                     <p>{modalInfoContent.text}</p>
@@ -97,6 +141,7 @@ class ModalInfo extends Component {
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     isMobile: state.responsiveReducer.isMobile,
+    currentTeam: state.teamReducer.currentTeam,
 });
 
 export default connect(mapStateToProps)(ModalInfo);

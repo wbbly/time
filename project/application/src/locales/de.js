@@ -167,6 +167,7 @@ export default {
     v_lastWeek: 'Letzte Woche',
     v_thisMonth: 'Dieser Monat',
     v_lastMonth: 'Letzter Monat',
+    v_this_year: 'Dieses Jahr',
     v_days_up_to_today: 'Tage bis heute',
     v_days_starting_today: 'Tage nach heute',
     v_jira_synchronization: 'Jira synchronisation',
@@ -180,4 +181,5 @@ export default {
     v_first_day_of_week: 'Erster Tag der Woche',
     v_time_format: 'Zeitformat',
     v_duration_display_format: 'Anzeigeformat für die Dauer',
+    v_switch_team_to_the: 'Team gewechselt zumÎ',
 };
