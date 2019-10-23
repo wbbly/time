@@ -255,7 +255,7 @@ class ReportsPage extends Component {
                                     <Bar
                                         ref={Bar => (this.barChart = Bar)}
                                         data={this.props.dataBarChat}
-                                        height={50}
+                                        height={isMobile? 150 : 50}
                                         options={this.lineChartOption(durationTimeFormat)}
                                     />
                                 </div>

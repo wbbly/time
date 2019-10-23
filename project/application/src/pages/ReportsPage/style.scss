@@ -132,7 +132,84 @@
 .wrapper_reports_page--mobile {
   padding: 1rem;
 
+  @media screen and (max-width: 894px) {
+    .header {
+      flex-wrap: wrap;
+    }
+    .header_name {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .selects_container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .arrow_down {
+      margin-left: 0;
+    }
+    .select_body {
+      right: auto;
+    }
+    .rdrDateRangePickerWrapper {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .rdrDefinedRangesWrapper {
+      width: 100%;
+    }
+    .rdrCalendarWrapper {
+      width: 100%;
+    }
+    .rdrMonth {
+      width: 100%;
+    }
+  }
+
   .data_container_reports_page {
     padding: 0;
+  }
+  .wrapper_reports_search_bar {
+    height: auto;
+    flex-direction: column;
+    padding: 10px;
+  }
+  .reports_search_select_wrapper {
+    width: 100%;
+    border-right: none;
+    padding: 0;
+  }
+  .reports_search_bar_search_field_container.select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .reports_search_bar_search_field_container {
+    padding-left: 0;
+  }
+  .reports_search_bar_button_container {
+    width: auto;
+  }
+  .reports_search_bar_button_container button {
+    padding: 10px 50px;
+  }
+  .total_time_container {
+    margin-top: 50px;
+    top: auto;
+  }
+  .line_chart_container {
+    top: auto;
+    margin-top: 10px;
+  }
+  .projects_chart_container {
+    top: auto;
+    margin-top: 35px;
+  }
+  .projects_container_wrapper {
+    flex-wrap: wrap;
+  }
+  .chart {
+    margin: 24px auto;
   }
 }

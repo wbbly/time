@@ -82,4 +82,48 @@
 
 .reports_by_projects_wrapper--mobile {
   padding: 1rem;
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .header_name {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .header_name:not(:last-child){
+    font-size: 18px;
+    color: #bdbdbd;
+  }
+  .projects_container_project_data_container {
+    font-family: "Open Sans", sans-serif;
+    line-height: normal;
+    font-size: 16px;
+    color: #ffffff;
+    border-top: 1px solid #bdbdbd;
+  }
+  .projects_container_project_data {
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+  }
+  .projects_container_project_data:last-child {
+    border-bottom: none;
+  }
+  .reports-by-project-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+  .reports-by-project-list:last-child {
+    margin-bottom: 0;
+  }
+  .project-list-title {
+    width: 100%;
+    font-size: 14px;
+    color: #bdbdbd;
+    margin-bottom: 10px;
+  }
 }

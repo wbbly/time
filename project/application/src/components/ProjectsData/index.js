@@ -40,8 +40,8 @@ class ProjectData extends Component {
         ];
         const tableInfoElements = this.props.tableInfo.map((item, index) => (
             <tr key={'table-header_' + index}>
-                <td>{item.name}</td>
-                <td>
+                <td data-label={`${v_project_name}: `}>{item.name}</td>
+                <td data-label={`${v_time}: `}>
                     {getTimeDurationByGivenTimestamp(item.totalTime, durationTimeFormat)}
                     {checkIsAdminByRole(currentTeam.data.role) && (
                         <i className="edit_button" onClick={e => this.setEdiItem(item)} />
