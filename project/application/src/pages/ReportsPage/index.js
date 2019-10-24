@@ -530,7 +530,7 @@ class ReportsPage extends Component {
         const { vocabulary } = this.props;
         const { lang } = vocabulary;
         moment.locale(lang.short);
-        showMobileSupportToastr();
+        // showMobileSupportToastr();
         this.setState({ selectionRange: this.props.timeRange });
         apiCall(AppConfig.apiURL + `user/list`, {
             method: 'GET',

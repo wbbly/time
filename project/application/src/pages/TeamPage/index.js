@@ -75,7 +75,17 @@ class TeamPage extends Component {
 
     render() {
         const { isMobile, vocabulary, currentTeamDetailedData, currentTeam, switchTeam } = this.props;
-        const { v_team, v_rename_team, v_invite_to_team, v_active, v_not_active } = vocabulary;
+        const {
+            v_team,
+            v_rename_team,
+            v_invite_to_team,
+            v_active,
+            v_not_active,
+            v_name,
+            v_team_role,
+            v_team_access,
+            v_phone,
+        } = vocabulary;
         const headerItemsElements = this.headerItems().map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
         ));
@@ -87,7 +97,7 @@ class TeamPage extends Component {
 
             return (
                 <tr key={item.user[0].id}>
-                    <td className="user-container">
+                    <td data-label={v_name} className="user-container">
                         {!avatar ? (
                             <img src={defaultLogo} className="avatar-small" />
                         ) : (
@@ -110,14 +120,25 @@ class TeamPage extends Component {
                         )}
                         <span>{username}</span>
                     </td>
-                    <td className="phone_container">{phone ? phone : '-'}</td>
-                    <td>{email}</td>
-                    <td>
+                    <td data-label={v_phone} className="phone_container">
+                        {phone ? phone : '-'}
+                    </td>
+                    <td data-label="E-mail">{email}</td>
+                    <td data-label={v_team_role}>
                         {checkIsMemberByRole(role) && <div className="access_container">{roleMap[role]}</div>}
                         {checkIsAdminByRole(role) && <div className="access_container red">{roleMap[role]}</div>}
                     </td>
-                    <td>
-                        <div className="team-access-container">{isActive ? v_active : v_not_active}</div>
+                    <td data-label={v_team_access}>
+                        <div
+                            className={classNames('team-access-container', {
+                                'team-access-container-admin': checkIsAdminByRole(currentTeam.data.role),
+                            })}
+                            onClick={e =>
+                                isMobile && checkIsAdminByRole(currentTeam.data.role) ? this.openEditModal(item) : null
+                            }
+                        >
+                            {isActive ? v_active : v_not_active}
+                        </div>
                         {checkIsAdminByRole(currentTeam.data.role) && (
                             <i onClick={e => this.openEditModal(item)} className="edit_button item_button" />
                         )}
@@ -200,7 +221,7 @@ class TeamPage extends Component {
 
     componentDidMount() {
         const { getCurrentTeamDetailedDataAction } = this.props;
-        showMobileSupportToastr();
+        // showMobileSupportToastr();
         getCurrentTeamDetailedDataAction();
     }
 }

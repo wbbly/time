@@ -275,4 +275,46 @@
   .data_container {
     padding: 1rem;
   }
+  @media screen and (max-width: 894px) {
+    .header_user_setting {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .header_user_setting div {
+      width: 100%;
+      text-align: center;
+    }
+    .header_user_setting button {
+      margin-left: 0;
+      margin-top: 10px;
+    }
+    .body_user_setting {
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .avatar-wrapper {
+      margin-top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .column-inputs {
+      padding: 0 5px;
+    }
+    .date-format {
+      justify-content: space-between;
+    }
+    .time-format {
+      width: auto;
+      justify-content: space-between;
+    }
+    .duration-time-format {
+      justify-content: space-between;
+    }
+    .body_user_setting button {
+      display: block;
+      margin: 25px auto 5px;
+    }
+  }
 }
