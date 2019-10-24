@@ -117,7 +117,7 @@ class ProjectsPage extends Component {
     }
 
     async componentDidMount() {
-        showMobileSupportToastr();
+        // showMobileSupportToastr();
         await this.getProjects();
         this.setState({ isInitialFetching: false });
     }

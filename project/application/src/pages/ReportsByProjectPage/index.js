@@ -69,6 +69,25 @@ class ReportsByProjectsPage extends Component {
                 </div>
             </div>
         ));
+        let projectsItemsMobile = this.state.dataOfProject.map((item, index) => (
+            <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
+                <div className="reports-by-project-list">
+                    <span className="project-list-title">{v_issue}:</span>
+                    <span>{this.getSlash(item.issue)}</span>
+                </div>
+                <div className="reports-by-project-list">
+                    <span className="project-list-title">{v_user_name}:</span>
+                    <span>{item.user.username}</span>
+                </div>
+                <div className="reports-by-project-list">
+                    <span className="project-list-title">{v_time}:</span>
+                    <span>
+                        {moment(item.startDatetime).format(dateFormat)} |{' '}
+                        {getTimeDurationByGivenTimestamp(item.durationTimestamp, durationTimeFormat)}
+                    </span>
+                </div>
+            </div>
+        ));
 
         return (
             <div
@@ -78,9 +97,14 @@ class ReportsByProjectsPage extends Component {
             >
                 <div className="header">
                     <div className="header_name">
-                        {this.props.match.params.projectName}:{' '}
-                        {moment(this.props.match.params.dateStart).format(dateFormat)}
-                        {' - '} {moment(this.props.match.params.endDate).format(dateFormat)}
+                        <span>
+                            {this.props.match.params.projectName}
+                            :&nbsp;
+                        </span>
+                        <span>
+                            {moment(this.props.match.params.dateStart).format(dateFormat)}
+                            {' - '} {moment(this.props.match.params.endDate).format(dateFormat)}
+                        </span>
                     </div>
                     <div className="header_name">
                         {v_sum_tasks}: {this.state.countTasks}
@@ -89,16 +113,20 @@ class ReportsByProjectsPage extends Component {
                         {v_sum_time}: {getTimeDurationByGivenTimestamp(this.state.totalTime, durationTimeFormat)}
                     </div>
                 </div>
-                <div className="projects_container_wrapper">
-                    <div className="projects_container_projects">
-                        <div className="projects_header">
-                            <div className="name">{v_issue}</div>
-                            <div className="username">{v_user_name}</div>
-                            <div className="time">{v_time}</div>
+                {!isMobile ? (
+                    <div className="projects_container_wrapper">
+                        <div className="projects_container_projects">
+                            <div className="projects_header">
+                                <div className="name">{v_issue}</div>
+                                <div className="username">{v_user_name}</div>
+                                <div className="time">{v_time}</div>
+                            </div>
+                            <div className="projects_container_project_data_container">{projectsItems}</div>
                         </div>
-                        <div className="projects_container_project_data_container">{projectsItems}</div>
                     </div>
-                </div>
+                ) : (
+                    <div className="projects_container_project_data_container">{projectsItemsMobile}</div>
+                )}
             </div>
         );
     }
