@@ -277,16 +277,15 @@
   }
   @media screen and (max-width: 894px) {
     .header_user_setting {
-      flex-wrap: wrap;
-      justify-content: center;
+      display: block;
     }
     .header_user_setting div {
       width: 100%;
       text-align: center;
     }
     .header_user_setting button {
-      margin-left: 0;
-      margin-top: 10px;
+      display: block;
+      margin: 10px auto 0;
     }
     .body_user_setting {
       margin-top: 20px;
