@@ -25,8 +25,9 @@ class TeamSwitcher extends Component {
         e.preventDefault();
         const { currentTeam, switchTeamRequestAction, history } = this.props;
         let teamId = e.target.getAttribute('data-id');
-        if (currentTeam.data.id === teamId) return;
-        switchTeamRequestAction({ teamId });
+        if (currentTeam.data.id !== teamId) {
+            switchTeamRequestAction({ teamId });
+        }
         history.push('/team');
     };
 
