@@ -12,6 +12,7 @@
     "date-fns": "2.0.0-alpha.27",
     "jwt-decode": "2.2.0",
     "moment": "2.24.0",
+    "moment-range": "4.0.2",
     "normalize.css": "8.0.1",
     "prop-types": "15.6.2",
     "react": "16.8.0",
