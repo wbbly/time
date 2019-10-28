@@ -213,12 +213,24 @@
 
   .wrapper-jira-sync {
     .input_checkbox_jira {
-      display: flex;
+      display: inline-flex !important;
       flex-direction: row !important;
       justify-content: flex-start;
       align-items: center;
-      // margin: 10px 0 10px 0 !important;
+      margin: 0 20px 0 0 !important;
     }
+
+    .jira_sync_visibility_btn {
+      font-family: "Open Sans", sans-serif;
+      font-size: 18px;
+      line-height: 25px;
+      // line-height: 20px;
+      color: #ffffff;
+      margin: 0 0 10px 0;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
     .verify-arrow-loop {
       width: 25px;
       height: 25px;
@@ -233,10 +245,11 @@
     }
 
     .input_title {
-      flex-grow: 1;
-      display: flex;
+      // flex-grow: 1;
+      display: inline-flex;
       align-items: center;
       justify-content: space-between;
+      margin-right: 6px;
     }
 
     input[type="checkbox"] {
@@ -256,7 +269,7 @@
     }
   }
 
-  .body_user_setting button {
+  .body_user_setting .save_btn {
     width: 196px;
     height: 45px;
     font-family: "Open Sans", sans-serif;
