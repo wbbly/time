@@ -138,8 +138,8 @@ class EditTaskPopup extends Component {
                 endDatetime: endDateTime.utc().toISOString(),
             });
             await getUserTimeEntries();
-            setIsUpdatingTask(false);
         }
+        setIsUpdatingTask(false);
     }
 
     render() {
