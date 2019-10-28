@@ -174,4 +174,6 @@ export default {
     v_time_format: 'Time format',
     v_duration_display_format: 'Duration display format',
     v_switch_team_to_the: 'Team switch to the',
+    v_show: 'show',
+    v_hide: 'hide',
 };

@@ -177,4 +177,6 @@ export default {
     v_time_format: 'Formato orario',
     v_duration_display_format: 'Formato di visualizzazione della durata',
     v_switch_team_to_the: 'Il team è cambiato in',
+    v_show: 'spettacolo',
+    v_hide: 'nascondere',
 };

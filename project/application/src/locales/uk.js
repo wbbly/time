@@ -175,4 +175,6 @@ export default {
     v_time_format: 'Формат часу',
     v_duration_display_format: 'Формат відображення тривалості',
     v_switch_team_to_the: 'Команда змінилася на',
+    v_show: 'показати',
+    v_hide: 'сховати',
 };
