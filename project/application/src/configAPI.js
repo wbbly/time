@@ -159,18 +159,12 @@ export const syncTaskWithJira = ({ id }) =>
         method: 'POST',
     });
 
-export const changeTask = (
-    { id, issue, projectId, startDatetime, endDatetime } // TODO: set deffault value for key
-) =>
+// keys for data: issue, projectId, startDatetime, endDatetime
+export const changeTask = (id, data) =>
     instance({
         url: `/timer/${id}`,
         method: 'PATCH',
-        data: {
-            issue,
-            projectId,
-            startDatetime,
-            endDatetime,
-        },
+        data,
     });
 
 export const getTimerUserList = () =>
