@@ -20,26 +20,28 @@ class JiraIcon extends Component {
     };
 
     syncTaskWithJira = event => {
-        this.setState({ rotateJiraIcon: true });
-        const { vocabulary, taskData } = this.props;
+        const { vocabulary, taskData, isUpdatingTask } = this.props;
         const { id } = taskData;
 
-        apiCall(AppConfig.apiURL + `sync/jira/issue/${id}/worklog`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
-            },
-        }).then(
-            result => {
-                this.setState({ rotateJiraIcon: false, isSyncOk: true });
-            },
-            err =>
-                err.text().then(text => {
-                    this.setState({ rotateJiraIcon: false });
-                    alert(vocabulary[JSON.parse(text).message]);
-                })
-        );
+        if (!isUpdatingTask) {
+            this.setState({ rotateJiraIcon: true });
+            apiCall(AppConfig.apiURL + `sync/jira/issue/${id}/worklog`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
+                },
+            }).then(
+                result => {
+                    this.setState({ rotateJiraIcon: false, isSyncOk: true });
+                },
+                err =>
+                    err.text().then(text => {
+                        this.setState({ rotateJiraIcon: false });
+                        alert(vocabulary[JSON.parse(text).message]);
+                    })
+            );
+        }
     };
 
     render() {
