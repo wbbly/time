@@ -191,6 +191,17 @@ class LeftBar extends Component {
                             <div className="links_text">{v_projects}</div>
                         </div>
                     </NavLink>
+                    <NavLink
+                        activeClassName="active-link"
+                        onClick={switchMenu}
+                        to="/clients"
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <div className="navigation_links">
+                            <i className="team" />
+                            <div className="links_text">Clients</div>
+                        </div>
+                    </NavLink>
                     <div className="wrapper-position-add-team">
                         <NavLink
                             activeClassName="active-link"
