@@ -10,6 +10,7 @@ import Input from '../../components/BaseComponents/Input';
 import SwitchLanguage from '../../components/SwitchLanguage';
 
 // Actions
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 
@@ -39,12 +40,11 @@ class ResetPasswordPage extends Component {
     };
 
     changePassword = ({ password, confirmPassword }, token) => {
-        const { history, vocabulary } = this.props;
+        const { history, vocabulary, showNotificationAction } = this.props;
         const { v_a_password_same_error, v_a_change_password_great_ok } = vocabulary;
 
         if (password !== confirmPassword) {
-            alert(v_a_password_same_error);
-
+            showNotificationAction({ text: v_a_password_same_error, type: 'warning' });
             return false;
         }
 
@@ -67,14 +67,14 @@ class ResetPasswordPage extends Component {
             })
             .then(
                 result => {
-                    alert(v_a_change_password_great_ok);
+                    showNotificationAction({ text: v_a_change_password_great_ok, type: 'success' });
                     history.push('/login');
                 },
                 err => {
                     if (err instanceof Response) {
                         err.text().then(errorMessage => {
                             const textError = JSON.parse(errorMessage).message;
-                            alert(vocabulary[textError]);
+                            showNotificationAction({ text: vocabulary[textError], type: 'error' });
                         });
                     } else {
                         console.log(err);
@@ -159,4 +159,13 @@ const mapStateToProps = state => ({
     authPageReducer: state.authPageReducer,
 });
 
-export default withRouter(connect(mapStateToProps)(ResetPasswordPage));
+const mapDispatchToProps = {
+    showNotificationAction,
+};
+
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(ResetPasswordPage)
+);

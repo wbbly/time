@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import classNames from 'classnames';
 
@@ -12,6 +13,7 @@ import Input from '../../components/BaseComponents/Input';
 import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
 
 // Actions
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 
@@ -46,7 +48,7 @@ class RegisterPage extends Component {
     };
 
     addUser = ({ email, password }) => {
-        const { vocabulary } = this.props;
+        const { vocabulary, showNotificationAction } = this.props;
         const { v_a_account_create, lang } = vocabulary;
         apiCall(
             AppConfig.apiURL + 'user/register',
@@ -64,14 +66,14 @@ class RegisterPage extends Component {
             false
         ).then(
             result => {
-                alert(v_a_account_create);
+                showNotificationAction({ text: v_a_account_create, type: 'success' });
                 this.toLoginPage();
             },
             err => {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
                         const textError = JSON.parse(errorMessage).message;
-                        alert(vocabulary[textError]);
+                        showNotificationAction({ text: vocabulary[textError], type: 'warning' });
                     });
                 } else {
                     console.log(err);
@@ -95,7 +97,7 @@ class RegisterPage extends Component {
 
     onSubmitHandler = event => {
         event.preventDefault();
-        const { vocabulary } = this.props;
+        const { vocabulary, showNotificationAction } = this.props;
         const { v_a_confirm_password_error } = vocabulary;
         const { inputs } = this.state;
         const userData = Object.keys(inputs).reduce((acc, curr) => {
@@ -110,7 +112,7 @@ class RegisterPage extends Component {
         }
         this.setState({ validEmail: true });
         if (userData.confirmPassword !== userData.password) {
-            alert(v_a_confirm_password_error);
+            showNotificationAction({ text: v_a_confirm_password_error, type: 'warning' });
             return;
         }
         this.addUser(userData);
@@ -221,5 +223,13 @@ class RegisterPage extends Component {
         );
     }
 }
+const mapDispatchToProps = {
+    showNotificationAction,
+};
 
-export default withRouter(RegisterPage);
+export default withRouter(
+    connect(
+        null,
+        mapDispatchToProps
+    )(RegisterPage)
+);

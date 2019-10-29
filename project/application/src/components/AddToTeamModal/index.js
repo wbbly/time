@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { apiCall } from '../../services/apiService';
 import { ROLES } from '../../services/authentication';
 import { authValidation } from '../../services/validateService';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Components
 import Input from '../../components/BaseComponents/Input';
@@ -33,7 +34,7 @@ class AddToTeamModal extends Component {
     };
 
     addUser = ({ email }) => {
-        const { vocabulary, addInvitedUserToCurrentTeamDetailedDataAction } = this.props;
+        const { vocabulary, addInvitedUserToCurrentTeamDetailedDataAction, showNotificationAction } = this.props;
         const { v_a_invite_sent, v_a_invite_sent_error } = vocabulary;
         const { inputs } = this.state;
 
@@ -48,7 +49,7 @@ class AddToTeamModal extends Component {
         }).then(
             result => {
                 if (result.invitedUserId) {
-                    alert(v_a_invite_sent);
+                    showNotificationAction({ text: v_a_invite_sent, type: 'success' });
                     addInvitedUserToCurrentTeamDetailedDataAction({
                         is_active: false,
                         role_collaboration: {
@@ -63,7 +64,7 @@ class AddToTeamModal extends Component {
                         ],
                     });
                 } else {
-                    alert(v_a_invite_sent_error);
+                    showNotificationAction({ text: v_a_invite_sent_error, type: 'error' });
                 }
 
                 this.closeModal();
@@ -72,7 +73,7 @@ class AddToTeamModal extends Component {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
                         const textError = JSON.parse(errorMessage).message;
-                        alert(vocabulary[textError]);
+                        showNotificationAction({ text: vocabulary[textError], type: 'error' });
                     });
                 } else {
                     console.log(err);
@@ -152,6 +153,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     addInvitedUserToCurrentTeamDetailedDataAction,
+    showNotificationAction,
 };
 
 export default connect(

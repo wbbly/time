@@ -31,6 +31,7 @@ import addTasks, {
     setServerClientTimediffAction,
 } from '../../actions/MainPageAction';
 import manualTimerModalAction from '../../actions/ManualTimerModalAction';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 import { getProjectListParseFunction, getTodayTimeEntriesParseFunction } from '../../queries';
@@ -139,7 +140,7 @@ class MainPage extends Component {
     }
 
     timerPlayStopButtonAction(className, projectId) {
-        const { vocabulary } = this.props;
+        const { vocabulary, showNotificationAction } = this.props;
         const { v_a_task_name_before, v_a_starting, v_a_stopping, v_a_time_tracking } = vocabulary;
         let issue = (this.issueTargetElement || {}).value || '';
         issue = issue.trim();
@@ -161,11 +162,12 @@ class MainPage extends Component {
                 }
             });
         } else {
-            alert(
-                `${v_a_task_name_before} ${
+            showNotificationAction({
+                text: `${v_a_task_name_before} ${
                     className === 'control_task_time_icons play' ? v_a_starting : v_a_stopping
-                } ${v_a_time_tracking}`
-            );
+                } ${v_a_time_tracking}`,
+                type: 'warning',
+            });
         }
     }
 
@@ -248,7 +250,7 @@ class MainPage extends Component {
     }
 
     timerContinue(name = '', item) {
-        const { vocabulary } = this.props;
+        const { vocabulary, showNotificationAction } = this.props;
         const { v_a_task_name_before, v_a_starting, v_a_time_tracking } = vocabulary;
         name = name.trim();
         if (name.length) {
@@ -257,7 +259,10 @@ class MainPage extends Component {
                 this.timerPlayStopButtonAction('control_task_time_icons play', item.project.id)
             );
         } else {
-            alert(`${v_a_task_name_before} ${v_a_starting} ${v_a_time_tracking}`);
+            showNotificationAction({
+                text: `${v_a_task_name_before} ${v_a_starting} ${v_a_time_tracking}`,
+                type: 'warning',
+            });
         }
     }
 
@@ -474,7 +479,15 @@ class MainPage extends Component {
 
     createTimeEntriesList(data) {
         const { isUpdatingTask } = this.state;
-        const { viewport, isMobile, vocabulary, durationTimeFormat, timeFormat, editedItem } = this.props;
+        const {
+            viewport,
+            isMobile,
+            vocabulary,
+            durationTimeFormat,
+            timeFormat,
+            editedItem,
+            showNotificationAction,
+        } = this.props;
         const { v_edit_task, v_delete_task, v_find } = vocabulary;
         let items = data.map(item => {
             const { syncJiraStatus } = item;
@@ -534,7 +547,8 @@ class MainPage extends Component {
                                         }
                                     } else {
                                         event.target.textContent = this.contentEditableValue;
-                                        alert(v_a_task_name_error);
+                                        // alert(v_a_task_name_error);
+                                        showNotificationAction({ text: v_a_task_name_error, type: 'warning' });
                                     }
                                     this.setState({
                                         isUpdatingTask: false,
@@ -1107,6 +1121,7 @@ const mapDispatchToProps = dispatch => {
         setCurrentTimerAction: payload => dispatch(setCurrentTimerAction(payload)),
         resetCurrentTimerAction: () => dispatch(resetCurrentTimerAction()),
         setServerClientTimediffAction: payload => dispatch(setServerClientTimediffAction(payload)),
+        showNotificationAction: payload => dispatch(showNotificationAction(payload)),
     };
 };
 
