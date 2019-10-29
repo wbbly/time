@@ -10,6 +10,7 @@ import dafaultAvatarImg from '../../images/icons/Group20.svg';
 
 // Actions
 import { setUserAvatarAction, deleteUserAvatarAction } from '../../actions/UserActions';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Styles
 import './style.scss';
@@ -51,12 +52,12 @@ class Avatar extends Component {
     };
 
     fileHandler = event => {
-        const { user, setUserAvatarAction, vocabulary } = this.props;
+        const { user, setUserAvatarAction, vocabulary, showNotificationAction } = this.props;
         const { v_a_avatar_upload_error } = vocabulary;
         const img = event.nativeEvent.target.files[0];
         if (!img) return;
         if (img.type.split('/')[0] !== 'image' || img.size > 1000000) {
-            alert(v_a_avatar_upload_error);
+            showNotificationAction({ text: v_a_avatar_upload_error, type: 'error' });
             return;
         }
         const formData = new FormData();
@@ -121,6 +122,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     setUserAvatarAction,
     deleteUserAvatarAction,
+    showNotificationAction,
 };
 
 export default connect(

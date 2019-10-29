@@ -12,7 +12,7 @@
   top: 15px;
   right: 15px;
   max-width: 350px;
-  height: 85px;
+  min-height: 85px;
   box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.21);
   border-radius: 4px;
   background: white;
@@ -56,6 +56,15 @@
     }
     &--team-switched {
       background: #4A5BF2;
+    }
+    &--success {
+      background: #00A92F;
+    }
+    &--warning {
+      background: #FCB500;
+    }
+    &--error {
+      background: #D70101;
     }
   }
   .modal-info-text {

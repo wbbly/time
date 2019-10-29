@@ -9,6 +9,7 @@ import { apiCall } from '../../services/apiService';
 // Components
 
 // Actions
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 
@@ -42,9 +43,14 @@ class EditProjectModal extends Component {
     }
 
     changeProject() {
-        const { vocabulary } = this.props;
+        const { vocabulary, showNotificationAction } = this.props;
         const { v_a_project_existed, v_a_project_edit_error } = vocabulary;
-        const project = addProjectPreProcessing(this.editProjectInput.value, this.state.selectedValue.id, vocabulary);
+        const project = addProjectPreProcessing(
+            this.editProjectInput.value,
+            this.state.selectedValue.id,
+            vocabulary,
+            showNotificationAction
+        );
         if (!project) {
             return null;
         }
@@ -76,9 +82,9 @@ class EditProjectModal extends Component {
                     err.text().then(error => {
                         const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
                         if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                            alert(v_a_project_existed);
+                            showNotificationAction({ text: v_a_project_existed, type: 'warning' });
                         } else {
-                            alert(v_a_project_edit_error);
+                            showNotificationAction({ text: v_a_project_edit_error, type: 'error' });
                         }
                     });
                 } else {
@@ -197,4 +203,11 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
 });
 
-export default connect(mapStateToProps)(EditProjectModal);
+const mapDispatchToProps = {
+    showNotificationAction,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(EditProjectModal);

@@ -10,8 +10,12 @@ import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 // Config
 import { AppConfig } from '../../config';
 
+// Actions
+import { showNotificationAction } from '../../actions/NotificationActions';
+
 // Styles
 import './style.scss';
+import { type } from 'os';
 
 class JiraIcon extends Component {
     state = {
@@ -20,7 +24,7 @@ class JiraIcon extends Component {
     };
 
     syncTaskWithJira = event => {
-        const { vocabulary, taskData, isUpdatingTask } = this.props;
+        const { vocabulary, taskData, isUpdatingTask, showNotificationAction } = this.props;
         const { id } = taskData;
 
         if (!isUpdatingTask) {
@@ -38,7 +42,7 @@ class JiraIcon extends Component {
                 err =>
                     err.text().then(text => {
                         this.setState({ rotateJiraIcon: false });
-                        alert(vocabulary[JSON.parse(text).message]);
+                        showNotificationAction({ text: vocabulary[JSON.parse(text).message], type: 'error' });
                     })
             );
         }
@@ -66,4 +70,11 @@ const mapStatetToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
 });
 
-export default connect(mapStatetToProps)(JiraIcon);
+const mapDispatchToProps = {
+    showNotificationAction,
+};
+
+export default connect(
+    mapStatetToProps,
+    mapDispatchToProps
+)(JiraIcon);

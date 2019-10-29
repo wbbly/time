@@ -10,6 +10,7 @@ import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 
 // Actions
 import { getCurrentTeamAction, getUserTeamsAction, getCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 
@@ -27,6 +28,7 @@ class CreateTeamModal extends Component {
             getCurrentTeamAction,
             getCurrentTeamDetailedDataAction,
             history,
+            showNotificationAction,
         } = this.props;
         const { v_a_team_name_empty_error, v_a_team_existed, v_a_team_create_error } = vocabulary;
         const createTeam = (this.createTeamInput.value || '').trim();
@@ -52,9 +54,9 @@ class CreateTeamModal extends Component {
                         err.text().then(error => {
                             const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
                             if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                                alert(v_a_team_existed);
+                                showNotificationAction({ text: v_a_team_existed, type: 'warning' });
                             } else {
-                                alert(v_a_team_create_error);
+                                showNotificationAction({ text: v_a_team_create_error, type: 'error' });
                             }
                         });
                     } else {
@@ -64,7 +66,7 @@ class CreateTeamModal extends Component {
             );
             this.closeModal();
         } else {
-            alert(v_a_team_name_empty_error);
+            showNotificationAction({ text: v_a_team_name_empty_error, type: 'warning' });
         }
     }
 
@@ -135,6 +137,7 @@ const mapDispatchToProps = {
     getUserTeamsAction,
     getCurrentTeamAction,
     getCurrentTeamDetailedDataAction,
+    showNotificationAction,
 };
 
 export default withRouter(

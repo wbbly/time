@@ -16,6 +16,7 @@ import { apiCall } from '../../services/apiService';
 // Actions
 import { changeUserData } from '../../actions/UserActions';
 import { getCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 
@@ -52,7 +53,7 @@ class EditTeamModal extends Component {
     }
 
     addUser = () => {
-        const { vocabulary, changeUserData, getCurrentTeamDetailedDataAction } = this.props;
+        const { vocabulary, changeUserData, getCurrentTeamDetailedDataAction, showNotificationAction } = this.props;
 
         apiCall(AppConfig.apiURL + `user/${this.state.id}/team`, {
             method: 'PATCH',
@@ -68,7 +69,7 @@ class EditTeamModal extends Component {
         }).then(
             result => {
                 if (result.mesage) {
-                    alert(vocabulary[result.mesage]);
+                    showNotificationAction({ text: vocabulary[result.mesage], type: 'error' });
                 } else {
                     changeUserData(result);
                 }
@@ -79,7 +80,7 @@ class EditTeamModal extends Component {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
                         const textError = JSON.parse(errorMessage).message;
-                        alert(vocabulary[textError]);
+                        showNotificationAction({ text: vocabulary[textError], type: 'error' });
                     });
                 } else {
                     console.log(err);
@@ -186,6 +187,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     changeUserData,
     getCurrentTeamDetailedDataAction,
+    showNotificationAction,
 };
 
 export default connect(

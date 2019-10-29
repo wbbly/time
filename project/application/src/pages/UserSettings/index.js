@@ -8,6 +8,7 @@ import 'react-phone-input-2/dist/style.css';
 
 // Actions
 import { toggleModal, changeUserData } from '../../actions/UserActions';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 //Components
 import ChangePasswordModal from '../../components/ChangePasswordModal';
@@ -94,7 +95,7 @@ class UserSetting extends Component {
     };
 
     changeUserSetting = ({ userName: username, ...rest }) => {
-        const { vocabulary, changeUserData, userReducer } = this.props;
+        const { vocabulary, changeUserData, userReducer, showNotificationAction } = this.props;
         const { v_a_data_updated_ok, lang } = vocabulary;
 
         const { phone } = this.state;
@@ -116,7 +117,7 @@ class UserSetting extends Component {
         }).then(
             result => {
                 changeUserData(result);
-                alert(v_a_data_updated_ok);
+                showNotificationAction({ text: v_a_data_updated_ok, type: 'success' });
                 this.updateUserData();
                 this.setState({ userSetJiraSync: false });
             },
@@ -124,7 +125,7 @@ class UserSetting extends Component {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
                         const textError = JSON.parse(errorMessage).message;
-                        alert(vocabulary[textError]);
+                        showNotificationAction({ text: vocabulary[textError], type: 'error' });
                     });
                 } else {
                     console.log(err);
@@ -135,7 +136,7 @@ class UserSetting extends Component {
 
     onSubmitHandler = event => {
         event.preventDefault();
-        const { vocabulary } = this.props;
+        const { vocabulary, showNotificationAction } = this.props;
 
         const { inputs, userSetJiraSync } = this.state;
         const { jiraUsername, jiraPassword, syncJiraStatus, jiraURL, jiraType } = inputs;
@@ -163,7 +164,10 @@ class UserSetting extends Component {
                 try {
                     userData.tokenJira = btoa(`${jiraUsername.value}:${jiraPassword.value}`);
                 } catch (e) {
-                    alert(vocabulary['ERROR.TIMER.JIRA_SYNC_FAILED']);
+                    showNotificationAction({
+                        text: vocabulary['ERROR.TIMER.JIRA_SYNC_FAILED'],
+                        type: 'error',
+                    });
                     return false;
                 }
 
@@ -217,7 +221,7 @@ class UserSetting extends Component {
     };
     verifyJiraAuth = () => {
         this.setState({ rotateArrowLoop: true });
-        const { vocabulary } = this.props;
+        const { vocabulary, showNotificationAction } = this.props;
 
         const { inputs } = this.state;
         const { jiraUsername, jiraPassword, jiraURL } = inputs;
@@ -226,7 +230,7 @@ class UserSetting extends Component {
         try {
             tokenJira = btoa(`${jiraUsername.value}:${jiraPassword.value}`);
         } catch (e) {
-            alert(vocabulary['ERROR.TIMER.JIRA_SYNC_FAILED']);
+            showNotificationAction({ text: vocabulary['ERROR.TIMER.JIRA_SYNC_FAILED'], type: 'error' });
             this.setState({ rotateArrowLoop: false });
             return false;
         }
@@ -240,13 +244,13 @@ class UserSetting extends Component {
         }).then(
             result => {
                 this.setState({ rotateArrowLoop: false });
-                alert(vocabulary[result.message]);
+                showNotificationAction({ text: vocabulary[result.message], type: 'success' });
                 return true;
             },
             err => {
                 this.setState({ rotateArrowLoop: false });
                 err.text().then(text => {
-                    alert(vocabulary[JSON.parse(text).message]);
+                    showNotificationAction({ text: vocabulary[JSON.parse(text).message], type: 'error' });
                     return false;
                 });
             }
@@ -554,6 +558,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     toggleModal,
     changeUserData,
+    showNotificationAction,
 };
 
 export default connect(

@@ -9,6 +9,7 @@ import { apiCall } from '../../services/apiService';
 
 // Actions
 import { getUserTeamsAction, getCurrentTeamAction } from '../../actions/TeamActions';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 
@@ -25,7 +26,13 @@ class RenameTeamModal extends Component {
     }
 
     renameTeam() {
-        const { vocabulary, currentTeam, getUserTeamsAction, getCurrentTeamAction } = this.props;
+        const {
+            vocabulary,
+            currentTeam,
+            getUserTeamsAction,
+            getCurrentTeamAction,
+            showNotificationAction,
+        } = this.props;
         const { v_a_team_existed, v_a_team_rename_error, v_a_team_name_empty_error } = vocabulary;
         const teamName = (this.teamNameRef.current.value || '').trim();
         if (teamName.length) {
@@ -49,9 +56,9 @@ class RenameTeamModal extends Component {
                         err.text().then(error => {
                             const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
                             if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                                alert(v_a_team_existed);
+                                showNotificationAction({ text: v_a_team_existed, type: 'warning' });
                             } else {
-                                alert(v_a_team_rename_error);
+                                showNotificationAction({ text: v_a_team_rename_error, type: 'error' });
                             }
                         });
                     } else {
@@ -60,7 +67,7 @@ class RenameTeamModal extends Component {
                 }
             );
         } else {
-            alert(v_a_team_name_empty_error);
+            showNotificationAction({ text: v_a_team_name_empty_error, type: 'warning' });
         }
     }
 
@@ -99,6 +106,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     getUserTeamsAction,
     getCurrentTeamAction,
+    showNotificationAction,
 };
 
 export default connect(
