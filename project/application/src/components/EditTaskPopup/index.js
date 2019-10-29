@@ -17,6 +17,9 @@ import uaLocale from 'date-fns/locale/uk';
 // axios request
 import { changeTask } from '../../configAPI';
 
+// Actions
+import { showNotificationAction } from '../../actions/NotificationActions';
+
 import { encodeTimeEntryIssue } from '../../services/timeEntryService';
 
 import './style.scss';
@@ -111,7 +114,7 @@ class EditTaskPopup extends Component {
 
     async componentWillUnmount() {
         const { isChanged, startTime, endTime, date } = this.state;
-        const { getUserTimeEntries, editedItem, vocabulary, setIsUpdatingTask } = this.props;
+        const { getUserTimeEntries, editedItem, vocabulary, setIsUpdatingTask, showNotificationAction } = this.props;
         const { startDatetime, endDatetime, id, project, issue } = editedItem;
         const { v_a_time_start_error } = vocabulary;
         if (isChanged) {
@@ -128,7 +131,8 @@ class EditTaskPopup extends Component {
             );
 
             if (startDateTime && endDateTime && +startDateTime >= +endDateTime) {
-                alert(v_a_time_start_error);
+                // alert(v_a_time_start_error);
+                showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
                 return;
             }
             await changeTask(id, {
@@ -199,4 +203,11 @@ const mapStateToProps = store => ({
     vocabulary: store.languageReducer.vocabulary,
 });
 
-export default connect(mapStateToProps)(EditTaskPopup);
+const mapDispatchToProps = {
+    showNotificationAction,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(EditTaskPopup);

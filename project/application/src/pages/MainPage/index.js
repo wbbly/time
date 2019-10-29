@@ -479,7 +479,15 @@ class MainPage extends Component {
 
     createTimeEntriesList(data) {
         const { isUpdatingTask } = this.state;
-        const { viewport, isMobile, vocabulary, durationTimeFormat, timeFormat, editedItem } = this.props;
+        const {
+            viewport,
+            isMobile,
+            vocabulary,
+            durationTimeFormat,
+            timeFormat,
+            editedItem,
+            showNotificationAction,
+        } = this.props;
         const { v_edit_task, v_delete_task, v_find } = vocabulary;
         let items = data.map(item => {
             const { syncJiraStatus } = item;
@@ -539,7 +547,8 @@ class MainPage extends Component {
                                         }
                                     } else {
                                         event.target.textContent = this.contentEditableValue;
-                                        alert(v_a_task_name_error);
+                                        // alert(v_a_task_name_error);
+                                        showNotificationAction({ text: v_a_task_name_error, type: 'warning' });
                                     }
                                     this.setState({
                                         isUpdatingTask: false,
