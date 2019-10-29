@@ -22,6 +22,7 @@ import { updatePageTitle } from '../../services/pageTitleService';
 import ManualTimeModal from '../../components/ManualTimeModal';
 import JiraIcon from '../../components/JiraIcon';
 import { Loading } from '../../components/Loading';
+import EditTaskPopup from '../../components/EditTaskPopup';
 
 // Actions
 import addTasks, {
@@ -36,6 +37,9 @@ import { getProjectListParseFunction, getTodayTimeEntriesParseFunction } from '.
 
 // Config
 import { AppConfig } from '../../config';
+
+// axios request
+import { changeTask } from '../../configAPI';
 
 // Styles
 import './style.scss';
@@ -344,7 +348,7 @@ class MainPage extends Component {
         }
     }
 
-    getUserTimeEntries() {
+    getUserTimeEntries = () => {
         return new Promise((resolve, reject) => {
             //@TODO Add association w/ Teams
             apiCall(AppConfig.apiURL + `timer/user-list`, {
@@ -368,7 +372,7 @@ class MainPage extends Component {
                 }
             );
         });
-    }
+    };
 
     getProjectList() {
         return new Promise((resolve, reject) => {
@@ -469,25 +473,157 @@ class MainPage extends Component {
     }
 
     createTimeEntriesList(data) {
-        const { viewport, isMobile, vocabulary, durationTimeFormat, timeFormat } = this.props;
-        const { v_edit_task, v_delete_task } = vocabulary;
+        const { isUpdatingTask } = this.state;
+        const { viewport, isMobile, vocabulary, durationTimeFormat, timeFormat, editedItem } = this.props;
+        const { v_edit_task, v_delete_task, v_find } = vocabulary;
         let items = data.map(item => {
             const { syncJiraStatus } = item;
             return (
                 <Swipe className="ul" onSwipeStart={this.toggleSwipe} onSwipeMove={this.onSwipeMove} key={item.id}>
-                    <div className="li">
-                        <JiraIcon taskData={item} isSync={syncJiraStatus} />
+                    <div className={editedItem.id === item.id ? 'li selected' : 'li'}>
+                        <JiraIcon taskData={item} isSync={syncJiraStatus} isUpdatingTask={isUpdatingTask} />
                         <div className="name_container">
-                            <div className="name">{item.issue}</div>
-                            <div className="project_name">
-                                <span className={`circle ${item.project.projectColor.name}`} />
-                                <span className="project_name__name">{item.project.name}</span>
+                            <div
+                                spellCheck={false}
+                                className="name"
+                                contentEditable={!isMobile}
+                                suppressContentEditableWarning={true}
+                                onKeyDown={event => {
+                                    return event.keyCode === 13 ? event.target.blur() : null;
+                                }}
+                                onFocus={event => {
+                                    if (editedItem.id !== item.id) {
+                                        this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                    }
+                                    const { isMobile } = this.props;
+                                    if (isMobile) return;
+                                    event.persist();
+                                    const target = event.target;
+                                    target.style.textOverflow = 'unset';
+                                    this.contentEditableValue = event.target.textContent;
+                                }}
+                                onBlur={async event => {
+                                    const { vocabulary, isMobile } = this.props;
+                                    if (isMobile) return;
+                                    this.setState({
+                                        isUpdatingTask: true,
+                                    });
+                                    event.persist();
+                                    event.target.style.textOverflow = '';
+                                    const { v_a_task_name_error } = vocabulary;
+                                    const value = event.target.textContent;
+                                    const encodeValue = encodeTimeEntryIssue(value.trim());
+                                    this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: { id: null } });
+                                    if (encodeValue.length) {
+                                        if (value === this.contentEditableValue) {
+                                            this.setState({
+                                                isUpdatingTask: false,
+                                            });
+                                            return;
+                                        }
+                                        const { editedItem } = this.props;
+                                        const { id, project } = editedItem;
+                                        try {
+                                            await changeTask(id, {
+                                                issue: encodeValue,
+                                                projectId: project.id,
+                                            });
+                                            await this.getUserTimeEntries();
+                                        } catch (error) {
+                                            event.target.textContent = this.contentEditableValue;
+                                        }
+                                    } else {
+                                        event.target.textContent = this.contentEditableValue;
+                                        alert(v_a_task_name_error);
+                                    }
+                                    this.setState({
+                                        isUpdatingTask: false,
+                                    });
+                                }}
+                            >
+                                {item.issue}
+                            </div>
+                        </div>
+                        <div
+                            className="project_name"
+                            onClick={event => {
+                                event.persist();
+                                event.stopPropagation();
+                                if (editedItem.id !== item.id) {
+                                    this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                }
+                                const currentTarget = event.currentTarget;
+                                currentTarget.classList.add('active');
+                                const hideListProject = event => {
+                                    if (
+                                        event.target.className === 'projects_list_wrapper' ||
+                                        event.target.className === 'projects_list_input'
+                                    )
+                                        return;
+                                    this.props.addTasksAction('SET_EDITED_ITEM', {
+                                        editedItem: { id: null },
+                                    });
+                                    currentTarget.classList.remove('active');
+                                    document.body.removeEventListener('click', hideListProject);
+                                };
+                                document.body.addEventListener('click', hideListProject);
+                            }}
+                        >
+                            <span className={`circle ${item.project.projectColor.name}`} />
+                            <span className="project_name__name">{item.project.name}</span>
+                            <div className="projects_list_wrapper" onClick={event => event.stopPropagation()}>
+                                <input
+                                    className="projects_list_input"
+                                    placeholder={`${v_find}...`}
+                                    type="text"
+                                    onChange={event => {
+                                        this.findProjectByName(event.target.value);
+                                    }}
+                                />
+                                <div className="projects_list">
+                                    {this.state.projectListForModalWindow.map(project => {
+                                        return (
+                                            <div
+                                                key={project.id}
+                                                className="projects_list_item"
+                                                onClick={async event => {
+                                                    event.persist();
+                                                    this.setState({
+                                                        isUpdatingTask: true,
+                                                    });
+                                                    this.props.addTasksAction('SET_EDITED_ITEM', {
+                                                        editedItem: { id: null },
+                                                    });
+                                                    try {
+                                                        await changeTask(item.id, {
+                                                            issue: encodeTimeEntryIssue(item.issue),
+                                                            projectId: project.id,
+                                                        });
+                                                        await this.getUserTimeEntries();
+                                                    } catch (error) {
+                                                        console.log(error);
+                                                    }
+                                                    this.setState({
+                                                        isUpdatingTask: false,
+                                                    });
+                                                }}
+                                            >
+                                                <div
+                                                    className={`projects_list_item_circle projects_list_item_circle--${
+                                                        project.projectColor.name
+                                                    }`}
+                                                />
+                                                <div className="projects_list_item_name">{project.name}</div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
                         <div
                             className="time_container_history"
                             onClick={event => {
-                                event.stopPropagation();
+                                // event.stopPropagation();
                                 if (!isMobile && event.target.className !== 'small_play item_button') return;
                                 if (this.swipedElement) {
                                     if (this.swipedElement.className === 'ul swipe') {
@@ -513,17 +649,47 @@ class MainPage extends Component {
                                     durationTimeFormat
                                 )}
                             </div>
+
                             {!this.state.timerDurationValue && <i className="small_play item_button" />}
                             <i
                                 className="edit_button item_button"
                                 onClick={event => {
-                                    event.stopPropagation();
-                                    this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
-                                    this.props.manualTimerModalAction('TOGGLE_MODAL', {
-                                        manualTimerModalToggle: true,
+                                    if (editedItem.id !== item.id) {
+                                        this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                    }
+                                    this.setState({
+                                        isVisibleEditTaskPopup: item.id,
                                     });
+                                    // event.stopPropagation();
+                                    // this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: item });
+                                    // this.props.manualTimerModalAction('TOGGLE_MODAL', {
+                                    //     manualTimerModalToggle: true,
+                                    // });
+                                    const currentTarget = event.currentTarget;
+                                    const hideEditTaskPopup = event => {
+                                        if (currentTarget.nextSibling.contains(event.target)) return;
+                                        if (!event.target.classList.contains('name')) {
+                                            this.props.addTasksAction('SET_EDITED_ITEM', { editedItem: { id: null } });
+                                        }
+                                        this.setState({
+                                            isVisibleEditTaskPopup: null,
+                                        });
+                                        document.body.removeEventListener('click', hideEditTaskPopup);
+                                    };
+                                    document.body.addEventListener('click', hideEditTaskPopup);
                                 }}
                             />
+                            {this.state.isVisibleEditTaskPopup === item.id && (
+                                <EditTaskPopup
+                                    setIsUpdatingTask={key =>
+                                        this.setState({
+                                            isUpdatingTask: key,
+                                        })
+                                    }
+                                    editedItem={item}
+                                    getUserTimeEntries={this.getUserTimeEntries}
+                                />
+                            )}
                             <i
                                 className="cancel item_button"
                                 onClick={event => {
@@ -579,6 +745,7 @@ class MainPage extends Component {
     };
 
     componentDidUpdate(prevProps, prevState) {
+        console.log('is updating', this.state.isUpdatingTask);
         if (!prevProps.isShowMenu && this.props.isShowMenu && this.checkSwipe()) {
             this.swipedElement.click();
         }

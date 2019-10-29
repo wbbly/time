@@ -28,8 +28,8 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
+  // overflow-x: hidden;
+  // overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -137,19 +137,26 @@
 }
 
 .time_tracker_wrapper .name_container {
-  flex-grow: 1;
+  // flex-grow: 1;
   overflow: hidden;
   margin: 0 1rem 0 0;
+  display: inline-block;
 }
 
 .name_container .name {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  // display: inline-block;
 }
-.name_container .project_name {
+.li .project_name {
   display: flex;
   align-items: center;
+  margin: 0 10px 0 0;
+
+  .projects_list_wrapper {
+    display: none;
+  }
 }
 .project_name .project_name__name {
   text-overflow: ellipsis;
@@ -158,22 +165,29 @@
 }
 
 .time_container_history {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   color: #b8b8b8;
+  margin: 0 0 0 auto;
 }
 
 .time_container_history .time_now {
   display: none;
   margin: 0 1rem 0 0;
+
+  div {
+    white-space: nowrap;
+  }
 }
 
 .time_container_history .timePassed {
   display: block;
   margin: 0;
   font-size: 1.2rem;
+  white-space: nowrap;
   /* line-height: 1.6rem; */
 }
 
@@ -636,7 +650,7 @@ span.circle {
   }
 
   .time_tracker_wrapper .li {
-    z-index: 0;
+    z-index: auto;
     /* padding: 1rem 1rem; */
     padding: 1.5rem 1rem 1.5rem 1.5rem;
     font-size: 1.4rem;
@@ -647,6 +661,11 @@ span.circle {
   .wrapper_main_page {
     flex-direction: row;
   }
+
+  // .wrapper_main_page .li {
+  //   border-radius: 0.4rem;
+  //   background-color: #333333;
+  // }
 
   .wrapper_main_page .li:hover {
     border-radius: 0.4rem;
@@ -707,6 +726,15 @@ span.circle {
     display: block;
   }
 
+  .wrapper_main_page .li.selected {
+    border-radius: 0.4rem;
+    background-color: #333333;
+  }
+
+  .wrapper_main_page .li.selected .time_container_history .item_button {
+    display: block;
+  }
+
   .time_container_history {
     display: flex;
     flex-direction: row;
@@ -726,6 +754,10 @@ span.circle {
     font-size: 1.4rem;
   }
 
+  .edit_button.active ~ .edit-task-popup {
+    display: block;
+  }
+
   .time_tracker_wrapper {
     margin: 0 0 26px 0;
     padding: 1rem;
@@ -733,22 +765,104 @@ span.circle {
 
   .time_tracker_wrapper .name_container {
     display: flex;
-    flex-grow: 1;
+    // flex-grow: 1;
     overflow: hidden;
     margin: 0 1rem 0 0;
   }
 
   .name_container .name {
-    margin-right: 1rem;
+    // margin-right: 1rem;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    outline: none;
   }
 
-  .name_container .project_name {
+  .li .project_name {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 10px 0 0;
+    cursor: pointer;
+
+    &.active {
+      .projects_list_wrapper {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    .projects_list_wrapper {
+      border-radius: 0.4rem;
+      position: absolute;
+      z-index: 1;
+      display: none;
+      top: 110%;
+      left: 0;
+      max-height: 200px;
+      width: 220px;
+      background: #ffffff;
+      padding: 1rem;
+      box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.25);
+
+      .projects_list_input {
+        font-family: "Open Sans", sans-serif;
+        outline: none;
+        padding: 0.5rem;
+        border: 1px solid #bdbdbd;
+        margin: 0 0 0.5rem 0;
+      }
+
+      .projects_list {
+        flex-grow: 1;
+        overflow: auto;
+      }
+
+      .projects_list_item {
+        display: flex;
+        align-items: center;
+        margin: 0 0 0.5rem 0;
+        padding: 0.3rem 0.5rem;
+        border-radius: 0.4rem;
+
+        &:hover {
+          background-color: #e0e0e0;
+        }
+
+        &:last-child {
+          margin: 0;
+        }
+      }
+
+      .projects_list_item_circle {
+        display: inline-block;
+        min-height: 0.8rem;
+        min-width: 0.8rem;
+        border-radius: 50%;
+        margin: 0 0.5rem 0 0;
+
+        &--red {
+          background-color: red;
+        }
+
+        &--pink {
+          background-color: pink;
+        }
+
+        &--green {
+          background-color: green;
+        }
+
+        &--blue {
+          background-color: blue;
+        }
+      }
+
+      .projects_list_item_name {
+        color: black;
+      }
+    }
   }
 
   .name_container .project_name .project_name__name {

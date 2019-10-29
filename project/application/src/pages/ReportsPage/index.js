@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as moment from 'moment';
+import * as Moment from 'moment';
+import { extendMoment } from 'moment-range';
 
 import { DateRangePicker } from 'react-date-range';
 import { enGB, ru, de, it, ua } from 'react-date-range/src/locale';
@@ -48,6 +49,8 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
+
+const moment = extendMoment(Moment);
 
 const localeMap = {
     ru: ru,
@@ -277,6 +280,14 @@ class ReportsPage extends Component {
         );
     }
 
+    checkYearPeriod = () => {
+        const { selectionRange } = this.state;
+        const { startDate, endDate } = selectionRange;
+        const range = moment.range(startDate, endDate);
+        const months = Array.from(range.by('month'));
+        return months.length >= 12;
+    };
+
     getLablesAndTime(labels, time) {
         const { dateFormat } = this.props;
         const deletedYearFromString = str => (str[0] === 'Y' ? str.slice(5, 10) : str.slice(0, 5));
@@ -285,8 +296,17 @@ class ReportsPage extends Component {
             labels: [],
             timeArr: [],
         };
-        for (let i = 0; i < labels.length; i++) {
-            finishData.labels.push(moment(labels[i]).format(`ddd ${deletedYearFromString(dateFormat)}`));
+        if (this.checkYearPeriod()) {
+            const toUpperCaseFirstLetter = str => str[0].toUpperCase() + str.slice(1);
+            const { selectionRange } = this.state;
+            const { startDate, endDate } = selectionRange;
+            const range = moment.range(startDate, endDate);
+            const months = Array.from(range.by('month')).map(m => toUpperCaseFirstLetter(m.format('MMMM')));
+            finishData.labels = months;
+        } else {
+            for (let i = 0; i < labels.length; i++) {
+                finishData.labels.push(moment(labels[i]).format(`ddd ${deletedYearFromString(dateFormat)}`));
+            }
         }
 
         if (time.length) {
@@ -362,27 +382,60 @@ class ReportsPage extends Component {
 
     getSumTimeEntriesByDay(datePeriod, timeEntries) {
         const sumTimeEntriesByDay = {};
-        for (let i = 0; i < datePeriod.length; i++) {
-            const date = datePeriod[i];
-            sumTimeEntriesByDay[date] = 0;
-        }
+        if (this.checkYearPeriod()) {
+            const sumTimeEntriesByMonth = {};
+            const copyTimeEntries = JSON.parse(JSON.stringify(timeEntries));
+            const { selectionRange } = this.state;
+            const { startDate, endDate } = selectionRange;
+            const range = moment.range(startDate, endDate);
+            const months = Array.from(range.by('month'));
 
-        if (!timeEntries) {
+            for (let i = 0; i < months.length; i++) {
+                const date = months[i].format('YYYY-MM');
+                sumTimeEntriesByMonth[date] = [];
+            }
+            copyTimeEntries.forEach(item => {
+                sumTimeEntriesByMonth[moment(item.start_datetime).format('YYYY-MM')].push(item);
+            });
+            const entries = Object.keys(sumTimeEntriesByMonth).map(item => {
+                const taskArr = sumTimeEntriesByMonth[item];
+                if (taskArr.length) {
+                    return taskArr.reduce((acc, curr) => {
+                        const { start_datetime: startDatetime, end_datetime: endDatetime } = curr;
+                        const startDatetimeLocalISO = convertUTCDateToLocalISOString(startDatetime);
+                        const endDatetimeLocalISO = convertUTCDateToLocalISOString(endDatetime);
+
+                        const diff = getDateTimestamp(endDatetimeLocalISO) - getDateTimestamp(startDatetimeLocalISO);
+                        return (acc += diff);
+                    }, 0);
+                } else {
+                    return 0;
+                }
+            });
+            return entries;
+        } else {
+            for (let i = 0; i < datePeriod.length; i++) {
+                const date = datePeriod[i];
+                sumTimeEntriesByDay[date] = 0;
+            }
+
+            if (!timeEntries) {
+                return Object.keys(sumTimeEntriesByDay).map(date => sumTimeEntriesByDay[date]);
+            }
+
+            for (let i = 0; i < timeEntries.length; i++) {
+                const { start_datetime: startDatetime, end_datetime: endDatetime } = timeEntries[i];
+                const startDatetimeLocalISO = convertUTCDateToLocalISOString(startDatetime);
+                const endDatetimeLocalISO = convertUTCDateToLocalISOString(endDatetime);
+
+                const diff = getDateTimestamp(endDatetimeLocalISO) - getDateTimestamp(startDatetimeLocalISO);
+                if (diff) {
+                    sumTimeEntriesByDay[startDatetimeLocalISO.split('T')[0]] += diff;
+                }
+            }
+
             return Object.keys(sumTimeEntriesByDay).map(date => sumTimeEntriesByDay[date]);
         }
-
-        for (let i = 0; i < timeEntries.length; i++) {
-            const { start_datetime: startDatetime, end_datetime: endDatetime } = timeEntries[i];
-            const startDatetimeLocalISO = convertUTCDateToLocalISOString(startDatetime);
-            const endDatetimeLocalISO = convertUTCDateToLocalISOString(endDatetime);
-
-            const diff = getDateTimestamp(endDatetimeLocalISO) - getDateTimestamp(startDatetimeLocalISO);
-            if (diff) {
-                sumTimeEntriesByDay[startDatetimeLocalISO.split('T')[0]] += diff;
-            }
-        }
-
-        return Object.keys(sumTimeEntriesByDay).map(date => sumTimeEntriesByDay[date]);
     }
 
     export() {

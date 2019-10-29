@@ -268,6 +268,13 @@ class UserSetting extends Component {
         }
     };
 
+    switchVisibilityJiraForm = event => {
+        event.preventDefault();
+        this.setState(prevState => ({
+            userSetJiraSync: !prevState.userSetJiraSync,
+        }));
+    };
+
     componentDidMount() {
         this.setDataToForm();
     }
@@ -287,12 +294,13 @@ class UserSetting extends Component {
             v_change_password,
             v_phone,
             v_jira_synchronization,
-            v_log_in,
             v_password,
             v_type,
             v_enter_to,
             v_to_get_token,
             v_login,
+            v_show,
+            v_hide,
         } = vocabulary;
 
         const { validEmail, inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
@@ -393,6 +401,14 @@ class UserSetting extends Component {
                                         onChange={this.onChangeHandler}
                                     />
                                     <span className="input_title">{v_jira_synchronization}</span>
+                                    {checked && (
+                                        <span
+                                            className="jira_sync_visibility_btn"
+                                            onClick={this.switchVisibilityJiraForm}
+                                        >
+                                            {userSetJiraSync ? v_hide : v_show}
+                                        </span>
+                                    )}
                                 </label>
                                 {checked &&
                                     userSetJiraSync && (
@@ -430,18 +446,19 @@ class UserSetting extends Component {
                                             <label className="input_container">
                                                 <span className="input_title">
                                                     {v_password}
-                                                    {jiraPassword.value && (
-                                                        <i
-                                                            onClick={event => {
-                                                                event.preventDefault();
-                                                                this.verifyJiraAuth();
-                                                            }}
-                                                            className={classNames('verify-arrow-loop', {
-                                                                'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
-                                                            })}
-                                                            title="Verify"
-                                                        />
-                                                    )}
+                                                    {jiraPassword.value &&
+                                                        jiraPassword.value !== fakePassword && (
+                                                            <i
+                                                                onClick={event => {
+                                                                    event.preventDefault();
+                                                                    this.verifyJiraAuth();
+                                                                }}
+                                                                className={classNames('verify-arrow-loop', {
+                                                                    'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
+                                                                })}
+                                                                title="Verify"
+                                                            />
+                                                        )}
                                                 </span>
                                                 {jiraType.value === 'cloud' && (
                                                     <span className="input_subtitle">
@@ -470,7 +487,9 @@ class UserSetting extends Component {
                                         </>
                                     )}
                             </div>
-                            <button type="submit">{v_save_changes}</button>
+                            <button className="save_btn" type="submit">
+                                {v_save_changes}
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -516,7 +535,7 @@ class UserSetting extends Component {
                 },
                 jiraPassword: {
                     ...prevState.inputs.jiraPassword,
-                    value: fakePassword,
+                    value: tokenJira ? fakePassword : '',
                 },
                 syncJiraStatus: {
                     ...prevState.inputs.syncJiraStatus,

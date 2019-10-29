@@ -177,4 +177,6 @@ export default {
     v_time_format: 'Формат времени',
     v_duration_display_format: 'Формат отображения длительности',
     v_switch_team_to_the: 'Команда изменилась на',
+    v_show: 'показать',
+    v_hide: 'скрыть',
 };

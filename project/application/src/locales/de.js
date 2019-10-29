@@ -182,4 +182,6 @@ export default {
     v_time_format: 'Zeitformat',
     v_duration_display_format: 'Anzeigeformat für die Dauer',
     v_switch_team_to_the: 'Team gewechselt zumÎ',
+    v_show: 'zeigen',
+    v_hide: 'verstecken',
 };
