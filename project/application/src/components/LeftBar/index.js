@@ -13,6 +13,7 @@ import { apiCall } from '../../services/apiService';
 import { decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { logoutByUnauthorized } from '../../services/authentication';
 import { updatePageTitle } from '../../services/pageTitleService';
+import { checkIsAdminByRole } from '../../services/authentication';
 
 // Components
 import TeamSwitcher from '../TeamSwitcher';
@@ -142,7 +143,7 @@ class LeftBar extends Component {
     }
 
     render() {
-        const { switchMenu, isMobile, vocabulary } = this.props;
+        const { switchMenu, isMobile, vocabulary, currentTeam } = this.props;
         const { v_timer, v_reports, v_projects, v_team } = vocabulary;
         return (
             <div className={classNames('wrapper', { 'wrapper--mobile': isMobile })}>
@@ -191,17 +192,19 @@ class LeftBar extends Component {
                             <div className="links_text">{v_projects}</div>
                         </div>
                     </NavLink>
-                    <NavLink
-                        activeClassName="active-link"
-                        onClick={switchMenu}
-                        to="/clients"
-                        style={{ textDecoration: 'none' }}
-                    >
-                        <div className="navigation_links">
-                            <i className="team" />
-                            <div className="links_text">Clients</div>
-                        </div>
-                    </NavLink>
+                    {checkIsAdminByRole(currentTeam.data.role) && (
+                        <NavLink
+                            activeClassName="active-link"
+                            onClick={switchMenu}
+                            to="/clients"
+                            style={{ textDecoration: 'none' }}
+                        >
+                            <div className="navigation_links">
+                                <i className="clients" />
+                                <div className="links_text">Clients</div>
+                            </div>
+                        </NavLink>
+                    )}
                     <div className="wrapper-position-add-team">
                         <NavLink
                             activeClassName="active-link"
@@ -226,6 +229,7 @@ class LeftBar extends Component {
 const mapStateToProps = state => ({
     currentTimer: state.mainPageReducer.currentTimer,
     durationTimeFormat: state.userReducer.durationTimeFormat,
+    currentTeam: state.teamReducer.currentTeam,
 });
 
 const mapDispatchToProps = {

@@ -1,0 +1,147 @@
+.wrapper_client_modal {
+    z-index: 1;
+}
+
+.client_modal_background {
+    position: fixed;
+    background-color: rgba(89, 89, 89, 0.5);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    z-index: 5;
+    cursor: default;
+}
+
+.client_modal_container {
+    position: fixed;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 945px;
+    z-index: 5;
+    background: #ffffff;
+    border: 1px solid #828282;
+    box-sizing: border-box;
+    border-radius: 4px;
+    cursor: default;
+}
+
+.client_modal_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid #bdbdbd;
+    height: 63px;
+}
+
+.client_modal_header_title {
+    font-family: "Open Sans", sans-serif;
+    line-height: normal;
+    font-size: 16px;
+    color: #000000;
+    font-weight: 600;
+}
+
+.client_modal_header_close {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/forbidden-mark.svg") no-repeat center;
+    cursor: pointer;
+}
+
+.client_modal_data {
+    padding: 0 20px;
+}
+
+.client_modal_data .client_modal_data_input_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 28px;
+}
+
+.client_modal_data .client_modal_data_input_container input {
+    padding-left: 16px;
+    width: 100%;
+    height: 47px;
+    border: 1px solid #828282;
+    border-radius: 4px;
+    text-transform: none;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #4f4f4f;
+}
+
+.client_modal_data
+    .client_modal_data_input_container
+    input::-webkit-input-placeholder {
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 14px;
+    color: #4f4f4f;
+}
+
+.client_modal_data
+    .client_modal_data_input_container
+    input::-moz-placeholder {
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 14px;
+    color: #4f4f4f;
+}
+
+.client_modal_data
+    .client_modal_data_input_container
+    input:-moz-placeholder {
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 14px;
+    color: #4f4f4f;
+}
+
+.client_modal_data
+    .client_modal_data_input_container
+    input:-ms-input-placeholder {
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 14px;
+    color: #4f4f4f;
+}
+
+.client_modal_button_container {
+    margin-top: 28px;
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 19px;
+}
+
+.client_modal_button_container_button {
+    width: 177px;
+    height: 41px;
+    margin-right: 20px;
+    border: 0;
+    background-color: #27ae60;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    font-size: 14px;
+    color: #ffffff;
+    border-radius: 0;
+    cursor: pointer;
+}
+

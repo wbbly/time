@@ -1,0 +1,129 @@
+.wrapper_clients_page {
+  font-family: "Open Sans", sans-serif;
+  color: #ffffff;
+
+  .data_container_clients_page {
+    padding: 47px 56px 0;
+  }
+  .clients_page_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 67px;
+  }
+  .clients_page_title {
+    font-size: 36px;
+  }
+  .add_client_button {
+    width: 208px;
+    height: 41px;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #27ae60;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .wrapper_clients_search_bar {
+    width: 100%;
+    height: 59px;
+    background-color: #4f4f4f;
+    display: flex;
+    align-items: center;
+  }
+
+  .clients_search_bar_select_wrapper {
+    width: 55px;
+  }
+
+  .wrapper_clients_search_bar .clients_search_bar_select_wrapper {
+    margin-left: 30px;
+  }
+
+  .clients_search_bar_search_field_container {
+    width: 100%;
+    position: relative;
+    margin-left: 22px;
+  }
+
+  .clients_search_bar_search_field_container .magnifer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/magnifying-glass.svg") no-repeat center;
+  }
+
+  .clients_search_bar_search_field_container input {
+    width: 94%;
+    margin-left: 46px;
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #ffffff;
+  }
+
+  .clients_search_bar_button_container {
+    height: 100%;
+    width: 208px;
+  }
+
+  .clients_search_bar_button_container button {
+    width: 100%;
+    height: 100%;
+    background-color: #616161;
+    color: white;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .clients_list_container {
+    font-size: 16px;
+    margin-top: 53px;
+  }
+  .clients_list_item {
+    padding: 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+  }
+  .clients_list_item.list-header {
+    border-bottom: 1px solid #bdbdbd;
+  }
+  .clients_list_item:not(.list-header):hover {
+    background-color: #2F2F2F;
+  }
+  .client_delete {
+    width: 25px;
+    height: 25px;
+    background: url('../../images/icons/baseline-create-24px.svg') no-repeat;
+    background-size: contain;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  .client_list_item_right_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 130px;
+  }
+}
+.wrapper_clients_page--mobile {
+  .data_container_clients_page {
+    padding: 1rem;
+  }
+}
