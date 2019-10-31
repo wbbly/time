@@ -162,7 +162,7 @@ export default {
     v_lastWeek: 'Прошлая неделя',
     v_thisMonth: 'Текущий месяц',
     v_lastMonth: 'Прошлый месяц',
-    v_this_year: 'В этом году',
+    v_this_year: 'Текущий год',
     v_days_up_to_today: 'дней до сегодня',
     v_days_starting_today: 'дней от сегодня',
     v_jira_synchronization: 'Jira синхронизация',
