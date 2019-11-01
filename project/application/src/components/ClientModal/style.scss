@@ -145,3 +145,14 @@
     cursor: pointer;
 }
 
+@media screen and (max-width: 894px) {
+    .client_modal_container{
+        width: 95%;
+    }
+    .client_modal_button_container{
+        justify-content: center;
+    }
+    .client_modal_button_container_button {
+        margin-right: 0;
+    }
+}

@@ -31,6 +31,15 @@
     font-size: 16px;
     color: #ffffff;
 }
+.table-project-name {
+    width: 60%;
+}
+.table-project-client {
+    width: 25%;
+}
+.table-project-time {
+    width: 15%;
+}
 
 .project_data_wrapper table tbody tr {
     border-bottom: 1px solid rgba(189, 189, 189, 0.11);

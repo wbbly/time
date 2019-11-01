@@ -8,6 +8,7 @@ import { addProjectPreProcessing } from '../../services/mutationProjectsFunction
 import { apiCall } from '../../services/apiService';
 
 // Components
+import ClientsDropdown from '../ClientsDropdown';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
@@ -28,6 +29,7 @@ class CreateProjectModal extends Component {
         },
         listOpen: false,
         selectValue: [],
+        selectedClient: null,
     };
 
     setItem(value) {
@@ -41,6 +43,9 @@ class CreateProjectModal extends Component {
             listOpen: !this.state.listOpen,
         });
     }
+    clientSelect = data => {
+        this.setState({ selectedClient: data ? data : null });
+    };
 
     addProject() {
         const { vocabulary, showNotificationAction } = this.props;
@@ -87,8 +92,19 @@ class CreateProjectModal extends Component {
         );
     }
 
+    closeList = e => {
+        const { listOpen } = this.state;
+        console.log(e.target);
+        if (listOpen && !e.target.closest('.create_projects_modal_data_select_container')) {
+            this.setState({ listOpen: false });
+        }
+    };
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.closeList);
+    }
+
     render() {
-        const { vocabulary } = this.props;
+        const { vocabulary, clientsList } = this.props;
         const { v_create_project, v_project_name } = vocabulary;
 
         let selectItems = this.state.selectValue.map(value => {
@@ -112,8 +128,9 @@ class CreateProjectModal extends Component {
                         />
                     </div>
                     <div className="create_projects_modal_data">
-                        <div className="create_projects_modal_data_input_container">
+                        <div className="create_projects_modal_data_input_container" data-label="Add project name">
                             <input
+                                className="project-input"
                                 type="text"
                                 ref={input => {
                                     this.createProjectInput = input;
@@ -130,6 +147,7 @@ class CreateProjectModal extends Component {
                                 <i className="vector" />
                                 {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                             </div>
+                            <ClientsDropdown clientsList={clientsList} clientSelect={this.clientSelect} />
                         </div>
                     </div>
                     <div className="create_projects_modal_button_container">
@@ -164,6 +182,7 @@ class CreateProjectModal extends Component {
                 }
             }
         );
+        document.addEventListener('mousedown', this.closeList);
     }
 }
 

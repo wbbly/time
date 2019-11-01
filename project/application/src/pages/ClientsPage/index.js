@@ -201,12 +201,16 @@ class ClientsPage extends Component {
                             </div>
                             {clientsList.map((item, index) => (
                                 <div className="clients_list_item" key={item.id}>
-                                    <div className="client_name">{item.name}</div>
+                                    <div className="client_name" data-label="Client Name: ">
+                                        {item.name}
+                                    </div>
                                     <div className="client_list_item_right_container">
-                                        <div className="client_time">{item.totalTime}</div>
+                                        <div className="client_time" data-label="Total Time: ">
+                                            {item.totalTime}
+                                        </div>
                                         <div className="client_edit_container">
                                             <i
-                                                className="client_delete"
+                                                className="client_edit"
                                                 onClick={() =>
                                                     this.setState({ editedItem: clientsList[index], showModal: true })
                                                 }

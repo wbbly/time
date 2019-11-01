@@ -32,15 +32,23 @@ class ProjectData extends Component {
             {
                 key: 1,
                 value: v_project_name,
+                className: 'table-project-name',
             },
             {
                 key: 2,
+                value: 'Client',
+                className: 'table-project-client',
+            },
+            {
+                key: 3,
                 value: v_time,
+                className: 'table-project-time',
             },
         ];
         const tableInfoElements = this.props.tableInfo.map((item, index) => (
             <tr key={'table-header_' + index}>
                 <td data-label={`${v_project_name}: `}>{item.name}</td>
+                <td data-label={`Client: `}>-</td>
                 <td data-label={`${v_time}: `}>
                     {getTimeDurationByGivenTimestamp(item.totalTime, durationTimeFormat)}
                     {checkIsAdminByRole(currentTeam.data.role) && (
@@ -49,7 +57,11 @@ class ProjectData extends Component {
                 </td>
             </tr>
         ));
-        const tableHeaderElements = tableHeader.map((item, index) => <th key={'table-info_' + index}>{item.value}</th>);
+        const tableHeaderElements = tableHeader.map((item, index) => (
+            <th key={'table-info_' + index} className={item.className}>
+                {item.value}
+            </th>
+        ));
 
         return (
             <div className="project_data_wrapper">
@@ -58,6 +70,7 @@ class ProjectData extends Component {
                         editedProject={this.props.editedProject}
                         projectsPageAction={this.props.projectsPageAction}
                         getProjects={this.props.getProjects}
+                        clientsList={this.props.clientsList}
                     />
                 )}
                 <table>

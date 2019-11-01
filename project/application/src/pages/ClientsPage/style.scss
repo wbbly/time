@@ -105,12 +105,12 @@
     border-bottom: 1px solid #bdbdbd;
   }
   .clients_list_item:not(.list-header):hover {
-    background-color: #2F2F2F;
+    background-color: #2f2f2f;
   }
-  .client_delete {
+  .client_edit {
     width: 25px;
     height: 25px;
-    background: url('../../images/icons/baseline-create-24px.svg') no-repeat;
+    background: url("../../images/icons/baseline-create-24px.svg") no-repeat;
     background-size: contain;
     margin-right: 10px;
     cursor: pointer;
@@ -125,5 +125,62 @@
 .wrapper_clients_page--mobile {
   .data_container_clients_page {
     padding: 1rem;
+  }
+  @media screen and (max-width: 894px) {
+    .clients_page_header {
+      flex-direction: column;
+      padding-bottom: 30px;
+    }
+    .add_client_button {
+      margin-top: 20px;
+    }
+    .wrapper_clients_search_bar {
+      height: 40px;
+    }
+    .clients_search_bar_search_field_container {
+      margin-left: 10px;
+    }
+    .clients_search_bar_search_field_container input {
+      margin-left: 25px;
+      width: 80%;
+    }
+    .clients_list_container {
+      margin-top: 30px;
+      border-top: 1px solid #bdbdbd;
+    }
+    .clients_list_item.list-header {
+      display: none;
+    }
+    .clients_list_item {
+      flex-direction: column;
+      align-items: initial;
+      position: relative;
+    }
+    .client_name::before {
+      content: attr(data-label);
+      font-family: "Open Sans", sans-serif;
+      font-size: 13px;
+      color: #bdbdbd;
+    }
+    .client_time::before {
+      content: attr(data-label);
+      font-family: "Open Sans", sans-serif;
+      font-size: 13px;
+      color: #bdbdbd;
+    }
+    .client_list_item_right_container {
+      margin-top: 25px;
+    }
+    .client_edit {
+      position: absolute;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      right: 5px;
+      width: 30px;
+      height: 30px;
+      background-size: cover;
+      margin: 0;
+    }
   }
 }

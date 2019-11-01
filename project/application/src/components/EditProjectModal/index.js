@@ -7,6 +7,7 @@ import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { apiCall } from '../../services/apiService';
 
 // Components
+import ClientsDropdown from '../ClientsDropdown';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
@@ -28,6 +29,7 @@ class EditProjectModal extends Component {
         listOpen: false,
         selectValue: [],
         projectId: '',
+        selectedClient: null,
     };
 
     setItem(value) {
@@ -97,6 +99,9 @@ class EditProjectModal extends Component {
     closeModal = () => {
         this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', { tableData: false });
     };
+    clientSelect = data => {
+        this.setState({ selectedClient: data ? data : null });
+    };
 
     componentDidMount() {
         apiCall(AppConfig.apiURL + `project-color/list`, {
@@ -141,8 +146,17 @@ class EditProjectModal extends Component {
                 }
             }
         );
+        document.addEventListener('mousedown', this.closeList);
     }
-
+    closeList = e => {
+        const { listOpen } = this.state;
+        if (listOpen && !e.target.closest('.edit_projects_modal_data_select_container')) {
+            this.setState({ listOpen: false });
+        }
+    };
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.closeList);
+    }
     render() {
         const { vocabulary } = this.props;
         const { v_edit_project, v_project_name } = vocabulary;
@@ -165,9 +179,10 @@ class EditProjectModal extends Component {
                         <i className="edit_projects_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
                     <div className="edit_projects_modal_data">
-                        <div className="edit_projects_modal_data_input_container">
+                        <div className="edit_projects_modal_data_input_container" data-label="Edit project name">
                             <input
                                 type="text"
+                                className="edit_project_input"
                                 ref={input => {
                                     this.editProjectInput = input;
                                 }}
@@ -183,6 +198,7 @@ class EditProjectModal extends Component {
                                 <i className="vector" />
                                 {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                             </div>
+                            <ClientsDropdown clientSelect={this.clientSelect} clientsList={this.props.clientsList} />
                         </div>
                     </div>
                     <div className="edit_projects_modal_button_container">

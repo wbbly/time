@@ -83,6 +83,9 @@ class ReportsSearchBar extends Component {
 
     closeDropdownProject = e => {
         if (
+            !this.selectListProjectsRef ||
+            !this.selectAllProjectsRef ||
+            !this.selectNoneProjectsRef ||
             !this.selectListProjectsRef.contains(e.target) ||
             this.selectAllProjectsRef.contains(e.target) ||
             this.selectNoneProjectsRef.contains(e.target)

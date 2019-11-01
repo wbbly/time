@@ -28,6 +28,74 @@ import { AppConfig } from '../../config';
 // Styles
 import './style.scss';
 
+const clientsArray = [
+    {
+        id: '5db9a5428440dc7c1d228564',
+        name: 'Delaney Boone',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a54276d0f1be45431716',
+        name: 'Melisa William',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a542cc897674fa839936',
+        name: 'Hahn Mckay',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a542005bac0f8e7d77a5',
+        name: 'Adams Morales',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a542bd740361e9cc5e45',
+        name: 'Wilkerson Hines',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a5428f32cba395d4815e',
+        name: 'Gamble Woods',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a5423496d67ef5c56095',
+        name: 'Bowen Lee',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a54273fa8808564aa70a',
+        name: 'Sanders Rosa',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a5423d37571203973f49',
+        name: 'Lawanda Delgado',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a54224241402e57e11c6',
+        name: 'Mcclure Landry',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a542cd6295ab5afdeb38',
+        name: 'Cline Curtis',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a542e970061626254421',
+        name: 'Judy Williams',
+        totalTime: '00:00:00',
+    },
+    {
+        id: '5db9a54209670125c7a0dea4',
+        name: 'Aileen Silva',
+        totalTime: '00:00:00',
+    },
+];
+
 class ProjectsPage extends Component {
     state = {
         isInitialFetching: true,
@@ -80,6 +148,7 @@ class ProjectsPage extends Component {
                             tableInfo={tableData}
                             projectsPageAction={projectsPageAction}
                             getProjects={this.getProjects}
+                            clientsList={clientsArray}
                         />
                     )}
                     <div className="data_container_projects_page">
@@ -108,6 +177,7 @@ class ProjectsPage extends Component {
                                 editedProject={this.props.editedProject}
                                 editProjectModal={this.props.editProjectModal}
                                 getProjects={this.getProjects}
+                                clientsList={clientsArray}
                             />
                         </div>
                     </div>
