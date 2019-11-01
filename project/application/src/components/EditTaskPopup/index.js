@@ -127,10 +127,15 @@ class EditTaskPopup extends Component {
                 }`
             );
 
-            if (startDateTime && endDateTime && +startDateTime >= +endDateTime) {
+            if (
+                !startDateTime.utc().toISOString() ||
+                !endDateTime.utc().toISOString() ||
+                +startDateTime >= +endDateTime
+            ) {
                 alert(v_a_time_start_error);
                 return;
             }
+
             await changeTask(id, {
                 issue: encodeTimeEntryIssue(issue),
                 projectId: project.id,
@@ -152,9 +157,9 @@ class EditTaskPopup extends Component {
 
         return (
             <div className="edit-task-popup">
-                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={customLocale}>
-                    <ThemeProvider theme={muiTheme}>
-                        <div className="edit-task-popup_set-time">
+                <ThemeProvider theme={muiTheme}>
+                    <div className="edit-task-popup_set-time">
+                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale}>
                             <div className="edit-task-popup_set-time-start">
                                 <div className="edit-task-popup_set-time-label">{v_time_start}</div>
                                 <KeyboardTimePicker
@@ -173,8 +178,10 @@ class EditTaskPopup extends Component {
                                     onChange={this.onChangeTimeEnd}
                                 />
                             </div>
-                        </div>
-                        <div className="edit-task-popup_calendar">
+                        </MuiPickersUtilsProvider>
+                    </div>
+                    <div className="edit-task-popup_calendar">
+                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={customLocale}>
                             <DatePicker
                                 autoOk
                                 disableToolbar={true}
@@ -183,9 +190,9 @@ class EditTaskPopup extends Component {
                                 value={date}
                                 onChange={this.changeDate}
                             />
-                        </div>
-                    </ThemeProvider>
-                </MuiPickersUtilsProvider>
+                        </MuiPickersUtilsProvider>
+                    </div>
+                </ThemeProvider>
             </div>
         );
     }
