@@ -674,9 +674,9 @@ class MainPage extends Component {
                                         this.setState({
                                             isVisibleEditTaskPopup: null,
                                         });
-                                        document.body.removeEventListener('click', hideEditTaskPopup);
+                                        document.body.removeEventListener('mousedown', hideEditTaskPopup);
                                     };
-                                    document.body.addEventListener('click', hideEditTaskPopup);
+                                    document.body.addEventListener('mousedown', hideEditTaskPopup);
                                 }}
                             />
                             {this.state.isVisibleEditTaskPopup === item.id && (
