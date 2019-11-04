@@ -11,6 +11,7 @@ import ClientsDropdown from '../ClientsDropdown';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
+import { getClientsAction } from '../../actions/ClientsActions';
 
 // Queries
 
@@ -47,6 +48,8 @@ class EditProjectModal extends Component {
     changeProject() {
         const { vocabulary, showNotificationAction } = this.props;
         const { v_a_project_existed, v_a_project_edit_error } = vocabulary;
+        const { selectedClient } = this.state;
+        console.log(selectedClient);
         const project = addProjectPreProcessing(
             this.editProjectInput.value,
             this.state.selectedValue.id,
@@ -72,6 +75,7 @@ class EditProjectModal extends Component {
                 project: {
                     name: this.editProjectInput.value,
                     projectColorId: this.state.selectedValue.id,
+                    clientId: selectedClient ? selectedClient.id : null,
                 },
             }),
         }).then(
@@ -100,10 +104,12 @@ class EditProjectModal extends Component {
         this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', { tableData: false });
     };
     clientSelect = data => {
+        console.log(data);
         this.setState({ selectedClient: data ? data : null });
     };
 
     componentDidMount() {
+        console.log(this.props);
         apiCall(AppConfig.apiURL + `project-color/list`, {
             method: 'GET',
             headers: {
@@ -131,7 +137,9 @@ class EditProjectModal extends Component {
         }).then(
             result => {
                 let data = result.data;
-                this.setState({ projectId: data.project_v2[0].id });
+                this.setState({ projectId: data.project_v2[0].id, selectedClient: data.project_v2[0].client }, () =>
+                    console.log(this.state)
+                );
                 this.setItem({
                     id: data.project_v2[0].project_color.id,
                     name: data.project_v2[0].project_color.name,
@@ -146,6 +154,7 @@ class EditProjectModal extends Component {
                 }
             }
         );
+        this.props.getClientsAction();
         document.addEventListener('mousedown', this.closeList);
     }
     closeList = e => {
@@ -159,6 +168,7 @@ class EditProjectModal extends Component {
     }
     render() {
         const { vocabulary } = this.props;
+        const { selectedClient } = this.state;
         const { v_edit_project, v_project_name } = vocabulary;
 
         let selectItems = this.state.selectValue.map(value => {
@@ -198,7 +208,11 @@ class EditProjectModal extends Component {
                                 <i className="vector" />
                                 {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                             </div>
-                            <ClientsDropdown clientSelect={this.clientSelect} clientsList={this.props.clientsList} />
+                            <ClientsDropdown
+                                clientSelect={this.clientSelect}
+                                editedClient={selectedClient}
+                                clientsList={this.props.clientsList}
+                            />
                         </div>
                     </div>
                     <div className="edit_projects_modal_button_container">
@@ -217,10 +231,12 @@ class EditProjectModal extends Component {
 
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
+    clientsList: state.clientsReducer.clientsList,
 });
 
 const mapDispatchToProps = {
     showNotificationAction,
+    getClientsAction,
 };
 
 export default connect(

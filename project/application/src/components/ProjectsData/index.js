@@ -48,7 +48,7 @@ class ProjectData extends Component {
         const tableInfoElements = this.props.tableInfo.map((item, index) => (
             <tr key={'table-header_' + index}>
                 <td data-label={`${v_project_name}: `}>{item.name}</td>
-                <td data-label={`Client: `}>-</td>
+                <td data-label={`Client: `}>{item.client ? item.client.name : '-'}</td>
                 <td data-label={`${v_time}: `}>
                     {getTimeDurationByGivenTimestamp(item.totalTime, durationTimeFormat)}
                     {checkIsAdminByRole(currentTeam.data.role) && (
@@ -70,7 +70,6 @@ class ProjectData extends Component {
                         editedProject={this.props.editedProject}
                         projectsPageAction={this.props.projectsPageAction}
                         getProjects={this.props.getProjects}
-                        clientsList={this.props.clientsList}
                     />
                 )}
                 <table>

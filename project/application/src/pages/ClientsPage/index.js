@@ -9,6 +9,7 @@ import { Loading } from '../../components/Loading';
 import ClientModal from '../../components/ClientModal';
 
 // Actions
+import { getClientsAction, setClientAction, editClientNameAction } from '../../actions/ClientsActions';
 
 // Services
 import { checkIsAdminByRole } from '../../services/authentication';
@@ -16,77 +17,8 @@ import { checkIsAdminByRole } from '../../services/authentication';
 // Styles
 import './style.scss';
 
-const clientsArray = [
-    {
-        id: '5db9a5428440dc7c1d228564',
-        name: 'Delaney Boone',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a54276d0f1be45431716',
-        name: 'Melisa William',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a542cc897674fa839936',
-        name: 'Hahn Mckay',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a542005bac0f8e7d77a5',
-        name: 'Adams Morales',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a542bd740361e9cc5e45',
-        name: 'Wilkerson Hines',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a5428f32cba395d4815e',
-        name: 'Gamble Woods',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a5423496d67ef5c56095',
-        name: 'Bowen Lee',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a54273fa8808564aa70a',
-        name: 'Sanders Rosa',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a5423d37571203973f49',
-        name: 'Lawanda Delgado',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a54224241402e57e11c6',
-        name: 'Mcclure Landry',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a542cd6295ab5afdeb38',
-        name: 'Cline Curtis',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a542e970061626254421',
-        name: 'Judy Williams',
-        totalTime: '00:00:00',
-    },
-    {
-        id: '5db9a54209670125c7a0dea4',
-        name: 'Aileen Silva',
-        totalTime: '00:00:00',
-    },
-];
-
 class ClientsPage extends Component {
     state = {
-        isInitialFetching: true,
         showModal: false,
         searchValue: '',
         editedItem: null,
@@ -96,23 +28,26 @@ class ClientsPage extends Component {
         this.setState({ showModal: false, editedItem: null });
     };
     editClient = (clientName, id) => {
-        const { clientsList } = this.state;
+        const { editedItem } = this.state;
         if (clientName.length === 0) {
             alert('empty');
             return;
-        } else {
-            clientsList.forEach(item => {
-                if (item.id === id) {
-                    item.name = clientName;
-                }
-            });
-            this.setState({ clientsList });
+        } else if (clientName === editedItem.name) {
             this.closeModal();
+            return;
+        } else if (this.checkClientName(clientName)) {
+            alert('already have');
+            return;
+        } else {
+            this.props.editClientNameAction(clientName, id);
+            this.closeModal();
+            alert('edited');
         }
     };
-    searchClient = () => {
+    searchClient = async () => {
         const { searchValue } = this.state;
-        let afterSearch = clientsArray.filter(
+        const { clientsList } = this.props;
+        let afterSearch = clientsList.filter(
             obj => obj.name.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1
         );
         this.setState({ clientsList: afterSearch });
@@ -121,35 +56,44 @@ class ClientsPage extends Component {
         if (client.length === 0) {
             alert('empty');
             return;
+        } else if (this.checkClientName(client)) {
+            alert('already have');
+            return;
         } else {
-            console.log(client);
+            this.props.setClientAction(client);
             this.closeModal();
+            alert('added');
         }
     };
     handleChange = e => {
+        const { clientsList } = this.props;
         this.setState({ searchValue: e.target.value });
         if (e.target.value.length === 0) {
-            this.setState({ clientsList: clientsArray });
+            this.setState({ clientsList });
         }
     };
+    checkClientName = name => {
+        const { clientsList } = this.props;
+        return clientsList.some(obj => obj.name.toLowerCase().trim() === name.toLowerCase().trim());
+    };
     componentDidMount() {
-        this.setState({
-            isInitialFetching: false,
-            clientsList: clientsArray,
-        });
+        this.props.getClientsAction();
     }
     componentDidUpdate(prevProps, prevState) {
-        const { currentTeam, history } = this.props;
+        const { currentTeam, history, clientsList } = this.props;
         if (!prevProps.currentTeam.data.id && this.props.currentTeam.data.id) {
             if (!checkIsAdminByRole(currentTeam.data.role)) {
                 history.push('/timer');
             }
         }
+        if (prevProps.clientsList !== clientsList) {
+            this.setState({ clientsList });
+        }
     }
 
     render() {
-        const { isInitialFetching, showModal, searchValue, editedItem, clientsList } = this.state;
-        const { vocabulary, isMobile, currentTeam } = this.props;
+        const { showModal, searchValue, editedItem, clientsList } = this.state;
+        const { vocabulary, isMobile, currentTeam, isInitialFetching } = this.props;
         return (
             <Loading flag={isInitialFetching || currentTeam.isFetching} mode="parentSize" withLogo={false}>
                 <div
@@ -193,30 +137,31 @@ class ClientsPage extends Component {
                             </div>
                         </div>
                         <div className="clients_list_container">
-                            <div className="clients_list_item list-header">
-                                <div className="client_name">Client Name</div>
-                                <div className="client_list_item_right_container">
-                                    <div className="client_time">Total Time</div>
-                                </div>
-                            </div>
                             {clientsList.map((item, index) => (
                                 <div className="clients_list_item" key={item.id}>
                                     <div className="client_name" data-label="Client Name: ">
                                         {item.name}
                                     </div>
-                                    <div className="client_list_item_right_container">
-                                        <div className="client_time" data-label="Total Time: ">
-                                            {item.totalTime}
+                                    <i
+                                        className="client_edit"
+                                        onClick={() =>
+                                            this.setState({ editedItem: clientsList[index], showModal: true })
+                                        }
+                                    />
+                                    {item.project.length !== 0 && (
+                                        <div className="clients_project_container">
+                                            {item.project.map((item, index) => (
+                                                <div className="clients_project" key={index}>
+                                                    <div
+                                                        className={`clients_project-color-circle ${
+                                                            item.project_color.name
+                                                        }`}
+                                                    />
+                                                    <div className="clients-project-name">{item.name}</div>
+                                                </div>
+                                            ))}
                                         </div>
-                                        <div className="client_edit_container">
-                                            <i
-                                                className="client_edit"
-                                                onClick={() =>
-                                                    this.setState({ editedItem: clientsList[index], showModal: true })
-                                                }
-                                            />
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -230,6 +175,18 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     currentTeam: state.teamReducer.currentTeam,
     isMobile: state.responsiveReducer.isMobile,
+    isInitialFetching: state.clientsReducer.isInitialFetching,
+    clientsList: state.clientsReducer.clientsList,
 });
+const mapDispatchToProps = {
+    getClientsAction,
+    setClientAction,
+    editClientNameAction,
+};
 
-export default withRouter(connect(mapStateToProps)(ClientsPage));
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(ClientsPage)
+);

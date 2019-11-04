@@ -12,6 +12,7 @@ import ClientsDropdown from '../ClientsDropdown';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
+import { getClientsAction } from '../../actions/ClientsActions';
 
 // Queries
 
@@ -30,6 +31,7 @@ class CreateProjectModal extends Component {
         listOpen: false,
         selectValue: [],
         selectedClient: null,
+        clientsList: null,
     };
 
     setItem(value) {
@@ -49,6 +51,7 @@ class CreateProjectModal extends Component {
 
     addProject() {
         const { vocabulary, showNotificationAction } = this.props;
+        const { selectedClient } = this.state;
         const { v_a_project_existed, v_a_project_created_error } = vocabulary;
         const project = addProjectPreProcessing(
             this.createProjectInput.value,
@@ -68,6 +71,7 @@ class CreateProjectModal extends Component {
                 project: {
                     name: project.name,
                     projectColorId: project.colorProject.id,
+                    clientId: selectedClient ? selectedClient.id : null,
                 },
             }),
         }).then(
@@ -94,7 +98,6 @@ class CreateProjectModal extends Component {
 
     closeList = e => {
         const { listOpen } = this.state;
-        console.log(e.target);
         if (listOpen && !e.target.closest('.create_projects_modal_data_select_container')) {
             this.setState({ listOpen: false });
         }
@@ -102,11 +105,17 @@ class CreateProjectModal extends Component {
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.closeList);
     }
+    componentDidUpdate(prevProps, prevState) {
+        const { clientsList } = this.props;
+        if (prevProps.clientsList !== clientsList) {
+            this.setState({ clientsList }, () => console.log(this.state));
+        }
+    }
 
     render() {
-        const { vocabulary, clientsList } = this.props;
+        const { vocabulary } = this.props;
         const { v_create_project, v_project_name } = vocabulary;
-
+        const { clientsList } = this.state;
         let selectItems = this.state.selectValue.map(value => {
             const { id, name } = value;
             return (
@@ -183,6 +192,7 @@ class CreateProjectModal extends Component {
             }
         );
         document.addEventListener('mousedown', this.closeList);
+        this.props.getClientsAction();
     }
 }
 
@@ -192,10 +202,12 @@ CreateProjectModal.propTypes = {
 
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
+    clientsList: state.clientsReducer.clientsList,
 });
 
 const mapDispatchToProps = {
     showNotificationAction,
+    getClientsAction,
 };
 
 export default connect(

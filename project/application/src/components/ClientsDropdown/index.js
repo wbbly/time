@@ -11,8 +11,17 @@ class ClientsDropdown extends Component {
         selectedItem: null,
     };
     componentDidMount() {
-        this.setState({ clientsList: this.props.clientsList, inputValue: '' });
+        this.setState({ inputValue: '' });
         document.addEventListener('mousedown', this.closeDropdown);
+    }
+    componentDidUpdate(prevProps, prevState) {
+        const { clientsList, editedClient } = this.props;
+        if (prevProps.clientsList !== clientsList) {
+            this.setState({ clientsList });
+        }
+        if (prevProps.editedClient !== editedClient) {
+            this.setState({ selectedItem: editedClient });
+        }
     }
     closeDropdown = e => {
         const { showList } = this.state;
@@ -41,9 +50,11 @@ class ClientsDropdown extends Component {
     removeSelectedClient = event => {
         event.stopPropagation();
         this.setState({ selectedItem: null });
+        this.props.clientSelect(null);
     };
     render() {
         const { clientsList, showList, inputValue, selectedItem } = this.state;
+        const { editedClient } = this.props;
         return (
             <div className="clients_list_wrapper" data-label="Select client" onClick={event => event.stopPropagation()}>
                 <div className="clients_list_select-title" onClick={e => this.setState({ showList: !showList })}>

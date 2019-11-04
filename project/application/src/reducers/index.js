@@ -11,6 +11,7 @@ import responsiveReducer from './ResponsiveReducer';
 import languageReducer from './LanguageReducer';
 import userReducer from './UserReducer';
 import notificationReducer from './NotificationReducer';
+import clientsReducer from './ClientsReducer';
 
 export const rootReducer = combineReducers({
     projectReducer,
@@ -24,4 +25,5 @@ export const rootReducer = combineReducers({
     languageReducer,
     userReducer,
     notificationReducer,
+    clientsReducer,
 });

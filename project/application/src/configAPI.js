@@ -89,6 +89,28 @@ export const tutorialChecked = (id, key) =>
             onboardingMobile: key,
         },
     });
+export const getClientsList = () =>
+    instance({
+        url: '/client/list',
+        method: 'GET',
+    });
+
+export const setClient = client =>
+    instance({
+        url: '/client/add',
+        method: 'POST',
+        data: {
+            name: client,
+        },
+    });
+export const editClient = (client, id) =>
+    instance({
+        url: `client/${id}`,
+        method: 'PATCH',
+        data: {
+            name: client,
+        },
+    });
 
 // UNUSED AXIOS REQUESTS
 
