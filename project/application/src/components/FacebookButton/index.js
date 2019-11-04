@@ -7,6 +7,9 @@ import { loginWithFacebook } from '../../configAPI';
 
 import { setTokenToLocalStorage } from '../../services/tokenStorageService';
 
+// Actions
+import { showNotificationAction } from '../../actions/NotificationActions';
+
 import './style.scss';
 
 const FacebookIcon = () => (
@@ -27,7 +30,7 @@ const FacebookIcon = () => (
 
 class FacebookButton extends Component {
     responseFacebook = async response => {
-        const { vocabulary, setHaveToken } = this.props;
+        const { vocabulary, setHaveToken, showNotificationAction } = this.props;
 
         if (response.status !== 'unknown') {
             const { email, id, name } = response;
@@ -39,7 +42,7 @@ class FacebookButton extends Component {
                 setHaveToken();
             } catch (error) {
                 const textError = error.response.data.message;
-                alert(vocabulary[textError]);
+                showNotificationAction({ text: vocabulary[textError], type: 'error' });
             }
         }
     };
@@ -67,4 +70,11 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
 });
 
-export default connect(mapStateToProps)(FacebookButton);
+const mapDispatchToProps = {
+    showNotificationAction,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(FacebookButton);

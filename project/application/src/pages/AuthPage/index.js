@@ -14,6 +14,7 @@ import FacebookButton from '../../components/FacebookButton';
 
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 
@@ -48,7 +49,7 @@ class AuthPage extends Component {
         });
 
     login = ({ email, password }) => {
-        const { vocabulary } = this.props;
+        const { vocabulary, showNotificationAction } = this.props;
 
         apiCall(
             AppConfig.apiURL + 'user/login',
@@ -73,7 +74,7 @@ class AuthPage extends Component {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
                         const textError = JSON.parse(errorMessage).message;
-                        alert(vocabulary[textError]);
+                        showNotificationAction({ text: vocabulary[textError], type: 'error' });
                     });
                 } else {
                     console.log(err);
@@ -190,6 +191,7 @@ class AuthPage extends Component {
 
 const mapDispatchToProps = dispatch => ({
     reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
+    showNotificationAction: payload => dispatch(showNotificationAction(payload)),
 });
 
 export default withRouter(

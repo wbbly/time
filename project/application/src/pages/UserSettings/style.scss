@@ -288,4 +288,41 @@
   .data_container {
     padding: 1rem;
   }
+  @media screen and (max-width: 894px) {
+    .header_user_setting {
+      display: block;
+    }
+    .header_user_setting div {
+      width: 100%;
+      text-align: center;
+    }
+    .header_user_setting button {
+      display: block;
+      margin: 10px auto 0;
+    }
+    .body_user_setting {
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .avatar-wrapper {
+      margin: 0 auto 10px;
+    }
+    .column-inputs {
+      padding: 0 5px;
+    }
+    .date-format {
+      justify-content: space-between;
+    }
+    .time-format {
+      width: auto;
+      justify-content: space-between;
+    }
+    .duration-time-format {
+      justify-content: space-between;
+    }
+    .body_user_setting button {
+      display: block;
+      margin: 25px auto 5px;
+    }
+  }
 }

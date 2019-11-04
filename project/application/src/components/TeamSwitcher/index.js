@@ -12,6 +12,7 @@ import { Loading } from '../Loading';
 
 // Actions
 import { switchTeamRequestAction } from '../../actions/TeamActions';
+import { switchMenu } from '../../actions/ResponsiveActions';
 
 // Queries
 
@@ -23,11 +24,13 @@ import './style.css';
 class TeamSwitcher extends Component {
     handleChange = e => {
         e.preventDefault();
-        const { currentTeam, switchTeamRequestAction, history } = this.props;
+        const { currentTeam, switchTeamRequestAction, history, switchMenu } = this.props;
         let teamId = e.target.getAttribute('data-id');
-        if (currentTeam.data.id === teamId) return;
-        switchTeamRequestAction({ teamId });
+        if (currentTeam.data.id !== teamId) {
+            switchTeamRequestAction({ teamId });
+        }
         history.push('/team');
+        switchMenu();
     };
 
     render() {
@@ -76,6 +79,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     switchTeamRequestAction,
+    switchMenu,
 };
 
 export default withRouter(

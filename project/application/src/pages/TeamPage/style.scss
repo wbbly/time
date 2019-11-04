@@ -141,12 +141,6 @@
     background-size: 20px;
   }
 }
-
-.wrapper_team_page--mobile {
-  .data_container_team_page {
-    padding: 1rem;
-  }
-}
 .avatar-big {
   position: absolute;
   display: inline-block;
@@ -162,4 +156,99 @@
   bottom: 40px;
   transform: scale(0);
   transition: transform 0.4s ease;
+}
+
+.wrapper_team_page--mobile {
+  .data_container_team_page {
+    padding: 1rem;
+  }
+  @media screen and (max-width: 894px) {
+    .team_page_data .user-container .avatar-small,
+    .team_page_data .user-container .avatar-big {
+      display: none;
+    }
+    .team_page_header {
+      flex-wrap: wrap;
+    }
+    .team_page_main-controls {
+      width: 100%;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      padding-bottom: 20px;
+    }
+    .invite_container {
+      padding: 20px 0 0 0;
+    }
+    .invite_container button {
+      width: auto;
+      min-width: 140px;
+    }
+    .page_name {
+      font-size: 16px;
+    }
+    .add_user_modal_container,
+    .rename_team_modal_container {
+      width: 95%;
+      max-width: 350px;
+    }
+    .rename_team_modal_button_container_button {
+      margin-right: 0;
+    }
+    .rename_team_modal_button_container {
+      justify-content: center;
+    }
+    .add_user_modal_button_container_button {
+      align-self: center;
+    }
+    .team_page_data {
+      margin-top: 0;
+      border-top: 1px solid rgba(156, 156, 156, 0.4);
+    }
+    thead {
+      display: none;
+    }
+    td {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 50%;
+    }
+    td:before {
+      content: attr(data-label);
+      font-size: 13px;
+      color: #bdbdbd;
+      position: absolute;
+      top: 0;
+    }
+    tr {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      flex-direction: column;
+      position: relative;
+      height: 160px;
+      border-bottom: 1px solid rgba(156, 156, 156, 0.4);
+      margin-top: 10px;
+    }
+    td:nth-child(4) {
+      justify-content: flex-end;
+    }
+    td:nth-child(5) {
+      justify-content: flex-end;
+    }
+    .team_page_data table .user-container span {
+      margin-left: 0;
+    }
+    .team_page_data table .team-access-container {
+      min-width: auto;
+    }
+    .team_page_data table .access_container {
+      height: auto;
+      width: 75px;
+      margin-top: 5px;
+    }
+    .team-access-container-admin {
+      padding-right: 20px;
+    }
+  }
 }

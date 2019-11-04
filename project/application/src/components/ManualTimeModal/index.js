@@ -20,6 +20,7 @@ import { apiCall } from '../../services/apiService';
 // Components
 
 // Actions
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 import { getTodayTimeEntriesParseFunction } from '../../queries';
@@ -126,7 +127,7 @@ class ManualTimeModal extends Component {
     }
 
     changeData() {
-        const { vocabulary, manualTimerModalAction } = this.props;
+        const { vocabulary, manualTimerModalAction, showNotificationAction } = this.props;
         const { v_a_time_start_error, v_a_task_name_error } = vocabulary;
         let changedItem = {};
 
@@ -151,7 +152,7 @@ class ManualTimeModal extends Component {
         }
 
         if (+startDatetimeNew >= +endDatetimeNew) {
-            alert(v_a_time_start_error);
+            showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
             return false;
         }
 
@@ -179,7 +180,7 @@ class ManualTimeModal extends Component {
                 }
             );
         } else {
-            alert(v_a_task_name_error);
+            showNotificationAction({ text: v_a_task_name_error, type: 'warning' });
         }
     }
 
@@ -432,4 +433,11 @@ const mapStateToProps = store => ({
     firstDayOfWeek: store.userReducer.firstDayOfWeek,
 });
 
-export default connect(mapStateToProps)(ManualTimeModal);
+const mapDispatchToProps = {
+    showNotificationAction,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ManualTimeModal);

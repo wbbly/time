@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 // Services
 import { authValidation } from '../../services/validateService';
@@ -9,6 +10,7 @@ import Input from '../../components/BaseComponents/Input';
 import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
 
 // Actions
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
 
@@ -31,7 +33,7 @@ class ForgotPassword extends Component {
     };
 
     addUser = ({ email }) => {
-        const { history, vocabulary } = this.props;
+        const { history, vocabulary, showNotificationAction } = this.props;
         const { v_check_email } = vocabulary;
         fetch(AppConfig.apiURL + 'user/reset-password', {
             method: 'POST',
@@ -50,12 +52,12 @@ class ForgotPassword extends Component {
             })
             .then(
                 result => {
-                    alert(v_check_email);
+                    showNotificationAction({ text: v_check_email, type: 'success' });
                     history.push('/login');
                 },
                 err => {
                     if (err instanceof Response) {
-                        alert(v_check_email);
+                        showNotificationAction({ text: v_check_email, type: 'success' });
                         history.push('/login');
                     } else {
                         console.log(err);
@@ -128,5 +130,13 @@ class ForgotPassword extends Component {
         );
     }
 }
+const mapDispatchToProps = {
+    showNotificationAction,
+};
 
-export default withRouter(ForgotPassword);
+export default withRouter(
+    connect(
+        null,
+        mapDispatchToProps
+    )(ForgotPassword)
+);

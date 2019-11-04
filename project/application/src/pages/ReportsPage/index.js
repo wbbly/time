@@ -258,7 +258,7 @@ class ReportsPage extends Component {
                                     <Bar
                                         ref={Bar => (this.barChart = Bar)}
                                         data={this.props.dataBarChat}
-                                        height={50}
+                                        height={isMobile ? 150 : 50}
                                         options={this.lineChartOption(durationTimeFormat)}
                                     />
                                 </div>
@@ -583,7 +583,7 @@ class ReportsPage extends Component {
         const { vocabulary } = this.props;
         const { lang } = vocabulary;
         moment.locale(lang.short);
-        showMobileSupportToastr();
+        // showMobileSupportToastr();
         this.setState({ selectionRange: this.props.timeRange });
         apiCall(AppConfig.apiURL + `user/list`, {
             method: 'GET',

@@ -10,6 +10,7 @@ import Input from '../../components/BaseComponents/Input';
 
 // Actions
 import { toggleModal } from '../../actions/UserActions';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Config
 import { AppConfig } from '../../config';
@@ -40,12 +41,11 @@ class ChangePasswordModal extends Component {
     };
 
     addUser = ({ password, newPassword, confirmNewPassword }) => {
-        const { vocabulary } = this.props;
+        const { vocabulary, showNotificationAction } = this.props;
         const { v_a_password_same_error, v_a_change_password_ok } = vocabulary;
 
         if (newPassword !== confirmNewPassword) {
-            alert(v_a_password_same_error);
-
+            showNotificationAction({ text: v_a_password_same_error, type: 'warning' });
             return false;
         }
 
@@ -61,14 +61,14 @@ class ChangePasswordModal extends Component {
             }),
         }).then(
             result => {
-                alert(v_a_change_password_ok);
+                showNotificationAction({ text: v_a_change_password_ok, type: 'success' });
                 this.closeModal();
             },
             err => {
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
                         const textError = JSON.parse(errorMessage).message;
-                        alert(vocabulary[textError]);
+                        showNotificationAction({ text: vocabulary[textError], type: 'error' });
                     });
                 } else {
                     console.log(err);
@@ -180,6 +180,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     toggleModal,
+    showNotificationAction,
 };
 
 export default connect(
