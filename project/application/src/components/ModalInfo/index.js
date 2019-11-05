@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import classNames from 'classnames';
-import { hideNotificationAction } from '../../actions/NotificationActions';
+import { showNotificationAction, hideNotificationAction } from '../../actions/NotificationActions';
 
 import './style.scss';
 
@@ -90,11 +90,6 @@ const TeamSwitchedIcon = () => (
 );
 
 class ModalInfo extends Component {
-    state = {
-        showModal: false,
-        modalInfoContent: {},
-    };
-
     componentDidMount() {
         window.addEventListener('online', this.connectionRestore);
         window.addEventListener('offline', this.connectionLost);
@@ -105,71 +100,67 @@ class ModalInfo extends Component {
         window.removeEventListener('offline', this.connectionLost);
     }
 
-    connectionRestore = e => {
-        const { v_connection_restored } = this.props.vocabulary;
-        this.showModalInfo(v_connection_restored, 'connection-restored');
-    };
-
-    connectionLost = e => {
-        const { v_connection_problem } = this.props.vocabulary;
-        this.showModalInfo(v_connection_problem, 'lost-connection');
-    };
-
-    teamSwitched = e => {
-        const { currentTeam, vocabulary } = this.props;
-        const { v_switch_team_to_the } = vocabulary;
-        this.showModalInfo(`${v_switch_team_to_the} ${currentTeam.data.name}`, 'team-switched');
-    };
-
-    showModalInfo = (text, type) => {
-        this.setState({ showModal: true, modalInfoContent: { text, type } });
-    };
-
-    hideModalInfo = () => {
-        this.setState({
-            showModal: false,
-            modalInfoContent: {},
+    connectionRestore = event => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_connection_restored } = vocabulary;
+        showNotificationAction({
+            type: 'connection-restored',
+            text: v_connection_restored,
         });
-        this.props.hideNotificationAction();
+    };
+
+    connectionLost = event => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_connection_problem } = vocabulary;
+        showNotificationAction({
+            type: 'lost-connection',
+            text: v_connection_problem,
+        });
+    };
+
+    teamSwitched = event => {
+        const { currentTeam, vocabulary, showNotificationAction } = this.props;
+        const { v_switch_team_to_the } = vocabulary;
+        showNotificationAction({
+            type: 'team-switched',
+            text: `${v_switch_team_to_the} ${currentTeam.data.name}`,
+        });
+    };
+
+    hideModalInfo = event => {
+        const { hideNotificationAction } = this.props;
+        hideNotificationAction();
     };
 
     componentDidUpdate(prevProps, prevState) {
-        const { currentTeam, notificationInfo } = this.props;
+        const { currentTeam } = this.props;
         if (prevProps.currentTeam.data.name && currentTeam.data.name !== prevProps.currentTeam.data.name) {
             this.teamSwitched();
-        } else if (prevProps.notificationInfo.showNotification !== notificationInfo.showNotification) {
-            const { showNotification, notificationText, notificationType } = notificationInfo;
-            this.setState({
-                showModal: showNotification,
-                modalInfoContent: {
-                    text: notificationText,
-                    type: notificationType,
-                },
-            });
         }
     }
 
     render() {
-        const { showModal, modalInfoContent } = this.state;
+        const { isMobile, notificationReducer } = this.props;
+        const { notificationText, notificationType } = notificationReducer;
         return (
             <div
                 className={classNames(
                     'modal-info',
-                    { 'modal-info--mobile': this.props.isMobile },
-                    { 'modal-info--hidden': !showModal }
+                    { 'modal-info--mobile': isMobile },
+                    { 'modal-info--hidden': !notificationText }
                 )}
                 onClick={this.hideModalInfo}
             >
-                <div className={classNames('modal-info-icon', `modal-info-icon--${modalInfoContent.type}`)}>
-                    {modalInfoContent.type === 'lost-connection' && <NoConnectionSVG />}
-                    {modalInfoContent.type === 'connection-restored' && <ConnectionRestoredSVG />}
-                    {modalInfoContent.type === 'team-switched' && <TeamSwitchedIcon />}
-                    {modalInfoContent.type === 'success' && <SuccessSVG />}
-                    {modalInfoContent.type === 'warning' && <WarningSVG />}
-                    {modalInfoContent.type === 'error' && <ErrorSVG />}
+                <div className={classNames('modal-info-icon', `modal-info-icon--${notificationType}`)}>
+                    {notificationType === 'lost-connection' && <NoConnectionSVG />}
+                    {notificationType === 'connection-restored' && <ConnectionRestoredSVG />}
+                    {notificationType === 'team-switched' && <TeamSwitchedIcon />}
+                    {notificationType === 'success' && <SuccessSVG />}
+                    {notificationType === 'warning' && <WarningSVG />}
+                    {notificationType === 'error' && <ErrorSVG />}
                 </div>
                 <div className="modal-info-text">
-                    <p>{modalInfoContent.text}</p>
+                    <p>{notificationText}</p>
                 </div>
             </div>
         );
@@ -180,10 +171,11 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     isMobile: state.responsiveReducer.isMobile,
     currentTeam: state.teamReducer.currentTeam,
-    notificationInfo: state.notificationReducer,
+    notificationReducer: state.notificationReducer,
 });
 const mapDispatchToProps = {
     hideNotificationAction,
+    showNotificationAction,
 };
 
 export default connect(

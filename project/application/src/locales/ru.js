@@ -1,5 +1,5 @@
 export default {
-    lang: { short: 'ru', long: 'Russian' },
+    lang: { short: 'ru', long: 'Русский' },
 
     'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Учетная запись пользователя уже существует.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD':
@@ -191,4 +191,11 @@ export default {
     v_select_client: 'Выберите клиента',
     v_add_project_name: 'Добавьте название проекта',
     v_edit_project_name: 'Измените имя проекта',
+    v_verify: 'Проверить',
+    v_classic: 'Классический',
+    v_improved: 'Улучшенный',
+    v_decimal: 'Десятичный',
+    v_short_day: 'ДД',
+    v_short_month: 'ММ',
+    v_short_year: 'ГГГГ',
 };

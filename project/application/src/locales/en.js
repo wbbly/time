@@ -188,4 +188,11 @@ export default {
     v_select_client: 'Select client',
     v_add_project_name: 'Add project name',
     v_edit_project_name: 'Edit project name',
+    v_verify: 'Verify',
+    v_classic: 'Classic',
+    v_improved: 'Improved',
+    v_decimal: 'Decimal',
+    v_short_day: 'DD',
+    v_short_month: 'MM',
+    v_short_year: 'YYYY',
 };

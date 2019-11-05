@@ -196,4 +196,11 @@ export default {
     v_select_client: 'Wählen Sie den Client aus',
     v_add_project_name: 'Projektnamen hinzufügen',
     v_edit_project_name: 'Ändern Sie den Projektnamen',
+    v_verify: 'Überprüfen',
+    v_classic: 'Klassisch',
+    v_improved: 'Verbessert',
+    v_decimal: 'Dezimal',
+    v_short_day: 'TT',
+    v_short_month: 'MM',
+    v_short_year: 'JJJJ',
 };
