@@ -10,6 +10,7 @@ import ClientModal from '../../components/ClientModal';
 
 // Actions
 import { getClientsAction, setClientAction, editClientNameAction } from '../../actions/ClientsActions';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Services
 import { checkIsAdminByRole } from '../../services/authentication';
@@ -28,20 +29,21 @@ class ClientsPage extends Component {
         this.setState({ showModal: false, editedItem: null });
     };
     editClient = (clientName, id) => {
+        const { showNotificationAction, vocabulary } = this.props;
+        const { v_a_client_existed, v_a_client_name_empty_error } = vocabulary;
         const { editedItem } = this.state;
         if (clientName.length === 0) {
-            alert('empty');
+            showNotificationAction({ text: v_a_client_name_empty_error, type: 'warning' });
             return;
         } else if (clientName === editedItem.name) {
             this.closeModal();
             return;
         } else if (this.checkClientName(clientName)) {
-            alert('already have');
+            showNotificationAction({ text: v_a_client_existed, type: 'warning' });
             return;
         } else {
             this.props.editClientNameAction(clientName, id);
             this.closeModal();
-            alert('edited');
         }
     };
     searchClient = async () => {
@@ -53,16 +55,17 @@ class ClientsPage extends Component {
         this.setState({ clientsList: afterSearch });
     };
     addNewClient = client => {
+        const { showNotificationAction, vocabulary } = this.props;
+        const { v_a_client_existed, v_a_client_name_empty_error } = vocabulary;
         if (client.length === 0) {
-            alert('empty');
+            showNotificationAction({ text: v_a_client_name_empty_error, type: 'warning' });
             return;
         } else if (this.checkClientName(client)) {
-            alert('already have');
+            showNotificationAction({ text: v_a_client_existed, type: 'warning' });
             return;
         } else {
             this.props.setClientAction(client);
             this.closeModal();
-            alert('added');
         }
     };
     handleChange = e => {
@@ -94,6 +97,7 @@ class ClientsPage extends Component {
     render() {
         const { showModal, searchValue, editedItem, clientsList } = this.state;
         const { vocabulary, isMobile, currentTeam, isInitialFetching } = this.props;
+        const { v_clients, v_add_new_client, v_apply } = vocabulary;
         return (
             <Loading flag={isInitialFetching || currentTeam.isFetching} mode="parentSize" withLogo={false}>
                 <div
@@ -112,10 +116,10 @@ class ClientsPage extends Component {
                     )}
                     <div className="data_container_clients_page">
                         <div className="clients_page_header">
-                            <div className="clients_page_title">Clients</div>
+                            <div className="clients_page_title">{v_clients}</div>
                             {true && (
                                 <button className="add_client_button" onClick={e => this.setState({ showModal: true })}>
-                                    Add new client
+                                    {v_add_new_client}
                                 </button>
                             )}
                         </div>
@@ -132,7 +136,7 @@ class ClientsPage extends Component {
                             </div>
                             <div className="clients_search_bar_button_container">
                                 <button className="clients_search_bar_button" onClick={this.searchClient}>
-                                    Apply
+                                    {v_apply}
                                 </button>
                             </div>
                         </div>
@@ -182,6 +186,7 @@ const mapDispatchToProps = {
     getClientsAction,
     setClientAction,
     editClientNameAction,
+    showNotificationAction,
 };
 
 export default withRouter(

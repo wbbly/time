@@ -169,7 +169,7 @@ class EditProjectModal extends Component {
     render() {
         const { vocabulary } = this.props;
         const { selectedClient } = this.state;
-        const { v_edit_project, v_project_name } = vocabulary;
+        const { v_edit_project, v_project_name, v_edit_project_name } = vocabulary;
 
         let selectItems = this.state.selectValue.map(value => {
             const { id, name } = value;
@@ -189,7 +189,7 @@ class EditProjectModal extends Component {
                         <i className="edit_projects_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
                     <div className="edit_projects_modal_data">
-                        <div className="edit_projects_modal_data_input_container" data-label="Edit project name">
+                        <div className="edit_projects_modal_data_input_container" data-label={v_edit_project_name}>
                             <input
                                 type="text"
                                 className="edit_project_input"
@@ -212,6 +212,7 @@ class EditProjectModal extends Component {
                                 clientSelect={this.clientSelect}
                                 editedClient={selectedClient}
                                 clientsList={this.props.clientsList}
+                                vocabulary={vocabulary}
                             />
                         </div>
                     </div>

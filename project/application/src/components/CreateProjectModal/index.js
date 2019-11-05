@@ -114,7 +114,7 @@ class CreateProjectModal extends Component {
 
     render() {
         const { vocabulary } = this.props;
-        const { v_create_project, v_project_name } = vocabulary;
+        const { v_create_project, v_project_name, v_add_project_name } = vocabulary;
         const { clientsList } = this.state;
         let selectItems = this.state.selectValue.map(value => {
             const { id, name } = value;
@@ -137,7 +137,7 @@ class CreateProjectModal extends Component {
                         />
                     </div>
                     <div className="create_projects_modal_data">
-                        <div className="create_projects_modal_data_input_container" data-label="Add project name">
+                        <div className="create_projects_modal_data_input_container" data-label={v_add_project_name}>
                             <input
                                 className="project-input"
                                 type="text"
@@ -156,7 +156,11 @@ class CreateProjectModal extends Component {
                                 <i className="vector" />
                                 {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                             </div>
-                            <ClientsDropdown clientsList={clientsList} clientSelect={this.clientSelect} />
+                            <ClientsDropdown
+                                clientsList={clientsList}
+                                clientSelect={this.clientSelect}
+                                vocabulary={vocabulary}
+                            />
                         </div>
                     </div>
                     <div className="create_projects_modal_button_container">

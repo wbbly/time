@@ -69,6 +69,8 @@ export default {
     v_a_project_name_error: 'Il nome del progetto non può essere vuoto',
     v_a_task_delete: 'Vuoi davvero cancellare questo valore del tempo?',
     v_a_incorect_email: 'Email non corretta',
+    v_a_client_existed: 'Il client esiste già',
+    v_a_client_name_empty_error: 'Il nome del cliente non può essere vuoto!',
 
     v_upload_image: 'Carica immagine',
     v_delete_image: 'Cancella immagine',
@@ -179,4 +181,14 @@ export default {
     v_switch_team_to_the: 'Il team è cambiato in',
     v_show: 'spettacolo',
     v_hide: 'nascondere',
+    v_clients: 'Сlienti',
+    v_client: 'Сliente',
+    v_add_new_client: 'Aggiungi nuovo cliente',
+    v_client_name: 'Nome del cliente',
+    v_add_client: 'Aggiungi client',
+    v_edit_client_name: 'Modifica il nome del cliente',
+    v_edit_client: 'Modifica client',
+    v_select_client: 'Seleziona cliente',
+    v_add_project_name: 'Aggiungi il nome del progetto',
+    v_edit_project_name: 'Modifica il nome del progetto',
 };

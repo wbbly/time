@@ -144,7 +144,7 @@ class LeftBar extends Component {
 
     render() {
         const { switchMenu, isMobile, vocabulary, currentTeam } = this.props;
-        const { v_timer, v_reports, v_projects, v_team } = vocabulary;
+        const { v_timer, v_reports, v_projects, v_team, v_clients } = vocabulary;
         return (
             <div className={classNames('wrapper', { 'wrapper--mobile': isMobile })}>
                 {!isMobile && (
@@ -201,7 +201,7 @@ class LeftBar extends Component {
                         >
                             <div className="navigation_links">
                                 <i className="clients" />
-                                <div className="links_text">Clients</div>
+                                <div className="links_text">{v_clients}</div>
                             </div>
                         </NavLink>
                     )}

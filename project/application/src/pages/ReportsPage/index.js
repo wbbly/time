@@ -41,6 +41,7 @@ import { Loading } from '../../components/Loading';
 
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
+import { getClientsAction } from '../../actions/ClientsActions';
 
 // Queries
 
@@ -233,6 +234,7 @@ class ReportsPage extends Component {
                                 inputProjectData={this.props.inputProjectData}
                                 inputUserData={this.props.inputUserData}
                                 reportsPageAction={this.props.reportsPageAction}
+                                inputClientData={this.props.clientsList}
                             />
                         )}
                         {this.state.toggleBar &&
@@ -580,7 +582,7 @@ class ReportsPage extends Component {
     }
 
     componentDidMount() {
-        const { vocabulary } = this.props;
+        const { vocabulary, getClientsAction } = this.props;
         const { lang } = vocabulary;
         moment.locale(lang.short);
         // showMobileSupportToastr();
@@ -610,6 +612,7 @@ class ReportsPage extends Component {
                 }
             }
         );
+        getClientsAction();
     }
 }
 
@@ -629,11 +632,13 @@ const mapStateToProps = store => ({
     dateFormat: store.userReducer.dateFormat,
     firstDayOfWeek: store.userReducer.firstDayOfWeek,
     durationTimeFormat: store.userReducer.durationTimeFormat,
+    clientsList: store.clientsReducer.clientsList,
 });
 
 const mapDispatchToProps = dispatch => {
     return {
         reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
+        getClientsAction: () => dispatch(getClientsAction()),
     };
 };
 

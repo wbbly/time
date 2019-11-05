@@ -13,14 +13,17 @@ class ClientModal extends Component {
         }
     }
     render() {
-        const { closeModal, addNewClient, editedItem, editClient } = this.props;
+        const { closeModal, addNewClient, editedItem, editClient, vocabulary } = this.props;
         const { inputValue } = this.state;
+        const { v_add_new_client, v_edit_client_name, v_client_name, v_edit_project, v_add_client } = vocabulary;
         return (
             <div className="wrapper_client_modal">
                 <div className="client_modal_background" />
                 <div className="client_modal_container">
                     <div className="client_modal_header">
-                        <div className="client_modal_header_title">{editedItem ? 'Edit Client' : 'Add new client'}</div>
+                        <div className="client_modal_header_title">
+                            {editedItem ? v_edit_client_name : v_add_new_client}
+                        </div>
                         <i className="client_modal_header_close" onClick={e => closeModal()} />
                     </div>
                     <div className="client_modal_data">
@@ -28,7 +31,7 @@ class ClientModal extends Component {
                             <input
                                 type="text"
                                 value={this.state.inputValue}
-                                placeholder="Client Name"
+                                placeholder={v_client_name}
                                 onChange={e => this.setState({ inputValue: e.target.value })}
                             />
                         </div>
@@ -40,7 +43,7 @@ class ClientModal extends Component {
                                 editedItem ? editClient(inputValue, editedItem.id) : addNewClient(inputValue)
                             }
                         >
-                            {editedItem ? 'Edit client' : 'Add client'}
+                            {editedItem ? v_edit_project : v_add_client}
                         </button>
                     </div>
                 </div>

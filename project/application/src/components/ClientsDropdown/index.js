@@ -54,15 +54,20 @@ class ClientsDropdown extends Component {
     };
     render() {
         const { clientsList, showList, inputValue, selectedItem } = this.state;
-        const { editedClient } = this.props;
+        const { editedClient, vocabulary } = this.props;
+        const { v_select_client, v_clients, v_search, v_find } = vocabulary;
         return (
-            <div className="clients_list_wrapper" data-label="Select client" onClick={event => event.stopPropagation()}>
+            <div
+                className="clients_list_wrapper"
+                data-label={v_select_client}
+                onClick={event => event.stopPropagation()}
+            >
                 <div className="clients_list_select-title" onClick={e => this.setState({ showList: !showList })}>
                     <span>
                         {selectedItem ? (
                             selectedItem.name
                         ) : (
-                            <span className="clients-select-placeholder">Clients...</span>
+                            <span className="clients-select-placeholder">{`${v_clients}...`}</span>
                         )}
                     </span>
                     <span>
@@ -74,7 +79,7 @@ class ClientsDropdown extends Component {
                     <div className="clients_list">
                         <input
                             className="clients_list_input"
-                            placeholder={`Search...`}
+                            placeholder={`${v_find}...`}
                             type="text"
                             value={inputValue}
                             onChange={this.searchClient}

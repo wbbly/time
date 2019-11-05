@@ -148,7 +148,6 @@ class ProjectsPage extends Component {
                             tableInfo={tableData}
                             projectsPageAction={projectsPageAction}
                             getProjects={this.getProjects}
-                            clientsList={clientsArray}
                         />
                     )}
                     <div className="data_container_projects_page">
@@ -177,7 +176,6 @@ class ProjectsPage extends Component {
                                 editedProject={this.props.editedProject}
                                 editProjectModal={this.props.editProjectModal}
                                 getProjects={this.getProjects}
-                                clientsList={clientsArray}
                             />
                         </div>
                     </div>
