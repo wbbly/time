@@ -122,6 +122,7 @@ class UserSetting extends Component {
                 this.setState({ userSetJiraSync: false });
             },
             err => {
+                this.updateUserData();
                 if (err instanceof Response) {
                     err.text().then(errorMessage => {
                         const textError = JSON.parse(errorMessage).message;
@@ -181,10 +182,14 @@ class UserSetting extends Component {
                 userData.loginJira = '';
             }
         }
+        if (userData.tokenJira && jiraPassword.value === fakePassword) {
+            delete userData.tokenJira;
+        }
         this.changeUserSetting(userData);
     };
 
     onChangeHandler = event => {
+        const { inputs } = this.state;
         const { name, value, checked } = event.target;
         if (name === 'syncJiraStatus') {
             this.setState(prevState => ({
@@ -194,6 +199,22 @@ class UserSetting extends Component {
                     [name]: {
                         ...prevState.inputs[name],
                         checked,
+                    },
+                },
+            }));
+            return;
+        }
+        if (name === 'jiraUsername' && inputs.jiraPassword.value === fakePassword) {
+            this.setState(prevState => ({
+                inputs: {
+                    ...prevState.inputs,
+                    [name]: {
+                        ...prevState.inputs[name],
+                        value: '',
+                    },
+                    jiraPassword: {
+                        ...prevState.inputs.jiraPassword,
+                        value: '',
                     },
                 },
             }));
@@ -283,6 +304,13 @@ class UserSetting extends Component {
         this.setDataToForm();
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.userReducer.user.avatar !== nextProps.userReducer.user.avatar) {
+            return false;
+        }
+        return true;
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (JSON.stringify(prevProps.userReducer.user) !== JSON.stringify(this.props.userReducer.user)) {
             this.setDataToForm();
@@ -305,6 +333,7 @@ class UserSetting extends Component {
             v_login,
             v_show,
             v_hide,
+            v_verify,
         } = vocabulary;
 
         const { validEmail, inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
@@ -460,7 +489,7 @@ class UserSetting extends Component {
                                                                 className={classNames('verify-arrow-loop', {
                                                                     'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
                                                                 })}
-                                                                title="Verify"
+                                                                title={v_verify}
                                                             />
                                                         )}
                                                 </span>
