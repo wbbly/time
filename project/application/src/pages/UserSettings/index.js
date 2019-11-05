@@ -210,7 +210,7 @@ class UserSetting extends Component {
                     ...prevState.inputs,
                     [name]: {
                         ...prevState.inputs[name],
-                        value: '',
+                        value,
                     },
                     jiraPassword: {
                         ...prevState.inputs.jiraPassword,
