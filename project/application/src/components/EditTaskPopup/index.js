@@ -189,6 +189,7 @@ class EditTaskPopup extends Component {
                             <DatePicker
                                 autoOk
                                 disableToolbar={true}
+                                allowKeyboardControl={false}
                                 variant="static"
                                 openTo="date"
                                 value={date}
