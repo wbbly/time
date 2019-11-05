@@ -1,5 +1,5 @@
 export default {
-    lang: { short: 'uk', long: 'Ukraine' },
+    lang: { short: 'uk', long: 'Українська' },
 
     'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Обліковий запис користувача вже існує.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD': 'Мінімальний час для додавання ворклогу в Jira становить 1 хвилина.',
@@ -177,4 +177,11 @@ export default {
     v_switch_team_to_the: 'Команда змінилася на',
     v_show: 'показати',
     v_hide: 'сховати',
+    v_verify: 'Перевірити',
+    v_classic: 'Класичний',
+    v_improved: 'Покращенний',
+    v_decimal: 'Десятковий',
+    v_short_day: 'ДД',
+    v_short_month: 'ММ',
+    v_short_year: 'РРРР',
 };

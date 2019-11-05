@@ -1,5 +1,5 @@
 export default {
-    lang: { short: 'it', long: 'Italian' },
+    lang: { short: 'it', long: 'Italiano' },
 
     'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Account utente già esistente.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD':
@@ -179,4 +179,11 @@ export default {
     v_switch_team_to_the: 'Il team è cambiato in',
     v_show: 'spettacolo',
     v_hide: 'nascondere',
+    v_verify: 'Verificare',
+    v_classic: 'Classico',
+    v_improved: 'Migliorata',
+    v_decimal: 'Decimale',
+    v_short_day: 'GG',
+    v_short_month: 'MM',
+    v_short_year: 'AAAA',
 };
