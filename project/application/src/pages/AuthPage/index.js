@@ -167,7 +167,9 @@ class AuthPage extends Component {
                     <button type="submit" className="login_button">
                         {v_enter}
                     </button>
-                    <div className={'or'}>{v_or}</div>
+                    <div className={'or'} style={{ visibility: 'hidden' }}>
+                        {v_or}
+                    </div>
                     {/* <FacebookButton setHaveToken={this.setHaveToken} login={this.login} /> */}
                     <button
                         type="button"
