@@ -28,7 +28,7 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  // overflow-x: hidden;
+  overflow-x: hidden;
   // overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -656,6 +656,10 @@ span.circle {
     font-size: 1.4rem;
     line-height: 2rem;
     transition: 0.3s linear left;
+  }
+
+  .main_wrapper_tracker_items {
+    overflow-x: unset;
   }
 
   .wrapper_main_page {
