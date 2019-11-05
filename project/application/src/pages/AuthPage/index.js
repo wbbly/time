@@ -168,7 +168,7 @@ class AuthPage extends Component {
                         {v_enter}
                     </button>
                     <div className={'or'}>{v_or}</div>
-                    <FacebookButton setHaveToken={this.setHaveToken} login={this.login} />
+                    {/* <FacebookButton setHaveToken={this.setHaveToken} login={this.login} /> */}
                     <button
                         type="button"
                         className="forgot_password_button"
