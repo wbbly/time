@@ -26,21 +26,29 @@ class ProjectData extends Component {
 
     render() {
         const { currentTeam, vocabulary, durationTimeFormat } = this.props;
-        const { v_project_name, v_time } = vocabulary;
+        const { v_project_name, v_time, v_client } = vocabulary;
 
         const tableHeader = [
             {
                 key: 1,
                 value: v_project_name,
+                className: 'table-project-name',
             },
             {
                 key: 2,
+                value: v_client,
+                className: 'table-project-client',
+            },
+            {
+                key: 3,
                 value: v_time,
+                className: 'table-project-time',
             },
         ];
         const tableInfoElements = this.props.tableInfo.map((item, index) => (
             <tr key={'table-header_' + index}>
                 <td data-label={`${v_project_name}: `}>{item.name}</td>
+                <td data-label={`${v_client}: `}>{item.client ? item.client.name : '-'}</td>
                 <td data-label={`${v_time}: `}>
                     {getTimeDurationByGivenTimestamp(item.totalTime, durationTimeFormat)}
                     {checkIsAdminByRole(currentTeam.data.role) && (
@@ -49,7 +57,11 @@ class ProjectData extends Component {
                 </td>
             </tr>
         ));
-        const tableHeaderElements = tableHeader.map((item, index) => <th key={'table-info_' + index}>{item.value}</th>);
+        const tableHeaderElements = tableHeader.map((item, index) => (
+            <th key={'table-info_' + index} className={item.className}>
+                {item.value}
+            </th>
+        ));
 
         return (
             <div className="project_data_wrapper">

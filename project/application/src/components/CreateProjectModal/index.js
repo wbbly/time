@@ -8,9 +8,11 @@ import { addProjectPreProcessing } from '../../services/mutationProjectsFunction
 import { apiCall } from '../../services/apiService';
 
 // Components
+import ClientsDropdown from '../ClientsDropdown';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
+import { getClientsAction } from '../../actions/ClientsActions';
 
 // Queries
 
@@ -28,6 +30,8 @@ class CreateProjectModal extends Component {
         },
         listOpen: false,
         selectValue: [],
+        selectedClient: null,
+        clientsList: null,
     };
 
     setItem(value) {
@@ -41,9 +45,13 @@ class CreateProjectModal extends Component {
             listOpen: !this.state.listOpen,
         });
     }
+    clientSelect = data => {
+        this.setState({ selectedClient: data ? data : null });
+    };
 
     addProject() {
         const { vocabulary, showNotificationAction } = this.props;
+        const { selectedClient } = this.state;
         const { v_a_project_existed, v_a_project_created_error } = vocabulary;
         const project = addProjectPreProcessing(
             this.createProjectInput.value,
@@ -63,6 +71,7 @@ class CreateProjectModal extends Component {
                 project: {
                     name: project.name,
                     projectColorId: project.colorProject.id,
+                    clientId: selectedClient ? selectedClient.id : null,
                 },
             }),
         }).then(
@@ -87,10 +96,26 @@ class CreateProjectModal extends Component {
         );
     }
 
+    closeList = e => {
+        const { listOpen } = this.state;
+        if (listOpen && !e.target.closest('.create_projects_modal_data_select_container')) {
+            this.setState({ listOpen: false });
+        }
+    };
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.closeList);
+    }
+    componentDidUpdate(prevProps, prevState) {
+        const { clientsList } = this.props;
+        if (prevProps.clientsList !== clientsList) {
+            this.setState({ clientsList }, () => console.log(this.state));
+        }
+    }
+
     render() {
         const { vocabulary } = this.props;
-        const { v_create_project, v_project_name } = vocabulary;
-
+        const { v_create_project, v_project_name, v_add_project_name } = vocabulary;
+        const { clientsList } = this.state;
         let selectItems = this.state.selectValue.map(value => {
             const { id, name } = value;
             return (
@@ -112,8 +137,9 @@ class CreateProjectModal extends Component {
                         />
                     </div>
                     <div className="create_projects_modal_data">
-                        <div className="create_projects_modal_data_input_container">
+                        <div className="create_projects_modal_data_input_container" data-label={v_add_project_name}>
                             <input
+                                className="project-input"
                                 type="text"
                                 ref={input => {
                                     this.createProjectInput = input;
@@ -130,6 +156,11 @@ class CreateProjectModal extends Component {
                                 <i className="vector" />
                                 {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                             </div>
+                            <ClientsDropdown
+                                clientsList={clientsList}
+                                clientSelect={this.clientSelect}
+                                vocabulary={vocabulary}
+                            />
                         </div>
                     </div>
                     <div className="create_projects_modal_button_container">
@@ -164,6 +195,8 @@ class CreateProjectModal extends Component {
                 }
             }
         );
+        document.addEventListener('mousedown', this.closeList);
+        this.props.getClientsAction();
     }
 }
 
@@ -173,10 +206,12 @@ CreateProjectModal.propTypes = {
 
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
+    clientsList: state.clientsReducer.clientsList,
 });
 
 const mapDispatchToProps = {
     showNotificationAction,
+    getClientsAction,
 };
 
 export default connect(

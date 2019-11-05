@@ -55,7 +55,7 @@ export function getProjectsV2ProjectPageUserParseFunction(data) {
     for (let i = 0; i < projectV2.length; i++) {
         const project = projectV2[i];
 
-        const { id, name, timer } = project;
+        const { id, name, timer, client } = project;
 
         let totalTime = 0; // in ms
         for (let i = 0; i < timer.length; i++) {
@@ -68,6 +68,7 @@ export function getProjectsV2ProjectPageUserParseFunction(data) {
             id,
             name,
             totalTime,
+            client,
         });
     }
 

@@ -55,12 +55,21 @@
 
 .create_projects_modal_data .create_projects_modal_data_input_container {
     display: flex;
+    position: relative;
     align-items: center;
     justify-content: space-between;
-    margin-top: 28px;
+    margin-top: 43px;
+}
+.create_projects_modal_data_input_container::before{
+    content: attr(data-label);
+    position: absolute;
+    font-family: "Open Sans", sans-serif;
+    color: #4F4F4F;
+    font-size: 14px;
+    top: -25px;
 }
 
-.create_projects_modal_data .create_projects_modal_data_input_container input {
+.create_projects_modal_data .create_projects_modal_data_input_container .project-input {
     padding-left: 16px;
     flex-grow: 1;
     height: 47px;
@@ -93,7 +102,7 @@
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
-    line-height: normal;
+    /* line-height: normal; */
     font-size: 14px;
     color: #4f4f4f;
 }
@@ -104,7 +113,7 @@
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
-    line-height: normal;
+    /* line-height: normal; */
     font-size: 14px;
     color: #4f4f4f;
 }
@@ -131,22 +140,25 @@
     display: flex;
     align-items: center;
     padding-left: 10px;
-    width: 80px;
+    width: 70px;
     height: 47px;
     margin-left: -1px;
     border: 1px solid #828282;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
+    cursor: pointer;
 }
 
 .create_projects_modal_data_select_container .select_list {
     background: white;
     border: 1px solid #828282;
-    width: 90px;
+    width: 70px;
     position: absolute;
-    top: 45px;
+    top: 110%;
     left: -1px;
-    border-bottom-right-radius: 4px;
+    z-index: 99;
+    border-radius: 4px;
+    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.25);
 }
 
 .create_projects_modal_data_select_container .select_list .item {
@@ -179,7 +191,7 @@
     padding: 0;
     display: flex;
     justify-content: flex-end;
-    padding-bottom: 19px;
+    padding-bottom: 14px;
 }
 
 .create_projects_modal_button_container_button {

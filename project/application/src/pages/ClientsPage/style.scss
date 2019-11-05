@@ -1,0 +1,221 @@
+.wrapper_clients_page {
+  font-family: "Open Sans", sans-serif;
+  color: #ffffff;
+
+  .data_container_clients_page {
+    padding: 47px 56px 0;
+  }
+  .clients_page_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 67px;
+  }
+  .clients_page_title {
+    font-size: 36px;
+  }
+  .add_client_button {
+    width: 208px;
+    height: 41px;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #27ae60;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .wrapper_clients_search_bar {
+    width: 100%;
+    height: 59px;
+    background-color: #4f4f4f;
+    display: flex;
+    align-items: center;
+  }
+
+  .clients_search_bar_select_wrapper {
+    width: 55px;
+  }
+
+  .wrapper_clients_search_bar .clients_search_bar_select_wrapper {
+    margin-left: 30px;
+  }
+
+  .clients_search_bar_search_field_container {
+    width: 100%;
+    position: relative;
+    margin-left: 22px;
+  }
+
+  .clients_search_bar_search_field_container .magnifer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/magnifying-glass.svg") no-repeat center;
+  }
+
+  .clients_search_bar_search_field_container input {
+    width: 94%;
+    margin-left: 46px;
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #ffffff;
+  }
+
+  .clients_search_bar_button_container {
+    height: 100%;
+    width: 208px;
+  }
+
+  .clients_search_bar_button_container button {
+    width: 100%;
+    height: 100%;
+    background-color: #616161;
+    color: white;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .clients_list_container {
+    padding-top: 10px;
+    font-size: 16px;
+    margin-top: 53px;
+    border-top: 1px solid #bdbdbd;
+  }
+  .clients_list_item {
+    padding: 16px 0;
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+  }
+  .clients_list_item.list-header {
+    border-bottom: 1px solid #bdbdbd;
+  }
+  .clients_list_item:not(.list-header):hover {
+    background-color: #2f2f2f;
+  }
+  .client_name {
+    width: 100%;
+  }
+  .client_edit {
+    width: 25px;
+    height: 25px;
+    background: url("../../images/icons/baseline-create-24px.svg") no-repeat;
+    background-size: contain;
+    margin-right: 10px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    right: 5px;
+  }
+  .clients_project_container {
+    margin-top: 20px;
+    width: 100%;
+  }
+  .clients_project {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .clients_project:not(:last-child){
+    padding-bottom: 15px;
+  }
+  .clients_project-color-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  .green {
+    background-color: green;
+  }
+  .pink {
+    background-color: pink;
+  }
+  .red {
+    background-color: red;
+  }
+  .blue {
+    background-color: blue;
+  }
+}
+.wrapper_clients_page--mobile {
+  .data_container_clients_page {
+    padding: 1rem;
+  }
+  @media screen and (max-width: 894px) {
+    .clients_page_header {
+      flex-direction: column;
+      padding-bottom: 30px;
+    }
+    .add_client_button {
+      margin-top: 20px;
+    }
+    .wrapper_clients_search_bar {
+      height: 40px;
+    }
+    .clients_search_bar_search_field_container {
+      margin-left: 10px;
+    }
+    .clients_search_bar_search_field_container input {
+      margin-left: 25px;
+      width: 80%;
+    }
+    .clients_list_container {
+      margin-top: 30px;
+      border-top: 1px solid #bdbdbd;
+    }
+    .clients_list_item.list-header {
+      display: none;
+    }
+    .clients_list_item {
+      flex-direction: column;
+      align-items: initial;
+      position: relative;
+    }
+    .client_name::before {
+      content: attr(data-label);
+      font-family: "Open Sans", sans-serif;
+      font-size: 13px;
+      color: #bdbdbd;
+    }
+    .client_time::before {
+      content: attr(data-label);
+      font-family: "Open Sans", sans-serif;
+      font-size: 13px;
+      color: #bdbdbd;
+    }
+    .client_list_item_right_container {
+      margin-top: 25px;
+    }
+    .client_edit {
+      position: absolute;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      right: 5px;
+      width: 30px;
+      height: 30px;
+      background-size: cover;
+      margin: 0;
+    }
+  }
+}

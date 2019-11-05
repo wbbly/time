@@ -759,7 +759,6 @@ class MainPage extends Component {
     };
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('is updating', this.state.isUpdatingTask);
         if (!prevProps.isShowMenu && this.props.isShowMenu && this.checkSwipe()) {
             this.swipedElement.click();
         }

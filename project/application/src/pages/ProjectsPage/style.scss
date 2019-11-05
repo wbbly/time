@@ -93,19 +93,34 @@
       margin-top: 20px;
     }
     .create_projects_modal_container {
-      width: auto;
+      width: 100%;
+      max-width: 350px;
+    }
+    .create_projects_modal_data_input_container{
+      flex-wrap: wrap;
+    }
+    .clients_list_wrapper {
+      margin-left: 0;
+      width: 100%;
+      margin-top: 35px;
     }
     .create_projects_modal_button_container {
       justify-content: center;
+      margin-top: 14px;
     }
     .create_projects_modal_button_container_button {
       margin-right: 0;
     }
     .edit_projects_modal_container {
-      width: auto;
+      width: 100%;
+      max-width: 350px;
+    }
+    .edit_projects_modal_data_input_container{
+      flex-wrap: wrap;
     }
     .edit_projects_modal_button_container {
       justify-content: center;
+      margin-top: 14px;
     }
     .edit_projects_modal_button_container_button {
       margin-right: 0;

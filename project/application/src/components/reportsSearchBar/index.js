@@ -34,12 +34,16 @@ class ReportsSearchBar extends Component {
     state = {
         toggleSelectUser: false,
         toggleSelectProject: false,
+        toggleSelectClient: false,
         userDataSelected: [],
         userDataFiltered: [],
         userDataEtalon: [],
         projectDataSelected: [],
         projectDataFiltered: [],
         projectDataEtalon: [],
+        clientDataSelected: [],
+        clientDataFiltered: [],
+        clientDataEtalon: [],
     };
 
     openSelectUser() {
@@ -53,6 +57,11 @@ class ReportsSearchBar extends Component {
         this.findProject(this.state.projectDataEtalon);
         document.addEventListener('click', this.closeDropdownProject);
     }
+    openSelectClient() {
+        this.setState({ toggleSelectClient: true });
+        this.findClient(this.state.clientDataEtalon);
+        document.addEventListener('click', this.closeDropdownClient);
+    }
 
     clearUserSearch() {
         this.smallSelectUserInputRef.value = '';
@@ -64,8 +73,16 @@ class ReportsSearchBar extends Component {
         this.findProject(this.state.projectDataEtalon);
     }
 
+    clearClientSearch() {
+        this.smallSelectClientInputRef.value = '';
+        this.findClient(this.state.clientDataEtalon);
+    }
+
     closeDropdownUser = e => {
         if (
+            !this.selectListUsersRef ||
+            !this.selectAllUsersRef ||
+            !this.selectNoneUsersRef ||
             !this.selectListUsersRef.contains(e.target) ||
             this.selectAllUsersRef.contains(e.target) ||
             this.selectNoneUsersRef.contains(e.target)
@@ -83,6 +100,9 @@ class ReportsSearchBar extends Component {
 
     closeDropdownProject = e => {
         if (
+            !this.selectListProjectsRef ||
+            !this.selectAllProjectsRef ||
+            !this.selectNoneProjectsRef ||
             !this.selectListProjectsRef.contains(e.target) ||
             this.selectAllProjectsRef.contains(e.target) ||
             this.selectNoneProjectsRef.contains(e.target)
@@ -93,6 +113,26 @@ class ReportsSearchBar extends Component {
                 },
                 () => {
                     document.removeEventListener('click', this.closeDropdownProject);
+                }
+            );
+        }
+    };
+
+    closeDropdownClient = e => {
+        if (
+            !this.selectListClientsRef ||
+            !this.selectAllClientsRef ||
+            !this.selectNoneClientsRef ||
+            !this.selectListClientsRef.contains(e.target) ||
+            this.selectAllClientsRef.contains(e.target) ||
+            this.selectNoneClientsRef.contains(e.target)
+        ) {
+            this.setState(
+                {
+                    toggleSelectClient: false,
+                },
+                () => {
+                    document.removeEventListener('click', this.closeDropdownClient);
                 }
             );
         }
@@ -139,8 +179,29 @@ class ReportsSearchBar extends Component {
         }
     }
 
+    findClient(items, searchText = '') {
+        if (searchText.length > 1) {
+            searchText = searchText.toLowerCase();
+            const filteredArr = items.filter(it => {
+                const values = [];
+                values.push(it['name']);
+
+                return values
+                    .join()
+                    .toLowerCase()
+                    .indexOf(searchText) > -1
+                    ? it
+                    : undefined;
+            });
+            this.setState({ clientDataFiltered: filteredArr });
+        } else {
+            this.setState({ clientDataFiltered: items });
+        }
+    }
+
     applySearch() {
         this.props.applySearch();
+        console.log(this.state);
     }
 
     getCheckedProjects(name) {
@@ -151,6 +212,12 @@ class ReportsSearchBar extends Component {
 
     getCheckedUsers(name) {
         if (JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
+            return true;
+        }
+    }
+
+    getCheckedClients(name) {
+        if (JSON.stringify(this.state.clientDataSelected).indexOf(name) > -1) {
             return true;
         }
     }
@@ -171,7 +238,11 @@ class ReportsSearchBar extends Component {
             projects.push(project);
         }
 
-        this.setState({ projectDataSelected: projects });
+        this.setState({
+            projectDataSelected: projects,
+            clientDataSelected: this.filterClientsByProject(projects),
+        });
+        this.filterClientsByProject(projects);
         this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: projects.map(p => p.name) });
     }
 
@@ -195,8 +266,36 @@ class ReportsSearchBar extends Component {
         this.props.reportsPageAction('SET_ACTIVE_USER', { data: users.map(u => u.email) });
     }
 
+    toggleClient(client) {
+        let clients = JSON.parse(JSON.stringify(this.state.clientDataSelected));
+        let exists = false;
+        for (let i = 0; i < clients.length; i++) {
+            const currentClient = clients[i];
+            if (currentClient.name === client.name) {
+                exists = true;
+                clients.splice(i, 1);
+                break;
+            }
+        }
+
+        if (!exists) {
+            clients.push(client);
+        }
+
+        this.setState({
+            clientDataSelected: clients,
+            projectDataSelected: this.filterProjectsByClient(clients),
+        });
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {
+            data: this.filterProjectsByClient(clients).map(p => p.name),
+        });
+    }
+
     selectAllProjects() {
-        this.setState({ projectDataSelected: this.state.projectDataEtalon });
+        this.setState({
+            projectDataSelected: this.state.projectDataEtalon,
+            clientDataSelected: this.filterClientsByProject(this.state.projectDataEtalon),
+        });
         this.props.reportsPageAction('SET_SELECTED_PROJECTS', {
             data: this.state.projectDataEtalon.map(p => p.name),
         });
@@ -207,19 +306,75 @@ class ReportsSearchBar extends Component {
         this.props.reportsPageAction('SET_ACTIVE_USER', { data: this.state.userDataEtalon.map(u => u.email) });
     }
 
+    selectAllClients() {
+        this.setState({
+            clientDataSelected: this.state.clientDataEtalon,
+            projectDataSelected: this.filterProjectsByClient(this.state.clientDataEtalon),
+        });
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', {
+            data: this.filterProjectsByClient(this.state.clientDataEtalon).map(p => p.name),
+        });
+    }
+
     selectNoneUsers() {
         this.setState({ userDataSelected: [] });
         this.props.reportsPageAction('SET_ACTIVE_USER', { data: [] });
     }
 
     selectNoneProjects() {
-        this.setState({ projectDataSelected: [] });
+        this.setState({
+            projectDataSelected: [],
+            clientDataSelected: [],
+        });
         this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: [] });
     }
+
+    selectNoneClients() {
+        this.setState({ clientDataSelected: [], projectDataSelected: [] });
+        this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: [] });
+    }
+
+    filterClientsByProject = projects => {
+        const { clientDataEtalon } = this.state;
+        let newArr = [];
+        projects.forEach(project => {
+            clientDataEtalon.forEach(client => {
+                if (project.client && client.id === project.client.id) {
+                    newArr.push(client);
+                }
+            });
+        });
+        return [...new Set(newArr)];
+    };
+    filterProjectsByClient = clients => {
+        const { projectDataEtalon } = this.state;
+        let projectIds = [];
+        let newArr = [];
+        clients.forEach(client => {
+            if (client.project.length !== 0) {
+                client.project.forEach(project => {
+                    projectIds.push(project.id);
+                });
+            }
+        });
+        projectIds.forEach(id => {
+            projectDataEtalon.forEach(project => {
+                if (id === project.id) {
+                    newArr.push(project);
+                }
+            });
+        });
+        return newArr;
+    };
 
     componentDidMount() {
         this.userInputRef.value = this.props.inputUserData[0] || '';
         this.projectInputRef.value = this.props.inputProjectData[0] || '';
+        this.clientInputRef.value = this.props.inputClientData[0] || '';
+        this.setState({
+            clientDataEtalon: this.props.inputClientData,
+        });
+
         apiCall(AppConfig.apiURL + `team/current/detailed-data`, {
             method: 'GET',
             headers: {
@@ -284,7 +439,7 @@ class ReportsSearchBar extends Component {
 
     render() {
         const { vocabulary } = this.props;
-        const { v_user, v_project, v_find, v_select_all, v_select_none, v_apply } = vocabulary;
+        const { v_user, v_project, v_find, v_select_all, v_select_none, v_apply, v_client } = vocabulary;
         return (
             <div className="wrapper_reports_search_bar">
                 <div className="reports_search_bar_search_field_container select">
@@ -414,6 +569,74 @@ class ReportsSearchBar extends Component {
                         </div>
                     )}
                 </div>
+                <div className="reports_search_bar_search_field_container select">
+                    <div className="reports_search_select_wrapper">
+                        <div
+                            className="reports_search_select_header"
+                            onClick={_ => this.openSelectClient()}
+                            ref={div => (this.clientInputRef = div)}
+                        >
+                            <div>
+                                {v_client}
+                                :&nbsp;
+                                {this.state.clientDataSelected.map((item, index) => (
+                                    <span key={item.name + index}>{index === 0 ? item.name : `, ${item.name}`}</span>
+                                ))}
+                            </div>
+                            <i className="arrow_down" />
+                        </div>
+                    </div>
+                    {this.state.toggleSelectClient && (
+                        <div className="select_body" ref={div => (this.selectListClientsRef = div)}>
+                            <div className="search_menu_select">
+                                <input
+                                    type="text"
+                                    onKeyUp={_ =>
+                                        this.findClient(
+                                            this.state.clientDataEtalon,
+                                            this.smallSelectClientInputRef.value
+                                        )
+                                    }
+                                    ref={input => (this.smallSelectClientInputRef = input)}
+                                    placeholder={`${v_find}...`}
+                                />
+                                <div
+                                    ref={div => (this.selectAllClientsRef = div)}
+                                    onClick={_ => this.selectAllClients()}
+                                >
+                                    {v_select_all}
+                                </div>
+                                <div
+                                    ref={div => (this.selectNoneClientsRef = div)}
+                                    onClick={_ => this.selectNoneClients()}
+                                >
+                                    {v_select_none}
+                                </div>
+                                <i className="small_clear" onClick={_ => this.clearClientSearch()} />
+                            </div>
+                            <div className="select_items_container">
+                                {this.state.clientDataFiltered.map((item, index) => (
+                                    <div className="select_users_item" key={item.name + index}>
+                                        <label>
+                                            <ThemeProvider theme={materialTheme}>
+                                                <Checkbox
+                                                    color={'primary'}
+                                                    value={item.name || ''}
+                                                    checked={this.getCheckedClients(item.name)}
+                                                    onChange={_ => {
+                                                        this.toggleClient(item);
+                                                    }}
+                                                />
+                                            </ThemeProvider>{' '}
+                                            <span className="select_users_item_username">{item.name}</span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
                 <div className="reports_search_bar_button_container">
                     <button className="reports_search_bar_button" onClick={_ => this.applySearch()}>
                         {v_apply}

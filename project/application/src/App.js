@@ -14,6 +14,7 @@ import RegisterPage from './pages/RegisterPage';
 import ForgotPassword from './pages/ForgotPassword';
 import UserSettings from './pages/UserSettings';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import ClientsPage from './pages/ClientsPage';
 
 import PageTemplate from './components/PageTemplate';
 
@@ -104,6 +105,7 @@ class App extends Component {
                 <PrivateRoute exact path="/timer" render={() => <PageTemplate content={MainPage} />} />
                 <PrivateRoute exact path="/reports/summary" render={() => <PageTemplate content={ReportsPage} />} />
                 <PrivateRoute exact path="/projects" render={() => <PageTemplate content={ProjectsPage} />} />
+                <PrivateRoute exact path="/clients" render={() => <PageTemplate content={ClientsPage} />} />
                 <PrivateRoute exact path="/team" render={() => <PageTemplate content={TeamPage} />} />
                 <PrivateRoute
                     exact
