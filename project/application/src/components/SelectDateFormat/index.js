@@ -39,13 +39,21 @@ class SelectDateFormat extends Component {
     render() {
         const { value, list, isOpenDropdown } = this.state;
         const { vocabulary } = this.props;
-        const { v_date_format } = vocabulary;
+        const { v_date_format, v_short_day, v_short_month, v_short_year } = vocabulary;
+        const formatDateMap = {
+            'MM/DD/YYYY': `${v_short_month}/${v_short_day}/${v_short_year}`,
+            'DD-MM-YYYY': `${v_short_day}-${v_short_month}-${v_short_year}`,
+            'MM-DD-YYYY': `${v_short_month}-${v_short_day}-${v_short_year}`,
+            'YYYY-MM-DD': `${v_short_year}-${v_short_month}-${v_short_day}`,
+            'DD/MM/YYYY': `${v_short_day}/${v_short_month}/${v_short_year}`,
+            'DD.MM.YYYY': `${v_short_day}.${v_short_month}.${v_short_year}`,
+        };
 
         return (
             <div className="date-format">
                 <div className="date-format__title">{v_date_format}:</div>
                 <div className="date-format_select" onClick={this.openDropdown}>
-                    <span>{value}</span>
+                    <span>{formatDateMap[value]}</span>
 
                     {isOpenDropdown && (
                         <div className="date-format__list">
@@ -57,7 +65,7 @@ class SelectDateFormat extends Component {
                                         this.setValue(item);
                                     }}
                                 >
-                                    {item}
+                                    {formatDateMap[item]}
                                 </div>
                             ))}
                         </div>
