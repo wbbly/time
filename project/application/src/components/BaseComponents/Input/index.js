@@ -12,7 +12,7 @@ class Input extends Component {
 
     switchPasswordVisibility = event =>
         this.setState(state => ({
-            typeInput: state.typeInput === 'password' ? 'test' : 'password',
+            typeInput: state.typeInput === 'password' ? 'text' : 'password',
         }));
 
     render() {
