@@ -2,8 +2,7 @@ import { SHOW_NOTIFICATION, HIDE_NOTIFICATION } from '../actions/NotificationAct
 import { RESET_ALL } from '../actions/UserActions';
 
 const initialState = {
-    showNotification: false,
-    notificationText: null,
+    notificationText: '',
     notificationType: null,
 };
 
@@ -11,7 +10,6 @@ export default (state = initialState, { type, payload }) => {
     switch (type) {
         case SHOW_NOTIFICATION:
             return {
-                showNotification: true,
                 notificationText: payload.text,
                 notificationType: payload.type,
             };

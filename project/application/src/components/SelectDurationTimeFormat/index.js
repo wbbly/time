@@ -39,11 +39,11 @@ class SelectDurationTimeFormat extends Component {
     render() {
         const { value, list, isOpenDropdown } = this.state;
         const { vocabulary } = this.props;
-        const { v_duration_display_format } = vocabulary;
+        const { v_duration_display_format, v_classic, v_improved, v_decimal } = vocabulary;
         const durationMap = {
-            classic: 'Classic (32:08 min)',
-            improved: 'Improved (0:42:03)',
-            decimal: 'Decimal (0.67 h)',
+            classic: `${v_classic} (32:08 min)`,
+            improved: `${v_improved} (0:42:03)`,
+            decimal: `${v_decimal} (0.67 h)`,
         };
 
         return (

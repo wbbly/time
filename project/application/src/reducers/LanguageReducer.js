@@ -10,7 +10,7 @@ const initialState = {
     languages: [
         {
             short: 'ru',
-            long: 'Russian',
+            long: 'Русский',
         },
         {
             short: 'en',
@@ -22,11 +22,11 @@ const initialState = {
         },
         {
             short: 'uk',
-            long: 'Ukraine',
+            long: 'Українська',
         },
         {
             short: 'it',
-            long: 'Italian',
+            long: 'Italiano',
         },
     ],
     vocabulary: en_vocabulary,

@@ -176,4 +176,11 @@ export default {
     v_switch_team_to_the: 'Team switch to the',
     v_show: 'show',
     v_hide: 'hide',
+    v_verify: 'Verify',
+    v_classic: 'Classic',
+    v_improved: 'Improved',
+    v_decimal: 'Decimal',
+    v_short_day: 'DD',
+    v_short_month: 'MM',
+    v_short_year: 'YYYY',
 };
