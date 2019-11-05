@@ -55,15 +55,18 @@ class Avatar extends Component {
         const { user, setUserAvatarAction, vocabulary, showNotificationAction } = this.props;
         const { v_a_avatar_upload_error } = vocabulary;
         const img = event.nativeEvent.target.files[0];
-        if (!img) return;
-        if (img.type.split('/')[0] !== 'image' || img.size > 1000000) {
-            showNotificationAction({ text: v_a_avatar_upload_error, type: 'error' });
-            return;
-        }
-        const formData = new FormData();
-        formData.append('file', img, img.name);
+        if (img) {
+            if (img.type.split('/')[0] !== 'image' || img.size > 1000000) {
+                showNotificationAction({ text: v_a_avatar_upload_error, type: 'error' });
+                event.target.value = '';
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', img, img.name);
 
-        setUserAvatarAction(user.id, formData);
+            setUserAvatarAction(user.id, formData);
+        }
+        event.target.value = '';
     };
 
     render() {
