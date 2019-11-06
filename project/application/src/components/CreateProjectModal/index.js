@@ -108,7 +108,7 @@ class CreateProjectModal extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { clientsList } = this.props;
         if (prevProps.clientsList !== clientsList) {
-            this.setState({ clientsList }, () => console.log(this.state));
+            this.setState({ clientsList });
         }
     }
 

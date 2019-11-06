@@ -20,6 +20,21 @@ import { AppConfig } from '../../config';
 // Styles
 import './style.css';
 
+const PreCheckedSVG = () => (
+    <svg
+        id="Layer_1"
+        data-name="Layer 1"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="#3f51b5"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+    >
+        <title>check_box_blank_24px</title>
+        <path d="M19,5V19H5V5H19m0-2H5A2,2,0,0,0,3,5V19a2,2,0,0,0,2,2H19a2,2,0,0,0,2-2V5A2,2,0,0,0,19,3ZM17,7H7V17H17Z" />
+    </svg>
+);
+
 const materialTheme = createMuiTheme({
     overrides: {
         MuiSvgIcon: {
@@ -139,7 +154,7 @@ class ReportsSearchBar extends Component {
     };
 
     findProject(items, searchText = '') {
-        if (searchText.length > 1) {
+        if (searchText.length > 0) {
             searchText = searchText.toLowerCase();
             const filteredArr = items.filter(it => {
                 const values = [];
@@ -159,7 +174,7 @@ class ReportsSearchBar extends Component {
     }
 
     findUser(items, searchText = '') {
-        if (searchText.length > 1) {
+        if (searchText.length > 0) {
             searchText = searchText.toLowerCase();
             const filteredArr = items.filter(it => {
                 const values = [];
@@ -180,7 +195,7 @@ class ReportsSearchBar extends Component {
     }
 
     findClient(items, searchText = '') {
-        if (searchText.length > 1) {
+        if (searchText.length > 0) {
             searchText = searchText.toLowerCase();
             const filteredArr = items.filter(it => {
                 const values = [];
@@ -201,7 +216,6 @@ class ReportsSearchBar extends Component {
 
     applySearch() {
         this.props.applySearch();
-        console.log(this.state);
     }
 
     getCheckedProjects(name) {
@@ -219,6 +233,24 @@ class ReportsSearchBar extends Component {
     getCheckedClients(name) {
         if (JSON.stringify(this.state.clientDataSelected).indexOf(name) > -1) {
             return true;
+        }
+    }
+
+    clientCheckbox(client) {
+        const { projectDataSelected } = this.state;
+        if (client.project.length === 0) return undefined;
+        let clientEntriesCount = 0;
+        projectDataSelected.forEach(curr => {
+            client.project.forEach(item => {
+                if (item.id === curr.id) {
+                    clientEntriesCount++;
+                }
+            });
+        });
+        if (clientEntriesCount === client.project.length) {
+            return undefined;
+        } else {
+            return <PreCheckedSVG />;
         }
     }
 
@@ -623,6 +655,7 @@ class ReportsSearchBar extends Component {
                                                     color={'primary'}
                                                     value={item.name || ''}
                                                     checked={this.getCheckedClients(item.name)}
+                                                    checkedIcon={this.clientCheckbox(item)}
                                                     onChange={_ => {
                                                         this.toggleClient(item);
                                                     }}
