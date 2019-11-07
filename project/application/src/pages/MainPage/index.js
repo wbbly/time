@@ -69,6 +69,7 @@ class MainPage extends Component {
         timerPlayButtonLoader: false,
         timerDurationValue: null,
         timerStartTime: undefined,
+        nextTimer: null,
         seletedProject: null,
         timeEntriesList: [],
         projectList: [],
@@ -155,10 +156,12 @@ class MainPage extends Component {
                             projectId: projectId,
                         });
                 } else {
-                    this.socketConnection &&
-                        this.socketConnection.emit('stop-timer-v2', {
-                            token: `Bearer ${getTokenFromLocalStorage()}`,
-                        });
+                    this.setState({ nextTimer: null }, () => {
+                        this.socketConnection &&
+                            this.socketConnection.emit('stop-timer-v2', {
+                                token: `Bearer ${getTokenFromLocalStorage()}`,
+                            });
+                    });
                 }
             });
         } else {
@@ -206,7 +209,7 @@ class MainPage extends Component {
 
     timerStop() {
         const { resetCurrentTimerAction } = this.props;
-
+        const { nextTimer } = this.state;
         resetCurrentTimerAction();
         this.getUserTimeEntries().then(
             _ => {
@@ -220,6 +223,9 @@ class MainPage extends Component {
                     () => {
                         if (!!this.issueTargetElement) {
                             this.issueTargetElement.value = '';
+                        }
+                        if (nextTimer) {
+                            this.timerContinue(nextTimer.name, nextTimer.item);
                         }
                     }
                 );
@@ -487,6 +493,7 @@ class MainPage extends Component {
             timeFormat,
             editedItem,
             showNotificationAction,
+            currentTimer,
         } = this.props;
         const { v_edit_task, v_delete_task, v_find } = vocabulary;
         let items = data.map(item => {
@@ -645,7 +652,18 @@ class MainPage extends Component {
                                     }
                                     this.swipedElementClose();
                                 }
-                                this.state.timerReadyToUse && this.timerContinue(item.issue, item);
+                                if (this.state.timerReadyToUse) {
+                                    if (currentTimer.issue) {
+                                        this.setState({ nextTimer: { name: item.issue, item } }, () => {
+                                            this.socketConnection &&
+                                                this.socketConnection.emit('stop-timer-v2', {
+                                                    token: `Bearer ${getTokenFromLocalStorage()}`,
+                                                });
+                                        });
+                                    } else {
+                                        this.timerContinue(item.issue, item);
+                                    }
+                                }
                             }}
                         >
                             <div className="time_now">
@@ -664,7 +682,8 @@ class MainPage extends Component {
                                 )}
                             </div>
 
-                            {!this.state.timerDurationValue && <i className="small_play item_button" />}
+                            {/* {!this.state.timerDurationValue && <i className="small_play item_button" />} */}
+                            {<i className="small_play item_button" />}
                             <i
                                 className="edit_button item_button"
                                 onClick={event => {
@@ -1101,6 +1120,7 @@ const mapStateToProps = store => {
     return {
         timeEntriesList: store.mainPageReducer.timeEntriesList,
         editedItem: store.mainPageReducer.editedItem,
+        currentTimer: store.mainPageReducer.currentTimer,
         manualTimerModal: store.manualTimerModalReducer,
         viewport: store.responsiveReducer.viewport,
         isShowMenu: store.responsiveReducer.isShowMenu,
