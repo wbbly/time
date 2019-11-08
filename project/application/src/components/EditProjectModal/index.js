@@ -49,7 +49,6 @@ class EditProjectModal extends Component {
         const { vocabulary, showNotificationAction } = this.props;
         const { v_a_project_existed, v_a_project_edit_error } = vocabulary;
         const { selectedClient } = this.state;
-        console.log(selectedClient);
         const project = addProjectPreProcessing(
             this.editProjectInput.value,
             this.state.selectedValue.id,
@@ -104,12 +103,10 @@ class EditProjectModal extends Component {
         this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', { tableData: false });
     };
     clientSelect = data => {
-        console.log(data);
         this.setState({ selectedClient: data ? data : null });
     };
 
     componentDidMount() {
-        console.log(this.props);
         apiCall(AppConfig.apiURL + `project-color/list`, {
             method: 'GET',
             headers: {

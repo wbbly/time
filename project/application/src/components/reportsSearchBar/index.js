@@ -201,7 +201,6 @@ class ReportsSearchBar extends Component {
 
     applySearch() {
         this.props.applySearch();
-        console.log(this.state);
     }
 
     getCheckedProjects(name) {
