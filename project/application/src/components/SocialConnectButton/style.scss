@@ -1,0 +1,62 @@
+.social-connect-button {
+  min-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #c4c4c4;
+  border-radius: 0.4rem;
+  padding: 0.7rem 1.3rem 0.7rem 1.1rem;
+  margin: 0 0 1rem 0;
+  cursor: default;
+  transition: background 0.1s linear;
+
+  &:not(.social-connect-button__is-fetching):hover {
+    cursor: pointer;
+    background: #727272;
+  }
+
+  &.social-connect-button__disabled {
+    display: none;
+  }
+
+  &.social-connect-button__is-fetching {
+    opacity: 0.3;
+  }
+
+  &.social-connect-button__connected {
+    background: #2ab264;
+
+    &:not(.social-connect-button__is-fetching):hover {
+      background: #f55b5b;
+    }
+
+    &:not(.social-connect-button__is-fetching):hover
+      .social-connect-button__cross-icon {
+      display: inline-block;
+      margin: 0 0.2rem 0 0;
+    }
+
+    &:not(.social-connect-button__is-fetching):hover
+      .social-connect-button__connected-icon {
+      display: none;
+    }
+  }
+
+  .social-connect-button__cross-icon {
+    display: none;
+  }
+
+  .social-connect-button__social-icon {
+    margin: 0 6px 0 0;
+  }
+
+  .social-connect-button__text {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    user-select: none;
+    color: #ffffff;
+    margin: 0 auto 0 0;
+  }
+}
