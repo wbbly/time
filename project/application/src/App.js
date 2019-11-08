@@ -23,8 +23,6 @@ import 'normalize.css';
 import './App.scss';
 import './fonts/icomoon/icomoon.css';
 
-import 'react-toastify/dist/ReactToastify.css';
-
 import * as responsiveActions from './actions/ResponsiveActions';
 
 const addEvent = (object, type, callback) => {
