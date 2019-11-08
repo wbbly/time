@@ -15,7 +15,16 @@ const instance = axios.create({
     },
 });
 
-export const loginWithFacebook = ({ email = '', id, name: username }) =>
+export const setSocialConnect = (socialName, { socialId }) =>
+    instance({
+        url: `user/social/set/${socialName}`,
+        method: 'POST',
+        data: {
+            socialId,
+        },
+    });
+
+export const loginWithFacebook = ({ email = '', id, name: username, language }) =>
     instance({
         url: '/user/login-fb',
         method: 'POST',
@@ -23,6 +32,7 @@ export const loginWithFacebook = ({ email = '', id, name: username }) =>
             email,
             id,
             username,
+            language,
         },
     });
 
