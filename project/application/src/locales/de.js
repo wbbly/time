@@ -1,6 +1,10 @@
 export default {
     lang: { short: 'de', long: 'Deutsch' },
 
+    'ERROR.USER.THIS_FACEBOOK_ID_ALREADY_CONNECTED_TO_ANOTHER_ACCOUNT':
+        'Dieser Facebook-Account ist bereits mit einem anderen Account verbunden',
+    'ERROR.USER.THIS_EMAIL_ALREADY_CONNECTED_TO_ANOTHER_FB_ACCOUNT':
+        'Konto mit dieser E-Mail bereits mit einem anderen Facebook-Konto verbunden',
     'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Benutzerkonto existiert bereits.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD':
         'Die Mindestzeit für das Hinzufügen von Worklog in Jira beträgt 1 Minute.',
