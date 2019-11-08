@@ -23,7 +23,6 @@ import 'normalize.css';
 import './App.scss';
 import './fonts/icomoon/icomoon.css';
 
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import * as responsiveActions from './actions/ResponsiveActions';
@@ -36,34 +35,6 @@ const addEvent = (object, type, callback) => {
         object.attachEvent('on' + type, callback);
     } else {
         object['on' + type] = callback;
-    }
-};
-
-toast.configure();
-
-let mobileSupportToastr;
-const mobileSupportToastrText = 'We were sorry! Wobbly not yet support mobile, but it should be done soon!';
-export const showMobileSupportToastr = () => {
-    const { pathname } = window.location;
-    const arrayOfResponsiveRoutes = ['/timer', '/register', '/login', '/'];
-    if (window.innerWidth <= 1024 && arrayOfResponsiveRoutes.indexOf(pathname) === -1) {
-        if (!mobileSupportToastr) {
-            mobileSupportToastr = toast(mobileSupportToastrText, {
-                position: 'top-right',
-                className: 'mobile-support-toastr',
-                autoClose: false,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                onClose: () => {
-                    mobileSupportToastr = undefined;
-                },
-            });
-        }
-    } else {
-        toast.dismiss(mobileSupportToastr);
-        mobileSupportToastr = undefined;
     }
 };
 
@@ -87,12 +58,10 @@ class App extends Component {
     componentDidMount() {
         this.setResponsiveReducer();
         addEvent(window, 'resize', this.setResponsiveReducer);
-        addEvent(window, 'resize', showMobileSupportToastr);
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.setResponsiveReducer);
-        window.removeEventListener('resize', showMobileSupportToastr);
     }
 
     render() {

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import defaultLogo from '../../images/icons/Group20.svg';
 
-import { showMobileSupportToastr } from '../../App';
-
 // dependencies
 import classNames from 'classnames';
 
@@ -221,7 +219,6 @@ class TeamPage extends Component {
 
     componentDidMount() {
         const { getCurrentTeamDetailedDataAction } = this.props;
-        // showMobileSupportToastr();
         getCurrentTeamDetailedDataAction();
     }
 }

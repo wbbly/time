@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import openSocket from 'socket.io-client';
 import * as moment from 'moment';
-import { showMobileSupportToastr } from '../../App';
 
 // dependencies
 import classNames from 'classnames';
@@ -418,7 +417,6 @@ class MainPage extends Component {
     }
 
     async componentDidMount() {
-        showMobileSupportToastr();
         await this.getProjectList();
         await this.getUserTimeEntries();
         this.initSocketConnection();

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { showMobileSupportToastr } from '../../App';
-
 // dependencies
 import classNames from 'classnames';
 
@@ -117,7 +115,6 @@ class ProjectsPage extends Component {
     }
 
     async componentDidMount() {
-        // showMobileSupportToastr();
         await this.getProjects();
         this.setState({ isInitialFetching: false });
     }

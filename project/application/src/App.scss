@@ -60,35 +60,6 @@ input:focus {
   border: 1px solid red !important;
 }
 
-.mobile-support-toastr {
-  background: #4f4f4f !important;
-  color: #fff !important;
-  font-size: 16px;
-  line-height: 22px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  padding: 15px;
-
-  .Toastify__close-button {
-    color: #fff;
-    opacity: 0.6;
-    transform: rotate(45deg);
-    visibility: hidden;
-    position: relative;
-
-    &::before {
-      content: '+';
-      position: absolute;
-      font-size: 20px;
-      font-weight: bolder;
-      visibility: visible;
-    }
-  }
-
-  .Toastify__toast-body {
-    padding: 0 10px;
-  }
-}
-
 .fixed_right_corner {
   z-index: 20;
 }
