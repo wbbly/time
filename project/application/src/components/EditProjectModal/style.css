@@ -75,8 +75,7 @@
     flex-grow: 1;
     height: 47px;
     border: 1px solid #828282;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+    border-radius: 4px 0 0 4px;
     text-transform: none;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
@@ -84,6 +83,7 @@
     line-height: normal;
     font-size: 16px;
     color: #4f4f4f;
+    -webkit-appearance: none;
 }
 
 .edit_projects_modal_data
@@ -93,6 +93,7 @@
     font-style: normal;
     font-weight: normal;
     line-height: normal;
+    padding-top: 2px;
     font-size: 14px;
     color: #4f4f4f;
 }

@@ -16,8 +16,6 @@ import 'moment/locale/de';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 
-import { showMobileSupportToastr } from '../../App';
-
 // dependencies
 import classNames from 'classnames';
 
@@ -585,7 +583,6 @@ class ReportsPage extends Component {
         const { vocabulary, getClientsAction } = this.props;
         const { lang } = vocabulary;
         moment.locale(lang.short);
-        // showMobileSupportToastr();
         this.setState({ selectionRange: this.props.timeRange });
         apiCall(AppConfig.apiURL + `user/list`, {
             method: 'GET',

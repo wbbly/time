@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import openSocket from 'socket.io-client';
 import * as moment from 'moment';
-import { showMobileSupportToastr } from '../../App';
 
 // dependencies
 import classNames from 'classnames';
@@ -156,12 +155,10 @@ class MainPage extends Component {
                             projectId: projectId,
                         });
                 } else {
-                    this.setState({ nextTimer: null }, () => {
-                        this.socketConnection &&
-                            this.socketConnection.emit('stop-timer-v2', {
-                                token: `Bearer ${getTokenFromLocalStorage()}`,
-                            });
-                    });
+                    this.socketConnection &&
+                        this.socketConnection.emit('stop-timer-v2', {
+                            token: `Bearer ${getTokenFromLocalStorage()}`,
+                        });
                 }
             });
         } else {
@@ -226,6 +223,7 @@ class MainPage extends Component {
                         }
                         if (nextTimer) {
                             this.timerContinue(nextTimer.name, nextTimer.item);
+                            this.setState({ nextTimer: null });
                         }
                     }
                 );
@@ -419,7 +417,6 @@ class MainPage extends Component {
     }
 
     async componentDidMount() {
-        showMobileSupportToastr();
         await this.getProjectList();
         await this.getUserTimeEntries();
         this.initSocketConnection();
