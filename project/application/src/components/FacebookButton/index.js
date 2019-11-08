@@ -34,8 +34,9 @@ class FacebookButton extends Component {
 
         if (response.status !== 'unknown') {
             const { email, id, name } = response;
+            const { lang } = vocabulary;
             try {
-                const response = await loginWithFacebook({ email, id, name });
+                const response = await loginWithFacebook({ email, id, name, language: lang.short });
                 const { token } = response.data;
                 setTokenToLocalStorage(token);
                 document.cookie = 'isAuthWobbly=true; path=/; domain=.wobbly.me;';
@@ -58,8 +59,7 @@ class FacebookButton extends Component {
                 cssClass="facebook-button"
                 appId="543553739782396"
                 autoLoad={false}
-                fields="name,email,picture"
-                onClick={this.componentClicked}
+                fields="name,email"
                 callback={this.responseFacebook}
             />
         );
