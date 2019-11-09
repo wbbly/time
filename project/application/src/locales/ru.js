@@ -1,6 +1,10 @@
 export default {
     lang: { short: 'ru', long: 'Русский' },
 
+    'ERROR.USER.THIS_FACEBOOK_ID_ALREADY_CONNECTED_TO_ANOTHER_ACCOUNT':
+        'Эта учетная запись Facebook уже подключена к другой учетной записи',
+    'ERROR.USER.THIS_EMAIL_ALREADY_CONNECTED_TO_ANOTHER_FB_ACCOUNT':
+        'Аккаунт с этим e-mail уже подключен к другому аккаунту Facebook',
     'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Учетная запись пользователя уже существует.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD':
         'Минимальное время для добавление ворклога в Jira составляет 1 минута.',

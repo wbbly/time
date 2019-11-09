@@ -1,6 +1,10 @@
 export default {
     lang: { short: 'uk', long: 'Українська' },
 
+    'ERROR.USER.THIS_FACEBOOK_ID_ALREADY_CONNECTED_TO_ANOTHER_ACCOUNT':
+        'Цей обліковий запис у Facebook вже підключено до іншого облікового запису',
+    'ERROR.USER.THIS_EMAIL_ALREADY_CONNECTED_TO_ANOTHER_FB_ACCOUNT':
+        'Обліковий запис з цією електронною поштою вже підключений до іншого облікового запису Facebook',
     'ERROR.USER.ACCOUNT_ALREADY_EXISTED': 'Обліковий запис користувача вже існує.',
     'ERROR.TIMER.JIRA_WORKLOG_1_MIN_THRESHHOLD': 'Мінімальний час для додавання ворклогу в Jira становить 1 хвилина.',
     'ERROR.TIMER.JIRA_ADD_WORKLOG_FAILED':

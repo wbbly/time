@@ -19,6 +19,7 @@ import SelectDateFormat from '../../components/SelectDateFormat';
 import SelectTimeFormat from '../../components/SelectTimeFormat';
 import SelectFirstDayOfWeek from '../../components/SelectFirstDayOfWeek';
 import SelectDurationTimeFormat from '../../components/SelectDurationTimeFormat';
+import SocialConnect from '../../components/SocialConnect';
 
 //Services
 import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
@@ -349,7 +350,10 @@ class UserSetting extends Component {
                         <button onClick={e => this.openChangePasswordModal()}>{v_change_password}</button>
                     </div>
                     <div className="body_user_setting">
-                        <Avatar />
+                        <div className="column column-avatar-social">
+                            <Avatar />
+                            <SocialConnect />
+                        </div>
                         <form
                             autoComplete="new-password"
                             className="column column-inputs"
