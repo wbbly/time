@@ -28,10 +28,11 @@ class SocialConnect extends Component {
         const { showNotificationAction, vocabulary, checkUserDataAction } = this.props;
 
         if (response.status !== 'unknown') {
+            const { user } = this.props;
             const { id } = response;
 
             try {
-                await setSocialConnect('facebook', { socialId: id });
+                await setSocialConnect(user.id, { socialId: id, socialName: 'facebook' });
                 await checkUserDataAction();
             } catch (error) {
                 const textError = error.response.data.message;
@@ -78,6 +79,7 @@ class SocialConnect extends Component {
             <div className="social-connect-wrapper">
                 {socialButtons.map(button => {
                     const { type, disabled, textButton, connected } = button;
+                    const { user } = this.props;
                     if (type === 'facebook') {
                         return (
                             <FacebookLogin
@@ -92,7 +94,10 @@ class SocialConnect extends Component {
                                             if (isFetchingFacebook) return;
                                             this.setState({ isFetchingFacebook: true });
                                             if (facebookId) {
-                                                await setSocialConnect('facebook', { socialId: null });
+                                                await setSocialConnect(user.id, {
+                                                    socialId: null,
+                                                    socialName: 'facebook',
+                                                });
                                                 await checkUserDataAction();
                                                 this.setState({ isFetchingFacebook: false });
                                                 return;
@@ -127,6 +132,7 @@ class SocialConnect extends Component {
 const mapStateToProps = state => ({
     social: state.userReducer.user.social,
     vocabulary: state.languageReducer.vocabulary,
+    user: state.userReducer.user,
 });
 
 const mapDispatchToProps = {

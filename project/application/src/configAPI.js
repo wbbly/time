@@ -15,9 +15,9 @@ const instance = axios.create({
     },
 });
 
-export const setSocialConnect = (socialName, { socialId }) =>
+export const setSocialConnect = (userId, { socialId, socialName }) =>
     instance({
-        url: `user/social/set/${socialName}`,
+        url: `user/${userId}/set-social/${socialName}`,
         method: 'POST',
         data: {
             socialId,
