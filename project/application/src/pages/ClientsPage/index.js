@@ -97,7 +97,7 @@ class ClientsPage extends Component {
     render() {
         const { showModal, searchValue, editedItem, clientsList } = this.state;
         const { vocabulary, isMobile, currentTeam, isInitialFetching } = this.props;
-        const { v_clients, v_add_new_client, v_apply } = vocabulary;
+        const { v_clients, v_add_new_client, v_apply, v_client_name } = vocabulary;
         return (
             <Loading flag={isInitialFetching || currentTeam.isFetching} mode="parentSize" withLogo={false}>
                 <div
@@ -143,7 +143,7 @@ class ClientsPage extends Component {
                         <div className="clients_list_container">
                             {clientsList.map((item, index) => (
                                 <div className="clients_list_item" key={item.id}>
-                                    <div className="client_name" data-label="Client Name: ">
+                                    <div className="client_name" data-label={`${v_client_name}: `}>
                                         {item.name}
                                     </div>
                                     <i

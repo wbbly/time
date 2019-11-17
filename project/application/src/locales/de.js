@@ -196,7 +196,7 @@ export default {
     v_client_name: 'Kundenname',
     v_add_client: 'Client hinzufügen',
     v_edit_client_name: 'Bearbeiten Sie den Client-Namen',
-    v_edit_client: 'Mandant bearbeiten',
+    v_edit_client: 'Bearbeiten',
     v_select_client: 'Wählen Sie den Client aus',
     v_add_project_name: 'Projektnamen hinzufügen',
     v_edit_project_name: 'Ändern Sie den Projektnamen',
