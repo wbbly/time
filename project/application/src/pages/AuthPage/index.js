@@ -116,7 +116,7 @@ class AuthPage extends Component {
     render() {
         const { validEmail, inputs, haveToken } = this.state;
         const { email, password } = inputs;
-        const { history, vocabulary } = this.props;
+        const { history, vocabulary, isMobile } = this.props;
         const {
             v_email,
             v_add_your_email,
@@ -167,8 +167,12 @@ class AuthPage extends Component {
                     <button type="submit" className="login_button">
                         {v_enter}
                     </button>
-                    <div className={'or'}>{v_or}</div>
-                    <FacebookButton setHaveToken={this.setHaveToken} login={this.login} />
+                    {!isMobile && (
+                        <>
+                            <div className={'or'}>{v_or}</div>
+                            <FacebookButton setHaveToken={this.setHaveToken} login={this.login} />
+                        </>
+                    )}
                     <button
                         type="button"
                         className="forgot_password_button"
@@ -188,6 +192,9 @@ class AuthPage extends Component {
         );
     }
 }
+const mapStateToProps = state => ({
+    isMobile: state.responsiveReducer.isMobile,
+});
 
 const mapDispatchToProps = dispatch => ({
     reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
@@ -196,7 +203,7 @@ const mapDispatchToProps = dispatch => ({
 
 export default withRouter(
     connect(
-        null,
+        mapStateToProps,
         mapDispatchToProps
     )(AuthPage)
 );

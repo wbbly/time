@@ -199,4 +199,5 @@ export default {
     v_short_day: 'DD',
     v_short_month: 'MM',
     v_short_year: 'YYYY',
+    v_empty: 'Is empty',
 };

@@ -6,12 +6,14 @@ class ClientModal extends Component {
     state = {
         inputValue: '',
     };
+
     componentDidMount() {
         const { editedItem } = this.props;
         if (editedItem) {
             this.setState({ inputValue: editedItem.name });
         }
     }
+
     render() {
         const { closeModal, addNewClient, editedItem, editClient, vocabulary } = this.props;
         const { inputValue } = this.state;
