@@ -191,7 +191,7 @@ export default {
     v_client_name: 'Nome del cliente',
     v_add_client: 'Aggiungi client',
     v_edit_client_name: 'Modifica il nome del cliente',
-    v_edit_client: 'Modifica client',
+    v_edit_client: 'Modifica',
     v_select_client: 'Seleziona cliente',
     v_add_project_name: 'Aggiungi il nome del progetto',
     v_edit_project_name: 'Modifica il nome del progetto',

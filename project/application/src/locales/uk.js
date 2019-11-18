@@ -189,7 +189,7 @@ export default {
     v_client_name: "Ім'я клієнта",
     v_add_client: 'Додати клієнта',
     v_edit_client_name: "Редагувати ім'я клієнта",
-    v_edit_client: 'Редагувати клієнта',
+    v_edit_client: 'Редагувати',
     v_select_client: 'Виберіть клієнта',
     v_add_project_name: 'Додайте назву проекту',
     v_edit_project_name: 'Змініть назву проекту',
