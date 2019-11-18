@@ -200,4 +200,5 @@ export default {
     v_short_day: 'ДД',
     v_short_month: 'ММ',
     v_short_year: 'РРРР',
+    v_empty: 'Пусто',
 };

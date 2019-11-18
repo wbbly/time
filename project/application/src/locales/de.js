@@ -207,4 +207,5 @@ export default {
     v_short_day: 'TT',
     v_short_month: 'MM',
     v_short_year: 'JJJJ',
+    v_empty: 'Ist leer',
 };

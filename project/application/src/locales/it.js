@@ -202,4 +202,5 @@ export default {
     v_short_day: 'GG',
     v_short_month: 'MM',
     v_short_year: 'AAAA',
+    v_empty: 'È vuoto',
 };
