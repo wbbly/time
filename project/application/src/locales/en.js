@@ -200,4 +200,7 @@ export default {
     v_short_month: 'MM',
     v_short_year: 'YYYY',
     v_empty: 'Is empty',
+    v_empty_email: 'E-mail is required',
+    v_empty_password: 'A password is required',
+    v_cofirm_password_required: 'Password confirm is required',
 };

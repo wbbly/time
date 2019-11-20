@@ -20,56 +20,13 @@
     right: 14px;
     z-index: 20;
   }
-
-  .authorisation_window {
-    display: flex;
-    flex-direction: column;
-    padding: 2.2rem;
+  .authorisation_container {
+    border-radius: 0.4rem;
     background-color: #ffffff;
     width: 100%;
     max-width: 31.3rem;
+    padding: 2.2rem;
     margin: 0 0 1rem 0;
-    border-radius: 0.4rem;
-  }
-
-  .input_container {
-    display: flex;
-    flex-direction: column;
-    margin: 0 0 2rem 0;
-
-    &:first-child {
-      margin: 0 0 0.4rem 0;
-    }
-  }
-
-  input {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 400;
-    padding: 1.5rem;
-    border: 1px solid #828282;
-    outline: none;
-    border-radius: 0.4rem;
-    color: black;
-    font-size: 1.4rem;
-    line-height: 1.9rem;
-  }
-
-  .input_title {
-    position: static;
-    margin: 0 0 1rem 0;
-    color: #333333;
-  }
-
-  .login_button {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    line-height: 1.9rem;
-    padding: 1rem 0;
-    color: white;
-    border-radius: 0.5rem;
-    background: #27ae60;
-    margin: 0 0 0.5rem 0;
   }
 
   .or {
@@ -94,7 +51,7 @@
     cursor: pointer;
     color: #2d9cdb;
     background-color: white;
-
+    width: 100%;
     font-family: "Roboto", sans-serif;
     font-weight: 700;
     font-size: 1.6rem;

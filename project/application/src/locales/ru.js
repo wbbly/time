@@ -203,4 +203,7 @@ export default {
     v_short_month: 'ММ',
     v_short_year: 'ГГГГ',
     v_empty: 'Пусто',
+    v_empty_email: 'Требуется электронная почта',
+    v_empty_password: 'Требуется пароль',
+    v_cofirm_password_required: 'Требуется подтверждение пароля',
 };

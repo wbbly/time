@@ -17,18 +17,19 @@ class Input extends Component {
 
     render() {
         const { typeInput } = this.state;
-        const { config, vocabulary, checkFakePassword = () => {} } = this.props;
+        const { config, vocabulary, errorMsg, withValidation, label, checkFakePassword = () => {} } = this.props;
+        const { type, id, ...rest } = config;
 
-        const { v_a_incorect_email } = vocabulary;
-        const { valid = true, type, ...rest } = config;
-
-        let component = null;
-
-        switch (type) {
-            case 'password':
-                component = (
-                    <>
-                        <input {...rest} type={typeInput} />
+        return (
+            <label htmlFor={id} className="input_container">
+                <span className="input_title">{label}</span>
+                <div
+                    className={classNames('wrapper-base-input', {
+                        'wrapper-base-input--error': errorMsg && withValidation,
+                    })}
+                >
+                    <input {...rest} id={id} type={type === 'password' ? typeInput : type} />
+                    {config.type === 'password' && (
                         <span
                             className="wrapper-base-input__icon-eye"
                             onClick={event => {
@@ -36,29 +37,12 @@ class Input extends Component {
                                 checkFakePassword();
                             }}
                         />
-                    </>
-                );
-                break;
-            case 'email':
-                component = (
-                    <>
-                        <input {...rest} type="email" />
-                        <p className="wrapper-base-input__error-message">{valid ? '' : v_a_incorect_email}</p>
-                    </>
-                );
-                break;
-
-            default:
-                component = (
-                    <>
-                        <input {...rest} type="text" />
-                    </>
-                );
-                break;
-        }
-
-        return (
-            <div className={classNames('wrapper-base-input', { 'wrapper-base-input--error': !valid })}>{component}</div>
+                    )}
+                    {withValidation ? (
+                        <div className="wrapper-base-input__error-message">{errorMsg ? vocabulary[errorMsg] : ''}</div>
+                    ) : null}
+                </div>
+            </label>
         );
     }
 }

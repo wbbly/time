@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-
 import classNames from 'classnames';
 
 // Services
-import { apiCall } from '../../services/apiService';
-import { authValidation } from '../../services/validateService';
+import { signUp } from '../../configAPI';
 
 // Components
-import Input from '../../components/BaseComponents/Input';
 import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
+import RegisterForm from '../../components/RegisterForm';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
@@ -18,140 +16,49 @@ import { showNotificationAction } from '../../actions/NotificationActions';
 // Queries
 
 // Config
-import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
 
 class RegisterPage extends Component {
     state = {
-        validEmail: true,
-        inputs: {
-            email: {
-                value: '',
-                type: 'email',
-                name: 'email',
-            },
-            password: {
-                value: '',
-                type: 'password',
-                name: 'password',
-                required: true,
-            },
-            confirmPassword: {
-                value: '',
-                type: 'password',
-                name: 'confirmPassword',
-                required: true,
-            },
-        },
-    };
-
-    addUser = ({ email, password }) => {
-        const { vocabulary, showNotificationAction } = this.props;
-        const { v_a_account_create, lang } = vocabulary;
-        apiCall(
-            AppConfig.apiURL + 'user/register',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    password,
-                    language: lang.short,
-                }),
-            },
-            false
-        ).then(
-            result => {
-                showNotificationAction({ text: v_a_account_create, type: 'success' });
-                this.toLoginPage();
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => {
-                        const textError = JSON.parse(errorMessage).message;
-                        showNotificationAction({ text: vocabulary[textError], type: 'warning' });
-                    });
-                } else {
-                    console.log(err);
-                }
-            }
-        );
-    };
-
-    onChangeHandler = event => {
-        const { name, value } = event.target;
-        this.setState(prevState => ({
-            inputs: {
-                ...prevState.inputs,
-                [name]: {
-                    ...prevState.inputs[name],
-                    value,
-                },
-            },
-        }));
-    };
-
-    onSubmitHandler = event => {
-        event.preventDefault();
-        const { vocabulary, showNotificationAction } = this.props;
-        const { v_a_confirm_password_error } = vocabulary;
-        const { inputs } = this.state;
-        const userData = Object.keys(inputs).reduce((acc, curr) => {
-            if (curr === 'email') {
-                return { ...acc, [curr]: inputs[curr].value.toLowerCase() };
-            }
-            return { ...acc, [curr]: inputs[curr].value };
-        }, {});
-        if (authValidation('email', userData.email)) {
-            this.setState({ validEmail: false });
-            return;
-        }
-        this.setState({ validEmail: true });
-        if (userData.confirmPassword !== userData.password) {
-            showNotificationAction({ text: v_a_confirm_password_error, type: 'warning' });
-            return;
-        }
-        this.addUser(userData);
+        emailFromRedirect: null,
     };
 
     toLoginPage = event => {
         const { history } = this.props;
         history.push('/login');
     };
+
+    submitForm = async values => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_a_account_create, lang } = vocabulary;
+
+        try {
+            await signUp({ ...values, language: lang.short });
+            showNotificationAction({ text: v_a_account_create, type: 'success' });
+            this.toLoginPage();
+        } catch (error) {
+            if (error.response && error.response.data.message) {
+                const errorMsg = error.response.data.message;
+                showNotificationAction({ text: vocabulary[errorMsg], type: 'error' });
+            } else {
+                console.log(error);
+            }
+        }
+    };
+
     componentDidMount() {
         if (window.location.href.indexOf('email') > 0) {
             let emailInput = window.location.href.split('=');
-            this.setState(prevState => ({
-                inputs: {
-                    ...prevState.inputs,
-                    email: {
-                        ...prevState.inputs.email,
-                        value: emailInput[emailInput.length - 1],
-                    },
-                },
-            }));
+            this.setState({ emailFromRedirect: emailInput[emailInput.length - 1] });
         }
     }
+
     render() {
-        const { validEmail } = this.state;
-        const { email, password, confirmPassword } = this.state.inputs;
+        const { emailFromRedirect } = this.state;
         const { vocabulary } = this.props;
-        const {
-            v_email,
-            v_add_your_email,
-            v_add_your_password,
-            v_password,
-            v_cofirm_password,
-            v_add_confirm_password,
-            v_register,
-            v_already_have_an_account,
-            v_log_in,
-            v_registration_terms_and_policy,
-        } = vocabulary;
+        const { v_already_have_an_account, v_log_in, v_registration_terms_and_policy } = vocabulary;
 
         return (
             <div className={classNames('register-block', { 'register-block--mobile': true })}>
@@ -159,53 +66,7 @@ class RegisterPage extends Component {
                     <SwitchLanguageLogin dropdown />
                 </div>
                 <i className="register-block__logo" />
-                <form className="register-block__form" onSubmit={this.onSubmitHandler}>
-                    <label className="register-block__label">
-                        <span className="register-block__label-text">{v_email}</span>
-                        <Input
-                            config={{
-                                valid: validEmail,
-                                className: 'register-block__input',
-                                onChange: this.onChangeHandler,
-                                name: email.name,
-                                value: email.value,
-                                type: email.type,
-                                placeholder: `${v_add_your_email}...`,
-                            }}
-                        />
-                    </label>
-                    <label className="register-block__label">
-                        <span className="register-block__label-text">{v_password}</span>
-                        <Input
-                            config={{
-                                className: 'register-block__input',
-                                onChange: this.onChangeHandler,
-                                name: password.name,
-                                value: password.value,
-                                type: password.type,
-                                required: password.required,
-                                placeholder: `${v_add_your_password}...`,
-                            }}
-                        />
-                    </label>
-                    <label className="register-block__label">
-                        <span className="register-block__label-text">{v_cofirm_password}</span>
-                        <Input
-                            config={{
-                                className: 'register-block__input',
-                                onChange: this.onChangeHandler,
-                                name: confirmPassword.name,
-                                value: confirmPassword.value,
-                                type: confirmPassword.type,
-                                required: confirmPassword.required,
-                                placeholder: `${v_add_confirm_password}...`,
-                            }}
-                        />
-                    </label>
-                    <button className="register-block__button register-block__button--submit" type="submit">
-                        {v_register}
-                    </button>
-                </form>
+                <RegisterForm submitForm={this.submitForm} emailFromRedirect={emailFromRedirect} />
                 <button
                     onClick={this.toLoginPage}
                     className="register-block__button register-block__button--to-login"
@@ -223,6 +84,7 @@ class RegisterPage extends Component {
         );
     }
 }
+
 const mapDispatchToProps = {
     showNotificationAction,
 };

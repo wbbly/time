@@ -26,54 +26,6 @@
     margin: 0 0 2rem 0;
   }
 
-  .register-block__form {
-    display: flex;
-    flex-direction: column;
-    padding: 2.2rem;
-    background-color: #ffffff;
-    width: 100%;
-    max-width: 31.3rem;
-    margin: 0 0 0.8rem 0;
-    border-radius: 0.4rem;
-  }
-
-  .register-block__label {
-    display: flex;
-    flex-direction: column;
-    margin: 0 0 2rem 0;
-
-    &:first-child {
-      margin: 0 0 0.4rem 0;
-    }
-  }
-
-  .register-block__label-text {
-    margin: 0 0 1rem 0;
-  }
-
-  .register-block__input {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 400;
-    padding: 1.5rem;
-    border: 1px solid #828282;
-    outline: none;
-    border-radius: 0.4rem;
-    color: black;
-    font-size: 1.4rem;
-    line-height: 1.9rem;
-  }
-
-  .register-block__button--submit {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    line-height: 1.9rem;
-    padding: 1rem 0;
-    color: white;
-    border-radius: 0.5rem;
-    background: #27ae60;
-  }
-
   .register-block__button--to-login {
     font-style: normal;
     cursor: pointer;
