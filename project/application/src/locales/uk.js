@@ -201,4 +201,7 @@ export default {
     v_short_month: 'ММ',
     v_short_year: 'РРРР',
     v_empty: 'Пусто',
+    v_empty_email: 'Потрібна електронна пошта',
+    v_empty_password: 'Потрібен пароль',
+    v_cofirm_password_required: 'Потрібно підтвердити пароль',
 };
