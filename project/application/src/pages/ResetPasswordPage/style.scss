@@ -13,59 +13,11 @@
   padding: 2rem 2rem 2rem 2rem;
   position: relative;
 
-  .authorization_window {
-    display: flex;
-    flex-direction: column;
-    padding: 2.2rem;
-    background-color: #ffffff;
-    width: 100%;
-    max-width: 31.3rem;
-    margin: 0 0 1rem 0;
-    border-radius: 0.4rem;
-  }
-
-  .input_container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    margin: 0 0 2rem 0;
-  }
-
-  .authorization_window .input_container:first-of-type {
-    // margin-top: 28px;
-  }
-
-  input {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 400;
-    padding: 1.5rem 6rem 1.5rem 1.5rem;
-    border: 1px solid #828282;
-    outline: none;
-    border-radius: 0.4rem;
-    color: black;
-    font-size: 1.4rem;
-    line-height: 1.9rem;
-  }
-
-  input:focus {
-    border-color: #56ccf2;
-  }
-
-  .input_title {
-    position: static;
-    margin: 0 0 1rem 0;
-    color: #333333;
-  }
-
-  .login_button {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    line-height: 1.9rem;
-    padding: 1rem 0;
-    color: white;
-    border-radius: 0.5rem;
-    background: #27ae60;
+  .fixed_right_corner {
+    position: fixed;
+    top: 0;
+    right: 14px;
+    z-index: 20;
   }
 
   .page_title {
@@ -83,35 +35,5 @@
     background: url("../../images/icons/logo.svg") no-repeat center;
     background-size: 196px 46px;
     margin: 0 0 2rem 0;
-  }
-
-  .registration_button {
-    margin-top: 12px;
-    font-family: "Open Sans", sans-serif;
-    font-style: normal;
-    line-height: normal;
-    font-size: 12px;
-    cursor: pointer;
-    color: blue;
-    text-decoration: underline;
-    background-color: white;
-  }
-
-  .passwords_buttons_container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .visible_password_eye {
-    position: absolute;
-    right: 24px;
-    width: 24px;
-    height: 24px;
-    background: url("../../images/icons/eye.svg") no-repeat center;
-  }
-
-  .visible_password_eye.new_password {
-    top: 14px;
   }
 }

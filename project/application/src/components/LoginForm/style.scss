@@ -1,0 +1,18 @@
+.authorisation_window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 31.3rem;
+}
+
+.login_button {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.9rem;
+  padding: 1rem 0;
+  color: white;
+  border-radius: 0.5rem;
+  background: #27ae60;
+  margin: 1rem 0 0.5rem 0;
+}

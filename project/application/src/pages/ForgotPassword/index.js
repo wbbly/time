@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 // Services
-import { authValidation } from '../../services/validateService';
+import { resetPassword } from '../../configAPI';
 
 // Components
 import Input from '../../components/BaseComponents/Input';
@@ -15,93 +17,28 @@ import { showNotificationAction } from '../../actions/NotificationActions';
 // Queries
 
 // Config
-import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
 
 class ForgotPassword extends Component {
-    state = {
-        validEmail: true,
-        inputs: {
-            email: {
-                value: '',
-                type: 'email',
-                name: 'email',
-            },
-        },
-    };
-
-    addUser = ({ email }) => {
+    submitForm = async email => {
         const { history, vocabulary, showNotificationAction } = this.props;
         const { v_check_email } = vocabulary;
-        fetch(AppConfig.apiURL + 'user/reset-password', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email.toLowerCase(),
-            }),
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw res;
-                }
-            })
-            .then(
-                result => {
-                    showNotificationAction({ text: v_check_email, type: 'success' });
-                    history.push('/login');
-                },
-                err => {
-                    if (err instanceof Response) {
-                        showNotificationAction({ text: v_check_email, type: 'success' });
-                        history.push('/login');
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
-    };
 
-    onSubmitHandler = event => {
-        event.preventDefault();
-        const { inputs } = this.state;
-        const userData = Object.keys(inputs).reduce((acc, curr) => {
-            if (curr === 'email') {
-                return { ...acc, [curr]: inputs[curr].value.toLowerCase() };
-            }
-            return { ...acc, [curr]: inputs[curr].value };
-        }, {});
-        if (authValidation('email', userData.email)) {
-            this.setState({ validEmail: false });
-            return;
+        try {
+            await resetPassword(email.toLowerCase());
+            showNotificationAction({ text: v_check_email, type: 'success' });
+            history.push('/login');
+        } catch (error) {
+            showNotificationAction({ text: v_check_email, type: 'success' });
+            history.push('/login');
         }
-        this.setState({ validEmail: true });
-        this.addUser(userData);
-    };
-
-    onChangeHandler = event => {
-        const { name, value } = event.target;
-        this.setState(prevState => ({
-            inputs: {
-                ...prevState.inputs,
-                [name]: {
-                    ...prevState.inputs[name],
-                    value,
-                },
-            },
-        }));
     };
 
     render() {
-        const { validEmail, inputs } = this.state;
-        const { email } = inputs;
-
         const { vocabulary } = this.props;
-        const { v_send, v_enter_email } = vocabulary;
+        const { v_send, v_enter_email, v_email } = vocabulary;
 
         return (
             <div className="forgot_password_modal_wrapper">
@@ -109,23 +46,42 @@ class ForgotPassword extends Component {
                     <SwitchLanguageLogin dropdown />
                 </div>
                 <i className="page_title" />
-                <form className="add_to_team_modal_data" onSubmit={this.onSubmitHandler} noValidate>
-                    <label className="add_to_team_modal_input_container">
-                        <span className="add_to_team_modal_input_title">Email</span>
-                        <Input
-                            config={{
-                                valid: validEmail,
-                                type: email.type,
-                                name: email.name,
-                                value: email.value,
-                                onChange: this.onChangeHandler,
-                                placeholder: `${v_enter_email}...`,
-                                className: 'add_to_team_modal_input',
-                            }}
-                        />
-                    </label>
-                    <button type="submit">{v_send}</button>
-                </form>
+                <Formik
+                    validateOnChange={false}
+                    validateOnBlur={false}
+                    initialValues={{ email: '' }}
+                    validationSchema={Yup.object({
+                        email: Yup.string()
+                            .email('v_a_incorect_email')
+                            .required('v_empty_email'),
+                    })}
+                    onSubmit={(value, { setSubmitting }) => {
+                        this.submitForm(value.email);
+                        setSubmitting(false);
+                    }}
+                >
+                    {formik => (
+                        <div className="forgot_password_form_container">
+                            <form className="add_to_team_modal_data" onSubmit={formik.handleSubmit} noValidate>
+                                <Input
+                                    config={{
+                                        id: 'email',
+                                        name: 'email',
+                                        type: 'email',
+                                        onChange: formik.handleChange,
+                                        onBlur: formik.handleBlur,
+                                        value: formik.values.email,
+                                        placeholder: `${v_enter_email}...`,
+                                    }}
+                                    errorMsg={formik.errors.email}
+                                    label={v_email}
+                                    withValidation
+                                />
+                                <button type="submit">{v_send}</button>
+                            </form>
+                        </div>
+                    )}
+                </Formik>
             </div>
         );
     }
