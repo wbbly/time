@@ -1,3 +1,5 @@
+import { SET_PROJECTS_LIST } from '../actions/ProjectsActions';
+
 const initialState = {
     tableData: [
         {
@@ -12,10 +14,13 @@ const initialState = {
     addNewProjectModalToggle: false,
     editedProject: '',
     editProjectModal: false,
+    projectsList: [],
 };
 
 export function projectReducer(state = initialState, action) {
     switch (action.type) {
+        case SET_PROJECTS_LIST:
+            return { ...state, projectsList: action.payload };
         case 'TOGGLE_MODAL':
             return { ...state, addNewProjectModalToggle: action.payload.toggle };
         case 'CREATE_PROJECT':
