@@ -1,0 +1,204 @@
+.task-item {
+  position: relative;
+  min-width: 100%;
+  font-size: 1.4rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 0 1rem 0;
+  padding: 1.5rem 2rem 1.5rem 1.5rem;
+  border-radius: 0.4rem;
+  color: #ffffff;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  // styled task as hover when calendar is opened
+  &.task-item--selected {
+    background-color: #333333;
+
+    .task-item__edit-wrapper {
+      display: flex;
+    }
+
+    .task-item__duration-time {
+      margin: 0 1rem 0 0;
+    }
+  }
+
+  // disabled hover when task disabled, calendar is opened and on the mobile device
+  &:not(.task-item--disabled):not(.task-item--selected):not(.task-item--mobile):hover {
+    background-color: #333333;
+
+    .task-item__edit-wrapper {
+      display: flex;
+    }
+
+    .task-item__duration-time {
+      margin: 0 1rem 0 0;
+    }
+  }
+
+  .task-item__issue {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0 1rem 0 0;
+    outline: none;
+
+    &--editing {
+      text-overflow: unset;
+    }
+  }
+
+  .task-item__period-time {
+    margin: 0 1rem 0 0;
+    white-space: nowrap;
+  }
+
+  .task-item__start-time {
+  }
+
+  .task-item__end-time {
+  }
+
+  .task-item__duration-time {
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .task-item__edit-wrapper {
+    position: relative;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .task-item__play-icon {
+    margin: 0 1rem 0 0;
+    cursor: pointer;
+  }
+
+  .task-item__edit-icon {
+    cursor: pointer;
+    margin: 0 1rem 0 0;
+    fill: #6fcf97;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .task-item__delete-icon {
+    cursor: pointer;
+  }
+}
+
+// Mobile styles
+.task-item-swipe--swiped {
+  .task-item--mobile {
+    left: -50%;
+  }
+}
+
+.task-item--mobile {
+  padding: 1.2rem 1rem 1.2rem 1rem;
+  background-color: #4f4f4f;
+  border-radius: 0;
+  z-index: 2;
+  left: 0;
+  transition: left 0.5s linear;
+  margin: 0;
+
+  .task-item__period-time {
+    display: none;
+  }
+
+  .task-item__duration-time {
+    display: none;
+  }
+
+  .task-item__edit-wrapper {
+    position: static;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .task-item__duration-time-mobile {
+    display: inline-block;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: #b8b8b8;
+    white-space: nowrap;
+  }
+
+  .task-item__play-icon {
+    margin: 0;
+  }
+
+  .task-item__edit-icon {
+    display: none;
+  }
+
+  .task-item__delete-icon {
+    display: none;
+  }
+}
+
+// Bottom layer for edit task on mobile device
+.task-item-swipe {
+  position: relative;
+  color: #ffffff;
+
+  .task-item__bottom-layer {
+    position: absolute;
+    display: flex;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.4rem;
+
+    .task-item__bottom-layer-edit-button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100%;
+      min-width: 50%;
+      background: #f2994a;
+    }
+
+    .task-item__bottom-layer-edit-button-text {
+    }
+
+    .task-item__bottom-layer-edit-button-icon {
+      width: 1.9rem;
+      height: 2rem;
+      fill: #ffffff;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .task-item__bottom-layer-delete-button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100%;
+      min-width: 50%;
+      background: #eb5757;
+    }
+
+    .task-item__bottom-layer-delete-button-text {
+    }
+
+    .task-item__bottom-layer-delete-button-icon {
+      width: 1.8rem;
+      height: 2rem;
+      margin: 0 0 0.5rem 0;
+    }
+  }
+}
