@@ -36,9 +36,9 @@ class TutorialComponent extends Component {
     };
 
     finishTutorial = async () => {
-        const { userReducer, changeUserData } = this.props;
+        const { user, changeUserData } = this.props;
         try {
-            let res = await tutorialChecked(userReducer.user.id, true);
+            let res = await tutorialChecked(user.id, true);
             changeUserData(res.data);
         } catch (err) {
             console.log(err);
@@ -46,7 +46,9 @@ class TutorialComponent extends Component {
     };
 
     render() {
-        return (
+        const { user, isMobile, children } = this.props;
+
+        return !user.onboardingMobile && isMobile ? (
             <div className="tutorial-container">
                 <div className="tutorial-wrapper">
                     <div className="slide" style={{ backgroundImage: `url(${slide6})` }}>
@@ -117,13 +119,15 @@ class TutorialComponent extends Component {
                     </Swipe>
                 </div>
             </div>
+        ) : (
+            children
         );
     }
 }
-// export default TutorialComponent;
 
 const mapStateToProps = state => ({
-    userReducer: state.userReducer,
+    user: state.userReducer.user,
+    isMobile: state.responsiveReducer.isMobile,
 });
 
 const mapDispatchToProps = {
