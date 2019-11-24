@@ -5,6 +5,8 @@ import { getTokenFromLocalStorage, removeTokenFromLocalStorage } from './tokenSt
 import { store } from '../store/configureStore';
 import { resetAll } from '../actions/UserActions';
 
+import { closeSocket } from '../configSocket';
+
 const APP_VERSION = 'v1.0.5';
 
 export const ROLES = {
@@ -33,6 +35,7 @@ export function checkIsMemberByRole(role) {
 }
 
 export function logoutByUnauthorized() {
+    closeSocket();
     removeTokenFromLocalStorage();
     store.dispatch(resetAll());
 }
