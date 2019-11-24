@@ -1,4 +1,4 @@
-import * as types from '../actions/ResponsiveActions';
+import { SET_VIEWPORT_SIZE, SWITCH_MENU, SET_IS_MOBILE, SET_SWIPED_TASK } from '../actions/ResponsiveActions';
 
 const initialState = {
     viewport: {
@@ -7,22 +7,26 @@ const initialState = {
     },
     isShowMenu: false,
     isMobile: false,
+    swipedTask: null,
 };
 
 export default (state = initialState, { type, payload }) => {
     switch (type) {
-        case types.SET_VIEWPORT_SIZE: {
+        case SET_VIEWPORT_SIZE: {
             return { ...state, viewport: payload };
         }
 
-        case types.SWITCH_MENU: {
+        case SWITCH_MENU: {
             return { ...state, isShowMenu: !state.isShowMenu };
         }
 
-        case types.SET_IS_MOBILE: {
+        case SET_IS_MOBILE: {
             return { ...state, isMobile: payload };
         }
 
+        case SET_SWIPED_TASK: {
+            return { ...state, swipedTask: payload };
+        }
         default:
             return state;
     }
