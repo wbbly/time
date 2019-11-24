@@ -1,0 +1,27 @@
+.change-password_container{
+  border-radius: 0.4rem;
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 31.3rem;
+  padding: 2.2rem;
+  margin: 0 0 1rem 0;
+}
+
+.change-password_window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 31.3rem;
+}
+
+.login_button {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.9rem;
+  padding: 1rem 0;
+  color: white;
+  border-radius: 0.5rem;
+  background: #27ae60;
+  margin: 1rem 0 0.5rem 0;
+}

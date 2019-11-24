@@ -355,3 +355,22 @@ instance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+export const resetPassword = email =>
+    instance({
+        url: '/user/reset-password',
+        method: 'POST',
+        data: {
+            email,
+        },
+    });
+
+export const setPassword = ({ password, token }) =>
+    instance({
+        url: '/user/set-password',
+        method: 'POST',
+        data: {
+            password,
+            token,
+        },
+    });

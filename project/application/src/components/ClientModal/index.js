@@ -6,16 +6,18 @@ class ClientModal extends Component {
     state = {
         inputValue: '',
     };
+
     componentDidMount() {
         const { editedItem } = this.props;
         if (editedItem) {
             this.setState({ inputValue: editedItem.name });
         }
     }
+
     render() {
         const { closeModal, addNewClient, editedItem, editClient, vocabulary } = this.props;
         const { inputValue } = this.state;
-        const { v_add_new_client, v_edit_client_name, v_client_name, v_edit_project, v_add_client } = vocabulary;
+        const { v_add_new_client, v_edit_client_name, v_client_name, v_edit_client, v_add_client } = vocabulary;
         return (
             <div className="wrapper_client_modal">
                 <div className="client_modal_background" />
@@ -43,7 +45,7 @@ class ClientModal extends Component {
                                 editedItem ? editClient(inputValue, editedItem.id) : addNewClient(inputValue)
                             }
                         >
-                            {editedItem ? v_edit_project : v_add_client}
+                            {editedItem ? v_edit_client : v_add_client}
                         </button>
                     </div>
                 </div>

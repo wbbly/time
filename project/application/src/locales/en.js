@@ -188,7 +188,7 @@ export default {
     v_client_name: 'Client name',
     v_add_client: 'Add client',
     v_edit_client_name: 'Edit client name',
-    v_edit_client: 'Edit client',
+    v_edit_client: 'Edit',
     v_select_client: 'Select client',
     v_add_project_name: 'Add project name',
     v_edit_project_name: 'Edit project name',
@@ -199,4 +199,8 @@ export default {
     v_short_day: 'DD',
     v_short_month: 'MM',
     v_short_year: 'YYYY',
+    v_empty: 'Is empty',
+    v_empty_email: 'E-mail is required',
+    v_empty_password: 'A password is required',
+    v_cofirm_password_required: 'Password confirm is required',
 };

@@ -189,7 +189,7 @@ export default {
     v_client_name: "Ім'я клієнта",
     v_add_client: 'Додати клієнта',
     v_edit_client_name: "Редагувати ім'я клієнта",
-    v_edit_client: 'Редагувати клієнта',
+    v_edit_client: 'Редагувати',
     v_select_client: 'Виберіть клієнта',
     v_add_project_name: 'Додайте назву проекту',
     v_edit_project_name: 'Змініть назву проекту',
@@ -200,4 +200,8 @@ export default {
     v_short_day: 'ДД',
     v_short_month: 'ММ',
     v_short_year: 'РРРР',
+    v_empty: 'Пусто',
+    v_empty_email: 'Потрібна електронна пошта',
+    v_empty_password: 'Потрібен пароль',
+    v_cofirm_password_required: 'Потрібно підтвердити пароль',
 };

@@ -43,19 +43,23 @@
     margin-bottom: 10px;
   }
 
-  .clients_list {
+  .clients_list_dropdown {
     flex-grow: 1;
-    overflow: auto;
+    // overflow: hidden;
     position: absolute;
     width: 100%;
     background: white;
     font-size: 14px;
-    min-height: 210px;
+    // min-height: 210px;
     border: 1px solid grey;
     border-radius: 4px;
     top: 110%;
     padding: 10px;
     box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.25);
+  }
+  .clients_list {
+    height: 18.5rem;
+    overflow: auto;
   }
   .empty-list {
     padding: 0.3rem 0.5rem;

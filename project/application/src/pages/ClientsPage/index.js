@@ -25,9 +25,11 @@ class ClientsPage extends Component {
         editedItem: null,
         clientsList: [],
     };
+
     closeModal = () => {
         this.setState({ showModal: false, editedItem: null });
     };
+
     editClient = (clientName, id) => {
         const { showNotificationAction, vocabulary } = this.props;
         const { v_a_client_existed, v_a_client_name_empty_error } = vocabulary;
@@ -46,6 +48,7 @@ class ClientsPage extends Component {
             this.closeModal();
         }
     };
+
     searchClient = async () => {
         const { searchValue } = this.state;
         const { clientsList } = this.props;
@@ -54,6 +57,7 @@ class ClientsPage extends Component {
         );
         this.setState({ clientsList: afterSearch });
     };
+
     addNewClient = client => {
         const { showNotificationAction, vocabulary } = this.props;
         const { v_a_client_existed, v_a_client_name_empty_error } = vocabulary;
@@ -68,6 +72,7 @@ class ClientsPage extends Component {
             this.closeModal();
         }
     };
+
     handleChange = e => {
         const { clientsList } = this.props;
         this.setState({ searchValue: e.target.value });
@@ -75,13 +80,16 @@ class ClientsPage extends Component {
             this.setState({ clientsList });
         }
     };
+
     checkClientName = name => {
         const { clientsList } = this.props;
         return clientsList.some(obj => obj.name.toLowerCase().trim() === name.toLowerCase().trim());
     };
+
     componentDidMount() {
         this.props.getClientsAction();
     }
+
     componentDidUpdate(prevProps, prevState) {
         const { currentTeam, history, clientsList } = this.props;
         if (!prevProps.currentTeam.data.id && this.props.currentTeam.data.id) {
@@ -97,7 +105,7 @@ class ClientsPage extends Component {
     render() {
         const { showModal, searchValue, editedItem, clientsList } = this.state;
         const { vocabulary, isMobile, currentTeam, isInitialFetching } = this.props;
-        const { v_clients, v_add_new_client, v_apply } = vocabulary;
+        const { v_clients, v_add_new_client, v_apply, v_client_name } = vocabulary;
         return (
             <Loading flag={isInitialFetching || currentTeam.isFetching} mode="parentSize" withLogo={false}>
                 <div
@@ -143,7 +151,7 @@ class ClientsPage extends Component {
                         <div className="clients_list_container">
                             {clientsList.map((item, index) => (
                                 <div className="clients_list_item" key={item.id}>
-                                    <div className="client_name" data-label="Client Name: ">
+                                    <div className="client_name" data-label={`${v_client_name}: `}>
                                         {item.name}
                                     </div>
                                     <i
@@ -175,6 +183,7 @@ class ClientsPage extends Component {
         );
     }
 }
+
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     currentTeam: state.teamReducer.currentTeam,
@@ -182,6 +191,7 @@ const mapStateToProps = state => ({
     isInitialFetching: state.clientsReducer.isInitialFetching,
     clientsList: state.clientsReducer.clientsList,
 });
+
 const mapDispatchToProps = {
     getClientsAction,
     setClientAction,
