@@ -1,0 +1,57 @@
+.add-task {
+  color: #ffffff;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 0 2.6rem 0;
+  padding: 0.7rem 1rem;
+  border-radius: 0.4rem;
+  background: #4f4f4f;
+  box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.15);
+
+  .add-task__input {
+    flex-grow: 1;
+    font-family: "Open Sans", sans-serif;
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    color: #fff;
+    background: #4f4f4f;
+    border: none;
+
+    &::placeholder {
+      color: #e0e0e0;
+      font-size: 16px;
+    }
+  }
+
+  .add-task__play-icon {
+    cursor: pointer;
+    border-radius: 50%;
+    width: 3.6rem;
+    height: 3.6rem;
+    box-shadow: 0 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
+
+    &--disabled {
+      .add-task__play-icon-circle {
+        fill: #0a7b3e;
+      }
+    }
+  }
+
+  .add-task__duration {
+    font-size: 1.6rem;
+    margin: 0 0.5rem 0 0;
+  }
+
+  .add-task__stop-icon {
+    cursor: pointer;
+    border-radius: 50%;
+    width: 3.6rem;
+    height: 3.6rem;
+    box-shadow: 0 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
+
+    &--disabled {
+      opacity: 0.6;
+    }
+  }
+}
