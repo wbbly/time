@@ -1,0 +1,28 @@
+.edit-task-popup {
+  display: block;
+  position: absolute;
+  top: 130%;
+  right: 0;
+  background-color: white;
+  border-radius: 0.4rem;
+  color: black;
+  z-index: 1;
+
+  .edit-task-popup_set-time {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 1.5rem;
+  }
+
+  .edit-task-popup_set-time-start {
+    width: 48%;
+  }
+
+  .edit-task-popup_set-time-end {
+    width: 48%;
+  }
+
+  .edit-task-popup_set-time-label {
+  }
+}
