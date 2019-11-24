@@ -216,19 +216,19 @@ const SpinnerIcon = () => (
     </svg>
 );
 
-const Spinner = ({ withLogo = true, mode = 'fullScreen' }) => {
-    return (
-        <div
-            className={classNames('wrapper-spinner', {
-                'wrapper-spinner--full-screen': mode === 'fullScreen',
-                'wrapper-spinner--parent-size': mode === 'parentSize',
-                'wrapper-spinner--inline': mode === 'inline',
-            })}
-        >
-            {withLogo && <LogoIcon />}
-            <SpinnerIcon />
-        </div>
-    );
-};
+const Spinner = ({ withLogo = true, mode = 'fullScreen', circle }) => (
+    <div
+        className={classNames('wrapper-spinner', {
+            'wrapper-spinner--full-screen': mode === 'fullScreen',
+            'wrapper-spinner--parent-size': mode === 'parentSize',
+            'wrapper-spinner--inline': mode === 'inline',
+            'wrapper-spinner--overlay': mode === 'overlay',
+            'wrapper-spinner--circle': circle,
+        })}
+    >
+        {withLogo && <LogoIcon />}
+        <SpinnerIcon />
+    </div>
+);
 
 export default Spinner;
