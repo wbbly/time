@@ -1,51 +1,63 @@
-import { SET_CURRENT_TIMER, SET_SERVER_CLIENT_TIMEDIFF, RESET_CURRENT_TIMER } from '../actions/MainPageAction';
+import {
+    SET_CURRENT_TIMER,
+    SET_SERVER_CLIENT_TIMEDIFF,
+    GET_TIME_ENTRIES_LIST,
+    SET_TIMER_TICK,
+    INC_PAGINATION,
+    GET_TIME_ENTRIES_LIST_PAGINATION,
+    DISABLE_PAGINATION,
+} from '../actions/MainPageAction';
 
 const initialState = {
-    mainTaskField: {
-        classToggle: true,
-        time: '',
-        date: '',
-        timeEntriesList: [],
-    },
     timeEntriesList: [],
-    editedItem: {
-        date: '',
-        id: null,
-        name: '',
-        project: '',
-        timeFrom: '',
-        timePassed: '',
-        timeTo: '',
-    },
-    currentTimer: {
-        issue: '',
-        project: {
-            id: '',
-            name: '',
-            projectColor: {
-                id: '',
-                name: '',
-            },
-        },
-        timeStart: 0,
-    },
+    isFetchingTimeEntriesList: false,
+    currentTimer: null,
+    timerTick: null,
     serverClientTimediff: 0,
+    pagination: {
+        page: 1,
+        limit: 50,
+        disabled: false,
+    },
 };
 
-export function mainPageReducer(state = initialState, action) {
-    switch (action.type) {
-        case 'ADD_TASKS_ARR':
-            return { ...state, timeEntriesList: action.payload.timeEntriesList };
+export function mainPageReducer(state = initialState, { type, payload }) {
+    switch (type) {
+        case GET_TIME_ENTRIES_LIST:
+            return { ...state, timeEntriesList: payload };
         case 'CHANGE_ARR':
-            return { ...state, timeEntriesList: action.payload.timeEntriesList };
-        case 'SET_EDITED_ITEM':
-            return { ...state, editedItem: action.payload.editedItem };
+            return { ...state, timeEntriesList: payload.timeEntriesList };
         case SET_CURRENT_TIMER:
-            return { ...state, currentTimer: action.payload };
-        case RESET_CURRENT_TIMER:
-            return { ...state, currentTimer: initialState.currentTimer };
+            return { ...state, currentTimer: payload };
         case SET_SERVER_CLIENT_TIMEDIFF:
-            return { ...state, serverClientTimediff: action.payload };
+            return { ...state, serverClientTimediff: payload };
+        case SET_TIMER_TICK:
+            return { ...state, timerTick: payload };
+        case INC_PAGINATION:
+            return {
+                ...state,
+                isFetchingTimeEntriesList: true,
+                pagination: {
+                    ...state.pagination,
+                    page: ++state.pagination.page,
+                },
+            };
+        case DISABLE_PAGINATION:
+            return {
+                ...state,
+                isFetchingTimeEntriesList: false,
+                pagination: {
+                    ...state.pagination,
+                    disabled: true,
+                    page: --state.pagination.page,
+                },
+            };
+        case GET_TIME_ENTRIES_LIST_PAGINATION:
+            return {
+                ...state,
+                isFetchingTimeEntriesList: false,
+                timeEntriesList: state.timeEntriesList.concat(payload),
+            };
         case 'RESET_ALL':
             return initialState;
         default:
