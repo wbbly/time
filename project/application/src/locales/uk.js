@@ -204,4 +204,6 @@ export default {
     v_empty_email: 'Потрібна електронна пошта',
     v_empty_password: 'Потрібен пароль',
     v_cofirm_password_required: 'Потрібно підтвердити пароль',
+    v_add_old_password: 'Введіть поточний пароль',
+    v_add_new_password: 'Введіть новий пароль',
 };

@@ -211,4 +211,6 @@ export default {
     v_empty_email: 'E-Mail ist erforderlich',
     v_empty_password: 'Ein Passwort ist erforderlich',
     v_cofirm_password_required: 'Passwortbestätigung ist erforderlich',
+    v_add_old_password: 'Aktuelles Passwort hinzufügen',
+    v_add_new_password: 'Gib dein neues Passwort ein',
 };

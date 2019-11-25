@@ -203,4 +203,6 @@ export default {
     v_empty_email: 'E-mail is required',
     v_empty_password: 'A password is required',
     v_cofirm_password_required: 'Password confirm is required',
+    v_add_old_password: 'Add current password',
+    v_add_new_password: 'Add your new password',
 };
