@@ -1,0 +1,50 @@
+.play-icon-large-mobile {
+  position: fixed;
+  z-index: 5;
+  width: 5rem;
+  height: 5rem;
+  bottom: 1.5rem;
+  right: 2.5rem;
+  border-radius: 50%;
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+.current-task-mobile {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  color: #ffffff;
+
+  .current-task-mobile__task-info {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 1rem 0 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  .current-task-mobile__task-timer {
+    font-size: 1.8rem;
+    margin: 0 0 0.7rem 0;
+  }
+  .current-task-mobile__task-name {
+    font-size: 1.4rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .current-task-mobile__stop-icon-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .current-task-mobile__stop-icon {
+    min-width: 5rem;
+    min-height: 5rem;
+  }
+}

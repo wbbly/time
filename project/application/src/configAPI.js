@@ -122,6 +122,48 @@ export const editClient = (client, id) =>
         },
     });
 
+export const deleteTask = id =>
+    instance({
+        url: `/timer/${id}`,
+        method: 'DELETE',
+    });
+
+export const getTimeEntriesList = (params = {}) =>
+    instance({
+        url: '/timer/user-list',
+        method: 'GET',
+        params,
+    });
+
+export const getCurrentTime = () =>
+    instance({
+        url: '/time/current',
+        method: 'GET',
+    });
+
+export const getProjectsList = (withTimerList = false) =>
+    instance({
+        url: '/project/list',
+        method: 'GET',
+        params: {
+            withTimerList,
+        },
+    });
+
+// keys for data: issue, projectId, startDatetime, endDatetime
+export const changeTask = (id, data) =>
+    instance({
+        url: `/timer/${id}`,
+        method: 'PATCH',
+        data,
+    });
+
+export const syncTaskWithJira = id =>
+    instance({
+        url: `/sync/jira/issue/${id}/worklog`,
+        method: 'POST',
+    });
+
 // UNUSED AXIOS REQUESTS
 
 export const userInvite = ({ email }) =>
@@ -185,26 +227,6 @@ export const changeUserInTeam = ({ id, email, username, isActive, roleName }) =>
         },
     });
 
-export const syncTaskWithJira = ({ id }) =>
-    instance({
-        url: `/sync/jira/issue/${id}/worklog`,
-        method: 'POST',
-    });
-
-// keys for data: issue, projectId, startDatetime, endDatetime
-export const changeTask = (id, data) =>
-    instance({
-        url: `/timer/${id}`,
-        method: 'PATCH',
-        data,
-    });
-
-export const getTimerUserList = () =>
-    instance({
-        url: '/timer/user-list',
-        method: 'GET',
-    });
-
 export const renameTeam = ({ teamId, newName }) =>
     instance({
         url: '/team/rename',
@@ -212,15 +234,6 @@ export const renameTeam = ({ teamId, newName }) =>
         data: {
             teamId,
             newName,
-        },
-    });
-
-export const getProjectList = (withTimerList = false) =>
-    instance({
-        url: '/project/list',
-        method: 'GET',
-        params: {
-            withTimerList,
         },
     });
 
@@ -232,18 +245,6 @@ export const signIn = ({ email, password }) =>
             email,
             password,
         },
-    });
-
-export const getCurrentTime = () =>
-    instance({
-        url: '/time/current',
-        method: 'GET',
-    });
-
-export const deleteTask = ({ id }) =>
-    instance({
-        url: `/timer/${id}`,
-        method: 'DELETE',
     });
 
 export const signUp = ({ email, password, language }) =>
@@ -325,8 +326,6 @@ export const verifyJiraToken = ({ token }) =>
             token,
         },
     });
-
-// TODO: create functions of open, close and emit socket connection
 
 // Add a request interceptor
 instance.interceptors.request.use(

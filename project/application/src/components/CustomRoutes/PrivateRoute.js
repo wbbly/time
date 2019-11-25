@@ -2,9 +2,18 @@ import React, { Component } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import _ from 'lodash';
+
+import { initSocket } from '../../configSocket';
+
+// Actions
+import { setTimerTickAction, getTimeEntriesListAction } from '../../actions/MainPageAction';
 import { getUserDataAction, checkUserDataAction } from '../../actions/UserActions';
 import { getUserTeamsAction, getCurrentTeamAction } from '../../actions/TeamActions';
+
+// Services
 import { checkAppVersion, logoutByUnauthorized } from '../../services/authentication';
+import { updatePageTitle } from '../../services/pageTitleService';
 
 import { Loading } from '../Loading';
 
@@ -20,15 +29,57 @@ class PrivateRoute extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { checkUserDataAction, getUserTeamsAction, getCurrentTeamAction } = this.props;
+        const {
+            checkUserDataAction,
+            getUserTeamsAction,
+            getCurrentTeamAction,
+            user,
+            currentTimer,
+            setTimerTickAction,
+            getTimeEntriesListAction,
+        } = this.props;
 
         if (!checkAppVersion()) return logoutByUnauthorized();
+
+        if (!prevProps.user && user) {
+            initSocket();
+        }
+
+        if (!_.isEqual(prevProps.currentTimer, currentTimer)) {
+            if (currentTimer) {
+                // set timerTick
+                if (!this.setInterval) {
+                    this.setInterval = setInterval(() => {
+                        setTimerTickAction();
+                    }, 1000);
+                }
+            } else {
+                // reset timerTick
+                updatePageTitle(null);
+                clearInterval(this.setInterval);
+                this.setInterval = null;
+                setTimerTickAction('reset');
+            }
+            // getting a new task list when stopping or starting
+            // a new task without stopping the last task
+            if (
+                (prevProps.currentTimer && !currentTimer) ||
+                (prevProps.currentTimer && currentTimer && prevProps.currentTimer.id !== currentTimer.id)
+            ) {
+                getTimeEntriesListAction();
+            }
+        }
 
         if (prevProps.location.pathname !== this.props.location.pathname) {
             checkUserDataAction();
             getUserTeamsAction();
             getCurrentTeamAction();
         }
+    }
+
+    componentWillUnmount() {
+        updatePageTitle(null);
+        clearInterval(this.setInterval);
     }
 
     render() {
@@ -53,6 +104,7 @@ const mapStateToProps = state => ({
     user: state.userReducer.user,
     isFetching: state.userReducer.isFetching,
     isInitialFetching: state.userReducer.isInitialFetching,
+    currentTimer: state.mainPageReducer.currentTimer,
 });
 
 const mapDispatchToProps = {
@@ -60,6 +112,8 @@ const mapDispatchToProps = {
     checkUserDataAction,
     getUserTeamsAction,
     getCurrentTeamAction,
+    setTimerTickAction,
+    getTimeEntriesListAction,
 };
 
 export default connect(

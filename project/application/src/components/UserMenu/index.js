@@ -27,6 +27,10 @@ class UserMenu extends Component {
         this.setState({ activeUserMenu: true });
     };
 
+    componentWillUnmount() {
+        document.removeEventListener('click', this.closeDropdown);
+    }
+
     render() {
         const { switchMenu, vocabulary, isMobile, user } = this.props;
         const { v_log_out, v_profile_settings, v_more_option } = vocabulary;

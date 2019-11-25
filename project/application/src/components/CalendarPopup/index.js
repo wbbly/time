@@ -14,13 +14,8 @@ import ruLocale from 'date-fns/locale/ru';
 import itLocale from 'date-fns/locale/it';
 import uaLocale from 'date-fns/locale/uk';
 
-// axios request
-import { changeTask } from '../../configAPI';
-
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
-
-import { encodeTimeEntryIssue } from '../../services/timeEntryService';
 
 import './style.scss';
 
@@ -31,8 +26,6 @@ const localeMap = {
     it: itLocale,
     uk: uaLocale,
 };
-
-// MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd
 
 const muiTheme = createMuiTheme({
     overrides: {
@@ -75,92 +68,93 @@ const muiTheme = createMuiTheme({
     },
 });
 
-class EditTaskPopup extends Component {
+class CalendarPopup extends Component {
     state = {
-        date: new Date(),
-        startTime: new Date(),
-        endTime: new Date(),
+        startDateTime: null,
+        endDateTime: null,
+        date: null,
         isChanged: false,
+        initialRender: true,
     };
 
-    changeDate = value =>
-        this.setState({
-            date: value,
-            isChanged: true,
-        });
-
-    onChangeTimeStart = value =>
-        this.setState({
-            startTime: value,
-            isChanged: true,
-        });
-
-    onChangeTimeEnd = value =>
-        this.setState({
-            endTime: value,
-            isChanged: true,
-        });
-
-    componentDidMount() {
-        const { editedItem } = this.props;
-        const { startDatetime, endDatetime } = editedItem;
-
-        this.setState({
-            startTime: moment(startDatetime).toDate(),
-            endTime: moment(endDatetime).toDate(),
-            date: moment(startDatetime).toDate(),
-        });
+    static getDerivedStateFromProps(props, state) {
+        const { startDateTime, endDateTime } = props;
+        const { initialRender } = state;
+        if (initialRender) {
+            return {
+                startDateTime: moment(startDateTime).toDate(),
+                endDateTime: moment(endDateTime).toDate(),
+                date: moment(startDateTime).toDate(),
+                initialRender: false,
+            };
+        }
+        return null;
     }
 
-    async componentWillUnmount() {
-        const { isChanged, startTime, endTime, date } = this.state;
-        const { getUserTimeEntries, editedItem, vocabulary, setIsUpdatingTask, showNotificationAction } = this.props;
-        const { startDatetime, endDatetime, id, project, issue } = editedItem;
+    changeHandlerStartTime = startTime => {
+        this.setState({
+            isChanged: true,
+            startDateTime: startTime,
+        });
+    };
+
+    changeHandlerEndTime = endTime => {
+        this.setState({
+            isChanged: true,
+            endDateTime: endTime,
+        });
+    };
+
+    changeHandlerDate = date => {
+        this.setState({
+            isChanged: true,
+            date,
+        });
+    };
+
+    componentDidMount() {
+        const { createRefCallback } = this.props;
+        createRefCallback(this.editTaskPopupRef);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { createRefCallback } = this.props;
+        createRefCallback(this.editTaskPopupRef);
+    }
+
+    componentWillUnmount() {
+        const { updateTask, vocabulary, showNotificationAction } = this.props;
         const { v_a_time_start_error } = vocabulary;
+        const { startDateTime, endDateTime, date, isChanged } = this.state;
         if (isChanged) {
-            setIsUpdatingTask(true);
-            const startDateTime = moment(
-                `${moment(date).format('YYYY-MM-DD')} ${
-                    startTime ? moment(startTime).format('HH:mm') : moment(startDatetime).format('HH:mm')
-                }`
-            );
-            const endDateTime = moment(
-                `${moment(date).format('YYYY-MM-DD')} ${
-                    endTime ? moment(endTime).format('HH:mm') : moment(endDatetime).format('HH:mm')
-                }`
-            );
-
-            if (
-                !startDateTime.utc().toISOString() ||
-                !endDateTime.utc().toISOString() ||
-                +startDateTime >= +endDateTime
-            ) {
-                // alert(v_a_time_start_error);
+            if (moment(startDateTime).isValid() && moment(endDateTime).isValid()) {
+                const day = moment(date).format('YYYY-MM-DD');
+                const startTime = moment(`${day} ${moment(startDateTime).format('HH:mm')}`);
+                const endTime = moment(`${day} ${moment(endDateTime).format('HH:mm')}`);
+                if (+startTime >= +endTime) {
+                    showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
+                } else {
+                    updateTask({
+                        startDateTime: startTime,
+                        endDateTime: endTime,
+                    });
+                }
+            } else {
                 showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
-                return;
             }
-
-            await changeTask(id, {
-                issue: encodeTimeEntryIssue(issue),
-                projectId: project.id,
-                startDatetime: startDateTime.utc().toISOString(),
-                endDatetime: endDateTime.utc().toISOString(),
-            });
-            await getUserTimeEntries();
         }
-        setIsUpdatingTask(false);
     }
 
     render() {
-        const { date, startTime, endTime } = this.state;
-        const { vocabulary, timeFormat, firstDayOfWeek } = this.props;
-        const { v_time_start, v_time_end, lang } = vocabulary;
+        const { startDateTime, endDateTime, date } = this.state;
+        const { timeFormat, vocabulary, firstDayOfWeek } = this.props;
+        const { lang, v_time_start, v_time_end } = vocabulary;
 
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
 
         return (
-            <div className="edit-task-popup">
+            <div ref={(this.editTaskPopupRef = React.createRef())} className="edit-task-popup">
                 <ThemeProvider theme={muiTheme}>
                     <div className="edit-task-popup_set-time">
                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale}>
@@ -169,8 +163,8 @@ class EditTaskPopup extends Component {
                                 <KeyboardTimePicker
                                     disableToolbar
                                     ampm={timeFormat === '12'}
-                                    value={startTime}
-                                    onChange={this.onChangeTimeStart}
+                                    value={startDateTime}
+                                    onChange={this.changeHandlerStartTime}
                                 />
                             </div>
                             <div className="edit-task-popup_set-time-end">
@@ -178,8 +172,8 @@ class EditTaskPopup extends Component {
                                 <KeyboardTimePicker
                                     disableToolbar
                                     ampm={timeFormat === '12'}
-                                    value={endTime}
-                                    onChange={this.onChangeTimeEnd}
+                                    value={endDateTime}
+                                    onChange={this.changeHandlerEndTime}
                                 />
                             </div>
                         </MuiPickersUtilsProvider>
@@ -193,7 +187,7 @@ class EditTaskPopup extends Component {
                                 variant="static"
                                 openTo="date"
                                 value={date}
-                                onChange={this.changeDate}
+                                onChange={this.changeHandlerDate}
                             />
                         </MuiPickersUtilsProvider>
                     </div>
@@ -203,12 +197,10 @@ class EditTaskPopup extends Component {
     }
 }
 
-const mapStateToProps = store => ({
-    vocabulary: store.languageReducer.vocabulary,
-    dateFormat: store.userReducer.dateFormat,
-    timeFormat: store.userReducer.timeFormat,
-    firstDayOfWeek: store.userReducer.firstDayOfWeek,
-    vocabulary: store.languageReducer.vocabulary,
+const mapStateToProps = state => ({
+    vocabulary: state.languageReducer.vocabulary,
+    timeFormat: state.userReducer.timeFormat,
+    firstDayOfWeek: state.userReducer.firstDayOfWeek,
 });
 
 const mapDispatchToProps = {
@@ -218,4 +210,4 @@ const mapDispatchToProps = {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(EditTaskPopup);
+)(CalendarPopup);

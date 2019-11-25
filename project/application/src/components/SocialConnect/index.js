@@ -83,13 +83,13 @@ class SocialConnect extends Component {
                     if (type === 'facebook') {
                         return (
                             <FacebookLogin
+                                key={type}
                                 appId="543553739782396"
                                 autoLoad={false}
                                 fields="name,email"
                                 callback={this.responseFacebook}
                                 render={renderProps => (
                                     <SocialConnectButton
-                                        key={type}
                                         onClick={async event => {
                                             if (isFetchingFacebook) return;
                                             this.setState({ isFetchingFacebook: true });

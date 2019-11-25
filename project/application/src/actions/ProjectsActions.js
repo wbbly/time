@@ -1,3 +1,7 @@
+import { getProjectsList } from '../configAPI';
+
+export const SET_PROJECTS_LIST = 'SET_PROJECTS_LIST';
+
 export default function projectsPageAction(actionType, action) {
     if (actionType === 'CREATE_PROJECT') {
         return {
@@ -31,3 +35,45 @@ export default function projectsPageAction(actionType, action) {
         };
     }
 }
+
+const setProjectsListAction = payload => ({
+    type: SET_PROJECTS_LIST,
+    payload,
+});
+
+export const getProjectsListActions = (withTimerList = false) => async dispatch => {
+    try {
+        const { data } = await getProjectsList(withTimerList);
+
+        const formattedList = data.data.project_v2.map(project => {
+            const { is_active: isActive, project_color: projectColor, ...rest } = project;
+            let { timer } = project;
+            if (timer) {
+                timer = timer.map(item => {
+                    const { start_datetime: startDatetime, end_datetime: endDatetime } = item;
+                    return {
+                        startDatetime,
+                        endDatetime,
+                    };
+                });
+
+                return {
+                    ...rest,
+                    isActive,
+                    projectColor,
+                    timer,
+                };
+            } else {
+                return {
+                    ...rest,
+                    isActive,
+                    projectColor,
+                };
+            }
+        });
+
+        dispatch(setProjectsListAction(formattedList));
+    } catch {
+        dispatch(setProjectsListAction([]));
+    }
+};
