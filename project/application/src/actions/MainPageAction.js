@@ -13,6 +13,7 @@ export const SET_TIMER_TICK = 'SET_TIMER_TICK';
 export const INC_PAGINATION = 'INC_PAGINATION';
 export const GET_TIME_ENTRIES_LIST_PAGINATION = 'GET_TIME_ENTRIES_LIST_PAGINATION';
 export const DISABLE_PAGINATION = 'DISABLE_PAGINATION';
+export const RESTORE_PAGINATION = 'RESTORE_PAGINATION';
 
 const setTimeEntriesListAction = payload => ({
     type: GET_TIME_ENTRIES_LIST,
@@ -70,12 +71,16 @@ export const incPaginationAction = () => ({
     type: INC_PAGINATION,
 });
 
+export const restorePaginationAction = () => ({
+    type: RESTORE_PAGINATION,
+});
+
 const setTimeEntriesListPaginationAction = payload => ({
     type: GET_TIME_ENTRIES_LIST_PAGINATION,
     payload,
 });
 
-const disablePaginationAction = payload => ({
+const disablePaginationAction = () => ({
     type: DISABLE_PAGINATION,
 });
 

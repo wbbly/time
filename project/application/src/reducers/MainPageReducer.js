@@ -6,6 +6,7 @@ import {
     INC_PAGINATION,
     GET_TIME_ENTRIES_LIST_PAGINATION,
     DISABLE_PAGINATION,
+    RESTORE_PAGINATION,
 } from '../actions/MainPageAction';
 
 const initialState = {
@@ -39,7 +40,15 @@ export function mainPageReducer(state = initialState, { type, payload }) {
                 isFetchingTimeEntriesList: true,
                 pagination: {
                     ...state.pagination,
-                    page: ++state.pagination.page,
+                    page: state.pagination.page + 1,
+                },
+            };
+        case RESTORE_PAGINATION:
+            return {
+                ...state,
+                isFetchingTimeEntriesList: false,
+                pagination: {
+                    ...initialState.pagination,
                 },
             };
         case DISABLE_PAGINATION:
