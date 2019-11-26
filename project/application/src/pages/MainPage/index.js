@@ -21,6 +21,7 @@ import {
     getTimeEntriesListAction,
     incPaginationAction,
     getTimeEntriesListPaginationAction,
+    restorePaginationAction,
 } from '../../actions/MainPageAction';
 import { getProjectsListActions } from '../../actions/ProjectsActions';
 
@@ -98,6 +99,11 @@ class MainPage extends Component {
         this.setState({
             isInitialFetching: false,
         });
+    }
+
+    componentWillUnmount() {
+        const { restorePaginationAction } = this.props;
+        restorePaginationAction();
     }
 
     render() {
@@ -183,6 +189,7 @@ const mapDispatchToProps = {
     getProjectsListActions,
     incPaginationAction,
     getTimeEntriesListPaginationAction,
+    restorePaginationAction,
 };
 
 export default connect(
