@@ -113,13 +113,11 @@ export const setClient = client =>
             name: client,
         },
     });
-export const editClient = (client, id) =>
+export const editClient = ({ userData, id }) =>
     instance({
         url: `client/${id}`,
         method: 'PATCH',
-        data: {
-            name: client,
-        },
+        data: userData,
     });
 
 export const deleteTask = id =>
@@ -306,24 +304,20 @@ export const getUserList = () =>
         method: 'GET',
     });
 
-export const changeUserData = ({ id, email, username, language, tokenJira }) =>
+export const requestChangeUserData = (data, id) =>
     instance({
         url: `user/${id}`,
         method: 'PATCH',
-        data: {
-            email,
-            username,
-            language,
-            tokenJira,
-        },
+        data,
     });
 
-export const verifyJiraToken = ({ token }) =>
+export const verifyJiraToken = ({ token, urlJira }) =>
     instance({
         url: 'sync/jira/my-permissions',
         method: 'GET',
         params: {
             token,
+            urlJira,
         },
     });
 

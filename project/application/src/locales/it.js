@@ -208,4 +208,7 @@ export default {
     v_cofirm_password_required: 'È richiesta la conferma della password',
     v_add_old_password: 'Aggiungi la password corrente',
     v_add_new_password: 'Inserisci la tua nuova password',
+
+    v_v_required: 'Campo obbligatorio',
+    v_v_incorect_url: 'URL errato',
 };

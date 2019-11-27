@@ -17,12 +17,12 @@ class Input extends Component {
 
     render() {
         const { typeInput } = this.state;
-        const { config, vocabulary, errorMsg, withValidation, label, checkFakePassword = () => {} } = this.props;
+        const { config, vocabulary, errorMsg, withValidation, label, dark, checkFakePassword = () => {} } = this.props;
         const { type, id, ...rest } = config;
 
         return (
-            <label htmlFor={id} className="input_container">
-                <span className="input_title">{label}</span>
+            <label htmlFor={id} className={classNames('input_container', { input_container_dark: dark })}>
+                {label && <span className="input_title">{label}</span>}
                 <div
                     className={classNames('wrapper-base-input', {
                         'wrapper-base-input--error': errorMsg && withValidation,

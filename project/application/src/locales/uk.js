@@ -206,4 +206,7 @@ export default {
     v_cofirm_password_required: 'Потрібно підтвердити пароль',
     v_add_old_password: 'Введіть поточний пароль',
     v_add_new_password: 'Введіть новий пароль',
+
+    v_v_required: "Обов'язкове поле",
+    v_v_incorect_url: 'Неправильна URL-адреса',
 };

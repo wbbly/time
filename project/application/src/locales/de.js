@@ -213,4 +213,7 @@ export default {
     v_cofirm_password_required: 'Passwortbestätigung ist erforderlich',
     v_add_old_password: 'Aktuelles Passwort hinzufügen',
     v_add_new_password: 'Gib dein neues Passwort ein',
+
+    v_v_required: 'Pflichtfeld',
+    v_v_incorect_url: 'Falsche URL',
 };

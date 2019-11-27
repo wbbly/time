@@ -49,7 +49,7 @@
 
   .column-inputs {
     flex-grow: 1;
-    padding: 0 0 0 20px;
+    padding: 0 0 20px 20px;
     max-width: 600px;
   }
 
@@ -65,11 +65,11 @@
   }
 
   .body_user_setting .input_subtitle {
-    font-family: "Open Sans", sans-serif;
-    font-size: 14px;
-    line-height: 25px;
-    color: #ffffff;
-    margin: 0 0 10px 0;
+    // font-family: "Open Sans", sans-serif;
+    // font-size: 14px;
+    // line-height: 25px;
+    // color: #ffffff;
+    // margin: 0 0 10px 0;
 
     a {
       color: #d9d9d9;
@@ -84,29 +84,33 @@
     }
   }
 
-  .body_user_setting .input_container input {
-    // margin-top: 10px;
-    margin: 0 0 16px 0;
-    font-size: 16px;
-    line-height: 22px;
-    color: #d8d8d8;
-    // width: 638px;
-    height: 45px;
-    background: #4f4f4f;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    border: 0;
-    padding-left: 18px;
+  // .body_user_setting .input_container input {
+  //   // margin-top: 10px;
+  //   margin: 0 0 16px 0;
+  //   font-size: 16px;
+  //   line-height: 22px;
+  //   color: #d8d8d8;
+  //   // width: 638px;
+  //   height: 45px;
+  //   background: #4f4f4f;
+  //   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  //   border-radius: 4px;
+  //   border: 0;
+  //   padding-left: 18px;
 
-    &[type="email"],
-    &[name="jiraPassword"] {
-      margin: 0;
-    }
-  }
+  //   // &[type="email"],
+  //   &[name="jiraPassword"] {
+  //     margin: 0;
+  //   }
+  // }
 
   .input_container_phone {
     margin: 0 0 16px 0;
     position: relative;
+
+    .react-tel-input{
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    }
 
     .form-control {
       width: 100%;
@@ -259,15 +263,15 @@
     }
   }
 
-  .body_user_setting .input_container {
-    display: flex;
-    flex-direction: column;
-    // margin: 10px 0 10px 0;
+  // .body_user_setting .input_container {
+  //   display: flex;
+  //   flex-direction: column;
+  //   // margin: 10px 0 10px 0;
 
-    &:last-of-type {
-      margin: 0;
-    }
-  }
+  //   &:last-of-type {
+  //     margin: 0;
+  //   }
+  // }
 
   .body_user_setting .save_btn {
     width: 196px;

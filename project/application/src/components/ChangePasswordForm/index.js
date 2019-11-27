@@ -42,11 +42,11 @@ class ChangePasswordForm extends Component {
                 validateOnBlur={false}
                 initialValues={{ oldPassword: withOldPassword && '', password: '', confirmPassword: '' }}
                 validationSchema={Yup.object({
-                    oldPassword: withOldPassword && Yup.string().required('v_empty_password'),
-                    password: Yup.string().required('v_empty_password'),
+                    oldPassword: withOldPassword && Yup.string().required('v_v_required'),
+                    password: Yup.string().required('v_v_required'),
                     confirmPassword: Yup.string()
                         .equalTo(Yup.ref('password'), 'v_a_confirm_password_error')
-                        .required('v_cofirm_password_required'),
+                        .required('v_v_required'),
                 })}
                 onSubmit={(values, { setSubmitting }) => {
                     submitForm({ newPassword: values.password, password: values.oldPassword });
