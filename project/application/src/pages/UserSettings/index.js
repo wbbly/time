@@ -304,6 +304,7 @@ class UserSetting extends Component {
                                     autoComplete="new-password"
                                     className="column column-inputs"
                                     onSubmit={formik.handleSubmit}
+                                    noValidate
                                 >
                                     <input
                                         autoComplete="new-password"
