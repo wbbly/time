@@ -113,11 +113,13 @@ export const setClient = client =>
             name: client,
         },
     });
-export const editClient = ({ userData, id }) =>
+export const editClient = (data, id) =>
     instance({
         url: `client/${id}`,
         method: 'PATCH',
-        data: userData,
+        data: {
+            name: data,
+        },
     });
 
 export const deleteTask = id =>
