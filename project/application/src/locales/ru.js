@@ -206,4 +206,9 @@ export default {
     v_empty_email: 'Требуется электронная почта',
     v_empty_password: 'Требуется пароль',
     v_cofirm_password_required: 'Требуется подтверждение пароля',
+    v_add_old_password: 'Введите текущий пароль',
+    v_add_new_password: 'Введите новый пароль',
+
+    v_v_required: 'Обязательное поле',
+    v_v_incorect_url: 'Неверный URL',
 };

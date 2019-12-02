@@ -199,6 +199,7 @@
     border-radius: 0;
     cursor: pointer;
     align-self: flex-end;
+    margin-top: 28px;
 }
 
 .add_user_modal_container i.vector {

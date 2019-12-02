@@ -38,7 +38,7 @@ class AuthPage extends Component {
             const response = await signIn(values);
             setTokenToLocalStorage(response.data.token);
             document.cookie = 'isAuthWobbly=true; path=/; domain=.wobbly.me;';
-            this.setState({ haveToken: true }, () => console.log('here'));
+            this.setState({ haveToken: true });
         } catch (error) {
             if (error.response && error.response.data.message) {
                 const errorMsg = error.response.data.message;

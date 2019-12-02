@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
 
 import classNames from 'classnames';
 
@@ -20,18 +22,15 @@ import SelectTimeFormat from '../../components/SelectTimeFormat';
 import SelectFirstDayOfWeek from '../../components/SelectFirstDayOfWeek';
 import SelectDurationTimeFormat from '../../components/SelectDurationTimeFormat';
 import SocialConnect from '../../components/SocialConnect';
+import SwitchJiraType from '../../components/SwitchJiraType';
 
 //Services
-import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
-import { apiCall } from '../../services/apiService';
-import { authValidation } from '../../services/validateService';
+import { verifyJiraToken, requestChangeUserData } from '../../configAPI';
 
 //Config
-import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
-import SwitchJiraType from '../../components/SwitchJiraType';
 
 const fakePassword = '8d8ae757-81ca-408f-a0b8-00d1e9f9923f';
 
@@ -39,41 +38,27 @@ class UserSetting extends Component {
     state = {
         rotateArrowLoop: false,
         userSetJiraSync: false,
-        validEmail: true,
         phone: {
             value: '',
         },
         inputs: {
             userName: {
                 value: '',
-                type: 'text',
-                name: 'userName',
             },
             email: {
                 value: '',
-                type: 'email',
-                name: 'email',
             },
             jiraURL: {
                 value: '',
-                type: 'text',
-                name: 'jiraURL',
-                required: true,
             },
             jiraType: {
                 value: '',
             },
             jiraUsername: {
                 value: '',
-                type: 'text',
-                name: 'jiraUsername',
-                required: true,
             },
             jiraPassword: {
                 value: '',
-                type: 'password',
-                name: 'jiraPassword',
-                required: true,
             },
             syncJiraStatus: {
                 checked: false,
@@ -95,53 +80,44 @@ class UserSetting extends Component {
         return `+${code}`;
     };
 
-    changeUserSetting = ({ userName: username, ...rest }) => {
+    changeUserSetting = async ({ userName: username, ...rest }) => {
         const { vocabulary, changeUserData, userReducer, showNotificationAction } = this.props;
         const { v_a_data_updated_ok, lang } = vocabulary;
 
         const { phone } = this.state;
 
         const { id } = userReducer.user;
-
-        apiCall(AppConfig.apiURL + `user/${id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
-            },
-            body: JSON.stringify({
-                ...rest,
-                username,
-                phone: (phone.value || '').trim().indexOf(' ') > -1 ? phone.value : '',
-                language: lang.short,
-            }),
-        }).then(
-            result => {
-                changeUserData(result);
+        let userData = {
+            ...rest,
+            username,
+            phone: (phone.value || '').trim().indexOf(' ') > -1 ? phone.value : '',
+            language: lang.short,
+        };
+        try {
+            const result = await requestChangeUserData(userData, id);
+            if (result.data) {
+                changeUserData(result.data);
                 showNotificationAction({ text: v_a_data_updated_ok, type: 'success' });
                 this.updateUserData();
                 this.setState({ userSetJiraSync: false });
-            },
-            err => {
-                this.updateUserData();
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => {
-                        const textError = JSON.parse(errorMessage).message;
-                        showNotificationAction({ text: vocabulary[textError], type: 'error' });
-                    });
-                } else {
-                    console.log(err);
-                }
             }
-        );
+        } catch (error) {
+            this.updateUserData();
+            if (error.response && error.response.data.message) {
+                const errorMsg = error.response.data.message;
+                showNotificationAction({ text: vocabulary[errorMsg], type: 'error' });
+            } else {
+                console.log(error);
+            }
+        }
     };
 
-    onSubmitHandler = event => {
-        event.preventDefault();
+    onSubmitHandler = values => {
         const { vocabulary, showNotificationAction } = this.props;
 
         const { inputs, userSetJiraSync } = this.state;
-        const { jiraUsername, jiraPassword, syncJiraStatus, jiraURL, jiraType } = inputs;
+        const { syncJiraStatus, jiraType } = inputs;
+        const { jiraUserName, jiraPassword, jiraUrl } = values;
 
         const userData = Object.keys(inputs).reduce((acc, curr) => {
             if (
@@ -152,19 +128,14 @@ class UserSetting extends Component {
                 curr === 'jiraType'
             )
                 return acc;
-            return { ...acc, [curr]: inputs[curr].value };
+            return { ...acc, [curr]: values[curr] };
         }, {});
-        if (authValidation('email', userData.email)) {
-            this.setState({ validEmail: false });
-            return;
-        }
-        this.setState({ validEmail: true });
 
         if (userSetJiraSync) {
             if (syncJiraStatus.checked) {
                 userData.tokenJira = '';
                 try {
-                    userData.tokenJira = btoa(`${jiraUsername.value}:${jiraPassword.value}`);
+                    userData.tokenJira = btoa(`${jiraUserName}:${jiraPassword}`);
                 } catch (e) {
                     showNotificationAction({
                         text: vocabulary['ERROR.TIMER.JIRA_SYNC_FAILED'],
@@ -173,9 +144,9 @@ class UserSetting extends Component {
                     return false;
                 }
 
-                userData.urlJira = jiraURL.value;
+                userData.urlJira = jiraUrl;
                 userData.typeJira = jiraType.value;
-                userData.loginJira = jiraUsername.value;
+                userData.loginJira = jiraUserName;
             } else {
                 userData.tokenJira = '';
                 userData.urlJira = '';
@@ -183,54 +154,26 @@ class UserSetting extends Component {
                 userData.loginJira = '';
             }
         }
-        if (userData.tokenJira && jiraPassword.value === fakePassword) {
+        if (userData.tokenJira && jiraPassword === fakePassword) {
             delete userData.tokenJira;
         }
         this.changeUserSetting(userData);
     };
 
-    onChangeHandler = event => {
-        const { inputs } = this.state;
-        const { name, value, checked } = event.target;
-        if (name === 'syncJiraStatus') {
-            this.setState(prevState => ({
-                userSetJiraSync: true,
-                inputs: {
-                    ...prevState.inputs,
-                    [name]: {
-                        ...prevState.inputs[name],
-                        checked,
-                    },
-                },
-            }));
-            return;
-        }
-        if (name === 'jiraUsername' && inputs.jiraPassword.value === fakePassword) {
-            this.setState(prevState => ({
-                inputs: {
-                    ...prevState.inputs,
-                    [name]: {
-                        ...prevState.inputs[name],
-                        value,
-                    },
-                    jiraPassword: {
-                        ...prevState.inputs.jiraPassword,
-                        value: '',
-                    },
-                },
-            }));
-            return;
-        }
+    changeSyncJiraStatus = event => {
+        const { name, checked } = event.target;
         this.setState(prevState => ({
+            userSetJiraSync: true,
             inputs: {
                 ...prevState.inputs,
                 [name]: {
                     ...prevState.inputs[name],
-                    value,
+                    checked,
                 },
             },
         }));
     };
+
     selectedJiraType = value => {
         this.setState(prevState => ({
             inputs: {
@@ -241,56 +184,29 @@ class UserSetting extends Component {
             },
         }));
     };
-    verifyJiraAuth = () => {
+
+    verifyJiraAuth = async (jiraUserName, jiraPassword, jiraUrl) => {
         this.setState({ rotateArrowLoop: true });
         const { vocabulary, showNotificationAction } = this.props;
 
-        const { inputs } = this.state;
-        const { jiraUsername, jiraPassword, jiraURL } = inputs;
-
         let tokenJira;
         try {
-            tokenJira = btoa(`${jiraUsername.value}:${jiraPassword.value}`);
-        } catch (e) {
-            showNotificationAction({ text: vocabulary['ERROR.TIMER.JIRA_SYNC_FAILED'], type: 'error' });
+            tokenJira = btoa(`${jiraUserName}:${jiraPassword}`);
+            const result = await verifyJiraToken({ token: tokenJira, urlJira: jiraUrl });
             this.setState({ rotateArrowLoop: false });
-            return false;
-        }
-
-        return apiCall(AppConfig.apiURL + `sync/jira/my-permissions?token=${tokenJira}&urlJira=${jiraURL.value}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
-            },
-        }).then(
-            result => {
-                this.setState({ rotateArrowLoop: false });
-                showNotificationAction({ text: vocabulary[result.message], type: 'success' });
-                return true;
-            },
-            err => {
-                this.setState({ rotateArrowLoop: false });
-                err.text().then(text => {
-                    showNotificationAction({ text: vocabulary[JSON.parse(text).message], type: 'error' });
-                    return false;
-                });
+            showNotificationAction({ text: vocabulary[result.data.message], type: 'success' });
+            return true;
+        } catch (error) {
+            this.setState({ rotateArrowLoop: false });
+            if (error.response && error.response.data.message) {
+                const errorMsg = error.response.data.message;
+                showNotificationAction({ text: vocabulary[errorMsg], type: 'error' });
+                return false;
+            } else {
+                console.log(error);
+                showNotificationAction({ text: vocabulary['ERROR.TIMER.JIRA_SYNC_FAILED'], type: 'error' });
+                return false;
             }
-        );
-    };
-
-    checkFakePassword = () => {
-        const { inputs } = this.state;
-        if (inputs.jiraPassword.value === fakePassword) {
-            this.setState(prevState => ({
-                inputs: {
-                    ...prevState.inputs,
-                    jiraPassword: {
-                        ...prevState.inputs.jiraPassword,
-                        value: '',
-                    },
-                },
-            }));
         }
     };
 
@@ -337,7 +253,7 @@ class UserSetting extends Component {
             v_verify,
         } = vocabulary;
 
-        const { validEmail, inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
+        const { inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
         const { userName, email, jiraUsername, jiraPassword, syncJiraStatus, jiraURL, jiraType } = inputs;
         const { checked } = syncJiraStatus;
         return (
@@ -354,180 +270,237 @@ class UserSetting extends Component {
                             <Avatar />
                             <SocialConnect />
                         </div>
-                        <form
-                            autoComplete="new-password"
-                            className="column column-inputs"
-                            onSubmit={this.onSubmitHandler}
+                        <Formik
+                            enableReinitialize={true}
+                            validateOnChange={false}
+                            validateOnBlur={false}
+                            initialValues={{
+                                email: email.value || '',
+                                userName: userName.value || '',
+                                jiraUrl: jiraURL.value || '',
+                                jiraUserName: jiraUsername.value || '',
+                                jiraPassword: jiraPassword.value || '',
+                            }}
+                            validationSchema={Yup.object({
+                                email: Yup.string()
+                                    .email('v_a_incorect_email')
+                                    .required('v_v_required'),
+                                userName: Yup.string().required('v_v_required'),
+                                jiraUrl:
+                                    userSetJiraSync &&
+                                    Yup.string()
+                                        .url('v_v_incorect_url')
+                                        .required('v_v_required'),
+                                jiraUserName: userSetJiraSync && Yup.string().required('v_v_required'),
+                                jiraPassword: userSetJiraSync && Yup.string().required('v_v_required'),
+                            })}
+                            onSubmit={(values, { setSubmitting }) => {
+                                this.onSubmitHandler(values);
+                                setSubmitting(false);
+                            }}
                         >
-                            <input
-                                autoComplete="new-password"
-                                className="fakecredentials"
-                                type="text"
-                                name="fakeusernameremembered"
-                            />
-                            <input
-                                autoComplete="new-password"
-                                className="fakecredentials"
-                                type="email"
-                                name="fakeuseremailremembered"
-                            />
-                            <input
-                                autoComplete="new-password"
-                                className="fakecredentials"
-                                type="password"
-                                name="fakepasswordremembered"
-                            />
-                            <label className="input_container">
-                                <span className="input_title">{v_your_name}</span>
-                                <Input
-                                    config={{
-                                        value: userName.value,
-                                        type: userName.type,
-                                        name: userName.name,
-                                        onChange: this.onChangeHandler,
-                                    }}
-                                />
-                            </label>
-                            <label className="input_container">
-                                <span className="input_title">E-Mail</span>
-                                <Input
-                                    config={{
-                                        valid: validEmail,
-                                        value: email.value,
-                                        type: email.type,
-                                        name: email.name,
-                                        onChange: this.onChangeHandler,
-                                    }}
-                                />
-                            </label>
-                            <div className="input_container_phone">
-                                <span className="input_title">{v_phone}</span>
-                                <ReactPhoneInput
-                                    defaultCountry="de"
-                                    countryCodeEditable={false}
-                                    autoFormat={false}
-                                    placeholder=""
-                                    inputExtraProps={{ value: phone.value }}
-                                    value={phone.value}
-                                    onChange={(value, data) => {
-                                        this.setState({
-                                            phone: {
-                                                value: this.checkValidPhone(value, data.dialCode),
-                                            },
-                                        });
-                                    }}
-                                />
-                            </div>
-                            <SwitchLanguage dropdown />
-                            <div className="user-settings__date-time-format-block">
-                                <div className="user-settings__date-time-format-block--row">
-                                    <SelectDateFormat />
-                                    <SelectFirstDayOfWeek />
-                                </div>
-                                <div className="user-settings__date-time-format-block--row">
-                                    <SelectTimeFormat />
-                                    <SelectDurationTimeFormat />
-                                </div>
-                            </div>
-                            <div className="wrapper-jira-sync">
-                                <label className="input_container input_checkbox_jira">
+                            {formik => (
+                                <form
+                                    autoComplete="new-password"
+                                    className="column column-inputs"
+                                    onSubmit={formik.handleSubmit}
+                                >
                                     <input
-                                        type={syncJiraStatus.type}
-                                        checked={syncJiraStatus.checked}
-                                        name={syncJiraStatus.name}
-                                        onChange={this.onChangeHandler}
+                                        autoComplete="new-password"
+                                        className="fakecredentials"
+                                        type="text"
+                                        name="fakeusernameremembered"
                                     />
-                                    <span className="input_title">{v_jira_synchronization}</span>
-                                    {checked && (
-                                        <span
-                                            className="jira_sync_visibility_btn"
-                                            onClick={this.switchVisibilityJiraForm}
-                                        >
-                                            {userSetJiraSync ? v_hide : v_show}
-                                        </span>
-                                    )}
-                                </label>
-                                {checked &&
-                                    userSetJiraSync && (
-                                        <>
-                                            <SwitchJiraType
-                                                dropdown
-                                                onSelect={this.selectedJiraType}
-                                                selectedType={jiraType.value}
-                                                v_type={v_type}
+                                    <input
+                                        autoComplete="new-password"
+                                        className="fakecredentials"
+                                        type="email"
+                                        name="fakeuseremailremembered"
+                                    />
+                                    <input
+                                        autoComplete="new-password"
+                                        className="fakecredentials"
+                                        type="password"
+                                        name="fakepasswordremembered"
+                                    />
+                                    <Input
+                                        config={{
+                                            id: 'userName',
+                                            name: 'userName',
+                                            type: 'text',
+                                            onChange: formik.handleChange,
+                                            onBlur: formik.handleBlur,
+                                            value: formik.values.userName,
+                                        }}
+                                        errorMsg={formik.errors.userName}
+                                        label={v_your_name}
+                                        withValidation
+                                        dark
+                                    />
+                                    <Input
+                                        config={{
+                                            id: 'email',
+                                            name: 'email',
+                                            type: 'email',
+                                            onChange: formik.handleChange,
+                                            onBlur: formik.handleBlur,
+                                            value: formik.values.email,
+                                        }}
+                                        errorMsg={formik.errors.email}
+                                        label={'E-Mail'}
+                                        withValidation
+                                        dark
+                                    />
+                                    <div className="input_container_phone">
+                                        <span className="input_title">{v_phone}</span>
+                                        <ReactPhoneInput
+                                            defaultCountry="de"
+                                            countryCodeEditable={false}
+                                            autoFormat={false}
+                                            placeholder=""
+                                            inputExtraProps={{ value: phone.value }}
+                                            value={phone.value}
+                                            onChange={(value, data) => {
+                                                this.setState({
+                                                    phone: {
+                                                        value: this.checkValidPhone(value, data.dialCode),
+                                                    },
+                                                });
+                                            }}
+                                        />
+                                    </div>
+                                    <SwitchLanguage dropdown />
+                                    <div className="user-settings__date-time-format-block">
+                                        <div className="user-settings__date-time-format-block--row">
+                                            <SelectDateFormat />
+                                            <SelectFirstDayOfWeek />
+                                        </div>
+                                        <div className="user-settings__date-time-format-block--row">
+                                            <SelectTimeFormat />
+                                            <SelectDurationTimeFormat />
+                                        </div>
+                                    </div>
+                                    <div className="wrapper-jira-sync">
+                                        <label className="input_container input_checkbox_jira">
+                                            <input
+                                                type={syncJiraStatus.type}
+                                                checked={syncJiraStatus.checked}
+                                                name={syncJiraStatus.name}
+                                                onChange={this.changeSyncJiraStatus}
                                             />
-                                            <label className="input_container">
-                                                <span className="input_title">Jira url</span>
-                                                <Input
-                                                    config={{
-                                                        value: jiraURL.value,
-                                                        type: jiraURL.type,
-                                                        name: jiraURL.name,
-                                                        required: jiraURL.required,
-                                                        onChange: this.onChangeHandler,
-                                                    }}
-                                                />
-                                            </label>
-                                            <label className="input_container">
-                                                <span className="input_title">{v_login}</span>
-                                                <Input
-                                                    config={{
-                                                        value: jiraUsername.value,
-                                                        type: jiraUsername.type,
-                                                        name: jiraUsername.name,
-                                                        required: jiraUsername.required,
-                                                        onChange: this.onChangeHandler,
-                                                    }}
-                                                />
-                                            </label>
-                                            <label className="input_container">
-                                                <span className="input_title">
-                                                    {v_password}
-                                                    {jiraPassword.value &&
-                                                        jiraPassword.value !== fakePassword && (
-                                                            <i
-                                                                onClick={event => {
-                                                                    event.preventDefault();
-                                                                    this.verifyJiraAuth();
-                                                                }}
-                                                                className={classNames('verify-arrow-loop', {
-                                                                    'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
-                                                                })}
-                                                                title={v_verify}
-                                                            />
-                                                        )}
+                                            <span className="input_title">{v_jira_synchronization}</span>
+                                            {checked && (
+                                                <span
+                                                    className="jira_sync_visibility_btn"
+                                                    onClick={this.switchVisibilityJiraForm}
+                                                >
+                                                    {userSetJiraSync ? v_hide : v_show}
                                                 </span>
-                                                {jiraType.value === 'cloud' && (
-                                                    <span className="input_subtitle">
-                                                        ({v_enter_to}{' '}
-                                                        <a
-                                                            href="https://id.atlassian.com/manage/api-tokens"
-                                                            target="_blank"
-                                                        >
-                                                            https://id.atlassian.com/manage/api-tokens
-                                                        </a>{' '}
-                                                        {v_to_get_token})
-                                                    </span>
-                                                )}
-                                                <Input
-                                                    checkFakePassword={this.checkFakePassword}
-                                                    config={{
-                                                        onFocus: this.checkFakePassword,
-                                                        value: jiraPassword.value,
-                                                        type: jiraPassword.type,
-                                                        name: jiraPassword.name,
-                                                        required: jiraPassword.required,
-                                                        onChange: this.onChangeHandler,
-                                                    }}
-                                                />
-                                            </label>
-                                        </>
-                                    )}
-                            </div>
-                            <button className="save_btn" type="submit">
-                                {v_save_changes}
-                            </button>
-                        </form>
+                                            )}
+                                        </label>
+                                        {checked &&
+                                            userSetJiraSync && (
+                                                <>
+                                                    <SwitchJiraType
+                                                        dropdown
+                                                        onSelect={this.selectedJiraType}
+                                                        selectedType={jiraType.value}
+                                                        v_type={v_type}
+                                                    />
+                                                    <Input
+                                                        config={{
+                                                            id: 'jiraUrl',
+                                                            name: 'jiraUrl',
+                                                            type: 'text',
+                                                            onChange: formik.handleChange,
+                                                            onBlur: formik.handleBlur,
+                                                            value: formik.values.jiraUrl,
+                                                        }}
+                                                        errorMsg={formik.errors.jiraUrl}
+                                                        label={'Jira url'}
+                                                        withValidation
+                                                        dark
+                                                    />
+                                                    <Input
+                                                        name="jiraUserInput"
+                                                        config={{
+                                                            id: 'jiraUserName',
+                                                            name: 'jiraUserName',
+                                                            type: 'text',
+                                                            onChange: formik.handleChange,
+                                                            onBlur: formik.handleBlur,
+                                                            value: formik.values.jiraUserName,
+                                                        }}
+                                                        errorMsg={formik.errors.jiraUserName}
+                                                        label={v_login}
+                                                        withValidation
+                                                        dark
+                                                    />
+                                                    <label className="input_container">
+                                                        <span className="input_title">
+                                                            {v_password}
+                                                            {jiraPassword.value &&
+                                                                jiraPassword.value !== fakePassword && (
+                                                                    <i
+                                                                        onClick={event => {
+                                                                            event.preventDefault();
+                                                                            const {
+                                                                                jiraUserName,
+                                                                                jiraPassword,
+                                                                                jiraUrl,
+                                                                            } = formik.values;
+                                                                            formik
+                                                                                .validateForm()
+                                                                                .then(() =>
+                                                                                    this.verifyJiraAuth(
+                                                                                        jiraUserName,
+                                                                                        jiraPassword,
+                                                                                        jiraUrl
+                                                                                    )
+                                                                                );
+                                                                        }}
+                                                                        className={classNames('verify-arrow-loop', {
+                                                                            'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
+                                                                        })}
+                                                                        title={v_verify}
+                                                                    />
+                                                                )}
+                                                        </span>
+                                                        {jiraType.value === 'cloud' && (
+                                                            <span className="input_subtitle">
+                                                                ({v_enter_to}{' '}
+                                                                <a
+                                                                    href="https://id.atlassian.com/manage/api-tokens"
+                                                                    target="_blank"
+                                                                >
+                                                                    https://id.atlassian.com/manage/api-tokens
+                                                                </a>{' '}
+                                                                {v_to_get_token})
+                                                            </span>
+                                                        )}
+                                                        <Input
+                                                            config={{
+                                                                id: 'jiraPassword',
+                                                                name: 'jiraPassword',
+                                                                type: 'password',
+                                                                onChange: formik.handleChange,
+                                                                onBlur: formik.handleBlur,
+                                                                value: formik.values.jiraPassword,
+                                                            }}
+                                                            errorMsg={formik.errors.jiraPassword}
+                                                            withValidation
+                                                            dark
+                                                        />
+                                                    </label>
+                                                </>
+                                            )}
+                                    </div>
+                                    <button className="save_btn" type="submit">
+                                        {v_save_changes}
+                                    </button>
+                                </form>
+                            )}
+                        </Formik>
                     </div>
                 </div>
             </div>

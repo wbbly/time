@@ -2,173 +2,60 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Services
-import { apiCall } from '../../services/apiService';
-import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
+import { userChangePassword } from '../../configAPI';
 
 // Components
-import Input from '../../components/BaseComponents/Input';
+import ChangePasswordForm from '../ChangePasswordForm';
 
 // Actions
 import { toggleModal } from '../../actions/UserActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Config
-import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
 
 class ChangePasswordModal extends Component {
-    state = {
-        validEmail: true,
-        inputs: {
-            password: {
-                value: '',
-                type: 'password',
-                name: 'password',
-            },
-            newPassword: {
-                value: '',
-                type: 'password',
-                name: 'newPassword',
-            },
-            confirmNewPassword: {
-                value: '',
-                type: 'password',
-                name: 'confirmNewPassword',
-            },
-        },
-    };
-
-    addUser = ({ password, newPassword, confirmNewPassword }) => {
-        const { vocabulary, showNotificationAction } = this.props;
-        const { v_a_password_same_error, v_a_change_password_ok } = vocabulary;
-
-        if (newPassword !== confirmNewPassword) {
-            showNotificationAction({ text: v_a_password_same_error, type: 'warning' });
-            return false;
-        }
-
-        apiCall(AppConfig.apiURL + 'user/change-password', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `'Bearer ${getTokenFromLocalStorage()}'`,
-            },
-            body: JSON.stringify({
-                password,
-                newPassword,
-            }),
-        }).then(
-            result => {
-                showNotificationAction({ text: v_a_change_password_ok, type: 'success' });
-                this.closeModal();
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => {
-                        const textError = JSON.parse(errorMessage).message;
-                        showNotificationAction({ text: vocabulary[textError], type: 'error' });
-                    });
-                } else {
-                    console.log(err);
-                }
-            }
-        );
-    };
-
     closeModal() {
         this.props.toggleModal(false);
     }
 
-    onSubmitHandler = event => {
-        event.preventDefault();
-        const { inputs } = this.state;
-        const userData = Object.keys(inputs).reduce((acc, curr) => ({ ...acc, [curr]: inputs[curr].value }), {});
-        this.addUser(userData);
-    };
+    submitForm = async ({ newPassword, password }) => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_a_change_password_ok } = vocabulary;
 
-    onChangeHandler = event => {
-        const { name, value } = event.target;
-        this.setState(prevState => ({
-            inputs: {
-                ...prevState.inputs,
-                [name]: {
-                    ...prevState.inputs[name],
-                    value,
-                },
-            },
-        }));
+        try {
+            await userChangePassword({
+                password,
+                newPassword,
+            });
+            showNotificationAction({ text: v_a_change_password_ok, type: 'success' });
+            this.closeModal();
+        } catch (error) {
+            if (error.response && error.response.data.message) {
+                const errorMsg = error.response.data.message;
+                showNotificationAction({ text: vocabulary[errorMsg], type: 'error' });
+            } else {
+                console.log(error);
+            }
+        }
     };
 
     render() {
         const { vocabulary } = this.props;
-        const {
-            v_change_password,
-            v_current_password,
-            v_new_password,
-            v_cofirm_new_password,
-            v_save_changes,
-        } = vocabulary;
+        const { v_change_password } = vocabulary;
 
-        const { inputs } = this.state;
-        const { password, newPassword, confirmNewPassword } = inputs;
         return (
             <div className="wrapper_change_password_modal">
                 <div className="change_password_modal_background" />
-                <form className="change_password_modal_container" onSubmit={this.onSubmitHandler} noValidate>
+                <div className="change_password_modal_container">
                     <div className="change_password_modal_header">
                         <div className="change_password_modal_header_title">{v_change_password}</div>
                         <i className="change_password_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
-                    <div className="change_password_modal_data">
-                        <label className="change_password_modal_data_input_container">
-                            <Input
-                                config={{
-                                    type: password.type,
-                                    name: password.name,
-                                    value: password.value,
-                                    onChange: this.onChangeHandler,
-                                    maxLength: '30',
-                                    placeholder: `${v_current_password}...`,
-                                }}
-                            />
-                        </label>
-                    </div>
-                    <div className="change_password_modal_data">
-                        <label className="change_password_modal_data_input_container">
-                            <Input
-                                config={{
-                                    type: newPassword.type,
-                                    name: newPassword.name,
-                                    value: newPassword.value,
-                                    onChange: this.onChangeHandler,
-                                    maxLength: '30',
-                                    placeholder: `${v_new_password}...`,
-                                }}
-                            />
-                        </label>
-                    </div>
-                    <div className="change_password_modal_data">
-                        <label className="change_password_modal_data_input_container">
-                            <Input
-                                config={{
-                                    type: confirmNewPassword.type,
-                                    name: confirmNewPassword.name,
-                                    value: confirmNewPassword.value,
-                                    onChange: this.onChangeHandler,
-                                    maxLength: '30',
-                                    placeholder: `${v_cofirm_new_password}...`,
-                                }}
-                            />
-                        </label>
-                    </div>
-                    <div className="change_password_modal_button_container">
-                        <button type="submit" className="change_password_modal_button_container_button">
-                            {v_save_changes}
-                        </button>
-                    </div>
-                </form>
+                    <ChangePasswordForm withOldPassword submitForm={this.submitForm} />
+                </div>
             </div>
         );
     }

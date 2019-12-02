@@ -25,11 +25,13 @@ Yup.addMethod(Yup.string, 'equalTo', equalTo);
 
 class ChangePasswordForm extends Component {
     render() {
-        const { vocabulary, submitForm, emailFromRedirect } = this.props;
+        const { vocabulary, submitForm, withOldPassword } = this.props;
         const {
             v_new_password,
-            v_add_your_password,
+            v_current_password,
+            v_add_old_password,
             v_cofirm_password,
+            v_add_new_password,
             v_add_confirm_password,
             v_change_password,
         } = vocabulary;
@@ -38,21 +40,38 @@ class ChangePasswordForm extends Component {
             <Formik
                 validateOnChange={false}
                 validateOnBlur={false}
-                initialValues={{ password: '', confirmPassword: '' }}
+                initialValues={{ oldPassword: withOldPassword && '', password: '', confirmPassword: '' }}
                 validationSchema={Yup.object({
-                    password: Yup.string().required('v_empty_password'),
+                    oldPassword: withOldPassword && Yup.string().required('v_v_required'),
+                    password: Yup.string().required('v_v_required'),
                     confirmPassword: Yup.string()
                         .equalTo(Yup.ref('password'), 'v_a_confirm_password_error')
-                        .required('v_cofirm_password_required'),
+                        .required('v_v_required'),
                 })}
                 onSubmit={(values, { setSubmitting }) => {
-                    submitForm(values.password);
+                    submitForm({ newPassword: values.password, password: values.oldPassword });
                     setSubmitting(false);
                 }}
             >
                 {formik => (
                     <div className="change-password_container">
                         <form className="change-password_window" onSubmit={formik.handleSubmit} noValidate>
+                            {withOldPassword && (
+                                <Input
+                                    config={{
+                                        id: 'oldPassword',
+                                        name: 'oldPassword',
+                                        type: 'password',
+                                        onChange: formik.handleChange,
+                                        onBlur: formik.handleBlur,
+                                        value: formik.values.oldPassword,
+                                        placeholder: `${v_add_old_password}...`,
+                                    }}
+                                    errorMsg={formik.errors.oldPassword}
+                                    label={v_current_password}
+                                    withValidation
+                                />
+                            )}
                             <Input
                                 config={{
                                     id: 'password',
@@ -61,7 +80,7 @@ class ChangePasswordForm extends Component {
                                     onChange: formik.handleChange,
                                     onBlur: formik.handleBlur,
                                     value: formik.values.password,
-                                    placeholder: `${v_add_your_password}...`,
+                                    placeholder: `${v_add_new_password}...`,
                                 }}
                                 errorMsg={formik.errors.password}
                                 label={v_new_password}
