@@ -85,7 +85,9 @@ class ProjectsListPopup extends Component {
         const { projectsList } = this.props;
         const { inputValue } = this.state;
 
-        const filteredProjectsList = projectsList.filter(project => project.name.indexOf(inputValue) !== -1);
+        const filteredProjectsList = projectsList.filter(
+            project => project.name.toLowerCase().indexOf(inputValue) !== -1
+        );
         this.setState({
             projectsList: initial ? projectsList : filteredProjectsList,
         });
