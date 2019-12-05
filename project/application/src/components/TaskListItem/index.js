@@ -185,7 +185,7 @@ class TaskListItem extends Component {
         const { isMobile, task } = this.props;
         if (isMobile) return;
         const { newIssue } = this.state;
-        if (newIssue) {
+        if (newIssue.trim() && newIssue.trim() !== task.issue) {
             await this.updateTask({ issue: newIssue.trim() });
         } else {
             event.target.textContent = task.issue;
