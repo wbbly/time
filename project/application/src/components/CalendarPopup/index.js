@@ -128,17 +128,20 @@ class CalendarPopup extends Component {
         const { startDateTime, endDateTime, date, isChanged } = this.state;
         if (isChanged) {
             if (moment(startDateTime).isValid() && moment(endDateTime).isValid()) {
-                const day = moment(date).format('YYYY-MM-DD');
-                const startTime = moment(`${day} ${moment(startDateTime).format('HH:mm')}`);
-                const endTime = moment(`${day} ${moment(endDateTime).format('HH:mm')}`);
+                const startDay = moment(date).format('YYYY-MM-DD');
+                let endDay = moment(date).format('YYYY-MM-DD');
+                const startTime = moment(`${startDay} ${moment(startDateTime).format('HH:mm')}`);
+                let endTime = moment(`${endDay} ${moment(endDateTime).format('HH:mm')}`);
                 if (+startTime >= +endTime) {
-                    showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
-                } else {
-                    updateTask({
-                        startDateTime: startTime,
-                        endDateTime: endTime,
-                    });
+                    endDay = moment(date)
+                        .add(1, 'days')
+                        .format('YYYY-MM-DD');
+                    endTime = moment(`${endDay} ${moment(endDateTime).format('HH:mm')}`);
                 }
+                updateTask({
+                    startDateTime: startTime,
+                    endDateTime: endTime,
+                });
             } else {
                 showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
             }
