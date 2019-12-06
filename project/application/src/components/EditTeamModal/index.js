@@ -69,7 +69,7 @@ class EditTeamModal extends Component {
         }).then(
             result => {
                 if (result.mesage) {
-                    showNotificationAction({ text: vocabulary[result.mesage], type: 'error' });
+                    showNotificationAction({ text: vocabulary[result.mesage], type: 'success' });
                 } else {
                     changeUserData(result);
                 }

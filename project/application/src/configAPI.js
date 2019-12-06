@@ -164,8 +164,6 @@ export const syncTaskWithJira = id =>
         method: 'POST',
     });
 
-// UNUSED AXIOS REQUESTS
-
 export const userInvite = ({ email }) =>
     instance({
         url: '/user/invite',
@@ -174,6 +172,8 @@ export const userInvite = ({ email }) =>
             email,
         },
     });
+
+// UNUSED AXIOS REQUESTS
 
 export const userChangePassword = ({ password, newPassword }) =>
     instance({
