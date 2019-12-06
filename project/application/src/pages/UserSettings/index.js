@@ -440,8 +440,8 @@ class UserSetting extends Component {
                                                     <label className="input_container">
                                                         <span className="input_title">
                                                             {v_password}
-                                                            {jiraPassword.value &&
-                                                                jiraPassword.value !== fakePassword && (
+                                                            {formik.values.jiraPassword &&
+                                                                formik.values.jiraPassword !== fakePassword && (
                                                                     <i
                                                                         onClick={event => {
                                                                             event.preventDefault();
