@@ -17,7 +17,7 @@
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
-    width: 945px;
+    width: 660px;
     z-index: 2;
     background: #ffffff;
     border: 1px solid #828282;
@@ -60,6 +60,7 @@
     justify-content: space-between;
     margin-top: 43px;
     position: relative;
+    flex-wrap: wrap;
 }
 .edit_projects_modal_data_input_container::before{
     content: attr(data-label);
@@ -193,7 +194,7 @@
     padding: 0;
     display: flex;
     justify-content: flex-end;
-    padding-bottom: 14px;
+    padding-bottom: 19px;
 }
 
 .edit_projects_modal_button_container_button {
