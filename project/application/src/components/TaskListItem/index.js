@@ -140,6 +140,7 @@ class TaskListItem extends Component {
         }
         await changeTask(id, data);
         await getTimeEntriesListAction();
+        this.setState({ isUpdatingTask: false });
     };
 
     onChangeProject = projectId => {
@@ -150,7 +151,7 @@ class TaskListItem extends Component {
         this.setState({
             isOpenCalendar: true,
         });
-        document.addEventListener('click', this.closeCalendar);
+        document.addEventListener('mousedown', this.closeCalendar);
     };
 
     closeCalendar = event => {
@@ -158,7 +159,7 @@ class TaskListItem extends Component {
             this.setState({
                 isOpenCalendar: false,
             });
-            document.removeEventListener('click', this.closeCalendar);
+            document.removeEventListener('mousedown', this.closeCalendar);
         }
     };
 

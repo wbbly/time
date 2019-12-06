@@ -136,20 +136,22 @@ class StartEditTaskModal extends Component {
                     return;
                 }
                 if (moment(startDateTime).isValid() && moment(endDateTime).isValid()) {
-                    const day = moment(startDateTime).format('YYYY-MM-DD');
-                    const startTime = moment(`${day} ${moment(startDateTime).format('HH:mm')}`);
-                    const endTime = moment(`${day} ${moment(endDateTime).format('HH:mm')}`);
+                    const startDay = moment(startDateTime).format('YYYY-MM-DD');
+                    let endDay = moment(startDateTime).format('YYYY-MM-DD');
+                    const startTime = moment(`${startDay} ${moment(startDateTime).format('HH:mm')}`);
+                    let endTime = moment(`${endDay} ${moment(endDateTime).format('HH:mm')}`);
                     if (+startTime >= +endTime) {
-                        showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
-                        return;
-                    } else {
-                        this.updateTask({
-                            issue: taskName,
-                            projectId: selectedProject.id,
-                            startDateTime: startTime,
-                            endDateTime: endTime,
-                        });
+                        endDay = moment(startDateTime)
+                            .add(1, 'days')
+                            .format('YYYY-MM-DD');
+                        endTime = moment(`${endDay} ${moment(endDateTime).format('HH:mm')}`);
                     }
+                    this.updateTask({
+                        issue: taskName,
+                        projectId: selectedProject.id,
+                        startDateTime: startTime,
+                        endDateTime: endTime,
+                    });
                 } else {
                     showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
                     return;
