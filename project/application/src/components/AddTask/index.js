@@ -146,12 +146,14 @@ class AddTask extends Component {
 
     onChangeProject = id => {
         const { currentTimer } = this.props;
+        const { issue } = this.state;
         if (currentTimer) {
             this.setState({
                 isUpdating: true,
             });
             updateTimerSocket({
                 projectId: id,
+                issue,
             });
         } else {
             this.setState({
@@ -221,7 +223,12 @@ class AddTask extends Component {
                         placeholder={v_add_your_task_name}
                         className="add-task__input"
                     />
-                    <ProjectsListPopup withFolder onChange={this.onChangeProject} selectedProjectId={projectId} />
+                    <ProjectsListPopup
+                        withFolder
+                        disabled={isUpdating}
+                        onChange={this.onChangeProject}
+                        selectedProjectId={projectId}
+                    />
                     <span className="add-task__duration">
                         {timerTick ? timerTick : getTimeDurationByGivenTimestamp(0, durationTimeFormat)}
                     </span>
