@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 import './style.scss';
 
@@ -72,8 +71,8 @@ class ClientsDropdown extends Component {
 
     render() {
         const { clientsList, showList, inputValue, selectedItem } = this.state;
-        const { editedClient, vocabulary } = this.props;
-        const { v_select_client, v_clients, v_search, v_find, v_empty } = vocabulary;
+        const { vocabulary } = this.props;
+        const { v_select_client, v_clients, v_find, v_empty } = vocabulary;
         return (
             <div
                 className="clients_list_wrapper"

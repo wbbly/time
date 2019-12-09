@@ -15,7 +15,7 @@ export default (state = initialState, { type, payload }) => {
             };
         case HIDE_NOTIFICATION:
             return initialState;
-        case 'RESET_ALL':
+        case RESET_ALL:
             return initialState;
         default:
             return state;
