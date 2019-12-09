@@ -12,6 +12,27 @@ class CustomScrollbar extends Component {
         super(props, ...rest);
     }
 
+    animateScroll = () => {
+        const { scrollTo, scrollToAction } = this.props;
+        const { scrollbars } = this.refs;
+
+        const top = scrollbars.getScrollTop();
+
+        let startTime = performance.now();
+        const animate = timestamp => {
+            const runtime = timestamp - startTime;
+            const progress = runtime / 200;
+            const procent = progress >= 0 ? Math.min(progress, 1) : 0;
+            scrollbars.scrollTop(procent * (scrollTo + 10) + top);
+            if (procent < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                scrollToAction(null);
+            }
+        };
+        requestAnimationFrame(animate);
+    };
+
     handleScrollFrame = values => {
         const {
             incPaginationAction,
@@ -28,19 +49,11 @@ class CustomScrollbar extends Component {
         }
     };
 
-    handleScrollTo = top => {
-        const { scrollbars } = this.refs;
-        scrollbars.scrollTop(top);
-    };
-
     componentDidUpdate(prevProps, prevState) {
-        const { scrollTo, scrollToAction } = this.props;
-        const { scrollbars } = this.refs;
+        const { scrollTo } = this.props;
 
         if (scrollTo && prevProps.scrollTo !== scrollTo) {
-            const top = scrollbars.getScrollTop();
-            scrollbars.scrollTop(top + scrollTo + 20);
-            scrollToAction(null);
+            this.animateScroll();
         }
     }
 
