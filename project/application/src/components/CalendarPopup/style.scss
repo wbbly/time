@@ -7,6 +7,7 @@
   border-radius: 0.4rem;
   color: black;
   z-index: 1;
+  animation: slowVisibility 0.3s;
 
   .edit-task-popup_set-time {
     display: flex;
