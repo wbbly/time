@@ -1,4 +1,10 @@
-import { SET_VIEWPORT_SIZE, SWITCH_MENU, SET_IS_MOBILE, SET_SWIPED_TASK } from '../actions/ResponsiveActions';
+import {
+    SET_VIEWPORT_SIZE,
+    SWITCH_MENU,
+    SET_IS_MOBILE,
+    SET_SWIPED_TASK,
+    SCROLL_TO,
+} from '../actions/ResponsiveActions';
 
 const initialState = {
     viewport: {
@@ -8,6 +14,7 @@ const initialState = {
     isShowMenu: false,
     isMobile: false,
     swipedTask: null,
+    scrollTo: null,
 };
 
 export default (state = initialState, { type, payload }) => {
@@ -27,6 +34,11 @@ export default (state = initialState, { type, payload }) => {
         case SET_SWIPED_TASK: {
             return { ...state, swipedTask: payload };
         }
+
+        case SCROLL_TO: {
+            return { ...state, scrollTo: payload };
+        }
+
         default:
             return state;
     }
