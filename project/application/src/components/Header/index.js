@@ -6,20 +6,27 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // actions
-import { switchMenu } from '../../actions/ResponsiveActions';
+import { switchMenu, setSwipedTaskAction } from '../../actions/ResponsiveActions';
 
 // styles
 import './style.scss';
 
 class Header extends Component {
+    swithMenuHandle = event => {
+        const { switchMenu, setSwipedTaskAction } = this.props;
+        setSwipedTaskAction(null);
+        switchMenu();
+    };
+
     render() {
-        const { switchMenu, isShowMenu } = this.props;
+        const { isShowMenu } = this.props;
+
         return (
             <div className="main-header">
                 <Link to="/timer">
                     <i className="main-header__small-logo" />
                 </Link>
-                <button onClick={switchMenu} className="main-header__show-menu-button">
+                <button onClick={this.swithMenuHandle} className="main-header__show-menu-button">
                     <span
                         className={classNames('main-header__show-menu-button-icon', {
                             'icon-close': isShowMenu,
@@ -39,6 +46,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     switchMenu,
+    setSwipedTaskAction,
 };
 
 export default connect(
