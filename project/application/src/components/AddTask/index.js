@@ -92,7 +92,7 @@ class AddTask extends Component {
         const { showNotificationAction, vocabulary } = this.props;
         const { v_a_task_name_before, v_a_starting, v_a_time_tracking } = vocabulary;
         const { issue, projectId } = this.state;
-        if (issue) {
+        if (issue.trim()) {
             this.setState({
                 isUpdating: true,
             });
@@ -101,6 +101,9 @@ class AddTask extends Component {
                 projectId,
             });
         } else {
+            this.setState({
+                issue: '',
+            });
             showNotificationAction({
                 text: `${v_a_task_name_before} ${v_a_starting} ${v_a_time_tracking}`,
                 type: 'warning',
@@ -112,12 +115,15 @@ class AddTask extends Component {
         const { issue } = this.state;
         const { showNotificationAction, vocabulary } = this.props;
         const { v_a_task_name_before, v_a_stopping, v_a_time_tracking } = vocabulary;
-        if (issue) {
+        if (issue.trim()) {
             this.setState({
                 isUpdating: true,
             });
             stopTimerSocket();
         } else {
+            this.setState({
+                issue: '',
+            });
             showNotificationAction({
                 text: `${v_a_task_name_before} ${v_a_stopping} ${v_a_time_tracking}`,
                 type: 'warning',
@@ -129,7 +135,7 @@ class AddTask extends Component {
         const { currentTimer } = this.props;
         const value = event.target.value;
 
-        if (currentTimer) {
+        if (currentTimer && value.trim()) {
             this.setState(
                 {
                     isUpdating: true,

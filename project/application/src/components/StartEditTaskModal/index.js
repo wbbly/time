@@ -128,7 +128,10 @@ class StartEditTaskModal extends Component {
         const { taskName, selectedProject, isChanged, startDateTime, endDateTime } = this.state;
         if (editMode) {
             if (isChanged) {
-                if (!taskName) {
+                if (!taskName.trim()) {
+                    this.setState({
+                        taskName: '',
+                    });
                     showNotificationAction({
                         text: `${v_a_task_name_error}`,
                         type: 'warning',
@@ -160,11 +163,15 @@ class StartEditTaskModal extends Component {
                 disableShowModal();
             }
         } else {
-            if (!taskName) {
+            if (!taskName.trim()) {
+                this.setState({
+                    taskName: '',
+                });
                 showNotificationAction({
                     text: `${v_a_task_name_before} ${v_a_starting} ${v_a_time_tracking}`,
                     type: 'warning',
                 });
+
                 return;
             }
             this.setState(
