@@ -163,6 +163,12 @@ class UserSetting extends Component {
         }));
     };
 
+    verifyJiraAction = async formik => {
+        const { jiraUserName, jiraPassword, jiraUrl } = formik.values;
+        await formik.validateForm();
+        this.verifyJiraAuth(jiraUserName, jiraPassword, jiraUrl);
+    };
+
     verifyJiraAuth = async (jiraUserName, jiraPassword, jiraUrl) => {
         this.setState({ rotateArrowLoop: true });
         const { vocabulary, showNotificationAction } = this.props;
@@ -448,19 +454,9 @@ class UserSetting extends Component {
                                                             {formik.values.jiraPassword &&
                                                                 formik.values.jiraPassword !== fakePassword && (
                                                                     <i
-                                                                        onClick={async event => {
+                                                                        onClick={event => {
                                                                             event.preventDefault();
-                                                                            const {
-                                                                                jiraUserName,
-                                                                                jiraPassword,
-                                                                                jiraUrl,
-                                                                            } = formik.values;
-                                                                            await formik.validateForm();
-                                                                            this.verifyJiraAuth(
-                                                                                jiraUserName,
-                                                                                jiraPassword,
-                                                                                jiraUrl
-                                                                            );
+                                                                            this.verifyJiraAction(formik);
                                                                         }}
                                                                         className={classNames('verify-arrow-loop', {
                                                                             'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
