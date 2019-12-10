@@ -21,7 +21,7 @@ class CustomScrollbar extends Component {
         let startTime = performance.now();
         const animate = timestamp => {
             const runtime = timestamp - startTime;
-            const progress = runtime / 200;
+            const progress = runtime / 300;
             const procent = progress >= 0 ? Math.min(progress, 1) : 0;
             scrollbars.scrollTop(procent * (scrollTo + 10) + top);
             if (procent < 1) {
