@@ -21,8 +21,12 @@ class Input extends Component {
         const { type, id, ...rest } = config;
 
         return (
-            <label htmlFor={id} className={classNames('input_container', { input_container_dark: dark })}>
-                {label && <span className="input_title">{label}</span>}
+            <div className={classNames('input_container', { input_container_dark: dark })}>
+                {label && (
+                    <label htmlFor={id} className="input_title">
+                        {label}
+                    </label>
+                )}
                 <div
                     className={classNames('wrapper-base-input', {
                         'wrapper-base-input--error': errorMsg && withValidation,
@@ -42,7 +46,7 @@ class Input extends Component {
                         <div className="wrapper-base-input__error-message">{errorMsg ? vocabulary[errorMsg] : ''}</div>
                     ) : null}
                 </div>
-            </label>
+            </div>
         );
     }
 }

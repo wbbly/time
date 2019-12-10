@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
+import _ from 'lodash';
 
 import classNames from 'classnames';
 
@@ -42,22 +43,7 @@ class UserSetting extends Component {
             value: '',
         },
         inputs: {
-            userName: {
-                value: '',
-            },
-            email: {
-                value: '',
-            },
-            jiraURL: {
-                value: '',
-            },
             jiraType: {
-                value: '',
-            },
-            jiraUsername: {
-                value: '',
-            },
-            jiraPassword: {
                 value: '',
             },
             syncJiraStatus: {
@@ -98,11 +84,11 @@ class UserSetting extends Component {
             if (result.data) {
                 changeUserData(result.data);
                 showNotificationAction({ text: v_a_data_updated_ok, type: 'success' });
-                this.updateUserData();
+                this.setDataToForm();
                 this.setState({ userSetJiraSync: false });
             }
         } catch (error) {
-            this.updateUserData();
+            this.setDataToForm();
             if (error.response && error.response.data.message) {
                 const errorMsg = error.response.data.message;
                 showNotificationAction({ text: vocabulary[errorMsg], type: 'error' });
@@ -118,16 +104,8 @@ class UserSetting extends Component {
         const { inputs, userSetJiraSync } = this.state;
         const { syncJiraStatus, jiraType } = inputs;
         const { jiraUserName, jiraPassword, jiraUrl } = values;
-
-        const userData = Object.keys(inputs).reduce((acc, curr) => {
-            if (
-                curr === 'syncJiraStatus' ||
-                curr === 'jiraUsername' ||
-                curr === 'jiraPassword' ||
-                curr === 'jiraURL' ||
-                curr === 'jiraType'
-            )
-                return acc;
+        const userData = Object.keys(values).reduce((acc, curr) => {
+            if (curr === 'jiraUserName' || curr === 'jiraPassword' || curr === 'jiraUrl') return acc;
             return { ...acc, [curr]: values[curr] };
         }, {});
 
@@ -229,7 +207,8 @@ class UserSetting extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (JSON.stringify(prevProps.userReducer.user) !== JSON.stringify(this.props.userReducer.user)) {
+        const { userReducer } = this.props;
+        if (!_.isEqual(prevProps.userReducer.user, userReducer.user)) {
             this.setDataToForm();
         }
     }
@@ -254,8 +233,12 @@ class UserSetting extends Component {
         } = vocabulary;
 
         const { inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
-        const { userName, email, jiraUsername, jiraPassword, syncJiraStatus, jiraURL, jiraType } = inputs;
+        const { syncJiraStatus, jiraType } = inputs;
         const { checked } = syncJiraStatus;
+
+        const { user } = this.props.userReducer;
+        const { email, username, tokenJira, urlJira, loginJira } = user;
+
         return (
             <div className={classNames('wrapper_user_setting_page', { 'wrapper_user_setting_page--mobile': isMobile })}>
                 {Object.prototype.toString.call(userReducer.changePasswordModal) === '[object Boolean]' &&
@@ -275,11 +258,11 @@ class UserSetting extends Component {
                             validateOnChange={false}
                             validateOnBlur={false}
                             initialValues={{
-                                email: email.value || '',
-                                userName: userName.value || '',
-                                jiraUrl: jiraURL.value || '',
-                                jiraUserName: jiraUsername.value || '',
-                                jiraPassword: jiraPassword.value || '',
+                                email: email || '',
+                                userName: username || '',
+                                jiraUrl: urlJira,
+                                jiraUserName: loginJira,
+                                jiraPassword: tokenJira ? fakePassword : '',
                             }}
                             validationSchema={Yup.object({
                                 email: Yup.string()
@@ -287,12 +270,12 @@ class UserSetting extends Component {
                                     .required('v_v_required'),
                                 userName: Yup.string().required('v_v_required'),
                                 jiraUrl:
-                                    userSetJiraSync &&
+                                    checked &&
                                     Yup.string()
                                         .url('v_v_incorect_url')
                                         .required('v_v_required'),
-                                jiraUserName: userSetJiraSync && Yup.string().required('v_v_required'),
-                                jiraPassword: userSetJiraSync && Yup.string().required('v_v_required'),
+                                jiraUserName: checked && Yup.string().required('v_v_required'),
+                                jiraPassword: checked && Yup.string().required('v_v_required'),
                             })}
                             onSubmit={(values, { setSubmitting }) => {
                                 this.onSubmitHandler(values);
@@ -387,13 +370,29 @@ class UserSetting extends Component {
                                                 type={syncJiraStatus.type}
                                                 checked={syncJiraStatus.checked}
                                                 name={syncJiraStatus.name}
-                                                onChange={this.changeSyncJiraStatus}
+                                                onChange={event => {
+                                                    this.changeSyncJiraStatus(event);
+                                                    formik.setValues({
+                                                        ...formik.values,
+                                                        jiraPassword: tokenJira ? fakePassword : '',
+                                                        jiraUserName: loginJira || '',
+                                                        jiraUrl: urlJira || '',
+                                                    });
+                                                }}
                                             />
                                             <span className="input_title">{v_jira_synchronization}</span>
                                             {checked && (
                                                 <span
                                                     className="jira_sync_visibility_btn"
-                                                    onClick={this.switchVisibilityJiraForm}
+                                                    onClick={event => {
+                                                        this.switchVisibilityJiraForm(event);
+                                                        formik.setValues({
+                                                            ...formik.values,
+                                                            jiraPassword: tokenJira ? fakePassword : '',
+                                                            jiraUserName: loginJira || '',
+                                                            jiraUrl: urlJira || '',
+                                                        });
+                                                    }}
                                                 >
                                                     {userSetJiraSync ? v_hide : v_show}
                                                 </span>
@@ -428,7 +427,13 @@ class UserSetting extends Component {
                                                             id: 'jiraUserName',
                                                             name: 'jiraUserName',
                                                             type: 'text',
-                                                            onChange: formik.handleChange,
+                                                            onChange: e => {
+                                                                e.preventDefault();
+                                                                formik.handleChange(e);
+                                                                if (formik.values.jiraPassword === fakePassword) {
+                                                                    formik.setFieldValue('jiraPassword', '');
+                                                                }
+                                                            },
                                                             onBlur: formik.handleBlur,
                                                             value: formik.values.jiraUserName,
                                                         }}
@@ -443,22 +448,19 @@ class UserSetting extends Component {
                                                             {formik.values.jiraPassword &&
                                                                 formik.values.jiraPassword !== fakePassword && (
                                                                     <i
-                                                                        onClick={event => {
+                                                                        onClick={async event => {
                                                                             event.preventDefault();
                                                                             const {
                                                                                 jiraUserName,
                                                                                 jiraPassword,
                                                                                 jiraUrl,
                                                                             } = formik.values;
-                                                                            formik
-                                                                                .validateForm()
-                                                                                .then(() =>
-                                                                                    this.verifyJiraAuth(
-                                                                                        jiraUserName,
-                                                                                        jiraPassword,
-                                                                                        jiraUrl
-                                                                                    )
-                                                                                );
+                                                                            await formik.validateForm();
+                                                                            this.verifyJiraAuth(
+                                                                                jiraUserName,
+                                                                                jiraPassword,
+                                                                                jiraUrl
+                                                                            );
                                                                         }}
                                                                         className={classNames('verify-arrow-loop', {
                                                                             'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
@@ -486,6 +488,12 @@ class UserSetting extends Component {
                                                                 type: 'password',
                                                                 onChange: formik.handleChange,
                                                                 onBlur: formik.handleBlur,
+                                                                onFocus: event => {
+                                                                    event.preventDefault();
+                                                                    if (formik.values.jiraPassword === fakePassword) {
+                                                                        formik.setFieldValue('jiraPassword', '');
+                                                                    }
+                                                                },
                                                                 value: formik.values.jiraPassword,
                                                             }}
                                                             errorMsg={formik.errors.jiraPassword}
@@ -513,40 +521,16 @@ class UserSetting extends Component {
     }
 
     setDataToForm = () => {
-        this.updateUserData();
-    };
-
-    updateUserData = () => {
         const { user } = this.props.userReducer;
-        const { email: userEmail, username: userName, tokenJira, phone, urlJira, typeJira, loginJira } = user;
+        const { tokenJira, phone, typeJira } = user;
         this.setState(prevState => ({
             phone: {
                 value: phone ? phone : '+49',
             },
             inputs: {
                 ...prevState.inputs,
-                userName: {
-                    ...prevState.inputs.userName,
-                    value: userName,
-                },
-                email: {
-                    ...prevState.inputs.email,
-                    value: userEmail,
-                },
                 jiraType: {
                     value: typeJira || '',
-                },
-                jiraURL: {
-                    ...prevState.inputs.jiraURL,
-                    value: urlJira || '',
-                },
-                jiraUsername: {
-                    ...prevState.inputs.jiraUsername,
-                    value: loginJira || '',
-                },
-                jiraPassword: {
-                    ...prevState.inputs.jiraPassword,
-                    value: tokenJira ? fakePassword : '',
                 },
                 syncJiraStatus: {
                     ...prevState.inputs.syncJiraStatus,
@@ -555,6 +539,8 @@ class UserSetting extends Component {
             },
         }));
     };
+
+    updateUserData = () => {};
 }
 
 const mapStateToProps = state => ({
