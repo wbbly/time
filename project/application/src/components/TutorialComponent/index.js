@@ -60,7 +60,7 @@ class TutorialComponent extends Component {
                     </div>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
                         <div className="slide" style={{ backgroundImage: `url(${slide5})` }}>
-                            <a href="#" onClick={this.finishTutorial} className="skip-link">
+                            <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
                             <div className="instruction" style={{ bottom: '10%', right: '8%' }}>
@@ -71,7 +71,7 @@ class TutorialComponent extends Component {
                     </Swipe>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
                         <div className="slide" style={{ backgroundImage: `url(${slide4})` }}>
-                            <a href="#" onClick={this.finishTutorial} className="skip-link">
+                            <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
                             <div className="instruction" style={{ top: '47%', right: '0%' }}>
@@ -82,7 +82,7 @@ class TutorialComponent extends Component {
                     </Swipe>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
                         <div className="slide" style={{ backgroundImage: `url(${slide3})` }}>
-                            <a href="#" onClick={this.finishTutorial} className="skip-link">
+                            <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
                             <div className="instruction" style={{ top: '37%', right: '13%' }}>
@@ -93,7 +93,7 @@ class TutorialComponent extends Component {
                     </Swipe>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
                         <div className="slide" style={{ backgroundImage: `url(${slide2})` }}>
-                            <a href="#" onClick={this.finishTutorial} className="skip-link">
+                            <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
                             <div className="instruction" style={{ top: '26%', right: '13%' }}>
@@ -104,7 +104,7 @@ class TutorialComponent extends Component {
                     </Swipe>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
                         <div className="slide" style={{ backgroundImage: `url(${slide1})` }}>
-                            <a href="#" onClick={this.finishTutorial} className="skip-link">
+                            <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
                             <div className="slide-title">

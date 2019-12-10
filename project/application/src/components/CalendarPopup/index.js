@@ -16,6 +16,7 @@ import uaLocale from 'date-fns/locale/uk';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
+import { scrollToAction } from '../../actions/ResponsiveActions';
 
 import './style.scss';
 
@@ -113,8 +114,15 @@ class CalendarPopup extends Component {
     };
 
     componentDidMount() {
-        const { createRefCallback } = this.props;
+        const { createRefCallback, scrollToAction } = this.props;
         createRefCallback(this.editTaskPopupRef);
+        const height = window.innerHeight || window.document.documentElement.clientHeight;
+        const boundingClientRect = this.editTaskPopupRef.current.getBoundingClientRect();
+        const { bottom } = boundingClientRect;
+        if (bottom > height) {
+            const diff = bottom - height;
+            scrollToAction(diff);
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -208,6 +216,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     showNotificationAction,
+    scrollToAction,
 };
 
 export default connect(

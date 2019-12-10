@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import _ from 'lodash';
 
@@ -471,6 +471,7 @@ class UserSetting extends Component {
                                                                 <a
                                                                     href="https://id.atlassian.com/manage/api-tokens"
                                                                     target="_blank"
+                                                                    rel="noopener noreferrer"
                                                                 >
                                                                     https://id.atlassian.com/manage/api-tokens
                                                                 </a>{' '}

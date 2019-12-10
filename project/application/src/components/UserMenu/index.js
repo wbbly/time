@@ -54,7 +54,7 @@ class UserMenu extends Component {
                             title={v_more_option}
                         />
                     ) : (
-                        <img src={defaultLogo} className="default-logo" />
+                        <img alt="default_avatar" src={defaultLogo} className="default-logo" />
                     )}
                     {this.state.activeUserMenu && (
                         <div className="user_setting_modal">

@@ -59,12 +59,10 @@ export const stopTimerSocket = callback => {
 };
 
 export const updateTimerSocket = ({ issue, projectId }, callback) => {
-    const data = {};
-    if (projectId) {
-        data.projectId = projectId;
-    } else {
-        data.issue = encodeTimeEntryIssue(issue.trim());
-    }
+    const data = {
+        issue: encodeTimeEntryIssue(issue.trim()),
+        projectId,
+    };
     socketEmit('update-timer-v2', data, callback);
 };
 

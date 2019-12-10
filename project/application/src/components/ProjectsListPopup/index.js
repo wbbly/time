@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
+// Actions
+import { scrollToAction } from '../../actions/ResponsiveActions';
+
 // Styles
 import './style.scss';
 
@@ -62,7 +65,7 @@ class ProjectsListPopup extends Component {
     };
 
     closeDropdown = event => {
-        if (event.target.className !== 'project-list-popup__dropdown-list-input') {
+        if (!event.target.classList.contains('project-list-popup__dropdown-list-input')) {
             const { onChangeVisibility } = this.props;
             document.removeEventListener('click', this.closeDropdown);
             this.setState(
@@ -95,9 +98,20 @@ class ProjectsListPopup extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         const { isOpen, inputValue } = this.state;
+        const { scrollToAction, withFolder } = this.props;
+        const { dropdown } = this.refs;
 
         if (!prevState.isOpen && isOpen) {
             this.input.current.focus();
+            if (!withFolder) {
+                const height = window.innerHeight || window.document.documentElement.clientHeight;
+                const boundingClientRect = dropdown.getBoundingClientRect();
+                const { bottom } = boundingClientRect;
+                if (bottom > height) {
+                    const diff = bottom - height;
+                    scrollToAction(diff);
+                }
+            }
         }
         if (prevState.isOpen && !isOpen) {
             this.setState({
@@ -138,7 +152,7 @@ class ProjectsListPopup extends Component {
                     {withFolder && <FolderIcon className="project-list-popup__folder-icon" />}
                 </div>
                 {isOpen && (
-                    <div className={classNames('project-list-popup__dropdown')}>
+                    <div ref="dropdown" className={classNames('project-list-popup__dropdown')}>
                         <input
                             className="project-list-popup__dropdown-list-input"
                             ref={(this.input = React.createRef())}
@@ -184,4 +198,11 @@ const mapStateToProps = state => ({
     isMobile: state.responsiveReducer.isMobile,
 });
 
-export default connect(mapStateToProps)(ProjectsListPopup);
+const mapDispatchToProps = {
+    scrollToAction,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ProjectsListPopup);

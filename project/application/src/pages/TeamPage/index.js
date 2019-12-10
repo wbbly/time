@@ -97,7 +97,7 @@ class TeamPage extends Component {
                 <tr key={item.user[0].id}>
                     <td data-label={v_name} className="user-container">
                         {!avatar ? (
-                            <img src={defaultLogo} className="avatar-small" />
+                            <img alt="avatar_img" src={defaultLogo} className="avatar-small" />
                         ) : (
                             <>
                                 <div

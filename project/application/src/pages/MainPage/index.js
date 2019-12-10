@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import _ from 'lodash';
 
 // dependencies
 import classNames from 'classnames';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 import { getDateInString } from '../../services/timeService';
 
@@ -15,14 +13,10 @@ import TaskListItem from '../../components/TaskListItem';
 import AddTask from '../../components/AddTask';
 import StartTaskMobile from '../../components/StartTaskMobile';
 import TutorialComponent from '../../components/TutorialComponent';
+import CustomScrollbar from '../../components/CustomScrollbar';
 
 // Actions
-import {
-    getTimeEntriesListAction,
-    incPaginationAction,
-    getTimeEntriesListPaginationAction,
-    restorePaginationAction,
-} from '../../actions/MainPageAction';
+import { getTimeEntriesListAction, restorePaginationAction } from '../../actions/MainPageAction';
 import { getProjectsListActions } from '../../actions/ProjectsActions';
 
 // Styles
@@ -76,22 +70,6 @@ class MainPage extends Component {
         return getDateInString(totalTime, durationTimeFormat);
     };
 
-    handleScrollFrame = values => {
-        const {
-            incPaginationAction,
-            isFetchingTimeEntriesList,
-            getTimeEntriesListPaginationAction,
-            pagination,
-        } = this.props;
-        const { top } = values;
-        if (top > 0.7) {
-            if (!isFetchingTimeEntriesList && !pagination.disabled) {
-                incPaginationAction();
-                getTimeEntriesListPaginationAction();
-            }
-        }
-    };
-
     async componentDidMount() {
         const { getTimeEntriesListAction, getProjectsListActions } = this.props;
         await getTimeEntriesListAction();
@@ -127,7 +105,7 @@ class MainPage extends Component {
                         })}
                     >
                         <AddTask />
-                        <Scrollbars onScrollFrame={this.handleScrollFrame}>
+                        <CustomScrollbar>
                             <div className="main-page__list">
                                 {this.splitTimersByDay(timeEntriesList).map((day, index, arr) => (
                                     <div
@@ -164,7 +142,7 @@ class MainPage extends Component {
                                     !currentTimer &&
                                     pagination.disabled && <div className="main-page__empty-block" />}
                             </div>
-                        </Scrollbars>
+                        </CustomScrollbar>
                         <StartTaskMobile />
                     </div>
                 </TutorialComponent>
@@ -187,8 +165,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     getTimeEntriesListAction,
     getProjectsListActions,
-    incPaginationAction,
-    getTimeEntriesListPaginationAction,
     restorePaginationAction,
 };
 

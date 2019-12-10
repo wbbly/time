@@ -18,7 +18,7 @@ import { Loading } from '../../components/Loading';
 import projectsPageAction from '../../actions/ProjectsActions';
 
 // Queries
-import { getProjectsV2ProjectPageUserParseFunction, getProjectsV2ProjectPageAdminParseFunction } from '../../queries';
+import { getProjectsV2ProjectPageUserParseFunction } from '../../queries';
 
 // Config
 import { AppConfig } from '../../config';
