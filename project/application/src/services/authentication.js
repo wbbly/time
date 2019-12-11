@@ -7,7 +7,7 @@ import { resetAll } from '../actions/UserActions';
 
 import { closeSocket } from '../configSocket';
 
-const APP_VERSION = 'v1.0.5';
+const APP_VERSION = 'v1.0.7';
 
 export const ROLES = {
     ROLE_ADMIN: 'ROLE_ADMIN',
