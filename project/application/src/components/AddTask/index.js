@@ -190,6 +190,9 @@ class AddTask extends Component {
             // Start new task without stop last task
             else if (prev && curr && prev.id !== curr.id) {
                 this.setStateByCurrentTimer();
+                this.setState({
+                    isUpdating: false,
+                });
             }
             // Update task
             else if (prev && curr && prev.id === curr.id) {
@@ -223,6 +226,7 @@ class AddTask extends Component {
                     <input
                         onFocus={event => (event.target.placeholder = '')}
                         onBlur={event => (event.target.placeholder = v_add_your_task_name)}
+                        onKeyDown={event => event.keyCode === 13 && !currentTimer && !isUpdating && this.startTimer()}
                         type="text"
                         value={issue}
                         onChange={this.onChangeInput}
