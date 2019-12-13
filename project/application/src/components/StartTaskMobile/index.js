@@ -11,7 +11,6 @@ import StartEditTaskModal from '../StartEditTaskModal';
 import ModalPortal from '../ModalPortal';
 
 // Services
-import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { stopTimerSocket } from '../../configSocket';
 
 // Styles
@@ -105,16 +104,14 @@ class StartTaskMobile extends Component {
 
     render() {
         const { isStoppingTask, showModal } = this.state;
-        const { timerTick, currentTimer, durationTimeFormat, isMobile } = this.props;
+        const { timerTick, currentTimer, isMobile } = this.props;
 
         return (
             isMobile &&
             (currentTimer ? (
                 <div className="current-task-mobile">
                     <div className="current-task-mobile__task-info">
-                        <div className="current-task-mobile__task-timer">
-                            {timerTick ? timerTick : getTimeDurationByGivenTimestamp(0, durationTimeFormat)}
-                        </div>
+                        <div className="current-task-mobile__task-timer">{timerTick ? timerTick : '00:00:00'}</div>
                         <div className="current-task-mobile__task-name">{currentTimer.issue}</div>
                     </div>
                     <Loading mode="overlay" flag={isStoppingTask} withLogo={false} width="50px" height="50px">
@@ -139,7 +136,6 @@ class StartTaskMobile extends Component {
 const mapStateToProps = state => ({
     currentTimer: state.mainPageReducer.currentTimer,
     timerTick: state.mainPageReducer.timerTick,
-    durationTimeFormat: state.userReducer.durationTimeFormat,
     isMobile: state.responsiveReducer.isMobile,
 });
 

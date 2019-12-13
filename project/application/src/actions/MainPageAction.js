@@ -56,10 +56,11 @@ export const setTimerTickAction = key => {
             payload: null,
         };
     } else {
-        const { mainPageReducer, userReducer } = store.getState();
+        const { mainPageReducer } = store.getState();
         const { currentTimer } = mainPageReducer;
-        const duration = getTimeDiff(currentTimer.timeStart, true, userReducer.durationTimeFormat);
-        updatePageTitle(duration, currentTimer.issue, currentTimer.project.name);
+        const duration = getTimeDiff(currentTimer.timeStart, true);
+        const durationForTitle = getTimeDiff(currentTimer.timeStart, true, 'classic');
+        updatePageTitle(durationForTitle, currentTimer.issue, currentTimer.project.name);
         return {
             type: SET_TIMER_TICK,
             payload: duration,
