@@ -14,7 +14,6 @@ import { showNotificationAction } from '../../actions/NotificationActions';
 import './style.scss';
 import { stopTimerSocket, startTimerSocket, updateTimerSocket } from '../../configSocket';
 import ProjectsListPopup from '../ProjectsListPopup';
-import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 
 const PlayIcon = props => {
     const { className, onClick } = props;
@@ -218,7 +217,7 @@ class AddTask extends Component {
 
     render() {
         const { issue, projectId, isUpdating } = this.state;
-        const { currentTimer, vocabulary, timerTick, durationTimeFormat, isMobile } = this.props;
+        const { currentTimer, vocabulary, timerTick, isMobile } = this.props;
         const { v_add_your_task_name } = vocabulary;
         return (
             !isMobile && (
@@ -239,9 +238,7 @@ class AddTask extends Component {
                         onChange={this.onChangeProject}
                         selectedProjectId={projectId}
                     />
-                    <span className="add-task__duration">
-                        {timerTick ? timerTick : getTimeDurationByGivenTimestamp(0, durationTimeFormat)}
-                    </span>
+                    <span className="add-task__duration">{timerTick ? timerTick : '00:00:00'}</span>
                     <Loading mode="overlay" flag={isUpdating} withLogo={false} circle width="3.6rem" height="3.6rem">
                         {currentTimer ? (
                             <StopIcon className={classNames('add-task__stop-icon')} onClick={this.stopTimer} />
@@ -261,7 +258,6 @@ const mapStateToProps = state => ({
     projectsList: state.projectReducer.projectsList,
     timeEntriesList: state.mainPageReducer.timeEntriesList,
     timerTick: state.mainPageReducer.timerTick,
-    durationTimeFormat: state.userReducer.durationTimeFormat,
     user: state.userReducer.user,
     isMobile: state.responsiveReducer.isMobile,
 });
