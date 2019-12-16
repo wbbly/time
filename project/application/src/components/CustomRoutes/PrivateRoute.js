@@ -60,14 +60,6 @@ class PrivateRoute extends Component {
                 this.setInterval = null;
                 setTimerTickAction('reset');
             }
-            // getting a new task list when stopping or starting
-            // a new task without stopping the last task
-            if (
-                (prevProps.currentTimer && !currentTimer) ||
-                (prevProps.currentTimer && currentTimer && prevProps.currentTimer.id !== currentTimer.id)
-            ) {
-                getTimeEntriesListAction();
-            }
         }
 
         if (prevProps.location.pathname !== this.props.location.pathname) {
