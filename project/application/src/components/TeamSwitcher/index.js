@@ -17,6 +17,7 @@ import { switchMenu } from '../../actions/ResponsiveActions';
 // Queries
 
 // Config
+import { stopTimerSocket } from '../../configSocket';
 
 // Styles
 import './style.css';
@@ -24,9 +25,12 @@ import './style.css';
 class TeamSwitcher extends Component {
     handleChange = e => {
         e.preventDefault();
-        const { currentTeam, switchTeamRequestAction, history, switchMenu } = this.props;
+        const { currentTeam, switchTeamRequestAction, history, switchMenu, currentTimer } = this.props;
         let teamId = e.target.getAttribute('data-id');
         if (currentTeam.data.id !== teamId) {
+            if (currentTimer) {
+                stopTimerSocket();
+            }
             switchTeamRequestAction({ teamId });
         }
         history.push('/team');
@@ -75,6 +79,7 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     userTeams: state.teamReducer.userTeams,
     currentTeam: state.teamReducer.currentTeam,
+    currentTimer: state.mainPageReducer.currentTimer,
 });
 
 const mapDispatchToProps = {
