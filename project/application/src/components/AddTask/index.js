@@ -134,18 +134,12 @@ class AddTask extends Component {
         const { currentTimer } = this.props;
         const value = event.target.value;
 
-        if (currentTimer && value.trim()) {
-            this.setState(
-                {
-                    isUpdating: true,
-                    issue: value,
-                },
-                () => this.updateTaskIssueDebounced()
-            );
-        } else {
-            this.setState({
-                issue: value,
-            });
+        this.setState({
+            issue: value,
+        });
+
+        if (currentTimer && value.trim() && currentTimer.issue !== value.trim()) {
+            this.setState({ isUpdating: true }, () => this.updateTaskIssueDebounced());
         }
     };
 
