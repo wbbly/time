@@ -74,7 +74,8 @@ class CalendarPopup extends Component {
         startDateTime: null,
         endDateTime: null,
         date: null,
-        isChanged: false,
+        isChangedTime: false,
+        isChangedDate: false,
         initialRender: true,
     };
 
@@ -94,21 +95,21 @@ class CalendarPopup extends Component {
 
     changeHandlerStartTime = startTime => {
         this.setState({
-            isChanged: true,
+            isChangedTime: true,
             startDateTime: startTime,
         });
     };
 
     changeHandlerEndTime = endTime => {
         this.setState({
-            isChanged: true,
+            isChangedTime: true,
             endDateTime: endTime,
         });
     };
 
     changeHandlerDate = date => {
         this.setState({
-            isChanged: true,
+            isChangedDate: true,
             date,
         });
     };
@@ -133,14 +134,18 @@ class CalendarPopup extends Component {
     componentWillUnmount() {
         const { updateTask, vocabulary, showNotificationAction } = this.props;
         const { v_a_time_start_error } = vocabulary;
-        const { startDateTime, endDateTime, date, isChanged } = this.state;
-        if (isChanged) {
+        const { startDateTime, endDateTime, date, isChangedTime, isChangedDate } = this.state;
+        if (isChangedTime || isChangedDate) {
             if (moment(startDateTime).isValid() && moment(endDateTime).isValid()) {
                 const startDay = moment(date).format('YYYY-MM-DD');
                 let endDay = moment(date).format('YYYY-MM-DD');
-                const startTime = moment(`${startDay} ${moment(startDateTime).format('HH:mm')}`);
-                let endTime = moment(`${endDay} ${moment(endDateTime).format('HH:mm')}`);
-                if (+startTime >= +endTime) {
+                const startTime = isChangedTime
+                    ? moment(`${startDay} ${moment(startDateTime).format('HH:mm')}`)
+                    : moment(`${startDay} ${moment(startDateTime).format('HH:mm:ss')}`);
+                let endTime = isChangedTime
+                    ? moment(`${endDay} ${moment(endDateTime).format('HH:mm')}`)
+                    : moment(`${endDay} ${moment(endDateTime).format('HH:mm:ss')}`);
+                if (isChangedTime && +startTime >= +endTime) {
                     endDay = moment(date)
                         .add(1, 'days')
                         .format('YYYY-MM-DD');
