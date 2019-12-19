@@ -96,12 +96,21 @@ export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, la
         },
     ]);
 
+const checkMaxDate = value => {
+    return new Date().getTime() - value * 86400000 < new Date(1919, 11, 18).getTime()
+        ? Math.round((new Date(1919, 11, 18).getTime() - new Date().getTime()) / -86400000)
+        : value;
+};
+
 export const inputRanges = (daysUpToToday, daysStartingToday, weekStartsOn) => [
     {
         label: daysUpToToday,
         range(value) {
             return {
-                startDate: addDays(defineds(weekStartsOn).startOfToday, (Math.max(Number(value), 1) - 1) * -1),
+                startDate: addDays(
+                    defineds(weekStartsOn).startOfToday,
+                    (Math.max(Number(checkMaxDate(value)), 1) - 1) * -1
+                ),
                 endDate: defineds(weekStartsOn).endOfToday,
             };
         },
