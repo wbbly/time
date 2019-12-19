@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
     addDays,
     endOfDay,
@@ -97,8 +98,8 @@ export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, la
     ]);
 
 const checkMaxDate = value => {
-    return new Date().getTime() - value * 86400000 < new Date(1919, 11, 18).getTime()
-        ? Math.round((new Date(1919, 11, 18).getTime() - new Date().getTime()) / -86400000)
+    return moment().diff(moment([1919, 11, 18])) < value * 86400000
+        ? Math.round(moment([1919, 11, 18]).diff(moment()) / -86400000)
         : value;
 };
 

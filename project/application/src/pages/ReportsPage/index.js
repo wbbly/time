@@ -131,7 +131,7 @@ class ReportsPage extends Component {
     }, 1000);
 
     handleSelect = ranges => {
-        if (new Date(ranges.selection.startDate).getTime() - new Date(1919, 11, 18).getTime() === 0) {
+        if (moment(ranges.selection.startDate).diff(moment([1919, 11, 18])) === 0) {
             this.setState({ selectionRange: ranges.selection });
             return;
         }
