@@ -295,6 +295,11 @@ class UserSetting extends Component {
                                     onSubmit={formik.handleSubmit}
                                     noValidate
                                 >
+                                    <OpenJiraMenuIfValidationFails
+                                        formik={formik}
+                                        flag={syncJiraStatus}
+                                        onSubmissionError={e => this.setState({ userSetJiraSync: true })}
+                                    />
                                     <input
                                         autoComplete="new-password"
                                         className="fakecredentials"
@@ -538,6 +543,16 @@ class UserSetting extends Component {
     };
 
     updateUserData = () => {};
+}
+
+function OpenJiraMenuIfValidationFails(props) {
+    const effect = () => {
+        if (props.formik.submitCount > 0 && !props.formik.isValid && props.flag.checked) {
+            props.onSubmissionError();
+        }
+    };
+    React.useEffect(effect, [props.formik.submitCount, props.formik.isValid]);
+    return null;
 }
 
 const mapStateToProps = state => ({
