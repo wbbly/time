@@ -90,6 +90,11 @@ const TeamSwitchedIcon = () => (
 );
 
 class ModalInfo extends Component {
+    constructor(props) {
+        super(props);
+        this.removeNotification = this.closeNotificationTimeOut.bind(this);
+        this.hideModalInfoInTime = this.hideModalInfo.bind(this);
+    }
     componentDidMount() {
         window.addEventListener('online', this.connectionRestore);
         window.addEventListener('offline', this.connectionLost);
@@ -98,6 +103,7 @@ class ModalInfo extends Component {
     componentWillUnmount() {
         window.removeEventListener('online', this.connectionRestore);
         window.removeEventListener('offline', this.connectionLost);
+        window.removeEventListener('mousemove', this.removeNotification);
     }
 
     connectionRestore = event => {
@@ -133,10 +139,19 @@ class ModalInfo extends Component {
     };
 
     componentDidUpdate(prevProps, prevState) {
-        const { currentTeam } = this.props;
+        const { currentTeam, notificationReducer } = this.props;
+        const { notificationType } = notificationReducer;
         if (prevProps.currentTeam.data.name && currentTeam.data.name !== prevProps.currentTeam.data.name) {
             this.teamSwitched();
         }
+        if (prevProps !== this.props && notificationType) {
+            window.addEventListener('mousemove', this.removeNotification);
+        }
+    }
+
+    closeNotificationTimeOut() {
+        setTimeout(this.hideModalInfoInTime, 2500);
+        window.removeEventListener('mousemove', this.removeNotification);
     }
 
     render() {
