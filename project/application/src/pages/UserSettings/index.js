@@ -35,6 +35,16 @@ import './style.scss';
 
 const fakePassword = '8d8ae757-81ca-408f-a0b8-00d1e9f9923f';
 
+const OpenJiraMenuIfValidationFails = props => {
+    const effect = () => {
+        if (props.formik.submitCount > 0 && !props.formik.isValid && props.flag.checked) {
+            props.onSubmissionError();
+        }
+    };
+    React.useEffect(effect, [props.formik.submitCount, props.formik.isValid]);
+    return null;
+};
+
 class UserSetting extends Component {
     state = {
         rotateArrowLoop: false,
@@ -541,18 +551,6 @@ class UserSetting extends Component {
             },
         }));
     };
-
-    updateUserData = () => {};
-}
-
-function OpenJiraMenuIfValidationFails(props) {
-    const effect = () => {
-        if (props.formik.submitCount > 0 && !props.formik.isValid && props.flag.checked) {
-            props.onSubmissionError();
-        }
-    };
-    React.useEffect(effect, [props.formik.submitCount, props.formik.isValid]);
-    return null;
 }
 
 const mapStateToProps = state => ({
