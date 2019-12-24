@@ -40,7 +40,6 @@ class ProjectSearchBar extends Component {
         clientDataEtalon: [],
         clientArray: [],
     };
-    // etalonTable = [];
 
     openSelectClient() {
         this.setState({ toggleSelectClient: true });
@@ -136,7 +135,6 @@ class ProjectSearchBar extends Component {
 
     setDefaultArr() {
         if (this.searchInput.value.length < 1) {
-            // this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
             this.searchClients();
         }
     }
@@ -145,19 +143,11 @@ class ProjectSearchBar extends Component {
         this.setState({
             clientDataEtalon: this.props.etalonArr,
             clientArray: [...new Set(this.props.etalonArr.map(el => el.client.name))],
-            // clientDataFiltered: [...new Set(this.props.etalonArr.map(el => el.client.name))],
         });
     }
 
     render() {
-        console.log(this.state);
-        const {
-            toggleSelectClient,
-            clientDataSelected,
-            clientDataFiltered,
-            clientDataEtalon,
-            clientArray,
-        } = this.state;
+        const { toggleSelectClient, clientDataSelected, clientDataFiltered, clientArray } = this.state;
         const { vocabulary } = this.props;
         const { v_find, v_select_all, v_select_none, v_apply, v_client } = vocabulary;
         return (
@@ -172,25 +162,25 @@ class ProjectSearchBar extends Component {
                         className="project_search_bar_search_field"
                     />
                 </div>
-                <div className="wrapper_reports_search_bar">
-                    <div className="reports_search_bar_search_field_container select">
-                        <div className="reports_search_select_wrapper">
+                <div className="wrapper_project_search_bar_dropmenu">
+                    <div className="project_search_bar_dropmenu_container select">
+                        <div className="dropmenu_select_wrapper">
                             <div
-                                className="reports_search_select_header"
+                                className="project_search_dropmenu_select_header"
                                 onClick={_ => this.openSelectClient()}
                                 ref={div => (this.clientInputRef = div)}
                             >
                                 <div>
                                     {v_client}
                                     :&nbsp;
-                                    {this.state.clientDataSelected.map((item, index) => (
+                                    {clientDataSelected.map((item, index) => (
                                         <span key={item + index}>{index === 0 ? item : `, ${item}`}</span>
                                     ))}
                                 </div>
-                                <i className="arrow_down" />
+                                <i className={toggleSelectClient ? 'arrow_up' : 'arrow_down'} />
                             </div>
                         </div>
-                        {this.state.toggleSelectClient && (
+                        {toggleSelectClient && (
                             <div className="select_body" ref={div => (this.selectListClientsRef = div)}>
                                 <div className="search_menu_select">
                                     <input
@@ -200,6 +190,7 @@ class ProjectSearchBar extends Component {
                                         }
                                         ref={input => (this.smallSelectClientInputRef = input)}
                                         placeholder={`${v_find}...`}
+                                        autoFocus
                                     />
                                     <div
                                         ref={div => (this.selectAllClientsRef = div)}
@@ -215,22 +206,21 @@ class ProjectSearchBar extends Component {
                                     </div>
                                     <i className="small_clear" onClick={_ => this.clearClientSearch()} />
                                 </div>
-                                <div className="select_items_container">
+                                <div className="select_dropmenu_items_container">
                                     {clientDataFiltered.map((item, index) => (
-                                        <div className="select_users_item" key={index}>
+                                        <div className="select_dropmenu_users_item" key={index}>
                                             <label>
                                                 <ThemeProvider theme={materialTheme}>
                                                     <Checkbox
                                                         color={'primary'}
                                                         value={item}
                                                         checked={!!clientDataSelected.find(el => el === item)}
-                                                        // checkedIcon={this.clientCheckbox(item)}
                                                         onChange={_ => {
                                                             this.toggleClient(item);
                                                         }}
                                                     />
                                                 </ThemeProvider>{' '}
-                                                <span className="select_users_item_username">{item}</span>
+                                                <span className="select_dropmenu_users_item_username">{item}</span>
                                             </label>
                                         </div>
                                     ))}
