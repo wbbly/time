@@ -63,7 +63,7 @@
     cursor: pointer;
 }
 
-/* --------------------- */
+/* -----------DropDown---------- */
 
 .wrapper_project_search_bar_dropmenu {
     width: 40%;
@@ -73,15 +73,10 @@
     align-items: center;
     margin-top: 0px;
   }
-/*   
-  .reports_search_bar_select_wrapper {
-    width: 100%;
-  } */
-  
+
   .wrapper_project_search_bar_dropmenu  {
     margin-left: 0px;
   }
-  /* .reports_search_bar_select_wrapper */
    
   
   .project_search_bar_dropmenu_container {
