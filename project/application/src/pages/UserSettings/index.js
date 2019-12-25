@@ -309,7 +309,6 @@ class UserSetting extends Component {
                                 >
                                     <OpenJiraMenuIfValidationFails
                                         formik={formik}
-                                        checked={syncJiraStatus}
                                         open={userSetJiraSync}
                                         onSubmissionError={e => this.setState({ userSetJiraSync: true })}
                                     />
