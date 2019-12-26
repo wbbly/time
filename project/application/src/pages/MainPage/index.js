@@ -13,6 +13,7 @@ import TaskListItem from '../../components/TaskListItem';
 import AddTask from '../../components/AddTask';
 import StartTaskMobile from '../../components/StartTaskMobile';
 import TutorialComponent from '../../components/TutorialComponent';
+import NewTutorial from '../../components/NewTutorial';
 import CustomScrollbar from '../../components/CustomScrollbar';
 
 // Actions
@@ -110,7 +111,7 @@ class MainPage extends Component {
 
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
-                <TutorialComponent>
+                <NewTutorial>
                     <div
                         className={classNames('main-page', {
                             'main-page--mobile': isMobile,
@@ -157,7 +158,7 @@ class MainPage extends Component {
                         </CustomScrollbar>
                         <StartTaskMobile />
                     </div>
-                </TutorialComponent>
+                </NewTutorial>
             </Loading>
         );
     }

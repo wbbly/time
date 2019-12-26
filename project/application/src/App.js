@@ -69,7 +69,11 @@ class App extends Component {
             <Switch>
                 <Route exact path="/" render={redirect('/login')} />
 
-                <PrivateRoute exact path="/timer" render={() => <PageTemplate content={MainPage} />} />
+                <PrivateRoute
+                    exact
+                    path="/timer"
+                    render={() => <PageTemplate hideSidebar hideHeader content={MainPage} />}
+                />
                 <PrivateRoute exact path="/reports/summary" render={() => <PageTemplate content={ReportsPage} />} />
                 <PrivateRoute exact path="/projects" render={() => <PageTemplate content={ProjectsPage} />} />
                 <PrivateRoute exact path="/clients" render={() => <PageTemplate content={ClientsPage} />} />
