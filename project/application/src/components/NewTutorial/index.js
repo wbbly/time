@@ -21,17 +21,29 @@ class NewTutorial extends React.Component {
         this.setState({ step: this.state.step === 0 ? 0 : this.state.step - 1 });
     };
 
+    finishTutorial = async () => {
+        const { user, changeUserData } = this.props;
+        try {
+            let res = await tutorialChecked(user.id, true); //change to false on push
+            changeUserData(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     render() {
-        const { isMobile } = this.props;
-        return (
-            <>
-                {isMobile ? (
-                    <div>Mobile</div>
-                ) : (
-                    <DesctopTutorial nextPage={this.nextPage} prevPage={this.prevPage} step={this.state.step} />
-                )}
-            </>
-        );
+        const { isMobile, user, children } = this.props;
+        if (user.onboardingMobile && isMobile) return <div>Mobile</div>;
+        if (user.onboardingMobile && !isMobile)
+            return (
+                <DesctopTutorial
+                    nextPage={this.nextPage}
+                    prevPage={this.prevPage}
+                    step={this.state.step}
+                    finish={this.finishTutorial}
+                />
+            );
+        return children;
     }
 }
 const mapStateToProps = state => ({

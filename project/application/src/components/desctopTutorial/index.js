@@ -96,7 +96,19 @@ const ArrowPointerBox = ({ style, step }) => {
 
 const DesctopTutorial = props => {
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', height: '100%', flexGrow: '1', overflow: 'auto' }}>
+        <div
+            style={{
+                position: 'absolute',
+                left: '0',
+                top: '0',
+                display: 'flex',
+                flexDirection: 'row',
+                width: '100%',
+                height: '100%',
+                flexGrow: '1',
+                overflow: 'auto',
+            }}
+        >
             <div className="aside" style={{ height: '100%' }}>
                 <div className="wrapper">
                     <div className="navigation_links_container">
@@ -253,10 +265,7 @@ const DesctopTutorial = props => {
                 <div className="middle-buttons">
                     <div className="middle-buttons__finish">
                         <p className="middle-buttons__text-larg">Use Wobbly with pleasure</p>
-                        <button
-                            className="middle-buttons__end-tutorial"
-                            onClick={e => console.log('tutorial finished')}
-                        >
+                        <button className="middle-buttons__end-tutorial" onClick={props.finish}>
                             Finish Tutorial
                         </button>
                     </div>
