@@ -32,18 +32,24 @@ class NewTutorial extends React.Component {
     };
 
     render() {
-        const { isMobile, user, children } = this.props;
-        if (user.onboardingMobile && isMobile) return <div>Mobile</div>;
-        if (user.onboardingMobile && !isMobile)
-            return (
-                <DesctopTutorial
-                    nextPage={this.nextPage}
-                    prevPage={this.prevPage}
-                    step={this.state.step}
-                    finish={this.finishTutorial}
-                />
-            );
-        return children;
+        const { isMobile } = this.props;
+        return isMobile ? (
+            <DesctopTutorial
+                nextPage={this.nextPage}
+                prevPage={this.prevPage}
+                step={this.state.step}
+                finish={this.finishTutorial}
+                isMobile={isMobile}
+            />
+        ) : (
+            <DesctopTutorial
+                nextPage={this.nextPage}
+                prevPage={this.prevPage}
+                step={this.state.step}
+                finish={this.finishTutorial}
+                isMobile={isMobile}
+            />
+        );
     }
 }
 const mapStateToProps = state => ({

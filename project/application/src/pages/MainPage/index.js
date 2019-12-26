@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-
 // dependencies
 import classNames from 'classnames';
 
@@ -12,9 +11,9 @@ import { Loading } from '../../components/Loading';
 import TaskListItem from '../../components/TaskListItem';
 import AddTask from '../../components/AddTask';
 import StartTaskMobile from '../../components/StartTaskMobile';
-import TutorialComponent from '../../components/TutorialComponent';
 import NewTutorial from '../../components/NewTutorial';
 import CustomScrollbar from '../../components/CustomScrollbar';
+import ModalPortal from '../../components/ModalPortal';
 
 // Actions
 import { getTimeEntriesListAction, restorePaginationAction } from '../../actions/MainPageAction';
@@ -105,13 +104,17 @@ class MainPage extends Component {
             currentTimer,
             isFetchingTimeEntriesList,
             pagination,
+            user,
         } = this.props;
         const { v_total_time } = vocabulary;
         const { isInitialFetching } = this.state;
-
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
-                <NewTutorial>
+                {user.onboardingMobile ? (
+                    <ModalPortal>
+                        <NewTutorial />
+                    </ModalPortal>
+                ) : (
                     <div
                         className={classNames('main-page', {
                             'main-page--mobile': isMobile,
@@ -158,7 +161,7 @@ class MainPage extends Component {
                         </CustomScrollbar>
                         <StartTaskMobile />
                     </div>
-                </NewTutorial>
+                )}
             </Loading>
         );
     }
