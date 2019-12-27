@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
@@ -25,6 +25,7 @@
       align-items: center;
   }
   &__start-text {
+      height: 200px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -67,16 +68,27 @@
   }
 
 }
+.middle-buttons--mobile {
+  width:90%;
+  min-width: 275px;
+  .middle-buttons__text-larg {
+    font-size: 2rem;
+    font-weight: 900;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    line-height: 1rem;
+    color: #ffffff;
+  }
+}
 
 .tutorial-box-shadow{
-    z-index: 99;
-    position: absolute;
+    z-index: 50;
+    position: fixed;
     top:0;
     left: 0;
     height: 100%;
     width: 100%;
     background-color: black;
-    opacity: 0.8;
+    opacity: 0.85;
 }
 
 .tutorial-pointer {
@@ -136,6 +148,76 @@
   &__arrow &__point:after {
     top: -11px;
     left: 1px;
+    transform: rotate(-30deg);
+    -webkit-transform: rotate(-30deg);
+    -moz-transform: rotate(-30deg);
+    -ms-transform: rotate(-30deg);
+  }
+}
+
+.tutorial-pointer--mobile {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  min-width: 275px;
+  height: 50px;
+  bottom:calc(1.5rem + 55px);
+  right: calc(2.5rem + 25px);
+  z-index: 101;
+  top:auto;
+  // left:auto;
+
+  .tutorial-pointer__text-box {
+    text-align: center;
+    margin: 0 10px 0 10px;
+    font-size: 1.5rem;
+    font-weight: 400;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    line-height: 2rem;
+    color:#ffffff;
+    margin-top: -1.5rem;
+  }
+
+  .tutorial-pointer__arrow {
+    position: relative;
+    width: 50px;
+    height: 50px;
+  }
+
+  .tutorial-pointer__arrow .tutorial-pointer__curve {
+    border: 2px solid #ffffff;
+    border-color: transparent #ffffff #ffffff transparent;
+    height: 50px;
+    width: 50px;
+    border-bottom-right-radius: 100%;
+  }
+
+  .tutorial-pointer__arrow .tutorial-pointer__point {
+    position: absolute;
+    left: 51px;
+    top: 10px;
+  }
+
+  .tutorial-pointer__arrow .tutorial-pointer__point:before,
+  .tutorial-pointer__arrow .tutorial-pointer__point:after {
+    border: 2px solid #ffffff;
+    height: 15px;
+    content: "";
+    position: absolute;
+  }
+
+  .tutorial-pointer__arrow .tutorial-pointer__point:before {
+    top: -12px;
+    left: -8px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+  }
+
+  .tutorial-pointer__arrow .tutorial-pointer__point:after {
+    top: -11px;
+    left: 0px;
     transform: rotate(-30deg);
     -webkit-transform: rotate(-30deg);
     -moz-transform: rotate(-30deg);

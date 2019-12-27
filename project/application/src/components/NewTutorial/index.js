@@ -11,14 +11,19 @@ import './style.scss';
 
 class NewTutorial extends React.Component {
     state = {
-        step: 0,
+        dStep: 0,
+        mStep: 0,
     };
 
     nextPage = () => {
-        this.setState({ step: this.state.step === 4 ? 4 : this.state.step + 1 });
+        this.props.isMobile
+            ? this.setState({ mStep: this.state.mStep === 5 ? 5 : this.state.mStep + 1 })
+            : this.setState({ dStep: this.state.dStep === 4 ? 4 : this.state.dStep + 1 });
     };
     prevPage = () => {
-        this.setState({ step: this.state.step === 0 ? 0 : this.state.step - 1 });
+        this.props.isMobile
+            ? this.setState({ mStep: this.state.mStep === 0 ? 0 : this.state.mStep - 1 })
+            : this.setState({ dStep: this.state.dStep === 0 ? 0 : this.state.dStep - 1 });
     };
 
     finishTutorial = async () => {
@@ -34,18 +39,20 @@ class NewTutorial extends React.Component {
     render() {
         const { isMobile } = this.props;
         return isMobile ? (
-            <DesctopTutorial
-                nextPage={this.nextPage}
-                prevPage={this.prevPage}
-                step={this.state.step}
-                finish={this.finishTutorial}
-                isMobile={isMobile}
-            />
+            <Swipe onSwipeLeft={this.nextPage} onSwipeRight={this.prevPage}>
+                <DesctopTutorial
+                    dStep={this.state.dStep}
+                    mStep={this.state.mStep}
+                    finish={this.finishTutorial}
+                    isMobile={isMobile}
+                />
+            </Swipe>
         ) : (
             <DesctopTutorial
                 nextPage={this.nextPage}
                 prevPage={this.prevPage}
-                step={this.state.step}
+                dStep={this.state.dStep}
+                mStep={this.state.mStep}
                 finish={this.finishTutorial}
                 isMobile={isMobile}
             />
