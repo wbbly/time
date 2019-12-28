@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
 // import { PlayIcon, DeleteIcon, EditIcon } from '../TaskListItem';
@@ -294,15 +294,42 @@ const ModalEditTask = ({ mStep }) => (
                 className="start-edit-task-modal__submit-button"
                 style={mStep === 3 ? { zIndex: '100', position: 'relative' } : null}
             >
-                <span className="start-edit-task-modal__submit-button-text">{'TEST'}</span>
+                <span className="start-edit-task-modal__submit-button-text">Start Timer</span>
                 <PlayIconModal className="start-edit-task-modal__submit-button-play-icon" />
             </button>
         </div>
     </div>
 );
 
+const SwipeArrows = ({ changeColor }) => (
+    <div className="swipe-arrows-container">
+        <div className="left-swipe-arrows">
+            <div className={changeColor === 0 ? 'swipe-arrow' : 'swipe-arrow--none'} />
+            <div className={changeColor === 1 ? 'swipe-arrow' : 'swipe-arrow--none'} />
+            <div className={changeColor === 2 ? 'swipe-arrow' : 'swipe-arrow--none'} />
+        </div>
+        <div className="right-swipe-arrows">
+            <div className={changeColor === 0 ? 'swipe-arrow' : 'swipe-arrow--none'} />
+            <div className={changeColor === 1 ? 'swipe-arrow' : 'swipe-arrow--none'} />
+            <div className={changeColor === 2 ? 'swipe-arrow' : 'swipe-arrow--none'} />
+        </div>
+    </div>
+);
+
 const DesctopTutorial = ({ isMobile, dStep, mStep, prevPage, nextPage, finish }) => {
-    console.log(dStep, mStep);
+    const [changeColor, setChangeColor] = useState(0);
+
+    useEffect(() => {
+        //swipe arrows slider
+        const interval = setInterval(() => {
+            setChangeColor(changeColor => (changeColor === 2 ? 0 : changeColor + 1));
+        }, 1000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
     return (
         <div
             className="wrapper-page-template"
@@ -317,7 +344,6 @@ const DesctopTutorial = ({ isMobile, dStep, mStep, prevPage, nextPage, finish })
             }}
         >
             {isMobile ? <ArrowPointerBox dStep={dStep} mStep={mStep} isMobile={isMobile} /> : null}
-            {/* {(mStep === 1 || mStep === 2 || mStep === 3 )&& <ModalEditTask mStep={mStep} />} */}
             {isMobile ? (
                 <div className="main-header">
                     <i className="main-header__small-logo" />
@@ -327,7 +353,6 @@ const DesctopTutorial = ({ isMobile, dStep, mStep, prevPage, nextPage, finish })
                 </div>
             ) : null}
             <div className="wrapper-main-content">
-                {/* {(mStep === 1 || mStep === 2 || mStep === 3) && isMobile && <ModalEditTask mStep={mStep} />} */}
                 <aside className={!isMobile ? 'aside' : 'aside--hide'}>
                     <div className="wrapper">
                         <div className="navigation_links_container">
@@ -450,7 +475,7 @@ const DesctopTutorial = ({ isMobile, dStep, mStep, prevPage, nextPage, finish })
                                 )}
                                 <ArrowPointerBox dStep={dStep} mStep={mStep} isMobile={isMobile} />
                             </div>
-                        ) : !mStep ? (
+                        ) : mStep === 0 ? (
                             <PlayIconMobile className="play-icon-large-mobile" style={{ zIndex: '100' }} />
                         ) : (
                             (mStep === 4 || mStep === 5) && (
@@ -554,7 +579,12 @@ const DesctopTutorial = ({ isMobile, dStep, mStep, prevPage, nextPage, finish })
                 )}
             </div>
 
-            <div className="tutorial-box-shadow" />
+            <div className="tutorial-box-shadow">
+                <button onClick={finish} className={classNames('skip-btn', { 'skip-btn--mobile': isMobile })}>
+                    Skip Tutorial
+                </button>
+                {isMobile && mStep < 5 ? <SwipeArrows changeColor={changeColor} /> : null}
+            </div>
         </div>
     );
 };
