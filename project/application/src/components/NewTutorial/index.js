@@ -29,7 +29,7 @@ class NewTutorial extends React.Component {
     finishTutorial = async () => {
         const { user, changeUserData } = this.props;
         try {
-            let res = await tutorialChecked(user.id, true); //change to false on push
+            let res = await tutorialChecked(user.id, false);
             changeUserData(res.data);
         } catch (err) {
             console.log(err);
