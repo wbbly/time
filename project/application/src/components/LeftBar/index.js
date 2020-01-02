@@ -99,6 +99,17 @@ class LeftBar extends Component {
                         </NavLink>
                         <TeamSwitcher isMobile={isMobile} />
                     </div>
+                    <NavLink
+                        activeClassName="active-link"
+                        onClick={switchMenu}
+                        to="/planing"
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <div className="navigation_links">
+                            <i className="planing" />
+                            <div className="links_text">{'Planing' /* add translation to vocab*/}</div>
+                        </div>
+                    </NavLink>
                 </div>
                 <UserMenu switchMenu={switchMenu} />
             </div>
