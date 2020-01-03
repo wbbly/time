@@ -1,13 +1,56 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { border } from '@material-ui/system';
 
 class PlaningPage extends React.Component {
     state = {
         current: moment(),
         month: [],
         dayFormat: false,
+        users: [
+            {
+                id: 1,
+                avatar: 'url',
+                shedule: [
+                    {
+                        date: '2020-01-13',
+                        planed: 8,
+                        tracked: 0,
+                        porject: {
+                            name: 'ultradom',
+                            color: 'orange',
+                        },
+                    },
+                    {
+                        date: '2020-01-14',
+                        planed: 8,
+                        tracked: 0,
+                        porject: {
+                            name: 'ultradom',
+                            color: 'orange',
+                        },
+                    },
+                    {
+                        date: '2020-01-15',
+                        planed: 8,
+                        tracked: 0,
+                        porject: {
+                            name: 'ultradom',
+                            color: 'orange',
+                        },
+                    },
+                    {
+                        date: '2020-01-16',
+                        planed: 8,
+                        tracked: 0,
+                        porject: {
+                            name: 'ultradom',
+                            color: 'orange',
+                        },
+                    },
+                ],
+            },
+        ],
     };
 
     componentDidMount() {
@@ -31,22 +74,52 @@ class PlaningPage extends React.Component {
         const daysArray = [];
         let week = [];
         for (let x = 1; x <= this.state.current.daysInMonth(); x++) {
-            const el = this.state.current.date(x).format('YYYY-MM-DD');
+            let el = this.state.current.date(x).format();
             const day = {
                 fullDate: el,
                 color: moment(el).isSame(moment(), 'day') ? '#FFFFFF' : '#717171',
-                backgroundColor: moment(el).day() === 0 || moment(el).day() === 6 ? '#003434' : '#323232',
+                backgroundColor: moment(el).day() === 6 || moment(el).day() === 0 ? '#003434' : '#323232',
             };
             week.push(day);
             if (moment(el).day() === 0 || x === this.state.current.daysInMonth()) {
-                console.log('WEEK', week);
                 daysArray.push({
                     week: week,
                     weekCount: moment(el).isoWeek(),
-                    dayStart: moment(week[0].fullDate).format('DDD'),
-                    dayEnd: moment(week[week.length - 1].fullDate).format('DDD'),
+                    dayStart: moment(week[0].fullDate).format('DD'),
+                    dayEnd: moment(week[week.length - 1].fullDate).format('DD'),
                     weekColor: week.find(item => item.color === '#FFFFFF') ? '#FFFFFF' : '#717171',
                 });
+                const iterations = 7 - week.length;
+                console.log(daysArray.week);
+                if (week.length < 7) {
+                    if (moment(week[week.length - 1].fullDate).date() < 10) {
+                        for (let x = 0; x < iterations; x++) {
+                            const prevDay = moment(week[0].fullDate)
+                                .subtract(1, 'days')
+                                .format();
+                            console.log(daysArray.week);
+                            daysArray.week.unshift({
+                                fullDate: prevDay,
+                                color: moment(prevDay).isSame(moment(), 'day') ? '#FFFFFF' : '#717171',
+                                backgroundColor:
+                                    moment(prevDay).day() === 6 || moment(prevDay).day() === 0 ? '#003434' : '#323232',
+                            });
+                        }
+                    } else {
+                        for (let x = 0; x < iterations; x++) {
+                            const nextDay = moment(week[week.length - 1].fullDate)
+                                .add(1, 'days')
+                                .format();
+                            daysArray.week.push({
+                                fullDate: nextDay,
+                                color: moment(nextDay).isSame(moment(), 'day') ? '#FFFFFF' : '#717171',
+                                backgroundColor:
+                                    moment(nextDay).day() === 6 || moment(nextDay).day() === 0 ? '#003434' : '#323232',
+                            });
+                        }
+                    }
+                }
+
                 week = [];
             }
         }
@@ -66,7 +139,8 @@ class PlaningPage extends React.Component {
 
     render() {
         const { current, month, dayFormat } = this.state;
-        console.log(month);
+        const { user, currentTeamData } = this.props;
+        console.log('Month array:', month);
         return (
             <div
                 style={{
@@ -106,6 +180,7 @@ class PlaningPage extends React.Component {
                                 style={{
                                     display: 'flex',
                                     flexDirection: 'column',
+                                    alignItems: 'center',
                                     margin: '0 5px 0 5px',
                                     flex: '1',
                                 }}
@@ -115,7 +190,7 @@ class PlaningPage extends React.Component {
                                         week.dayStart
                                     } - ${week.dayEnd}`}
                                 </h2>
-                                <div style={{ display: 'flex', flex: '1' }}>
+                                <div style={{ display: 'flex', flex: '1', width: '100%' }}>
                                     {week.week.map((day, index) => (
                                         <div
                                             key={index}
@@ -133,7 +208,7 @@ class PlaningPage extends React.Component {
                                                     color: day.color,
                                                 }}
                                             >
-                                                {moment(day.fullDate).format(dayFormat ? 'ddd DD' : 'DD')}
+                                                {moment(day.fullDate).format(!dayFormat ? 'ddd DD' : 'DD')}
                                             </div>
                                             <div
                                                 key={index}
@@ -158,6 +233,7 @@ class PlaningPage extends React.Component {
 
 const mapStateToProps = state => ({
     user: state.userReducer.user,
+    currentTeamData: state.teamReducer.currentTeamDetailedData.data,
 });
 
 const mapDispatchToProps = {};
