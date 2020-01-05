@@ -6,7 +6,6 @@ class PlaningPage extends React.Component {
     state = {
         current: moment(),
         month: [],
-        dayFormat: false,
         users: [
             {
                 id: 1,
@@ -58,17 +57,8 @@ class PlaningPage extends React.Component {
         this.setState({ current: moment() }, () => {
             this.getMonthArray();
         });
-        window.addEventListener('resize', this.changeDayFormat);
         // this.setState({month:[...Array(moment().daysInMonth() + 1).keys()].slice(1,)})
     }
-
-    componentWillMount() {
-        window.removeEventListener('resize', this.changeDayFormat);
-    }
-
-    changeDayFormat = () => {
-        window.screen.width > 1300 ? this.setState({ dayFormat: true }) : this.setState({ dayFormat: false });
-    };
 
     getMonthArray = () => {
         const daysArray = [];
@@ -78,7 +68,7 @@ class PlaningPage extends React.Component {
             const day = {
                 fullDate: el,
                 color: moment(el).isSame(moment(), 'day') ? '#FFFFFF' : '#717171',
-                backgroundColor: moment(el).day() === 6 || moment(el).day() === 0 ? '#003434' : '#323232',
+                background: moment(el).day() === 6 || moment(el).day() === 0 ? '#003434' : '#323232',
             };
             week.push(day);
             if (moment(el).day() === 0 || x === this.state.current.daysInMonth()) {
@@ -90,19 +80,33 @@ class PlaningPage extends React.Component {
                     weekColor: week.find(item => item.color === '#FFFFFF') ? '#FFFFFF' : '#717171',
                 });
                 const iterations = 7 - week.length;
-                console.log(daysArray.week);
                 if (week.length < 7) {
                     if (moment(week[week.length - 1].fullDate).date() < 10) {
                         for (let x = 0; x < iterations; x++) {
                             const prevDay = moment(week[0].fullDate)
                                 .subtract(1, 'days')
                                 .format();
-                            console.log(daysArray.week);
-                            daysArray.week.unshift({
+                            daysArray[0].week.unshift({
                                 fullDate: prevDay,
                                 color: moment(prevDay).isSame(moment(), 'day') ? '#FFFFFF' : '#717171',
-                                backgroundColor:
-                                    moment(prevDay).day() === 6 || moment(prevDay).day() === 0 ? '#003434' : '#323232',
+                                background:
+                                    moment(prevDay).day() === 6 || moment(prevDay).day() === 0
+                                        ? `repeating-linear-gradient(
+                                    60deg,
+                                    #1F1F1F,
+                                    #1F1F1F 5px,
+                                    #003434 5px,
+                                    #003434 10px
+                                  )`
+                                        : `repeating-linear-gradient(
+                                    60deg,
+                                    #1F1F1F,
+                                    #1F1F1F 5px,
+                                    #323232 5px,
+                                    #323232 10px
+                                  )`,
+                                checkFlag: true,
+                                opacity: '0.3',
                             });
                         }
                     } else {
@@ -110,11 +114,27 @@ class PlaningPage extends React.Component {
                             const nextDay = moment(week[week.length - 1].fullDate)
                                 .add(1, 'days')
                                 .format();
-                            daysArray.week.push({
+                            daysArray[daysArray.length - 1].week.push({
                                 fullDate: nextDay,
                                 color: moment(nextDay).isSame(moment(), 'day') ? '#FFFFFF' : '#717171',
-                                backgroundColor:
-                                    moment(nextDay).day() === 6 || moment(nextDay).day() === 0 ? '#003434' : '#323232',
+                                background:
+                                    moment(nextDay).day() === 6 || moment(nextDay).day() === 0
+                                        ? `repeating-linear-gradient(
+                                    60deg,
+                                    #1F1F1F,
+                                    #1F1F1F 5px,
+                                    #003434 5px,
+                                    #003434 10px
+                                  )`
+                                        : `repeating-linear-gradient(
+                                    60deg,
+                                    #1F1F1F,
+                                    #1F1F1F 5px,
+                                    #323232 5px,
+                                    #323232 10px
+                                  )`,
+                                checkFlag: true,
+                                opacity: '0.3',
                             });
                         }
                     }
@@ -146,7 +166,7 @@ class PlaningPage extends React.Component {
                 style={{
                     display: 'flex',
                     backgroundColor: '#1F1F1F',
-                    width: '100%',
+                    minWidth: '100%',
                     height: '100%',
                 }}
             >
@@ -171,7 +191,6 @@ class PlaningPage extends React.Component {
                         style={{
                             display: 'flex',
                             width: '100%',
-                            height: '100%',
                         }}
                     >
                         {month.map((week, index) => (
@@ -181,8 +200,11 @@ class PlaningPage extends React.Component {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: 'center',
-                                    margin: '0 5px 0 5px',
+                                    margin: '0 20px 0 20px',
                                     flex: '1',
+                                    maxWidth: '280px',
+                                    minWidth: '280px',
+                                    minHeight: '400px',
                                 }}
                             >
                                 <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
@@ -208,7 +230,7 @@ class PlaningPage extends React.Component {
                                                     color: day.color,
                                                 }}
                                             >
-                                                {moment(day.fullDate).format(!dayFormat ? 'ddd DD' : 'DD')}
+                                                {moment(day.fullDate).format('ddd DD')}
                                             </div>
                                             <div
                                                 key={index}
@@ -216,7 +238,9 @@ class PlaningPage extends React.Component {
                                                 style={{
                                                     flex: '1',
                                                     border: '1px solid #1F1F1F',
-                                                    backgroundColor: day.backgroundColor,
+                                                    // backgroundColor: day.backgroundColor,
+                                                    background: day.background,
+                                                    opacity: day.opacity,
                                                 }}
                                             />
                                         </div>
