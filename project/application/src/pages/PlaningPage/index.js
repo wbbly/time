@@ -2,6 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
+import PlaningUserBlock from '../../components/PlaningUserBlock';
+import { Scrollbars } from 'react-custom-scrollbars';
+
 class PlaningPage extends React.Component {
     state = {
         current: moment(),
@@ -12,40 +15,202 @@ class PlaningPage extends React.Component {
                 avatar: 'url',
                 shedule: [
                     {
-                        date: '2020-01-13',
-                        planed: 8,
-                        tracked: 0,
-                        porject: {
-                            name: 'ultradom',
-                            color: 'orange',
+                        dateStart: '2020-01-6',
+                        dateEnd: '2020-01-12',
+                        planedTotal() {
+                            return this.projects.reduce((a, b) => a.planed + b.planed);
                         },
+                        trackedTotal() {
+                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                        },
+                        projects: [
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                            {
+                                name: 'siba',
+                                color: 'purple',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                        ],
                     },
                     {
-                        date: '2020-01-14',
-                        planed: 8,
-                        tracked: 0,
-                        porject: {
-                            name: 'ultradom',
-                            color: 'orange',
+                        dateStart: '2020-01-13',
+                        dateEnd: '2020-01-19',
+                        planedTotal() {
+                            return this.projects.reduce((a, b) => a.planed + b.planed);
                         },
+                        trackedTotal() {
+                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                        },
+                        projects: [
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                        ],
                     },
                     {
-                        date: '2020-01-15',
-                        planed: 8,
-                        tracked: 0,
-                        porject: {
-                            name: 'ultradom',
-                            color: 'orange',
+                        dateStart: '2020-01-1',
+                        dateEnd: '2020-01-5',
+                        planedTotal() {
+                            return this.projects.reduce((a, b) => a.planed + b.planed);
                         },
+                        trackedTotal() {
+                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                        },
+                        projects: [
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                            {
+                                name: 'siba',
+                                color: 'purple',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                        ],
                     },
                     {
-                        date: '2020-01-16',
-                        planed: 8,
-                        tracked: 0,
-                        porject: {
-                            name: 'ultradom',
-                            color: 'orange',
+                        dateStart: '2020-01-20',
+                        dateEnd: '2020-01-26',
+                        planedTotal() {
+                            return this.projects.reduce((a, b) => a.planed + b.planed);
                         },
+                        trackedTotal() {
+                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                        },
+                        projects: [
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                            {
+                                name: 'siba',
+                                color: 'purple',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                id: 2,
+                avatar: 'url',
+                shedule: [
+                    {
+                        dateStart: '2020-01-1',
+                        dateEnd: '2020-01-5',
+                        planedTotal() {
+                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                        },
+                        trackedTotal() {
+                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                        },
+                        projects: [
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                            {
+                                name: 'siba',
+                                color: 'purple',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                        ],
+                    },
+                    {
+                        dateStart: '2020-01-7',
+                        dateEnd: '2020-01-10',
+                        planedTotal() {
+                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                        },
+                        trackedTotal() {
+                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                        },
+                        projects: [
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                            {
+                                name: 'siba',
+                                color: 'purple',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                        ],
+                    },
+                    {
+                        dateStart: '2020-02-5',
+                        dateEnd: '2020-01-10',
+                        planedTotal() {
+                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                        },
+                        trackedTotal() {
+                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                        },
+                        projects: [
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 0,
+                            },
+                            {
+                                name: 'siba',
+                                color: 'purple',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                        ],
+                    },
+                    {
+                        dateStart: '2020-02-15',
+                        dateEnd: '2020-01-20',
+                        planedTotal() {
+                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                        },
+                        trackedTotal() {
+                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                        },
+                        projects: [
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                            {
+                                name: 'siba',
+                                color: 'purple',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                        ],
                     },
                 ],
             },
@@ -151,6 +316,7 @@ class PlaningPage extends React.Component {
             this.getMonthArray();
         });
     };
+
     prevMonth = () => {
         this.setState({ current: this.state.current.subtract(1, 'month') }, () => {
             this.getMonthArray();
@@ -158,98 +324,128 @@ class PlaningPage extends React.Component {
     };
 
     render() {
-        const { current, month, dayFormat } = this.state;
+        const { users, current, month, dayFormat } = this.state;
         const { user, currentTeamData } = this.props;
-        console.log('Month array:', month);
         return (
             <div
+                className="planing"
                 style={{
                     display: 'flex',
+                    flexDirection: 'column',
                     backgroundColor: '#1F1F1F',
-                    minWidth: '100%',
                     height: '100%',
                 }}
             >
-                <div style={{ position: 'fixed', height: '100%', width: '55px', backgroundColor: 'grey' }}>aside</div>
                 <div
+                    className="planing-header"
                     style={{
                         display: 'flex',
-                        flexDirection: 'column',
-                        marginLeft: '55px',
-                        padding: '10px',
-                        height: '100%',
+                        height: '150px',
                         width: '100%',
                     }}
                 >
-                    <div>
+                    <div
+                        className="planing-header__left"
+                        style={{
+                            width: '55px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                        }}
+                    />
+                    <div className="planing-header__right" style={{ marginLeft: '10px' }}>
                         Planing Header
                         <button onClick={this.prevMonth}>Prev Month</button>
                         <button onClick={this.nextMonth}>Next Month</button>
-                        <h2>{current.format('MMMM-MM-YYYY')}</h2>
+                        <h2>742 h All projects</h2>
+                        <h2>068 h Tracked</h2>
                     </div>
+                </div>
+                {/* {-------BODY---------} */}
+                <Scrollbars>
                     <div
                         style={{
                             display: 'flex',
-                            width: '100%',
+                            flexDirection: 'column',
+                            minWidth: '100%',
+                            position: 'relative',
                         }}
                     >
-                        {month.map((week, index) => (
+                        <div
+                            style={{
+                                display: 'flex',
+                                width: '100%',
+                                // marginLeft: '55px',
+                            }}
+                        >
                             <div
-                                key={index}
+                                className="add-user-btn"
                                 style={{
                                     display: 'flex',
-                                    flexDirection: 'column',
+                                    justifyContent: 'center',
                                     alignItems: 'center',
-                                    margin: '0 20px 0 20px',
-                                    flex: '1',
-                                    maxWidth: '280px',
-                                    minWidth: '280px',
-                                    minHeight: '400px',
+                                    minWidth: '55px',
+                                    maxWidth: '55px',
+                                    height: '53px',
                                 }}
                             >
-                                <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
-                                    {`Week ${week.weekCount} / ${moment(week.week[0].fullDate).format('MMM')} ${
-                                        week.dayStart
-                                    } - ${week.dayEnd}`}
-                                </h2>
-                                <div style={{ display: 'flex', flex: '1', width: '100%' }}>
-                                    {week.week.map((day, index) => (
-                                        <div
-                                            key={index}
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                flex: '1',
-                                            }}
-                                        >
-                                            <div
-                                                style={{
-                                                    fontSize: '1em',
-                                                    whiteSpace: 'nowrap',
-                                                    textAlign: 'center',
-                                                    color: day.color,
-                                                }}
-                                            >
-                                                {moment(day.fullDate).format('ddd DD')}
-                                            </div>
+                                X
+                            </div>
+                            <div
+                                style={{
+                                    minWidth: '20px',
+                                    maxWidth: '20px',
+                                    height: '53px',
+                                }}
+                            />
+                            {month.map((week, index) => (
+                                <div
+                                    key={index}
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        margin: '0 10px 0 10px',
+                                        maxWidth: '280px',
+                                        minWidth: '280px',
+                                        height: '53px',
+                                    }}
+                                >
+                                    <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
+                                        {`Week ${week.weekCount} / ${moment(week.week[0].fullDate).format('MMM')} ${
+                                            week.dayStart
+                                        } - ${week.dayEnd}`}
+                                    </h2>
+                                    <div style={{ display: 'flex', flex: '1', width: '100%' }}>
+                                        {week.week.map((day, index) => (
                                             <div
                                                 key={index}
-                                                id={day.fullDate}
                                                 style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
                                                     flex: '1',
-                                                    border: '1px solid #1F1F1F',
-                                                    // backgroundColor: day.backgroundColor,
-                                                    background: day.background,
-                                                    opacity: day.opacity,
                                                 }}
-                                            />
-                                        </div>
-                                    ))}
+                                            >
+                                                <div
+                                                    style={{
+                                                        fontSize: '1em',
+                                                        whiteSpace: 'nowrap',
+                                                        textAlign: 'center',
+                                                        color: day.color,
+                                                    }}
+                                                >
+                                                    {moment(day.fullDate).format('ddd DD')}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            ))}
+                        </div>
+                        {users.map(user => (
+                            <PlaningUserBlock key={user.id} month={month} user={user} />
                         ))}
                     </div>
-                </div>
+                </Scrollbars>
             </div>
         );
     }
