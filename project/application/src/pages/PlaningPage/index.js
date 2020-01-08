@@ -1,14 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-
-import PlaningUserBlock from '../../components/PlaningUserBlock';
 import { Scrollbars } from 'react-custom-scrollbars';
+
+//---COMPONENTS---
+import PlaningUserBlock from '../../components/PlaningUserBlock';
+
+//---ACTIONS---
+import { createMonthArray, nextMonth, prevMonth } from '../../actions/PlaningActions';
+
+//---STYLES---
+import './style.scss';
 
 class PlaningPage extends React.Component {
     state = {
-        current: moment(),
-        month: [],
         users: [
             {
                 id: 1,
@@ -18,12 +23,24 @@ class PlaningPage extends React.Component {
                         dateStart: '2020-01-6',
                         dateEnd: '2020-01-12',
                         planedTotal() {
-                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
                         trackedTotal() {
-                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
                         },
                         projects: [
+                            {
+                                name: 'ultradom',
+                                color: 'orange',
+                                planed: 4,
+                                tracked: 4,
+                            },
+                            {
+                                name: 'siba',
+                                color: 'purple',
+                                planed: 4,
+                                tracked: 4,
+                            },
                             {
                                 name: 'ultradom',
                                 color: 'orange',
@@ -42,10 +59,10 @@ class PlaningPage extends React.Component {
                         dateStart: '2020-01-13',
                         dateEnd: '2020-01-19',
                         planedTotal() {
-                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
                         trackedTotal() {
-                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
                         },
                         projects: [
                             {
@@ -66,10 +83,10 @@ class PlaningPage extends React.Component {
                         dateStart: '2020-01-1',
                         dateEnd: '2020-01-5',
                         planedTotal() {
-                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
                         trackedTotal() {
-                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
                         },
                         projects: [
                             {
@@ -90,10 +107,10 @@ class PlaningPage extends React.Component {
                         dateStart: '2020-01-20',
                         dateEnd: '2020-01-26',
                         planedTotal() {
-                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
                         trackedTotal() {
-                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
                         },
                         projects: [
                             {
@@ -120,10 +137,10 @@ class PlaningPage extends React.Component {
                         dateStart: '2020-01-1',
                         dateEnd: '2020-01-5',
                         planedTotal() {
-                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
                         trackedTotal() {
-                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
                         },
                         projects: [
                             {
@@ -144,10 +161,10 @@ class PlaningPage extends React.Component {
                         dateStart: '2020-01-7',
                         dateEnd: '2020-01-10',
                         planedTotal() {
-                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
                         trackedTotal() {
-                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
                         },
                         projects: [
                             {
@@ -168,10 +185,10 @@ class PlaningPage extends React.Component {
                         dateStart: '2020-02-5',
                         dateEnd: '2020-01-10',
                         planedTotal() {
-                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
                         trackedTotal() {
-                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
                         },
                         projects: [
                             {
@@ -192,10 +209,10 @@ class PlaningPage extends React.Component {
                         dateStart: '2020-02-15',
                         dateEnd: '2020-01-20',
                         planedTotal() {
-                            return this.projects.reduce((a, b) => a.planed + b.planed);
+                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
                         trackedTotal() {
-                            return this.projects.reduce((a, b) => a.tracked + b.tracked);
+                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
                         },
                         projects: [
                             {
@@ -219,113 +236,59 @@ class PlaningPage extends React.Component {
 
     componentDidMount() {
         moment.locale(`${this.props.user.language}`);
-        this.setState({ current: moment() }, () => {
-            this.getMonthArray();
-        });
-        // this.setState({month:[...Array(moment().daysInMonth() + 1).keys()].slice(1,)})
+        this.props.createMonthArray();
     }
 
-    getMonthArray = () => {
-        const daysArray = [];
-        let week = [];
-        for (let x = 1; x <= this.state.current.daysInMonth(); x++) {
-            let el = this.state.current.date(x).format();
-            const day = {
-                fullDate: el,
-                color: moment(el).isSame(moment(), 'day') ? '#FFFFFF' : '#717171',
-                background: moment(el).day() === 6 || moment(el).day() === 0 ? '#003434' : '#323232',
-            };
-            week.push(day);
-            if (moment(el).day() === 0 || x === this.state.current.daysInMonth()) {
-                daysArray.push({
-                    week: week,
-                    weekCount: moment(el).isoWeek(),
-                    dayStart: moment(week[0].fullDate).format('DD'),
-                    dayEnd: moment(week[week.length - 1].fullDate).format('DD'),
-                    weekColor: week.find(item => item.color === '#FFFFFF') ? '#FFFFFF' : '#717171',
-                });
-                const iterations = 7 - week.length;
-                if (week.length < 7) {
-                    if (moment(week[week.length - 1].fullDate).date() < 10) {
-                        for (let x = 0; x < iterations; x++) {
-                            const prevDay = moment(week[0].fullDate)
-                                .subtract(1, 'days')
-                                .format();
-                            daysArray[0].week.unshift({
-                                fullDate: prevDay,
-                                color: moment(prevDay).isSame(moment(), 'day') ? '#FFFFFF' : '#717171',
-                                background:
-                                    moment(prevDay).day() === 6 || moment(prevDay).day() === 0
-                                        ? `repeating-linear-gradient(
-                                    60deg,
-                                    #1F1F1F,
-                                    #1F1F1F 5px,
-                                    #003434 5px,
-                                    #003434 10px
-                                  )`
-                                        : `repeating-linear-gradient(
-                                    60deg,
-                                    #1F1F1F,
-                                    #1F1F1F 5px,
-                                    #323232 5px,
-                                    #323232 10px
-                                  )`,
-                                checkFlag: true,
-                                opacity: '0.3',
-                            });
-                        }
-                    } else {
-                        for (let x = 0; x < iterations; x++) {
-                            const nextDay = moment(week[week.length - 1].fullDate)
-                                .add(1, 'days')
-                                .format();
-                            daysArray[daysArray.length - 1].week.push({
-                                fullDate: nextDay,
-                                color: moment(nextDay).isSame(moment(), 'day') ? '#FFFFFF' : '#717171',
-                                background:
-                                    moment(nextDay).day() === 6 || moment(nextDay).day() === 0
-                                        ? `repeating-linear-gradient(
-                                    60deg,
-                                    #1F1F1F,
-                                    #1F1F1F 5px,
-                                    #003434 5px,
-                                    #003434 10px
-                                  )`
-                                        : `repeating-linear-gradient(
-                                    60deg,
-                                    #1F1F1F,
-                                    #1F1F1F 5px,
-                                    #323232 5px,
-                                    #323232 10px
-                                  )`,
-                                checkFlag: true,
-                                opacity: '0.3',
-                            });
-                        }
-                    }
-                }
-
-                week = [];
-            }
-        }
-        this.setState({ month: daysArray });
-    };
-
     nextMonth = () => {
-        this.setState({ current: this.state.current.add(1, 'month') }, () => {
-            this.getMonthArray();
-        });
+        this.props.nextMonth();
     };
 
     prevMonth = () => {
-        this.setState({ current: this.state.current.subtract(1, 'month') }, () => {
-            this.getMonthArray();
-        });
+        this.props.prevMonth();
+    };
+
+    totalPlaned = () => {
+        return this.state.users
+            .map(el =>
+                el.shedule
+                    .map(item => item.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed)
+                    .reduce((a, b) => a + b)
+            )
+            .reduce((a, b) => a + b);
+    };
+    totalTracked = () => {
+        return this.state.users
+            .map(el =>
+                el.shedule
+                    .map(item => item.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked)
+                    .reduce((a, b) => a + b)
+            )
+            .reduce((a, b) => a + b);
     };
 
     render() {
-        const { users, current, month, dayFormat } = this.state;
-        const { user, currentTeamData } = this.props;
+        const { users } = this.state;
+        const { planingReducer, vocabulary } = this.props;
+        const { month } = planingReducer;
+        const {
+            v_planning,
+            v_resource_planing,
+            v_all_projects,
+            v_tracked,
+            v_hour_small,
+            v_next_month,
+            v_prev_month,
+            v_week,
+            v_plan,
+            v_add_plan,
+            v_time_off,
+            v_add_time,
+            v_add_preson,
+            v_add,
+            V_cancel,
+            v_public_holiday,
+        } = vocabulary;
+
         return (
             <div
                 className="planing"
@@ -353,11 +316,12 @@ class PlaningPage extends React.Component {
                         }}
                     />
                     <div className="planing-header__right" style={{ marginLeft: '10px' }}>
-                        Planing Header
-                        <button onClick={this.prevMonth}>Prev Month</button>
-                        <button onClick={this.nextMonth}>Next Month</button>
-                        <h2>742 h All projects</h2>
-                        <h2>068 h Tracked</h2>
+                        <div>{v_resource_planing}</div>
+
+                        <button onClick={this.prevMonth}>{v_prev_month}</button>
+                        <button onClick={this.nextMonth}>{v_next_month}</button>
+                        <h2>{`${this.totalPlaned()} ${v_hour_small} ${v_all_projects} `}</h2>
+                        <h2>{`${this.totalTracked()} ${v_hour_small} ${v_tracked}`}</h2>
                     </div>
                 </div>
                 {/* {-------BODY---------} */}
@@ -411,9 +375,9 @@ class PlaningPage extends React.Component {
                                     }}
                                 >
                                     <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
-                                        {`Week ${week.weekCount} / ${moment(week.week[0].fullDate).format('MMM')} ${
-                                            week.dayStart
-                                        } - ${week.dayEnd}`}
+                                        {`${v_week} ${week.weekCount} / ${moment(week.week[0].fullDate).format(
+                                            'MMM'
+                                        )} ${week.dayStart} - ${week.dayEnd}`}
                                     </h2>
                                     <div style={{ display: 'flex', flex: '1', width: '100%' }}>
                                         {week.week.map((day, index) => (
@@ -442,7 +406,7 @@ class PlaningPage extends React.Component {
                             ))}
                         </div>
                         {users.map(user => (
-                            <PlaningUserBlock key={user.id} month={month} user={user} />
+                            <PlaningUserBlock key={user.id} month={month} user={user} {...vocabulary} />
                         ))}
                     </div>
                 </Scrollbars>
@@ -453,10 +417,16 @@ class PlaningPage extends React.Component {
 
 const mapStateToProps = state => ({
     user: state.userReducer.user,
-    currentTeamData: state.teamReducer.currentTeamDetailedData.data,
+    // currentTeamData: state.teamReducer.currentTeamDetailedData.data,
+    planingReducer: state.planingReducer,
+    vocabulary: state.languageReducer.vocabulary,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    createMonthArray,
+    nextMonth,
+    prevMonth,
+};
 
 export default connect(
     mapStateToProps,
