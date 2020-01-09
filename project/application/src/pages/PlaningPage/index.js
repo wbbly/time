@@ -22,6 +22,9 @@ class PlaningPage extends React.Component {
                     {
                         dateStart: '2020-01-6',
                         dateEnd: '2020-01-12',
+                        daysCount() {
+                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
+                        },
                         planedTotal() {
                             return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
@@ -52,12 +55,25 @@ class PlaningPage extends React.Component {
                                 color: 'purple',
                                 planed: 4,
                                 tracked: 4,
+                            },
+                        ],
+                        timeOff: [
+                            {
+                                name: 'public holiday',
+                                color: 'pink',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'blue',
                             },
                         ],
                     },
                     {
                         dateStart: '2020-01-13',
                         dateEnd: '2020-01-19',
+                        daysCount() {
+                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
+                        },
                         planedTotal() {
                             return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
@@ -76,12 +92,25 @@ class PlaningPage extends React.Component {
                                 color: 'orange',
                                 planed: 4,
                                 tracked: 4,
+                            },
+                        ],
+                        timeOff: [
+                            {
+                                name: 'public holiday',
+                                color: 'red',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'yellow',
                             },
                         ],
                     },
                     {
                         dateStart: '2020-01-1',
                         dateEnd: '2020-01-5',
+                        daysCount() {
+                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
+                        },
                         planedTotal() {
                             return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
@@ -102,10 +131,23 @@ class PlaningPage extends React.Component {
                                 tracked: 4,
                             },
                         ],
+                        timeOff: [
+                            {
+                                name: 'public holiday',
+                                color: 'green',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'brown',
+                            },
+                        ],
                     },
                     {
                         dateStart: '2020-01-20',
                         dateEnd: '2020-01-26',
+                        daysCount() {
+                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
+                        },
                         planedTotal() {
                             return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
@@ -124,6 +166,16 @@ class PlaningPage extends React.Component {
                                 color: 'purple',
                                 planed: 4,
                                 tracked: 4,
+                            },
+                        ],
+                        timeOff: [
+                            {
+                                name: 'public holiday',
+                                color: 'aqua',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'magenta',
                             },
                         ],
                     },
@@ -136,6 +188,9 @@ class PlaningPage extends React.Component {
                     {
                         dateStart: '2020-01-1',
                         dateEnd: '2020-01-5',
+                        daysCount() {
+                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
+                        },
                         planedTotal() {
                             return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
@@ -154,12 +209,25 @@ class PlaningPage extends React.Component {
                                 color: 'purple',
                                 planed: 4,
                                 tracked: 4,
+                            },
+                        ],
+                        timeOff: [
+                            {
+                                name: 'public holiday',
+                                color: 'pink',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'blue',
                             },
                         ],
                     },
                     {
                         dateStart: '2020-01-7',
                         dateEnd: '2020-01-10',
+                        daysCount() {
+                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
+                        },
                         planedTotal() {
                             return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
@@ -180,10 +248,31 @@ class PlaningPage extends React.Component {
                                 tracked: 4,
                             },
                         ],
+                        timeOff: [
+                            {
+                                name: 'public holiday',
+                                color: 'red',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'magenta',
+                            },
+                            {
+                                name: 'public holiday',
+                                color: 'red',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'magenta',
+                            },
+                        ],
                     },
                     {
                         dateStart: '2020-02-5',
                         dateEnd: '2020-01-10',
+                        daysCount() {
+                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
+                        },
                         planedTotal() {
                             return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
@@ -204,10 +293,31 @@ class PlaningPage extends React.Component {
                                 tracked: 4,
                             },
                         ],
+                        timeOff: [
+                            {
+                                name: 'public holiday',
+                                color: 'pink',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'blue',
+                            },
+                            {
+                                name: 'public holiday',
+                                color: 'pink',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'blue',
+                            },
+                        ],
                     },
                     {
                         dateStart: '2020-02-15',
                         dateEnd: '2020-01-20',
+                        daysCount() {
+                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
+                        },
                         planedTotal() {
                             return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                         },
@@ -226,6 +336,24 @@ class PlaningPage extends React.Component {
                                 color: 'purple',
                                 planed: 4,
                                 tracked: 4,
+                            },
+                        ],
+                        timeOff: [
+                            {
+                                name: 'public holiday',
+                                color: 'pink',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'blue',
+                            },
+                            {
+                                name: 'public holiday',
+                                color: 'pink',
+                            },
+                            {
+                                name: 'day off',
+                                color: 'blue',
                             },
                         ],
                     },
@@ -290,120 +418,55 @@ class PlaningPage extends React.Component {
         } = vocabulary;
 
         return (
-            <div
-                className="planing"
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    backgroundColor: '#1F1F1F',
-                    height: '100%',
-                }}
-            >
-                <div
-                    className="planing-header"
-                    style={{
-                        display: 'flex',
-                        height: '150px',
-                        width: '100%',
-                    }}
-                >
-                    <div
-                        className="planing-header__left"
-                        style={{
-                            width: '55px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
-                    />
-                    <div className="planing-header__right" style={{ marginLeft: '10px' }}>
-                        <div>{v_resource_planing}</div>
-
-                        <button onClick={this.prevMonth}>{v_prev_month}</button>
-                        <button onClick={this.nextMonth}>{v_next_month}</button>
-                        <h2>{`${this.totalPlaned()} ${v_hour_small} ${v_all_projects} `}</h2>
-                        <h2>{`${this.totalTracked()} ${v_hour_small} ${v_tracked}`}</h2>
+            <div className="planing">
+                <div className="planing-header">
+                    <div className="planing-header-left" />
+                    <div className="planing-header-right">
+                        <div className="planing-header-right__info-container">
+                            <div>{v_resource_planing}</div>
+                            <h2>{`${this.totalPlaned()} ${v_hour_small} ${v_all_projects} `}</h2>
+                            <h2>{`${this.totalTracked()} ${v_hour_small} ${v_tracked}`}</h2>
+                        </div>
+                        <div className="planing-header-right__btn-container">
+                            <button onClick={this.prevMonth}>{v_prev_month}</button>
+                            <button onClick={this.nextMonth}>{v_next_month}</button>
+                        </div>
                     </div>
                 </div>
                 {/* {-------BODY---------} */}
                 <Scrollbars>
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            minWidth: '100%',
-                            position: 'relative',
-                        }}
-                    >
-                        <div
-                            style={{
-                                display: 'flex',
-                                width: '100%',
-                                // marginLeft: '55px',
-                            }}
-                        >
-                            <div
-                                className="add-user-btn"
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    minWidth: '55px',
-                                    maxWidth: '55px',
-                                    height: '53px',
-                                }}
-                            >
-                                X
+                    <div className="main-content-wrapper">
+                        <div className="month-container">
+                            <div className="month-container__add-user-block">
+                                <button>X</button>
                             </div>
-                            <div
-                                style={{
-                                    minWidth: '20px',
-                                    maxWidth: '20px',
-                                    height: '53px',
-                                }}
-                            />
-                            {month.map((week, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        margin: '0 10px 0 10px',
-                                        maxWidth: '280px',
-                                        minWidth: '280px',
-                                        height: '53px',
-                                    }}
-                                >
-                                    <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
-                                        {`${v_week} ${week.weekCount} / ${moment(week.week[0].fullDate).format(
-                                            'MMM'
-                                        )} ${week.dayStart} - ${week.dayEnd}`}
-                                    </h2>
-                                    <div style={{ display: 'flex', flex: '1', width: '100%' }}>
-                                        {week.week.map((day, index) => (
-                                            <div
-                                                key={index}
-                                                style={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    flex: '1',
-                                                }}
-                                            >
-                                                <div
-                                                    style={{
-                                                        fontSize: '1em',
-                                                        whiteSpace: 'nowrap',
-                                                        textAlign: 'center',
-                                                        color: day.color,
-                                                    }}
-                                                >
-                                                    {moment(day.fullDate).format('ddd DD')}
+                            <div className="month-container__weeks-block">
+                                {month.map((week, index) => (
+                                    <div className="month-container__week" key={index}>
+                                        <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
+                                            {`${v_week} ${week.weekCount} / ${moment(week.week[0].fullDate).format(
+                                                'MMM'
+                                            )} ${week.dayStart} - ${week.dayEnd}`}
+                                        </h2>
+                                        <div className="month-container__days-block">
+                                            {week.week.map((day, index) => (
+                                                <div className="month-container__day" key={index}>
+                                                    <div
+                                                        style={{
+                                                            fontSize: '1em',
+                                                            whiteSpace: 'nowrap',
+                                                            textAlign: 'center',
+                                                            color: day.color,
+                                                        }}
+                                                    >
+                                                        {moment(day.fullDate).format('ddd DD')}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                         {users.map(user => (
                             <PlaningUserBlock key={user.id} month={month} user={user} {...vocabulary} />
