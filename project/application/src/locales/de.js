@@ -84,6 +84,7 @@ export default {
     v_hour_small: 's',
     v_next_month: 'Nächsten Monat',
     v_prev_month: 'Vorheriger Monat',
+    v_current_month: 'Aktueller Monat',
     v_week: 'Woche',
     v_plan: 'Planen',
     v_add_plan: 'Plan hinzufügen',
@@ -91,7 +92,7 @@ export default {
     v_add_time: 'Zeit hinzufügen',
     v_add_preson: 'Person hinzufügen',
     v_add: 'Hinzufügen',
-    V_cancel: 'Stornieren',
+    v_cancel: 'Stornieren',
     v_public_holiday: 'Gesetzlicher Feiertag',
 
     v_upload_image: 'Bild hochladen',

@@ -83,6 +83,7 @@ export default {
     v_hour_small: 'o',
     v_next_month: 'Il prossimo mese',
     v_prev_month: 'Il mese scorso',
+    v_current_month: 'Corrente mese',
     v_week: 'Settimana',
     v_plan: 'Piano',
     v_add_plan: 'Aggiungi piano',
@@ -90,7 +91,7 @@ export default {
     v_add_time: 'Aggiungi tempo',
     v_add_preson: 'Aggiungi persona',
     v_add: 'Aggiungi',
-    V_cancel: 'Annulla',
+    v_cancel: 'Annulla',
     v_public_holiday: 'Festa nazionale',
 
     v_upload_image: 'Carica immagine',

@@ -7,7 +7,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import PlaningUserBlock from '../../components/PlaningUserBlock';
 
 //---ACTIONS---
-import { createMonthArray, nextMonth, prevMonth } from '../../actions/PlaningActions';
+import { createMonthArray, nextMonth, prevMonth, currentMonth } from '../../actions/PlaningActions';
 
 //---STYLES---
 import './style.scss';
@@ -17,7 +17,7 @@ class PlaningPage extends React.Component {
         users: [
             {
                 id: 1,
-                avatar: 'url',
+                avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
                 shedule: [
                     {
                         dateStart: '2020-01-6',
@@ -35,36 +35,36 @@ class PlaningPage extends React.Component {
                             {
                                 name: 'ultradom',
                                 color: 'orange',
-                                planed: 4,
+                                planed: 8,
                                 tracked: 4,
                             },
                             {
                                 name: 'siba',
                                 color: 'purple',
-                                planed: 4,
-                                tracked: 4,
+                                planed: 8,
+                                tracked: 3,
                             },
                             {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 4,
-                                tracked: 4,
+                                name: 'project1',
+                                color: 'green',
+                                planed: 10,
+                                tracked: 5,
                             },
                             {
-                                name: 'siba',
-                                color: 'purple',
-                                planed: 4,
-                                tracked: 4,
+                                name: 'project2',
+                                color: 'blue',
+                                planed: 12,
+                                tracked: 5,
                             },
                         ],
                         timeOff: [
                             {
                                 name: 'public holiday',
-                                color: 'pink',
+                                color: '#008D8D',
                             },
                             {
                                 name: 'day off',
-                                color: 'blue',
+                                color: '#DB1040',
                             },
                         ],
                     },
@@ -84,24 +84,26 @@ class PlaningPage extends React.Component {
                             {
                                 name: 'ultradom',
                                 color: 'orange',
-                                planed: 4,
-                                tracked: 4,
+                                planed: 2,
+                                tracked: 0,
                             },
                             {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 4,
-                                tracked: 4,
+                                name: 'siba',
+                                color: 'purple',
+                                planed: 3,
+                                tracked: 3,
+                            },
+                            {
+                                name: 'project1',
+                                color: 'green',
+                                planed: 10,
+                                tracked: 5,
                             },
                         ],
                         timeOff: [
                             {
                                 name: 'public holiday',
-                                color: 'red',
-                            },
-                            {
-                                name: 'day off',
-                                color: 'yellow',
+                                color: '#008D8D',
                             },
                         ],
                     },
@@ -121,26 +123,11 @@ class PlaningPage extends React.Component {
                             {
                                 name: 'ultradom',
                                 color: 'orange',
-                                planed: 4,
-                                tracked: 4,
-                            },
-                            {
-                                name: 'siba',
-                                color: 'purple',
-                                planed: 4,
+                                planed: 20,
                                 tracked: 4,
                             },
                         ],
-                        timeOff: [
-                            {
-                                name: 'public holiday',
-                                color: 'green',
-                            },
-                            {
-                                name: 'day off',
-                                color: 'brown',
-                            },
-                        ],
+                        timeOff: [],
                     },
                     {
                         dateStart: '2020-01-20',
@@ -158,24 +145,28 @@ class PlaningPage extends React.Component {
                             {
                                 name: 'ultradom',
                                 color: 'orange',
-                                planed: 4,
+                                planed: 30,
                                 tracked: 4,
                             },
                             {
                                 name: 'siba',
                                 color: 'purple',
-                                planed: 4,
+                                planed: 10,
                                 tracked: 4,
                             },
                         ],
                         timeOff: [
                             {
-                                name: 'public holiday',
-                                color: 'aqua',
+                                name: 'day off',
+                                color: '#DB1040',
                             },
                             {
                                 name: 'day off',
-                                color: 'magenta',
+                                color: '#DB1040',
+                            },
+                            {
+                                name: 'day off',
+                                color: '#DB1040',
                             },
                         ],
                     },
@@ -183,7 +174,7 @@ class PlaningPage extends React.Component {
             },
             {
                 id: 2,
-                avatar: 'url',
+                avatar: 'https://randomuser.me/api/portraits/women/75.jpg',
                 shedule: [
                     {
                         dateStart: '2020-01-1',
@@ -199,28 +190,13 @@ class PlaningPage extends React.Component {
                         },
                         projects: [
                             {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 4,
-                                tracked: 4,
-                            },
-                            {
                                 name: 'siba',
                                 color: 'purple',
-                                planed: 4,
+                                planed: 40,
                                 tracked: 4,
                             },
                         ],
-                        timeOff: [
-                            {
-                                name: 'public holiday',
-                                color: 'pink',
-                            },
-                            {
-                                name: 'day off',
-                                color: 'blue',
-                            },
-                        ],
+                        timeOff: [],
                     },
                     {
                         dateStart: '2020-01-7',
@@ -251,19 +227,19 @@ class PlaningPage extends React.Component {
                         timeOff: [
                             {
                                 name: 'public holiday',
-                                color: 'red',
+                                color: '#008D8D',
                             },
                             {
                                 name: 'day off',
-                                color: 'magenta',
+                                color: '#DB1040',
                             },
                             {
-                                name: 'public holiday',
-                                color: 'red',
+                                name: 'own days',
+                                color: '#03008D',
                             },
                             {
-                                name: 'day off',
-                                color: 'magenta',
+                                name: 'sick',
+                                color: '#DB7110',
                             },
                         ],
                     },
@@ -283,32 +259,14 @@ class PlaningPage extends React.Component {
                             {
                                 name: 'ultradom',
                                 color: 'orange',
-                                planed: 4,
+                                planed: 8,
                                 tracked: 0,
-                            },
-                            {
-                                name: 'siba',
-                                color: 'purple',
-                                planed: 4,
-                                tracked: 4,
                             },
                         ],
                         timeOff: [
                             {
-                                name: 'public holiday',
-                                color: 'pink',
-                            },
-                            {
-                                name: 'day off',
-                                color: 'blue',
-                            },
-                            {
-                                name: 'public holiday',
-                                color: 'pink',
-                            },
-                            {
-                                name: 'day off',
-                                color: 'blue',
+                                name: 'sick',
+                                color: '#DB7110',
                             },
                         ],
                     },
@@ -334,26 +292,18 @@ class PlaningPage extends React.Component {
                             {
                                 name: 'siba',
                                 color: 'purple',
-                                planed: 4,
+                                planed: 10,
                                 tracked: 4,
                             },
                         ],
                         timeOff: [
                             {
                                 name: 'public holiday',
-                                color: 'pink',
-                            },
-                            {
-                                name: 'day off',
-                                color: 'blue',
+                                color: '#008D8D',
                             },
                             {
                                 name: 'public holiday',
-                                color: 'pink',
-                            },
-                            {
-                                name: 'day off',
-                                color: 'blue',
+                                color: '#008D8D',
                             },
                         ],
                     },
@@ -364,7 +314,7 @@ class PlaningPage extends React.Component {
 
     componentDidMount() {
         moment.locale(`${this.props.user.language}`);
-        this.props.createMonthArray();
+        this.props.currentMonth();
     }
 
     nextMonth = () => {
@@ -373,6 +323,9 @@ class PlaningPage extends React.Component {
 
     prevMonth = () => {
         this.props.prevMonth();
+    };
+    currentMonth = () => {
+        this.props.currentMonth();
     };
 
     totalPlaned = () => {
@@ -397,7 +350,7 @@ class PlaningPage extends React.Component {
     render() {
         const { users } = this.state;
         const { planingReducer, vocabulary } = this.props;
-        const { month } = planingReducer;
+        const { month, current } = planingReducer;
         const {
             v_planning,
             v_resource_planing,
@@ -406,6 +359,7 @@ class PlaningPage extends React.Component {
             v_hour_small,
             v_next_month,
             v_prev_month,
+            v_current_month,
             v_week,
             v_plan,
             v_add_plan,
@@ -413,7 +367,7 @@ class PlaningPage extends React.Component {
             v_add_time,
             v_add_preson,
             v_add,
-            V_cancel,
+            v_cancel,
             v_public_holiday,
         } = vocabulary;
 
@@ -422,14 +376,26 @@ class PlaningPage extends React.Component {
                 <div className="planing-header">
                     <div className="planing-header-left" />
                     <div className="planing-header-right">
+                        <p>{v_resource_planing}</p>
                         <div className="planing-header-right__info-container">
-                            <div>{v_resource_planing}</div>
-                            <h2>{`${this.totalPlaned()} ${v_hour_small} ${v_all_projects} `}</h2>
-                            <h2>{`${this.totalTracked()} ${v_hour_small} ${v_tracked}`}</h2>
-                        </div>
-                        <div className="planing-header-right__btn-container">
-                            <button onClick={this.prevMonth}>{v_prev_month}</button>
-                            <button onClick={this.nextMonth}>{v_next_month}</button>
+                            <div className="planing-header-right__counters">
+                                <p>{`${this.totalPlaned()}${v_hour_small} ${v_all_projects} `}</p>
+                                <p>{`${this.totalTracked()}${v_hour_small} ${v_tracked}`}</p>
+                            </div>
+                            <div className="planing-header-right__add-btn">
+                                <button style={{ display: 'flex', alignItems: 'center' }}>
+                                    {' '}
+                                    <i className="planing-header-right__plus" />
+                                    {v_add_plan}
+                                </button>
+
+                                <button>{v_time_off}</button>
+                            </div>
+                            <div className="planing-header-right__move-btn">
+                                <button onClick={this.prevMonth}>{v_prev_month}</button>
+                                <button onClick={this.currentMonth}>{v_current_month}</button>
+                                <button onClick={this.nextMonth}>{v_next_month}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -438,15 +404,15 @@ class PlaningPage extends React.Component {
                     <div className="main-content-wrapper">
                         <div className="month-container">
                             <div className="month-container__add-user-block">
-                                <button>X</button>
+                                <i className="month-container__add-user" />
                             </div>
                             <div className="month-container__weeks-block">
                                 {month.map((week, index) => (
                                     <div className="month-container__week" key={index}>
                                         <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
-                                            {`${v_week} ${week.weekCount} / ${moment(week.week[0].fullDate).format(
-                                                'MMM'
-                                            )} ${week.dayStart} - ${week.dayEnd}`}
+                                            {`${v_week} ${week.weekCount} / ${moment(current).format('MMM')} ${
+                                                week.dayStart
+                                            } - ${week.dayEnd}`}
                                         </h2>
                                         <div className="month-container__days-block">
                                             {week.week.map((day, index) => (
@@ -471,6 +437,13 @@ class PlaningPage extends React.Component {
                         {users.map(user => (
                             <PlaningUserBlock key={user.id} month={month} user={user} {...vocabulary} />
                         ))}
+                        {/* {users.map(user => (
+                            <PlaningUserBlock key={user.id} month={month} user={user} {...vocabulary} />
+                        ))}
+                        {users.map(user => (
+                            <PlaningUserBlock key={user.id} month={month} user={user} {...vocabulary} />
+                        ))} */}
+                        <div className="aside-footer" />
                     </div>
                 </Scrollbars>
             </div>
@@ -489,6 +462,7 @@ const mapDispatchToProps = {
     createMonthArray,
     nextMonth,
     prevMonth,
+    currentMonth,
 };
 
 export default connect(

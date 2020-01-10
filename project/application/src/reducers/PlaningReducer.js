@@ -1,9 +1,9 @@
-import { CREATE_MONTH_ARRAY, INCRIMENT_MONTH, DECREMENT_MONTH } from '../actions/PlaningActions';
+import { CREATE_MONTH_ARRAY, INCRIMENT_MONTH, DECREMENT_MONTH, SET_CURRENT_MONTH } from '../actions/PlaningActions';
 
 import moment from 'moment';
 
 const defaultState = {
-    current: moment(),
+    current: null,
     month: [],
 };
 
@@ -20,6 +20,13 @@ export const planingReducer = (state = defaultState, action) => {
             return {
                 ...state,
                 current: state.current.subtract(1, 'month'),
+            };
+        }
+
+        case SET_CURRENT_MONTH: {
+            return {
+                ...state,
+                current: moment(),
             };
         }
 

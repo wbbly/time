@@ -81,6 +81,7 @@ export default {
     v_hour_small: 'г',
     v_next_month: 'Наступний місяць',
     v_prev_month: 'Попередній місяць',
+    v_current_month: 'Поточний місяць',
     v_week: 'Тиждень',
     v_plan: 'План',
     v_add_plan: 'Додати план',
@@ -88,7 +89,7 @@ export default {
     v_add_time: 'Додати час',
     v_add_preson: 'Додати особу',
     v_add: 'Додати',
-    V_cancel: 'Скасувати',
+    v_cancel: 'Скасувати',
     v_public_holiday: 'Народне свято',
 
     v_upload_image: 'Завантажити зображення',

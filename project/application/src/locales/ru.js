@@ -83,6 +83,7 @@ export default {
     v_hour_small: 'ч',
     v_next_month: 'Следующий месяц',
     v_prev_month: 'Предыдущий месяц',
+    v_current_month: 'Текущий месяц',
     v_week: 'Неделя',
     v_plan: 'План',
     v_add_plan: 'Добавить План',
@@ -90,7 +91,7 @@ export default {
     v_add_time: 'Добавить время',
     v_add_preson: 'Добавить человека',
     v_add: 'Добавить',
-    V_cancel: 'Отменить',
+    v_cancel: 'Отменить',
     v_public_holiday: 'Гос. Праздник',
 
     v_upload_image: 'Загрузить изображение',

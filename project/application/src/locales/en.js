@@ -80,6 +80,7 @@ export default {
     v_hour_small: 'h',
     v_next_month: 'Next month',
     v_prev_month: 'Previous month',
+    v_current_month: 'Current month',
     v_week: 'Week',
     v_plan: 'Plan',
     v_add_plan: 'Add Plan',
@@ -87,7 +88,7 @@ export default {
     v_add_time: 'Add time',
     v_add_preson: 'Add Person',
     v_add: 'Add',
-    V_cancel: 'Cancel',
+    v_cancel: 'Cancel',
     v_public_holiday: 'Public holiday',
 
     v_upload_image: 'Upload image',

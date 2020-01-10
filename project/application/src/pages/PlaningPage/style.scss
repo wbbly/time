@@ -7,8 +7,8 @@
 
 .planing-header {
   display: flex;
-  min-height: 150px;
-  max-height: 150px;;
+  min-height: 180px;
+  max-height: 180px;
   width: 100%;
 }
 
@@ -22,17 +22,51 @@
 }
 .planing-header-right {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  margin: 0 10px;
+  margin: 10px 10px 0 40px;
+
   &__info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  &__btn-container {
+
+  &__counters {
+    font-size: 16px;
+    color: #ffffff;
   }
+
+  &__add-btn,
+  &__move-btn {
+    display: flex;
+    // width: 220px;
+    justify-content: space-between;
+  }
+  &__add-btn  button,
+  &__move-btn button {
+    margin: 0 10px;
+    height: 33px;
+    font-size: 14px;
+    color: #ffffff;
+    background: #02af67;
+    border-radius: 3px;
+  }
+  &__plus {
+    width: 20px;
+    height: 20px;
+    background: url("../../images/icons/add-plan.svg") no-repeat center;
+  }
+}
+.planing-header-right > p {
+  font-size: 24px;
+  color: #ffffff;
 }
 
 .main-content-wrapper {
   display: flex;
+  height: 100%;
   flex-direction: column;
   position: relative;
   min-width: 100%;
@@ -50,18 +84,25 @@
     max-width: 55px;
     height: 55px;
     background: #3b3b3b;
-    border-left: 3px solid #1f1f1f;
+    border-left: 3px solid #1f1f1f; 
+    cursor: pointer;
+    padding-bottom: 15px ;   
+  }
+  &__add-user {
+    width: 40px;
+    height: 40px;
+    background: url("../../images/icons/add-person.svg") no-repeat center;
   }
 
   &__weeks-block {
     display: flex;
-    margin-left: 20px;
+    margin-left: 30px;
   }
 
   &__week {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    // align-items: center;
     margin: 0 10px;
     max-width: 280px;
     min-width: 280px;
@@ -79,4 +120,12 @@
     flex-direction: column;
     flex: 1;
   }
+}
+
+.aside-footer {
+  min-width: 55px;
+  max-width: 55px;
+  height: 100%;
+  background: #3b3b3b;
+  border-left: 3px solid #1f1f1f;
 }
