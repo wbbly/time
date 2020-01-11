@@ -1,31 +1,19 @@
 .planing {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width: 100%;
+  min-height: 100%;
   background: #1f1f1f;
 }
 
 .planing-header {
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   min-height: 180px;
   max-height: 180px;
   width: 100%;
-}
-
-.planing-header-left {
-  display: flex;
-  flex-direction: column;
-  min-width: 55px;
-  max-width: 55px;
-  background: #3b3b3b;
-  border-left: 3px solid #1f1f1f;
-}
-.planing-header-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100%;
-  margin: 10px 10px 0 40px;
+  padding: 0 10px;
 
   &__info-container {
     display: flex;
@@ -34,6 +22,7 @@
   }
 
   &__counters {
+    margin-left: 10px;
     font-size: 16px;
     color: #ffffff;
   }
@@ -41,7 +30,6 @@
   &__add-btn,
   &__move-btn {
     display: flex;
-    // width: 220px;
     justify-content: space-between;
   }
   &__add-btn  button,
@@ -59,54 +47,40 @@
     background: url("../../images/icons/add-plan.svg") no-repeat center;
   }
 }
-.planing-header-right > p {
+.planing-header > p {
   font-size: 24px;
   color: #ffffff;
 }
 
+
+
 .main-content-wrapper {
   display: flex;
-  height: 100%;
+  // height: 100%;
   flex-direction: column;
   position: relative;
-  min-width: 100%;
+  // min-width: 100%;
+  padding: 0 10px;
 }
 
 .month-container {
   display: flex;
   width: 100%;
 
-  &__add-user-block {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 55px;
-    max-width: 55px;
-    height: 55px;
-    background: #3b3b3b;
-    border-left: 3px solid #1f1f1f; 
-    cursor: pointer;
-    padding-bottom: 15px ;   
-  }
-  &__add-user {
-    width: 40px;
-    height: 40px;
-    background: url("../../images/icons/add-person.svg") no-repeat center;
-  }
+
 
   &__weeks-block {
     display: flex;
-    margin-left: 30px;
+    margin-left: -10px;
   }
 
   &__week {
     display: flex;
     flex-direction: column;
-    // align-items: center;
-    margin: 0 10px;
     max-width: 280px;
     min-width: 280px;
     height: 55px;
+    margin: 0 10px;
   }
 
   &__days-block {
@@ -122,10 +96,75 @@
   }
 }
 
-.aside-footer {
-  min-width: 55px;
-  max-width: 55px;
+.aside-bar {
+  min-width: 105px;
+  max-width: 105px;
   height: 100%;
-  background: #3b3b3b;
-  border-left: 3px solid #1f1f1f;
+  border-left: 2px solid #1f1f1f;
+  
+  // &__openers {
+  //   background-color: transparent;
+  // }
+
+  &__filler-top {
+    height: 180px;
+    background: transparent;
+  }
+  
+  &__users {
+  width: 55px;
+  height: 100%;
+  background: #3b3b3b;  
+  }
+
+  &__add-user-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 55px;
+    max-width: 55px;
+    height: 55px;
+    cursor: pointer;  
+  }
+
+  &__add-user {
+    width: 40px;
+    height: 40px;
+    background: url("../../images/icons/add-person.svg") no-repeat center;
+  }
+
+  &__user-info {
+    display: flex;
+  }
+
+  &__avatar-block {
+    display: flex;
+    justify-content: center;
+    min-width: 55px;
+    max-width: 55px;
+    padding-top: 8px;
+    transition: 0.3s;
+    background: #3b3b3b;
+  }
+  &__avatar {
+    width: 40px;
+    height: 40px;
+    position: relative;
+  }
+  &__avatar > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  &__avatar > i {
+    cursor: pointer;
+    position: absolute;
+    top:0;
+    right: 0;
+    margin-top: -6px;
+    height: 20px;
+    width: 20px;
+    background: url("../../images/icons/delete-person.svg") no-repeat center;
+  }
+
 }

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import './style.scss';
 
-const OpendBlock = ({ date, index, v_hour_small, v_plan }) => {
+const OpendBlock = ({ date, v_hour_small, v_plan }) => {
     return (
-        <div key={index}>
+        <div>
             <div
                 style={{
                     position: 'absolute',
@@ -76,15 +76,60 @@ const OpendBlock = ({ date, index, v_hour_small, v_plan }) => {
                             />
                         </div>
                     ))}
+                    {date.timeOff.map((timeOff, index) => (
+                        <div
+                            key={index}
+                            style={{
+                                left: '10px',
+                                position: 'relative',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                background: timeOff.color,
+                                height: '30px',
+                                marginBottom: '15px',
+                                padding: '0 10px',
+                                zIndex: '1',
+                            }}
+                        >
+                            <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{timeOff.name}</p>
+                            {/* <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${
+                                project.planed
+                            } ${v_hour_small}`}</p> */}
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    background: timeOff.color,
+                                    width: '15px',
+                                    height: '15px',
+                                    top: '7.5px',
+                                    left: '-7.5px',
+                                    margin: 'auto',
+                                    borderRadius: '50%',
+                                    border: '3px solid #323232',
+                                }}
+                            />
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
     );
 };
 
-const ClosedBlock = ({ date, index, v_hour_small, v_plan }) => {
+const ClosedBlock = ({ date, v_hour_small, v_plan }) => {
+    const strech = (e, timeOff) => {
+        e.target.style.flex = 10;
+        e.target.parentNode.style.flex = 10;
+        e.target.innerText = timeOff.name;
+    };
+    const shrink = (e, timeOff) => {
+        e.target.style.flex = 1;
+        e.target.parentNode.style.flex = 1;
+        e.target.innerText = timeOff.name.slice(0, 1);
+    };
+
     return (
-        <div key={index}>
+        <div>
             <div
                 style={{
                     position: 'absolute',
@@ -118,9 +163,27 @@ const ClosedBlock = ({ date, index, v_hour_small, v_plan }) => {
                     ))}
                 </div>
                 {date.timeOff.length ? (
-                    <div style={{ display: 'flex', flex: 1 }}>
-                        {date.timeOff.map((off, index) => (
-                            <div key={index} style={{ flex: '1', background: off.color }} />
+                    <div style={{ display: 'flex', flex: 1, transition: 'flex 0.5s' }}>
+                        {date.timeOff.map((timeOff, index) => (
+                            <div
+                                onMouseOver={e => strech(e, timeOff)}
+                                onMouseOut={e => shrink(e, timeOff)}
+                                key={index}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flex: '1',
+                                    background: timeOff.color,
+                                    color: '#FFFFFF',
+                                    fontSize: '10px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.5s',
+                                }}
+                            >
+                                {timeOff.name.slice(0, 1)}
+                            </div>
                         ))}
                     </div>
                 ) : null}
@@ -129,15 +192,15 @@ const ClosedBlock = ({ date, index, v_hour_small, v_plan }) => {
     );
 };
 
-const PlaningUserBlock = ({ month, user, v_hour_small, v_plan }) => {
+const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
     const [openFlag, setOpenFlag] = useState(false);
-    const [longestArray, setLongestArray] = useState(1);
+    // const [longestArray, setLongestArray] = useState(1);
 
     useEffect(
         () => {
-            user.shedule.map(el => (el.projects.length > longestArray ? setLongestArray(el.projects.length) : null));
+            addUser();
         },
-        [month]
+        [user]
     );
 
     const changeFlag = () => {
@@ -146,11 +209,11 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan }) => {
     console.log(user);
     return (
         <div className="user-block">
-            <div className="user-block__user-info">
+            {/* <div className="user-block__user-info">
                 <div
                     className="user-block__avatar-block"
                     style={{
-                        height: openFlag ? `calc(${longestArray * 60 + 61}px)` : '60px',
+                        height: openFlag ? `${user.heightMulti * 60 + 61}px` : '60px',
                     }}
                 >
                     <div className="user-block__avatar">
@@ -166,8 +229,11 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan }) => {
                 >
                     <i className={openFlag ? 'arrow_up' : 'arrow_down'} />
                 </div>
-            </div>
-            <div className="user-block__main-block" style={{ display: 'flex', borderBottom: '1px solid #1F1F1F' }}>
+            </div> */}
+            <div
+                className="user-block__main-block"
+                style={{ display: 'flex', borderBottom: '1px solid #1F1F1F', marginLeft: '-10px' }}
+            >
                 {month.map((week, index) => (
                     <div key={index} style={{ display: 'flex', margin: '0 10px 0 10px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -176,7 +242,7 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan }) => {
                                 style={{
                                     display: 'flex',
                                     position: 'relative',
-                                    height: openFlag ? `calc(${longestArray * 60 + 60}px)` : '59px',
+                                    height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
                                 }}
                             >
                                 {week.week.map((day, index) => (
@@ -199,16 +265,16 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan }) => {
                                         week.week.find(el =>
                                             moment(date.dateStart).isSame(moment(el.fullDate), 'day')
                                         ) ? (
-                                            openFlag ? (
+                                            user.openFlag ? (
                                                 <OpendBlock
-                                                    index={index}
+                                                    key={index}
                                                     date={date}
                                                     v_plan={v_plan}
                                                     v_hour_small={v_hour_small}
                                                 />
                                             ) : (
                                                 <ClosedBlock
-                                                    index={index}
+                                                    key={index}
                                                     date={date}
                                                     v_hour_small={v_hour_small}
                                                     v_plan={v_plan}

@@ -7,311 +7,20 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import PlaningUserBlock from '../../components/PlaningUserBlock';
 
 //---ACTIONS---
-import { createMonthArray, nextMonth, prevMonth, currentMonth } from '../../actions/PlaningActions';
+import {
+    createMonthArray,
+    nextMonth,
+    prevMonth,
+    currentMonth,
+    addUser,
+    changeUserOpenFlag,
+} from '../../actions/PlaningActions';
 
 //---STYLES---
 import './style.scss';
+import { isOpera } from 'react-device-detect';
 
 class PlaningPage extends React.Component {
-    state = {
-        users: [
-            {
-                id: 1,
-                avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
-                shedule: [
-                    {
-                        dateStart: '2020-01-6',
-                        dateEnd: '2020-01-12',
-                        daysCount() {
-                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                        },
-                        planedTotal() {
-                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                        },
-                        trackedTotal() {
-                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                        },
-                        projects: [
-                            {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 8,
-                                tracked: 4,
-                            },
-                            {
-                                name: 'siba',
-                                color: 'purple',
-                                planed: 8,
-                                tracked: 3,
-                            },
-                            {
-                                name: 'project1',
-                                color: 'green',
-                                planed: 10,
-                                tracked: 5,
-                            },
-                            {
-                                name: 'project2',
-                                color: 'blue',
-                                planed: 12,
-                                tracked: 5,
-                            },
-                        ],
-                        timeOff: [
-                            {
-                                name: 'public holiday',
-                                color: '#008D8D',
-                            },
-                            {
-                                name: 'day off',
-                                color: '#DB1040',
-                            },
-                        ],
-                    },
-                    {
-                        dateStart: '2020-01-13',
-                        dateEnd: '2020-01-19',
-                        daysCount() {
-                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                        },
-                        planedTotal() {
-                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                        },
-                        trackedTotal() {
-                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                        },
-                        projects: [
-                            {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 2,
-                                tracked: 0,
-                            },
-                            {
-                                name: 'siba',
-                                color: 'purple',
-                                planed: 3,
-                                tracked: 3,
-                            },
-                            {
-                                name: 'project1',
-                                color: 'green',
-                                planed: 10,
-                                tracked: 5,
-                            },
-                        ],
-                        timeOff: [
-                            {
-                                name: 'public holiday',
-                                color: '#008D8D',
-                            },
-                        ],
-                    },
-                    {
-                        dateStart: '2020-01-1',
-                        dateEnd: '2020-01-5',
-                        daysCount() {
-                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                        },
-                        planedTotal() {
-                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                        },
-                        trackedTotal() {
-                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                        },
-                        projects: [
-                            {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 20,
-                                tracked: 4,
-                            },
-                        ],
-                        timeOff: [],
-                    },
-                    {
-                        dateStart: '2020-01-20',
-                        dateEnd: '2020-01-26',
-                        daysCount() {
-                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                        },
-                        planedTotal() {
-                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                        },
-                        trackedTotal() {
-                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                        },
-                        projects: [
-                            {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 30,
-                                tracked: 4,
-                            },
-                            {
-                                name: 'siba',
-                                color: 'purple',
-                                planed: 10,
-                                tracked: 4,
-                            },
-                        ],
-                        timeOff: [
-                            {
-                                name: 'day off',
-                                color: '#DB1040',
-                            },
-                            {
-                                name: 'day off',
-                                color: '#DB1040',
-                            },
-                            {
-                                name: 'day off',
-                                color: '#DB1040',
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                id: 2,
-                avatar: 'https://randomuser.me/api/portraits/women/75.jpg',
-                shedule: [
-                    {
-                        dateStart: '2020-01-1',
-                        dateEnd: '2020-01-5',
-                        daysCount() {
-                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                        },
-                        planedTotal() {
-                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                        },
-                        trackedTotal() {
-                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                        },
-                        projects: [
-                            {
-                                name: 'siba',
-                                color: 'purple',
-                                planed: 40,
-                                tracked: 4,
-                            },
-                        ],
-                        timeOff: [],
-                    },
-                    {
-                        dateStart: '2020-01-7',
-                        dateEnd: '2020-01-10',
-                        daysCount() {
-                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                        },
-                        planedTotal() {
-                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                        },
-                        trackedTotal() {
-                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                        },
-                        projects: [
-                            {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 4,
-                                tracked: 4,
-                            },
-                            {
-                                name: 'siba',
-                                color: 'purple',
-                                planed: 4,
-                                tracked: 4,
-                            },
-                        ],
-                        timeOff: [
-                            {
-                                name: 'public holiday',
-                                color: '#008D8D',
-                            },
-                            {
-                                name: 'day off',
-                                color: '#DB1040',
-                            },
-                            {
-                                name: 'own days',
-                                color: '#03008D',
-                            },
-                            {
-                                name: 'sick',
-                                color: '#DB7110',
-                            },
-                        ],
-                    },
-                    {
-                        dateStart: '2020-02-5',
-                        dateEnd: '2020-01-10',
-                        daysCount() {
-                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                        },
-                        planedTotal() {
-                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                        },
-                        trackedTotal() {
-                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                        },
-                        projects: [
-                            {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 8,
-                                tracked: 0,
-                            },
-                        ],
-                        timeOff: [
-                            {
-                                name: 'sick',
-                                color: '#DB7110',
-                            },
-                        ],
-                    },
-                    {
-                        dateStart: '2020-02-15',
-                        dateEnd: '2020-01-20',
-                        daysCount() {
-                            return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                        },
-                        planedTotal() {
-                            return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                        },
-                        trackedTotal() {
-                            return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                        },
-                        projects: [
-                            {
-                                name: 'ultradom',
-                                color: 'orange',
-                                planed: 4,
-                                tracked: 4,
-                            },
-                            {
-                                name: 'siba',
-                                color: 'purple',
-                                planed: 10,
-                                tracked: 4,
-                            },
-                        ],
-                        timeOff: [
-                            {
-                                name: 'public holiday',
-                                color: '#008D8D',
-                            },
-                            {
-                                name: 'public holiday',
-                                color: '#008D8D',
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
-    };
-
     componentDidMount() {
         moment.locale(`${this.props.user.language}`);
         this.props.currentMonth();
@@ -320,7 +29,6 @@ class PlaningPage extends React.Component {
     nextMonth = () => {
         this.props.nextMonth();
     };
-
     prevMonth = () => {
         this.props.prevMonth();
     };
@@ -329,7 +37,8 @@ class PlaningPage extends React.Component {
     };
 
     totalPlaned = () => {
-        return this.state.users
+        const { users } = this.props.planingReducer;
+        return users
             .map(el =>
                 el.shedule
                     .map(item => item.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed)
@@ -338,7 +47,8 @@ class PlaningPage extends React.Component {
             .reduce((a, b) => a + b);
     };
     totalTracked = () => {
-        return this.state.users
+        const { users } = this.props.planingReducer;
+        return users
             .map(el =>
                 el.shedule
                     .map(item => item.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked)
@@ -347,12 +57,14 @@ class PlaningPage extends React.Component {
             .reduce((a, b) => a + b);
     };
 
+    changeUserOpenFlag = e => {
+        this.props.changeUserOpenFlag(e.target.id);
+    };
+
     render() {
-        const { users } = this.state;
-        const { planingReducer, vocabulary } = this.props;
-        const { month, current } = planingReducer;
+        const { planingReducer, vocabulary, addUser } = this.props;
+        const { month, current, users } = planingReducer;
         const {
-            v_planning,
             v_resource_planing,
             v_all_projects,
             v_tracked,
@@ -361,91 +73,123 @@ class PlaningPage extends React.Component {
             v_prev_month,
             v_current_month,
             v_week,
-            v_plan,
             v_add_plan,
             v_time_off,
-            v_add_time,
-            v_add_preson,
-            v_add,
-            v_cancel,
-            v_public_holiday,
         } = vocabulary;
-
         return (
-            <div className="planing">
-                <div className="planing-header">
-                    <div className="planing-header-left" />
-                    <div className="planing-header-right">
+            <div style={{ display: 'flex', minWidth: '100%', height: '100%' }}>
+                <div className="aside-bar">
+                    <div className="aside-bar__users">
+                        <div className="aside-bar__filler-top" />
+                        <div className="aside-bar__add-user-block">
+                            <i className="aside-bar__add-user" />
+                        </div>
+                        {users.map(user => (
+                            <div className="aside-bar__user-info">
+                                <div
+                                    className="aside-bar__avatar-block"
+                                    style={{
+                                        height: user.openFlag ? `${user.heightMulti * 60 + 60}px` : '60px',
+                                    }}
+                                >
+                                    <div className="aside-bar__avatar">
+                                        {' '}
+                                        <img src={user.avatar} alt="oops no img" />
+                                        <i />
+                                    </div>
+                                </div>
+                                <div
+                                    className="user-block__show-btn"
+                                    style={{
+                                        minWidth: '20px',
+                                        height: '20px',
+                                        marginLeft: '10px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    <i
+                                        id={user.id}
+                                        onClick={this.changeUserOpenFlag}
+                                        className={user.openFlag ? 'arrow_up' : 'arrow_down'}
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    {/* <div className="aside-bar__openers" /> */}
+                </div>
+                <div className="planing">
+                    <div className="planing-header">
+                        {/* <div className="planing-header-left" /> */}
+                        {/* <div className="planing-header-right"> */}
                         <p>{v_resource_planing}</p>
-                        <div className="planing-header-right__info-container">
-                            <div className="planing-header-right__counters">
+                        <div className="planing-header__info-container">
+                            <div className="planing-header__counters">
                                 <p>{`${this.totalPlaned()}${v_hour_small} ${v_all_projects} `}</p>
                                 <p>{`${this.totalTracked()}${v_hour_small} ${v_tracked}`}</p>
                             </div>
-                            <div className="planing-header-right__add-btn">
+                            <div className="planing-header__add-btn">
                                 <button style={{ display: 'flex', alignItems: 'center' }}>
                                     {' '}
-                                    <i className="planing-header-right__plus" />
+                                    <i className="planing-header__plus" />
                                     {v_add_plan}
                                 </button>
 
                                 <button>{v_time_off}</button>
                             </div>
-                            <div className="planing-header-right__move-btn">
+                            <div className="planing-header__move-btn">
                                 <button onClick={this.prevMonth}>{v_prev_month}</button>
                                 <button onClick={this.currentMonth}>{v_current_month}</button>
                                 <button onClick={this.nextMonth}>{v_next_month}</button>
                             </div>
                         </div>
+                        {/* </div> */}
                     </div>
-                </div>
-                {/* {-------BODY---------} */}
-                <Scrollbars>
-                    <div className="main-content-wrapper">
-                        <div className="month-container">
-                            <div className="month-container__add-user-block">
-                                <i className="month-container__add-user" />
-                            </div>
-                            <div className="month-container__weeks-block">
-                                {month.map((week, index) => (
-                                    <div className="month-container__week" key={index}>
-                                        <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
-                                            {`${v_week} ${week.weekCount} / ${moment(current).format('MMM')} ${
-                                                week.dayStart
-                                            } - ${week.dayEnd}`}
-                                        </h2>
-                                        <div className="month-container__days-block">
-                                            {week.week.map((day, index) => (
-                                                <div className="month-container__day" key={index}>
-                                                    <div
-                                                        style={{
-                                                            fontSize: '1em',
-                                                            whiteSpace: 'nowrap',
-                                                            textAlign: 'center',
-                                                            color: day.color,
-                                                        }}
-                                                    >
-                                                        {moment(day.fullDate).format('ddd DD')}
+                    {/* {-------BODY---------} */}
+
+                    <Scrollbars>
+                        <div className="main-content-wrapper">
+                            <div className="month-container">
+                                <div className="month-container__weeks-block">
+                                    {month.map((week, index) => (
+                                        <div className="month-container__week" key={index}>
+                                            <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
+                                                {`${v_week} ${week.weekCount} / ${moment(current).format('MMM')} ${
+                                                    week.dayStart
+                                                } - ${week.dayEnd}`}
+                                            </h2>
+                                            <div className="month-container__days-block">
+                                                {week.week.map((day, index) => (
+                                                    <div className="month-container__day" key={index}>
+                                                        <div
+                                                            style={{
+                                                                fontSize: '1em',
+                                                                whiteSpace: 'nowrap',
+                                                                textAlign: 'center',
+                                                                color: day.color,
+                                                            }}
+                                                        >
+                                                            {moment(day.fullDate).format('ddd DD')}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
+                            {users.map(user => (
+                                <PlaningUserBlock
+                                    key={user.id}
+                                    month={month}
+                                    user={user}
+                                    addUser={addUser}
+                                    {...vocabulary}
+                                />
+                            ))}
                         </div>
-                        {users.map(user => (
-                            <PlaningUserBlock key={user.id} month={month} user={user} {...vocabulary} />
-                        ))}
-                        {/* {users.map(user => (
-                            <PlaningUserBlock key={user.id} month={month} user={user} {...vocabulary} />
-                        ))}
-                        {users.map(user => (
-                            <PlaningUserBlock key={user.id} month={month} user={user} {...vocabulary} />
-                        ))} */}
-                        <div className="aside-footer" />
-                    </div>
-                </Scrollbars>
+                    </Scrollbars>
+                </div>
             </div>
         );
     }
@@ -463,6 +207,8 @@ const mapDispatchToProps = {
     nextMonth,
     prevMonth,
     currentMonth,
+    addUser,
+    changeUserOpenFlag,
 };
 
 export default connect(
