@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 import './style.scss';
 
@@ -16,7 +16,6 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                     height: '30px',
                     background: '#474747',
                     display: 'flex',
-                    zIndex: '1',
                 }}
             >
                 <div
@@ -54,7 +53,6 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                                 height: '30px',
                                 marginBottom: '15px',
                                 padding: '0 10px',
-                                zIndex: '1',
                             }}
                         >
                             <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{project.name}</p>
@@ -88,13 +86,9 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                                 height: '30px',
                                 marginBottom: '15px',
                                 padding: '0 10px',
-                                zIndex: '1',
                             }}
                         >
                             <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{timeOff.name}</p>
-                            {/* <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${
-                                project.planed
-                            } ${v_hour_small}`}</p> */}
                             <div
                                 style={{
                                     position: 'absolute',
@@ -139,7 +133,6 @@ const ClosedBlock = ({ date, v_hour_small, v_plan }) => {
                     width: '190px',
                     height: '30px',
                     display: 'flex',
-                    zIndex: '1',
                 }}
             >
                 <div style={{ display: 'flex', flex: 3, position: 'relative' }}>
@@ -193,9 +186,6 @@ const ClosedBlock = ({ date, v_hour_small, v_plan }) => {
 };
 
 const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
-    const [openFlag, setOpenFlag] = useState(false);
-    // const [longestArray, setLongestArray] = useState(1);
-
     useEffect(
         () => {
             addUser();
@@ -203,33 +193,8 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
         [user]
     );
 
-    const changeFlag = () => {
-        setOpenFlag(!openFlag);
-    };
-    console.log(user);
     return (
         <div className="user-block">
-            {/* <div className="user-block__user-info">
-                <div
-                    className="user-block__avatar-block"
-                    style={{
-                        height: openFlag ? `${user.heightMulti * 60 + 61}px` : '60px',
-                    }}
-                >
-                    <div className="user-block__avatar">
-                        {' '}
-                        <img src={user.avatar} alt="oops no img" />
-                        <i />
-                    </div>
-                </div>
-                <div
-                    className="user-block__show-btn"
-                    style={{ minWidth: '20px', height: '20px', marginLeft: '10px', cursor: 'pointer' }}
-                    onClick={changeFlag}
-                >
-                    <i className={openFlag ? 'arrow_up' : 'arrow_down'} />
-                </div>
-            </div> */}
             <div
                 className="user-block__main-block"
                 style={{ display: 'flex', borderBottom: '1px solid #1F1F1F', marginLeft: '-10px' }}
@@ -243,6 +208,7 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
                                     display: 'flex',
                                     position: 'relative',
                                     height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
+                                    transition: 'height 0.3s',
                                 }}
                             >
                                 {week.week.map((day, index) => (

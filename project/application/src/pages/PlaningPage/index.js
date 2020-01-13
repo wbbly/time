@@ -4,7 +4,11 @@ import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 //---COMPONENTS---
+import ModalPortal from '../../components/ModalPortal';
 import PlaningUserBlock from '../../components/PlaningUserBlock';
+import { AddUser } from '../../components/PlaningModals/AddUser';
+import { AddPlan } from '../../components/PlaningModals/AddPlan';
+import { AddTimeOff } from '../../components/PlaningModals/AddTimeOff';
 
 //---ACTIONS---
 import {
@@ -18,9 +22,15 @@ import {
 
 //---STYLES---
 import './style.scss';
-import { isOpera } from 'react-device-detect';
 
 class PlaningPage extends React.Component {
+    state = {
+        showAddUser: false,
+        showAddPlan: false,
+        showTimeOff: false,
+        showAddPlanTimeOff: false,
+    };
+
     componentDidMount() {
         moment.locale(`${this.props.user.language}`);
         this.props.currentMonth();
@@ -61,9 +71,32 @@ class PlaningPage extends React.Component {
         this.props.changeUserOpenFlag(e.target.id);
     };
 
+    changeAddUserFlag = () => {
+        this.setState({ showAddUser: true });
+    };
+    changeAddPlanFlag = () => {
+        this.setState({ showAddPlan: true });
+    };
+    changeAddTimeOffFlag = () => {
+        this.setState({ showTimeOff: true });
+    };
+    changeAddPlanTimeOffFlag = () => {
+        this.setState({ showAddPlanTimeOff: true });
+    };
+
+    closeAllFlags = () => {
+        this.setState({
+            showAddUser: false,
+            showAddPlan: false,
+            showTimeOff: false,
+            showAddUser: false,
+        });
+    };
+
     render() {
         const { planingReducer, vocabulary, addUser } = this.props;
         const { month, current, users } = planingReducer;
+        const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff } = this.state;
         const {
             v_resource_planing,
             v_all_projects,
@@ -81,7 +114,7 @@ class PlaningPage extends React.Component {
                 <div className="aside-bar">
                     <div className="aside-bar__users">
                         <div className="aside-bar__filler-top" />
-                        <div className="aside-bar__add-user-block">
+                        <div className="aside-bar__add-user-block" onClick={this.changeAddUserFlag}>
                             <i className="aside-bar__add-user" />
                         </div>
                         {users.map(user => (
@@ -89,7 +122,7 @@ class PlaningPage extends React.Component {
                                 <div
                                     className="aside-bar__avatar-block"
                                     style={{
-                                        height: user.openFlag ? `${user.heightMulti * 60 + 60}px` : '60px',
+                                        height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
                                     }}
                                 >
                                     <div className="aside-bar__avatar">
@@ -116,12 +149,9 @@ class PlaningPage extends React.Component {
                             </div>
                         ))}
                     </div>
-                    {/* <div className="aside-bar__openers" /> */}
                 </div>
                 <div className="planing">
                     <div className="planing-header">
-                        {/* <div className="planing-header-left" /> */}
-                        {/* <div className="planing-header-right"> */}
                         <p>{v_resource_planing}</p>
                         <div className="planing-header__info-container">
                             <div className="planing-header__counters">
@@ -129,13 +159,16 @@ class PlaningPage extends React.Component {
                                 <p>{`${this.totalTracked()}${v_hour_small} ${v_tracked}`}</p>
                             </div>
                             <div className="planing-header__add-btn">
-                                <button style={{ display: 'flex', alignItems: 'center' }}>
+                                <button
+                                    style={{ display: 'flex', alignItems: 'center' }}
+                                    onClick={this.changeAddPlanFlag}
+                                >
                                     {' '}
                                     <i className="planing-header__plus" />
                                     {v_add_plan}
                                 </button>
 
-                                <button>{v_time_off}</button>
+                                <button onClick={this.changeAddTimeOffFlag}>{v_time_off}</button>
                             </div>
                             <div className="planing-header__move-btn">
                                 <button onClick={this.prevMonth}>{v_prev_month}</button>
@@ -143,8 +176,8 @@ class PlaningPage extends React.Component {
                                 <button onClick={this.nextMonth}>{v_next_month}</button>
                             </div>
                         </div>
-                        {/* </div> */}
                     </div>
+
                     {/* {-------BODY---------} */}
 
                     <Scrollbars>
@@ -190,6 +223,30 @@ class PlaningPage extends React.Component {
                         </div>
                     </Scrollbars>
                 </div>
+                {showAddUser || showAddPlan || showTimeOff || showAddPlanTimeOff ? (
+                    <ModalPortal>
+                        <div style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%' }}>
+                            {showAddUser ? (
+                                <AddUser cancel={this.closeAllFlags} add={console.log} data={[]} {...vocabulary} />
+                            ) : null}
+                            {showAddPlan ? (
+                                <AddPlan cancel={this.closeAllFlags} add={console.log} data={[]} {...vocabulary} />
+                            ) : null}
+                            {showTimeOff ? (
+                                <AddTimeOff cancel={this.closeAllFlags} add={console.log} data={[]} {...vocabulary} />
+                            ) : null}
+                            <div
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    background: 'black',
+                                    opacity: '0.7',
+                                    zIndex: '19',
+                                }}
+                            />
+                        </div>
+                    </ModalPortal>
+                ) : null}
             </div>
         );
     }
@@ -197,7 +254,6 @@ class PlaningPage extends React.Component {
 
 const mapStateToProps = state => ({
     user: state.userReducer.user,
-    // currentTeamData: state.teamReducer.currentTeamDetailedData.data,
     planingReducer: state.planingReducer,
     vocabulary: state.languageReducer.vocabulary,
 });

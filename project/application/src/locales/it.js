@@ -91,7 +91,7 @@ export default {
     v_add_time: 'Aggiungi tempo',
     v_add_preson: 'Aggiungi persona',
     v_add: 'Aggiungi',
-    v_cancel: 'Annulla',
+    v_cancel_small: 'Annulla',
     v_public_holiday: 'Festa nazionale',
 
     v_upload_image: 'Carica immagine',

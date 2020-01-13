@@ -91,7 +91,7 @@ export default {
     v_add_time: 'Добавить время',
     v_add_preson: 'Добавить человека',
     v_add: 'Добавить',
-    v_cancel: 'Отменить',
+    v_cancel_small: 'Отменить',
     v_public_holiday: 'Гос. Праздник',
 
     v_upload_image: 'Загрузить изображение',

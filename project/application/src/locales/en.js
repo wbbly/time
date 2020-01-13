@@ -88,7 +88,7 @@ export default {
     v_add_time: 'Add time',
     v_add_preson: 'Add Person',
     v_add: 'Add',
-    v_cancel: 'Cancel',
+    v_cancel_small: 'Cancel',
     v_public_holiday: 'Public holiday',
 
     v_upload_image: 'Upload image',

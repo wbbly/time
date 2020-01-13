@@ -75,7 +75,7 @@ class App extends Component {
                 <PrivateRoute exact path="/projects" render={() => <PageTemplate content={ProjectsPage} />} />
                 <PrivateRoute exact path="/clients" render={() => <PageTemplate content={ClientsPage} />} />
                 <PrivateRoute exact path="/team" render={() => <PageTemplate content={TeamPage} />} />
-                <PrivateRoute exact path="/planing" render={() => <PageTemplate content={PlaningPage} />} />
+                <PrivateRoute path="/planing" render={() => <PageTemplate content={PlaningPage} />} />
                 <PrivateRoute
                     exact
                     path="/reports/detailed/projects/:projectName/team/:userEmails/from/:dateStart/to/:endDate/"

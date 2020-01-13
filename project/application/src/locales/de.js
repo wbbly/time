@@ -92,7 +92,7 @@ export default {
     v_add_time: 'Zeit hinzufügen',
     v_add_preson: 'Person hinzufügen',
     v_add: 'Hinzufügen',
-    v_cancel: 'Stornieren',
+    v_cancel_small: 'Stornieren',
     v_public_holiday: 'Gesetzlicher Feiertag',
 
     v_upload_image: 'Bild hochladen',
