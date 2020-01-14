@@ -10,6 +10,9 @@ import { AddUser } from '../../components/PlaningModals/AddUser';
 import { AddPlan } from '../../components/PlaningModals/AddPlan';
 import { AddTimeOff } from '../../components/PlaningModals/AddTimeOff';
 
+//---SERVICES---
+import { apiCall } from '../../services/apiService';
+
 //---ACTIONS---
 import {
     createMonthArray,
@@ -19,9 +22,17 @@ import {
     addUser,
     changeUserOpenFlag,
 } from '../../actions/PlaningActions';
+import projectsPageAction from '../../actions/ProjectsActions';
+
+// Queries
+import { getProjectsV2ProjectPageUserParseFunction } from '../../queries';
+
+//---CONFIG---
+import { AppConfig } from '../../config';
 
 //---STYLES---
 import './style.scss';
+import { projectReducer } from '../../reducers/ProjectsReducer';
 
 class PlaningPage extends React.Component {
     state = {
@@ -31,9 +42,30 @@ class PlaningPage extends React.Component {
         showAddPlanTimeOff: false,
     };
 
+    getProjects = () =>
+        apiCall(AppConfig.apiURL + `project/list?withTimerList=true`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            result => {
+                let data = getProjectsV2ProjectPageUserParseFunction(result.data);
+                this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
+                }
+            }
+        );
+
     componentDidMount() {
         moment.locale(`${this.props.user.language}`);
         this.props.currentMonth();
+        this.getProjects();
     }
 
     nextMonth = () => {
@@ -84,7 +116,7 @@ class PlaningPage extends React.Component {
         this.setState({ showAddPlanTimeOff: true });
     };
 
-    closeAllFlags = () => {
+    closeAllFlags = e => {
         this.setState({
             showAddUser: false,
             showAddPlan: false,
@@ -94,7 +126,7 @@ class PlaningPage extends React.Component {
     };
 
     render() {
-        const { planingReducer, vocabulary, addUser } = this.props;
+        const { planingReducer, vocabulary, addUser, projectsArray } = this.props;
         const { month, current, users } = planingReducer;
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff } = this.state;
         const {
@@ -109,6 +141,7 @@ class PlaningPage extends React.Component {
             v_add_plan,
             v_time_off,
         } = vocabulary;
+        console.log(projectsArray, '-----');
         return (
             <div style={{ display: 'flex', minWidth: '100%', height: '100%' }}>
                 <div className="aside-bar">
@@ -180,7 +213,14 @@ class PlaningPage extends React.Component {
 
                     {/* {-------BODY---------} */}
 
-                    <Scrollbars>
+                    <Scrollbars
+                        renderTrackVertical={props => (
+                            <div {...props} style={{ display: 'none' }} className="track-horizontal" />
+                        )}
+                        // hideTracksWhenNotNeeded={true}
+                        // autoHide={true}
+                        autoHeight={true}
+                    >
                         <div className="main-content-wrapper">
                             <div className="month-container">
                                 <div className="month-container__weeks-block">
@@ -230,7 +270,13 @@ class PlaningPage extends React.Component {
                                 <AddUser cancel={this.closeAllFlags} add={console.log} data={[]} {...vocabulary} />
                             ) : null}
                             {showAddPlan ? (
-                                <AddPlan cancel={this.closeAllFlags} add={console.log} data={[]} {...vocabulary} />
+                                <AddPlan
+                                    cancel={this.closeAllFlags}
+                                    add={console.log}
+                                    users={users}
+                                    projects={projectsArray}
+                                    {...vocabulary}
+                                />
                             ) : null}
                             {showTimeOff ? (
                                 <AddTimeOff cancel={this.closeAllFlags} add={console.log} data={[]} {...vocabulary} />
@@ -256,6 +302,7 @@ const mapStateToProps = state => ({
     user: state.userReducer.user,
     planingReducer: state.planingReducer,
     vocabulary: state.languageReducer.vocabulary,
+    projectsArray: state.projectReducer.tableData,
 });
 
 const mapDispatchToProps = {
@@ -265,6 +312,7 @@ const mapDispatchToProps = {
     currentMonth,
     addUser,
     changeUserOpenFlag,
+    projectsPageAction,
 };
 
 export default connect(

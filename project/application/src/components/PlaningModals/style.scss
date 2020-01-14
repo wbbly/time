@@ -21,6 +21,12 @@
         display: flex;
         width: 100%;
     }
+    &__header > p {
+        font-style: normal;
+        font-size: 18px;
+        font-weight: 600;
+        font-family: 'Open Sans';
+    }
 
     &__body {
         display: flex;

@@ -9,13 +9,15 @@ import {
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
+import { doesNotReject } from 'assert';
 
 const defaultState = {
     current: null,
     month: [],
     users: [
         {
-            id: 1,
+            id: '1',
+            name: 'John Doe',
             avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
             openFlag: false,
             heightMulti: 1,
@@ -174,7 +176,8 @@ const defaultState = {
             ],
         },
         {
-            id: 2,
+            id: '2',
+            name: 'JO JO',
             avatar: 'https://randomuser.me/api/portraits/women/75.jpg',
             openFlag: false,
             heightMulti: 1,
@@ -313,7 +316,8 @@ const defaultState = {
             ],
         },
         {
-            id: 3,
+            id: '3',
+            name: 'Abdull rakhmedatrrui',
             avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
             openFlag: false,
             heightMulti: 1,
@@ -472,7 +476,8 @@ const defaultState = {
             ],
         },
         {
-            id: 4,
+            id: '4',
+            name: 'Some random dude',
             avatar: 'https://randomuser.me/api/portraits/women/75.jpg',
             openFlag: false,
             heightMulti: 1,

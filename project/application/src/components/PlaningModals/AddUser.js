@@ -7,17 +7,27 @@ export class AddUser extends React.Component {
         searchFlag: true,
     };
 
+    setFlagTrue = () => {
+        this.setState({ searchFlag: true });
+    };
+    setFlagFalse = () => {
+        this.setState({ searchFlag: false });
+    };
+
     render() {
-        const { add, cancel, v_cancel_small, v_add } = this.props;
+        const { add, cancel, v_cancel_small, v_add, peopleArr = [], projectArr = [] } = this.props;
+        const { searchFlag } = this.state;
         return (
             <div className="planing-modal">
                 <div className="planing-modal__header">
-                    <button>People</button>
-                    <button>Projects</button>
+                    <button onClick={this.setFlagTrue}>People</button>
+                    <button onClick={this.setFlagFalse}>Projects</button>
                 </div>
                 <div className="planing-modal__body">
                     <div>input</div>
-                    <div>list</div>
+                    {(searchFlag ? peopleArr : projectArr).map(el => (
+                        <div>list</div>
+                    ))}
                 </div>
                 <div className="planing-modal__footer">
                     <button className="planing-modal__add-btn" onClick={e => add('hello')}>

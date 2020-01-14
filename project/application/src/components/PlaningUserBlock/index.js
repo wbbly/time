@@ -99,7 +99,7 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                                     left: '-7.5px',
                                     margin: 'auto',
                                     borderRadius: '50%',
-                                    border: '3px solid #323232',
+                                    border: '3px solid transparent',
                                 }}
                             />
                         </div>
