@@ -6,9 +6,9 @@ import { Scrollbars } from 'react-custom-scrollbars';
 //---COMPONENTS---
 import ModalPortal from '../../components/ModalPortal';
 import PlaningUserBlock from '../../components/PlaningUserBlock';
-import { AddUser } from '../../components/PlaningModals/AddUser';
-import { AddPlan } from '../../components/PlaningModals/AddPlan';
-import { AddTimeOff } from '../../components/PlaningModals/AddTimeOff';
+import { AddUserProject } from '../../components/PlaningAddUserProject';
+import { AddPlan } from '../../components/PlaningAddPlan';
+import { AddTimeOff } from '../../components/PlaningAddTimeOff';
 
 //---SERVICES---
 import { apiCall } from '../../services/apiService';
@@ -42,6 +42,12 @@ class PlaningPage extends React.Component {
         showAddPlanTimeOff: false,
     };
 
+    componentDidMount() {
+        moment.locale(`${this.props.user.language}`);
+        this.props.currentMonth();
+        this.getProjects();
+    }
+
     getProjects = () =>
         apiCall(AppConfig.apiURL + `project/list?withTimerList=true`, {
             method: 'GET',
@@ -61,12 +67,6 @@ class PlaningPage extends React.Component {
                 }
             }
         );
-
-    componentDidMount() {
-        moment.locale(`${this.props.user.language}`);
-        this.props.currentMonth();
-        this.getProjects();
-    }
 
     nextMonth = () => {
         this.props.nextMonth();
@@ -121,7 +121,7 @@ class PlaningPage extends React.Component {
             showAddUser: false,
             showAddPlan: false,
             showTimeOff: false,
-            showAddUser: false,
+            showAddPlanTimeOff: false,
         });
     };
 
@@ -141,134 +141,135 @@ class PlaningPage extends React.Component {
             v_add_plan,
             v_time_off,
         } = vocabulary;
-        console.log(projectsArray, '-----');
         return (
-            <div style={{ display: 'flex', minWidth: '100%', height: '100%' }}>
-                <div className="aside-bar">
-                    <div className="aside-bar__users">
-                        <div className="aside-bar__filler-top" />
-                        <div className="aside-bar__add-user-block" onClick={this.changeAddUserFlag}>
-                            <i className="aside-bar__add-user" />
-                        </div>
-                        {users.map(user => (
-                            <div className="aside-bar__user-info">
-                                <div
-                                    className="aside-bar__avatar-block"
-                                    style={{
-                                        height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
-                                    }}
-                                >
-                                    <div className="aside-bar__avatar">
-                                        {' '}
-                                        <img src={user.avatar} alt="oops no img" />
-                                        <i />
-                                    </div>
+            <>
+                <Scrollbars>
+                    <div style={{ display: 'flex', minWidth: '100%', minHeight: '100%', overflowX: 'hidden' }}>
+                        <div className="aside-bar">
+                            <div className="aside-bar__users">
+                                <div className="aside-bar__filler-top" />
+                                <div className="aside-bar__add-user-block" onClick={this.changeAddUserFlag}>
+                                    <i className="aside-bar__add-user" />
+                                    {showAddUser ? (
+                                        <AddUserProject
+                                            cancel={this.closeAllFlags}
+                                            add={console.log} //change to needed function when backend will be done
+                                            users={users}
+                                            projects={projectsArray}
+                                            vocabulary={vocabulary}
+                                        />
+                                    ) : null}
                                 </div>
-                                <div
-                                    className="user-block__show-btn"
-                                    style={{
-                                        minWidth: '20px',
-                                        height: '20px',
-                                        marginLeft: '10px',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    <i
-                                        id={user.id}
-                                        onClick={this.changeUserOpenFlag}
-                                        className={user.openFlag ? 'arrow_up' : 'arrow_down'}
-                                    />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className="planing">
-                    <div className="planing-header">
-                        <p>{v_resource_planing}</p>
-                        <div className="planing-header__info-container">
-                            <div className="planing-header__counters">
-                                <p>{`${this.totalPlaned()}${v_hour_small} ${v_all_projects} `}</p>
-                                <p>{`${this.totalTracked()}${v_hour_small} ${v_tracked}`}</p>
-                            </div>
-                            <div className="planing-header__add-btn">
-                                <button
-                                    style={{ display: 'flex', alignItems: 'center' }}
-                                    onClick={this.changeAddPlanFlag}
-                                >
-                                    {' '}
-                                    <i className="planing-header__plus" />
-                                    {v_add_plan}
-                                </button>
-
-                                <button onClick={this.changeAddTimeOffFlag}>{v_time_off}</button>
-                            </div>
-                            <div className="planing-header__move-btn">
-                                <button onClick={this.prevMonth}>{v_prev_month}</button>
-                                <button onClick={this.currentMonth}>{v_current_month}</button>
-                                <button onClick={this.nextMonth}>{v_next_month}</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* {-------BODY---------} */}
-
-                    <Scrollbars
-                        renderTrackVertical={props => (
-                            <div {...props} style={{ display: 'none' }} className="track-horizontal" />
-                        )}
-                        // hideTracksWhenNotNeeded={true}
-                        // autoHide={true}
-                        autoHeight={true}
-                    >
-                        <div className="main-content-wrapper">
-                            <div className="month-container">
-                                <div className="month-container__weeks-block">
-                                    {month.map((week, index) => (
-                                        <div className="month-container__week" key={index}>
-                                            <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
-                                                {`${v_week} ${week.weekCount} / ${moment(current).format('MMM')} ${
-                                                    week.dayStart
-                                                } - ${week.dayEnd}`}
-                                            </h2>
-                                            <div className="month-container__days-block">
-                                                {week.week.map((day, index) => (
-                                                    <div className="month-container__day" key={index}>
-                                                        <div
-                                                            style={{
-                                                                fontSize: '1em',
-                                                                whiteSpace: 'nowrap',
-                                                                textAlign: 'center',
-                                                                color: day.color,
-                                                            }}
-                                                        >
-                                                            {moment(day.fullDate).format('ddd DD')}
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                {users.map(user => (
+                                    <div key={user.id} className="aside-bar__user-info">
+                                        <div
+                                            className="aside-bar__avatar-block"
+                                            style={{
+                                                height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
+                                            }}
+                                        >
+                                            <div className="aside-bar__avatar">
+                                                {' '}
+                                                <img src={user.avatar} alt="oops no img" />
+                                                <i />
                                             </div>
                                         </div>
-                                    ))}
+                                        <div
+                                            className="user-block__show-btn"
+                                            style={{
+                                                minWidth: '20px',
+                                                height: '20px',
+                                                marginLeft: '10px',
+                                                cursor: 'pointer',
+                                            }}
+                                        >
+                                            <i
+                                                id={user.id}
+                                                onClick={this.changeUserOpenFlag}
+                                                className={user.openFlag ? 'arrow_up' : 'arrow_down'}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="planing">
+                            <div className="planing-header">
+                                <p>{v_resource_planing}</p>
+                                <div className="planing-header__info-container">
+                                    <div className="planing-header__counters">
+                                        <p>{`${this.totalPlaned()}${v_hour_small} ${v_all_projects} `}</p>
+                                        <p>{`${this.totalTracked()}${v_hour_small} ${v_tracked}`}</p>
+                                    </div>
+                                    <div className="planing-header__add-btn">
+                                        <button
+                                            style={{ display: 'flex', alignItems: 'center' }}
+                                            onClick={this.changeAddPlanFlag}
+                                        >
+                                            {' '}
+                                            <i className="planing-header__plus" />
+                                            {v_add_plan}
+                                        </button>
+
+                                        <button onClick={this.changeAddTimeOffFlag}>{v_time_off}</button>
+                                    </div>
+                                    <div className="planing-header__move-btn">
+                                        <button onClick={this.prevMonth}>{v_prev_month}</button>
+                                        <button onClick={this.currentMonth}>{v_current_month}</button>
+                                        <button onClick={this.nextMonth}>{v_next_month}</button>
+                                    </div>
                                 </div>
                             </div>
-                            {users.map(user => (
-                                <PlaningUserBlock
-                                    key={user.id}
-                                    month={month}
-                                    user={user}
-                                    addUser={addUser}
-                                    {...vocabulary}
-                                />
-                            ))}
+
+                            {/* {-------BODY---------} */}
+                            <Scrollbars>
+                                <div className="main-content-wrapper">
+                                    <div className="month-container">
+                                        <div className="month-container__weeks-block">
+                                            {month.map((week, index) => (
+                                                <div className="month-container__week" key={index}>
+                                                    <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
+                                                        {`${v_week} ${week.weekCount} / ${moment(current).format(
+                                                            'MMM'
+                                                        )} ${week.dayStart} - ${week.dayEnd}`}
+                                                    </h2>
+                                                    <div className="month-container__days-block">
+                                                        {week.week.map((day, index) => (
+                                                            <div className="month-container__day" key={index}>
+                                                                <div
+                                                                    style={{
+                                                                        fontSize: '1em',
+                                                                        whiteSpace: 'nowrap',
+                                                                        textAlign: 'center',
+                                                                        color: day.color,
+                                                                    }}
+                                                                >
+                                                                    {moment(day.fullDate).format('ddd DD')}
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    {users.map(user => (
+                                        <PlaningUserBlock
+                                            key={user.id}
+                                            month={month}
+                                            user={user}
+                                            addUser={addUser}
+                                            {...vocabulary}
+                                        />
+                                    ))}
+                                </div>
+                            </Scrollbars>
                         </div>
-                    </Scrollbars>
-                </div>
+                    </div>
+                </Scrollbars>
                 {showAddUser || showAddPlan || showTimeOff || showAddPlanTimeOff ? (
                     <ModalPortal>
                         <div style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%' }}>
-                            {showAddUser ? (
-                                <AddUser cancel={this.closeAllFlags} add={console.log} data={[]} {...vocabulary} />
-                            ) : null}
                             {showAddPlan ? (
                                 <AddPlan
                                     cancel={this.closeAllFlags}
@@ -293,7 +294,7 @@ class PlaningPage extends React.Component {
                         </div>
                     </ModalPortal>
                 ) : null}
-            </div>
+            </>
         );
     }
 }

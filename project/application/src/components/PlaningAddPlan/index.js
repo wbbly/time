@@ -1,15 +1,16 @@
 import React from 'react';
-
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import CustomSelect from '../../components/CustomSelect';
+
+import CustomSelect from '../CustomSelect';
+
+import './style.scss';
 
 export class AddPlan extends React.Component {
     state = {};
 
     render() {
         const { users = [], projects = [], add, cancel, v_cancel_small, v_add, v_add_plan, v_v_required } = this.props;
-        console.log(projects);
         return (
             <div className="planing-modal">
                 <div className="planing-modal__header">
@@ -23,10 +24,13 @@ export class AddPlan extends React.Component {
                         initialValues={{
                             person: '',
                             project: '',
+                            hours: 0,
+                            startDate: '',
+                            endDate: '',
                         }}
-                        validationSchema={Yup.object().shape({
-                            person: Yup.string().required(`${v_v_required}`),
-                            project: Yup.string().required(`${v_v_required}`),
+                        validationSchema={Yup.object({
+                            person: Yup.string().required(v_v_required),
+                            project: Yup.string().required(v_v_required),
                         })}
                         onSubmit={values => {
                             console.log(values);
@@ -67,6 +71,21 @@ export class AddPlan extends React.Component {
                                         error={formik.errors.project}
                                         touched={formik.touched.project}
                                     />
+                                </label>
+                                <label>
+                                    Add Time
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <input style={{ width: '78px', height: '25px' }} name="hours" type="number" />
+                                        <input style={{ width: '78px', height: '25px' }} name="startDate" type="date" />
+                                        to
+                                        <input style={{ width: '78px', height: '25px' }} name="endDate" type="date" />
+                                    </div>
                                 </label>
                                 <div className="planing-modal__footer">
                                     <button type="submit" className="planing-modal__add-btn">

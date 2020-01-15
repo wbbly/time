@@ -61,6 +61,8 @@
   position: relative;
   // min-width: 100%;
   padding: 0 10px;
+  // overflow-y: hidden;
+  // overflow-x: auto;
 }
 
 .month-container {
@@ -99,7 +101,7 @@
 .aside-bar {
   min-width: 105px;
   max-width: 105px;
-  height: 100%;
+  // height: 100%;
   border-left: 2px solid #1f1f1f;
   
   // &__openers {
@@ -118,6 +120,7 @@
   }
 
   &__add-user-block {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;

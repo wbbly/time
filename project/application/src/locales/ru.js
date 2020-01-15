@@ -93,6 +93,8 @@ export default {
     v_add: 'Добавить',
     v_cancel_small: 'Отменить',
     v_public_holiday: 'Гос. Праздник',
+    v_people: 'Люди',
+    v_projects: 'Проекты',
 
     v_upload_image: 'Загрузить изображение',
     v_delete_image: 'Удалить изображение',

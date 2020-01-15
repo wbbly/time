@@ -94,6 +94,8 @@ export default {
     v_add: 'Hinzufügen',
     v_cancel_small: 'Stornieren',
     v_public_holiday: 'Gesetzlicher Feiertag',
+    v_people: 'Menschen',
+    v_projects: 'Projekte',
 
     v_upload_image: 'Bild hochladen',
     v_delete_image: 'Bild löschen',

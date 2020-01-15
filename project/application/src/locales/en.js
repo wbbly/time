@@ -90,6 +90,8 @@ export default {
     v_add: 'Add',
     v_cancel_small: 'Cancel',
     v_public_holiday: 'Public holiday',
+    v_people: 'People',
+    v_projects: 'Projects',
 
     v_upload_image: 'Upload image',
     v_delete_image: 'Delete image',

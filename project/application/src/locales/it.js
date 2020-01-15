@@ -93,6 +93,8 @@ export default {
     v_add: 'Aggiungi',
     v_cancel_small: 'Annulla',
     v_public_holiday: 'Festa nazionale',
+    v_people: 'Persone',
+    v_projects: 'Progetti',
 
     v_upload_image: 'Carica immagine',
     v_delete_image: 'Cancella immagine',
