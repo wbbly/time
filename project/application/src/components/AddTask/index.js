@@ -138,7 +138,9 @@ class AddTask extends Component {
             issue: value,
         });
 
-        if (currentTimer && value.trim() && currentTimer.issue !== value.trim()) {
+        if (currentTimer.issue === value.trim()) {
+            this.setState({ isUpdating: false }, () => this.updateTaskIssueDebounced.cancel());
+        } else if (currentTimer && value.trim()) {
             this.setState({ isUpdating: true }, () => this.updateTaskIssueDebounced());
         }
     };
