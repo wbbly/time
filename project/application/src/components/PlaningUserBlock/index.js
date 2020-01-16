@@ -155,29 +155,32 @@ const ClosedBlock = ({ date, v_hour_small, v_plan }) => {
                         <div key={index} style={{ flex: '1', background: project.color }} />
                     ))}
                 </div>
-                {date.timeOff.length ? (
+                {!date.timeOff.every(off => off.checked === false) ? (
                     <div style={{ display: 'flex', flex: 1, transition: 'flex 0.5s' }}>
-                        {date.timeOff.map((timeOff, index) => (
-                            <div
-                                onMouseOver={e => strech(e, timeOff)}
-                                onMouseOut={e => shrink(e, timeOff)}
-                                key={index}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    flex: '1',
-                                    background: timeOff.color,
-                                    color: '#FFFFFF',
-                                    fontSize: '10px',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.5s',
-                                }}
-                            >
-                                {timeOff.name.slice(0, 1)}
-                            </div>
-                        ))}
+                        {date.timeOff.map(
+                            (timeOff, index) =>
+                                timeOff.checked ? (
+                                    <div
+                                        onMouseOver={e => strech(e, timeOff)}
+                                        onMouseOut={e => shrink(e, timeOff)}
+                                        key={index}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flex: '1',
+                                            background: timeOff.color,
+                                            color: '#FFFFFF',
+                                            fontSize: '10px',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.5s',
+                                        }}
+                                    >
+                                        {timeOff.name.slice(0, 1)}
+                                    </div>
+                                ) : null
+                        )}
                     </div>
                 ) : null}
             </div>
@@ -192,7 +195,6 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
         },
         [user]
     );
-
     return (
         <div className="user-block">
             <div

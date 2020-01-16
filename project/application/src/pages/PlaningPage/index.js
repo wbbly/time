@@ -21,6 +21,8 @@ import {
     currentMonth,
     addUser,
     changeUserOpenFlag,
+    changeTimeOffFlag,
+    changeAllTimeOff,
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -126,8 +128,8 @@ class PlaningPage extends React.Component {
     };
 
     render() {
-        const { planingReducer, vocabulary, addUser, projectsArray } = this.props;
-        const { month, current, users } = planingReducer;
+        const { planingReducer, vocabulary, addUser, projectsArray, changeTimeOffFlag, changeAllTimeOff } = this.props;
+        const { month, current, users, timeOff, swithcAllTimeOff } = planingReducer;
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff } = this.state;
         const {
             v_resource_planing,
@@ -267,7 +269,7 @@ class PlaningPage extends React.Component {
                         </div>
                     </div>
                 </Scrollbars>
-                {showAddUser || showAddPlan || showTimeOff || showAddPlanTimeOff ? (
+                {showAddPlan || showTimeOff || showAddPlanTimeOff ? (
                     <ModalPortal>
                         <div style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%' }}>
                             {showAddPlan ? (
@@ -276,11 +278,19 @@ class PlaningPage extends React.Component {
                                     add={console.log}
                                     users={users}
                                     projects={projectsArray}
-                                    {...vocabulary}
+                                    vocabulary={vocabulary}
                                 />
                             ) : null}
                             {showTimeOff ? (
-                                <AddTimeOff cancel={this.closeAllFlags} add={console.log} data={[]} {...vocabulary} />
+                                <AddTimeOff
+                                    cancel={this.closeAllFlags}
+                                    add={console.log}
+                                    change={changeTimeOffFlag}
+                                    changeAll={changeAllTimeOff}
+                                    timeOff={timeOff}
+                                    vocabulary={vocabulary}
+                                    allFlag={swithcAllTimeOff}
+                                />
                             ) : null}
                             <div
                                 style={{
@@ -314,6 +324,8 @@ const mapDispatchToProps = {
     addUser,
     changeUserOpenFlag,
     projectsPageAction,
+    changeTimeOffFlag,
+    changeAllTimeOff,
 };
 
 export default connect(

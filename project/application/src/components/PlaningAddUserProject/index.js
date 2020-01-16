@@ -1,6 +1,6 @@
 import React from 'react';
 
-import _ from 'lodash';
+// import _ from 'lodash';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Scrollbars } from 'react-custom-scrollbars';
 import './style.scss';

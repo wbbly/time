@@ -10,7 +10,8 @@ export class AddPlan extends React.Component {
     state = {};
 
     render() {
-        const { users = [], projects = [], add, cancel, v_cancel_small, v_add, v_add_plan, v_v_required } = this.props;
+        const { users = [], projects = [], add, cancel, vocabulary } = this.props;
+        const { v_cancel_small, v_add, v_add_plan, v_v_required } = vocabulary;
         return (
             <div className="planing-modal">
                 <div className="planing-modal__header">
@@ -99,14 +100,6 @@ export class AddPlan extends React.Component {
                         )}
                     </Formik>
                 </div>
-                {/* <div className="planing-modal__footer">
-                    <button className="planing-modal__add-btn"  onClick={e => add('hello')}>
-                        {v_add}
-                    </button>
-                    <button className="planing-modal__cancel-btn" onClick={cancel}>
-                        {v_cancel_small}
-                    </button>
-                </div> */}
             </div>
         );
     }
