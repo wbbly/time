@@ -35,6 +35,18 @@ import './style.scss';
 
 const fakePassword = '8d8ae757-81ca-408f-a0b8-00d1e9f9923f';
 
+const OpenJiraMenuIfValidationFails = props => {
+    const { formik, open, onSubmissionError } = props;
+    const { jiraUrl, jiraUserName, jiraPassword } = formik.errors;
+    const effect = () => {
+        if ((jiraUrl || jiraUserName || jiraPassword) && !open) {
+            onSubmissionError();
+        }
+    };
+    React.useEffect(effect, [formik.submitCount, formik.errors]);
+    return null;
+};
+
 class UserSetting extends Component {
     state = {
         rotateArrowLoop: false,
@@ -295,6 +307,11 @@ class UserSetting extends Component {
                                     onSubmit={formik.handleSubmit}
                                     noValidate
                                 >
+                                    <OpenJiraMenuIfValidationFails
+                                        formik={formik}
+                                        open={userSetJiraSync}
+                                        onSubmissionError={e => this.setState({ userSetJiraSync: true })}
+                                    />
                                     <input
                                         autoComplete="new-password"
                                         className="fakecredentials"
@@ -371,27 +388,14 @@ class UserSetting extends Component {
                                         </div>
                                     </div>
                                     <div className="wrapper-jira-sync">
-                                        <label className="input_container input_checkbox_jira">
-                                            <input
-                                                type={syncJiraStatus.type}
-                                                checked={syncJiraStatus.checked}
-                                                name={syncJiraStatus.name}
-                                                onChange={event => {
-                                                    this.changeSyncJiraStatus(event);
-                                                    formik.setValues({
-                                                        ...formik.values,
-                                                        jiraPassword: tokenJira ? fakePassword : '',
-                                                        jiraUserName: loginJira || '',
-                                                        jiraUrl: urlJira || '',
-                                                    });
-                                                }}
-                                            />
-                                            <span className="input_title">{v_jira_synchronization}</span>
-                                            {checked && (
-                                                <span
-                                                    className="jira_sync_visibility_btn"
-                                                    onClick={event => {
-                                                        this.switchVisibilityJiraForm(event);
+                                        <div className="jira-sync-labels-wrapper">
+                                            <label className="input_container input_checkbox_jira">
+                                                <input
+                                                    type={syncJiraStatus.type}
+                                                    checked={syncJiraStatus.checked}
+                                                    name={syncJiraStatus.name}
+                                                    onChange={event => {
+                                                        this.changeSyncJiraStatus(event);
                                                         formik.setValues({
                                                             ...formik.values,
                                                             jiraPassword: tokenJira ? fakePassword : '',
@@ -399,11 +403,22 @@ class UserSetting extends Component {
                                                             jiraUrl: urlJira || '',
                                                         });
                                                     }}
-                                                >
-                                                    {userSetJiraSync ? v_hide : v_show}
-                                                </span>
-                                            )}
-                                        </label>
+                                                />
+                                                <span className="input_title">{v_jira_synchronization}</span>
+                                            </label>
+                                            <label>
+                                                {checked && (
+                                                    <span
+                                                        className="jira_sync_visibility_btn"
+                                                        onClick={event => {
+                                                            this.switchVisibilityJiraForm(event);
+                                                        }}
+                                                    >
+                                                        {userSetJiraSync ? v_hide : v_show}
+                                                    </span>
+                                                )}
+                                            </label>
+                                        </div>
                                         {checked &&
                                             userSetJiraSync && (
                                                 <>
@@ -536,8 +551,6 @@ class UserSetting extends Component {
             },
         }));
     };
-
-    updateUserData = () => {};
 }
 
 const mapStateToProps = state => ({
