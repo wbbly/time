@@ -27,7 +27,7 @@ class ResetPasswordPage extends Component {
 
         try {
             await setPassword({
-                password,
+                password: password.newPassword,
                 token: location.search.substring(7),
             });
             showNotificationAction({ text: v_a_change_password_great_ok, type: 'success' });
