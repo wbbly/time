@@ -5,6 +5,10 @@ export const SET_CURRENT_MONTH = 'SET_CURRENT_MONTH';
 export const ADD_USER = 'ADD_USER';
 export const DELETE_USER = 'DELETE_USER';
 export const CHANGE_USER_OPEN_FLAG = 'CHANGE_USER_OPEN_FLAG';
+export const CHANGE_TIME_OFF_FLAG = 'CHANGE_TIME_OFF_FLAG';
+export const CHANGE_USER_TIME_OFF = 'CHANGE_USER_TIME_OFF';
+export const CHANGE_MAIN_TIME_OFF_SWITCH = 'CHANGE_ALL_TIME_OFF';
+export const CHANGE_ALL_USER_TIME_OFF = 'CHANGE_ALL_USER_TIME_OFF';
 
 const incrementMonth = () => ({
     type: INCRIMENT_MONTH,
@@ -57,3 +61,35 @@ export const changeUserOpenFlag = payload => ({
     type: CHANGE_USER_OPEN_FLAG,
     payload,
 });
+
+const changeTimeOff = payload => ({
+    type: CHANGE_TIME_OFF_FLAG,
+    payload,
+});
+
+const changeUserTimeOff = payload => ({
+    type: CHANGE_USER_TIME_OFF,
+    payload,
+});
+
+export const changeTimeOffFlag = payload => {
+    return async dispatch => {
+        dispatch(changeTimeOff(payload));
+        await dispatch(changeUserTimeOff(payload));
+    };
+};
+
+const changeMainTimeOffSwitch = () => ({
+    type: CHANGE_MAIN_TIME_OFF_SWITCH,
+});
+
+const changeAllUserTimeOff = () => ({
+    type: CHANGE_ALL_USER_TIME_OFF,
+});
+
+export const changeAllTimeOff = () => {
+    return async dispatch => {
+        dispatch(changeMainTimeOffSwitch());
+        await dispatch(changeAllUserTimeOff());
+    };
+};

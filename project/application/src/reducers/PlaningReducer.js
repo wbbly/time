@@ -6,10 +6,13 @@ import {
     ADD_USER,
     DELETE_USER,
     CHANGE_USER_OPEN_FLAG,
+    CHANGE_TIME_OFF_FLAG,
+    CHANGE_USER_TIME_OFF,
+    CHANGE_MAIN_TIME_OFF_SWITCH,
+    CHANGE_ALL_USER_TIME_OFF,
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
-import { doesNotReject } from 'assert';
 
 const defaultState = {
     current: null,
@@ -62,12 +65,16 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                     ],
                 },
@@ -105,8 +112,10 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                     ],
                 },
@@ -160,16 +169,22 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                     ],
                 },
@@ -232,20 +247,28 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                         {
+                            id: '4',
                             name: 'own days',
                             color: '#03008D',
+                            checked: true,
                         },
                         {
+                            id: '5',
                             name: 'sick',
                             color: '#DB7110',
+                            checked: true,
                         },
                     ],
                 },
@@ -271,8 +294,10 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '5',
                             name: 'sick',
                             color: '#DB7110',
+                            checked: true,
                         },
                     ],
                 },
@@ -304,12 +329,16 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                     ],
                 },
@@ -362,12 +391,16 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                     ],
                 },
@@ -405,8 +438,10 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                     ],
                 },
@@ -460,16 +495,22 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                     ],
                 },
@@ -532,20 +573,28 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                         {
+                            id: '2',
                             name: 'day off',
                             color: '#DB1040',
+                            checked: true,
                         },
                         {
+                            id: '4',
                             name: 'own days',
                             color: '#03008D',
+                            checked: true,
                         },
                         {
+                            id: '5',
                             name: 'sick',
                             color: '#DB7110',
+                            checked: true,
                         },
                     ],
                 },
@@ -571,8 +620,10 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '5',
                             name: 'sick',
                             color: '#DB7110',
+                            checked: true,
                         },
                     ],
                 },
@@ -604,18 +655,55 @@ const defaultState = {
                     ],
                     timeOff: [
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                         {
+                            id: '1',
                             name: 'public holiday',
                             color: '#008D8D',
+                            checked: true,
                         },
                     ],
                 },
             ],
         },
     ],
+    timeOff: [
+        {
+            id: '1',
+            name: 'public holiday',
+            color: '#008D8D',
+            checked: true,
+        },
+        {
+            id: '2',
+            name: 'day off',
+            color: '#DB1040',
+            checked: true,
+        },
+        {
+            id: '3',
+            name: 'vacation',
+            color: '#7E00CB',
+            checked: true,
+        },
+        {
+            id: '4',
+            name: 'own days',
+            color: '#03008D',
+            checked: true,
+        },
+        {
+            id: '5',
+            name: 'sick leav',
+            color: '#DB7110',
+            checked: true,
+        },
+    ],
+    swithcAllTimeOff: true,
 };
 
 export const planingReducer = (state = defaultState, action) => {
@@ -664,6 +752,50 @@ export const planingReducer = (state = defaultState, action) => {
                               }
                             : user
                 ),
+                swithcAllTimeOff: state.timeOff.every(el => !el.checked) ? false : true,
+            };
+        }
+
+        case CHANGE_MAIN_TIME_OFF_SWITCH: {
+            return {
+                ...state,
+                swithcAllTimeOff: !state.swithcAllTimeOff,
+            };
+        }
+        case CHANGE_ALL_USER_TIME_OFF: {
+            return {
+                ...state,
+                timeOff: state.timeOff.map(off => ({ ...off, checked: state.swithcAllTimeOff })),
+                users: state.users.map(user => ({
+                    ...user,
+                    shedule: user.shedule.map(shed => ({
+                        ...shed,
+                        timeOff: shed.timeOff.map(off => ({ ...off, checked: state.swithcAllTimeOff })),
+                    })),
+                })),
+            };
+        }
+        case CHANGE_TIME_OFF_FLAG: {
+            return {
+                ...state,
+                timeOff: state.timeOff.map(
+                    off => (off.id === action.payload.id ? { ...off, checked: !off.checked } : off)
+                ),
+            };
+        }
+        case CHANGE_USER_TIME_OFF: {
+            const timeOffItem = state.timeOff.find(el => el.id === action.payload.id);
+            return {
+                ...state,
+                users: state.users.map(user => ({
+                    ...user,
+                    shedule: user.shedule.map(shed => ({
+                        ...shed,
+                        timeOff: shed.timeOff.map(
+                            off => (off.id === action.payload.id ? { ...off, checked: timeOffItem.checked } : off)
+                        ),
+                    })),
+                })),
             };
         }
 
