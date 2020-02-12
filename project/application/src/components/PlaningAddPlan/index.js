@@ -48,7 +48,7 @@ export class AddPlan extends React.Component {
                                     height: '100%',
                                 }}
                             >
-                                <label htmlFor="person">
+                                <label htmlFor="person" className="planing-modal__label">
                                     Select Person
                                     <CustomSelect
                                         name="person"
@@ -60,7 +60,7 @@ export class AddPlan extends React.Component {
                                         touched={formik.touched.person}
                                     />
                                 </label>
-                                <label htmlFor="project">
+                                <label htmlFor="project" className="planing-modal__label">
                                     Select Project
                                     <CustomSelect
                                         name="project"
@@ -72,8 +72,8 @@ export class AddPlan extends React.Component {
                                         touched={formik.touched.project}
                                     />
                                 </label>
-                                <label>
-                                    Add Time
+                                <label className="planing-modal__label">
+                                    Add Time <small>(eg. 3w 4d 12h)</small>
                                     <div
                                         style={{
                                             display: 'flex',

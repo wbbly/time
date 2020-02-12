@@ -116,7 +116,7 @@ export class AddUserProject extends React.Component {
                             type="text"
                             onKeyUp={_ => this.findItem(dataEtalon, this.smallSelectClientInputRef.value)}
                             ref={input => (this.smallSelectClientInputRef = input)}
-                            placeholder={`${v_find}...`}
+                            placeholder={`${v_find}...`} //TODO probably change to search text
                             autoFocus
                         />
                         {/* <div  onClick={_ => this.selectAll()}>
@@ -129,11 +129,10 @@ export class AddUserProject extends React.Component {
                     </div>
 
                     <div className="add-user-modal__body-list">
-                        <Scrollbars>
+                        <Scrollbars renderTrackHorizontal={props => <div {...props} style={{display: 'none'}} className="track-horizontal"/>} >
                             {dataFiltered.map(item => (
                                 <div className="add-user-modal__list-item-container" key={item.id}>
                                     <label className="add-user-modal__list-item-label">
-                                        {item.name}
                                         <Checkbox
                                             color={'primary'}
                                             value={item.name}
@@ -142,6 +141,7 @@ export class AddUserProject extends React.Component {
                                                 this.selectItem(item);
                                             }}
                                         />
+                                        {item.name}
                                     </label>
                                 </div>
                             ))}

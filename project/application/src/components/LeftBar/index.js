@@ -106,7 +106,7 @@ class LeftBar extends Component {
                         style={{ textDecoration: 'none' }}
                     >
                         <div className="navigation_links">
-                            <i className="planing" />
+                            <i className="planning" />
                             <div className="links_text">{v_planning}</div>
                         </div>
                     </NavLink>

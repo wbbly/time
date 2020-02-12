@@ -31,7 +31,7 @@ class CustomSelect extends React.Component {
                     <p>{value}</p>
                     <i className={isOpenDropdown ? 'arrow-up' : 'arrow-down'} />
                 </div>
-                {error ? <small style={{ color: 'red' }}>{error}</small> : null}
+                {/* {error ? <small style={{ color: 'red' }}>{error}</small> : null} */}
                 <div className={isOpenDropdown ? 'dropdown-content__show' : 'dropdown-content__hidden'}>
                     {options.map(el => (
                         <div key={el.id} id={el.id} onClick={this.change}>

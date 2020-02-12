@@ -169,20 +169,11 @@ class PlaningPage extends React.Component {
                                             }}
                                         >
                                             <div className="aside-bar__avatar">
-                                                {' '}
                                                 <img src={user.avatar} alt="oops no img" />
                                                 <i />
                                             </div>
                                         </div>
-                                        <div
-                                            className="user-block__show-btn"
-                                            style={{
-                                                minWidth: '20px',
-                                                height: '20px',
-                                                marginLeft: '10px',
-                                                cursor: 'pointer',
-                                            }}
-                                        >
+                                        <div className="aside-bar__show-btn">
                                             <i
                                                 id={user.id}
                                                 onClick={this.changeUserOpenFlag}
