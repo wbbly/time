@@ -129,7 +129,11 @@ export class AddUserProject extends React.Component {
                     </div>
 
                     <div className="add-user-modal__body-list">
-                        <Scrollbars renderTrackHorizontal={props => <div {...props} style={{display: 'none'}} className="track-horizontal"/>} >
+                        <Scrollbars
+                            renderTrackHorizontal={props => (
+                                <div {...props} style={{ display: 'none' }} className="track-horizontal" />
+                            )}
+                        >
                             {dataFiltered.map(item => (
                                 <div className="add-user-modal__list-item-container" key={item.id}>
                                     <label className="add-user-modal__list-item-label">
