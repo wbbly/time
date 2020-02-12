@@ -260,7 +260,7 @@ class PlaningPage extends React.Component {
                         </div>
                     </div>
                 </Scrollbars>
-                {showAddPlan || showTimeOff || showAddPlanTimeOff ? (
+                {showAddPlan || showTimeOff || showAddPlanTimeOff || showAddUser ? (
                     <ModalPortal>
                         <div style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%' }}>
                             {showAddPlan ? (
