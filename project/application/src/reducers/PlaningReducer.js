@@ -344,362 +344,41 @@ const defaultState = {
                 },
             ],
         },
-        {
-            id: '3',
-            name: 'Abdull rakhmedatrrui',
-            avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
-            openFlag: false,
-            heightMulti: 1,
-            shedule: [
-                {
-                    dateStart: '2020-01-6',
-                    dateEnd: '2020-01-12',
-                    daysCount() {
-                        return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                    },
-                    planedTotal() {
-                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                    },
-                    trackedTotal() {
-                        return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                    },
-                    projects: [
-                        {
-                            name: 'ultradom',
-                            color: 'orange',
-                            planed: 8,
-                            tracked: 4,
-                        },
-                        {
-                            name: 'siba',
-                            color: 'purple',
-                            planed: 8,
-                            tracked: 3,
-                        },
-                        {
-                            name: 'project1',
-                            color: 'green',
-                            planed: 10,
-                            tracked: 5,
-                        },
-                        {
-                            name: 'project2',
-                            color: 'blue',
-                            planed: 12,
-                            tracked: 5,
-                        },
-                    ],
-                    timeOff: [
-                        {
-                            id: '1',
-                            name: 'public holiday',
-                            color: '#008D8D',
-                            checked: true,
-                        },
-                        {
-                            id: '2',
-                            name: 'day off',
-                            color: '#DB1040',
-                            checked: true,
-                        },
-                    ],
-                },
-                {
-                    dateStart: '2020-01-13',
-                    dateEnd: '2020-01-19',
-                    daysCount() {
-                        return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                    },
-                    planedTotal() {
-                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                    },
-                    trackedTotal() {
-                        return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                    },
-                    projects: [
-                        {
-                            name: 'ultradom',
-                            color: 'orange',
-                            planed: 2,
-                            tracked: 0,
-                        },
-                        {
-                            name: 'siba',
-                            color: 'purple',
-                            planed: 3,
-                            tracked: 3,
-                        },
-                        {
-                            name: 'project1',
-                            color: 'green',
-                            planed: 10,
-                            tracked: 5,
-                        },
-                    ],
-                    timeOff: [
-                        {
-                            id: '1',
-                            name: 'public holiday',
-                            color: '#008D8D',
-                            checked: true,
-                        },
-                    ],
-                },
-                {
-                    dateStart: '2020-01-1',
-                    dateEnd: '2020-01-5',
-                    daysCount() {
-                        return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                    },
-                    planedTotal() {
-                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                    },
-                    trackedTotal() {
-                        return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                    },
-                    projects: [
-                        {
-                            name: 'ultradom',
-                            color: 'orange',
-                            planed: 20,
-                            tracked: 4,
-                        },
-                    ],
-                    timeOff: [],
-                },
-                {
-                    dateStart: '2020-01-20',
-                    dateEnd: '2020-01-26',
-                    daysCount() {
-                        return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                    },
-                    planedTotal() {
-                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                    },
-                    trackedTotal() {
-                        return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                    },
-                    projects: [
-                        {
-                            name: 'ultradom',
-                            color: 'orange',
-                            planed: 30,
-                            tracked: 4,
-                        },
-                        {
-                            name: 'siba',
-                            color: 'purple',
-                            planed: 10,
-                            tracked: 4,
-                        },
-                    ],
-                    timeOff: [
-                        {
-                            id: '2',
-                            name: 'day off',
-                            color: '#DB1040',
-                            checked: true,
-                        },
-                        {
-                            id: '2',
-                            name: 'day off',
-                            color: '#DB1040',
-                            checked: true,
-                        },
-                        {
-                            id: '2',
-                            name: 'day off',
-                            color: '#DB1040',
-                            checked: true,
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            id: '4',
-            name: 'Some random dude',
-            avatar: 'https://randomuser.me/api/portraits/women/75.jpg',
-            openFlag: false,
-            heightMulti: 1,
-            shedule: [
-                {
-                    dateStart: '2020-01-1',
-                    dateEnd: '2020-01-5',
-                    daysCount() {
-                        return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                    },
-                    planedTotal() {
-                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                    },
-                    trackedTotal() {
-                        return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                    },
-                    projects: [
-                        {
-                            name: 'siba',
-                            color: 'purple',
-                            planed: 40,
-                            tracked: 4,
-                        },
-                    ],
-                    timeOff: [],
-                },
-                {
-                    dateStart: '2020-01-7',
-                    dateEnd: '2020-01-10',
-                    daysCount() {
-                        return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                    },
-                    planedTotal() {
-                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                    },
-                    trackedTotal() {
-                        return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                    },
-                    projects: [
-                        {
-                            name: 'ultradom',
-                            color: 'orange',
-                            planed: 4,
-                            tracked: 4,
-                        },
-                        {
-                            name: 'siba',
-                            color: 'purple',
-                            planed: 4,
-                            tracked: 4,
-                        },
-                    ],
-                    timeOff: [
-                        {
-                            id: '1',
-                            name: 'public holiday',
-                            color: '#008D8D',
-                            checked: true,
-                        },
-                        {
-                            id: '2',
-                            name: 'day off',
-                            color: '#DB1040',
-                            checked: true,
-                        },
-                        {
-                            id: '4',
-                            name: 'own days',
-                            color: '#03008D',
-                            checked: true,
-                        },
-                        {
-                            id: '5',
-                            name: 'sick',
-                            color: '#DB7110',
-                            checked: true,
-                        },
-                    ],
-                },
-                {
-                    dateStart: '2020-02-5',
-                    dateEnd: '2020-01-10',
-                    daysCount() {
-                        return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                    },
-                    planedTotal() {
-                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                    },
-                    trackedTotal() {
-                        return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                    },
-                    projects: [
-                        {
-                            name: 'ultradom',
-                            color: 'orange',
-                            planed: 8,
-                            tracked: 0,
-                        },
-                    ],
-                    timeOff: [
-                        {
-                            id: '5',
-                            name: 'sick',
-                            color: '#DB7110',
-                            checked: true,
-                        },
-                    ],
-                },
-                {
-                    dateStart: '2020-02-15',
-                    dateEnd: '2020-01-20',
-                    daysCount() {
-                        return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
-                    },
-                    planedTotal() {
-                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
-                    },
-                    trackedTotal() {
-                        return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
-                    },
-                    projects: [
-                        {
-                            name: 'ultradom',
-                            color: 'orange',
-                            planed: 4,
-                            tracked: 4,
-                        },
-                        {
-                            name: 'siba',
-                            color: 'purple',
-                            planed: 10,
-                            tracked: 4,
-                        },
-                    ],
-                    timeOff: [
-                        {
-                            id: '1',
-                            name: 'public holiday',
-                            color: '#008D8D',
-                            checked: true,
-                        },
-                        {
-                            id: '1',
-                            name: 'public holiday',
-                            color: '#008D8D',
-                            checked: true,
-                        },
-                    ],
-                },
-            ],
-        },
     ],
     timeOff: [
         {
             id: '1',
             name: 'public holiday',
             color: '#008D8D',
+            colorName: 'green',
             checked: true,
         },
         {
             id: '2',
             name: 'day off',
             color: '#DB1040',
+            colorName: 'red',
             checked: true,
         },
         {
             id: '3',
             name: 'vacation',
             color: '#7E00CB',
+            colorName: 'purple',
             checked: true,
         },
         {
             id: '4',
             name: 'own days',
             color: '#03008D',
+            colorName: 'blue',
             checked: true,
         },
         {
             id: '5',
             name: 'sick leav',
             color: '#DB7110',
+            colorName: 'orange',
             checked: true,
         },
     ],
@@ -796,6 +475,7 @@ export const planingReducer = (state = defaultState, action) => {
                         ),
                     })),
                 })),
+                swithcAllTimeOff: state.timeOff.every(el => el.checked),
             };
         }
 

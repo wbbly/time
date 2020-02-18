@@ -53,13 +53,12 @@
 
   &__add-btn,
   &__cancel-btn {
-    height: 31px;
-    width: 134px;
+    padding: 8.5px 55px;
+    max-width: 134px;
     border-radius: 2px;
     color: #ffffff;
-    font-size: 12px;
     font-weight: 600;
-    font-family: "Open Sans";
+    font-size: 12px;
   }
   &__add-btn {
     background: #02af67;

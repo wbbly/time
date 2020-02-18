@@ -8,7 +8,6 @@
   cursor: pointer;
   text-align: center;
   user-select: none;
-  margin-top: 10px;
   background-color: #ffffff;
   border: 1px solid #bebebe;
   border-radius: 2px;
@@ -44,13 +43,13 @@
   cursor: pointer;
   z-index: 1;
   user-select: none;
+  
 }
 
-.dropdown-content__show div {
+.dropdown-content__show > div {
   color: black;
-  padding: 12px 16px;
   text-decoration: none;
-  display: block;
+  padding: 5px 16px;
 }
 
 .dropdown-content__show div:hover {

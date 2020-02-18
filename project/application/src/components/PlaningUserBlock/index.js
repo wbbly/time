@@ -142,7 +142,7 @@ const ClosedBlock = ({ date, v_hour_small, v_plan }) => {
                             position: 'absolute',
                             display: 'flex',
                             justifyContent: 'space-between',
-                            padding: '0 5px',
+                            padding: '0 10px',
                         }}
                     >
                         <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{v_plan}</p>
