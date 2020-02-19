@@ -66,10 +66,28 @@ export const CloseSvg = ({ cancel }) => {
     );
 };
 
+export const PencilSvg = ({ openFlag, action, id }) => {
+    return (
+        <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            onClick={_ => action(id)}
+        >
+            <path
+                d="M11.1929 3.00397L14.8545 6.68347L5.58597 15.9974L1.92644 12.3179L11.1929 3.00397ZM17.633 2.11656L16 0.475623C15.369 -0.158541 14.3442 -0.158541 13.711 0.475623L12.1468 2.04747L15.8084 5.72701L17.633 3.89354C18.1224 3.40164 18.1224 2.60842 17.633 2.11656ZM0.0102504 17.4897C-0.0563861 17.7911 0.21438 18.0611 0.514313 17.9879L4.59456 16.9937L0.935028 13.3142L0.0102504 17.4897Z"
+                fill={openFlag ? '#D5D5D5' : '#6D6D6D'}
+            />
+        </svg>
+    );
+};
+
 export class AddTimeOff extends React.Component {
     state = {
         switchAllNotifFlag: false,
-        punlicNotifFlag: false,
+        publicNotifFlag: false,
         showAddDayFlag: false,
     };
 
@@ -77,15 +95,15 @@ export class AddTimeOff extends React.Component {
         this.setState({ switchAllNotifFlag: !this.state.switchAllNotifFlag });
     };
     switchPublicNotifFlag = () => {
-        this.setState({ punlicNotifFlag: !this.state.punlicNotifFlag });
+        this.setState({ publicNotifFlag: !this.state.publicNotifFlag });
     };
     switchShowAddDayFlag = () => {
         this.setState({ showAddDayFlag: !this.state.showAddDayFlag });
     };
     render() {
-        const { add, cancel, change, changeAll, vocabulary, timeOff, allFlag } = this.props;
+        const { add, cancel, change, changeAll, vocabulary, timeOff, allFlag, openDayOffChangeWindow } = this.props;
         const { v_add, v_cancel_small } = vocabulary;
-        const { switchAllNotifFlag, punlicNotifFlag, showAddDayFlag } = this.state;
+        const { switchAllNotifFlag, publicNotifFlag, showAddDayFlag } = this.state;
         return (
             <div className="timeoff-modal">
                 <div className="timeoff-modal__header">
@@ -97,8 +115,7 @@ export class AddTimeOff extends React.Component {
                     {/* <Scrollbars renderTrackHorizontal={props => <div {...props} style={{ display: 'none' }} />}> */}
                     <div className="timeoff-modal__list-item">
                         <div className="timeoff-modal__list-item-left">
-                            <div className="timeoff-modal__list-item-color" />
-                            <p className="timeoff-modal__list-item-text">Switch all</p>
+                            <div className="timeoff-modal__list-item-text">Switch all</div>
                         </div>
                         <div className="timeoff-modal__list-item-right">
                             <IOSSwitch checked={allFlag} onChange={_ => changeAll()} value={'all'} />
@@ -136,10 +153,10 @@ export class AddTimeOff extends React.Component {
                             />
                             <div className="timeoff-modal__question">
                                 <i onMouseOver={this.switchPublicNotifFlag} onMouseOut={this.switchPublicNotifFlag} />
-                                {/* {punlicNotifFlag ? ( */}
+                                {/* {publicNotifFlag ? ( */}
                                 <div
                                     className={
-                                        punlicNotifFlag
+                                        publicNotifFlag
                                             ? 'timeoff-modal__notification-show'
                                             : 'timeoff-modal__notification-hide'
                                     }
@@ -170,7 +187,23 @@ export class AddTimeOff extends React.Component {
                                             onChange={_ => change(item)}
                                             value={item.name}
                                         />
-                                        <i className="timeoff-modal__pencil" />
+                                        <div className="timeoff-modal__pencil">
+                                            <PencilSvg
+                                                openFlag={item.openFlag}
+                                                action={openDayOffChangeWindow}
+                                                id={item.id}
+                                            />
+                                            {item.openFlag ? (
+                                                <AddDaysModal
+                                                    timeOff={timeOff}
+                                                    vocabulary={vocabulary}
+                                                    close={openDayOffChangeWindow}
+                                                    initialColor={item.colorName}
+                                                    initialName={item.name}
+                                                    itemId={item.id}
+                                                />
+                                            ) : null}
+                                        </div>
                                     </div>
                                 </div>
                             );

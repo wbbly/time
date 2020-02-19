@@ -10,6 +10,7 @@ import {
     CHANGE_USER_TIME_OFF,
     CHANGE_MAIN_TIME_OFF_SWITCH,
     CHANGE_ALL_USER_TIME_OFF,
+    OPEN_DAY_OFF_CHANGE_WINDOW,
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
@@ -352,6 +353,7 @@ const defaultState = {
             color: '#008D8D',
             colorName: 'green',
             checked: true,
+            openFlag: false,
         },
         {
             id: '2',
@@ -359,6 +361,7 @@ const defaultState = {
             color: '#DB1040',
             colorName: 'red',
             checked: true,
+            openFlag: false,
         },
         {
             id: '3',
@@ -366,6 +369,7 @@ const defaultState = {
             color: '#7E00CB',
             colorName: 'purple',
             checked: true,
+            openFlag: false,
         },
         {
             id: '4',
@@ -373,6 +377,7 @@ const defaultState = {
             color: '#03008D',
             colorName: 'blue',
             checked: true,
+            openFlag: false,
         },
         {
             id: '5',
@@ -380,6 +385,7 @@ const defaultState = {
             color: '#DB7110',
             colorName: 'orange',
             checked: true,
+            openFlag: false,
         },
     ],
     swithcAllTimeOff: true,
@@ -416,6 +422,24 @@ export const planingReducer = (state = defaultState, action) => {
                     ...user,
                     openFlag: false,
                 })),
+            };
+        }
+
+        case OPEN_DAY_OFF_CHANGE_WINDOW: {
+            return {
+                ...state,
+                timeOff: state.timeOff.map(
+                    off =>
+                        off.id == action.payload
+                            ? {
+                                  ...off,
+                                  openFlag: !off.openFlag,
+                              }
+                            : {
+                                  ...off,
+                                  openFlag: false,
+                              }
+                ),
             };
         }
 

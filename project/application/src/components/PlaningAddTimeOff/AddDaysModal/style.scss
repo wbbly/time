@@ -1,7 +1,7 @@
 .add-days-modal {
   position: absolute;
-  top: 54px;
-  left: 204px;
+  top: 19%;
+  left: 70%;
   width: 307px;
   height: 193px;
   background: #ffffff;
@@ -10,6 +10,7 @@
   padding: 20px 16px;
   font-family: "Open Sans";
   font-style: normal;
+  z-index: 1;
 
   &__header {
     display: flex;
@@ -33,6 +34,13 @@
     border: 1px solid #a5a5a5;
     box-sizing: border-box;
     border-radius: 2px;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    padding:10px;
+  }
+  &__input::first-letter {
+    text-transform: uppercase;
   }
 
   &__select {
@@ -43,6 +51,9 @@
     border: 1px solid #a5a5a5;
     box-sizing: border-box;
     border-radius: 2px;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
   }
 
   &__footer {

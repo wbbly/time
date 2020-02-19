@@ -9,6 +9,12 @@ export const CHANGE_TIME_OFF_FLAG = 'CHANGE_TIME_OFF_FLAG';
 export const CHANGE_USER_TIME_OFF = 'CHANGE_USER_TIME_OFF';
 export const CHANGE_MAIN_TIME_OFF_SWITCH = 'CHANGE_ALL_TIME_OFF';
 export const CHANGE_ALL_USER_TIME_OFF = 'CHANGE_ALL_USER_TIME_OFF';
+export const OPEN_DAY_OFF_CHANGE_WINDOW = 'OPEN_DAY_OFF_CHANGE_WINDOW';
+
+export const openDayOffChangeWindow = payload => ({
+    type: OPEN_DAY_OFF_CHANGE_WINDOW,
+    payload,
+});
 
 const incrementMonth = () => ({
     type: INCRIMENT_MONTH,

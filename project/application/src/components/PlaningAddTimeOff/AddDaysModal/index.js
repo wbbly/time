@@ -6,7 +6,7 @@ import './style.scss';
 
 import CustomSelect from '../../CustomSelect';
 
-const AddDaysModal = ({ close, vocabulary, timeOff }) => {
+const AddDaysModal = ({ close, vocabulary, timeOff, initialName, initialColor, itemId }) => {
     const { v_cancel_small, v_add, v_v_required } = vocabulary;
     return (
         <div className="add-days-modal">
@@ -19,11 +19,11 @@ const AddDaysModal = ({ close, vocabulary, timeOff }) => {
                 validateOnChange={false}
                 validateOnBlur={true}
                 initialValues={{
-                    colorName: '',
-                    color: '',
+                    dayName: initialName ? initialName.charAt(0).toUpperCase() + initialName.slice(1) : '',
+                    color: initialColor ? initialColor : '',
                 }}
                 validationSchema={Yup.object({
-                    colorName: Yup.string().required(v_v_required),
+                    dayName: Yup.string().required(v_v_required),
                     color: Yup.string().required(v_v_required),
                 })}
                 onSubmit={values => {
@@ -34,7 +34,18 @@ const AddDaysModal = ({ close, vocabulary, timeOff }) => {
             >
                 {formik => (
                     <form onSubmit={formik.handleSubmit} className="add-days-modal__formik">
-                        <input name="colorName" className="add-days-modal__input" />
+                        <input
+                            style={{ border: formik.errors.dayName ? '1px solid red' : null }}
+                            name="dayName"
+                            type="text"
+                            className="add-days-modal__input"
+                            value={formik.values.dayName}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.errors.dayName}
+                            placeholder={'Enter day name'}
+                            autoFocus
+                        />
                         <CustomSelect
                             className="add-days-modal__select"
                             name="color"
@@ -42,10 +53,9 @@ const AddDaysModal = ({ close, vocabulary, timeOff }) => {
                             options={timeOff}
                             onChange={formik.setFieldValue}
                             onBlur={formik.setFieldTouched}
-                            z
-                            error={formik.errors.project}
-                            touched={formik.touched.project}
+                            error={formik.errors.color}
                             placeholder={'Pick a color'}
+                            touched={formik.touched.color}
                             addDays
                         />
 

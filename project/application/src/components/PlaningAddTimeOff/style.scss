@@ -143,7 +143,8 @@
     max-height: 9px;
     border-radius: 50%;
     margin-right: 10px;
-  }
+    box-shadow: 2px 0px 2px rgba(0, 0, 0, 0.25);
+  }  
 
   &__list-item-right {
     display: flex;

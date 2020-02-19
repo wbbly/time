@@ -31,12 +31,13 @@ class CustomSelect extends React.Component {
     }
 
     render() {
-        const { options, value, error, addDays, placeholder } = this.props;
+        const { options, value, error, addDays, placeholder, className } = this.props;
         const { isOpenDropdown } = this.state;
+        console.log(value);
         return (
             <div className="dropdown">
                 <div className="dropbtn" style={{ border: error ? '1px solid red' : null }} onClick={this.openDropdown}>
-                    {addDays ? (
+                    {addDays && value ? (
                         <div className="timeoff-modal__list-item-left">
                             <div
                                 className="timeoff-modal__list-item-color"

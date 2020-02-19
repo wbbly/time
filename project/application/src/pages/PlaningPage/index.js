@@ -23,6 +23,7 @@ import {
     changeUserOpenFlag,
     changeTimeOffFlag,
     changeAllTimeOff,
+    openDayOffChangeWindow,
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -128,7 +129,15 @@ class PlaningPage extends React.Component {
     };
 
     render() {
-        const { planingReducer, vocabulary, addUser, projectsArray, changeTimeOffFlag, changeAllTimeOff } = this.props;
+        const {
+            planingReducer,
+            vocabulary,
+            addUser,
+            projectsArray,
+            changeTimeOffFlag,
+            changeAllTimeOff,
+            openDayOffChangeWindow,
+        } = this.props;
         const { month, current, users, timeOff, swithcAllTimeOff } = planingReducer;
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff } = this.state;
         const {
@@ -281,6 +290,7 @@ class PlaningPage extends React.Component {
                                     timeOff={timeOff}
                                     vocabulary={vocabulary}
                                     allFlag={swithcAllTimeOff}
+                                    openDayOffChangeWindow={openDayOffChangeWindow}
                                 />
                             ) : null}
                             <div
@@ -317,6 +327,7 @@ const mapDispatchToProps = {
     projectsPageAction,
     changeTimeOffFlag,
     changeAllTimeOff,
+    openDayOffChangeWindow,
 };
 
 export default connect(
