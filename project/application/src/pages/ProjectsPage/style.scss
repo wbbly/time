@@ -65,19 +65,39 @@
   .data_container_projects_page {
     padding: 1rem;
   }
-
   .project_page_filters {
     margin-top: 30px;
   }
   .wrapper_project_search_bar {
-    height: 40px;
+    flex-direction: column;
+    height: auto; 
+    padding: 10px;   
   }
-  .project_search_bar_search_field_container {
-    margin-left: 10px;
+  .wrapper_project_search_bar_dropmenu {
+    width: 100%;
+  }
+  .dropmenu_select_wrapper {
+    border: none;
+    padding: 0;
+  }  
+  .project_search_bar_search_field_container,.wrapper_project_search_bar_dropmenu {
+    margin: 0;
+    margin-bottom: 10px;
+    border: 1px solid #5D5D5D;
+    border-radius: 4px;
+    padding: 10px;
   }
   .project_search_bar_search_field_container input {
     margin-left: 25px;
-    width: 80%;
+    width: calc(100% - 25px);
+    box-sizing : border-box;
+  }
+  .project_search_bar_search_field_container i {
+    margin-left: 5px
+  }
+  .project_search_bar_button_container button {
+    height: 42px;
+    width: 100%;
   }
 
   @media screen and (max-width: 894px) {
