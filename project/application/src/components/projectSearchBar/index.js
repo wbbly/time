@@ -75,7 +75,7 @@ class ProjectSearchBar extends Component {
 
     searchClients = () => {
         const last = this.state.clientDataEtalon.filter(el =>
-            this.state.clientDataSelected.find(item => item === el.client.name)
+            this.state.clientDataSelected.find(item => item === el.name)
         );
         this.props.projectsPageAction('CHANGE_ARR', { tableData: last.length ? last : this.state.clientDataEtalon });
     };
@@ -124,7 +124,7 @@ class ProjectSearchBar extends Component {
                 obj =>
                     this.state.clientDataSelected.length
                         ? obj.name.toLowerCase().indexOf(this.searchInput.value.toLowerCase().trim()) !== -1 &&
-                          this.state.clientDataSelected.find(item => item === obj.client.name)
+                          this.state.clientDataSelected.find(item => item === obj.name)
                         : obj.name.toLowerCase().indexOf(this.searchInput.value.toLowerCase().trim()) !== -1
             );
             this.props.projectsPageAction('CHANGE_ARR', { tableData: afterSearch });
@@ -142,7 +142,7 @@ class ProjectSearchBar extends Component {
     componentDidMount() {
         this.setState({
             clientDataEtalon: this.props.etalonArr,
-            clientArray: [...new Set(this.props.etalonArr.map(el => el.client.name))],
+            clientArray: [...new Set(this.props.etalonArr.map(el => el.name))],
         });
     }
 
