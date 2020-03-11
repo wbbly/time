@@ -3,7 +3,7 @@ import {
     SWITCH_MENU,
     SET_IS_MOBILE,
     SET_SWIPED_TASK,
-    SCROLL_TO
+    SCROLL_TO,
 } from '../actions/ResponsiveActions';
 
 const initialState = {

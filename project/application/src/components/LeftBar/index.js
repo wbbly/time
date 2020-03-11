@@ -13,7 +13,7 @@ import UserMenu from '../UserMenu';
 
 // Styles
 import './style.scss';
-import { switchMenu } from "../../actions/ResponsiveActions";
+import { switchMenu } from '../../actions/ResponsiveActions';
 
 class LeftBar extends Component {
     renderTimer = () => {
@@ -24,8 +24,8 @@ class LeftBar extends Component {
     };
 
     swithMenuHandle = () => {
-        const {  switchMenu } = this.props;
-        switchMenu()
+        const { switchMenu } = this.props;
+        switchMenu();
     };
 
     render() {
@@ -34,11 +34,9 @@ class LeftBar extends Component {
         return (
             <div className={classNames('wrapper', { 'wrapper--mobile': isMobile })}>
                 {!isMobile && (
-                    <div className="header-nav" >
+                    <div className="header-nav">
                         <button onClick={this.swithMenuHandle} className="show-menu-button">
-                            <span
-                                className={classNames('show-menu-button-icon', 'icon-menu')}
-                            />
+                            <span className={classNames('show-menu-button-icon', 'icon-menu')} />
                         </button>
                         <Link onClick={switchMenu} to="/timer">
                             <i className="logo_small" />
@@ -127,11 +125,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    switchMenu
-
+    switchMenu,
 };
 
-export default withRouter(connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(LeftBar));
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(LeftBar)
+);
