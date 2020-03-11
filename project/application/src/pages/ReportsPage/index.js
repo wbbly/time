@@ -439,8 +439,7 @@ class ReportsPage extends Component {
     }
 
     export() {
-        const { user } = this.props;
-        const { timezoneOffset } = user;
+        const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
 
         let dateFrom = this.getYear(this.state.selectionRange.startDate),
             dateTo = this.getYear(this.state.selectionRange.endDate);
