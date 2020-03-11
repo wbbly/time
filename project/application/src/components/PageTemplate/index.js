@@ -43,7 +43,7 @@ class PageTemplate extends Component {
                     {!hideSidebar && (
                         <aside
                             className={classNames('aside', {
-                                'aside--hide': !isShowMenu && isMobile,
+                                'aside--hide': !isShowMenu ,
                                 'aside--show': isShowMenu && isMobile,
                             })}
                         >
@@ -67,6 +67,7 @@ class PageTemplate extends Component {
 const mapStateToProps = state => ({
     viewport: state.responsiveReducer.viewport,
     isShowMenu: state.responsiveReducer.isShowMenu,
+    isShowMenuDesk: state.responsiveReducer.isShowMenuDesk,
     isMobile: state.responsiveReducer.isMobile,
     vocabulary: state.languageReducer.vocabulary,
 });
