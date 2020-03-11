@@ -43,7 +43,7 @@ class PageTemplate extends Component {
                     {!hideSidebar && (
                         <aside
                             className={classNames('aside', {
-                                'aside--hide': !isShowMenu && isMobile,
+                                'aside--hide': !isShowMenu,
                                 'aside--show': isShowMenu && isMobile,
                             })}
                         >
