@@ -47,7 +47,7 @@ class LeftBar extends Component {
                 <div className="navigation_links_container">
                     <NavLink
                         activeClassName="active-link"
-                        onClick={switchMenu}
+                        onClick={isMobile && switchMenu}
                         to="/timer"
                         style={{ textDecoration: 'none' }}
                     >
@@ -63,7 +63,7 @@ class LeftBar extends Component {
                             const { match } = this.props;
                             return match.path.indexOf('/reports') >= 0;
                         }}
-                        onClick={switchMenu}
+                        onClick={isMobile && switchMenu}
                         to="/reports/summary"
                         style={{ textDecoration: 'none' }}
                     >
@@ -74,7 +74,7 @@ class LeftBar extends Component {
                     </NavLink>
                     <NavLink
                         activeClassName="active-link"
-                        onClick={switchMenu}
+                        onClick={isMobile && switchMenu}
                         to="/projects"
                         style={{ textDecoration: 'none' }}
                     >
@@ -86,7 +86,7 @@ class LeftBar extends Component {
                     {checkIsAdminByRole(currentTeam.data.role) && (
                         <NavLink
                             activeClassName="active-link"
-                            onClick={switchMenu}
+                            onClick={isMobile && switchMenu}
                             to="/clients"
                             style={{ textDecoration: 'none' }}
                         >
@@ -99,7 +99,7 @@ class LeftBar extends Component {
                     <div className="wrapper-position-add-team">
                         <NavLink
                             activeClassName="active-link"
-                            onClick={switchMenu}
+                            onClick={isMobile && switchMenu}
                             to="/team"
                             style={{ textDecoration: 'none' }}
                         >
