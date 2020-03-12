@@ -209,6 +209,14 @@ class MainPage extends Component {
                                                     <div className="main-page__lazy-load-spinner" />
                                                 </Loading>
                                             ),
+                                            isMobile &&
+                                                !currentTimer &&
+                                                pagination.disabled && (
+                                                    <div
+                                                        style={{ width: width - 17 }}
+                                                        className="main-page__empty-block"
+                                                    />
+                                                ), //todo calculate width by another way
                                         ]}
                                     </AutoSizer>
                                 )}
