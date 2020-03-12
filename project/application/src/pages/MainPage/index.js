@@ -82,11 +82,12 @@ class MainPage extends Component {
     };
 
     _getRowHeight = ({ index }) => {
-        //todo new algorithm needed
+        //todo maybe new algorithm needed
+        const { isMobile } = this.props;
         const datumLength = this._getDatum(index).length;
         const containerSize = 36;
         const marginBottomSize = 26;
-        const listItemSize = 58;
+        const listItemSize = isMobile ? 62 : 58;
         return containerSize + marginBottomSize + listItemSize * datumLength;
     };
 
@@ -129,7 +130,7 @@ class MainPage extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { currentTimer, getTimeEntriesListAction, timeEntriesList } = this.props;
+        const { currentTimer, getTimeEntriesListAction, timeEntriesList, isMobile } = this.props;
         // getting a new task list when stopping or starting
         // a new task without stopping the last task
 
@@ -140,7 +141,7 @@ class MainPage extends Component {
             getTimeEntriesListAction();
         }
 
-        if (prevProps.timeEntriesList.length !== timeEntriesList.length) {
+        if (prevProps.timeEntriesList.length !== timeEntriesList.length || prevProps.isMobile !== isMobile) {
             if (this.listRef && this.listRef.current) this.listRef.current.recomputeRowHeights(0);
         }
     }
@@ -203,7 +204,7 @@ class MainPage extends Component {
                                                     mode="overlay"
                                                     withLogo={false}
                                                     flag={isFetchingTimeEntriesList}
-                                                    width={width - 17} //todo calculate width by another way
+                                                    width={width - 17} //todo calculate size by another way
                                                     height={100}
                                                 >
                                                     <div className="main-page__lazy-load-spinner" />
