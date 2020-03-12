@@ -23,6 +23,24 @@
   }
 }
 
+.wrapper_hide{
+  width: 48px!important;
+  overflow: hidden;
+}
+
+.navigation_links-hide_menu{
+  justify-content: center!important;
+  padding-left: inherit!important;
+
+  .links_text{
+    display: none!important;
+  }
+
+  .timer_task{
+    display: none;
+  }
+}
+
 .show-menu-button-icon {
   color: #ffffff;
   font-size: 2rem;

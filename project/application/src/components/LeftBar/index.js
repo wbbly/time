@@ -29,10 +29,14 @@ class LeftBar extends Component {
     };
 
     render() {
-        const { switchMenu, isMobile, vocabulary, currentTeam } = this.props;
+        const { switchMenu, isMobile, vocabulary, currentTeam, isShowMenu } = this.props;
         const { v_timer, v_reports, v_projects, v_team, v_clients } = vocabulary;
         return (
-            <div className={classNames('wrapper', { 'wrapper--mobile': isMobile })}>
+            <div className={classNames('wrapper',
+                {
+                    'wrapper--mobile': isMobile,
+                    'wrapper_hide':isShowMenu && !isMobile
+                })}>
                 {!isMobile && (
                     <div className="header-nav">
                         <button onClick={this.swithMenuHandle} className="show-menu-button">
@@ -51,10 +55,13 @@ class LeftBar extends Component {
                         to="/timer"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div className="navigation_links">
+                        <div className={classNames('navigation_links',
+                            {
+                                'navigation_links-hide_menu': isShowMenu && !isMobile
+                            })} >
                             <i className="timer" />
-                            <div className="links_text">{v_timer}</div>
-                            <div className="timer_task">{this.renderTimer()}</div>
+                            <div className="links_text" >{v_timer}</div>
+                            <div className="timer_task" >{this.renderTimer()}</div>
                         </div>
                     </NavLink>
                     <NavLink
@@ -67,7 +74,10 @@ class LeftBar extends Component {
                         to="/reports/summary"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div className="navigation_links">
+                        <div className={classNames('navigation_links',
+                            {
+                                'navigation_links-hide_menu': isShowMenu && !isMobile
+                            })}>
                             <i className="reports" />
                             <div className="links_text">{v_reports}</div>
                         </div>
@@ -78,7 +88,10 @@ class LeftBar extends Component {
                         to="/projects"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div className="navigation_links">
+                        <div  className={classNames('navigation_links',
+                            {
+                                'navigation_links-hide_menu': isShowMenu && !isMobile
+                            })}>
                             <i className="projects" />
                             <div className="links_text">{v_projects}</div>
                         </div>
@@ -90,7 +103,10 @@ class LeftBar extends Component {
                             to="/clients"
                             style={{ textDecoration: 'none' }}
                         >
-                            <div className="navigation_links">
+                            <div className={classNames('navigation_links',
+                                {
+                                    'navigation_links-hide_menu': isShowMenu && !isMobile
+                                })}>
                                 <i className="clients" />
                                 <div className="links_text">{v_clients}</div>
                             </div>
@@ -103,15 +119,18 @@ class LeftBar extends Component {
                             to="/team"
                             style={{ textDecoration: 'none' }}
                         >
-                            <div className="navigation_links">
+                            <div className={classNames('navigation_links',
+                                {
+                                    'navigation_links-hide_menu': isShowMenu && !isMobile
+                                })}>
                                 <i className="team" />
                                 <div className="links_text">{v_team}</div>
                             </div>
                         </NavLink>
-                        <TeamSwitcher isMobile={isMobile} />
+                        <TeamSwitcher isMobile={isMobile} isShowMenu={isShowMenu} />
                     </div>
                 </div>
-                <UserMenu switchMenu={switchMenu} />
+                <UserMenu switchMenu={switchMenu} isShowMenu={isShowMenu} />
             </div>
         );
     }
@@ -119,6 +138,7 @@ class LeftBar extends Component {
 
 const mapStateToProps = state => ({
     currentTimer: state.mainPageReducer.currentTimer,
+    isShowMenu: state.responsiveReducer.isShowMenu,
     durationTimeFormat: state.userReducer.durationTimeFormat,
     currentTeam: state.teamReducer.currentTeam,
     timerTick: state.mainPageReducer.timerTick,

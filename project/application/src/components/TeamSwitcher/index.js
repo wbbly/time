@@ -38,11 +38,11 @@ class TeamSwitcher extends Component {
     };
 
     render() {
-        const { isMobile, vocabulary, userTeams, currentTeam } = this.props;
+        const { isMobile, vocabulary, userTeams, currentTeam, isShowMenu } = this.props;
         const { v_active_team, v_set, v_team_is_active } = vocabulary;
         return (
             <Loading flag={userTeams.isInitialFetching} withLogo={false} mode="inline">
-                <div className="team_list">
+                {(!isShowMenu || isMobile) && <div className="team_list">
                     <ul>
                         {userTeams.data.map((team, index) => {
                             const title =
@@ -68,8 +68,8 @@ class TeamSwitcher extends Component {
                             );
                         })}
                     </ul>
-                    {!isMobile && <TeamAdd />}
-                </div>
+                    {!isMobile &&  <TeamAdd />}
+                </div>}
             </Loading>
         );
     }
