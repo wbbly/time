@@ -13,6 +13,7 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                     margin: 'auto',
                     padding: '0 10px',
                     width: '190px',
+                    zIndex: 789,
                     height: '30px',
                     background: '#474747',
                     display: 'flex',
@@ -28,7 +29,7 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                     <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{v_plan}</p>
                     <p
                         style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}
-                    >{`${date.planedTotal()} ${v_hour_small}`}</p>
+                    >{`${date.projects && date.planedTotal()} ${v_hour_small}`}</p>
                 </div>
                 <div
                     style={{
@@ -41,7 +42,7 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                         justifyContent: 'flex-start',
                     }}
                 >
-                    {date.projects.map((project, index) => (
+                    {date.projects && date.projects.map((project, index) => (
                         <div
                             key={index}
                             style={{
@@ -110,7 +111,7 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
     );
 };
 
-const ClosedBlock = ({ date, v_hour_small, v_plan }) => {
+const ClosedBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
     const strech = (e, timeOff) => {
         e.target.style.flex = 10;
         e.target.parentNode.style.flex = 10;
@@ -127,15 +128,16 @@ const ClosedBlock = ({ date, v_hour_small, v_plan }) => {
             <div
                 style={{
                     position: 'absolute',
-                    left: '5px',
+                    // left: '5px',
                     top: '15px',
                     margin: 'auto',
-                    width: '190px',
+                    width: `${(widthPlan +1) * 40}px`,
                     height: '30px',
+                    zIndex: 1111,
                     display: 'flex',
                 }}
             >
-                <div style={{ display: 'flex', flex: 3, position: 'relative' }}>
+                {date.projects &&  <div style={{ display: 'flex', flex: 3, position: 'relative' }}>
                     <div
                         style={{
                             width: '100%',
@@ -154,7 +156,7 @@ const ClosedBlock = ({ date, v_hour_small, v_plan }) => {
                     {date.projects.map((project, index) => (
                         <div key={index} style={{ flex: '1', background: project.color }} />
                     ))}
-                </div>
+                </div>}
                 {!date.timeOff.every(off => off.checked === false) ? (
                     <div style={{ display: 'flex', flex: 1, transition: 'flex 0.5s' }}>
                         {date.timeOff.map(
@@ -213,30 +215,39 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
                                     transition: 'height 0.3s',
                                 }}
                             >
-                                {week.week.map((day, index) => (
-                                    <div
+                                {week.week.map((day, index) => {
+                                    console.log(week)
+                                    return <div
                                         key={index}
                                         id={`middle_${day.fullDate}`}
                                         style={{
                                             width: '40px',
                                             height: '100%',
+                                            position: 'relative',
                                             border: '1px solid #1F1F1F',
                                             borderTop: 'none',
                                             borderBottom: 'none',
                                             background: day.background,
                                             opacity: day.opacity,
                                         }}
-                                    />
-                                ))}
+                                    >
+
                                 {user.shedule.map(
                                     (date, index) =>
-                                        week.week.find(el =>
-                                            moment(date.dateStart).isSame(moment(el.fullDate), 'day')
-                                        ) ? (
+                                        moment(date.dateStart).format('L') === moment(day.fullDate).format('L') &&
+                                        week.week.find(el => {
+                                            console.log(date, 'DDDDDDD' )
+                                            console.log(moment(date.dateStart).format('L') )
+                                            console.log(moment(el.fullDate).format('L'))
+                                            console.log((new Date(date.dateEnd)-new Date(date.dateStart))/(1000*60*60*24))
+                                            console.log(moment(date.dateStart).isSame(moment(el.fullDate), 'day'))
+                                            return moment(date.dateStart).format('L') === moment(el.fullDate).format('L')
+                                        }) ? (
                                             user.openFlag ? (
                                                 <OpendBlock
                                                     key={index}
                                                     date={date}
+                                                    widthPlan={(new Date(date.dateEnd)-new Date(date.dateStart))/(1000*60*60*24)}
                                                     v_plan={v_plan}
                                                     v_hour_small={v_hour_small}
                                                 />
@@ -244,12 +255,14 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
                                                 <ClosedBlock
                                                     key={index}
                                                     date={date}
+                                                    widthPlan={(new Date(date.dateEnd)-new Date(date.dateStart))/(1000*60*60*24)}
                                                     v_hour_small={v_hour_small}
                                                     v_plan={v_plan}
                                                 />
                                             )
                                         ) : null
                                 )}
+                                        </div>     })}
                             </div>
                             {/*---fake line ---*/}
                             {/* <div style={{ display: 'flex', position: 'relative' }}>

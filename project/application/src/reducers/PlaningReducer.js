@@ -19,6 +19,72 @@ const defaultState = {
     current: null,
     month: [],
     users: [
+        // {
+        //     id: '1',
+        //     name: 'John Doe',
+        //     avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+        //     openFlag: false,
+        //     heightMulti: 1,
+        //     plan: [
+        //         {
+        //             id: '11e468ff-ae8e-4a54-89a1-7f2bfbca12f6',
+        //             team_id: '11361827-073c-4333-8826-fbc9efdddefd',
+        //             user_id: '9886ee22-fc3e-4cc7-97bc-e48314926aa6',
+        //             user: {
+        //                 username: 'sipode@evxmail.net',
+        //                 email: 'sipode@evxmail.net',
+        //             },
+        //             project_id: null,
+        //             project: null,
+        //             timer_off_id: '2e8c3e92-5de0-41d4-be78-993f459fd98a',
+        //             timer_off: {
+        //                 name: 'Day off',
+        //                 timer_off_color: {
+        //                     name: 'red',
+        //                     color: '#DB1040',
+        //                 },
+        //             },
+        //             duration: 28800000,
+        //             start_date: '2020-02-10T00:00:00+00:00',
+        //             end_date: '2020-02-10T00:00:00+00:00',
+        //             created_by_id: '9886ee22-fc3e-4cc7-97bc-e48314926aa6',
+        //             created_by: {
+        //                 username: 'sipode@evxmail.net',
+        //                 email: 'sipode@evxmail.net',
+        //             },
+        //             created_at: '2020-02-21T10:09:21.006301+00:00',
+        //         },
+        //         {
+        //             id: '11e468ff-ae8e-4a54-89a1-7f2bfbca12f6',
+        //             team_id: '11361827-073c-4333-8826-fbc9efdddefd',
+        //             user_id: '9886ee22-fc3e-4cc7-97bc-e48314926aa6',
+        //             user: {
+        //                 username: 'sipode@evxmail.net',
+        //                 email: 'sipode@evxmail.net',
+        //             },
+        //             project_id: 'e07df3d2-d464-4054-bc20-a996a699927e',
+        //             project: {
+        //                 name: 'Ultradom',
+        //                 project_color: {
+        //                     name: 'orange',
+        //                     color: '#FF7A00',
+        //                 },
+        //             },
+        //             timer_off_id: null,
+        //             timer_off: null,
+        //             duration: 144000000,
+        //             start_date: '2020-03-12T00:00:00+00:00',
+        //             end_date: '2020-03-15T00:00:00+00:00',
+        //             created_by_id: '9886ee22-fc3e-4cc7-97bc-e48314926aa6',
+        //             created_by: {
+        //                 username: 'sipode@evxmail.net',
+        //                 email: 'sipode@evxmail.net',
+        //             },
+        //             created_at: '2020-02-21T10:09:21.006301+00:00',
+        //         },
+        //     ],
+        //     userRenderMonth: [],
+        // },
         {
             id: '1',
             name: 'John Doe',
@@ -27,13 +93,13 @@ const defaultState = {
             heightMulti: 1,
             shedule: [
                 {
-                    dateStart: '2020-01-6',
-                    dateEnd: '2020-01-12',
+                    dateStart: '2020-03-5',
+                    dateEnd: '2020-03-13',
                     daysCount() {
                         return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
                     },
                     planedTotal() {
-                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
+                        return  this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                     },
                     trackedTotal() {
                         return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
@@ -45,32 +111,60 @@ const defaultState = {
                             planed: 8,
                             tracked: 4,
                         },
-                        {
-                            name: 'siba',
-                            color: 'purple',
-                            planed: 8,
-                            tracked: 3,
-                        },
-                        {
-                            name: 'project1',
-                            color: 'green',
-                            planed: 10,
-                            tracked: 5,
-                        },
-                        {
-                            name: 'project2',
-                            color: 'blue',
-                            planed: 12,
-                            tracked: 5,
-                        },
+                        // {
+                        //     name: 'siba',
+                        //     color: 'purple',
+                        //     planed: 8,
+                        //     tracked: 3,
+                        // },
+                        // {
+                        //     name: 'project1',
+                        //     color: 'green',
+                        //     planed: 10,
+                        //     tracked: 5,
+                        // },
+                        // {
+                        //     name: 'project2',
+                        //     color: 'blue',
+                        //     planed: 12,
+                        //     tracked: 5,
+                        // },
                     ],
                     timeOff: [
-                        {
-                            id: '1',
-                            name: 'public holiday',
-                            color: '#008D8D',
-                            checked: true,
-                        },
+                        // {
+                        //     id: '1',
+                        //     name: 'public holiday',
+                        //     color: '#008D8D',
+                        //     checked: true,
+                        // },
+                        // {
+                        //     id: '2',
+                        //     name: 'day off',
+                        //     color: '#DB1040',
+                        //     checked: true,
+                        // },
+                    ],
+                },
+                {
+                    dateStart: '2020-03-7',
+                    dateEnd: '2020-03-7',
+                    daysCount() {
+                        return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
+                    },
+                    planedTotal() {
+                        return this.projects && this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
+                    },
+                    trackedTotal() {
+                        return this.projects && this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
+                    },
+                    projects:null,
+                    timeOff: [
+                        // {
+                        //     id: '1',
+                        //     name: 'public holiday',
+                        //     color: '#008D8D',
+                        //     checked: true,
+                        // },
                         {
                             id: '2',
                             name: 'day off',
@@ -275,7 +369,7 @@ const defaultState = {
                 },
                 {
                     dateStart: '2020-02-5',
-                    dateEnd: '2020-01-10',
+                    dateEnd: '2020-02-10',
                     daysCount() {
                         return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
                     },
@@ -304,7 +398,7 @@ const defaultState = {
                 },
                 {
                     dateStart: '2020-02-15',
-                    dateEnd: '2020-01-20',
+                    dateEnd: '2020-02-20',
                     daysCount() {
                         return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
                     },
@@ -514,7 +608,7 @@ export const planingReducer = (state = defaultState, action) => {
             newUsersArray.forEach(user => {
                 let longest = 1;
                 user.shedule.forEach(el => {
-                    if (el.projects.length + el.timeOff.length > longest)
+                    if (el.projects && el.projects.length + el.timeOff.length > longest)
                         longest = el.projects.length + el.timeOff.length;
                 });
                 user.heightMulti = longest - 1;
