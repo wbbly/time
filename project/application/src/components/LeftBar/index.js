@@ -16,6 +16,9 @@ import './style.scss';
 import { switchMenu } from '../../actions/ResponsiveActions';
 
 class LeftBar extends Component {
+    state={
+        widthMenu:188
+    }
     renderTimer = () => {
         const { history, timerTick } = this.props;
         if (history.location.pathname !== '/timer') {
@@ -23,19 +26,52 @@ class LeftBar extends Component {
         }
     };
 
+    closeMenu = () => {
+        const { widthMenu } = this.state
+        const newWidthMenu = widthMenu - 10;
+        if (widthMenu > 48) {
+            this.setState({ widthMenu: newWidthMenu });
+            requestAnimationFrame(this.closeMenu);
+        }
+    };
+
+    openMenu = () => {
+        const { widthMenu } = this.state
+        const newWidthMenu = widthMenu + 10;
+        if (widthMenu < 188) {
+            this.setState({ widthMenu: newWidthMenu });
+            requestAnimationFrame(this.openMenu);
+        }
+    };
+
     swithMenuHandle = () => {
-        const { switchMenu } = this.props;
+        const { switchMenu , isShowMenu } = this.props;
+        if(!isShowMenu) {
+            this.closeMenu()
+            cancelAnimationFrame(this.openMenu);
+        }else {
+            cancelAnimationFrame(this.closeMenu);
+            this.openMenu()
+        }
         switchMenu();
+    };
+
+    swithMenuHandleMob = () => {
+        const { switchMenu, isMobile } = this.props;
+        if(isMobile) {
+            switchMenu();
+        }
     };
 
     render() {
         const { switchMenu, isMobile, vocabulary, currentTeam, isShowMenu } = this.props;
         const { v_timer, v_reports, v_projects, v_team, v_clients } = vocabulary;
+        const { widthMenu } = this.state
         return (
-            <div className={classNames('wrapper',
+            <div style={{width:!isMobile && widthMenu}} className={classNames('wrapper',
                 {
                     'wrapper--mobile': isMobile,
-                    'wrapper_hide':isShowMenu && !isMobile
+                    'wrapper_hide':!isShowMenu && !isMobile
                 })}>
                 {!isMobile && (
                     <div className="header-nav">
@@ -43,7 +79,7 @@ class LeftBar extends Component {
                             <span className={classNames('show-menu-button-icon', 'icon-menu')} />
                         </button>
                         <Link onClick={switchMenu} to="/timer">
-                            <i className="logo_small" />
+                            {!isShowMenu && <i  className="logo_small" />}
                         </Link>
                     </div>
                 )}
@@ -51,13 +87,13 @@ class LeftBar extends Component {
                 <div className="navigation_links_container">
                     <NavLink
                         activeClassName="active-link"
-                        onClick={isMobile && switchMenu}
+                        onClick={this.swithMenuHandleMob}
                         to="/timer"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div className={classNames('navigation_links',
+                        <div title="Timer" className={classNames('navigation_links',
                             {
-                                'navigation_links-hide_menu': isShowMenu && !isMobile
+                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
                             })} >
                             <i className="timer" />
                             <div className="links_text" >{v_timer}</div>
@@ -70,13 +106,13 @@ class LeftBar extends Component {
                             const { match } = this.props;
                             return match.path.indexOf('/reports') >= 0;
                         }}
-                        onClick={isMobile && switchMenu}
+                        onClick={this.swithMenuHandleMob}
                         to="/reports/summary"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div className={classNames('navigation_links',
+                        <div title="Reports" className={classNames('navigation_links',
                             {
-                                'navigation_links-hide_menu': isShowMenu && !isMobile
+                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
                             })}>
                             <i className="reports" />
                             <div className="links_text">{v_reports}</div>
@@ -84,13 +120,13 @@ class LeftBar extends Component {
                     </NavLink>
                     <NavLink
                         activeClassName="active-link"
-                        onClick={isMobile && switchMenu}
+                        onClick={this.swithMenuHandleMob}
                         to="/projects"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div  className={classNames('navigation_links',
+                        <div title="Projects" className={classNames('navigation_links',
                             {
-                                'navigation_links-hide_menu': isShowMenu && !isMobile
+                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
                             })}>
                             <i className="projects" />
                             <div className="links_text">{v_projects}</div>
@@ -99,13 +135,13 @@ class LeftBar extends Component {
                     {checkIsAdminByRole(currentTeam.data.role) && (
                         <NavLink
                             activeClassName="active-link"
-                            onClick={isMobile && switchMenu}
+                            onClick={this.swithMenuHandleMob}
                             to="/clients"
                             style={{ textDecoration: 'none' }}
                         >
-                            <div className={classNames('navigation_links',
+                            <div title="Clients" className={classNames('navigation_links',
                                 {
-                                    'navigation_links-hide_menu': isShowMenu && !isMobile
+                                    'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
                                 })}>
                                 <i className="clients" />
                                 <div className="links_text">{v_clients}</div>
@@ -115,13 +151,13 @@ class LeftBar extends Component {
                     <div className="wrapper-position-add-team">
                         <NavLink
                             activeClassName="active-link"
-                            onClick={isMobile && switchMenu}
+                            onClick={this.swithMenuHandleMob}
                             to="/team"
                             style={{ textDecoration: 'none' }}
                         >
-                            <div className={classNames('navigation_links',
+                            <div title="Team" className={classNames('navigation_links',
                                 {
-                                    'navigation_links-hide_menu': isShowMenu && !isMobile
+                                    'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
                                 })}>
                                 <i className="team" />
                                 <div className="links_text">{v_team}</div>

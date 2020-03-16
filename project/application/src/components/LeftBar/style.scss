@@ -23,24 +23,6 @@
   }
 }
 
-.wrapper_hide{
-  width: 48px!important;
-  overflow: hidden;
-}
-
-.navigation_links-hide_menu{
-  justify-content: center!important;
-  padding-left: inherit!important;
-
-  .links_text{
-    display: none!important;
-  }
-
-  .timer_task{
-    display: none;
-  }
-}
-
 .show-menu-button-icon {
   color: #ffffff;
   font-size: 2rem;
@@ -52,7 +34,7 @@
 
 .show-menu-button {
   cursor: pointer;
-  padding: 0 1.5rem;
+  padding: 0 0 0 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -130,6 +112,19 @@ i {
   cursor: pointer;
 }
 
+.navigation_links-hide_menu{
+  justify-content: center;
+  padding-left: inherit;
+
+  .links_text{
+    display: none;
+  }
+
+  .timer_task{
+    display: none;
+  }
+}
+
 .navigation_links:hover {
   background: #4f4f4f;
 }
@@ -187,6 +182,11 @@ a {
 @media (min-width: 1024px) {
   .wrapper {
     width: 188px;
+  }
+
+  .wrapper_hide{
+    width: 48px;
+    overflow: hidden;
   }
 
   .wrapper-position-add-team {
