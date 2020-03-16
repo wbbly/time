@@ -99,7 +99,7 @@ const defaultState = {
                         return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
                     },
                     planedTotal() {
-                        return  this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
+                        return this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
                     },
                     trackedTotal() {
                         return this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
@@ -152,12 +152,17 @@ const defaultState = {
                         return moment(this.dateEnd).diff(moment(this.dateStart), 'days') + 1;
                     },
                     planedTotal() {
-                        return this.projects && this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed;
+                        return (
+                            this.projects && this.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed
+                        );
                     },
                     trackedTotal() {
-                        return this.projects && this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked;
+                        return (
+                            this.projects &&
+                            this.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked
+                        );
                     },
-                    projects:null,
+                    projects: null,
                     timeOff: [
                         // {
                         //     id: '1',

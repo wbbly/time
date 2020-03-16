@@ -1,5 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+
+import plusPlan from '../../images/plusPlan.svg';
+
 import './style.scss';
 
 const OpendBlock = ({ date, v_hour_small, v_plan }) => {
@@ -9,12 +12,12 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                 style={{
                     position: 'absolute',
                     left: '5px',
-                    top: '15px',
+                    top: '8px',
                     margin: 'auto',
                     padding: '0 10px',
                     width: '190px',
-                    zIndex: 789,
-                    height: '30px',
+                    zIndex: 1,
+                    height: '22px',
                     background: '#474747',
                     display: 'flex',
                 }}
@@ -27,54 +30,54 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                     }}
                 >
                     <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{v_plan}</p>
-                    <p
-                        style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}
-                    >{`${date.projects && date.planedTotal()} ${v_hour_small}`}</p>
+                    <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${date.projects &&
+                        date.planedTotal()} ${v_hour_small}`}</p>
                 </div>
                 <div
                     style={{
                         position: 'absolute',
                         left: '0',
-                        top: `calc(100% + 15px)`,
+                        top: `calc(100% + 8px)`,
                         width: '80%',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
                     }}
                 >
-                    {date.projects && date.projects.map((project, index) => (
-                        <div
-                            key={index}
-                            style={{
-                                left: '10px',
-                                position: 'relative',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                background: project.color,
-                                height: '30px',
-                                marginBottom: '15px',
-                                padding: '0 10px',
-                            }}
-                        >
-                            <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{project.name}</p>
-                            <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${
-                                project.planed
-                            } ${v_hour_small}`}</p>
+                    {date.projects &&
+                        date.projects.map((project, index) => (
                             <div
+                                key={index}
                                 style={{
-                                    position: 'absolute',
+                                    left: '10px',
+                                    position: 'relative',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
                                     background: project.color,
-                                    width: '15px',
-                                    height: '15px',
-                                    top: '7.5px',
-                                    left: '-7.5px',
-                                    margin: 'auto',
-                                    borderRadius: '50%',
-                                    border: '3px solid #323232',
+                                    height: '30px',
+                                    marginBottom: '15px',
+                                    padding: '0 10px',
                                 }}
-                            />
-                        </div>
-                    ))}
+                            >
+                                <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{project.name}</p>
+                                <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${
+                                    project.planed
+                                } ${v_hour_small}`}</p>
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        background: project.color,
+                                        width: '15px',
+                                        height: '15px',
+                                        top: '7.5px',
+                                        left: '-7.5px',
+                                        margin: 'auto',
+                                        borderRadius: '50%',
+                                        border: '3px solid #323232',
+                                    }}
+                                />
+                            </div>
+                        ))}
                     {date.timeOff.map((timeOff, index) => (
                         <div
                             key={index}
@@ -129,34 +132,40 @@ const ClosedBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
                 style={{
                     position: 'absolute',
                     // left: '5px',
-                    top: '15px',
+                    top: '8px',
                     margin: 'auto',
-                    width: `${(widthPlan +1) * 40}px`,
-                    height: '30px',
-                    zIndex: 1111,
+                    width: `${Math.floor(widthPlan + 1) * 40 - 2}px`,
+                    height: '22px',
+                    zIndex: 1,
                     display: 'flex',
                 }}
             >
-                {date.projects &&  <div style={{ display: 'flex', flex: 3, position: 'relative' }}>
-                    <div
-                        style={{
-                            width: '100%',
-                            position: 'absolute',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            padding: '0 10px',
-                        }}
-                    >
-                        <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{v_plan}</p>
-                        <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>
-                            {date.planedTotal()}
-                            {v_hour_small}
-                        </p>
+                {date.projects && (
+                    <div style={{ display: 'flex', flex: 3, position: 'relative' }}>
+                        <div
+                            style={{
+                                height: '100%',
+                                width: '100%',
+                                position: 'absolute',
+                                alignItems: 'center',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                padding: '0 10px',
+                            }}
+                        >
+                            <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0 }}>
+                                {v_plan}
+                            </p>
+                            <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0 }}>
+                                {date.planedTotal()}
+                                {v_hour_small}
+                            </p>
+                        </div>
+                        {date.projects.map((project, index) => (
+                            <div key={index} style={{ flex: '1', background: project.color }} />
+                        ))}
                     </div>
-                    {date.projects.map((project, index) => (
-                        <div key={index} style={{ flex: '1', background: project.color }} />
-                    ))}
-                </div>}
+                )}
                 {!date.timeOff.every(off => off.checked === false) ? (
                     <div style={{ display: 'flex', flex: 1, transition: 'flex 0.5s' }}>
                         {date.timeOff.map(
@@ -190,13 +199,29 @@ const ClosedBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
     );
 };
 
-const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
+const AddPlun = ({ changeAddPlanFlag }) => {
+    // if(!open){
+    //     return null
+    // }
+    return (
+        <div>
+            <img
+                onClick={changeAddPlanFlag}
+                style={{ width: 38, height: 22, zIndex: 12, position: 'absolute', top: '8px' }}
+                src={plusPlan}
+            />
+        </div>
+    );
+};
+
+const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAddPlanFlag }) => {
     useEffect(
         () => {
             addUser();
         },
         [user]
     );
+    const [dataClick, setOpen] = useState(false);
     return (
         <div className="user-block">
             <div
@@ -204,7 +229,13 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
                 style={{ display: 'flex', borderBottom: '1px solid #1F1F1F', marginLeft: '-10px' }}
             >
                 {month.map((week, index) => (
-                    <div key={index} style={{ display: 'flex', margin: '0 10px 0 10px' }}>
+                    <div
+                        key={index}
+                        style={{
+                            display: 'flex',
+                            // margin: '0 10px 0 10px'
+                        }}
+                    >
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <div
                                 id={`week_${week.week[0].fullDate}`}
@@ -216,53 +247,80 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser }) => {
                                 }}
                             >
                                 {week.week.map((day, index) => {
-                                    console.log(week)
-                                    return <div
-                                        key={index}
-                                        id={`middle_${day.fullDate}`}
-                                        style={{
-                                            width: '40px',
-                                            height: '100%',
-                                            position: 'relative',
-                                            border: '1px solid #1F1F1F',
-                                            borderTop: 'none',
-                                            borderBottom: 'none',
-                                            background: day.background,
-                                            opacity: day.opacity,
-                                        }}
-                                    >
-
-                                {user.shedule.map(
-                                    (date, index) =>
-                                        moment(date.dateStart).format('L') === moment(day.fullDate).format('L') &&
-                                        week.week.find(el => {
-                                            console.log(date, 'DDDDDDD' )
-                                            console.log(moment(date.dateStart).format('L') )
-                                            console.log(moment(el.fullDate).format('L'))
-                                            console.log((new Date(date.dateEnd)-new Date(date.dateStart))/(1000*60*60*24))
-                                            console.log(moment(date.dateStart).isSame(moment(el.fullDate), 'day'))
-                                            return moment(date.dateStart).format('L') === moment(el.fullDate).format('L')
-                                        }) ? (
-                                            user.openFlag ? (
-                                                <OpendBlock
-                                                    key={index}
-                                                    date={date}
-                                                    widthPlan={(new Date(date.dateEnd)-new Date(date.dateStart))/(1000*60*60*24)}
-                                                    v_plan={v_plan}
-                                                    v_hour_small={v_hour_small}
-                                                />
-                                            ) : (
-                                                <ClosedBlock
-                                                    key={index}
-                                                    date={date}
-                                                    widthPlan={(new Date(date.dateEnd)-new Date(date.dateStart))/(1000*60*60*24)}
-                                                    v_hour_small={v_hour_small}
-                                                    v_plan={v_plan}
-                                                />
-                                            )
-                                        ) : null
-                                )}
-                                        </div>     })}
+                                    console.log(week);
+                                    return (
+                                        <div
+                                            key={index}
+                                            id={`middle_${day.fullDate}`}
+                                            style={{
+                                                width: '40px',
+                                                height: '100%',
+                                                position: 'relative',
+                                                cursor: 'pointer',
+                                                border: '1px solid #1F1F1F',
+                                                borderTop: 'none',
+                                                borderBottom: 'none',
+                                                background: day.background,
+                                                opacity: day.opacity,
+                                                outline: 'none',
+                                            }}
+                                            onClick={() => setOpen(day.fullDate)}
+                                            tabIndex={1}
+                                            onBlur={() => setOpen(null)}
+                                        >
+                                            {day.fullDate === dataClick && (
+                                                <AddPlun changeAddPlanFlag={changeAddPlanFlag} />
+                                            )}
+                                            {user.shedule.map(
+                                                (date, index) =>
+                                                    moment(date.dateStart).format('L') ===
+                                                        moment(day.fullDate).format('L') &&
+                                                    week.week.find(el => {
+                                                        console.log(date, 'DDDDDDD');
+                                                        console.log(moment(date.dateStart).format('L'));
+                                                        console.log(moment(el.fullDate).format('L'));
+                                                        console.log(
+                                                            (new Date(date.dateEnd) - new Date(date.dateStart)) /
+                                                                (1000 * 60 * 60 * 24)
+                                                        );
+                                                        console.log(
+                                                            moment(date.dateStart).isSame(moment(el.fullDate), 'day')
+                                                        );
+                                                        return (
+                                                            moment(date.dateStart).format('L') ===
+                                                            moment(el.fullDate).format('L')
+                                                        );
+                                                    }) ? (
+                                                        user.openFlag ? (
+                                                            <OpendBlock
+                                                                key={index}
+                                                                date={date}
+                                                                widthPlan={
+                                                                    (new Date(date.dateEnd) -
+                                                                        new Date(date.dateStart)) /
+                                                                    (1000 * 60 * 60 * 24)
+                                                                }
+                                                                v_plan={v_plan}
+                                                                v_hour_small={v_hour_small}
+                                                            />
+                                                        ) : (
+                                                            <ClosedBlock
+                                                                key={index}
+                                                                date={date}
+                                                                widthPlan={
+                                                                    (new Date(date.dateEnd) -
+                                                                        new Date(date.dateStart)) /
+                                                                    (1000 * 60 * 60 * 24)
+                                                                }
+                                                                v_hour_small={v_hour_small}
+                                                                v_plan={v_plan}
+                                                            />
+                                                        )
+                                                    ) : null
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                             {/*---fake line ---*/}
                             {/* <div style={{ display: 'flex', position: 'relative' }}>

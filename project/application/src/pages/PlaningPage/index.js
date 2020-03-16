@@ -86,7 +86,10 @@ class PlaningPage extends React.Component {
         return users
             .map(el =>
                 el.shedule
-                    .map(item => item.projects &&  item.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed)
+                    .map(
+                        item =>
+                            item.projects && item.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed
+                    )
                     .reduce((a, b) => a + b)
             )
             .reduce((a, b) => a + b);
@@ -96,7 +99,11 @@ class PlaningPage extends React.Component {
         return users
             .map(el =>
                 el.shedule
-                    .map(item =>item.projects &&  item.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked)
+                    .map(
+                        item =>
+                            item.projects &&
+                            item.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked
+                    )
                     .reduce((a, b) => a + b)
             )
             .reduce((a, b) => a + b);
@@ -262,6 +269,7 @@ class PlaningPage extends React.Component {
                                             user={user}
                                             addUser={addUser}
                                             {...vocabulary}
+                                            changeAddPlanFlag={this.changeAddPlanFlag}
                                         />
                                     ))}
                                 </div>
