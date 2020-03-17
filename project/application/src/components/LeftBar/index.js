@@ -18,7 +18,7 @@ import { switchMenu } from '../../actions/ResponsiveActions';
 class LeftBar extends Component {
     state={
         widthMenu:188
-    }
+    };
     renderTimer = () => {
         const { history, timerTick } = this.props;
         if (history.location.pathname !== '/timer') {
@@ -27,7 +27,7 @@ class LeftBar extends Component {
     };
 
     closeMenu = () => {
-        const { widthMenu } = this.state
+        const { widthMenu } = this.state;
         const newWidthMenu = widthMenu - 10;
         if (widthMenu > 48) {
             this.setState({ widthMenu: newWidthMenu });
@@ -36,7 +36,7 @@ class LeftBar extends Component {
     };
 
     openMenu = () => {
-        const { widthMenu } = this.state
+        const { widthMenu } = this.state;
         const newWidthMenu = widthMenu + 10;
         if (widthMenu < 188) {
             this.setState({ widthMenu: newWidthMenu });
@@ -47,7 +47,7 @@ class LeftBar extends Component {
     swithMenuHandle = () => {
         const { switchMenu , isShowMenu } = this.props;
         if(!isShowMenu) {
-            this.closeMenu()
+            this.closeMenu();
             cancelAnimationFrame(this.openMenu);
         }else {
             cancelAnimationFrame(this.closeMenu);
@@ -66,7 +66,7 @@ class LeftBar extends Component {
     render() {
         const { switchMenu, isMobile, vocabulary, currentTeam, isShowMenu } = this.props;
         const { v_timer, v_reports, v_projects, v_team, v_clients } = vocabulary;
-        const { widthMenu } = this.state
+        const { widthMenu } = this.state;
         return (
             <div style={{width:!isMobile && widthMenu}} className={classNames('wrapper',
                 {
@@ -78,7 +78,7 @@ class LeftBar extends Component {
                         <button onClick={this.swithMenuHandle} className="show-menu-button">
                             <span className={classNames('show-menu-button-icon', 'icon-menu')} />
                         </button>
-                        <Link onClick={switchMenu} to="/timer">
+                        <Link  to="/timer">
                             {!isShowMenu && <i  className="logo_small" />}
                         </Link>
                     </div>
