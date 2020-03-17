@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import moment from 'moment';
 
-import { DatePicker, KeyboardTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { createMuiTheme, TextField } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
