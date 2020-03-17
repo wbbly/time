@@ -71,10 +71,8 @@ const muiTheme = createMuiTheme({
 
 class CalendarPopup extends Component {
     state = {
-        startDateTime: null,
         startTimeString: null,
         endTimeString: null,
-        endDateTime: null,
         date: null,
         isChangedTime: false,
         isChangedDate: false,
