@@ -86,6 +86,7 @@ export default {
     v_plan: 'План',
     v_add_plan: 'Додати план',
     v_time_off: 'Вихідний',
+    v_filter: 'Фільтр',
     v_add_time: 'Додати час',
     v_add_preson: 'Додати особу',
     v_add: 'Додати',

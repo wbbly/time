@@ -251,7 +251,8 @@ class PlaningPage extends React.Component {
                                         <div
                                             className="aside-bar__avatar-block"
                                             style={{
-                                                height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
+                                                // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
+                                                height:  `${user.heightMulti * 60 + 30}px`
                                             }}
                                         >
                                             <div className="aside-bar__avatar">
@@ -289,7 +290,7 @@ class PlaningPage extends React.Component {
                                             {v_add_plan}
                                         </button>
 
-                                        <button onClick={this.changeAddTimeOffFlag}>{v_time_off}</button>
+                                        <button onClick={this.changeAddPlanFlag}>{v_time_off}</button>
                                     </div>
 
                                     <div className="planing-header__move-btn">
@@ -394,7 +395,7 @@ class PlaningPage extends React.Component {
                 </Scrollbars>
                 {showAddPlan || showTimeOff || showAddPlanTimeOff || showAddUser ? (
                     <ModalPortal>
-                        <div style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%' }}>
+                        <div style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%', zIndex:1 }}>
                             {showAddPlan ? (
                                 <AddPlan
                                     cancel={this.closeAllFlags}

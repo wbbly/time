@@ -11,26 +11,21 @@ const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
             <div
                 style={{
                     position: 'absolute',
-                    // left: '5px',
                     top: '8px',
-                    // margin: 'auto',
-                    // padding: '0 10px',
                   width: `${Math.floor(widthPlan + 1) * 40 - 2}px`,
                     zIndex: 1,
-                    height: '22px',
-                    // background: '#474747',
                     display: 'flex',
                 }}
             >
-              {date.projects && <div
+              {date.projects && widthPlan<3 && <div
                     style={{
                         display: 'flex',
                         width: '100%',
                         justifyContent: 'flex-start',
                     }}
                 >
-                    <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{v_plan}</p>
-                    <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${date.projects &&
+                    <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0 }}>{v_plan}</p>
+                    <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0  }}>{`${date.projects &&
                         date.planedTotal()} ${v_hour_small}`}</p>
                 </div>}
                 <div
@@ -82,14 +77,13 @@ const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
                         <div
                             key={index}
                             style={{
-                                // left: '10px',
-                               width:40,
+                                width:40,
                                 position: 'relative',
                                 display: 'flex',
-                                justifyContent: 'space-between',
+                                justifyContent: 'center',
                                 background: timeOff.color,
                                 height: '30px',
-                                marginBottom: '15px',
+                                // marginBottom: '15px',
                                 padding: '0 1px',
                             }}
                         >
@@ -243,7 +237,8 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                                 style={{
                                     display: 'flex',
                                     position: 'relative',
-                                    height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
+                                    // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
+                                    height:  `${user.heightMulti * 60 + 30}px`,
                                     transition: 'height 0.3s',
                                 }}
                             >
@@ -277,22 +272,12 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                                                     moment(date.dateStart).format('L') ===
                                                         moment(day.fullDate).format('L') &&
                                                     week.week.find(el => {
-                                                        console.log(date, 'DDDDDDD');
-                                                        console.log(moment(date.dateStart).format('L'));
-                                                        console.log(moment(el.fullDate).format('L'));
-                                                        console.log(
-                                                            (new Date(date.dateEnd) - new Date(date.dateStart)) /
-                                                                (1000 * 60 * 60 * 24)
-                                                        );
-                                                        console.log(
-                                                            moment(date.dateStart).isSame(moment(el.fullDate), 'day')
-                                                        );
                                                         return (
                                                             moment(date.dateStart).format('L') ===
                                                             moment(el.fullDate).format('L')
                                                         );
                                                     }) ? (
-                                                        user.openFlag ? (
+                                                        user ? (
                                                             <OpendBlock
                                                                 key={index}
                                                                 date={date}
