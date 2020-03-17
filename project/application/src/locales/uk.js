@@ -92,7 +92,7 @@ export default {
     v_cancel_small: 'Скасувати',
     v_public_holiday: 'Народне свято',
     v_people: 'Люди',
-    v_projects: 'Проекти',
+    // v_projects: 'Проекти',
 
     v_upload_image: 'Завантажити зображення',
     v_delete_image: 'Видалити зображення',

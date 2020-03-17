@@ -36,13 +36,33 @@ import { AppConfig } from '../../config';
 //---STYLES---
 import './style.scss';
 import { projectReducer } from '../../reducers/ProjectsReducer';
-
+import { DateRange } from "react-date-range";
+import { inputRanges, staticRanges } from "../ReportsPage/ranges";
+import { de, enGB, it, ru, ua } from "react-date-range/dist/locale";
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css';
+import { getCurrentDate } from "../../services/timeService"; // theme css file
+const localeMap = {
+    ru: ru,
+    en: enGB,
+    de: de,
+    it: it,
+    uk: ua,
+};
 class PlaningPage extends React.Component {
     state = {
         showAddUser: false,
         showAddPlan: false,
         showTimeOff: false,
         showAddPlanTimeOff: false,
+
+
+        dateSelect: false,
+        selectionRange: {
+            startDate: getCurrentDate(),
+            endDate: getCurrentDate(),
+            key: 'selection',
+        },
     };
 
     componentDidMount() {
@@ -135,6 +155,31 @@ class PlaningPage extends React.Component {
         });
     };
 
+
+    openCalendar() {
+        this.setState({ dateSelect: !this.state.dateSelect });
+        document.addEventListener('click', this.closeDropdown);
+    }
+
+    closeDropdown = e => {
+        if (this.datePickerSelect && !this.datePickerSelect.contains(e.target)) {
+            this.setState(
+              {
+                  dateSelect: !this.state.dateSelect,
+              },
+              () => {
+                  document.removeEventListener('click', this.closeDropdown);
+              }
+            );
+        }
+    };
+
+    handleSelect = ranges => {
+        this.setState({ selectionRange: ranges.selection });
+        // this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
+        // this.applySearch(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
+    };
+
     render() {
         const {
             planingReducer,
@@ -144,6 +189,9 @@ class PlaningPage extends React.Component {
             changeTimeOffFlag,
             changeAllTimeOff,
             openDayOffChangeWindow,
+
+            firstDayOfWeek,
+            dateFormat
         } = this.props;
         const { month, current, users, timeOff, swithcAllTimeOff } = planingReducer;
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff } = this.state;
@@ -158,7 +206,27 @@ class PlaningPage extends React.Component {
             v_week,
             v_add_plan,
             v_time_off,
+            v_filter,
+
+
+            v_summary_report,
+            v_total,
+            v_export,
+            v_today,
+            v_yesterday,
+            v_thisWeek,
+            v_lastWeek,
+            v_thisMonth,
+            v_lastMonth,
+            v_this_year,
+            v_days_up_to_today,
+            v_days_starting_today,
+            lang,
         } = vocabulary;
+
+        const customLocale = localeMap[lang.short];
+        customLocale.options.weekStartsOn = firstDayOfWeek;
+
         return (
             <>
                 <Scrollbars>
@@ -211,6 +279,7 @@ class PlaningPage extends React.Component {
                                         <p>{`${this.totalTracked()}${v_hour_small} ${v_tracked}`}</p>
                                     </div>
                                     <div className="planing-header__add-btn">
+                                        <button onClick={this.changeAddTimeOffFlag}>{v_filter}</button>
                                         <button
                                             style={{ display: 'flex', alignItems: 'center' }}
                                             onClick={this.changeAddPlanFlag}
@@ -222,11 +291,57 @@ class PlaningPage extends React.Component {
 
                                         <button onClick={this.changeAddTimeOffFlag}>{v_time_off}</button>
                                     </div>
+
                                     <div className="planing-header__move-btn">
                                         <button onClick={this.prevMonth}>{v_prev_month}</button>
-                                        <button onClick={this.currentMonth}>{v_current_month}</button>
+                                        <div className="selects_container">
+                                            <div className="select_header" onClick={e => this.openCalendar()}>
+                                                <span>
+                                                {/*{moment(this.props.timeRange.startDate).format(dateFormat)} {' - '}*/}
+                                                    {/*{moment(this.props.timeRange.endDate).format(dateFormat)}*/}
+                                                    Month
+                                                </span>
+                                                <i className="arrow_down" />
+                                            </div>
+                                            {this.state.dateSelect && (
+                                              <div className="select_body" ref={div => (this.datePickerSelect = div)}>
+                                                  <DateRange
+                                                    locale={customLocale}
+                                                    dateDisplayFormat={dateFormat}
+                                                    ranges={[
+                                                        {
+                                                            startDate: this.state.selectionRange.startDate,
+                                                            endDate: this.state.selectionRange.endDate,
+                                                            key: 'selection',
+                                                        },
+                                                    ]}
+                                                    // staticRanges={staticRanges(
+                                                    //   v_today,
+                                                    //   v_yesterday,
+                                                    //   v_thisWeek,
+                                                    //   v_lastWeek,
+                                                    //   v_thisMonth,
+                                                    //   v_lastMonth,
+                                                    //   v_this_year,
+                                                    //   firstDayOfWeek
+                                                    // )}
+                                                    inputRanges={inputRanges(
+                                                      v_days_up_to_today,
+                                                      v_days_starting_today,
+                                                      firstDayOfWeek
+                                                    )}
+                                                    onChange={this.handleSelect}
+                                                    moveRangeOnFirstSelection={true}
+                                                    editableDateInputs={true}
+                                                  />
+                                              </div>
+                                            )}
+                                        </div>
+                                        {/*<button onClick={this.currentMonth}>{v_current_month}</button>*/}
                                         <button onClick={this.nextMonth}>{v_next_month}</button>
                                     </div>
+
+
                                 </div>
                             </div>
 
@@ -323,6 +438,9 @@ const mapStateToProps = state => ({
     planingReducer: state.planingReducer,
     vocabulary: state.languageReducer.vocabulary,
     projectsArray: state.projectReducer.tableData,
+
+    firstDayOfWeek: state.userReducer.firstDayOfWeek,
+    dateFormat: state.userReducer.dateFormat,
 });
 
 const mapDispatchToProps = {

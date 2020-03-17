@@ -5,40 +5,40 @@ import plusPlan from '../../images/plusPlan.svg';
 
 import './style.scss';
 
-const OpendBlock = ({ date, v_hour_small, v_plan }) => {
+const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
     return (
         <div>
             <div
                 style={{
                     position: 'absolute',
-                    left: '5px',
+                    // left: '5px',
                     top: '8px',
-                    margin: 'auto',
-                    padding: '0 10px',
-                    width: '190px',
+                    // margin: 'auto',
+                    // padding: '0 10px',
+                  width: `${Math.floor(widthPlan + 1) * 40 - 2}px`,
                     zIndex: 1,
                     height: '22px',
-                    background: '#474747',
+                    // background: '#474747',
                     display: 'flex',
                 }}
             >
-                <div
+              {date.projects && <div
                     style={{
                         display: 'flex',
                         width: '100%',
-                        justifyContent: 'space-between',
+                        justifyContent: 'flex-start',
                     }}
                 >
                     <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{v_plan}</p>
                     <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${date.projects &&
                         date.planedTotal()} ${v_hour_small}`}</p>
-                </div>
+                </div>}
                 <div
                     style={{
                         position: 'absolute',
                         left: '0',
                         top: `calc(100% + 8px)`,
-                        width: '80%',
+                        width: '100%',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
@@ -49,7 +49,7 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                             <div
                                 key={index}
                                 style={{
-                                    left: '10px',
+                                    // left: '10px',
                                     position: 'relative',
                                     display: 'flex',
                                     justifyContent: 'space-between',
@@ -63,49 +63,50 @@ const OpendBlock = ({ date, v_hour_small, v_plan }) => {
                                 <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${
                                     project.planed
                                 } ${v_hour_small}`}</p>
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        background: project.color,
-                                        width: '15px',
-                                        height: '15px',
-                                        top: '7.5px',
-                                        left: '-7.5px',
-                                        margin: 'auto',
-                                        borderRadius: '50%',
-                                        border: '3px solid #323232',
-                                    }}
-                                />
+                                {/*<div*/}
+                                {/*    style={{*/}
+                                {/*        position: 'absolute',*/}
+                                {/*        background: project.color,*/}
+                                {/*        width: '15px',*/}
+                                {/*        height: '15px',*/}
+                                {/*        top: '7.5px',*/}
+                                {/*        left: '-7.5px',*/}
+                                {/*        margin: 'auto',*/}
+                                {/*        borderRadius: '50%',*/}
+                                {/*        border: '3px solid #323232',*/}
+                                {/*    }}*/}
+                                {/*/>*/}
                             </div>
                         ))}
                     {date.timeOff.map((timeOff, index) => (
                         <div
                             key={index}
                             style={{
-                                left: '10px',
+                                // left: '10px',
+                               width:40,
                                 position: 'relative',
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 background: timeOff.color,
                                 height: '30px',
                                 marginBottom: '15px',
-                                padding: '0 10px',
+                                padding: '0 1px',
                             }}
                         >
                             <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{timeOff.name}</p>
-                            <div
-                                style={{
-                                    position: 'absolute',
-                                    background: timeOff.color,
-                                    width: '15px',
-                                    height: '15px',
-                                    top: '7.5px',
-                                    left: '-7.5px',
-                                    margin: 'auto',
-                                    borderRadius: '50%',
-                                    border: '3px solid #323232',
-                                }}
-                            />
+                            {/*<div*/}
+                            {/*    style={{*/}
+                            {/*        position: 'absolute',*/}
+                            {/*        background: timeOff.color,*/}
+                            {/*        width: '15px',*/}
+                            {/*        height: '15px',*/}
+                            {/*        top: '7.5px',*/}
+                            {/*        left: '-7.5px',*/}
+                            {/*        margin: 'auto',*/}
+                            {/*        borderRadius: '50%',*/}
+                            {/*        border: '3px solid #323232',*/}
+                            {/*    }}*/}
+                            {/*/>*/}
                         </div>
                     ))}
                 </div>

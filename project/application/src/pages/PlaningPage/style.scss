@@ -29,16 +29,20 @@
   &__add-btn,
   &__move-btn {
     display: flex;
+    align-items: center;
     justify-content: space-between;
   }
   &__add-btn  button,
-  &__move-btn button {
+  &__move-btn>button {
     margin: 0 10px;
     height: 33px;
-    font-size: 14px;
+    font-size: 12px;
+    line-height: 16px;
+    font-family: "Open Sans", sans-serif;
     color: #ffffff;
-    background: #02af67;
-    border-radius: 3px;
+    background: #434343;
+    padding: 4px 13px ;
+    //border-radius: 3px;
   }
   &__plus {
     width: 20px;
@@ -174,4 +178,31 @@
     background: url("../../images/icons/delete-person.svg") no-repeat center;
   }
 
+
+}
+.selects_container {
+  position: relative;
+}
+
+.select_body {
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  z-index: 3;
+  background-color: #f5f5f5;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+.select_header {
+  display: flex;
+  align-items: center;
+  font-family: "Open Sans", sans-serif;
+  line-height: normal;
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+
+  .arrow_down{
+    margin: 5px 0 0 5px;
+  }
 }
