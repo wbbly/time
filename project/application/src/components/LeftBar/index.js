@@ -28,7 +28,7 @@ class LeftBar extends Component {
 
     closeMenu = () => {
         const { widthMenu } = this.state;
-        const newWidthMenu = widthMenu - 10;
+        const newWidthMenu = widthMenu - 35;
         if (widthMenu > 48) {
             this.setState({ widthMenu: newWidthMenu });
             requestAnimationFrame(this.closeMenu);
@@ -37,7 +37,7 @@ class LeftBar extends Component {
 
     openMenu = () => {
         const { widthMenu } = this.state;
-        const newWidthMenu = widthMenu + 10;
+        const newWidthMenu = widthMenu + 35;
         if (widthMenu < 188) {
             this.setState({ widthMenu: newWidthMenu });
             requestAnimationFrame(this.openMenu);
@@ -48,11 +48,10 @@ class LeftBar extends Component {
         const { switchMenu , isShowMenu } = this.props;
         if(!isShowMenu) {
             this.closeMenu();
-            cancelAnimationFrame(this.openMenu);
         }else {
-            cancelAnimationFrame(this.closeMenu);
             this.openMenu()
         }
+
         switchMenu();
     };
 
@@ -79,7 +78,7 @@ class LeftBar extends Component {
                             <span className={classNames('show-menu-button-icon', 'icon-menu')} />
                         </button>
                         <Link  to="/timer">
-                            {!isShowMenu && <i  className="logo_small" />}
+                            <i style={{opacity:!isShowMenu?'1':'0'}} className="logo_small" />
                         </Link>
                     </div>
                 )}

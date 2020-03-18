@@ -21,10 +21,6 @@
   justify-content: center;
 }
 
-.user_setting_modal--show_menu{
-  left: 58px!important;
-}
-
 .logout_container div {
   height: 28px;
   padding: 4px 0;
@@ -116,6 +112,10 @@ i.profile_user {
   z-index: 15;
 }
 
+.wrapper_user_menu .user_setting_modal--show_menu{
+  left: 58px;
+}
+
 .user_setting_modal .user_setting_modal_item:hover {
   background-color: #cecece;
 }
@@ -135,4 +135,5 @@ i.profile_user {
     left: unset;
     right: 21px;
   }
+
 }
