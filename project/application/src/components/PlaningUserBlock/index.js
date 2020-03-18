@@ -17,7 +17,7 @@ const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan, switchMonth }) => {
                     display: 'flex',
                 }}
             >
-              {date.projects && widthPlan<3 && <div
+              {date.project && widthPlan<2 && <div
                     style={{
                         display: 'flex',
                         width: '100%',
@@ -39,29 +39,29 @@ const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan, switchMonth }) => {
                         justifyContent: 'flex-start',
                     }}
                 >
-                    {date.projects &&
-                        date.projects.map((project, index) => (
+                    {/*{date.project &&*/}
+                    {/*    date.project.map((project, index) => (*/}
                             <div
-                                key={index}
+                                // key={index}
                                 style={{
                                     // left: '10px',
                                     position: 'relative',
                                     display: 'flex',
                                     justifyContent: 'space-between',
-                                    background: project.color,
+                                    background: date.project.project_color.name,
                                     height: '30px',
                                     marginBottom: '15px',
                                     padding: '0 10px',
                                 }}
                             >
-                                <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{project.name}</p>
+                                <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{date.project.name}</p>
                                 <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${
-                                    project.planed
+                                    date.duration
                                 } ${v_hour_small}`}</p>
                                 {/*<div*/}
                                 {/*    style={{*/}
                                 {/*        position: 'absolute',*/}
-                                {/*        background: project.color,*/}
+                                {/*        background: date.project.project_color.name,*/}
                                 {/*        width: '15px',*/}
                                 {/*        height: '15px',*/}
                                 {/*        top: '7.5px',*/}
@@ -72,8 +72,8 @@ const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan, switchMonth }) => {
                                 {/*    }}*/}
                                 {/*/>*/}
                             </div>
-                        ))}
-                    {date.timeOff.map((timeOff, index) => (
+                        {/*))}*/}
+                    {date.timer_off && date.timer_off.map((timeOff, index) => (
                         <div
                             key={index}
                             style={{
@@ -220,7 +220,8 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
     const [dataClick, setOpen] = useState(false);
 
   const [isWeek, setIsWeek] = useState(true);
-
+   console.log(user)
+  console.log(month)
     return (
         <div className="user-block">
             <div
@@ -258,7 +259,7 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                                             id={`middle_${day.fullDate}`}
                                             style={{
                                                 width: !switchMonth?'166px':'40px',
-                                                height: '100%',
+                                                height: '100px',
                                                 position: 'relative',
                                                 cursor: 'pointer',
                                                 border: '1px solid #1F1F1F',
@@ -275,23 +276,33 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                                             {day.fullDate === dataClick && (
                                                 <AddPlun changeAddPlanFlag={changeAddPlanFlag} />
                                             )}
-                                            {user.shedule.map(
-                                                (date, index) =>
-                                                    moment(date.dateStart).format('L') ===
-                                                        moment(day.fullDate).format('L') &&
-                                                    week.week.find(el => {
-                                                        return (
-                                                            moment(date.dateStart).format('L') ===
-                                                            moment(el.fullDate).format('L')
-                                                        );
-                                                    }) ? (
+                                          {/*{user.timer_plannings.map(*/}
+                                            {user.timer_plannings.map(
+                                                // (date, index) =>
+                                                //     moment(date.dateStart).format('L') ===
+                                                //         moment(day.fullDate).format('L') &&
+                                                //     week.week.find(el => {
+                                                //         return (
+                                                //             moment(date.dateStart).format('L') ===
+                                                //             moment(el.fullDate).format('L')
+                                                //         );
+                                                //     }) ? (
+                                              (date, index) =>
+                                                moment(date.start_date).format('L') ===
+                                                moment(day.fullDate).format('L') &&
+                                                week.week.find(el => {
+                                                  return (
+                                                    moment(date.start_date).format('L') ===
+                                                    moment(el.fullDate).format('L')
+                                                  );
+                                                }) ? (
                                                         user ? (
                                                             <OpendBlock
                                                                 key={index}
                                                                 date={date}
                                                                 widthPlan={
-                                                                    (new Date(date.dateEnd) -
-                                                                        new Date(date.dateStart)) /
+                                                                    (new Date(date.end_date) -
+                                                                        new Date(date.start_date)) /
                                                                     (1000 * 60 * 60 * 24)
                                                                 }
                                                                 v_plan={v_plan}
@@ -303,8 +314,8 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                                                                 key={index}
                                                                 date={date}
                                                                 widthPlan={
-                                                                    (new Date(date.dateEnd) -
-                                                                        new Date(date.dateStart)) /
+                                                                    (new Date(date.end_date) -
+                                                                        new Date(date.start_date)) /
                                                                     (1000 * 60 * 60 * 24)
                                                                 }
                                                                 v_hour_small={v_hour_small}

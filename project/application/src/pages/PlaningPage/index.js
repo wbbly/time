@@ -53,6 +53,9 @@ const localeMap = {
 };
 class PlaningPage extends React.Component {
     state = {
+        userData: null,
+        timerPlaningList: null,
+
         showAddUser: false,
         showAddPlan: false,
         showTimeOff: false,
@@ -71,8 +74,76 @@ class PlaningPage extends React.Component {
     componentDidMount() {
         moment.locale(`${this.props.user.language}`);
         this.props.currentMonth();
+        this.getTimerPlaningList();
         this.getProjects();
     }
+
+    getUsersByCurrentTeam = async () => {
+        apiCall(AppConfig.apiURL + `team/current/detailed-data`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            result => {
+                const teamUsers = result.data.team[0].team_users;
+                const users = teamUsers.map(teamUser => teamUser.user[0]);
+                this.setState({ userData: users });
+                //todo add this users to reducer maybe
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
+                }
+            }
+        );
+    };
+
+    getTimerPlaningList = () => {
+        apiCall(AppConfig.apiURL + `team/current/detailed-data`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            result => {
+                const teamUsers = result.data.team[0].team_users;
+                const users = teamUsers.map(teamUser => teamUser.user[0]);
+                this.setState({ userData: users });
+                //todo add this users to reducer maybe
+                //todo split requests
+                apiCall(AppConfig.apiURL + `timer-planning/list`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userIds: users.map(user => user.id),
+                        startDate: moment()
+                            .startOf('month')
+                            .format('YYYY-MM-DD'),
+                        endDate: moment()
+                            .endOf('month')
+                            .format('YYYY-MM-DD'),
+                        //todo enter valid dates
+                    }),
+                }).then(result => {
+                    this.setState({
+                        timerPlaningList: result.data,
+                    });
+                });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
+                }
+            }
+        );
+    };
 
     getProjects = () =>
         apiCall(AppConfig.apiURL + `project/list?withTimerList=true`, {
@@ -190,18 +261,17 @@ class PlaningPage extends React.Component {
     closeDropdown = e => {
         if (this.datePickerSelect && !this.datePickerSelect.contains(e.target)) {
             this.setState(
-              {
-                  dateSelect: !this.state.dateSelect,
-              },
-              () => {
-                  document.removeEventListener('click', this.closeDropdown);
-              }
+                {
+                    dateSelect: !this.state.dateSelect,
+                },
+                () => {
+                    document.removeEventListener('click', this.closeDropdown);
+                }
             );
         }
     };
 
     handleSelect = ranges => {
-        console.log(ranges)
         this.setState({ selectionRange: ranges.selection });
         // this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
         // this.applySearch(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
@@ -382,8 +452,8 @@ class PlaningPage extends React.Component {
                                     <div className="month-container">
                                         <div className="month-container__weeks-block">
                                             {month.map((week, index) => (
-                                              ((!switchMonth && index ===this.state.week) || switchMonth) &&
-                                                <div className={classNames('month-container__week', { 'month-container__week_one': !switchMonth })}  key={index}>
+                                              ((!switchMonth && index === this.state.week) || switchMonth) &&
+                                                <div className={classNames('month-container__week', { 'month-container__week_one': !switchMonth })}   key={index}>
                                                     <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
                                                         {`${v_week} ${week.weekCount} / ${moment(current).format(
                                                             'MMM'
@@ -391,6 +461,7 @@ class PlaningPage extends React.Component {
                                                     </h2>
                                                     <div className="month-container__days-block">
                                                         {week.week.map((day, index) => (
+
                                                             <div className={classNames('month-container__day', { 'month-container__day_one': !switchMonth })}  key={index}>
                                                                 <div
                                                                     style={{
@@ -409,7 +480,7 @@ class PlaningPage extends React.Component {
                                             ))}
                                         </div>
                                     </div>
-                                    {users.map(user => (
+                                    {this.state.timerPlaningList && this.state.timerPlaningList.user.map(user => (
                                         <PlaningUserBlock
                                             key={user.id}
                                             month={month}
