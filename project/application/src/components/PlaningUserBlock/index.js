@@ -5,14 +5,14 @@ import plusPlan from '../../images/plusPlan.svg';
 
 import './style.scss';
 
-const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
+const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan, switchMonth }) => {
     return (
         <div>
             <div
                 style={{
                     position: 'absolute',
                     top: '8px',
-                  width: `${Math.floor(widthPlan + 1) * 40 - 2}px`,
+                    width: !switchMonth?`${Math.floor(widthPlan + 1) * 188 - 2}px`:`${Math.floor(widthPlan + 1) * 40 - 2}px`,
                     zIndex: 1,
                     display: 'flex',
                 }}
@@ -77,7 +77,7 @@ const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
                         <div
                             key={index}
                             style={{
-                                width:40,
+                                width:!switchMonth?164:40,
                                 position: 'relative',
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -209,7 +209,8 @@ const AddPlun = ({ changeAddPlanFlag }) => {
     );
 };
 
-const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAddPlanFlag }) => {
+const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAddPlanFlag, switchMonth, numberWeek }) => {
+
     useEffect(
         () => {
             addUser();
@@ -217,6 +218,9 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
         [user]
     );
     const [dataClick, setOpen] = useState(false);
+
+  const [isWeek, setIsWeek] = useState(true);
+
     return (
         <div className="user-block">
             <div
@@ -224,6 +228,7 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                 style={{ display: 'flex', borderBottom: '1px solid #1F1F1F', marginLeft: '-10px' }}
             >
                 {month.map((week, index) => (
+                  ((!switchMonth && index === numberWeek) || switchMonth) &&
                     <div
                         key={index}
                         style={{
@@ -235,6 +240,7 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                             <div
                                 id={`week_${week.week[0].fullDate}`}
                                 style={{
+                                    overflow:!switchMonth?'hidden':'',
                                     display: 'flex',
                                     position: 'relative',
                                     // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
@@ -243,13 +249,15 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                                 }}
                             >
                                 {week.week.map((day, index) => {
-                                    console.log(week);
+                                  // console.log(month[0].week);
+                                  // index === 0 && console.log(week[0]);
+                                  // console.log(week);
                                     return (
                                         <div
                                             key={index}
                                             id={`middle_${day.fullDate}`}
                                             style={{
-                                                width: '40px',
+                                                width: !switchMonth?'166px':'40px',
                                                 height: '100%',
                                                 position: 'relative',
                                                 cursor: 'pointer',
@@ -288,6 +296,7 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                                                                 }
                                                                 v_plan={v_plan}
                                                                 v_hour_small={v_hour_small}
+                                                                switchMonth={switchMonth}
                                                             />
                                                         ) : (
                                                             <ClosedBlock

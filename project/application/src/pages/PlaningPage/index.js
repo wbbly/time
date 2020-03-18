@@ -24,6 +24,7 @@ import {
     changeTimeOffFlag,
     changeAllTimeOff,
     openDayOffChangeWindow,
+    switch_Month
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -42,6 +43,7 @@ import { de, enGB, it, ru, ua } from "react-date-range/dist/locale";
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
 import { getCurrentDate } from "../../services/timeService"; // theme css file
+import classNames from 'classnames';
 const localeMap = {
     ru: ru,
     en: enGB,
@@ -63,6 +65,7 @@ class PlaningPage extends React.Component {
             endDate: getCurrentDate(),
             key: 'selection',
         },
+        week:0
     };
 
     componentDidMount() {
@@ -92,13 +95,35 @@ class PlaningPage extends React.Component {
         );
 
     nextMonth = () => {
-        this.props.nextMonth();
+
+        if(!this.props.planingReducer.switchMonth) {
+            this.setState({week:this.state.week +1})
+            if(this.state.week===4){
+                this.props.nextMonth();
+                this.setState({week:0})
+            }
+        }else {
+            this.props.nextMonth();
+        }
     };
     prevMonth = () => {
-        this.props.prevMonth();
+        if(!this.props.planingReducer.switchMonth) {
+            this.setState({week:this.state.week -1})
+            if(this.state.week===0){
+                this.props.prevMonth();
+                this.setState({week:4})
+            }
+        }else {
+            this.props.prevMonth();
+        }
+
     };
     currentMonth = () => {
         this.props.currentMonth();
+    };
+
+    switch_Month = () => {
+        this.props.switch_Month();
     };
 
     totalPlaned = () => {
@@ -157,7 +182,8 @@ class PlaningPage extends React.Component {
 
 
     openCalendar() {
-        this.setState({ dateSelect: !this.state.dateSelect });
+        this.switch_Month();
+        // this.setState({ dateSelect: !this.state.dateSelect });
         document.addEventListener('click', this.closeDropdown);
     }
 
@@ -175,6 +201,7 @@ class PlaningPage extends React.Component {
     };
 
     handleSelect = ranges => {
+        console.log(ranges)
         this.setState({ selectionRange: ranges.selection });
         // this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
         // this.applySearch(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
@@ -193,7 +220,8 @@ class PlaningPage extends React.Component {
             firstDayOfWeek,
             dateFormat
         } = this.props;
-        const { month, current, users, timeOff, swithcAllTimeOff } = planingReducer;
+        const { month, current, users, timeOff, swithcAllTimeOff, switchMonth } = planingReducer;
+        console.log(month)
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff } = this.state;
         const {
             v_resource_planing,
@@ -260,13 +288,13 @@ class PlaningPage extends React.Component {
                                                 <i />
                                             </div>
                                         </div>
-                                        <div className="aside-bar__show-btn">
-                                            <i
-                                                id={user.id}
-                                                onClick={this.changeUserOpenFlag}
-                                                className={user.openFlag ? 'arrow_up' : 'arrow_down'}
-                                            />
-                                        </div>
+                                        {/*<div className="aside-bar__show-btn">*/}
+                                        {/*    <i*/}
+                                        {/*        id={user.id}*/}
+                                        {/*        onClick={this.changeUserOpenFlag}*/}
+                                        {/*        className={user.openFlag ? 'arrow_up' : 'arrow_down'}*/}
+                                        {/*    />*/}
+                                        {/*</div>*/}
                                     </div>
                                 ))}
                             </div>
@@ -300,7 +328,7 @@ class PlaningPage extends React.Component {
                                                 <span>
                                                 {/*{moment(this.props.timeRange.startDate).format(dateFormat)} {' - '}*/}
                                                     {/*{moment(this.props.timeRange.endDate).format(dateFormat)}*/}
-                                                    Month
+                                                    {switchMonth?'Month':'Week'}
                                                 </span>
                                                 <i className="arrow_down" />
                                             </div>
@@ -326,14 +354,16 @@ class PlaningPage extends React.Component {
                                                     //   v_this_year,
                                                     //   firstDayOfWeek
                                                     // )}
-                                                    inputRanges={inputRanges(
-                                                      v_days_up_to_today,
-                                                      v_days_starting_today,
-                                                      firstDayOfWeek
-                                                    )}
+                                                    // focusedRange={[0,-1]}
+                                                    // initialFocusedRange={[this.state.selectionRange.startDate,3]}
+                                                    // inputRanges={inputRanges(
+                                                    //   v_days_up_to_today,
+                                                    //   v_days_starting_today,
+                                                    //   firstDayOfWeek
+                                                    // )}
                                                     onChange={this.handleSelect}
-                                                    moveRangeOnFirstSelection={true}
-                                                    editableDateInputs={true}
+                                                    // moveRangeOnFirstSelection={true}
+                                                    // editableDateInputs={true}
                                                   />
                                               </div>
                                             )}
@@ -352,7 +382,8 @@ class PlaningPage extends React.Component {
                                     <div className="month-container">
                                         <div className="month-container__weeks-block">
                                             {month.map((week, index) => (
-                                                <div className="month-container__week" key={index}>
+                                              ((!switchMonth && index ===this.state.week) || switchMonth) &&
+                                                <div className={classNames('month-container__week', { 'month-container__week_one': !switchMonth })}  key={index}>
                                                     <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
                                                         {`${v_week} ${week.weekCount} / ${moment(current).format(
                                                             'MMM'
@@ -360,7 +391,7 @@ class PlaningPage extends React.Component {
                                                     </h2>
                                                     <div className="month-container__days-block">
                                                         {week.week.map((day, index) => (
-                                                            <div className="month-container__day" key={index}>
+                                                            <div className={classNames('month-container__day', { 'month-container__day_one': !switchMonth })}  key={index}>
                                                                 <div
                                                                     style={{
                                                                         fontSize: '1em',
@@ -386,6 +417,8 @@ class PlaningPage extends React.Component {
                                             addUser={addUser}
                                             {...vocabulary}
                                             changeAddPlanFlag={this.changeAddPlanFlag}
+                                            switchMonth={switchMonth}
+                                            numberWeek={this.state.week}
                                         />
                                     ))}
                                 </div>
@@ -455,6 +488,8 @@ const mapDispatchToProps = {
     changeTimeOffFlag,
     changeAllTimeOff,
     openDayOffChangeWindow,
+
+    switch_Month
 };
 
 export default connect(
