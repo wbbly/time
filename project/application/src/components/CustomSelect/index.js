@@ -21,7 +21,7 @@ class CustomSelect extends React.Component {
         if (this.props.addDays) {
             this.props.onChange(this.props.name, this.props.options.find(el => el.id === e.target.id).colorName);
         } else {
-            this.props.onChange(this.props.name, this.props.options.find(el => el.id === e.target.id).name, e.target.id);
+            this.props.onChange(this.props.name, this.props.options.find(el => el.id === e.target.id).name);
         }
         this.props.onBlur(this.props.name, true);
     };
@@ -33,6 +33,7 @@ class CustomSelect extends React.Component {
     render() {
         const { options, value, error, addDays, placeholder, className } = this.props;
         const { isOpenDropdown } = this.state;
+        console.log(value);
         return (
             <div className="dropdown">
                 <div className="dropbtn" style={{ border: error ? '1px solid red' : null }} onClick={this.openDropdown}>

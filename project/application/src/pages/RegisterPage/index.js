@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Services
 import { signUp } from '../../configAPI';
-import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 
 // Components
 import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
@@ -60,7 +59,7 @@ class RegisterPage extends Component {
         const { emailFromRedirect } = this.state;
         const { vocabulary } = this.props;
         const { v_already_have_an_account, v_log_in, v_registration_terms_and_policy } = vocabulary;
-        if (getTokenFromLocalStorage()) return <Redirect to={'/timer'} />;
+
         return (
             <div className={classNames('register-block', { 'register-block--mobile': true })}>
                 <div className="fixed_right_corner">

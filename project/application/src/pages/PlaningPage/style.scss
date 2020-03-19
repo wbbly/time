@@ -82,15 +82,10 @@
   &__week {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     max-width: 280px;
     min-width: 280px;
     height: 55px;
     //margin: 0 10px;
-  }
-
-  &__week_one {
-    max-width: initial;
   }
 
   &__days-block {
@@ -103,10 +98,6 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-  }
-
-  &__day_one {
-    width: 166px;
   }
 }
 

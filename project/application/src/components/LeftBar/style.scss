@@ -14,37 +14,9 @@
   overflow-y: auto;
 }
 
-.header-nav{
-  display: flex;
-  margin-bottom: 3.5rem;
-
-  a{
-    width: 100%;
-  }
-}
-
-.show-menu-button-icon {
-  color: #ffffff;
-  font-size: 2rem;
-}
-
-.icon-menu:before {
-  content: "\e901";
-}
-
-.show-menu-button {
-  cursor: pointer;
-  padding: 0 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: none;
-  outline: none;
-  border: none;
-}
-
 .logo_small {
   display: block;
+  margin-bottom: 3.5rem;
   height: 26px;
   background: url("../../images/icons/logo.svg") no-repeat center;
   background-size: 111px;
