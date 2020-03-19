@@ -27,6 +27,7 @@
 
   .logged {
     flex: 1;
+    margin-bottom: 10px;
     //height: 20px;
 
     &__title {
@@ -88,7 +89,13 @@
     .project-title {
       color: white;
       font-size: 10px;
-      font-weight: bold;
+      font-weight: 500;
+      position: absolute;
+      width: max-content;
+      padding: 5px 3px;
+      top: 0;
+      left: 0;
+      margin: 0;
     }
 
     .cell-container {
@@ -98,7 +105,8 @@
       .cell {
         box-sizing: content-box;
         position: relative;
-        width: 40px;
+        width: 38px;
+        min-width: 38px;
         display: flex;
         justify-content: center;
         align-items: center;

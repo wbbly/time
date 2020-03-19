@@ -172,6 +172,7 @@ class PlaningPage extends React.Component {
                     }));
 
 
+                    //modify logged array by projectId
                     users.forEach((user, i) => user.logged.forEach((log, y) => {
                         let matchedLogIndex = logged.findIndex(l => l.projectId === log.project_id);
                         if (matchedLogIndex !== -1) {
@@ -196,43 +197,64 @@ class PlaningPage extends React.Component {
                         }
                     }));
 
-                    users.forEach((user, i) => {
-                        user.logged.forEach((log, y) => {
-                           let timeEntries = [];
+                    users.forEach((user, i) => user.logged.forEach((log, y) => {
 
-                           log.timeEntries.forEach(entry => {
-                               let findIndex = timeEntries.findIndex(e => e.formattedDate === moment(entry.startDatetime).format('YYYY-MM-DD'))
-                               if(findIndex !== -1){
+                            //add formattedDate and projectId keys
+                            let timeEntries = [];
+                            log.timeEntries.forEach(entry => {
+                                let findIndex = timeEntries.findIndex(e => e.formattedDate === moment(entry.startDatetime).format('YYYY-MM-DD'))
+                                if (findIndex !== -1) {
                                     timeEntries[findIndex].entries.push(entry);
-                               } else {
-                                   timeEntries.push(
-                                       {
-                                           formattedDate: moment(entry.startDatetime).format('YYYY-MM-DD'),
-                                           projectId: users[i].logged[y].projectId,
-                                           entries: [entry]
-                                       }
-                                   )
-                               }
-                           });
+                                } else {
+                                    timeEntries.push(
+                                        {
+                                            formattedDate: moment(entry.startDatetime).format('YYYY-MM-DD'),
+                                            projectId: users[i].logged[y].projectId,
+                                            entries: [entry]
+                                        }
+                                    )
+                                }
+                            });
 
+                            //count total time
                             timeEntries.forEach((entry, i) => {
                                 let totalTime = 0;
                                 entry.entries.forEach((e) => {
                                     totalTime += +moment(e.endDatetime) - +moment(e.startDatetime);
                                 });
-                                timeEntries[i].totalTime = moment(totalTime).format('H');
+                                timeEntries[i].totalTime = +moment(totalTime).format('H');
+                            });
+
+                            //create groups of inextricable days
+                            let timeGroups = [];
+                            timeEntries.forEach((entry, i) => {
+                                if (i === 0) {
+                                    return timeGroups.push({
+                                        ...entry,
+                                        days: [entry],
+                                    })
+                                }
+                                const dateDiff = moment(entry.formattedDate).diff(moment(timeEntries[i - 1].formattedDate), 'days');
+
+                                if (dateDiff === 1) {
+                                    timeGroups[timeGroups.length - 1].totalTime += entry.totalTime;
+                                    timeGroups[timeGroups.length - 1].days.push(entry);
+                                } else {
+                                    timeGroups.push({
+                                        ...entry,
+                                        days: [entry],
+                                    })
+                                }
+
                             });
 
                             users[i].logged[y] = {
-                                timeEntries,
+                                timeGroups,
                                 ...users[i].logged[y].project,
                                 projectId: users[i].logged[y].projectId,
                             };
                         })
-                    });
-
-
-
+                    );
 
 
                     console.log({users})
@@ -249,27 +271,6 @@ class PlaningPage extends React.Component {
                 }
             }
         );
-    };
-
-    splitTimersByDay = (timers = []) => {
-        const formattedLogsDates = [];
-        const formattedLogsDatesValues = [];
-
-        for (let i = 0; i < timers.length; i++) {
-            const date = moment(timers[i].startDatetime).format('YYYY-MM-DD');
-            let index = formattedLogsDates.indexOf(date);
-            if (index === -1) {
-                formattedLogsDates.push(date);
-                index = formattedLogsDates.length - 1;
-            }
-
-            if (typeof formattedLogsDatesValues[index] === 'undefined') {
-                formattedLogsDatesValues[index] = [];
-            }
-
-            formattedLogsDatesValues[index].push(timers[i]);
-        }
-        return formattedLogsDatesValues;
     };
 
     getProjects = () =>
