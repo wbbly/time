@@ -15,7 +15,7 @@ import './style.scss';
 import { stopTimerSocket, startTimerSocket, updateTimerSocket } from '../../configSocket';
 import ProjectsListPopup from '../ProjectsListPopup';
 
-const PlayIcon = props => {
+export const PlayIcon = props => {
     const { className, onClick } = props;
     return (
         <svg className={className} onClick={onClick} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,7 +30,7 @@ const PlayIcon = props => {
     );
 };
 
-const StopIcon = props => {
+export const StopIcon = props => {
     const { className, onClick } = props;
     return (
         <svg className={className} onClick={onClick} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -138,7 +138,9 @@ class AddTask extends Component {
             issue: value,
         });
 
-        if (currentTimer && value.trim() && currentTimer.issue !== value.trim()) {
+        if (!!currentTimer && currentTimer.issue === value.trim()) {
+            this.setState({ isUpdating: false }, () => this.updateTaskIssueDebounced.cancel());
+        } else if (!!currentTimer && currentTimer.issue !== value.trim() && value.trim()) {
             this.setState({ isUpdating: true }, () => this.updateTaskIssueDebounced());
         }
     };

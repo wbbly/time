@@ -13,6 +13,7 @@ import UserMenu from '../UserMenu';
 
 // Styles
 import './style.scss';
+import { switchMenu } from '../../actions/ResponsiveActions';
 
 class LeftBar extends Component {
     renderTimer = () => {
@@ -22,21 +23,31 @@ class LeftBar extends Component {
         }
     };
 
+    swithMenuHandle = () => {
+        const { switchMenu } = this.props;
+        switchMenu();
+    };
+
     render() {
         const { switchMenu, isMobile, vocabulary, currentTeam } = this.props;
         const { v_timer, v_reports, v_projects, v_team, v_clients, v_planning } = vocabulary;
         return (
             <div className={classNames('wrapper', { 'wrapper--mobile': isMobile })}>
                 {!isMobile && (
-                    <Link onClick={switchMenu} to="/timer">
-                        <i className="logo_small" />
-                    </Link>
+                    <div className="header-nav">
+                        <button onClick={this.swithMenuHandle} className="show-menu-button">
+                            <span className={classNames('show-menu-button-icon', 'icon-menu')} />
+                        </button>
+                        <Link onClick={switchMenu} to="/timer">
+                            <i className="logo_small" />
+                        </Link>
+                    </div>
                 )}
 
                 <div className="navigation_links_container">
                     <NavLink
                         activeClassName="active-link"
-                        onClick={switchMenu}
+                        onClick={isMobile && switchMenu}
                         to="/timer"
                         style={{ textDecoration: 'none' }}
                     >
@@ -52,7 +63,7 @@ class LeftBar extends Component {
                             const { match } = this.props;
                             return match.path.indexOf('/reports') >= 0;
                         }}
-                        onClick={switchMenu}
+                        onClick={isMobile && switchMenu}
                         to="/reports/summary"
                         style={{ textDecoration: 'none' }}
                     >
@@ -63,7 +74,7 @@ class LeftBar extends Component {
                     </NavLink>
                     <NavLink
                         activeClassName="active-link"
-                        onClick={switchMenu}
+                        onClick={isMobile && switchMenu}
                         to="/projects"
                         style={{ textDecoration: 'none' }}
                     >
@@ -75,7 +86,7 @@ class LeftBar extends Component {
                     {checkIsAdminByRole(currentTeam.data.role) && (
                         <NavLink
                             activeClassName="active-link"
-                            onClick={switchMenu}
+                            onClick={isMobile && switchMenu}
                             to="/clients"
                             style={{ textDecoration: 'none' }}
                         >
@@ -88,7 +99,7 @@ class LeftBar extends Component {
                     <div className="wrapper-position-add-team">
                         <NavLink
                             activeClassName="active-link"
-                            onClick={switchMenu}
+                            onClick={isMobile && switchMenu}
                             to="/team"
                             style={{ textDecoration: 'none' }}
                         >
@@ -124,4 +135,13 @@ const mapStateToProps = state => ({
     timerTick: state.mainPageReducer.timerTick,
 });
 
-export default withRouter(connect(mapStateToProps)(LeftBar));
+const mapDispatchToProps = {
+    switchMenu,
+};
+
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(LeftBar)
+);

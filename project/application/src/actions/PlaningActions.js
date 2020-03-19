@@ -11,6 +11,8 @@ export const CHANGE_MAIN_TIME_OFF_SWITCH = 'CHANGE_ALL_TIME_OFF';
 export const CHANGE_ALL_USER_TIME_OFF = 'CHANGE_ALL_USER_TIME_OFF';
 export const OPEN_DAY_OFF_CHANGE_WINDOW = 'OPEN_DAY_OFF_CHANGE_WINDOW';
 
+export const SWITCH_MONTH = 'SWITCH_MONTH';
+
 export const openDayOffChangeWindow = payload => ({
     type: OPEN_DAY_OFF_CHANGE_WINDOW,
     payload,
@@ -51,6 +53,10 @@ export const currentMonth = () => {
 
 export const createMonthArray = () => ({
     type: CREATE_MONTH_ARRAY,
+});
+
+export const switch_Month = () => ({
+    type: SWITCH_MONTH,
 });
 
 export const addUser = payload => ({

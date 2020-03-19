@@ -10,12 +10,13 @@ import {
     CHANGE_USER_TIME_OFF,
     CHANGE_MAIN_TIME_OFF_SWITCH,
     CHANGE_ALL_USER_TIME_OFF,
-    OPEN_DAY_OFF_CHANGE_WINDOW,
-} from '../actions/PlaningActions';
+    OPEN_DAY_OFF_CHANGE_WINDOW, SWITCH_MONTH
+} from "../actions/PlaningActions";
 
 import moment from 'moment';
 
 const defaultState = {
+    switchMonth:true,
     current: null,
     month: [],
     users: [
@@ -630,6 +631,13 @@ export const planingReducer = (state = defaultState, action) => {
             return {
                 ...state,
                 users: newUsersArray,
+            };
+        }
+
+        case SWITCH_MONTH: {
+            return {
+                ...state,
+                switchMonth: !state.switchMonth,
             };
         }
 
