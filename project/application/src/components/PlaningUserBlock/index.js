@@ -216,15 +216,7 @@ const AddPlun = ({changeAddPlanFlag}) => {
     );
 };
 
-const LoggedBlock = ({log, v_hour_small, widthPlan = 1, entry, logIndex, entryIndex}) => {
-    // widthPlan = Math.floor(widthPlan) + 1;
-    // const taskDuration = moment(moment(log.start_datetime) - moment(log.end_datetime)).format('H');
-    let showName = true;
-
-    if(entryIndex > 0){
-        const dayDiff = moment(entry.formattedDate).diff(moment(log.timeEntries[entryIndex - 1].formattedDate), 'days');
-        showName = dayDiff !== 1 ;
-    }
+const LoggedBlock = ({log, v_hour_small, entry, logIndex,}) => {
 
     return (
         <div
@@ -235,16 +227,19 @@ const LoggedBlock = ({log, v_hour_small, widthPlan = 1, entry, logIndex, entryIn
             }}
         >
             <div className="container">
-                {showName &&<p className="project-title">{log.name}</p>}
+                <p className="project-title">{log.name} / {`${entry.totalTime}${v_hour_small}`}</p>
                 <div className="cell-container">
+                    {entry.days.map((day, i) => (
                         <div
+                            key={day}
                             className="cell"
                             style={{
                                 background: log.project_color.name,
                             }}
                         >
-                            <p className="day-hour">{`${entry.totalTime}${v_hour_small}`}</p>
+                            <p className="day-hour">{`${day.totalTime}${v_hour_small}`}</p>
                         </div>
+                    ))}
                 </div>
             </div>
         </div>
@@ -397,7 +392,7 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                                         >
                                             {user.logged.map((log, logIndex) =>
 
-                                                log.timeEntries.map((entry, entryIndex) =>
+                                                log.timeGroups.map((entry, entryIndex) =>
 
                                                     moment(entry.formattedDate).format('L') ===
                                                     moment(day.fullDate).format('L') &&
@@ -410,43 +405,15 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                                                         <>
                                                             <LoggedBlock
                                                                 key={index}
-                                                                entryIndex={entryIndex}
                                                                 logIndex={logIndex}
                                                                 log={log}
                                                                 entry={entry}
-                                                                v_plan={v_plan}
                                                                 v_hour_small={v_hour_small}
                                                             />
                                                         </>
                                                     ) : null
                                                 )
                                             )}
-                                            {/*{user.logged.map(*/}
-                                            {/*    (log, index) =>*/}
-                                            {/*        moment(log.timeEntries[0].formattedDate).format('L') ===*/}
-                                            {/*        moment(day.fullDate).format('L') &&*/}
-                                            {/*        week.week.find(el => {*/}
-                                            {/*            return (*/}
-                                            {/*                moment(log.timeEntries[0].formattedDate).format('L') ===*/}
-                                            {/*                moment(el.fullDate).format('L')*/}
-                                            {/*            );*/}
-                                            {/*        }) ? (*/}
-                                            {/*            <>*/}
-                                            {/*                <LoggedBlock*/}
-                                            {/*                    user={user}*/}
-                                            {/*                    key={index}*/}
-                                            {/*                    log={log}*/}
-                                            {/*                    // widthPlan={*/}
-                                            {/*                    //     (new Date(log.end_datetime) -*/}
-                                            {/*                    //         new Date(log.start_datetime)) /*/}
-                                            {/*                    //     (1000 * 60 * 60 * 24)*/}
-                                            {/*                    // }*/}
-                                            {/*                    v_plan={v_plan}*/}
-                                            {/*                    v_hour_small={v_hour_small}*/}
-                                            {/*                />*/}
-                                            {/*            </>*/}
-                                            {/*        ) : null*/}
-                                            {/*)}*/}
                                         </div>
                                     );
                                 })}
