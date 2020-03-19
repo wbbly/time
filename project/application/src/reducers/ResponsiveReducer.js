@@ -11,7 +11,7 @@ const initialState = {
         width: 0,
         height: 0,
     },
-    isShowMenu: true,
+    isShowMenu: false,
     isMobile: false,
     swipedTask: null,
     scrollTo: null,

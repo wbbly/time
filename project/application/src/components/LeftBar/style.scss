@@ -34,7 +34,7 @@
 
 .show-menu-button {
   cursor: pointer;
-  padding: 0 1.5rem;
+  padding: 0 0 0 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -112,6 +112,18 @@ i {
   cursor: pointer;
 }
 
+.navigation_links-hide_menu{
+  padding-left: 16.5px;
+
+  .links_text{
+    display: none;
+  }
+
+  .timer_task{
+    display: none;
+  }
+}
+
 .navigation_links:hover {
   background: #4f4f4f;
 }
@@ -169,6 +181,11 @@ a {
 @media (min-width: 1024px) {
   .wrapper {
     width: 188px;
+  }
+
+  .wrapper_hide{
+    width: 48px;
+    overflow: hidden;
   }
 
   .wrapper-position-add-team {
