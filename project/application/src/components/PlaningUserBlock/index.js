@@ -5,49 +5,50 @@ import plusPlan from '../../images/plusPlan.svg';
 
 import './style.scss';
 
-const OpendBlock = ({date, v_hour_small, v_plan, widthPlan}) => {
+const OpendBlock = ({date, v_hour_small, v_plan, widthPlan, indexHeight, project }) => {
     console.log({date}, {widthPlan})
     return (
         <div>
             <div
                 style={{
+                    marginTop:8,
                     position: 'absolute',
-                    top: '8px',
+                    top: 38 * indexHeight,
                     width: `${Math.floor(widthPlan + 1) * 40 - 2}px`,
                     zIndex: 1,
                     display: 'flex',
                 }}
             >
-                {date.project &&
-                widthPlan < 3 && (
-                    <div
-                        style={{
-                            display: 'flex',
-                            width: '100%',
-                            justifyContent: 'flex-start',
-                        }}
-                    >
-                        <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}>
-                            {v_plan}
-                        </p>
-                        {/*<p*/}
-                        {/*    style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}*/}
-                        {/*>{`${date.project && date.planedTotal()} ${v_hour_small}`}</p>*/}
-                    </div>
-                )}
+                {/*{date.project &&*/}
+                {/*widthPlan < 3 && (*/}
+                {/*    <div*/}
+                {/*        style={{*/}
+                {/*            display: 'flex',*/}
+                {/*            width: '100%',*/}
+                {/*            justifyContent: 'flex-start',*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}>*/}
+                {/*            {v_plan}*/}
+                {/*        </p>*/}
+                {/*        /!*<p*!/*/}
+                {/*        /!*    style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}*!/*/}
+                {/*        /!*>{`${date.project && date.planedTotal()} ${v_hour_small}`}</p>*!/*/}
+                {/*    </div>*/}
+                {/*)}*/}
                 <div
                     style={{
                         position: 'absolute',
                         left: '0',
-                        top: `calc(100% + 8px)`,
+                        // top: `calc(100% + 8px)`,
                         width: '100%',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
                     }}
                 >
-                    {/*{date.project &&*/}
-                    {/*// date.project.map((project, index) => (*/}
+                    {/*{date.projects &&*/}
+                    {/*date.projects.map((project, index) => (*/}
                         <div
                             // key={index}
                             style={{
@@ -55,13 +56,13 @@ const OpendBlock = ({date, v_hour_small, v_plan, widthPlan}) => {
                                 position: 'relative',
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                background: date.project.project_color.name,
+                                background: project.project_color.name,
                                 height: '30px',
                                 marginBottom: '15px',
                                 padding: '0 10px',
                             }}
                         >
-                            <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold'}}>{date.project.name}</p>
+                            <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold'}}>{project.name}</p>
                             <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold'}}>{`${
                                 date.duration
                             } ${v_hour_small}`}</p>
@@ -259,9 +260,10 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
         [user]
     );
     const [dataClick, setOpen] = useState(false);
-
+   console.log(user)
     return (
         <div className="user-block">
+          <p className="plan__title">Plan /36h</p>
             <div
                 className="user-block__main-block"
                 style={{display: 'flex', borderBottom: '1px solid #1F1F1F', marginLeft: '-10px'}}
@@ -286,7 +288,6 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                                 }}
                             >
                                 {week.week.map((day, index) => {
-                                    console.log({day});
                                     return (
                                         <div
                                             key={index}
@@ -312,11 +313,12 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                                             )}
                                             {user.timer_plannings.map(
                                                 (date, index) =>
-                                                    moment(date.start_date).format('L') ===
+                                                  date.projects.map((project)=>(
+                                                    moment(project.start_date).format('L') ===
                                                     moment(day.fullDate).format('L') &&
                                                     week.week.find(el => {
                                                         return (
-                                                            moment(date.start_date).format('L') ===
+                                                            moment(project.start_date).format('L') ===
                                                             moment(el.fullDate).format('L')
                                                         );
                                                     }) ? (
@@ -326,12 +328,14 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                                                                     key={index}
                                                                     date={date}
                                                                     widthPlan={
-                                                                        (new Date(date.end_date) -
-                                                                            new Date(date.start_date)) /
+                                                                        (new Date(project.end_date) -
+                                                                            new Date(project.start_date)) /
                                                                         (1000 * 60 * 60 * 24)
                                                                     }
                                                                     v_plan={v_plan}
                                                                     v_hour_small={v_hour_small}
+                                                                    indexHeight={index}
+                                                                    project={project}
                                                                 />
                                                             </>
                                                         ) : (
@@ -348,7 +352,7 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                                                             />
                                                         )
                                                     ) : null
-                                            )}
+                                                  )))}
                                         </div>
                                     );
                                 })}
@@ -375,7 +379,7 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                     </div>
                 ))}
             </div>
-            {user.logged.length &&
+            {user.logged.length>0 &&
             <div className="logged">
                 <p className="logged__title">Logged</p>
                 <div className="user-block__main-block">

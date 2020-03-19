@@ -130,6 +130,47 @@ class PlaningPage extends React.Component {
 
                     let users = result.data.user;
                     let logged = [];
+                    let timer_plannings = [];
+
+                    users.forEach((user, i) => user.timer_plannings.forEach((log, y) => {
+                        console.log(log)
+                        let matchedLogIndex = timer_plannings.findIndex(l => l.project_id === log.project_id);
+                        console.log(matchedLogIndex)
+                        if (matchedLogIndex !== -1) {
+                            timer_plannings[matchedLogIndex].projects.push({
+                                start_date: log.start_date,
+                                end_date: log.end_date,
+                                name:log.project.name,
+                                project_color:log.project.project_color
+                            })
+                        } else {
+                            timer_plannings.push({
+                                id: log.id,
+                                team_id: log.team_id,
+                                project_id: log.project_id,
+                                project:log.project,
+                                timer_off_id:log.timer_off_id,
+                                timer_off:log.timer_off,
+                                duration:log.duration,
+                                start_date:log.start_date,
+                                end_date:log.end_date,
+                                created_by_id: log.created_by_id,
+                                created_by: log.created_by,
+                                created_at: log.created_at,
+                                projects:[{
+                                    start_date: log.start_date,
+                                    end_date: log.end_date,
+                                    name:log.project.name,
+                                    project_color:log.project.project_color
+                                }]
+                            })
+                        }
+                        if (users[i].timer_plannings.length - 1 === y) {
+                            users[i].timer_plannings = timer_plannings;
+                            timer_plannings = [];
+                        }
+                    }));
+
 
                     users.forEach((user, i) => user.logged.forEach((log, y) => {
                         let matchedLogIndex = logged.findIndex(l => l.projectId === log.project_id);
@@ -406,18 +447,18 @@ class PlaningPage extends React.Component {
                                 </div>
                                 {users.map(user => (
                                     <div key={user.id} className="aside-bar__user-info">
-                                        <div
-                                            className="aside-bar__avatar-block"
-                                            style={{
-                                                // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
-                                                height: `${user.heightMulti * 60 + 30}px`,
-                                            }}
-                                        >
-                                            <div className="aside-bar__avatar">
-                                                <img src={user.avatar} alt="oops no img"/>
-                                                <i/>
-                                            </div>
-                                        </div>
+                                        {/*<div*/}
+                                        {/*    className="aside-bar__avatar-block"*/}
+                                        {/*    style={{*/}
+                                        {/*        // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',*/}
+                                        {/*        height: `${user.heightMulti * 60 + 30}px`,*/}
+                                        {/*    }}*/}
+                                        {/*>*/}
+                                        {/*    <div className="aside-bar__avatar">*/}
+                                        {/*        <img src={user.avatar} alt="oops no img"/>*/}
+                                        {/*        <i/>*/}
+                                        {/*    </div>*/}
+                                        {/*</div>*/}
                                         <div className="aside-bar__show-btn">
                                             <i
                                                 id={user.id}
