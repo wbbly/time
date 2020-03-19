@@ -568,7 +568,7 @@ class PlaningPage extends React.Component {
                                 <AddPlan
                                     cancel={this.closeAllFlags}
                                     add={console.log}
-                                    users={this.state.timerPlaningList.user}
+                                    users={timerPlaningList}
                                     projects={projectsArray}
                                     vocabulary={vocabulary}
                                     getTimerPlaningList={this.getTimerPlaningList}
