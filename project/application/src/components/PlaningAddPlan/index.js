@@ -8,28 +8,40 @@ import './style.scss';
 import { apiCall } from "../../services/apiService";
 import { AppConfig } from "../../config";
 import moment from "moment";
+import { addPlanUser } from '../../actions/PlaningActions';
+
 import { connect } from "react-redux";
 
 export class AddPlan extends React.Component {
     state = {};
 
     addPlanClick = (data) => {
-      const { hours, startDate, endDate, person:{idPerson}, project:{idProject} } = data
-      apiCall(AppConfig.apiURL + `timer-planning/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId:'cd07fa64-8188-44a0-b926-49d412f7f07a',
-          projectId:'2b4547fa-fff9-4d30-8810-ab27333d8769',
-          startDate: startDate,
-          duration: hours,
-          endDate: endDate,
-        }),
-      }).then(result => {
-
-      });
+      console.log(data)
+      const { hours, startDate, endDate, person:{idPerson}, project:{idProject} } = data;
+      addPlanUser({
+        userId: idPerson,
+        projectId: idProject,
+        startDate: startDate,
+        duration: hours,
+        endDate: endDate,
+      }).then(()=>{
+        this.props.getTimerPlaningList()
+      })
+      // apiCall(AppConfig.apiURL + `timer-planning/add`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     userId:'a97028cf-30b8-4286-b961-673955af85c5',
+      //     projectId:'2b4547fa-fff9-4d30-8810-ab27333d8769',
+      //     startDate: startDate,
+      //     duration: hours,
+      //     endDate: endDate,
+      //   }),
+      // }).then(result => {
+      //
+      // });
     }
 
   render() {
@@ -135,7 +147,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-
+  // addPlanUser
 };
 
 export default connect(

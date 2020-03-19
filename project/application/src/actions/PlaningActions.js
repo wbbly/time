@@ -1,3 +1,5 @@
+import { addPlan } from "../configAPI";
+
 export const CREATE_MONTH_ARRAY = 'CREATE_MONTH_ARRAY';
 export const INCRIMENT_MONTH = 'INCRIMENT_MONTH';
 export const DECREMENT_MONTH = 'DECREMENT_MONTH';
@@ -104,4 +106,13 @@ export const changeAllTimeOff = () => {
         dispatch(changeMainTimeOffSwitch());
         await dispatch(changeAllUserTimeOff());
     };
+};
+
+export const addPlanUser = async data => {
+    console.log(data)
+    try {
+        await addPlan(data);
+
+    } catch (error) {
+    }
 };
