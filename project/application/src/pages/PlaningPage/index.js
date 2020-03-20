@@ -1,17 +1,17 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import moment from 'moment';
-import {Scrollbars} from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 //---COMPONENTS---
 import ModalPortal from '../../components/ModalPortal';
 import PlaningUserBlock from '../../components/PlaningUserBlock';
-import {AddUserProject} from '../../components/PlaningAddUserProject';
-import {AddPlan} from '../../components/PlaningAddPlan';
-import {AddTimeOff} from '../../components/PlaningAddTimeOff';
+import { AddUserProject } from '../../components/PlaningAddUserProject';
+import { AddPlan } from '../../components/PlaningAddPlan';
+import { AddTimeOff } from '../../components/PlaningAddTimeOff';
 
 //---SERVICES---
-import {apiCall} from '../../services/apiService';
+import { apiCall } from '../../services/apiService';
 
 //---ACTIONS---
 import {
@@ -28,20 +28,20 @@ import {
 import projectsPageAction from '../../actions/ProjectsActions';
 
 // Queries
-import {getProjectsV2ProjectPageUserParseFunction} from '../../queries';
+import { getProjectsV2ProjectPageUserParseFunction } from '../../queries';
 
 //---CONFIG---
-import {AppConfig} from '../../config';
+import { AppConfig } from '../../config';
 
 //---STYLES---
 import './style.scss';
-import {projectReducer} from '../../reducers/ProjectsReducer';
-import {DateRange} from 'react-date-range';
-import {inputRanges, staticRanges} from '../ReportsPage/ranges';
-import {de, enGB, it, ru, ua} from 'react-date-range/dist/locale';
+import { projectReducer } from '../../reducers/ProjectsReducer';
+import { DateRange } from 'react-date-range';
+import { inputRanges, staticRanges } from '../ReportsPage/ranges';
+import { de, enGB, it, ru, ua } from 'react-date-range/dist/locale';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
-import {getCurrentDate} from '../../services/timeService'; // theme css file
+import { getCurrentDate } from '../../services/timeService'; // theme css file
 const localeMap = {
     ru: ru,
     en: enGB,
@@ -85,7 +85,7 @@ class PlaningPage extends React.Component {
             result => {
                 const teamUsers = result.data.team[0].team_users;
                 const users = teamUsers.map(teamUser => teamUser.user[0]);
-                this.setState({userData: users});
+                this.setState({ userData: users });
                 //todo add this users to reducer maybe
             },
             err => {
@@ -108,7 +108,7 @@ class PlaningPage extends React.Component {
             result => {
                 const teamUsers = result.data.team[0].team_users;
                 const users = teamUsers.map(teamUser => teamUser.user[0]);
-                this.setState({userData: users});
+                this.setState({ userData: users });
                 //todo add this users to reducer maybe
                 //todo split requests
                 apiCall(AppConfig.apiURL + `timer-planning/list`, {
@@ -127,101 +127,110 @@ class PlaningPage extends React.Component {
                         //todo enter valid dates
                     }),
                 }).then(result => {
-
                     let users = result.data.user;
                     let logged = [];
                     let timer_plannings = [];
 
-                    users.forEach((user, i) => user.timer_plannings.forEach((timer_planning, y) => {
+                    users.forEach((user, i) =>
+                        user.timer_plannings.forEach((timer_planning, y) => {
+                            let matchedLogIndex = timer_plannings.findIndex(
+                                l => l.project_id === timer_planning.project_id
+                            );
 
-                        let matchedLogIndex = timer_plannings.findIndex(l => l.project_id === timer_planning.project_id);
-
-                        if (matchedLogIndex !== -1) {
-                            timer_plannings[matchedLogIndex].projects.push({
-                                start_date: timer_planning.start_date,
-                                end_date: timer_planning.end_date,
-                                name:timer_planning.project.name,
-                                project_color:timer_planning.project.project_color,
-                                duration:timer_planning.duration,
-                            })
-                        } else {
-                            timer_plannings.push({
-                                id: timer_planning.id,
-                                team_id: timer_planning.team_id,
-                                project_id: timer_planning.project_id,
-                                project:timer_planning.project,
-                                timer_off_id:timer_planning.timer_off_id,
-                                timer_off:timer_planning.timer_off,
-                                duration:timer_planning.duration,
-                                start_date:timer_planning.start_date,
-                                end_date:timer_planning.end_date,
-                                created_by_id: timer_planning.created_by_id,
-                                created_by: timer_planning.created_by,
-                                created_at: timer_planning.created_at,
-                                projects:[{
-                                    start_date: timer_planning.start_date,
-                                    end_date: timer_planning.end_date,
-                                    name:timer_planning.project.name,
-                                    project_color:timer_planning.project.project_color,
-                                    duration:timer_planning.duration,
-                                }]
-                            })
-                        }
-                        if (users[i].timer_plannings.length - 1 === y) {
-                            users[i].timer_plannings = timer_plannings;
-                            timer_plannings = [];
-                        }
-                    }));
-
+                            if (matchedLogIndex !== -1) {
+                                timer_planning.project &&
+                                    timer_plannings[matchedLogIndex].projects.push({
+                                        start_date: timer_planning.start_date,
+                                        end_date: timer_planning.end_date,
+                                        name: timer_planning.project.name,
+                                        project_color: timer_planning.project.project_color,
+                                        duration: timer_planning.duration,
+                                    });
+                            } else {
+                                timer_planning.project &&
+                                    timer_plannings.push({
+                                        id: timer_planning.id,
+                                        team_id: timer_planning.team_id,
+                                        project_id: timer_planning.project_id,
+                                        project: timer_planning.project,
+                                        timer_off_id: timer_planning.timer_off_id,
+                                        timer_off: timer_planning.timer_off,
+                                        duration: timer_planning.duration,
+                                        start_date: timer_planning.start_date,
+                                        end_date: timer_planning.end_date,
+                                        created_by_id: timer_planning.created_by_id,
+                                        created_by: timer_planning.created_by,
+                                        created_at: timer_planning.created_at,
+                                        projects: [
+                                            {
+                                                start_date: timer_planning.start_date,
+                                                end_date: timer_planning.end_date,
+                                                name: timer_planning.project.name,
+                                                project_color: timer_planning.project.project_color,
+                                                duration: timer_planning.duration,
+                                            },
+                                        ],
+                                    });
+                            }
+                            if (users[i].timer_plannings.length - 1 === y) {
+                                users[i].timer_plannings = timer_plannings;
+                                timer_plannings = [];
+                            }
+                        })
+                    );
 
                     //modify logged array by projectId
-                    users.forEach((user, i) => user.logged.forEach((log, y) => {
-                        let matchedLogIndex = logged.findIndex(l => l.projectId === log.project_id);
-                        if (matchedLogIndex !== -1) {
-                            logged[matchedLogIndex].timeEntries.push({
-                                startDatetime: log.start_datetime,
-                                endDatetime: log.end_datetime
-                            })
-                        } else {
-                            logged.push({
-                                projectId: log.project_id,
-                                issue: log.issue,
-                                project: log.project,
-                                timeEntries: [{
+                    users.forEach((user, i) =>
+                        user.logged.forEach((log, y) => {
+                            let matchedLogIndex = logged.findIndex(l => l.projectId === log.project_id);
+                            if (matchedLogIndex !== -1) {
+                                logged[matchedLogIndex].timeEntries.push({
                                     startDatetime: log.start_datetime,
-                                    endDatetime: log.end_datetime
-                                }]
-                            })
-                        }
-                        if (users[i].logged.length - 1 === y) {
-                            users[i].logged = logged;
-                            logged = [];
-                        }
-                    }));
+                                    endDatetime: log.end_datetime,
+                                });
+                            } else {
+                                logged.push({
+                                    projectId: log.project_id,
+                                    issue: log.issue,
+                                    project: log.project,
+                                    timeEntries: [
+                                        {
+                                            startDatetime: log.start_datetime,
+                                            endDatetime: log.end_datetime,
+                                        },
+                                    ],
+                                });
+                            }
+                            if (users[i].logged.length - 1 === y) {
+                                users[i].logged = logged;
+                                logged = [];
+                            }
+                        })
+                    );
 
-                    users.forEach((user, i) => user.logged.forEach((log, y) => {
-
+                    users.forEach((user, i) =>
+                        user.logged.forEach((log, y) => {
                             //add formattedDate and projectId keys
                             let timeEntries = [];
                             log.timeEntries.forEach(entry => {
-                                let findIndex = timeEntries.findIndex(e => e.formattedDate === moment(entry.startDatetime).format('YYYY-MM-DD'))
+                                let findIndex = timeEntries.findIndex(
+                                    e => e.formattedDate === moment(entry.startDatetime).format('YYYY-MM-DD')
+                                );
                                 if (findIndex !== -1) {
                                     timeEntries[findIndex].entries.push(entry);
                                 } else {
-                                    timeEntries.push(
-                                        {
-                                            formattedDate: moment(entry.startDatetime).format('YYYY-MM-DD'),
-                                            projectId: users[i].logged[y].projectId,
-                                            entries: [entry]
-                                        }
-                                    )
+                                    timeEntries.push({
+                                        formattedDate: moment(entry.startDatetime).format('YYYY-MM-DD'),
+                                        projectId: users[i].logged[y].projectId,
+                                        entries: [entry],
+                                    });
                                 }
                             });
 
                             //count total time
                             timeEntries.forEach((entry, i) => {
                                 let totalTime = 0;
-                                entry.entries.forEach((e) => {
+                                entry.entries.forEach(e => {
                                     totalTime += +moment(e.endDatetime) - +moment(e.startDatetime);
                                 });
                                 timeEntries[i].totalTime = +moment(totalTime).format('H');
@@ -234,9 +243,12 @@ class PlaningPage extends React.Component {
                                     return timeGroups.push({
                                         ...entry,
                                         days: [entry],
-                                    })
+                                    });
                                 }
-                                const dateDiff = moment(entry.formattedDate).diff(moment(timeEntries[i - 1].formattedDate), 'days');
+                                const dateDiff = moment(entry.formattedDate).diff(
+                                    moment(timeEntries[i - 1].formattedDate),
+                                    'days'
+                                );
 
                                 if (dateDiff === 1) {
                                     timeGroups[timeGroups.length - 1].totalTime += entry.totalTime;
@@ -245,9 +257,8 @@ class PlaningPage extends React.Component {
                                     timeGroups.push({
                                         ...entry,
                                         days: [entry],
-                                    })
+                                    });
                                 }
-
                             });
 
                             users[i].logged[y] = {
@@ -258,8 +269,7 @@ class PlaningPage extends React.Component {
                         })
                     );
 
-
-                    console.log({users})
+                    console.log({ users });
                     this.setState({
                         timerPlaningList: users,
                     });
@@ -284,7 +294,7 @@ class PlaningPage extends React.Component {
         }).then(
             result => {
                 let data = getProjectsV2ProjectPageUserParseFunction(result.data);
-                this.props.projectsPageAction('CREATE_PROJECT', {tableData: data.projectV2});
+                this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
             },
             err => {
                 if (err instanceof Response) {
@@ -306,27 +316,27 @@ class PlaningPage extends React.Component {
     };
 
     totalPlaned = () => {
-        const {users} = this.props.planingReducer;
+        const { users } = this.props.planingReducer;
         return users
             .map(el =>
                 el.shedule
                     .map(
                         item =>
-                            item.projects && item.projects.reduce((a, b) => ({planed: a.planed + b.planed})).planed
+                            item.projects && item.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed
                     )
                     .reduce((a, b) => a + b)
             )
             .reduce((a, b) => a + b);
     };
     totalTracked = () => {
-        const {users} = this.props.planingReducer;
+        const { users } = this.props.planingReducer;
         return users
             .map(el =>
                 el.shedule
                     .map(
                         item =>
                             item.projects &&
-                            item.projects.reduce((a, b) => ({tracked: a.tracked + b.tracked})).tracked
+                            item.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked
                     )
                     .reduce((a, b) => a + b)
             )
@@ -338,16 +348,16 @@ class PlaningPage extends React.Component {
     };
 
     changeAddUserFlag = () => {
-        this.setState({showAddUser: true});
+        this.setState({ showAddUser: true });
     };
     changeAddPlanFlag = () => {
-        this.setState({showAddPlan: true});
+        this.setState({ showAddPlan: true });
     };
     changeAddTimeOffFlag = () => {
-        this.setState({showTimeOff: true});
+        this.setState({ showTimeOff: true });
     };
     changeAddPlanTimeOffFlag = () => {
-        this.setState({showAddPlanTimeOff: true});
+        this.setState({ showAddPlanTimeOff: true });
     };
 
     closeAllFlags = e => {
@@ -360,7 +370,7 @@ class PlaningPage extends React.Component {
     };
 
     openCalendar() {
-        this.setState({dateSelect: !this.state.dateSelect});
+        this.setState({ dateSelect: !this.state.dateSelect });
         document.addEventListener('click', this.closeDropdown);
     }
 
@@ -378,7 +388,7 @@ class PlaningPage extends React.Component {
     };
 
     handleSelect = ranges => {
-        this.setState({selectionRange: ranges.selection});
+        this.setState({ selectionRange: ranges.selection });
         // this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
         // this.applySearch(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
     };
@@ -396,8 +406,8 @@ class PlaningPage extends React.Component {
             firstDayOfWeek,
             dateFormat,
         } = this.props;
-        const {month, current, users, timeOff, swithcAllTimeOff} = planingReducer;
-        const {showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timerPlaningList} = this.state;
+        const { month, current, users, timeOff, swithcAllTimeOff } = planingReducer;
+        const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timerPlaningList } = this.state;
         const {
             v_resource_planing,
             v_all_projects,
@@ -432,12 +442,12 @@ class PlaningPage extends React.Component {
         return (
             <>
                 <Scrollbars>
-                    <div style={{display: 'flex', minWidth: '100%', minHeight: '100%', overflowX: 'hidden'}}>
+                    <div style={{ display: 'flex', minWidth: '100%', minHeight: '100%', overflowX: 'hidden' }}>
                         <div className="aside-bar">
                             <div className="aside-bar__users">
-                                <div className="aside-bar__filler-top"/>
+                                <div className="aside-bar__filler-top" />
                                 <div className="aside-bar__add-user-block" onClick={this.changeAddUserFlag}>
-                                    <i className="aside-bar__add-user"/>
+                                    <i className="aside-bar__add-user" />
                                     {showAddUser ? (
                                         <AddUserProject
                                             cancel={this.closeAllFlags}
@@ -484,11 +494,11 @@ class PlaningPage extends React.Component {
                                     <div className="planing-header__add-btn">
                                         <button onClick={this.changeAddTimeOffFlag}>{v_filter}</button>
                                         <button
-                                            style={{display: 'flex', alignItems: 'center'}}
+                                            style={{ display: 'flex', alignItems: 'center' }}
                                             onClick={this.changeAddPlanFlag}
                                         >
                                             {' '}
-                                            <i className="planing-header__plus"/>
+                                            <i className="planing-header__plus" />
                                             {v_add_plan}
                                         </button>
 
@@ -504,7 +514,7 @@ class PlaningPage extends React.Component {
                                                     {/*{moment(this.props.timeRange.endDate).format(dateFormat)}*/}
                                                     Month
                                                 </span>
-                                                <i className="arrow_down"/>
+                                                <i className="arrow_down" />
                                             </div>
                                             {this.state.dateSelect && (
                                                 <div className="select_body" ref={div => (this.datePickerSelect = div)}>
@@ -553,7 +563,7 @@ class PlaningPage extends React.Component {
                                         <div className="month-container__weeks-block">
                                             {month.map((week, index) => (
                                                 <div className="month-container__week" key={index}>
-                                                    <h2 style={{whiteSpace: 'nowrap', color: week.weekColor}}>
+                                                    <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
                                                         {`${v_week} ${week.weekCount} / ${moment(current).format(
                                                             'MMM'
                                                         )} ${week.dayStart} - ${week.dayEnd}`}
@@ -578,16 +588,18 @@ class PlaningPage extends React.Component {
                                             ))}
                                         </div>
                                     </div>
-                                    {timerPlaningList ? timerPlaningList.map(user => (
-                                        <PlaningUserBlock
-                                            key={user.id}
-                                            month={month}
-                                            user={user}
-                                            addUser={addUser}
-                                            {...vocabulary}
-                                            changeAddPlanFlag={this.changeAddPlanFlag}
-                                        />
-                                    )) : null}
+                                    {timerPlaningList
+                                        ? timerPlaningList.map(user => (
+                                              <PlaningUserBlock
+                                                  key={user.id}
+                                                  month={month}
+                                                  user={user}
+                                                  addUser={addUser}
+                                                  {...vocabulary}
+                                                  changeAddPlanFlag={this.changeAddPlanFlag}
+                                              />
+                                          ))
+                                        : null}
                                     {/*{users.map(user => (*/}
                                     {/*    <PlaningUserBlock*/}
                                     {/*        key={user.id}*/}
@@ -606,7 +618,7 @@ class PlaningPage extends React.Component {
                 {showAddPlan || showTimeOff || showAddPlanTimeOff || showAddUser ? (
                     <ModalPortal>
                         <div
-                            style={{top: '0', left: '0', position: 'fixed', width: '100%', height: '100%', zIndex: 1}}
+                            style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%', zIndex: 1 }}
                         >
                             {showAddPlan ? (
                                 <AddPlan
