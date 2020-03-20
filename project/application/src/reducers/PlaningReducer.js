@@ -11,7 +11,8 @@ import {
     CHANGE_MAIN_TIME_OFF_SWITCH,
     CHANGE_ALL_USER_TIME_OFF,
     OPEN_DAY_OFF_CHANGE_WINDOW,
-    SET_SELECTED_USERS, SET_TIMER_PLANING_LIST,
+    SET_SELECTED_USERS,
+    SET_TIMER_PLANING_LIST,
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
@@ -80,7 +81,7 @@ export const planingReducer = (state = defaultState, action) => {
             return {
                 ...state,
                 timerPlaningList: action.payload,
-            }
+            };
         }
 
         case INCRIMENT_MONTH: {
