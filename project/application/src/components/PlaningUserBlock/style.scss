@@ -35,7 +35,19 @@
     }
   }
 
-  &__main-block {
+  .plan {
+    flex: 1;
+    //height: 20px;
+
+    &__title {
+      margin: 0;
+      padding: 7px 0 7px 5px;
+      color: white;
+      border-left: 5px solid #26A1A1;
+    }
+  }
+
+    &__main-block {
     display: flex;
     border-bottom: 1px solid #1F1F1F;
     margin-left: -10px;
