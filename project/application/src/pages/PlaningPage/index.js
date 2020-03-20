@@ -132,36 +132,38 @@ class PlaningPage extends React.Component {
                     let logged = [];
                     let timer_plannings = [];
 
-                    users.forEach((user, i) => user.timer_plannings.forEach((log, y) => {
-                        console.log(log)
-                        let matchedLogIndex = timer_plannings.findIndex(l => l.project_id === log.project_id);
-                        console.log(matchedLogIndex)
+                    users.forEach((user, i) => user.timer_plannings.forEach((timer_planning, y) => {
+
+                        let matchedLogIndex = timer_plannings.findIndex(l => l.project_id === timer_planning.project_id);
+
                         if (matchedLogIndex !== -1) {
                             timer_plannings[matchedLogIndex].projects.push({
-                                start_date: log.start_date,
-                                end_date: log.end_date,
-                                name:log.project.name,
-                                project_color:log.project.project_color
+                                start_date: timer_planning.start_date,
+                                end_date: timer_planning.end_date,
+                                name:timer_planning.project.name,
+                                project_color:timer_planning.project.project_color,
+                                duration:timer_planning.duration,
                             })
                         } else {
                             timer_plannings.push({
-                                id: log.id,
-                                team_id: log.team_id,
-                                project_id: log.project_id,
-                                project:log.project,
-                                timer_off_id:log.timer_off_id,
-                                timer_off:log.timer_off,
-                                duration:log.duration,
-                                start_date:log.start_date,
-                                end_date:log.end_date,
-                                created_by_id: log.created_by_id,
-                                created_by: log.created_by,
-                                created_at: log.created_at,
+                                id: timer_planning.id,
+                                team_id: timer_planning.team_id,
+                                project_id: timer_planning.project_id,
+                                project:timer_planning.project,
+                                timer_off_id:timer_planning.timer_off_id,
+                                timer_off:timer_planning.timer_off,
+                                duration:timer_planning.duration,
+                                start_date:timer_planning.start_date,
+                                end_date:timer_planning.end_date,
+                                created_by_id: timer_planning.created_by_id,
+                                created_by: timer_planning.created_by,
+                                created_at: timer_planning.created_at,
                                 projects:[{
-                                    start_date: log.start_date,
-                                    end_date: log.end_date,
-                                    name:log.project.name,
-                                    project_color:log.project.project_color
+                                    start_date: timer_planning.start_date,
+                                    end_date: timer_planning.end_date,
+                                    name:timer_planning.project.name,
+                                    project_color:timer_planning.project.project_color,
+                                    duration:timer_planning.duration,
                                 }]
                             })
                         }

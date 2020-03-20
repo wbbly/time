@@ -19,40 +19,18 @@ const OpendBlock = ({date, v_hour_small, v_plan, widthPlan, indexHeight, project
                     display: 'flex',
                 }}
             >
-                {/*{date.project &&*/}
-                {/*widthPlan < 3 && (*/}
-                {/*    <div*/}
-                {/*        style={{*/}
-                {/*            display: 'flex',*/}
-                {/*            width: '100%',*/}
-                {/*            justifyContent: 'flex-start',*/}
-                {/*        }}*/}
-                {/*    >*/}
-                {/*        <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}>*/}
-                {/*            {v_plan}*/}
-                {/*        </p>*/}
-                {/*        /!*<p*!/*/}
-                {/*        /!*    style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}*!/*/}
-                {/*        /!*>{`${date.project && date.planedTotal()} ${v_hour_small}`}</p>*!/*/}
-                {/*    </div>*/}
-                {/*)}*/}
                 <div
                     style={{
                         position: 'absolute',
                         left: '0',
-                        // top: `calc(100% + 8px)`,
                         width: '100%',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
                     }}
                 >
-                    {/*{date.projects &&*/}
-                    {/*date.projects.map((project, index) => (*/}
                         <div
-                            // key={index}
                             style={{
-                                // left: '10px',
                                 position: 'relative',
                                 display: 'flex',
                                 justifyContent: 'space-between',
@@ -64,23 +42,9 @@ const OpendBlock = ({date, v_hour_small, v_plan, widthPlan, indexHeight, project
                         >
                             <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold'}}>{project.name}</p>
                             <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold'}}>{`${
-                                date.duration
+                              project.duration
                             } ${v_hour_small}`}</p>
-                            {/*<div*/}
-                            {/*    style={{*/}
-                            {/*        position: 'absolute',*/}
-                            {/*        background: project.color,*/}
-                            {/*        width: '15px',*/}
-                            {/*        height: '15px',*/}
-                            {/*        top: '7.5px',*/}
-                            {/*        left: '-7.5px',*/}
-                            {/*        margin: 'auto',*/}
-                            {/*        borderRadius: '50%',*/}
-                            {/*        border: '3px solid #323232',*/}
-                            {/*    }}*/}
-                            {/*/>*/}
                         </div>
-                    {/*))}*/}
                     {date.timer_off && date.timer_off.map((timeOff, index) => (
                         <div
                             key={index}
@@ -91,24 +55,10 @@ const OpendBlock = ({date, v_hour_small, v_plan, widthPlan, indexHeight, project
                                 justifyContent: 'center',
                                 background: timeOff.color,
                                 height: '30px',
-                                // marginBottom: '15px',
                                 padding: '0 1px',
                             }}
                         >
                             <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold'}}>{timeOff.name}</p>
-                            {/*<div*/}
-                            {/*    style={{*/}
-                            {/*        position: 'absolute',*/}
-                            {/*        background: timeOff.color,*/}
-                            {/*        width: '15px',*/}
-                            {/*        height: '15px',*/}
-                            {/*        top: '7.5px',*/}
-                            {/*        left: '-7.5px',*/}
-                            {/*        margin: 'auto',*/}
-                            {/*        borderRadius: '50%',*/}
-                            {/*        border: '3px solid #323232',*/}
-                            {/*    }}*/}
-                            {/*/>*/}
                         </div>
                     ))}
                 </div>
@@ -250,15 +200,19 @@ const LoggedBlock = ({log, v_hour_small, entry, logIndex,}) => {
 const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAddPlanFlag}) => {
     useEffect(
         () => {
+
             addUser();
         },
         [user]
     );
     const [dataClick, setOpen] = useState(false);
-   console.log(user)
+    console.log(user)
+  let durationSum = 0
+  user.timer_plannings.forEach(timer_planning=>timer_planning.projects.forEach((project)=>durationSum +=project.duration))
+
     return (
         <div className="user-block">
-          <p className="plan__title">Plan /36h</p>
+          <p className="plan__title">Plan /{durationSum}h</p>
             <div
                 className="user-block__main-block"
                 style={{display: 'flex', borderBottom: '1px solid #1F1F1F', marginLeft: '-10px'}}
