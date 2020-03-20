@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
 import plusPlan from '../../images/plusPlan.svg';
 
 import './style.scss';
 
-const OpendBlock = ({date, v_hour_small, v_plan, widthPlan}) => {
-    console.log({date}, {widthPlan})
+const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
+    console.log({ date }, { widthPlan });
     return (
         <div>
             <div
@@ -19,22 +19,22 @@ const OpendBlock = ({date, v_hour_small, v_plan, widthPlan}) => {
                 }}
             >
                 {date.project &&
-                widthPlan < 3 && (
-                    <div
-                        style={{
-                            display: 'flex',
-                            width: '100%',
-                            justifyContent: 'flex-start',
-                        }}
-                    >
-                        <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}>
-                            {v_plan}
-                        </p>
-                        {/*<p*/}
-                        {/*    style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}*/}
-                        {/*>{`${date.project && date.planedTotal()} ${v_hour_small}`}</p>*/}
-                    </div>
-                )}
+                    widthPlan < 3 && (
+                        <div
+                            style={{
+                                display: 'flex',
+                                width: '100%',
+                                justifyContent: 'flex-start',
+                            }}
+                        >
+                            <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0 }}>
+                                {v_plan}
+                            </p>
+                            {/*<p*/}
+                            {/*    style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}*/}
+                            {/*>{`${date.project && date.planedTotal()} ${v_hour_small}`}</p>*/}
+                        </div>
+                    )}
                 <div
                     style={{
                         position: 'absolute',
@@ -48,75 +48,76 @@ const OpendBlock = ({date, v_hour_small, v_plan, widthPlan}) => {
                 >
                     {/*{date.project &&*/}
                     {/*// date.project.map((project, index) => (*/}
-                        <div
-                            // key={index}
-                            style={{
-                                // left: '10px',
-                                position: 'relative',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                background: date.project.project_color.name,
-                                height: '30px',
-                                marginBottom: '15px',
-                                padding: '0 10px',
-                            }}
-                        >
-                            <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold'}}>{date.project.name}</p>
-                            <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold'}}>{`${
-                                date.duration
-                            } ${v_hour_small}`}</p>
-                            {/*<div*/}
-                            {/*    style={{*/}
-                            {/*        position: 'absolute',*/}
-                            {/*        background: project.color,*/}
-                            {/*        width: '15px',*/}
-                            {/*        height: '15px',*/}
-                            {/*        top: '7.5px',*/}
-                            {/*        left: '-7.5px',*/}
-                            {/*        margin: 'auto',*/}
-                            {/*        borderRadius: '50%',*/}
-                            {/*        border: '3px solid #323232',*/}
-                            {/*    }}*/}
-                            {/*/>*/}
-                        </div>
+                    <div
+                        // key={index}
+                        style={{
+                            // left: '10px',
+                            position: 'relative',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            background: date.project.project_color.name,
+                            height: '30px',
+                            marginBottom: '15px',
+                            padding: '0 10px',
+                        }}
+                    >
+                        <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{date.project.name}</p>
+                        <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{`${
+                            date.duration
+                        } ${v_hour_small}`}</p>
+                        {/*<div*/}
+                        {/*    style={{*/}
+                        {/*        position: 'absolute',*/}
+                        {/*        background: project.color,*/}
+                        {/*        width: '15px',*/}
+                        {/*        height: '15px',*/}
+                        {/*        top: '7.5px',*/}
+                        {/*        left: '-7.5px',*/}
+                        {/*        margin: 'auto',*/}
+                        {/*        borderRadius: '50%',*/}
+                        {/*        border: '3px solid #323232',*/}
+                        {/*    }}*/}
+                        {/*/>*/}
+                    </div>
                     {/*))}*/}
-                    {date.timer_off && date.timer_off.map((timeOff, index) => (
-                        <div
-                            key={index}
-                            style={{
-                                width: 40,
-                                position: 'relative',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                background: timeOff.color,
-                                height: '30px',
-                                // marginBottom: '15px',
-                                padding: '0 1px',
-                            }}
-                        >
-                            <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold'}}>{timeOff.name}</p>
-                            {/*<div*/}
-                            {/*    style={{*/}
-                            {/*        position: 'absolute',*/}
-                            {/*        background: timeOff.color,*/}
-                            {/*        width: '15px',*/}
-                            {/*        height: '15px',*/}
-                            {/*        top: '7.5px',*/}
-                            {/*        left: '-7.5px',*/}
-                            {/*        margin: 'auto',*/}
-                            {/*        borderRadius: '50%',*/}
-                            {/*        border: '3px solid #323232',*/}
-                            {/*    }}*/}
-                            {/*/>*/}
-                        </div>
-                    ))}
+                    {date.timer_off &&
+                        date.timer_off.map((timeOff, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    width: 40,
+                                    position: 'relative',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    background: timeOff.color,
+                                    height: '30px',
+                                    // marginBottom: '15px',
+                                    padding: '0 1px',
+                                }}
+                            >
+                                <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold' }}>{timeOff.name}</p>
+                                {/*<div*/}
+                                {/*    style={{*/}
+                                {/*        position: 'absolute',*/}
+                                {/*        background: timeOff.color,*/}
+                                {/*        width: '15px',*/}
+                                {/*        height: '15px',*/}
+                                {/*        top: '7.5px',*/}
+                                {/*        left: '-7.5px',*/}
+                                {/*        margin: 'auto',*/}
+                                {/*        borderRadius: '50%',*/}
+                                {/*        border: '3px solid #323232',*/}
+                                {/*    }}*/}
+                                {/*/>*/}
+                            </div>
+                        ))}
                 </div>
             </div>
         </div>
     );
 };
 
-const ClosedBlock = ({date, v_hour_small, v_plan, widthPlan}) => {
+const ClosedBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
     const strech = (e, timeOff) => {
         e.target.style.flex = 10;
         e.target.parentNode.style.flex = 10;
@@ -143,7 +144,7 @@ const ClosedBlock = ({date, v_hour_small, v_plan, widthPlan}) => {
                 }}
             >
                 {date.projects && (
-                    <div style={{display: 'flex', flex: 3, position: 'relative'}}>
+                    <div style={{ display: 'flex', flex: 3, position: 'relative' }}>
                         <div
                             style={{
                                 height: '100%',
@@ -155,21 +156,21 @@ const ClosedBlock = ({date, v_hour_small, v_plan, widthPlan}) => {
                                 padding: '0 10px',
                             }}
                         >
-                            <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}>
+                            <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0 }}>
                                 {v_plan}
                             </p>
-                            <p style={{color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0}}>
+                            <p style={{ color: '#FFFFFF', fontSize: '10px', fontWeight: 'bold', margin: 0 }}>
                                 {date.planedTotal()}
                                 {v_hour_small}
                             </p>
                         </div>
                         {date.projects.map((project, index) => (
-                            <div key={index} style={{flex: '1', background: project.color}}/>
+                            <div key={index} style={{ flex: '1', background: project.color }} />
                         ))}
                     </div>
                 )}
                 {!date.timeOff.every(off => off.checked === false) ? (
-                    <div style={{display: 'flex', flex: 1, transition: 'flex 0.5s'}}>
+                    <div style={{ display: 'flex', flex: 1, transition: 'flex 0.5s' }}>
                         {date.timeOff.map(
                             (timeOff, index) =>
                                 timeOff.checked ? (
@@ -201,7 +202,7 @@ const ClosedBlock = ({date, v_hour_small, v_plan, widthPlan}) => {
     );
 };
 
-const AddPlun = ({changeAddPlanFlag}) => {
+const AddPlun = ({ changeAddPlanFlag }) => {
     // if(!open){
     //     return null
     // }
@@ -209,15 +210,14 @@ const AddPlun = ({changeAddPlanFlag}) => {
         <div>
             <img
                 onClick={changeAddPlanFlag}
-                style={{width: 38, height: 22, zIndex: 12, position: 'absolute', top: '8px'}}
+                style={{ width: 38, height: 22, zIndex: 12, position: 'absolute', top: '8px' }}
                 src={plusPlan}
             />
         </div>
     );
 };
 
-const LoggedBlock = ({log, v_hour_small, entry, logIndex,}) => {
-
+const LoggedBlock = ({ log, v_hour_small, entry, logIndex }) => {
     return (
         <div
             className="logged-block"
@@ -227,7 +227,9 @@ const LoggedBlock = ({log, v_hour_small, entry, logIndex,}) => {
             }}
         >
             <div className="container">
-                <p className="project-title">{log.name} / {`${entry.totalTime}${v_hour_small}`}</p>
+                <p className="project-title">
+                    {log.name} / {`${entry.totalTime}${v_hour_small}`}
+                </p>
                 <div className="cell-container">
                     {entry.days.map((day, i) => (
                         <div
@@ -246,7 +248,7 @@ const LoggedBlock = ({log, v_hour_small, entry, logIndex,}) => {
     );
 };
 
-const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAddPlanFlag}) => {
+const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAddPlanFlag }) => {
     useEffect(
         () => {
             addUser();
@@ -259,7 +261,7 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
         <div className="user-block">
             <div
                 className="user-block__main-block"
-                style={{display: 'flex', borderBottom: '1px solid #1F1F1F', marginLeft: '-10px'}}
+                style={{ display: 'flex', borderBottom: '1px solid #1F1F1F', marginLeft: '-10px' }}
             >
                 {month.map((week, index) => (
                     <div
@@ -269,7 +271,7 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                             // margin: '0 10px 0 10px'
                         }}
                     >
-                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <div
                                 id={`week_${week.week[0].fullDate}`}
                                 style={{
@@ -281,7 +283,7 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                                 }}
                             >
                                 {week.week.map((day, index) => {
-                                    console.log({day});
+                                    console.log({ day });
                                     return (
                                         <div
                                             key={index}
@@ -303,12 +305,12 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                                             onBlur={() => setOpen(null)}
                                         >
                                             {day.fullDate === dataClick && (
-                                                <AddPlun changeAddPlanFlag={changeAddPlanFlag}/>
+                                                <AddPlun changeAddPlanFlag={changeAddPlanFlag} />
                                             )}
                                             {user.timer_plannings.map(
                                                 (date, index) =>
                                                     moment(date.start_date).format('L') ===
-                                                    moment(day.fullDate).format('L') &&
+                                                        moment(day.fullDate).format('L') &&
                                                     week.week.find(el => {
                                                         return (
                                                             moment(date.start_date).format('L') ===
@@ -370,59 +372,61 @@ const PlaningUserBlock = ({month, user, v_hour_small, v_plan, addUser, changeAdd
                     </div>
                 ))}
             </div>
-            {user.logged.length &&
-            <div className="logged">
-                <p className="logged__title">Logged</p>
-                <div className="user-block__main-block">
-                    {month.map((week, index) => (
-                        <div key={index}>
-                            <div id={`week_${week.week[0].fullDate}`} className="week"
-                                 style={{height: 60 * user.logged.length}}>
-                                {week.week.map((day, index) => {
-                                    return (
-                                        <div
-                                            key={index}
-                                            id={`middle_logged_${day.fullDate}`}
-                                            className="day"
-                                            style={{
-                                                background: day.background,
-                                                opacity: day.opacity,
-                                            }}
-                                            tabIndex={1}
-                                        >
-                                            {user.logged.map((log, logIndex) =>
-
-                                                log.timeGroups.map((entry, entryIndex) =>
-
-                                                    moment(entry.formattedDate).format('L') ===
-                                                    moment(day.fullDate).format('L') &&
-                                                    week.week.find(el => {
-                                                        return (
+            {user.logged.length && (
+                <div className="logged">
+                    <p className="logged__title">Logged</p>
+                    <div className="user-block__main-block">
+                        {month.map((week, index) => (
+                            <div key={index}>
+                                <div
+                                    id={`week_${week.week[0].fullDate}`}
+                                    className="week"
+                                    style={{ height: 60 * user.logged.length }}
+                                >
+                                    {week.week.map((day, index) => {
+                                        return (
+                                            <div
+                                                key={index}
+                                                id={`middle_logged_${day.fullDate}`}
+                                                className="day"
+                                                style={{
+                                                    background: day.background,
+                                                    opacity: day.opacity,
+                                                }}
+                                                tabIndex={1}
+                                            >
+                                                {user.logged.map((log, logIndex) =>
+                                                    log.timeGroups.map(
+                                                        (entry, entryIndex) =>
                                                             moment(entry.formattedDate).format('L') ===
-                                                            moment(el.fullDate).format('L')
-                                                        );
-                                                    }) ? (
-                                                        <>
-                                                            <LoggedBlock
-                                                                key={index}
-                                                                logIndex={logIndex}
-                                                                log={log}
-                                                                entry={entry}
-                                                                v_hour_small={v_hour_small}
-                                                            />
-                                                        </>
-                                                    ) : null
-                                                )
-                                            )}
-                                        </div>
-                                    );
-                                })}
+                                                                moment(day.fullDate).format('L') &&
+                                                            week.week.find(el => {
+                                                                return (
+                                                                    moment(entry.formattedDate).format('L') ===
+                                                                    moment(el.fullDate).format('L')
+                                                                );
+                                                            }) ? (
+                                                                <>
+                                                                    <LoggedBlock
+                                                                        key={index}
+                                                                        logIndex={logIndex}
+                                                                        log={log}
+                                                                        entry={entry}
+                                                                        v_hour_small={v_hour_small}
+                                                                    />
+                                                                </>
+                                                            ) : null
+                                                    )
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </div>
-            }
+            )}
         </div>
     );
 };

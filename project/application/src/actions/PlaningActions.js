@@ -1,4 +1,5 @@
-import { addPlan } from "../configAPI";
+import {addPlan, getCurrentTeamDetailedData,} from '../configAPI';
+import {store} from "../store/configureStore";
 
 export const CREATE_MONTH_ARRAY = 'CREATE_MONTH_ARRAY';
 export const INCRIMENT_MONTH = 'INCRIMENT_MONTH';
@@ -12,6 +13,29 @@ export const CHANGE_USER_TIME_OFF = 'CHANGE_USER_TIME_OFF';
 export const CHANGE_MAIN_TIME_OFF_SWITCH = 'CHANGE_ALL_TIME_OFF';
 export const CHANGE_ALL_USER_TIME_OFF = 'CHANGE_ALL_USER_TIME_OFF';
 export const OPEN_DAY_OFF_CHANGE_WINDOW = 'OPEN_DAY_OFF_CHANGE_WINDOW';
+export const SET_SELECTED_USERS = 'SET_SELECTED_USERS';
+
+
+// const setTimeEntriesListAction = payload => ({
+//     type: GET_TIME_ENTRIES_LIST,
+//     payload,
+// });
+
+const setUsersByCurrentTeam = payload => ({
+    type: SET_SELECTED_USERS,
+    payload,
+});
+
+export const getUsersByCurrentTeam = () => async dispatch => {
+    // const { page, limit, disabled } = store.getState().mainPageReducer.pagination;
+    let res = getCurrentTeamDetailedData();
+
+    const teamUsers = res.data.team[0].team_users;
+    const users = teamUsers.map(teamUser => teamUser.user[0]);
+
+    dispatch(setUsersByCurrentTeam(users));
+};
+
 
 export const openDayOffChangeWindow = payload => ({
     type: OPEN_DAY_OFF_CHANGE_WINDOW,
@@ -103,10 +127,8 @@ export const changeAllTimeOff = () => {
 };
 
 export const addPlanUser = async data => {
-    console.log(data)
+    console.log(data);
     try {
         await addPlan(data);
-
-    } catch (error) {
-    }
+    } catch (error) {}
 };

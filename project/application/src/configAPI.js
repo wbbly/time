@@ -371,9 +371,9 @@ export const setPassword = ({ password, token }) =>
         },
     });
 
-export const addPlan = (data) =>
-  instance({
-    url: '/timer-planning/add',
-    method: 'POST',
-    data,
-  });
+export const addPlan = data =>
+    instance({
+        url: '/timer-planning/add',
+        method: 'POST',
+        data,
+    });
