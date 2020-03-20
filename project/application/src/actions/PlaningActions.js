@@ -1,5 +1,7 @@
-import {addPlan, getCurrentTeamDetailedData,} from '../configAPI';
+import {addPlan, getCurrentTeamDetailedData, getTimerPlaningListData,} from '../configAPI';
 import {store} from "../store/configureStore";
+import moment from "moment";
+import {getTimerPlanningListParseFunction} from "../queries";
 
 export const CREATE_MONTH_ARRAY = 'CREATE_MONTH_ARRAY';
 export const INCRIMENT_MONTH = 'INCRIMENT_MONTH';
@@ -14,6 +16,7 @@ export const CHANGE_MAIN_TIME_OFF_SWITCH = 'CHANGE_ALL_TIME_OFF';
 export const CHANGE_ALL_USER_TIME_OFF = 'CHANGE_ALL_USER_TIME_OFF';
 export const OPEN_DAY_OFF_CHANGE_WINDOW = 'OPEN_DAY_OFF_CHANGE_WINDOW';
 export const SET_SELECTED_USERS = 'SET_SELECTED_USERS';
+export const SET_TIMER_PLANING_LIST = 'SET_TIMER_PLANING_LIST';
 
 
 // const setTimeEntriesListAction = payload => ({
@@ -21,19 +24,29 @@ export const SET_SELECTED_USERS = 'SET_SELECTED_USERS';
 //     payload,
 // });
 
-const setUsersByCurrentTeam = payload => ({
+export const setSelectedUsers = payload => ({
     type: SET_SELECTED_USERS,
     payload,
 });
 
-export const getUsersByCurrentTeam = () => async dispatch => {
-    // const { page, limit, disabled } = store.getState().mainPageReducer.pagination;
-    let res = getCurrentTeamDetailedData();
+export const setTimerPlaningList = payload => ({
+    type: SET_TIMER_PLANING_LIST,
+    payload,
+});
 
-    const teamUsers = res.data.team[0].team_users;
-    const users = teamUsers.map(teamUser => teamUser.user[0]);
+export const getTimerPlaningList = () => async dispatch => {
+    const { selectedUsers, current } = store.getState().planingReducer;
 
-    dispatch(setUsersByCurrentTeam(users));
+    let userIds = selectedUsers.map(user => user.id);
+    let startDate = moment(current)
+        .startOf('month')
+        .format('YYYY-MM-DD');
+    let endDate = moment(current)
+        .endOf('month')
+        .format('YYYY-MM-DD');
+
+    let res = await getTimerPlaningListData({userIds, startDate, endDate});
+    dispatch(setTimerPlaningList(getTimerPlanningListParseFunction(res.data.data.user)))
 };
 
 

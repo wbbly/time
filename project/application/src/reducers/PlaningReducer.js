@@ -10,7 +10,8 @@ import {
     CHANGE_USER_TIME_OFF,
     CHANGE_MAIN_TIME_OFF_SWITCH,
     CHANGE_ALL_USER_TIME_OFF,
-    OPEN_DAY_OFF_CHANGE_WINDOW, SET_SELECTED_USERS,
+    OPEN_DAY_OFF_CHANGE_WINDOW,
+    SET_SELECTED_USERS, SET_TIMER_PLANING_LIST,
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
@@ -18,8 +19,9 @@ import moment from 'moment';
 const defaultState = {
     current: null,
     month: [],
-    selectedUsers:[],
+    selectedUsers: [],
     users: [],
+    timerPlaningList: [],
     timeOff: [
         {
             id: '1',
@@ -67,11 +69,17 @@ const defaultState = {
 
 export const planingReducer = (state = defaultState, action) => {
     switch (action.type) {
-
         case SET_SELECTED_USERS: {
             return {
                 ...state,
-                selectedUsers: action.payload
+                selectedUsers: action.payload,
+            };
+        }
+
+        case SET_TIMER_PLANING_LIST: {
+            return {
+                ...state,
+                timerPlaningList: action.payload,
             }
         }
 
