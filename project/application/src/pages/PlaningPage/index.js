@@ -23,7 +23,7 @@ import {
     changeUserOpenFlag,
     changeTimeOffFlag,
     changeAllTimeOff,
-    openDayOffChangeWindow,
+    openDayOffChangeWindow, getTimerPlaningList, setSelectedUsers,
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -41,7 +41,10 @@ import { inputRanges, staticRanges } from '../ReportsPage/ranges';
 import { de, enGB, it, ru, ua } from 'react-date-range/dist/locale';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
-import { getCurrentDate } from '../../services/timeService'; // theme css file
+
+import {getCurrentDate} from '../../services/timeService';
+import {getCurrentTeamDetailedData} from "../../configAPI"; // theme css file
+
 const localeMap = {
     ru: ru,
     en: enGB,
@@ -68,221 +71,23 @@ class PlaningPage extends React.Component {
         },
     };
 
-    componentDidMount() {
+    async componentDidMount() {
+        const {currentMonth, getTimerPlaningList} = this.props;
         moment.locale(`${this.props.user.language}`);
-        this.props.currentMonth();
-        this.getTimerPlaningList();
+        currentMonth();
+        await this.getUsersByCurrentTeam();
+        getTimerPlaningList();
         this.getProjects();
     }
 
     getUsersByCurrentTeam = async () => {
-        apiCall(AppConfig.apiURL + `team/current/detailed-data`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            result => {
-                const teamUsers = result.data.team[0].team_users;
-                const users = teamUsers.map(teamUser => teamUser.user[0]);
-                this.setState({ userData: users });
-                //todo add this users to reducer maybe
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => console.log(errorMessage));
-                } else {
-                    console.log(err);
-                }
-            }
-        );
-    };
 
-    getTimerPlaningList = () => {
-        apiCall(AppConfig.apiURL + `team/current/detailed-data`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            result => {
-                const teamUsers = result.data.team[0].team_users;
-                const users = teamUsers.map(teamUser => teamUser.user[0]);
-                this.setState({ userData: users });
-                //todo add this users to reducer maybe
-                //todo split requests
-                apiCall(AppConfig.apiURL + `timer-planning/list`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userIds: users.map(user => user.id),
-                        startDate: moment()
-                            .startOf('month')
-                            .format('YYYY-MM-DD'),
-                        endDate: moment()
-                            .endOf('month')
-                            .format('YYYY-MM-DD'),
-                        //todo enter valid dates
-                    }),
-                }).then(result => {
-                    let users = result.data.user;
-                    let logged = [];
-                    let timer_plannings = [];
+        let res = await getCurrentTeamDetailedData();
 
-                    users.forEach((user, i) =>
-                        user.timer_plannings.forEach((timer_planning, y) => {
-                            let matchedLogIndex = timer_plannings.findIndex(
-                                l => l.project_id === timer_planning.project_id
-                            );
+        const teamUsers = res.data.data.team[0].team_users;
+        const users = teamUsers.map(teamUser => teamUser.user[0]);
 
-                            if (matchedLogIndex !== -1) {
-                                timer_planning.project &&
-                                    timer_plannings[matchedLogIndex].projects.push({
-                                        start_date: timer_planning.start_date,
-                                        end_date: timer_planning.end_date,
-                                        name: timer_planning.project.name,
-                                        project_color: timer_planning.project.project_color,
-                                        duration: timer_planning.duration,
-                                    });
-                            } else {
-                                timer_planning.project &&
-                                    timer_plannings.push({
-                                        id: timer_planning.id,
-                                        team_id: timer_planning.team_id,
-                                        project_id: timer_planning.project_id,
-                                        project: timer_planning.project,
-                                        timer_off_id: timer_planning.timer_off_id,
-                                        timer_off: timer_planning.timer_off,
-                                        duration: timer_planning.duration,
-                                        start_date: timer_planning.start_date,
-                                        end_date: timer_planning.end_date,
-                                        created_by_id: timer_planning.created_by_id,
-                                        created_by: timer_planning.created_by,
-                                        created_at: timer_planning.created_at,
-                                        projects: [
-                                            {
-                                                start_date: timer_planning.start_date,
-                                                end_date: timer_planning.end_date,
-                                                name: timer_planning.project.name,
-                                                project_color: timer_planning.project.project_color,
-                                                duration: timer_planning.duration,
-                                            },
-                                        ],
-                                    });
-                            }
-                            if (users[i].timer_plannings.length - 1 === y) {
-                                users[i].timer_plannings = timer_plannings;
-                                timer_plannings = [];
-                            }
-                        })
-                    );
-
-                    //modify logged array by projectId
-                    users.forEach((user, i) =>
-                        user.logged.forEach((log, y) => {
-                            let matchedLogIndex = logged.findIndex(l => l.projectId === log.project_id);
-                            if (matchedLogIndex !== -1) {
-                                logged[matchedLogIndex].timeEntries.push({
-                                    startDatetime: log.start_datetime,
-                                    endDatetime: log.end_datetime,
-                                });
-                            } else {
-                                logged.push({
-                                    projectId: log.project_id,
-                                    issue: log.issue,
-                                    project: log.project,
-                                    timeEntries: [
-                                        {
-                                            startDatetime: log.start_datetime,
-                                            endDatetime: log.end_datetime,
-                                        },
-                                    ],
-                                });
-                            }
-                            if (users[i].logged.length - 1 === y) {
-                                users[i].logged = logged;
-                                logged = [];
-                            }
-                        })
-                    );
-
-                    users.forEach((user, i) =>
-                        user.logged.forEach((log, y) => {
-                            //add formattedDate and projectId keys
-                            let timeEntries = [];
-                            log.timeEntries.forEach(entry => {
-                                let findIndex = timeEntries.findIndex(
-                                    e => e.formattedDate === moment(entry.startDatetime).format('YYYY-MM-DD')
-                                );
-                                if (findIndex !== -1) {
-                                    timeEntries[findIndex].entries.push(entry);
-                                } else {
-                                    timeEntries.push({
-                                        formattedDate: moment(entry.startDatetime).format('YYYY-MM-DD'),
-                                        projectId: users[i].logged[y].projectId,
-                                        entries: [entry],
-                                    });
-                                }
-                            });
-
-                            //count total time
-                            timeEntries.forEach((entry, i) => {
-                                let totalTime = 0;
-                                entry.entries.forEach(e => {
-                                    totalTime += +moment(e.endDatetime) - +moment(e.startDatetime);
-                                });
-                                timeEntries[i].totalTime = +moment(totalTime).format('H');
-                            });
-
-                            //create groups of inextricable days
-                            let timeGroups = [];
-                            timeEntries.forEach((entry, i) => {
-                                if (i === 0) {
-                                    return timeGroups.push({
-                                        ...entry,
-                                        days: [entry],
-                                    });
-                                }
-                                const dateDiff = moment(entry.formattedDate).diff(
-                                    moment(timeEntries[i - 1].formattedDate),
-                                    'days'
-                                );
-
-                                if (dateDiff === 1) {
-                                    timeGroups[timeGroups.length - 1].totalTime += entry.totalTime;
-                                    timeGroups[timeGroups.length - 1].days.push(entry);
-                                } else {
-                                    timeGroups.push({
-                                        ...entry,
-                                        days: [entry],
-                                    });
-                                }
-                            });
-
-                            users[i].logged[y] = {
-                                timeGroups,
-                                ...users[i].logged[y].project,
-                                projectId: users[i].logged[y].projectId,
-                            };
-                        })
-                    );
-
-                    console.log({ users });
-                    this.setState({
-                        timerPlaningList: users,
-                    });
-                });
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => console.log(errorMessage));
-                } else {
-                    console.log(err);
-                }
-            }
-        );
+        this.props.setSelectedUsers(users)
     };
 
     getProjects = () =>
@@ -405,9 +210,11 @@ class PlaningPage extends React.Component {
 
             firstDayOfWeek,
             dateFormat,
+            getTimerPlaningList
         } = this.props;
-        const { month, current, users, timeOff, swithcAllTimeOff } = planingReducer;
-        const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timerPlaningList } = this.state;
+
+        const {month, current, users, timeOff, swithcAllTimeOff, timerPlaningList} = planingReducer;
+        const {showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff} = this.state;
         const {
             v_resource_planing,
             v_all_projects,
@@ -439,6 +246,7 @@ class PlaningPage extends React.Component {
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
 
+        console.log({timerPlaningList})
         return (
             <>
                 <Scrollbars>
@@ -488,8 +296,8 @@ class PlaningPage extends React.Component {
                                 <p>{v_resource_planing}</p>
                                 <div className="planing-header__info-container">
                                     <div className="planing-header__counters">
-                                        <p>{`${this.totalPlaned()}${v_hour_small} ${v_all_projects} `}</p>
-                                        <p>{`${this.totalTracked()}${v_hour_small} ${v_tracked}`}</p>
+                                        <p>{`${'TOT_PLANNING'}${v_hour_small} ${v_all_projects} `}</p>
+                                        <p>{`${'TOT_TRACKED'}${v_hour_small} ${v_tracked}`}</p>
                                     </div>
                                     <div className="planing-header__add-btn">
                                         <button onClick={this.changeAddTimeOffFlag}>{v_filter}</button>
@@ -590,15 +398,15 @@ class PlaningPage extends React.Component {
                                     </div>
                                     {timerPlaningList
                                         ? timerPlaningList.map(user => (
-                                              <PlaningUserBlock
-                                                  key={user.id}
-                                                  month={month}
-                                                  user={user}
-                                                  addUser={addUser}
-                                                  {...vocabulary}
-                                                  changeAddPlanFlag={this.changeAddPlanFlag}
-                                              />
-                                          ))
+                                            <PlaningUserBlock
+                                                key={user.id}
+                                                month={month}
+                                                user={user}
+                                                addUser={addUser}
+                                                {...vocabulary}
+                                                changeAddPlanFlag={this.changeAddPlanFlag}
+                                            />
+                                        ))
                                         : null}
                                     {/*{users.map(user => (*/}
                                     {/*    <PlaningUserBlock*/}
@@ -627,7 +435,7 @@ class PlaningPage extends React.Component {
                                     users={timerPlaningList}
                                     projects={projectsArray}
                                     vocabulary={vocabulary}
-                                    getTimerPlaningList={this.getTimerPlaningList}
+                                    getTimerPlaningList={getTimerPlaningList}
                                 />
                             ) : null}
                             {showTimeOff ? (
@@ -667,6 +475,8 @@ const mapStateToProps = state => ({
 
     firstDayOfWeek: state.userReducer.firstDayOfWeek,
     dateFormat: state.userReducer.dateFormat,
+    ///
+    selectedUsers: state.planingReducer.selectedUsers,
 });
 
 const mapDispatchToProps = {
@@ -680,6 +490,9 @@ const mapDispatchToProps = {
     changeTimeOffFlag,
     changeAllTimeOff,
     openDayOffChangeWindow,
+    ///
+    setSelectedUsers,
+    getTimerPlaningList
 };
 
 export default connect(

@@ -8,6 +8,7 @@ import './style.scss';
 const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan, indexHeight, project }) => {
     console.log({ date }, { widthPlan });
     return (
+
         <div
             style={{
                 top: 38 * indexHeight,
@@ -19,11 +20,12 @@ const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan, indexHeight, projec
                 <div
                     style={{
                         background: project.project_color.name,
+
                     }}
                     className="plan"
                 >
                     <p>{project.name}</p>
-                    <p>{`${project.duration} ${v_hour_small}`}</p>
+                    <p>{`${project.duration}${v_hour_small}`}</p>
                 </div>
                 {date.timer_off &&
                     date.timer_off.map((timeOff, index) => (
@@ -37,6 +39,7 @@ const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan, indexHeight, projec
                             <p>{timeOff.name}</p>
                         </div>
                     ))}
+
             </div>
         </div>
     );
@@ -306,7 +309,9 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                     </div>
                 ))}
             </div>
+
             {user.logged.length > 0 && (
+
                 <div className="logged">
                     <p className="logged__title">Logged</p>
                     <div className="user-block__main-block">

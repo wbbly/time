@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-import { logoutByUnauthorized } from './services/authentication';
+import {logoutByUnauthorized} from './services/authentication';
 
-import { AppConfig } from './config';
+import {AppConfig} from './config';
 
-import { getTokenFromLocalStorage } from './services/tokenStorageService';
+import {getTokenFromLocalStorage} from './services/tokenStorageService';
 
 const baseURL = AppConfig.apiURL;
 
@@ -15,7 +15,7 @@ const instance = axios.create({
     },
 });
 
-export const setSocialConnect = (userId, { socialId, socialName }) =>
+export const setSocialConnect = (userId, {socialId, socialName}) =>
     instance({
         url: `user/${userId}/set-social/${socialName}`,
         method: 'POST',
@@ -24,7 +24,7 @@ export const setSocialConnect = (userId, { socialId, socialName }) =>
         },
     });
 
-export const loginWithFacebook = ({ email = '', id, name: username, language }) =>
+export const loginWithFacebook = ({email = '', id, name: username, language}) =>
     instance({
         url: '/user/login-fb',
         method: 'POST',
@@ -54,7 +54,7 @@ export const getCurrentTeam = () =>
         method: 'GET',
     });
 
-export const addTeam = ({ teamName }) =>
+export const addTeam = ({teamName}) =>
     instance({
         url: '/team/add',
         method: 'POST',
@@ -69,7 +69,7 @@ export const getCurrentTeamDetailedData = () =>
         method: 'GET',
     });
 
-export const switchTeam = ({ teamId }) =>
+export const switchTeam = ({teamId}) =>
     instance({
         url: '/team/switch',
         method: 'PATCH',
@@ -164,7 +164,7 @@ export const syncTaskWithJira = id =>
         method: 'POST',
     });
 
-export const userInvite = ({ email }) =>
+export const userInvite = ({email}) =>
     instance({
         url: '/user/invite',
         method: 'POST',
@@ -175,7 +175,7 @@ export const userInvite = ({ email }) =>
 
 // UNUSED AXIOS REQUESTS
 
-export const userChangePassword = ({ password, newPassword }) =>
+export const userChangePassword = ({password, newPassword}) =>
     instance({
         url: '/user/change-password',
         method: 'POST',
@@ -185,7 +185,7 @@ export const userChangePassword = ({ password, newPassword }) =>
         },
     });
 
-export const addProject = ({ name, projectColorId }) =>
+export const addProject = ({name, projectColorId}) =>
     instance({
         url: '/project/add',
         method: 'POST',
@@ -203,7 +203,7 @@ export const getProjectColorList = () =>
         method: 'GET',
     });
 
-export const changeProject = ({ id, name, projectColorId }) =>
+export const changeProject = ({id, name, projectColorId}) =>
     instance({
         url: `/project/${id}`,
         method: 'PATCH',
@@ -215,7 +215,7 @@ export const changeProject = ({ id, name, projectColorId }) =>
         },
     });
 
-export const changeUserInTeam = ({ id, email, username, isActive, roleName }) =>
+export const changeUserInTeam = ({id, email, username, isActive, roleName}) =>
     instance({
         url: `/user/${id}/team`,
         method: 'PATCH',
@@ -227,7 +227,7 @@ export const changeUserInTeam = ({ id, email, username, isActive, roleName }) =>
         },
     });
 
-export const renameTeam = ({ teamId, newName }) =>
+export const renameTeam = ({teamId, newName}) =>
     instance({
         url: '/team/rename',
         method: 'PATCH',
@@ -237,7 +237,7 @@ export const renameTeam = ({ teamId, newName }) =>
         },
     });
 
-export const signIn = ({ email, password }) =>
+export const signIn = ({email, password}) =>
     instance({
         url: '/user/login',
         method: 'POST',
@@ -247,7 +247,7 @@ export const signIn = ({ email, password }) =>
         },
     });
 
-export const signUp = ({ email, password, language }) =>
+export const signUp = ({email, password, language}) =>
     instance({
         url: '/user/register',
         method: 'POST',
@@ -258,7 +258,7 @@ export const signUp = ({ email, password, language }) =>
         },
     });
 
-export const getProjectReports = ({ projectName, startDate, endDate }) =>
+export const getProjectReports = ({projectName, startDate, endDate}) =>
     instance({
         url: '/project/reports-project',
         method: 'GET',
@@ -269,7 +269,7 @@ export const getProjectReports = ({ projectName, startDate, endDate }) =>
         },
     });
 
-export const getExportReport = ({ timezoneOffset, startDate, endDate }) =>
+export const getExportReport = ({timezoneOffset, startDate, endDate}) =>
     instance({
         url: '/report/export',
         method: 'GET',
@@ -280,7 +280,7 @@ export const getExportReport = ({ timezoneOffset, startDate, endDate }) =>
         },
     });
 
-export const getReportsProjects = ({ startDate, endDate }) =>
+export const getReportsProjects = ({startDate, endDate}) =>
     instance({
         url: '/project/reports-projects',
         method: 'GET',
@@ -290,7 +290,7 @@ export const getReportsProjects = ({ startDate, endDate }) =>
         },
     });
 
-export const getTimerReportsList = ({ startDate, endDate }) =>
+export const getTimerReportsList = ({startDate, endDate}) =>
     instance({
         url: '/timer/reports-list',
         method: 'GET',
@@ -313,7 +313,7 @@ export const requestChangeUserData = (data, id) =>
         data,
     });
 
-export const verifyJiraToken = ({ token, urlJira }) =>
+export const verifyJiraToken = ({token, urlJira}) =>
     instance({
         url: 'sync/jira/my-permissions',
         method: 'GET',
@@ -330,7 +330,7 @@ instance.interceptors.request.use(
         if (token) {
             return {
                 ...config,
-                headers: { ...config.headers, Authorization: `Bearer ${token}` },
+                headers: {...config.headers, Authorization: `Bearer ${token}`},
             };
         }
 
@@ -361,7 +361,7 @@ export const resetPassword = email =>
         },
     });
 
-export const setPassword = ({ password, token }) =>
+export const setPassword = ({password, token}) =>
     instance({
         url: '/user/set-password',
         method: 'POST',
@@ -371,9 +371,16 @@ export const setPassword = ({ password, token }) =>
         },
     });
 
-export const addPlan = (data) =>
-  instance({
-    url: '/timer-planning/add',
-    method: 'POST',
-    data,
-  });
+export const addPlan = data =>
+    instance({
+        url: '/timer-planning/add',
+        method: 'POST',
+        data,
+    });
+
+export const getTimerPlaningListData = data =>
+    instance({
+        url: '/timer-planning/list',
+        method: 'POST',
+        data,
+    });
