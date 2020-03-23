@@ -6,7 +6,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 //---COMPONENTS---
 import ModalPortal from '../../components/ModalPortal';
 import PlaningUserBlock from '../../components/PlaningUserBlock';
-import { AddUserProject } from '../../components/PlaningAddUserProject';
+import AddUserProject from '../../components/PlaningAddUserProject';
 import { AddPlan } from '../../components/PlaningAddPlan';
 import { AddTimeOff } from '../../components/PlaningAddTimeOff';
 
@@ -26,6 +26,8 @@ import {
     openDayOffChangeWindow,
     getTimerPlaningList,
     setSelectedUsers,
+    setCurrentTeam,
+    deleteUser,
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -43,8 +45,9 @@ import { inputRanges, staticRanges } from '../ReportsPage/ranges';
 import { de, enGB, it, ru, ua } from 'react-date-range/dist/locale';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
+
 import { getCurrentDate } from '../../services/timeService';
-import { getCurrentTeamDetailedData } from '../../configAPI'; // theme css file
+import { getCurrentTeamDetailedData, getProjectsList } from '../../configAPI';
 const localeMap = {
     ru: ru,
     en: enGB,
@@ -75,29 +78,29 @@ class PlaningPage extends React.Component {
         const { currentMonth, getTimerPlaningList } = this.props;
         moment.locale(`${this.props.user.language}`);
         currentMonth();
-        await this.getUsersByCurrentTeam();
+        await this.getCurrentTeam();
         getTimerPlaningList();
         this.getProjects();
     }
 
-    getUsersByCurrentTeam = async () => {
+    getCurrentTeam = async () => {
         let res = await getCurrentTeamDetailedData();
 
         const teamUsers = res.data.data.team[0].team_users;
         const users = teamUsers.map(teamUser => teamUser.user[0]);
+        const team = {
+            id: res.data.data.team[0].id,
+            name: res.data.data.team[0].name,
+            users,
+        };
 
-        this.props.setSelectedUsers(users);
+        this.props.setCurrentTeam(team);
     };
 
     getProjects = () =>
-        apiCall(AppConfig.apiURL + `project/list?withTimerList=true`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
+        getProjectsList(true).then(
             result => {
-                let data = getProjectsV2ProjectPageUserParseFunction(result.data);
+                let data = getProjectsV2ProjectPageUserParseFunction(result.data.data);
                 this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
             },
             err => {
@@ -197,6 +200,21 @@ class PlaningPage extends React.Component {
         // this.applySearch(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
     };
 
+    handleAddUser = (dataSelected, searchFlag) => {
+        const { setSelectedUsers, getTimerPlaningList } = this.props;
+        if (searchFlag) {
+            setSelectedUsers(dataSelected);
+            getTimerPlaningList();
+        }
+        console.log({ dataSelected });
+    };
+
+    handleDeleteUser = userId => {
+        const { deleteUser, getTimerPlaningList } = this.props;
+        deleteUser(userId);
+        getTimerPlaningList();
+    };
+
     render() {
         const {
             planingReducer,
@@ -210,7 +228,16 @@ class PlaningPage extends React.Component {
             firstDayOfWeek,
             dateFormat,
         } = this.props;
-        const { month, current, users, timeOff, swithcAllTimeOff, timerPlaningList } = planingReducer;
+        const {
+            month,
+            current,
+            users,
+            timeOff,
+            swithcAllTimeOff,
+            timerPlaningList,
+            selectedUsers,
+            currentTeam,
+        } = planingReducer;
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff } = this.state;
         const {
             v_resource_planing,
@@ -242,120 +269,123 @@ class PlaningPage extends React.Component {
 
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
-
         return (
             <>
                 <Scrollbars>
                     <div style={{ display: 'flex', minWidth: '100%', minHeight: '100%', overflowX: 'hidden' }}>
-                        <div className="aside-bar">
-                            <div className="aside-bar__users">
-                                <div className="aside-bar__filler-top" />
-                                <div className="aside-bar__add-user-block" onClick={this.changeAddUserFlag}>
-                                    <i className="aside-bar__add-user" />
-                                    {showAddUser ? (
-                                        <AddUserProject
-                                            cancel={this.closeAllFlags}
-                                            add={console.log} //change to needed function when backend will be done
-                                            users={users}
-                                            projects={projectsArray}
-                                            vocabulary={vocabulary}
-                                        />
-                                    ) : null}
-                                </div>
-                                {users.map(user => (
-                                    <div key={user.id} className="aside-bar__user-info">
-                                        {/*<div*/}
-                                        {/*    className="aside-bar__avatar-block"*/}
-                                        {/*    style={{*/}
-                                        {/*        // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',*/}
-                                        {/*        height: `${user.heightMulti * 60 + 30}px`,*/}
-                                        {/*    }}*/}
-                                        {/*>*/}
-                                        {/*    <div className="aside-bar__avatar">*/}
-                                        {/*        <img src={user.avatar} alt="oops no img"/>*/}
-                                        {/*        <i/>*/}
-                                        {/*    </div>*/}
-                                        {/*</div>*/}
-                                        <div className="aside-bar__show-btn">
-                                            <i
-                                                id={user.id}
-                                                onClick={this.changeUserOpenFlag}
-                                                className={user.openFlag ? 'arrow_up' : 'arrow_down'}
-                                            />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
                         <div className="planing">
-                            <div className="planing-header">
-                                <p>{v_resource_planing}</p>
-                                <div className="planing-header__info-container">
-                                    <div className="planing-header__counters">
-                                        <p>{`${'TOT_PLANNING'}${v_hour_small} ${v_all_projects} `}</p>
-                                        <p>{`${'TOT_TRACKED'}${v_hour_small} ${v_tracked}`}</p>
-                                    </div>
-                                    <div className="planing-header__add-btn">
-                                        <button onClick={this.changeAddTimeOffFlag}>{v_filter}</button>
-                                        <button
-                                            style={{ display: 'flex', alignItems: 'center' }}
-                                            onClick={this.changeAddPlanFlag}
-                                        >
-                                            {' '}
-                                            <i className="planing-header__plus" />
-                                            {v_add_plan}
-                                        </button>
-
-                                        <button onClick={this.changeAddPlanFlag}>{v_time_off}</button>
-                                    </div>
-
-                                    <div className="planing-header__move-btn">
-                                        <button onClick={this.prevMonth}>{v_prev_month}</button>
-                                        <div className="selects_container">
-                                            <div className="select_header" onClick={e => this.openCalendar()}>
-                                                <span>
-                                                    {/*{moment(this.props.timeRange.startDate).format(dateFormat)} {' - '}*/}
-                                                    {/*{moment(this.props.timeRange.endDate).format(dateFormat)}*/}
-                                                    Month
-                                                </span>
-                                                <i className="arrow_down" />
-                                            </div>
-                                            {this.state.dateSelect && (
-                                                <div className="select_body" ref={div => (this.datePickerSelect = div)}>
-                                                    <DateRange
-                                                        locale={customLocale}
-                                                        dateDisplayFormat={dateFormat}
-                                                        ranges={[
-                                                            {
-                                                                startDate: this.state.selectionRange.startDate,
-                                                                endDate: this.state.selectionRange.endDate,
-                                                                key: 'selection',
-                                                            },
-                                                        ]}
-                                                        // staticRanges={staticRanges(
-                                                        //   v_today,
-                                                        //   v_yesterday,
-                                                        //   v_thisWeek,
-                                                        //   v_lastWeek,
-                                                        //   v_thisMonth,
-                                                        //   v_lastMonth,
-                                                        //   v_this_year,
-                                                        //   firstDayOfWeek
-                                                        // )}
-                                                        inputRanges={inputRanges(
-                                                            v_days_up_to_today,
-                                                            v_days_starting_today,
-                                                            firstDayOfWeek
-                                                        )}
-                                                        onChange={this.handleSelect}
-                                                        moveRangeOnFirstSelection={true}
-                                                        editableDateInputs={true}
-                                                    />
-                                                </div>
-                                            )}
+                            <div className="planing-header-container">
+                                <div className="aside-bar">
+                                    <div className="aside-bar__users">
+                                        <div className="aside-bar__add-user-block" onClick={this.changeAddUserFlag}>
+                                            <i className="aside-bar__add-user" />
+                                            {showAddUser ? (
+                                                <AddUserProject
+                                                    cancel={this.closeAllFlags}
+                                                    onAddPress={this.handleAddUser}
+                                                    users={currentTeam.users}
+                                                    projects={projectsArray}
+                                                    vocabulary={vocabulary}
+                                                />
+                                            ) : null}
                                         </div>
-                                        {/*<button onClick={this.currentMonth}>{v_current_month}</button>*/}
-                                        <button onClick={this.nextMonth}>{v_next_month}</button>
+                                        {/*{selectedUsers.map(user => (*/}
+                                        {/*    <div key={user.id} className="aside-bar__user-info">*/}
+                                        {/*        <div*/}
+                                        {/*            className="aside-bar__avatar-block"*/}
+                                        {/*            style={{*/}
+                                        {/*                // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',*/}
+                                        {/*                height: 100,*/}
+                                        {/*            }}*/}
+                                        {/*        >*/}
+                                        {/*            <div className="aside-bar__avatar">*/}
+                                        {/*                <img  alt="oops no img"/>*/}
+                                        {/*                <i/>*/}
+                                        {/*            </div>*/}
+                                        {/*        </div>*/}
+                                        {/*        <div className="aside-bar__show-btn">*/}
+                                        {/*            <i*/}
+                                        {/*                id={user.id}*/}
+                                        {/*                onClick={this.changeUserOpenFlag}*/}
+                                        {/*                className={user.openFlag ? 'arrow_up' : 'arrow_down'}*/}
+                                        {/*            />*/}
+                                        {/*        </div>*/}
+                                        {/*    </div>*/}
+                                        {/*))}*/}
+                                    </div>
+                                </div>
+                                <div className="planing-header">
+                                    <p>{v_resource_planing}</p>
+                                    <div className="planing-header__info-container">
+                                        <div className="planing-header__counters">
+                                            <p>{`${'TOT_PLANNING'}${v_hour_small} ${v_all_projects} `}</p>
+                                            <p>{`${'TOT_TRACKED'}${v_hour_small} ${v_tracked}`}</p>
+                                        </div>
+                                        <div className="planing-header__add-btn">
+                                            <button onClick={this.changeAddTimeOffFlag}>{v_filter}</button>
+                                            <button
+                                                style={{ display: 'flex', alignItems: 'center' }}
+                                                onClick={this.changeAddPlanFlag}
+                                            >
+                                                {' '}
+                                                <i className="planing-header__plus" />
+                                                {v_add_plan}
+                                            </button>
+
+                                            <button onClick={this.changeAddPlanFlag}>{v_time_off}</button>
+                                        </div>
+
+                                        <div className="planing-header__move-btn">
+                                            <button onClick={this.prevMonth}>{v_prev_month}</button>
+                                            <div className="selects_container">
+                                                <div className="select_header" onClick={e => this.openCalendar()}>
+                                                    <span>
+                                                        {/*{moment(this.props.timeRange.startDate).format(dateFormat)} {' - '}*/}
+                                                        {/*{moment(this.props.timeRange.endDate).format(dateFormat)}*/}
+                                                        Month
+                                                    </span>
+                                                    <i className="arrow_down" />
+                                                </div>
+                                                {this.state.dateSelect && (
+                                                    <div
+                                                        className="select_body"
+                                                        ref={div => (this.datePickerSelect = div)}
+                                                    >
+                                                        <DateRange
+                                                            locale={customLocale}
+                                                            dateDisplayFormat={dateFormat}
+                                                            ranges={[
+                                                                {
+                                                                    startDate: this.state.selectionRange.startDate,
+                                                                    endDate: this.state.selectionRange.endDate,
+                                                                    key: 'selection',
+                                                                },
+                                                            ]}
+                                                            // staticRanges={staticRanges(
+                                                            //   v_today,
+                                                            //   v_yesterday,
+                                                            //   v_thisWeek,
+                                                            //   v_lastWeek,
+                                                            //   v_thisMonth,
+                                                            //   v_lastMonth,
+                                                            //   v_this_year,
+                                                            //   firstDayOfWeek
+                                                            // )}
+                                                            inputRanges={inputRanges(
+                                                                v_days_up_to_today,
+                                                                v_days_starting_today,
+                                                                firstDayOfWeek
+                                                            )}
+                                                            onChange={this.handleSelect}
+                                                            moveRangeOnFirstSelection={true}
+                                                            editableDateInputs={true}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {/*<button onClick={this.currentMonth}>{v_current_month}</button>*/}
+                                            <button onClick={this.nextMonth}>{v_next_month}</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -364,6 +394,9 @@ class PlaningPage extends React.Component {
                             <Scrollbars>
                                 <div className="main-content-wrapper">
                                     <div className="month-container">
+                                        <div className="aside-bar">
+                                            <div className="aside-bar__users" />
+                                        </div>
                                         <div className="month-container__weeks-block">
                                             {month.map((week, index) => (
                                                 <div className="month-container__week" key={index}>
@@ -401,9 +434,11 @@ class PlaningPage extends React.Component {
                                                   addUser={addUser}
                                                   {...vocabulary}
                                                   changeAddPlanFlag={this.changeAddPlanFlag}
+                                                  onDeleteUser={this.handleDeleteUser}
                                               />
                                           ))
                                         : null}
+                                    <div className="aside-bar-stub" />
                                     {/*{users.map(user => (*/}
                                     {/*    <PlaningUserBlock*/}
                                     {/*        key={user.id}*/}
@@ -421,9 +456,7 @@ class PlaningPage extends React.Component {
                 </Scrollbars>
                 {showAddPlan || showTimeOff || showAddPlanTimeOff || showAddUser ? (
                     <ModalPortal>
-                        <div
-                            style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%', zIndex: 1 }}
-                        >
+                        <div>
                             {showAddPlan ? (
                                 <AddPlan
                                     cancel={this.closeAllFlags}
@@ -489,6 +522,8 @@ const mapDispatchToProps = {
     ///
     setSelectedUsers,
     getTimerPlaningList,
+    setCurrentTeam,
+    deleteUser,
 };
 
 export default connect(
