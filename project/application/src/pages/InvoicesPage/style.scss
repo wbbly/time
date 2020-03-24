@@ -1,0 +1,69 @@
+.wrapper_invoices_page {
+  font-family: "Open Sans", sans-serif;
+  color: #ffffff;
+
+  .data_container_invoices_page {
+    padding: 46px 40px 0;
+  }
+
+  .invoices_page {
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 32px;
+
+      .add_invoice_button {
+        //width: 208px;
+        //height: 41px;
+        padding: 10px 30px;
+        font-family: "Open Sans", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        line-height: normal;
+        font-size: 14px;
+        color: #ffffff;
+        background-color: #27ae60;
+        outline: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+    }
+
+    &__title {
+      font-size: 36px;
+    }
+
+    &__last_invoices {
+      //padding-bottom: 40px;
+    }
+
+    &__all_invoices {
+      height: 100%;
+
+      .all_invoices {
+
+        &__title {
+          padding: 0 40px;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 18px;
+          line-height: 25px;
+          text-transform: uppercase;
+        }
+
+        &__list {
+          //flex-grow: 1;
+
+        }
+      }
+    }
+
+  }
+
+
+  &--mobile {
+
+  }
+}
