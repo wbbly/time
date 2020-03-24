@@ -208,4 +208,6 @@ export default {
 
     v_v_required: 'Required field',
     v_v_incorect_url: 'Incorrect URL',
+
+    v_invoices: 'Invoices',
 };
