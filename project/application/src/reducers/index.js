@@ -11,7 +11,7 @@ import languageReducer from './LanguageReducer';
 import userReducer from './UserReducer';
 import notificationReducer from './NotificationReducer';
 import clientsReducer from './ClientsReducer';
-import invoicesReducer from "./InvoicesReducer";
+import invoicesReducer from './InvoicesReducer';
 
 export const rootReducer = combineReducers({
     projectReducer,

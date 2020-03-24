@@ -213,5 +213,5 @@ export default {
     v_add_new_invoice: 'New Invoice',
     v_all_invoices: 'All invoices',
     v_invoice: 'Invoice',
-    v_confirm_payment: 'Confirm payment'
+    v_confirm_payment: 'Confirm payment',
 };

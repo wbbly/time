@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from 'moment';
 
 const initialState = {
     invoices: [
@@ -8,7 +8,9 @@ const initialState = {
             number: '001',
             price: 30000,
             createdAt: new Date(),
-            deadlineDate: moment().add(2, 'months').toDate(),
+            deadlineDate: moment()
+                .add(2, 'months')
+                .toDate(),
             confirmed: true,
             currency: 'usd',
         },
@@ -18,10 +20,11 @@ const initialState = {
             number: '002',
             price: 85000,
             createdAt: new Date(),
-            deadlineDate: moment().add(1, 'months').toDate(),
+            deadlineDate: moment()
+                .add(1, 'months')
+                .toDate(),
             confirmed: true,
             currency: 'usd',
-
         },
         {
             id: '3',
@@ -29,7 +32,9 @@ const initialState = {
             number: '003',
             price: 30000,
             createdAt: new Date(),
-            deadlineDate: moment().add(3, 'months').toDate(),
+            deadlineDate: moment()
+                .add(3, 'months')
+                .toDate(),
             confirmed: false,
             currency: 'usd',
         },
@@ -39,17 +44,18 @@ const initialState = {
             number: '001',
             price: 84500,
             createdAt: new Date(),
-            deadlineDate: moment().add(2, 'months').toDate(),
+            deadlineDate: moment()
+                .add(2, 'months')
+                .toDate(),
             confirmed: true,
             currency: 'usd',
         },
-    ]
-
+    ],
 };
 
 export default function invoicesReducer(state = initialState, { type, payload }) {
     switch (type) {
         default:
-            return state
+            return state;
     }
 }
