@@ -1,6 +1,6 @@
 import { getDateTimestamp } from './services/timeService';
 import { decodeTimeEntryIssue } from './services/timeEntryService';
-import moment from "moment";
+import moment from 'moment';
 
 export function getProjectListParseFunction(result) {
     const dataParsed = {
@@ -118,19 +118,28 @@ export function getTimerPlanningListParseFunction(users) {
 
     users.forEach((user, i) =>
         user.timer_plannings.forEach((timer_planning, y) => {
-            console.log({timer_planning});
-            let matchedLogIndex = timer_plannings.findIndex(
-                l => l.project_id === timer_planning.project_id
-            );
-
+            console.log({ timer_planning });
+            let matchedLogIndex = timer_plannings.findIndex(l => l.project_id === timer_planning.project_id);
+            console.log(timer_plannings[matchedLogIndex])
             if (matchedLogIndex !== -1) {
+                // if(timer_planning.project){
+                console.log(timer_plannings[matchedLogIndex].timer_off_id)
                 timer_plannings[matchedLogIndex].projects.push({
                     start_date: timer_planning.start_date,
                     end_date: timer_planning.end_date,
-                    name: timer_planning.project ? timer_planning.project.name : 'name',
-                    project_color: timer_planning.project ? timer_planning.project.project_color: {name: 'red'},
+                    name: timer_planning.project ? timer_planning.project.name :  timer_planning.timer_off?  timer_planning.timer_off.title:'day off',
+                    project_color: timer_planning.project ? timer_planning.project.project_color : { name: 'red' },
                     duration: timer_planning.duration,
                 });
+                // }else {
+                    timer_plannings[matchedLogIndex].timeOff.push({
+                        start_date: timer_planning.start_date,
+                        end_date: timer_planning.end_date,
+                        title: timer_planning.timer_off ? timer_planning.timer_off.title : 'day off',
+                        // project_color: timer_planning.project ? timer_planning.project.project_color : { name: 'red' },
+                        duration: timer_planning.duration,
+                    });
+                // }
             } else {
                 timer_plannings.push({
                     id: timer_planning.id,
@@ -149,8 +158,21 @@ export function getTimerPlanningListParseFunction(users) {
                         {
                             start_date: timer_planning.start_date,
                             end_date: timer_planning.end_date,
-                            name: timer_planning.project ? timer_planning.project.name : 'name',
-                            project_color: timer_planning.project ? timer_planning.project.project_color: {name: 'red'},
+                            name: timer_planning.project ? timer_planning.project.name :  timer_planning.timer_off?  timer_planning.timer_off.title:'day off',
+                            project_color: timer_planning.project
+                                ? timer_planning.project.project_color
+                                : { name: 'red' },
+                            duration: timer_planning.duration,
+                        },
+                    ],
+                    timeOff: [
+                        {
+                            start_date: timer_planning.start_date,
+                            end_date: timer_planning.end_date,
+                            title: timer_planning.timer_off?  timer_planning.timer_off.title:'day off',
+                            // project_color: timer_planning.project
+                            //   ? timer_planning.project.project_color
+                            //   : { name: 'red' },
                             duration: timer_planning.duration,
                         },
                     ],
@@ -229,10 +251,7 @@ export function getTimerPlanningListParseFunction(users) {
                         days: [entry],
                     });
                 }
-                const dateDiff = moment(entry.formattedDate).diff(
-                    moment(timeEntries[i - 1].formattedDate),
-                    'days'
-                );
+                const dateDiff = moment(entry.formattedDate).diff(moment(timeEntries[i - 1].formattedDate), 'days');
 
                 if (dateDiff === 1) {
                     timeGroups[timeGroups.length - 1].totalTime += entry.totalTime;
@@ -254,5 +273,5 @@ export function getTimerPlanningListParseFunction(users) {
     );
 
     console.log({ users });
-    return users
+    return users;
 }

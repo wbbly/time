@@ -1,7 +1,7 @@
-import {addPlan, getCurrentTeamDetailedData, getTimerPlaningListData,} from '../configAPI';
-import {store} from "../store/configureStore";
-import moment from "moment";
-import {getTimerPlanningListParseFunction} from "../queries";
+import { addPlan, getCurrentTeamDetailedData, getTimerPlaningListData, getTimeOff, addTimerOff } from '../configAPI';
+import { store } from '../store/configureStore';
+import moment from 'moment';
+import { getTimerPlanningListParseFunction } from '../queries';
 
 export const CREATE_MONTH_ARRAY = 'CREATE_MONTH_ARRAY';
 export const INCRIMENT_MONTH = 'INCRIMENT_MONTH';
@@ -17,8 +17,7 @@ export const CHANGE_ALL_USER_TIME_OFF = 'CHANGE_ALL_USER_TIME_OFF';
 export const OPEN_DAY_OFF_CHANGE_WINDOW = 'OPEN_DAY_OFF_CHANGE_WINDOW';
 export const SET_SELECTED_USERS = 'SET_SELECTED_USERS';
 export const SET_TIMER_PLANING_LIST = 'SET_TIMER_PLANING_LIST';
-
-
+export const SET_TIME_OFF = 'SET_TIME_OFF';
 // const setTimeEntriesListAction = payload => ({
 //     type: GET_TIME_ENTRIES_LIST,
 //     payload,
@@ -29,12 +28,17 @@ export const setSelectedUsers = payload => ({
     payload,
 });
 
+export const setTimeOff = payload => ({
+    type: SET_TIME_OFF,
+    payload,
+});
+
 export const setTimerPlaningList = payload => ({
     type: SET_TIMER_PLANING_LIST,
     payload,
 });
 
-export const getTimerPlaningList = () => async dispatch => {
+export const getTimerPlaningList = (timerOffIds) => async dispatch => {
     const { selectedUsers, current } = store.getState().planingReducer;
 
     let userIds = selectedUsers.map(user => user.id);
@@ -45,10 +49,9 @@ export const getTimerPlaningList = () => async dispatch => {
         .endOf('month')
         .format('YYYY-MM-DD');
 
-    let res = await getTimerPlaningListData({userIds, startDate, endDate});
-    dispatch(setTimerPlaningList(getTimerPlanningListParseFunction(res.data.data.user)))
+    let res = await getTimerPlaningListData({ userIds, timerOffIds, startDate, endDate });
+    dispatch(setTimerPlaningList(getTimerPlanningListParseFunction(res.data.data.user)));
 };
-
 
 export const openDayOffChangeWindow = payload => ({
     type: OPEN_DAY_OFF_CHANGE_WINDOW,
@@ -139,8 +142,25 @@ export const changeAllTimeOff = () => {
     };
 };
 
-export const addPlanUser = async data =>{
+export const addPlanUser = async data => {
     try {
-        await addPlan(data)
+        await addPlan(data);
+    } catch (error) {}
+};
+
+export const getTime_Off = () => {return async dispatch => {
+    try {
+        const { data } = await getTimeOff();
+        return dispatch(setTimeOff(data.data.timer_off));
+    } catch (error) {
+    }
+}
+};
+
+export const postTimer_Off = data  =>async dispatch => {
+    try {
+        await addTimerOff(data);
+        dispatch(getTime_Off());
+        // getTime_Off()
     } catch (error) {}
 };

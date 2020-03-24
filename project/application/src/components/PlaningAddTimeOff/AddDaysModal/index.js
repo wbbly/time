@@ -3,11 +3,61 @@ import { CloseSvg } from '../index';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import './style.scss';
-
+import { apiCall } from '../../../services/apiService';
+import { AppConfig } from '../../../config';
 import CustomSelect from '../../CustomSelect';
+import {
+  postTimer_Off
+} from "../../../actions/PlaningActions";
+import projectsPageAction from "../../../actions/ProjectsActions";
+import { connect } from "react-redux";
 
-const AddDaysModal = ({ close, vocabulary, timeOff, initialName, initialColor, itemId }) => {
+const AddDaysModal = ({ close, vocabulary, timeOff, initialName, initialColor, itemId, postTimer_Off }) => {
     const { v_cancel_small, v_add, v_v_required } = vocabulary;
+
+  const addDayClick = data => {
+    console.log(data);
+    // const {
+    //   hours,
+    //   startDate,
+    //   endDate,
+    //   person: { idPerson },
+    //   project: { idProject },
+    // } = data;
+    // addPlanUser({
+    //   userId: idPerson,
+    //   projectId: idProject,
+    //   startDate: startDate,
+    //   duration: hours,
+    //   endDate: endDate,
+    // }).then(() => {
+    //   this.props.getTimerPlaningList();
+    // });
+    // apiCall(AppConfig.apiURL + `timer-off/add`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     title: data.dayName
+    //   }),
+    // }).then(result => {
+    //
+    // });
+    postTimer_Off({ title: data.dayName })
+    // apiCall(AppConfig.apiURL + `timer-off/list`, {
+    //     method: 'GET',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     // body: JSON.stringify({
+    //     //   title: data.dayName
+    //     // }),
+    //   }).then(result => {
+    //       console.log(result)
+    //   });
+  };
+
     return (
         <div className="add-days-modal">
             <div className="add-days-modal__header">
@@ -27,6 +77,7 @@ const AddDaysModal = ({ close, vocabulary, timeOff, initialName, initialColor, i
                     color: Yup.string().required(v_v_required),
                 })}
                 onSubmit={values => {
+                    addDayClick(values);
                     console.log(values);
                     console.log('test');
                     close();
@@ -74,4 +125,15 @@ const AddDaysModal = ({ close, vocabulary, timeOff, initialName, initialColor, i
     );
 };
 
-export default AddDaysModal;
+const mapStateToProps = state => ({
+
+});
+
+const mapDispatchToProps = {
+  postTimer_Off
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddDaysModal);

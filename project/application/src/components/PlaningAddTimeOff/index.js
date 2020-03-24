@@ -6,6 +6,9 @@ import Switch from '@material-ui/core/Switch';
 import AddDaysModal from './AddDaysModal';
 
 import './style.scss';
+import { ThemeProvider } from "@material-ui/styles";
+import Checkbox from "@material-ui/core/Checkbox";
+import { createMuiTheme } from "@material-ui/core";
 
 const IOSSwitch = withStyles(theme => ({
     root: {
@@ -83,13 +86,82 @@ export const PencilSvg = ({ openFlag, action, id }) => {
         </svg>
     );
 };
-
+const materialTheme = createMuiTheme({
+    overrides: {
+        MuiSvgIcon: {
+            root: {
+                fontSize: '24px',
+            },
+        },
+    },
+});
 export class AddTimeOff extends React.Component {
     state = {
         switchAllNotifFlag: false,
         publicNotifFlag: false,
         showAddDayFlag: false,
+        timeOffArray:[],
+        userDataSelected: [],
     };
+
+    componentDidMount() {
+        this.props.getTimeOff().then((res)=>{
+            this.setState({timeOffArray:res.payload})
+        })
+    }
+
+    toggleUser(user) {
+        let daysOff = JSON.parse(JSON.stringify(this.state.userDataSelected));
+        let exists = false;
+        for (let i = 0; i < daysOff.length; i++) {
+            const currentUser = daysOff[i];
+            if (currentUser === user.id) {
+                exists = true;
+                daysOff.splice(i, 1);
+                break;
+            }
+        }
+
+        if (!exists) {
+            daysOff.push(user.id);
+        }
+        console.log(daysOff)
+        this.setState({ userDataSelected: daysOff });
+        // this.props.getTimerPlaningList(daysOff);
+    }
+    selectAllUsers() {
+        this.setState({ userDataSelected: this.state.timeOffArray });
+        // this.props.getTimerPlaningList(this.state.timeOffArray.map((item)=>{return item.id});
+    }
+    selectNoneUsers() {
+        this.setState({ userDataSelected: [] });
+        // this.props.getTimerPlaningList([]);
+    }
+    getCheckedUsers(name) {
+        if (JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
+            return true;
+        }
+    }
+
+    findDays(items, searchText = '') {
+        if (searchText.length > 0) {
+            searchText = searchText.toLowerCase();
+            const filteredArr = items.filter(it => {
+                const values = [];
+                values.push(it['title']);
+
+                return values
+                  .join()
+                  .toLowerCase()
+                  .indexOf(searchText) > -1
+                  ? it
+                  : undefined;
+            });
+            this.setState({ timeOffArray: filteredArr });
+        } else {
+            this.setState({ timeOffArray: items });
+        }
+    }
 
     switchAllNotifFlag = () => {
         this.setState({ switchAllNotifFlag: !this.state.switchAllNotifFlag });
@@ -101,114 +173,161 @@ export class AddTimeOff extends React.Component {
         this.setState({ showAddDayFlag: !this.state.showAddDayFlag });
     };
     render() {
-        const { add, cancel, change, changeAll, vocabulary, timeOff, allFlag, openDayOffChangeWindow } = this.props;
-        const { v_add, v_cancel_small } = vocabulary;
-        const { switchAllNotifFlag, publicNotifFlag, showAddDayFlag } = this.state;
+        const { add, cancel, change, changeAll, vocabulary, timeOff, allFlag, openDayOffChangeWindow, newtimeOff } = this.props;
+        // const { v_add, v_cancel_small } = vocabulary;
+        const { v_user, v_project, v_find, v_select_all, v_select_none, v_apply, v_client } = vocabulary;
+        const { switchAllNotifFlag, publicNotifFlag, showAddDayFlag , timeOffArray} = this.state;
+        console.log(timeOffArray)
         return (
             <div className="timeoff-modal">
                 <div className="timeoff-modal__header">
-                    <p>Time Off</p>
+                    <p>Filter days</p>
                     <CloseSvg cancel={cancel} />
                 </div>
 
                 <div className="timeoff-modal__body">
                     {/* <Scrollbars renderTrackHorizontal={props => <div {...props} style={{ display: 'none' }} />}> */}
-                    <div className="timeoff-modal__list-item">
-                        <div className="timeoff-modal__list-item-left">
-                            <div className="timeoff-modal__list-item-text">Switch all</div>
-                        </div>
-                        <div className="timeoff-modal__list-item-right">
-                            <IOSSwitch checked={allFlag} onChange={_ => changeAll()} value={'all'} />
-                            <div className="timeoff-modal__question">
-                                <i onMouseOver={this.switchAllNotifFlag} onMouseOut={this.switchAllNotifFlag} />
-                                {/* {switchAllNotifFlag ? ( */}
-                                <div
-                                    className={
-                                        switchAllNotifFlag
-                                            ? 'timeoff-modal__notification-show'
-                                            : 'timeoff-modal__notification-hide'
-                                    }
-                                >
-                                    Laborum ea aute id mollit nisi et in veniam deserunt duis laborum ullamco duis.
-                                    Fugiat aliqua elit non dolore mollit consequat est. Labore ea est eiusmod esse non
-                                    nulla nulla laboris. Ullamco sit ipsum ex non minim ut nulla culpa eu pariatur amet.
-                                </div>
-                                {/* ) : null} */}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="timeoff-modal__list-item">
-                        <div className="timeoff-modal__list-item-left">
-                            <div
-                                className="timeoff-modal__list-item-color"
-                                style={{ background: `${timeOff[0].color}` }}
-                            />
-                            <p className="timeoff-modal__list-item-text">{timeOff[0].name}</p>
-                        </div>
-                        <div className="timeoff-modal__list-item-right">
-                            <IOSSwitch
-                                checked={timeOff[0].checked}
-                                onChange={_ => change(timeOff[0])}
-                                value={timeOff[0].name}
-                            />
-                            <div className="timeoff-modal__question">
-                                <i onMouseOver={this.switchPublicNotifFlag} onMouseOut={this.switchPublicNotifFlag} />
-                                {/* {publicNotifFlag ? ( */}
-                                <div
-                                    className={
-                                        publicNotifFlag
-                                            ? 'timeoff-modal__notification-show'
-                                            : 'timeoff-modal__notification-hide'
-                                    }
-                                >
-                                    Laborum ea aute id mollit nisi et in veniam deserunt duis laborum ullamco duis.
-                                    Fugiat aliqua elit non dolore mollit consequat est. Labore ea est eiusmod esse non
-                                    nulla nulla laboris. Ullamco sit ipsum ex non minim ut nulla culpa eu pariatur amet.
-                                </div>
-                                {/* ) : null} */}
-                            </div>
-                        </div>
-                    </div>
+                    {/*<div className="timeoff-modal__list-item">*/}
+                    {/*    <div className="timeoff-modal__list-item-left">*/}
+                    {/*        <div className="timeoff-modal__list-item-text">Switch all</div>*/}
+                    {/*    </div>*/}
+                    {/*    <div className="timeoff-modal__list-item-right">*/}
+                    {/*        <IOSSwitch checked={allFlag} onChange={_ => changeAll()} value={'all'} />*/}
+                    {/*        <div className="timeoff-modal__question">*/}
+                    {/*            <i onMouseOver={this.switchAllNotifFlag} onMouseOut={this.switchAllNotifFlag} />*/}
+                    {/*            /!* {switchAllNotifFlag ? ( *!/*/}
+                    {/*            <div*/}
+                    {/*                className={*/}
+                    {/*                    switchAllNotifFlag*/}
+                    {/*                        ? 'timeoff-modal__notification-show'*/}
+                    {/*                        : 'timeoff-modal__notification-hide'*/}
+                    {/*                }*/}
+                    {/*            >*/}
+                    {/*                Laborum ea aute id mollit nisi et in veniam deserunt duis laborum ullamco duis.*/}
+                    {/*                Fugiat aliqua elit non dolore mollit consequat est. Labore ea est eiusmod esse non*/}
+                    {/*                nulla nulla laboris. Ullamco sit ipsum ex non minim ut nulla culpa eu pariatur amet.*/}
+                    {/*            </div>*/}
+                    {/*            /!* ) : null} *!/*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
+                    {/*<div className="timeoff-modal__list-item">*/}
+                    {/*    <div className="timeoff-modal__list-item-left">*/}
+                    {/*        <div*/}
+                    {/*            className="timeoff-modal__list-item-color"*/}
+                    {/*            style={{ background: `${timeOff[0].color}` }}*/}
+                    {/*        />*/}
+                    {/*        <p className="timeoff-modal__list-item-text">{timeOff[0].name}</p>*/}
+                    {/*    </div>*/}
+                    {/*    <div className="timeoff-modal__list-item-right">*/}
+                    {/*        <IOSSwitch*/}
+                    {/*            checked={timeOff[0].checked}*/}
+                    {/*            onChange={_ => change(timeOff[0])}*/}
+                    {/*            value={timeOff[0].name}*/}
+                    {/*        />*/}
+                    {/*        <div className="timeoff-modal__question">*/}
+                    {/*            <i onMouseOver={this.switchPublicNotifFlag} onMouseOut={this.switchPublicNotifFlag} />*/}
+                    {/*            /!* {publicNotifFlag ? ( *!/*/}
+                    {/*            <div*/}
+                    {/*                className={*/}
+                    {/*                    publicNotifFlag*/}
+                    {/*                        ? 'timeoff-modal__notification-show'*/}
+                    {/*                        : 'timeoff-modal__notification-hide'*/}
+                    {/*                }*/}
+                    {/*            >*/}
+                    {/*                Laborum ea aute id mollit nisi et in veniam deserunt duis laborum ullamco duis.*/}
+                    {/*                Fugiat aliqua elit non dolore mollit consequat est. Labore ea est eiusmod esse non*/}
+                    {/*                nulla nulla laboris. Ullamco sit ipsum ex non minim ut nulla culpa eu pariatur amet.*/}
+                    {/*            </div>*/}
+                    {/*            /!* ) : null} *!/*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
 
-                    {timeOff.map(item => {
-                        if (item.name !== 'public holiday') {
-                            return (
-                                <div className="timeoff-modal__list-item" key={item.id}>
-                                    <div className="timeoff-modal__list-item-left">
-                                        <div
-                                            className="timeoff-modal__list-item-color"
-                                            style={{ background: `${item.color}` }}
-                                        />
-                                        <p className="timeoff-modal__list-item-text">{item.name}</p>
-                                    </div>
-                                    <div className="timeoff-modal__list-item-right">
-                                        <IOSSwitch
-                                            checked={item.checked}
-                                            onChange={_ => change(item)}
-                                            value={item.name}
-                                        />
-                                        <div className="timeoff-modal__pencil">
-                                            <PencilSvg
-                                                openFlag={item.openFlag}
-                                                action={openDayOffChangeWindow}
-                                                id={item.id}
+                    {/*{timeOff.map(item => {*/}
+                    {/*    if (item.name !== 'public holiday') {*/}
+                    {/*        return (*/}
+                    {/*            <div className="timeoff-modal__list-item" key={item.id}>*/}
+                    {/*                <div className="timeoff-modal__list-item-left">*/}
+                    {/*                    <div*/}
+                    {/*                        className="timeoff-modal__list-item-color"*/}
+                    {/*                        style={{ background: `${item.color}` }}*/}
+                    {/*                    />*/}
+                    {/*                    <p className="timeoff-modal__list-item-text">{item.name}</p>*/}
+                    {/*                </div>*/}
+                    {/*                <div className="timeoff-modal__list-item-right">*/}
+                    {/*                    <IOSSwitch*/}
+                    {/*                        checked={item.checked}*/}
+                    {/*                        onChange={_ => change(item)}*/}
+                    {/*                        value={item.name}*/}
+                    {/*                    />*/}
+                    {/*                    <div className="timeoff-modal__pencil">*/}
+                    {/*                        <PencilSvg*/}
+                    {/*                            openFlag={item.openFlag}*/}
+                    {/*                            action={openDayOffChangeWindow}*/}
+                    {/*                            id={item.id}*/}
+                    {/*                        />*/}
+                    {/*                        {item.openFlag ? (*/}
+                    {/*                            <AddDaysModal*/}
+                    {/*                                timeOff={timeOff}*/}
+                    {/*                                vocabulary={vocabulary}*/}
+                    {/*                                close={openDayOffChangeWindow}*/}
+                    {/*                                initialColor={item.colorName}*/}
+                    {/*                                initialName={item.name}*/}
+                    {/*                                itemId={item.id}*/}
+                    {/*                            />*/}
+                    {/*                        ) : null}*/}
+                    {/*                    </div>*/}
+                    {/*                </div>*/}
+                    {/*            </div>*/}
+                    {/*        );*/}
+                    {/*    } else return null;*/}
+                    {/*})}*/}
+                    {/*{newtimeOff.map((item)=>{*/}
+                    {/*    return <div>*/}
+                    {/*        {item.title}*/}
+                    {/*    </div>*/}
+                    {/*})}*/}
+                      <div className="filter_block" ref={div => (this.selectListUsersRef = div)}>
+                          <div className="search_menu_select">
+                              <input
+                                type="text"
+                                onKeyUp={_ =>
+                                  this.findDays(newtimeOff, this.smallSelectDaysInputRef.value)
+                                }
+                                ref={input => (this.smallSelectDaysInputRef = input)}
+                                // placeholder={`${v_find}...`}
+                                placeholder='Search'
+                              />
+                              <div ref={div => (this.selectAllUsersRef = div)} onClick={_ => this.selectAllUsers()}>
+                                  {v_select_all}
+                              </div>
+                              <div ref={div => (this.selectNoneUsersRef = div)} onClick={_ => this.selectNoneUsers()}>
+                                  {v_select_none}
+                              </div>
+                              {/*<i className="small_clear" onClick={_ => this.clearUserSearch()} />*/}
+                          </div>
+                          <div className="select_items_container">
+                              {timeOffArray.map((item, index) => (
+                                <div className="select_users_item" key={item.id + index}>
+                                    <label>
+                                        <ThemeProvider theme={materialTheme}>
+                                            <Checkbox
+                                              color={'primary'}
+                                              value={item.title || ''}
+                                              checked={this.getCheckedUsers(item.title)}
+                                              onChange={_ => {
+                                                  this.toggleUser(item);
+                                              }}
                                             />
-                                            {item.openFlag ? (
-                                                <AddDaysModal
-                                                    timeOff={timeOff}
-                                                    vocabulary={vocabulary}
-                                                    close={openDayOffChangeWindow}
-                                                    initialColor={item.colorName}
-                                                    initialName={item.name}
-                                                    itemId={item.id}
-                                                />
-                                            ) : null}
-                                        </div>
-                                    </div>
+                                        </ThemeProvider>{' '}
+                                        <span className="select_users_item_username">{item.title}</span>
+                                    </label>
                                 </div>
-                            );
-                        } else return null;
-                    })}
+                              ))}
+                          </div>
+                      </div>
+
                     <div className="timeoff-modal__add-days" onClick={this.switchShowAddDayFlag}>
                         <i className="timeoff-modal__plus" />
                         <p className="timeoff-modal__list-item-text">Add days</p>

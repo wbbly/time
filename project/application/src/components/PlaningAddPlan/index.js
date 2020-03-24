@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import CustomSelect from '../CustomSelect';
 
 import './style.scss';
+
 import { apiCall } from '../../services/apiService';
 import { AppConfig } from '../../config';
 import moment from 'moment';
@@ -14,6 +15,10 @@ import { connect } from 'react-redux';
 
 export class AddPlan extends React.Component {
     state = {};
+
+    componentDidMount() {
+        this.props.getTimeOff()
+    }
 
     addPlanClick = data => {
         console.log(data);
@@ -26,7 +31,7 @@ export class AddPlan extends React.Component {
         } = data;
         addPlanUser({
             userId: idPerson,
-            projectId: idProject,
+            [this.props.timeOffShow?'timerOffId':'projectId']: idProject,
             startDate: startDate,
             duration: hours,
             endDate: endDate,
@@ -51,10 +56,11 @@ export class AddPlan extends React.Component {
     };
 
     render() {
-        const { users = [], projects = [], add, cancel, vocabulary } = this.props;
+        const { users = [], projects = [], add, cancel, vocabulary,  timeOff = [], timeOffShow} = this.props;
         const { v_cancel_small, v_add, v_add_plan, v_v_required } = vocabulary;
         console.log(users);
         console.log(projects);
+        console.log(timeOff);
         return (
             <div className="planing-modal">
                 <div className="planing-modal__header">
@@ -108,11 +114,11 @@ export class AddPlan extends React.Component {
                                     />
                                 </label>
                                 <label htmlFor="project" className="planing-modal__label">
-                                    Select Project
+                                    Add Project / TimeOff
                                     <CustomSelect
                                         name="project"
                                         value={formik.values.project.b}
-                                        options={projects}
+                                        options={timeOffShow?timeOff:projects}
                                         onChange={(a, b, idProject) =>
                                             formik.setFieldValue('project', { a, b, idProject })
                                         }
@@ -172,7 +178,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    // addPlanUser
+
 };
 
 export default connect(

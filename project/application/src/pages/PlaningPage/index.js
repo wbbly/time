@@ -23,7 +23,11 @@ import {
     changeUserOpenFlag,
     changeTimeOffFlag,
     changeAllTimeOff,
-    openDayOffChangeWindow, getTimerPlaningList, setSelectedUsers,
+    openDayOffChangeWindow,
+    getTimerPlaningList,
+    setSelectedUsers,
+    getTime_Off,
+    setTimeOff
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -42,8 +46,8 @@ import { de, enGB, it, ru, ua } from 'react-date-range/dist/locale';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
 
-import {getCurrentDate} from '../../services/timeService';
-import {getCurrentTeamDetailedData} from "../../configAPI"; // theme css file
+import { getCurrentDate } from '../../services/timeService';
+import { getCurrentTeamDetailedData } from '../../configAPI'; // theme css file
 
 const localeMap = {
     ru: ru,
@@ -62,7 +66,7 @@ class PlaningPage extends React.Component {
         showAddPlan: false,
         showTimeOff: false,
         showAddPlanTimeOff: false,
-
+        timeOffShow: false,
         dateSelect: false,
         selectionRange: {
             startDate: getCurrentDate(),
@@ -72,7 +76,7 @@ class PlaningPage extends React.Component {
     };
 
     async componentDidMount() {
-        const {currentMonth, getTimerPlaningList} = this.props;
+        const { currentMonth, getTimerPlaningList } = this.props;
         moment.locale(`${this.props.user.language}`);
         currentMonth();
         await this.getUsersByCurrentTeam();
@@ -81,13 +85,12 @@ class PlaningPage extends React.Component {
     }
 
     getUsersByCurrentTeam = async () => {
-
         let res = await getCurrentTeamDetailedData();
 
         const teamUsers = res.data.data.team[0].team_users;
         const users = teamUsers.map(teamUser => teamUser.user[0]);
 
-        this.props.setSelectedUsers(users)
+        this.props.setSelectedUsers(users);
     };
 
     getProjects = () =>
@@ -156,8 +159,12 @@ class PlaningPage extends React.Component {
         this.setState({ showAddUser: true });
     };
     changeAddPlanFlag = () => {
-        this.setState({ showAddPlan: true });
+        this.setState({ showAddPlan: true, timeOffShow: false });
     };
+    changeTimeOffShow= () => {
+        this.setState({ showAddPlan: true, timeOffShow: true });
+    };
+
     changeAddTimeOffFlag = () => {
         this.setState({ showTimeOff: true });
     };
@@ -210,11 +217,12 @@ class PlaningPage extends React.Component {
 
             firstDayOfWeek,
             dateFormat,
-            getTimerPlaningList
+            getTimerPlaningList,
+            getTime_Off
         } = this.props;
 
-        const {month, current, users, timeOff, swithcAllTimeOff, timerPlaningList} = planingReducer;
-        const {showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff} = this.state;
+        const { month, current, users, newtimeOff, timeOff, swithcAllTimeOff, timerPlaningList } = planingReducer;
+        const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timeOffShow } = this.state;
         const {
             v_resource_planing,
             v_all_projects,
@@ -246,7 +254,7 @@ class PlaningPage extends React.Component {
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
 
-        console.log({timerPlaningList})
+        console.log({ timerPlaningList });
         return (
             <>
                 <Scrollbars>
@@ -310,7 +318,7 @@ class PlaningPage extends React.Component {
                                             {v_add_plan}
                                         </button>
 
-                                        <button onClick={this.changeAddPlanFlag}>{v_time_off}</button>
+                                        <button onClick={this.changeTimeOffShow}>{v_time_off}</button>
                                     </div>
 
                                     <div className="planing-header__move-btn">
@@ -398,15 +406,15 @@ class PlaningPage extends React.Component {
                                     </div>
                                     {timerPlaningList
                                         ? timerPlaningList.map(user => (
-                                            <PlaningUserBlock
-                                                key={user.id}
-                                                month={month}
-                                                user={user}
-                                                addUser={addUser}
-                                                {...vocabulary}
-                                                changeAddPlanFlag={this.changeAddPlanFlag}
-                                            />
-                                        ))
+                                              <PlaningUserBlock
+                                                  key={user.id}
+                                                  month={month}
+                                                  user={user}
+                                                  addUser={addUser}
+                                                  {...vocabulary}
+                                                  changeAddPlanFlag={this.changeAddPlanFlag}
+                                              />
+                                          ))
                                         : null}
                                     {/*{users.map(user => (*/}
                                     {/*    <PlaningUserBlock*/}
@@ -432,10 +440,13 @@ class PlaningPage extends React.Component {
                                 <AddPlan
                                     cancel={this.closeAllFlags}
                                     add={console.log}
+                                    timeOff={newtimeOff}
                                     users={timerPlaningList}
                                     projects={projectsArray}
                                     vocabulary={vocabulary}
                                     getTimerPlaningList={getTimerPlaningList}
+                                    getTimeOff={getTime_Off}
+                                    timeOffShow={timeOffShow}
                                 />
                             ) : null}
                             {showTimeOff ? (
@@ -448,6 +459,10 @@ class PlaningPage extends React.Component {
                                     vocabulary={vocabulary}
                                     allFlag={swithcAllTimeOff}
                                     openDayOffChangeWindow={openDayOffChangeWindow}
+                                    getTimeOff={getTime_Off}
+                                    newtimeOff={newtimeOff}
+                                    setTimeOff={this.props.setTimeOff}
+                                    getTimerPlaningList={getTimerPlaningList}
                                 />
                             ) : null}
                             <div
@@ -492,7 +507,9 @@ const mapDispatchToProps = {
     openDayOffChangeWindow,
     ///
     setSelectedUsers,
-    getTimerPlaningList
+    getTimerPlaningList,
+    getTime_Off,
+    setTimeOff
 };
 
 export default connect(
