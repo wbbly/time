@@ -27,31 +27,34 @@ class InvoicesPage extends Component {
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar>
-                <div
-                    className={classNames('wrapper_invoices_page', {
-                        'wrapper_invoices_page--mobile': isMobile,
-                    })}
-                >
-                    <div className="data_container_invoices_page">
-                        <div className="invoices_page__header">
-                            <div className="invoices_page__title">{v_invoices}</div>
-                            <button className="add_invoice_button" onClick={e => this.setState({ showModal: true })}>
-                                {v_add_new_invoice}
-                            </button>
+                    <div
+                        className={classNames('wrapper_invoices_page', {
+                            'wrapper_invoices_page--mobile': isMobile,
+                        })}
+                    >
+                        <div className="data_container_invoices_page">
+                            <div className="invoices_page__header">
+                                <div className="invoices_page__title">{v_invoices}</div>
+                                <button
+                                    className="add_invoice_button"
+                                    onClick={e => this.setState({ showModal: true })}
+                                >
+                                    {v_add_new_invoice}
+                                </button>
+                            </div>
+
+                            <div className="invoices_page__last_invoices">
+                                <LastInvoicesList invoices={invoices.slice(0, 4)} vocabulary={vocabulary} />
+                            </div>
                         </div>
 
-                        <div className="invoices_page__last_invoices">
-                            <LastInvoicesList invoices={invoices.slice(0, 4)} vocabulary={vocabulary} />
-                        </div>
-                    </div>
-
-                    <div className="invoices_page__all_invoices">
-                        <div className="all_invoices__title">{v_all_invoices}</div>
+                        <div className="invoices_page__all_invoices">
+                            <div className="all_invoices__title">{v_all_invoices}</div>
                             <div className="all_invoices__list">
                                 <AllInvoicesList invoices={invoices} vocabulary={vocabulary} />
                             </div>
+                        </div>
                     </div>
-                </div>
                 </CustomScrollbar>
             </Loading>
         );
