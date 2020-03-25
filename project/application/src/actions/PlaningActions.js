@@ -1,4 +1,4 @@
-import {addPlan, getCurrentTeamDetailedData, getProjectsList, getTimerPlaningListData} from '../configAPI';
+import { addPlan, getCurrentTeamDetailedData, getProjectsList, getTimerPlaningListData } from '../configAPI';
 import { store } from '../store/configureStore';
 import moment from 'moment';
 import { getTimerPlanningListParseFunction } from '../queries';
@@ -56,7 +56,6 @@ export const getTimerPlaningList = () => async dispatch => {
 };
 
 export const getProjects = () => async dispatch => {
-
     const res = await getProjectsList(false, true);
     dispatch(setProjects(res.data.data.project_v2));
 };

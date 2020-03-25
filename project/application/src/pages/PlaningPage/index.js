@@ -27,7 +27,8 @@ import {
     getTimerPlaningList,
     setSelectedUsers,
     setCurrentTeam,
-    deleteUser, getProjects,
+    deleteUser,
+    getProjects,
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -205,16 +206,17 @@ class PlaningPage extends React.Component {
         const { setSelectedUsers, getTimerPlaningList } = this.props;
         if (!searchFlag) {
             let selectedUsers = new Map();
-            dataSelected.forEach(item => item.team.team_users.forEach(user => {
-                let _user = user.user[0];
-                selectedUsers.set(_user.id, _user);
-            }));
-            dataSelected = Array.from(selectedUsers.values())
+            dataSelected.forEach(item =>
+                item.team.team_users.forEach(user => {
+                    let _user = user.user[0];
+                    selectedUsers.set(_user.id, _user);
+                })
+            );
+            dataSelected = Array.from(selectedUsers.values());
         }
 
         setSelectedUsers(dataSelected);
         getTimerPlaningList();
-
     };
 
     handleDeleteUser = userId => {

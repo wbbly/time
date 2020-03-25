@@ -147,7 +147,7 @@ export const getProjectsList = (withTimerList = false, withTeamUsers = false) =>
         method: 'GET',
         params: {
             withTimerList,
-            withTeamUsers
+            withTeamUsers,
         },
     });
 
