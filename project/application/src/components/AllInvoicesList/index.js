@@ -4,6 +4,8 @@ import classNames from 'classnames';
 // Styles
 import './style.scss';
 import moment from 'moment';
+import {toggleSendInvoiceModal} from "../../actions/InvoicesActions";
+import {connect} from "react-redux";
 
 const CheckIcon = ({ className, onClick, fill }) => (
     <svg
@@ -104,7 +106,7 @@ const SendIcon = ({ className, onClick }) => (
     </svg>
 );
 
-const AllInvoicesList = ({ invoices, vocabulary }) => {
+const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
     const {} = vocabulary;
 
     return (
@@ -133,7 +135,7 @@ const AllInvoicesList = ({ invoices, vocabulary }) => {
                         <SaveIcon className="icon_button" />
                         <CopyIcon className="icon_button" />
                         <DeleteIcon className="icon_button" />
-                        <SendIcon className="icon_button" />
+                        <SendIcon className="icon_button" onClick={() => toggleSendInvoiceModal(invoice)} />
                     </div>
                 </div>
             ))}
@@ -141,4 +143,8 @@ const AllInvoicesList = ({ invoices, vocabulary }) => {
     );
 };
 
-export default AllInvoicesList;
+const mapDispatchToProps = {
+    toggleSendInvoiceModal,
+};
+
+export default connect(null, mapDispatchToProps)(AllInvoicesList);

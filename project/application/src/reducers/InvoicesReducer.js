@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {TOGGLE_SEND_INVOICE_MODAL} from "../actions/InvoicesActions";
 
 const initialState = {
     invoices: [
@@ -51,10 +52,18 @@ const initialState = {
             currency: 'usd',
         },
     ],
+    sendInvoiceModalToggle: false,
+    openedInvoice: null
 };
 
 export default function invoicesReducer(state = initialState, { type, payload }) {
     switch (type) {
+        case TOGGLE_SEND_INVOICE_MODAL:
+            return {
+                ...state,
+                sendInvoiceModalToggle: !state.sendInvoiceModalToggle,
+                openedInvoice: !state.sendInvoiceModalToggle? payload : null
+            };
         default:
             return state;
     }

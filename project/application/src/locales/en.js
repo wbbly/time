@@ -214,4 +214,8 @@ export default {
     v_all_invoices: 'All invoices',
     v_invoice: 'Invoice',
     v_confirm_payment: 'Confirm payment',
+    v_send_invoice: 'Send invoice',
+    v_send_invoice_placeholder: 'placeholder',
+    v_from: 'From',
+    v_to: 'To',
 };
