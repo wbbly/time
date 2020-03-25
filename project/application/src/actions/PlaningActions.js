@@ -1,4 +1,4 @@
-import { addPlan, getCurrentTeamDetailedData, getTimerPlaningListData } from '../configAPI';
+import {addPlan, getCurrentTeamDetailedData, getProjectsList, getTimerPlaningListData} from '../configAPI';
 import { store } from '../store/configureStore';
 import moment from 'moment';
 import { getTimerPlanningListParseFunction } from '../queries';
@@ -18,6 +18,7 @@ export const OPEN_DAY_OFF_CHANGE_WINDOW = 'OPEN_DAY_OFF_CHANGE_WINDOW';
 export const SET_SELECTED_USERS = 'SET_SELECTED_USERS';
 export const SET_TIMER_PLANING_LIST = 'SET_TIMER_PLANING_LIST';
 export const SET_CURRENT_TEAM = 'SET_CURRENT_TEAM';
+export const SET_PROJECTS = 'SET_PROJECTS';
 
 // const setTimeEntriesListAction = payload => ({
 //     type: GET_TIME_ENTRIES_LIST,
@@ -53,6 +54,17 @@ export const getTimerPlaningList = () => async dispatch => {
     let res = await getTimerPlaningListData({ userIds, startDate, endDate });
     dispatch(setTimerPlaningList(getTimerPlanningListParseFunction(res.data.data.user)));
 };
+
+export const getProjects = () => async dispatch => {
+
+    const res = await getProjectsList(false, true);
+    dispatch(setProjects(res.data.data.project_v2));
+};
+
+export const setProjects = payload => ({
+    type: SET_PROJECTS,
+    payload,
+});
 
 export const openDayOffChangeWindow = payload => ({
     type: OPEN_DAY_OFF_CHANGE_WINDOW,

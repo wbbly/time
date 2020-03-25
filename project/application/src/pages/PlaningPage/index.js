@@ -27,7 +27,7 @@ import {
     getTimerPlaningList,
     setSelectedUsers,
     setCurrentTeam,
-    deleteUser,
+    deleteUser, getProjects,
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -75,11 +75,12 @@ class PlaningPage extends React.Component {
     };
 
     async componentDidMount() {
-        const { currentMonth, getTimerPlaningList } = this.props;
+        const { currentMonth, getTimerPlaningList, getProjects } = this.props;
         moment.locale(`${this.props.user.language}`);
         currentMonth();
         await this.getCurrentTeam();
         getTimerPlaningList();
+        getProjects();
         this.getProjects();
     }
 
@@ -202,11 +203,18 @@ class PlaningPage extends React.Component {
 
     handleAddUser = (dataSelected, searchFlag) => {
         const { setSelectedUsers, getTimerPlaningList } = this.props;
-        if (searchFlag) {
-            setSelectedUsers(dataSelected);
-            getTimerPlaningList();
+        if (!searchFlag) {
+            let selectedUsers = new Map();
+            dataSelected.forEach(item => item.team.team_users.forEach(user => {
+                let _user = user.user[0];
+                selectedUsers.set(_user.id, _user);
+            }));
+            dataSelected = Array.from(selectedUsers.values())
         }
-        console.log({ dataSelected });
+
+        setSelectedUsers(dataSelected);
+        getTimerPlaningList();
+
     };
 
     handleDeleteUser = userId => {
@@ -237,6 +245,7 @@ class PlaningPage extends React.Component {
             timerPlaningList,
             selectedUsers,
             currentTeam,
+            projects,
         } = planingReducer;
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff } = this.state;
         const {
@@ -284,7 +293,7 @@ class PlaningPage extends React.Component {
                                                     cancel={this.closeAllFlags}
                                                     onAddPress={this.handleAddUser}
                                                     users={currentTeam.users}
-                                                    projects={projectsArray}
+                                                    projects={projects}
                                                     vocabulary={vocabulary}
                                                 />
                                             ) : null}
@@ -524,6 +533,7 @@ const mapDispatchToProps = {
     getTimerPlaningList,
     setCurrentTeam,
     deleteUser,
+    getProjects,
 };
 
 export default connect(

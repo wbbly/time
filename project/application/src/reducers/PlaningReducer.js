@@ -13,7 +13,7 @@ import {
     OPEN_DAY_OFF_CHANGE_WINDOW,
     SET_SELECTED_USERS,
     SET_TIMER_PLANING_LIST,
-    SET_CURRENT_TEAM,
+    SET_CURRENT_TEAM, SET_PROJECTS,
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
@@ -25,6 +25,7 @@ const defaultState = {
     users: [],
     timerPlaningList: [],
     currentTeam: null,
+    projects: [],
     timeOff: [
         {
             id: '1',
@@ -72,6 +73,12 @@ const defaultState = {
 
 export const planingReducer = (state = defaultState, action) => {
     switch (action.type) {
+        case SET_PROJECTS: {
+            return {
+                ...state,
+                projects: action.payload,
+            }
+        }
         case SET_SELECTED_USERS: {
             localStorage.setItem(state.currentTeam.id, JSON.stringify(action.payload));
             return {
@@ -79,7 +86,6 @@ export const planingReducer = (state = defaultState, action) => {
                 selectedUsers: action.payload,
             };
         }
-
         case SET_CURRENT_TEAM: {
             let savedSelectedUsers = localStorage.getItem(action.payload.id);
 
