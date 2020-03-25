@@ -26,7 +26,7 @@ class InvoicesPage extends Component {
         const { isInitialFetching } = this.state;
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
-                {/*<CustomScrollbar>*/}
+                <CustomScrollbar>
                 <div
                     className={classNames('wrapper_invoices_page', {
                         'wrapper_invoices_page--mobile': isMobile,
@@ -47,15 +47,12 @@ class InvoicesPage extends Component {
 
                     <div className="invoices_page__all_invoices">
                         <div className="all_invoices__title">{v_all_invoices}</div>
-
-                        <CustomScrollbar>
                             <div className="all_invoices__list">
                                 <AllInvoicesList invoices={invoices} vocabulary={vocabulary} />
                             </div>
-                        </CustomScrollbar>
                     </div>
                 </div>
-                {/*</CustomScrollbar>*/}
+                </CustomScrollbar>
             </Loading>
         );
     }
