@@ -22,8 +22,8 @@
 }
 
 .user-block {
-  //display: flex;
-  //align-items: flex-start;
+  display: flex;
+  align-items: stretch;
 
   .logged {
     flex: 1;
@@ -32,6 +32,7 @@
 
     &__title {
       color: white;
+      margin-left: 20px;
     }
   }
 
@@ -40,7 +41,7 @@
     //height: 20px;
 
     &__title {
-      margin: 0;
+      margin: 0 0 0 20px;
       padding: 7px 0 7px 5px;
       color: white;
       border-left: 5px solid #26A1A1;
@@ -50,7 +51,7 @@
     &__main-block {
     display: flex;
     border-bottom: 1px solid #1F1F1F;
-    margin-left: -10px;
+      margin-left: 20px;
 
     .week {
       display: flex;
@@ -90,6 +91,7 @@
       display: flex;
       justify-content: space-between;
       height: 30px;
+      overflow: hidden;
       white-space: pre;
       margin-bottom: 15px;
       padding: 0 10px;

@@ -13,7 +13,10 @@ import {
     OPEN_DAY_OFF_CHANGE_WINDOW,
     SET_SELECTED_USERS,
     SET_TIMER_PLANING_LIST,
-    SET_TIME_OFF
+
+    SET_TIME_OFF,
+
+    SET_CURRENT_TEAM,
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
@@ -24,7 +27,10 @@ const defaultState = {
     selectedUsers: [],
     users: [],
     timerPlaningList: [],
+
     newtimeOff:[],
+
+    currentTeam: null,
     timeOff: [
         {
             id: '1',
@@ -73,16 +79,34 @@ const defaultState = {
 export const planingReducer = (state = defaultState, action) => {
     switch (action.type) {
         case SET_SELECTED_USERS: {
+            if (state.currentTeam) {
+                localStorage.setItem(state.currentTeam.id, JSON.stringify(action.payload));
+            }
             return {
                 ...state,
                 selectedUsers: action.payload,
             };
         }
 
+
         case SET_TIME_OFF: {
             return {
                 ...state,
                 newtimeOff: action.payload,
+            }
+        }
+        case SET_CURRENT_TEAM: {
+            let savedSelectedUsers = localStorage.getItem(action.payload.id);
+
+            if (savedSelectedUsers) {
+                savedSelectedUsers = JSON.parse(savedSelectedUsers);
+            }
+
+            return {
+                ...state,
+                currentTeam: action.payload,
+                selectedUsers: savedSelectedUsers ? savedSelectedUsers : [],
+
             };
         }
 
@@ -226,11 +250,14 @@ export const planingReducer = (state = defaultState, action) => {
         }
 
         case DELETE_USER: {
-            const newUsersArray = state.users.slice();
-            newUsersArray.slice(newUsersArray.indexOf(newUsersArray.find(user => user.id === action.payload), 1));
+            let newUsersArray = state.selectedUsers.slice();
+            newUsersArray = newUsersArray.filter(user => user.id !== action.payload);
+
+            localStorage.setItem(state.currentTeam.id, JSON.stringify(newUsersArray));
+
             return {
                 ...state,
-                users: newUsersArray,
+                selectedUsers: newUsersArray,
             };
         }
 

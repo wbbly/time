@@ -1,4 +1,8 @@
+
 import { addPlan, getCurrentTeamDetailedData, getTimerPlaningListData, getTimeOff, addTimerOff } from '../configAPI';
+
+
+
 import { store } from '../store/configureStore';
 import moment from 'moment';
 import { getTimerPlanningListParseFunction } from '../queries';
@@ -17,11 +21,21 @@ export const CHANGE_ALL_USER_TIME_OFF = 'CHANGE_ALL_USER_TIME_OFF';
 export const OPEN_DAY_OFF_CHANGE_WINDOW = 'OPEN_DAY_OFF_CHANGE_WINDOW';
 export const SET_SELECTED_USERS = 'SET_SELECTED_USERS';
 export const SET_TIMER_PLANING_LIST = 'SET_TIMER_PLANING_LIST';
+
 export const SET_TIME_OFF = 'SET_TIME_OFF';
+
+export const SET_CURRENT_TEAM = 'SET_CURRENT_TEAM';
+
+
 // const setTimeEntriesListAction = payload => ({
 //     type: GET_TIME_ENTRIES_LIST,
 //     payload,
 // });
+
+export const setCurrentTeam = payload => ({
+    type: SET_CURRENT_TEAM,
+    payload,
+});
 
 export const setSelectedUsers = payload => ({
     type: SET_SELECTED_USERS,
@@ -49,7 +63,9 @@ export const getTimerPlaningList = (timerOffIds) => async dispatch => {
         .endOf('month')
         .format('YYYY-MM-DD');
 
+
     let res = await getTimerPlaningListData({ userIds, timerOffIds, startDate, endDate });
+
     dispatch(setTimerPlaningList(getTimerPlanningListParseFunction(res.data.data.user)));
 };
 

@@ -225,6 +225,7 @@ class ReportsSearchBar extends Component {
     }
 
     getCheckedUsers(name) {
+        console.log(this.state.userDataSelected)
         if (JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
             return true;
         }

@@ -70,11 +70,11 @@ const AddDaysModal = ({ close, vocabulary, timeOff, initialName, initialColor, i
                 validateOnBlur={true}
                 initialValues={{
                     dayName: initialName ? initialName.charAt(0).toUpperCase() + initialName.slice(1) : '',
-                    color: initialColor ? initialColor : '',
+                    // color: initialColor ? initialColor : '',
                 }}
                 validationSchema={Yup.object({
                     dayName: Yup.string().required(v_v_required),
-                    color: Yup.string().required(v_v_required),
+                    // color: Yup.string().required(v_v_required),
                 })}
                 onSubmit={values => {
                     addDayClick(values);
@@ -97,18 +97,18 @@ const AddDaysModal = ({ close, vocabulary, timeOff, initialName, initialColor, i
                             placeholder={'Enter day name'}
                             autoFocus
                         />
-                        <CustomSelect
-                            className="add-days-modal__select"
-                            name="color"
-                            value={formik.values.color}
-                            options={timeOff}
-                            onChange={formik.setFieldValue}
-                            onBlur={formik.setFieldTouched}
-                            error={formik.errors.color}
-                            placeholder={'Pick a color'}
-                            touched={formik.touched.color}
-                            addDays
-                        />
+                        {/*<CustomSelect*/}
+                        {/*    className="add-days-modal__select"*/}
+                        {/*    name="color"*/}
+                        {/*    value={formik.values.color}*/}
+                        {/*    options={timeOff}*/}
+                        {/*    onChange={formik.setFieldValue}*/}
+                        {/*    onBlur={formik.setFieldTouched}*/}
+                        {/*    error={formik.errors.color}*/}
+                        {/*    placeholder={'Pick a color'}*/}
+                        {/*    touched={formik.touched.color}*/}
+                        {/*    addDays*/}
+                        {/*/>*/}
 
                         <div className="add-days-modal__footer">
                             <button type="submit" className="add-days-modal__add-btn">

@@ -1,11 +1,10 @@
 import React from 'react';
-
-// import _ from 'lodash';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Scrollbars } from 'react-custom-scrollbars';
 import './style.scss';
+import { connect } from 'react-redux';
 
-export class AddUserProject extends React.Component {
+class AddUserProject extends React.Component {
     state = {
         searchFlag: true,
         dataSelected: [],
@@ -16,11 +15,13 @@ export class AddUserProject extends React.Component {
     };
 
     componentDidMount() {
+        const { selectedUsers } = this.props;
         this.setState({
             peopleArray: this.props.users,
             projectsArray: this.props.projects,
             dataFiltered: this.props.users,
             dataEtalon: this.props.users,
+            dataSelected: selectedUsers,
         });
     }
 
@@ -30,11 +31,13 @@ export class AddUserProject extends React.Component {
     }
 
     findItem(items, searchText = '') {
+        const { searchFlag } = this.state;
+        const searchField = searchFlag ? 'username' : 'name';
         if (searchText.length > 0) {
             searchText = searchText.toLowerCase();
             const filteredArr = items.filter(it => {
                 const values = [];
-                values.push(it.name);
+                values.push(it[searchField]);
                 return values
                     .join()
                     .toLowerCase()
@@ -63,22 +66,27 @@ export class AddUserProject extends React.Component {
     // }
 
     setFlagTrue = () => {
+        const { searchFlag, peopleArray } = this.state;
+        const { selectedUsers } = this.props;
+
         this.setState({ searchFlag: true });
-        if (!this.state.searchFlag) {
+        if (!searchFlag) {
             this.setState({
-                dataEtalon: this.state.peopleArray,
-                dataFiltered: this.state.peopleArray,
-                dataSelected: [],
+                dataEtalon: peopleArray,
+                dataFiltered: peopleArray,
+                dataSelected: selectedUsers,
             });
             this.smallSelectClientInputRef.value = '';
         }
     };
     setFlagFalse = () => {
+        const { searchFlag, projectsArray } = this.state;
+
         this.setState({ searchFlag: false });
-        if (this.state.searchFlag) {
+        if (searchFlag) {
             this.setState({
-                dataEtalon: this.state.projectsArray,
-                dataFiltered: this.state.projectsArray,
+                dataEtalon: projectsArray,
+                dataFiltered: projectsArray,
                 dataSelected: [],
             });
             this.smallSelectClientInputRef.value = '';
@@ -88,6 +96,13 @@ export class AddUserProject extends React.Component {
     close = e => {
         e.stopPropagation();
         this.props.cancel();
+    };
+
+    handleAddButton = e => {
+        const { dataSelected, searchFlag } = this.state;
+
+        this.props.onAddPress(dataSelected, searchFlag);
+        this.close(e);
     };
 
     render() {
@@ -141,11 +156,11 @@ export class AddUserProject extends React.Component {
                                             color={'primary'}
                                             value={item.name}
                                             checked={!!dataSelected.find(el => el.id === item.id)}
-                                            onChange={_ => {
+                                            onChange={() => {
                                                 this.selectItem(item);
                                             }}
                                         />
-                                        {item.name}
+                                        {item.name || item.username}
                                     </label>
                                 </div>
                             ))}
@@ -153,10 +168,7 @@ export class AddUserProject extends React.Component {
                     </div>
                 </div>
                 <div className="add-user-modal__footer">
-                    <button
-                        className="add-user-modal__add-btn"
-                        onClick={e => add(JSON.stringify(this.state.dataSelected.map(el => el.name)))}
-                    >
+                    <button className="add-user-modal__add-btn" onClick={this.handleAddButton}>
                         {v_add}
                     </button>
                     <button className="add-user-modal__cancel-btn" onClick={this.close}>
@@ -167,3 +179,9 @@ export class AddUserProject extends React.Component {
         );
     }
 }
+
+const mapStateToProps = ({ planingReducer }) => ({
+    selectedUsers: planingReducer.selectedUsers,
+});
+
+export default connect(mapStateToProps)(AddUserProject);

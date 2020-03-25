@@ -102,6 +102,7 @@ export class AddTimeOff extends React.Component {
         showAddDayFlag: false,
         timeOffArray:[],
         userDataSelected: [],
+        checkedAll: false
     };
 
     componentDidMount() {
@@ -115,7 +116,9 @@ export class AddTimeOff extends React.Component {
         let exists = false;
         for (let i = 0; i < daysOff.length; i++) {
             const currentUser = daysOff[i];
-            if (currentUser === user.id) {
+            console.log(currentUser)
+            console.log(user.id)
+            if (currentUser.id === user.id) {
                 exists = true;
                 daysOff.splice(i, 1);
                 break;
@@ -123,21 +126,24 @@ export class AddTimeOff extends React.Component {
         }
 
         if (!exists) {
-            daysOff.push(user.id);
+            daysOff.push(user);
         }
         console.log(daysOff)
         this.setState({ userDataSelected: daysOff });
-        // this.props.getTimerPlaningList(daysOff);
+        this.props.getTimerPlaningList(daysOff.map((item)=>{return item.id}));
     }
     selectAllUsers() {
-        this.setState({ userDataSelected: this.state.timeOffArray });
-        // this.props.getTimerPlaningList(this.state.timeOffArray.map((item)=>{return item.id});
+        this.setState({ userDataSelected: this.state.timeOffArray,  checkedAll: false });
+        this.props.getTimerPlaningList(this.state.timeOffArray.map((item)=>{return item.id}));
     }
     selectNoneUsers() {
-        this.setState({ userDataSelected: [] });
-        // this.props.getTimerPlaningList([]);
+        this.setState({ userDataSelected: [],  checkedAll: false });
+        this.props.getTimerPlaningList([]);
     }
     getCheckedUsers(name) {
+        console.log(name)
+        console.log(this.state.userDataSelected)
+        console.log(JSON.stringify(this.state.userDataSelected).indexOf(name) > -1)
         if (JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
             return true;
         }
@@ -315,7 +321,7 @@ export class AddTimeOff extends React.Component {
                                             <Checkbox
                                               color={'primary'}
                                               value={item.title || ''}
-                                              checked={this.getCheckedUsers(item.title)}
+                                              checked={this.getCheckedUsers(item.id) || this.state.checkedAll }
                                               onChange={_ => {
                                                   this.toggleUser(item);
                                               }}
