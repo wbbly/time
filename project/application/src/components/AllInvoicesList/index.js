@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
+import moment from 'moment';
 
 // Styles
 import './style.scss';
-import moment from 'moment';
 
 const CheckIcon = ({ className, onClick, fill }) => (
     <svg
@@ -105,35 +105,40 @@ const SendIcon = ({ className, onClick }) => (
 );
 
 const AllInvoicesList = ({ invoices, vocabulary }) => {
-    const {} = vocabulary;
-
     return (
-        <div className="all_invoices_list">
+        <div className="all-invoices-list">
             {invoices.map(invoice => (
-                <div key={invoice.id} className="list_item">
-                    <div className="row">
+                <div key={invoice.id} className="all-invoices-list-item">
+                    <div className="all-invoices-list-item__block">
                         <div
-                            className={classNames('status', {
-                                confirmed: invoice.confirmed,
+                            className={classNames('all-invoices-list-item__status', {
+                                'all-invoices-list-item__status--confirmed': invoice.confirmed,
                             })}
                         />
-                        <div className="number">#{invoice.number}</div>
-                        <div className="name">{invoice.name}</div>
+                        <div className="all-invoices-list-item__number">#{invoice.number}</div>
+                        <div className="all-invoices-list-item__name">{invoice.name}</div>
                     </div>
-                    <div className="row">
-                        <div className="price">
+                    <div className="all-invoices-list-item__block">
+                        <div className="all-invoices-list-item__price">
                             {invoice.currency} {invoice.price.toLocaleString()}
                         </div>
-                        <div className="date">{moment(invoice.createdAt).format('MMM Do YYYY')}</div>
-                        <div className="date">{moment(invoice.deadlineDate).format('MMM Do YYYY')}</div>
+                        <div className="all-invoices-list-item__date">
+                            {moment(invoice.createdAt).format('MMM Do YYYY')}
+                        </div>
+                        <div className="all-invoices-list-item__date">
+                            {moment(invoice.deadlineDate).format('MMM Do YYYY')}
+                        </div>
                     </div>
-                    <div className="row instruments">
-                        <CheckIcon className="icon_button" fill={invoice.confirmed ? '#27AE60' : '#EB5757'} />
-                        <EditIcon className="icon_button" />
-                        <SaveIcon className="icon_button" />
-                        <CopyIcon className="icon_button" />
-                        <DeleteIcon className="icon_button" />
-                        <SendIcon className="icon_button" />
+                    <div className="all-invoices-list-item__instruments">
+                        <CheckIcon
+                            className="all-invoices-list-item__icon-button"
+                            fill={invoice.confirmed ? '#27AE60' : '#EB5757'}
+                        />
+                        <EditIcon className="all-invoices-list-item__icon-button" />
+                        <SaveIcon className="all-invoices-list-item__icon-button" />
+                        <CopyIcon className="all-invoices-list-item__icon-button" />
+                        <DeleteIcon className="all-invoices-list-item__icon-button" />
+                        <SendIcon className="all-invoices-list-item__icon-button" />
                     </div>
                 </div>
             ))}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
 
 // Styles
 import './style.scss';
@@ -7,7 +8,6 @@ import './style.scss';
 //Сomponents
 import { Loading } from '../../components/Loading';
 import CustomScrollbar from '../../components/CustomScrollbar';
-import { connect } from 'react-redux';
 import LastInvoicesList from '../../components/LastInvoicesList';
 import AllInvoicesList from '../../components/AllInvoicesList';
 
@@ -27,30 +27,30 @@ class InvoicesPage extends Component {
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar>
-                    <div
-                        className={classNames('wrapper_invoices_page', {
-                            'wrapper_invoices_page--mobile': isMobile,
-                        })}
-                    >
-                        <div className="data_container_invoices_page">
-                            <div className="invoices_page__header">
-                                <div className="invoices_page__title">{v_invoices}</div>
+                    <div className="wrapper-invoices-page">
+                        <div
+                            className={classNames('invoices-page-top', {
+                                'invoices-page-top--mobile': isMobile,
+                            })}
+                        >
+                            <div className="invoices-page-top__header">
+                                <div className="invoices-page-top__title">{v_invoices}</div>
                                 <button
-                                    className="add_invoice_button"
+                                    className="invoices-page-top__add-invoice-button"
                                     onClick={e => this.setState({ showModal: true })}
                                 >
                                     {v_add_new_invoice}
                                 </button>
                             </div>
 
-                            <div className="invoices_page__last_invoices">
+                            <div className="invoices-page-top__last-invoices">
                                 <LastInvoicesList invoices={invoices.slice(0, 4)} vocabulary={vocabulary} />
                             </div>
                         </div>
 
-                        <div className="invoices_page__all_invoices">
-                            <div className="all_invoices__title">{v_all_invoices}</div>
-                            <div className="all_invoices__list">
+                        <div className="invoices-page-bottom">
+                            <div className="invoices-page-bottom__title">{v_all_invoices}</div>
+                            <div className="invoices-page-bottom__all-invoices">
                                 <AllInvoicesList invoices={invoices} vocabulary={vocabulary} />
                             </div>
                         </div>
