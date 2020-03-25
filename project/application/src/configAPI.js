@@ -141,12 +141,13 @@ export const getCurrentTime = () =>
         method: 'GET',
     });
 
-export const getProjectsList = (withTimerList = false) =>
+export const getProjectsList = (withTimerList = false, withTeamUsers = false) =>
     instance({
         url: '/project/list',
         method: 'GET',
         params: {
             withTimerList,
+            withTeamUsers,
         },
     });
 

@@ -17,6 +17,7 @@ import {
     SET_TIME_OFF,
 
     SET_CURRENT_TEAM,
+    SET_PROJECTS,
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
@@ -31,6 +32,7 @@ const defaultState = {
     newtimeOff:[],
 
     currentTeam: null,
+    projects: [],
     timeOff: [
         {
             id: '1',
@@ -78,6 +80,12 @@ const defaultState = {
 
 export const planingReducer = (state = defaultState, action) => {
     switch (action.type) {
+        case SET_PROJECTS: {
+            return {
+                ...state,
+                projects: action.payload,
+            };
+        }
         case SET_SELECTED_USERS: {
             if (state.currentTeam) {
                 localStorage.setItem(state.currentTeam.id, JSON.stringify(action.payload));
@@ -87,6 +95,7 @@ export const planingReducer = (state = defaultState, action) => {
                 selectedUsers: action.payload,
             };
         }
+// <<<<<<< HEAD
 
 
         case SET_TIME_OFF: {
@@ -95,6 +104,8 @@ export const planingReducer = (state = defaultState, action) => {
                 newtimeOff: action.payload,
             }
         }
+// =======
+// >>>>>>> a0d8fbc2fb2c6f8d98d6913cacf55d96669f7c0e
         case SET_CURRENT_TEAM: {
             let savedSelectedUsers = localStorage.getItem(action.payload.id);
 

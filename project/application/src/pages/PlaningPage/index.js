@@ -36,6 +36,7 @@ import {
 
     setCurrentTeam,
     deleteUser,
+    getProjects,
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -88,12 +89,13 @@ class PlaningPage extends React.Component {
     };
 
     async componentDidMount() {
-        const { currentMonth, getTimerPlaningList } = this.props;
+        const { currentMonth, getTimerPlaningList, getProjects } = this.props;
         moment.locale(`${this.props.user.language}`);
         currentMonth();
         await this.getCurrentTeam();
         getTimerPlaningList();
-        this.getProjects();
+        getProjects();
+        // this.getProjects();
     }
 
     getCurrentTeam = async () => {
@@ -113,24 +115,24 @@ class PlaningPage extends React.Component {
         this.props.setCurrentTeam(team);
     };
 
-    getProjects = () =>
-        getProjectsList(true).then(
-            result => {
-// <<<<<<< HEAD
-//                 let data = getProjectsV2ProjectPageUserParseFunction(result.data);
-// =======
-                let data = getProjectsV2ProjectPageUserParseFunction(result.data.data);
-// >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
-                this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => console.log(errorMessage));
-                } else {
-                    console.log(err);
-                }
-            }
-        );
+//     getProjects = () =>
+//         getProjectsList(true).then(
+//             result => {
+// // <<<<<<< HEAD
+// //                 let data = getProjectsV2ProjectPageUserParseFunction(result.data);
+// // =======
+//                 let data = getProjectsV2ProjectPageUserParseFunction(result.data.data);
+// // >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
+//                 this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
+//             },
+//             err => {
+//                 if (err instanceof Response) {
+//                     err.text().then(errorMessage => console.log(errorMessage));
+//                 } else {
+//                     console.log(err);
+//                 }
+//             }
+//         );
 
     nextMonth = () => {
         this.props.nextMonth();
@@ -230,11 +232,19 @@ class PlaningPage extends React.Component {
 
     handleAddUser = (dataSelected, searchFlag) => {
         const { setSelectedUsers, getTimerPlaningList } = this.props;
-        if (searchFlag) {
-            setSelectedUsers(dataSelected);
-            getTimerPlaningList();
+        if (!searchFlag) {
+            let selectedUsers = new Map();
+            dataSelected.forEach(item =>
+                item.team.team_users.forEach(user => {
+                    let _user = user.user[0];
+                    selectedUsers.set(_user.id, _user);
+                })
+            );
+            dataSelected = Array.from(selectedUsers.values());
         }
-        console.log({ dataSelected });
+
+        setSelectedUsers(dataSelected);
+        getTimerPlaningList();
     };
 
     handleDeleteUser = userId => {
@@ -273,6 +283,7 @@ class PlaningPage extends React.Component {
             newtimeOff,
             selectedUsers,
             currentTeam,
+            projects,
         } = planingReducer;
         console.log(timerPlaningList)
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timeOffShow } = this.state;
@@ -389,7 +400,7 @@ class PlaningPage extends React.Component {
                                                     cancel={this.closeAllFlags}
                                                     onAddPress={this.handleAddUser}
                                                     users={currentTeam.users}
-                                                    projects={projectsArray}
+                                                    projects={projects}
                                                     vocabulary={vocabulary}
                                                 />
                                             ) : null}
@@ -623,7 +634,7 @@ class PlaningPage extends React.Component {
                                     add={console.log}
                                     timeOff={newtimeOff}
                                     users={timerPlaningList}
-                                    projects={projectsArray}
+                                    projects={projects}
                                     vocabulary={vocabulary}
                                     getTimerPlaningList={getTimerPlaningList}
                                     getTimeOff={getTime_Off}
@@ -695,7 +706,11 @@ const mapDispatchToProps = {
 // =======
     setCurrentTeam,
     deleteUser,
-// >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
+// <<<<<<< HEAD
+// // >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
+// =======
+    getProjects,
+// >>>>>>> a0d8fbc2fb2c6f8d98d6913cacf55d96669f7c0e
 };
 
 export default connect(

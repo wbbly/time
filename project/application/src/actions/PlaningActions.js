@@ -1,8 +1,12 @@
-
-import { addPlan, getCurrentTeamDetailedData, getTimerPlaningListData, getTimeOff, addTimerOff } from '../configAPI';
-
-
-
+// <<<<<<< HEAD
+//
+// import { addPlan, getCurrentTeamDetailedData, getTimerPlaningListData, getTimeOff, addTimerOff } from '../configAPI';
+//
+//
+//
+// =======
+import { addPlan, getCurrentTeamDetailedData, getProjectsList, getTimerPlaningListData, getTimeOff, addTimerOff } from '../configAPI';
+// >>>>>>> a0d8fbc2fb2c6f8d98d6913cacf55d96669f7c0e
 import { store } from '../store/configureStore';
 import moment from 'moment';
 import { getTimerPlanningListParseFunction } from '../queries';
@@ -25,6 +29,7 @@ export const SET_TIMER_PLANING_LIST = 'SET_TIMER_PLANING_LIST';
 export const SET_TIME_OFF = 'SET_TIME_OFF';
 
 export const SET_CURRENT_TEAM = 'SET_CURRENT_TEAM';
+export const SET_PROJECTS = 'SET_PROJECTS';
 
 
 // const setTimeEntriesListAction = payload => ({
@@ -68,6 +73,16 @@ export const getTimerPlaningList = (timerOffIds) => async dispatch => {
 
     dispatch(setTimerPlaningList(getTimerPlanningListParseFunction(res.data.data.user)));
 };
+
+export const getProjects = () => async dispatch => {
+    const res = await getProjectsList(false, true);
+    dispatch(setProjects(res.data.data.project_v2));
+};
+
+export const setProjects = payload => ({
+    type: SET_PROJECTS,
+    payload,
+});
 
 export const openDayOffChangeWindow = payload => ({
     type: OPEN_DAY_OFF_CHANGE_WINDOW,
