@@ -12,6 +12,7 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
         <div className="last_invoices_list">
             {invoices.map(invoice => (
                 <div
+                    key={invoice.id}
                     className={classNames('list_item', {
                         confirmed: invoice.confirmed,
                     })}
