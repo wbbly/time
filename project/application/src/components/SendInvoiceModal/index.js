@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import './style.scss';
-import {connect} from "react-redux";
+import { connect } from 'react-redux';
 
 const inputText = `Dear [Tomas],
 
@@ -24,30 +24,32 @@ class SendInvoiceModal extends Component {
     };
 
     render() {
-        const {closeModal, sendInvoice, vocabulary, user, openedInvoice} = this.props;
-        const {inputValue} = this.state;
-        const {v_send_invoice, v_send_invoice_placeholder, v_send, v_cancel, v_from, v_to} = vocabulary;
+        const { closeModal, sendInvoice, vocabulary, user, openedInvoice } = this.props;
+        const { inputValue } = this.state;
+        const { v_send_invoice, v_send_invoice_placeholder, v_send, v_cancel, v_from, v_to } = vocabulary;
 
-        console.log({user});
+        console.log({ user });
         return (
             <div className="wrapper_send_invoice_modal">
-                <div className="send_invoice_modal_background"/>
+                <div className="send_invoice_modal_background" />
                 <div className="send_invoice_modal_container">
                     <div>
                         <div className="send_invoice_modal_header">
-                            <div className="send_invoice_modal_header_title">
-                                {v_send_invoice}
-                            </div>
+                            <div className="send_invoice_modal_header_title">{v_send_invoice}</div>
                         </div>
                         <div className="send_invoice_modal_data">
-                            <div><span className="bold">{v_from}:</span> {user.username}</div>
-                            <div><span className="bold">{v_to}:</span> {openedInvoice.name}</div>
+                            <div>
+                                <span className="bold">{v_from}:</span> {user.username}
+                            </div>
+                            <div>
+                                <span className="bold">{v_to}:</span> {openedInvoice.name}
+                            </div>
                             <div className="send_invoice_modal_data_input_container">
-                            <textarea
-                                value={inputValue}
-                                placeholder={v_send_invoice_placeholder}
-                                onChange={e => this.setState({inputValue: e.target.value})}
-                            />
+                                <textarea
+                                    value={inputValue}
+                                    placeholder={v_send_invoice_placeholder}
+                                    onChange={e => this.setState({ inputValue: e.target.value })}
+                                />
                             </div>
                         </div>
                     </div>
@@ -58,10 +60,7 @@ class SendInvoiceModal extends Component {
                         >
                             {v_send}
                         </button>
-                        <button
-                            className="send_invoice_modal_button_container_button"
-                            onClick={closeModal}
-                        >
+                        <button className="send_invoice_modal_button_container_button" onClick={closeModal}>
                             {v_cancel.toLowerCase()}
                         </button>
                     </div>
@@ -70,7 +69,7 @@ class SendInvoiceModal extends Component {
         );
     }
 }
-const mapStateToProps = ({invoicesReducer, userReducer}) => ({
+const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
     openedInvoice: invoicesReducer.openedInvoice,
     user: userReducer.user,
 });
