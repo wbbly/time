@@ -110,7 +110,7 @@ const AllInvoicesList = ({ invoices, vocabulary }) => {
     return (
         <div className="all_invoices_list">
             {invoices.map(invoice => (
-                <div className="list_item">
+                <div key={invoice.id} className="list_item">
                     <div className="row">
                         <div
                             className={classNames('status', {
