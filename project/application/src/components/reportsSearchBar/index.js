@@ -225,7 +225,6 @@ class ReportsSearchBar extends Component {
     }
 
     getCheckedUsers(name) {
-        console.log(this.state.userDataSelected);
         if (JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
             return true;
         }
@@ -415,7 +414,7 @@ class ReportsSearchBar extends Component {
             },
         }).then(
             result => {
-                const teamUsers = result.data.team[0].team_users;
+                const teamUsers = result.data.team[0].team_users.filter(user => user.is_active);
                 const users = teamUsers.map(teamUser => teamUser.user[0]);
                 this.setState({ userDataEtalon: users });
                 const inputUserData = this.props.inputUserData;
@@ -504,6 +503,7 @@ class ReportsSearchBar extends Component {
                                     }
                                     ref={input => (this.smallSelectUserInputRef = input)}
                                     placeholder={`${v_find}...`}
+                                    autoFocus
                                 />
                                 <div ref={div => (this.selectAllUsersRef = div)} onClick={_ => this.selectAllUsers()}>
                                     {v_select_all}
@@ -565,6 +565,7 @@ class ReportsSearchBar extends Component {
                                     }}
                                     ref={input => (this.smallSelectProjectInputRef = input)}
                                     placeholder={`${v_find}...`}
+                                    autoFocus
                                 />
                                 <div
                                     ref={div => (this.selectAllProjectsRef = div)}
@@ -632,6 +633,7 @@ class ReportsSearchBar extends Component {
                                     }
                                     ref={input => (this.smallSelectClientInputRef = input)}
                                     placeholder={`${v_find}...`}
+                                    autoFocus
                                 />
                                 <div
                                     ref={div => (this.selectAllClientsRef = div)}

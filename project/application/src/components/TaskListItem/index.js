@@ -31,7 +31,7 @@ import StartEditTaskModal from '../StartEditTaskModal';
 // Styles
 import './style.scss';
 
-const PlayIcon = ({ className, onClick }) => (
+export const PlayIcon = ({ className, onClick }) => (
     <svg
         className={className}
         onClick={onClick}
@@ -50,13 +50,13 @@ const PlayIcon = ({ className, onClick }) => (
     </svg>
 );
 
-const EditIcon = ({ className, onClick }) => (
+export const EditIcon = ({ className, onClick }) => (
     <svg className={className} onClick={onClick} viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg">
         <path d="M11.8147 3.20179L15.6797 7.06678L5.89624 16.8502L2.0334 12.9852L11.8147 3.20179ZM18.6125 2.26964L16.8889 0.545986C16.2227 -0.120146 15.1411 -0.120146 14.4727 0.545986L12.8216 2.19707L16.6866 6.0621L18.6125 4.1362C19.1292 3.61951 19.1292 2.7863 18.6125 2.26964ZM0.0107555 18.4178C-0.0595831 18.7344 0.226226 19.018 0.542821 18.941L4.84975 17.8968L0.98691 14.0318L0.0107555 18.4178Z" />
     </svg>
 );
 
-const DeleteIcon = ({ className, onClick }) => (
+export const DeleteIcon = ({ className, onClick }) => (
     <svg
         className={className}
         onClick={onClick}
@@ -75,7 +75,7 @@ const DeleteIcon = ({ className, onClick }) => (
     </svg>
 );
 
-const TrashIcon = ({ className, onClick }) => (
+export const TrashIcon = ({ className, onClick }) => (
     <svg className={className} onClick={onClick} viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             fillRule="evenodd"
