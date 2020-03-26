@@ -64,7 +64,7 @@ class LeftBar extends Component {
 
     render() {
         const { switchMenu, isMobile, vocabulary, currentTeam, isShowMenu } = this.props;
-        const { v_timer, v_reports, v_projects, v_team, v_clients, v_invoices } = vocabulary;
+        const { v_timer, v_reports, v_projects, v_team, v_clients, v_invoices, v_planning } = vocabulary;
         const { widthMenu } = this.state;
         return (
             <div
@@ -190,6 +190,22 @@ class LeftBar extends Component {
                         >
                             {/*<i className="team" />*/}
                             <div className="links_text">{v_invoices}</div>
+                        </div>
+                    </NavLink>
+                    <NavLink
+                        activeClassName="active-link"
+                        onClick={this.swithMenuHandleMob}
+                        to="/planing"
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <div
+                            title="Planning"
+                            className={classNames('navigation_links', {
+                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100,
+                            })}
+                        >
+                            <i className="planning" />
+                            <div className="links_text">{v_planning}</div>
                         </div>
                     </NavLink>
                 </div>

@@ -18,7 +18,6 @@ import { Bar } from 'react-chartjs-2';
 
 // dependencies
 import classNames from 'classnames';
-import _ from 'lodash';
 
 // Services
 import { checkIsAdminByRole } from '../../services/authentication';
@@ -125,17 +124,10 @@ class ReportsPage extends Component {
         return newObject;
     }
 
-    addDebounceToSearch = _.debounce(ranges => {
+    handleSelect = ranges => {
+        this.setState({ selectionRange: ranges.selection });
         this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
         this.applySearch(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
-    }, 1000);
-
-    handleSelect = ranges => {
-        if (moment(ranges.selection.startDate).diff(moment([1919, 11, 18])) === 0) {
-            this.setState({ selectionRange: ranges.selection });
-            return;
-        }
-        this.setState({ selectionRange: ranges.selection }, () => this.addDebounceToSearch(ranges));
     };
 
     getYear(date) {
@@ -392,11 +384,12 @@ class ReportsPage extends Component {
         const sumTimeEntriesByDay = {};
         if (this.checkYearPeriod()) {
             const sumTimeEntriesByMonth = {};
-            const copyTimeEntries = _.cloneDeep(timeEntries);
+            const copyTimeEntries = JSON.parse(JSON.stringify(timeEntries));
             const { selectionRange } = this.state;
             const { startDate, endDate } = selectionRange;
             const range = moment.range(startDate, endDate);
             const months = Array.from(range.by('month'));
+
             for (let i = 0; i < months.length; i++) {
                 const date = months[i].format('YYYY-MM');
                 sumTimeEntriesByMonth[date] = [];

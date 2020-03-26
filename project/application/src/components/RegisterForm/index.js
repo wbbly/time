@@ -40,7 +40,6 @@ class RegisterForm extends Component {
             <Formik
                 validateOnChange={false}
                 validateOnBlur={false}
-                enableReinitialize
                 initialValues={{ email: emailFromRedirect ? emailFromRedirect : '', password: '', confirmPassword: '' }}
                 validationSchema={Yup.object({
                     email: Yup.string()

@@ -1,4 +1,3 @@
-import moment from 'moment';
 import {
     addDays,
     endOfDay,
@@ -97,21 +96,12 @@ export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, la
         },
     ]);
 
-const checkMaxDate = value => {
-    return moment().diff(moment([1919, 11, 18])) < value * 86400000
-        ? Math.round(moment([1919, 11, 18]).diff(moment()) / -86400000)
-        : value;
-};
-
 export const inputRanges = (daysUpToToday, daysStartingToday, weekStartsOn) => [
     {
         label: daysUpToToday,
         range(value) {
             return {
-                startDate: addDays(
-                    defineds(weekStartsOn).startOfToday,
-                    (Math.max(Number(checkMaxDate(value)), 1) - 1) * -1
-                ),
+                startDate: addDays(defineds(weekStartsOn).startOfToday, (Math.max(Number(value), 1) - 1) * -1),
                 endDate: defineds(weekStartsOn).endOfToday,
             };
         },
