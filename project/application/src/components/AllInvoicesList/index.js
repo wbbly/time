@@ -1,13 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
-import { connect } from 'react-redux';
 
 // Styles
 import './style.scss';
-
-//Components
-import { toggleSendInvoiceModal } from '../../actions/InvoicesActions';
 
 const CheckIcon = ({ className, onClick, fill }) => (
     <svg
@@ -153,11 +149,4 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
     );
 };
 
-const mapDispatchToProps = {
-    toggleSendInvoiceModal,
-};
-
-export default connect(
-    null,
-    mapDispatchToProps
-)(AllInvoicesList);
+export default AllInvoicesList;

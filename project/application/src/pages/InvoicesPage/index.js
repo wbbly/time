@@ -5,27 +5,31 @@ import { connect } from 'react-redux';
 // Styles
 import './style.scss';
 
-//Сomponents
+//Components
 import { Loading } from '../../components/Loading';
 import CustomScrollbar from '../../components/CustomScrollbar';
 import LastInvoicesList from '../../components/LastInvoicesList';
 import AllInvoicesList from '../../components/AllInvoicesList';
 import SendInvoiceModal from '../../components/SendInvoiceModal';
-import { toggleSendInvoiceModal } from '../../actions/InvoicesActions';
 
 class InvoicesPage extends Component {
     state = {
         isInitialFetching: true,
+        sendInvoiceModalData: null,
     };
 
     componentDidMount() {
         setTimeout(() => this.setState({ isInitialFetching: false }), 500);
     }
 
+    toggleSendInvoiceModal = (sendInvoiceModalData = null) => {
+        this.setState({ sendInvoiceModalData });
+    };
+
     render() {
-        const { vocabulary, isMobile, invoices, sendInvoiceModalToggle, toggleSendInvoiceModal, user } = this.props;
+        const { vocabulary, isMobile, invoices } = this.props;
         const { v_invoices, v_add_new_invoice, v_all_invoices } = vocabulary;
-        const { isInitialFetching } = this.state;
+        const { isInitialFetching, sendInvoiceModalData } = this.state;
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar>
@@ -50,13 +54,21 @@ class InvoicesPage extends Component {
                         <div className="invoices-page-bottom">
                             <div className="invoices-page-bottom__title">{v_all_invoices}</div>
                             <div className="invoices-page-bottom__all-invoices">
-                                <AllInvoicesList invoices={invoices} vocabulary={vocabulary} />
+                                <AllInvoicesList
+                                    toggleSendInvoiceModal={this.toggleSendInvoiceModal}
+                                    invoices={invoices}
+                                    vocabulary={vocabulary}
+                                />
                             </div>
                         </div>
                     </div>
                 </CustomScrollbar>
-                {sendInvoiceModalToggle && (
-                    <SendInvoiceModal closeModal={toggleSendInvoiceModal} vocabulary={vocabulary} />
+                {sendInvoiceModalData && (
+                    <SendInvoiceModal
+                        closeModal={this.toggleSendInvoiceModal}
+                        vocabulary={vocabulary}
+                        invoice={sendInvoiceModalData}
+                    />
                 )}
             </Loading>
         );
@@ -65,12 +77,9 @@ class InvoicesPage extends Component {
 
 const mapStateToProps = ({ invoicesReducer }) => ({
     invoices: invoicesReducer.invoices,
-    sendInvoiceModalToggle: invoicesReducer.sendInvoiceModalToggle,
 });
 
-const mapDispatchToProps = {
-    toggleSendInvoiceModal,
-};
+const mapDispatchToProps = {};
 
 export default connect(
     mapStateToProps,
