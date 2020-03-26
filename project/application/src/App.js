@@ -25,6 +25,7 @@ import './fonts/icomoon/icomoon.css';
 
 import * as responsiveActions from './actions/ResponsiveActions';
 import { showNotificationAction } from './actions/NotificationActions';
+import InvoicesPage from './pages/InvoicesPage';
 
 const addEvent = (object, type, callback) => {
     if (object === null || typeof object === 'undefined') return false;
@@ -120,6 +121,7 @@ class App extends Component {
                     path="/reset-password"
                     render={() => <PageTemplate hideSidebar hideHeader content={ResetPasswordPage} />}
                 />
+                <PrivateRoute exact path="/invoices" render={() => <PageTemplate content={InvoicesPage} />} />
 
                 <Route render={() => <div>404 not found</div>} />
             </Switch>

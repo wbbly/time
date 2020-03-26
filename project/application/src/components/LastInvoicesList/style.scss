@@ -1,0 +1,122 @@
+.last-invoices-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-wrap: wrap;
+
+  .last-invoices-list-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    height: 260px;
+    padding: 20px 25px;
+    margin-bottom: 40px;
+    background: #EB5757;
+    border-radius: 4px;
+
+    &--confirmed {
+      background: #27AE60;
+    }
+
+    &:last-child {
+      margin: 0;
+    }
+
+    &__top {
+      flex: 2;
+    }
+
+    &__name {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 19px;
+    }
+
+    &__thin-text {
+      font-size: 14px;
+      line-height: 19px;
+    }
+
+    &__bottom {
+      flex: 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    &__total {
+      font-size: 18px;
+      line-height: 25px;
+    }
+
+    &__price {
+      font-weight: bold;
+      font-size: 36px;
+      line-height: 49px;
+      text-transform: uppercase;
+    }
+
+    &__confirm-button {
+      height: 38px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 19px;
+      color: #FFFFFF;
+      background: #1F1F1F;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.43);
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+      margin-top: 7px;
+
+    }
+  }
+}
+
+@media screen and (min-width: 650px) {
+  .last-invoices-list-item {
+    margin-right: 42px;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .last-invoices-list-item {
+    min-width: 380px;
+
+    &:nth-child(2n) {
+      margin: 0;
+    }
+  }
+
+}
+
+@media screen and (max-width: 1080px) {
+  .last-invoices-list-item {
+    min-width: 290px;
+  }
+}
+
+@media screen and (max-width: 740px) {
+  .last-invoices-list-item {
+    min-width: 260px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .last-invoices-list-item {
+    min-width: 285px;
+    margin: 0 0 40px 0;
+
+    &:nth-child(2n) {
+      margin: 0 0 40px 0;
+    }
+  }
+}
+

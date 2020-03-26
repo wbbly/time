@@ -208,4 +208,14 @@ export default {
 
     v_v_required: 'Required field',
     v_v_incorect_url: 'Incorrect URL',
+
+    v_invoices: 'Invoices',
+    v_add_new_invoice: 'New Invoice',
+    v_all_invoices: 'All invoices',
+    v_invoice: 'Invoice',
+    v_confirm_payment: 'Confirm payment',
+    v_send_invoice: 'Send invoice',
+    v_send_invoice_placeholder: 'placeholder',
+    v_from: 'From',
+    v_to: 'To',
 };
