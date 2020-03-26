@@ -1,8 +1,8 @@
-.all_invoices_list {
+.all-invoices-list {
   font-size: 14px;
   line-height: 19px;
 
-  .list_item {
+  .all-invoices-list-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -10,55 +10,52 @@
     height: 50px;
     margin-bottom: 5px;
 
-    .row {
+    &__block {
       flex: 3;
       display: flex;
       align-items: center;
     }
 
-    .status {
+    &__status {
       background: #EB5757;
       width: 8px;
       height: 50px;
       margin-right: 25px;
+
+      &--confirmed {
+        background: #27AE60;
+      }
     }
 
-    .number {
+    &__number {
       margin-right: 20px;
     }
 
-    .name {
+    &__name {
 
     }
 
-    .date {
-      width: 100px;
-      margin-right: 30px;
-    }
-
-    .price {
+    &__price {
       font-weight: bold;
       margin-right: 50px;
       text-transform: uppercase;
     }
 
-    .instruments {
+    &__date {
+      width: 100px;
+      margin-right: 30px;
+    }
+
+    &__instruments {
       flex: 2;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-right: 40px;
-
-      .icon_button {
-        cursor: pointer;
-      }
     }
 
-
-    .confirmed {
-      background: #27AE60;
+    &__icon-button {
+      cursor: pointer;
     }
   }
-
-
 }
