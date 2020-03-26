@@ -25,7 +25,9 @@ class CustomSelect extends React.Component {
                 this.props.name,
                 this.props.options.find(el => el.id === e.target.id).name
                     ? this.props.options.find(el => el.id === e.target.id).name
-                    : this.props.options.find(el => el.id === e.target.id).username?this.props.options.find(el => el.id === e.target.id).username:this.props.options.find(el => el.id === e.target.id).title,
+                    : this.props.options.find(el => el.id === e.target.id).username
+                        ? this.props.options.find(el => el.id === e.target.id).username
+                        : this.props.options.find(el => el.id === e.target.id).title,
                 e.target.id
             );
         }
@@ -81,7 +83,7 @@ class CustomSelect extends React.Component {
                                 </div>
                             ) : (
                                 <div key={el.id} id={el.id} onClick={this.change}>
-                                    {el.name ? el.name : el.username? el.username: el.title}
+                                    {el.name ? el.name : el.username ? el.username : el.title}
                                 </div>
                             )
                     )}

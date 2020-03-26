@@ -6,8 +6,7 @@ import noAvatar from '../../images/icon-512x512.png';
 
 import './style.scss';
 
-const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan, indexHeight, project }) => {
-    console.log({ date }, { widthPlan }, date.timeOff);
+const OpendBlock = ({ date, v_hour_small, widthPlan, indexHeight, project }) => {
     return (
         <div
             style={{
@@ -26,46 +25,33 @@ const OpendBlock = ({ date, v_hour_small, v_plan, widthPlan, indexHeight, projec
                     <p>{project.name}</p>
                     <p>{`${project.duration}${v_hour_small}`}</p>
                 </div>
-                {/*{date.timeOff &&*/}
-                {/*    date.timeOff.map((time_Off, index) => (*/}
-                {/*        <div*/}
-                {/*            key={index}*/}
-                {/*            style={{*/}
-                {/*                background: time_Off.color,*/}
-                {/*            }}*/}
-                {/*            className="time-off"*/}
-                {/*        >*/}
-                {/*            <p>{time_Off.title}</p>*/}
-                {/*        </div>*/}
-                {/*    ))}*/}
             </div>
         </div>
     );
 };
 
-const OpendBlockTimeOff = ({ date, v_hour_small, v_plan, widthPlan, indexHeight, project }) => {
-  console.log({ date }, { widthPlan }, date.timeOff);
-  return (
-    <div
-      style={{
-        top: 38 * indexHeight,
-        width: `${Math.floor(widthPlan + 1) * 40 - 2}px`,
-      }}
-      className="plan-block"
-    >
-      <div className="plan-container">
-        <div
-          style={{
-            background: project.time_off_color,
-          }}
-          className="plan"
-        >
-          <p>{project.title}</p>
-        </div>
+const OpendBlockTimeOff = ({ date, widthPlan, indexHeight, project }) => {
 
-      </div>
-    </div>
-  );
+    return (
+        <div
+            style={{
+                top: 38 * indexHeight,
+                width: `${Math.floor(widthPlan + 1) * 40 - 2}px`,
+            }}
+            className="plan-block"
+        >
+            <div className="plan-container">
+                <div
+                    style={{
+                        background: project.time_off_color,
+                    }}
+                    className="plan"
+                >
+                    <p>{project.title}</p>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const ClosedBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
@@ -154,9 +140,7 @@ const ClosedBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
 };
 
 const AddPlun = ({ changeAddPlanFlag }) => {
-    // if(!open){
-    //     return null
-    // }
+
     return (
         <div>
             <img
@@ -208,168 +192,43 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
     );
 
     const [dataClick, setOpen] = useState(false);
-    console.log(user);
-    let durationSum = 0;
-    user.timer_plannings.forEach(timer_planning =>
+
+
+    const durSum = () => {
+      let durationSum = 0;
+       user.timer_plannings.forEach(timer_planning =>
         timer_planning.projects.forEach(project => (durationSum += project.duration))
-    );
+      );
+       return durationSum
+    }
+
 
     return (
         <div className="user-block">
-{/*<<<<<<< HEAD*/}
-{/*            <p className="plan__title">Plan /{durationSum}h</p>*/}
-{/*            <div*/}
-{/*                className="user-block__main-block"*/}
-{/*                style={{ display: 'flex', borderBottom: '1px solid #1F1F1F', marginLeft: '-10px' }}*/}
-{/*            >*/}
-{/*                {month.map((week, index) => (*/}
-{/*                    <div*/}
-{/*                        key={index}*/}
-{/*                        style={{*/}
-{/*                            display: 'flex',*/}
-{/*                            // margin: '0 10px 0 10px'*/}
-{/*                        }}*/}
-{/*                    >*/}
-{/*                        <div style={{ display: 'flex', flexDirection: 'column' }}>*/}
-{/*                            <div*/}
-{/*                                id={`week_${week.week[0].fullDate}`}*/}
-{/*                                style={{*/}
-{/*                                    display: 'flex',*/}
-{/*                                    position: 'relative',*/}
-{/*                                    // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',*/}
-{/*                                    height: 47 * user.timer_plannings.length,*/}
-{/*                                    transition: 'height 0.3s',*/}
-{/*                                }}*/}
-{/*                            >*/}
-{/*                                {week.week.map((day, index) => {*/}
-{/*                                    return (*/}
-{/*                                        <div*/}
-{/*                                            key={index}*/}
-{/*                                            id={`middle_${day.fullDate}`}*/}
-{/*                                            style={{*/}
-{/*                                                width: '40px',*/}
-{/*                                                height: '100%',*/}
-{/*                                                position: 'relative',*/}
-{/*                                                cursor: 'pointer',*/}
-{/*                                                border: '1px solid #1F1F1F',*/}
-{/*                                                borderTop: 'none',*/}
-{/*                                                borderBottom: 'none',*/}
-{/*                                                background: day.background,*/}
-{/*                                                opacity: day.opacity,*/}
-{/*                                                outline: 'none',*/}
-{/*                                            }}*/}
-{/*                                            onClick={() => setOpen(day.fullDate)}*/}
-{/*                                            tabIndex={1}*/}
-{/*                                            onBlur={() => setOpen(null)}*/}
-{/*                                        >*/}
-{/*                                            {day.fullDate === dataClick && (*/}
-{/*                                                <AddPlun changeAddPlanFlag={changeAddPlanFlag} />*/}
-{/*                                            )}*/}
-{/*                                            {user.timer_plannings.map((date, index) =>*/}
-{/*                                                date.projects.map(*/}
-{/*                                                    project =>*/}
-{/*                                                        moment(project.start_date).format('L') ===*/}
-{/*                                                            moment(day.fullDate).format('L') &&*/}
-{/*                                                        week.week.find(el => {*/}
-{/*                                                            return (*/}
-{/*                                                                moment(project.start_date).format('L') ===*/}
-{/*                                                                moment(el.fullDate).format('L')*/}
-{/*                                                            );*/}
-{/*                                                        }) ? (*/}
-{/*                                                            user ? (*/}
-{/*                                                                <>*/}
-{/*                                                                    <OpendBlock*/}
-{/*                                                                        key={index}*/}
-{/*                                                                        date={date}*/}
-{/*                                                                        widthPlan={*/}
-{/*                                                                            (new Date(project.end_date) -*/}
-{/*                                                                                new Date(project.start_date)) /*/}
-{/*                                                                            (1000 * 60 * 60 * 24)*/}
-{/*                                                                        }*/}
-{/*                                                                        v_plan={v_plan}*/}
-{/*                                                                        v_hour_small={v_hour_small}*/}
-{/*                                                                        indexHeight={index}*/}
-{/*                                                                        project={project}*/}
-{/*                                                                    />*/}
-{/*                                                                </>*/}
-{/*                                                            ) : (*/}
-{/*                                                                <ClosedBlock*/}
-{/*                                                                    key={index}*/}
-{/*                                                                    date={date}*/}
-{/*                                                                    widthPlan={*/}
-{/*                                                                        (new Date(date.dateEnd) -*/}
-{/*                                                                            new Date(date.dateStart)) /*/}
-{/*                                                                        (1000 * 60 * 60 * 24)*/}
-{/*                                                                    }*/}
-{/*                                                                    v_hour_small={v_hour_small}*/}
-{/*                                                                    v_plan={v_plan}*/}
-{/*                                                                />*/}
-{/*                                                            )*/}
-{/*                                                        ) : null*/}
-{/*                                                )*/}
-{/*                                            )}*/}
-{/*                                        </div>*/}
-{/*                                    );*/}
-{/*                                })}*/}
-{/*                            </div>*/}
-{/*                            /!*---fake line ---*!/*/}
-{/*                            /!* <div style={{ display: 'flex', position: 'relative' }}>*/}
-{/*                                {week.week.map((day, index) => (*/}
-{/*                                    <div*/}
-{/*                                        key={index}*/}
-{/*                                        id={`bottom_${day.fullDate}`}*/}
-{/*                                        style={{*/}
-{/*                                            width: '40px',*/}
-{/*                                            height: '40px',*/}
-{/*                                            border: '1px solid #1F1F1F',*/}
-{/*                                            borderTop: 'none',*/}
-{/*                                            borderBottom: 'none',*/}
-{/*                                            background: day.background,*/}
-{/*                                            opacity: day.opacity,*/}
-{/*                                        }}*/}
-{/*                                    />*/}
-{/*                                ))}*/}
-{/*                            </div> *!/*/}
-{/*                        </div>*/}
-{/*=======*/}
             <div className="aside-bar">
                 <div className="aside-bar__users">
                     <div className="aside-bar__avatar">
                         <img src={user.avatar ? user.avatar : noAvatar} alt="no img" />
                         <i onClick={() => onDeleteUser(user.id)} />
-{/*>>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f*/}
                     </div>
                 </div>
             </div>
-{/*<<<<<<< HEAD*/}
-
-{/*            {user.logged.length > 0 && (*/}
-{/*                <div className="logged">*/}
-{/*                    <p className="logged__title">Logged</p>*/}
-{/*                    <div className="user-block__main-block">*/}
-{/*                        {month.map((week, index) => (*/}
-{/*                            <div key={index}>*/}
-{/*=======*/}
             <div>
-                <p className="plan__title">Plan /{durationSum}h</p>
+                <p className="plan__title">Plan /{durSum()}h</p>
                 <div className="user-block__main-block">
                     {month.map((week, index) => (
                         <div
                             key={index}
                             style={{
                                 display: 'flex',
-                                // margin: '0 10px 0 10px'
                             }}
                         >
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
-{/*>>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f*/}
                                 <div
                                     id={`week_${week.week[0].fullDate}`}
                                     style={{
                                         display: 'flex',
                                         position: 'relative',
-                                        // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',
-                                        // height: 200,
                                         height: 47 * user.timer_plannings.length,
                                         transition: 'height 0.3s',
                                     }}
@@ -441,60 +300,41 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                                                                 )
                                                             ) : null
                                                     )
-
                                                 )}
-                                              {user.timer_plannings.map((date, index) =>
-                                                date.timeOff.map(
-                                                  timeOff =>
-                                                    moment(timeOff.start_date).format('L') ===
-                                                    moment(day.fullDate).format('L') &&
-                                                    week.week.find(el => {
-                                                      return (
-                                                        moment(timeOff.start_date).format('L') ===
-                                                        moment(el.fullDate).format('L')
-                                                      );
-                                                    }) ? (
-                                                        <>
-                                                          <OpendBlockTimeOff
-                                                            key={index}
-                                                            date={date}
-                                                            widthPlan={
-                                                              (new Date(timeOff.end_date) -
-                                                                new Date(timeOff.start_date)) /
-                                                              (1000 * 60 * 60 * 24)
-                                                            }
-                                                            v_plan={v_plan}
-                                                            v_hour_small={v_hour_small}
-                                                            indexHeight={index}
-                                                            project={timeOff}
-                                                          />
-                                                        </>
-                                                    ) : null
-                                                )
-
-                                              )}
+                                                {user.timer_plannings.map((date, index) =>
+                                                  ((user.timer_plannings.length === 1 && !date.project ) || !!date.projects.length)  &&
+                                                    date.timeOff.map(
+                                                        timeOff =>
+                                                            moment(timeOff.start_date).format('L') ===
+                                                                moment(day.fullDate).format('L') &&
+                                                            week.week.find(el => {
+                                                                return (
+                                                                    moment(timeOff.start_date).format('L') ===
+                                                                    moment(el.fullDate).format('L')
+                                                                );
+                                                            }) ? (
+                                                                <>
+                                                                    <OpendBlockTimeOff
+                                                                        key={index}
+                                                                        date={date}
+                                                                        widthPlan={
+                                                                            (new Date(timeOff.end_date) -
+                                                                                new Date(timeOff.start_date)) /
+                                                                            (1000 * 60 * 60 * 24)
+                                                                        }
+                                                                        v_plan={v_plan}
+                                                                        v_hour_small={v_hour_small}
+                                                                        indexHeight={index}
+                                                                        project={timeOff}
+                                                                    />
+                                                                </>
+                                                            ) : null
+                                                    )
+                                                )}
                                             </div>
                                         );
                                     })}
                                 </div>
-                                {/*---fake line ---*/}
-                                {/* <div style={{ display: 'flex', position: 'relative' }}>
-                                {week.week.map((day, index) => (
-                                    <div
-                                        key={index}
-                                        id={`bottom_${day.fullDate}`}
-                                        style={{
-                                            width: '40px',
-                                            height: '40px',
-                                            border: '1px solid #1F1F1F',
-                                            borderTop: 'none',
-                                            borderBottom: 'none',
-                                            background: day.background,
-                                            opacity: day.opacity,
-                                        }}
-                                    />
-                                ))}
-                            </div> */}
                             </div>
                         </div>
                     ))}

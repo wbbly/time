@@ -1,12 +1,11 @@
-// <<<<<<< HEAD
-//
-// import { addPlan, getCurrentTeamDetailedData, getTimerPlaningListData, getTimeOff, addTimerOff } from '../configAPI';
-//
-//
-//
-// =======
-import { addPlan, getCurrentTeamDetailedData, getProjectsList, getTimerPlaningListData, getTimeOff, addTimerOff } from '../configAPI';
-// >>>>>>> a0d8fbc2fb2c6f8d98d6913cacf55d96669f7c0e
+import {
+    addPlan,
+    getCurrentTeamDetailedData,
+    getProjectsList,
+    getTimerPlaningListData,
+    getTimeOff,
+    addTimerOff,
+} from '../configAPI';
 import { store } from '../store/configureStore';
 import moment from 'moment';
 import { getTimerPlanningListParseFunction } from '../queries';
@@ -30,7 +29,6 @@ export const SET_TIME_OFF = 'SET_TIME_OFF';
 
 export const SET_CURRENT_TEAM = 'SET_CURRENT_TEAM';
 export const SET_PROJECTS = 'SET_PROJECTS';
-
 
 // const setTimeEntriesListAction = payload => ({
 //     type: GET_TIME_ENTRIES_LIST,
@@ -57,7 +55,7 @@ export const setTimerPlaningList = payload => ({
     payload,
 });
 
-export const getTimerPlaningList = (timerOffIds) => async dispatch => {
+export const getTimerPlaningList = timerOffIds => async dispatch => {
     const { selectedUsers, current } = store.getState().planingReducer;
 
     let userIds = selectedUsers.map(user => user.id);
@@ -67,7 +65,6 @@ export const getTimerPlaningList = (timerOffIds) => async dispatch => {
     let endDate = moment(current)
         .endOf('month')
         .format('YYYY-MM-DD');
-
 
     let res = await getTimerPlaningListData({ userIds, timerOffIds, startDate, endDate });
 
@@ -179,16 +176,16 @@ export const addPlanUser = async data => {
     } catch (error) {}
 };
 
-export const getTime_Off = () => {return async dispatch => {
-    try {
-        const { data } = await getTimeOff();
-        return dispatch(setTimeOff(data.data.timer_off));
-    } catch (error) {
-    }
-}
+export const getTime_Off = () => {
+    return async dispatch => {
+        try {
+            const { data } = await getTimeOff();
+            return dispatch(setTimeOff(data.data.timer_off));
+        } catch (error) {}
+    };
 };
 
-export const postTimer_Off = data  =>async dispatch => {
+export const postTimer_Off = data => async dispatch => {
     try {
         await addTimerOff(data);
         dispatch(getTime_Off());

@@ -6,9 +6,9 @@ import Switch from '@material-ui/core/Switch';
 import AddDaysModal from './AddDaysModal';
 
 import './style.scss';
-import { ThemeProvider } from "@material-ui/styles";
-import Checkbox from "@material-ui/core/Checkbox";
-import { createMuiTheme } from "@material-ui/core";
+import { ThemeProvider } from '@material-ui/styles';
+import Checkbox from '@material-ui/core/Checkbox';
+import { createMuiTheme } from '@material-ui/core';
 
 const IOSSwitch = withStyles(theme => ({
     root: {
@@ -100,15 +100,15 @@ export class AddTimeOff extends React.Component {
         switchAllNotifFlag: false,
         publicNotifFlag: false,
         showAddDayFlag: false,
-        timeOffArray:[],
+        timeOffArray: [],
         userDataSelected: [],
-        checkedAll: false
+        checkedAll: false,
     };
 
     componentDidMount() {
-        this.props.getTimeOff().then((res)=>{
-            this.setState({timeOffArray:res.payload})
-        })
+        this.props.getTimeOff().then(res => {
+            this.setState({ timeOffArray: res.payload });
+        });
     }
 
     toggleUser(user) {
@@ -116,8 +116,8 @@ export class AddTimeOff extends React.Component {
         let exists = false;
         for (let i = 0; i < daysOff.length; i++) {
             const currentUser = daysOff[i];
-            console.log(currentUser)
-            console.log(user.id)
+            console.log(currentUser);
+            console.log(user.id);
             if (currentUser.id === user.id) {
                 exists = true;
                 daysOff.splice(i, 1);
@@ -128,22 +128,26 @@ export class AddTimeOff extends React.Component {
         if (!exists) {
             daysOff.push(user);
         }
-        console.log(daysOff)
         this.setState({ userDataSelected: daysOff });
-        this.props.getTimerPlaningList(daysOff.map((item)=>{return item.id}));
+        this.props.getTimerPlaningList(
+            daysOff.map(item => {
+                return item.id;
+            })
+        );
     }
     selectAllUsers() {
-        this.setState({ userDataSelected: this.state.timeOffArray,  checkedAll: false });
-        this.props.getTimerPlaningList(this.state.timeOffArray.map((item)=>{return item.id}));
+        this.setState({ userDataSelected: this.state.timeOffArray, checkedAll: false });
+        this.props.getTimerPlaningList(
+            this.state.timeOffArray.map(item => {
+                return item.id;
+            })
+        );
     }
     selectNoneUsers() {
-        this.setState({ userDataSelected: [],  checkedAll: false });
+        this.setState({ userDataSelected: [], checkedAll: false });
         this.props.getTimerPlaningList([]);
     }
     getCheckedUsers(name) {
-        console.log(name)
-        console.log(this.state.userDataSelected)
-        console.log(JSON.stringify(this.state.userDataSelected).indexOf(name) > -1)
         if (JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
             return true;
         }
@@ -157,11 +161,11 @@ export class AddTimeOff extends React.Component {
                 values.push(it['title']);
 
                 return values
-                  .join()
-                  .toLowerCase()
-                  .indexOf(searchText) > -1
-                  ? it
-                  : undefined;
+                    .join()
+                    .toLowerCase()
+                    .indexOf(searchText) > -1
+                    ? it
+                    : undefined;
             });
             this.setState({ timeOffArray: filteredArr });
         } else {
@@ -179,11 +183,21 @@ export class AddTimeOff extends React.Component {
         this.setState({ showAddDayFlag: !this.state.showAddDayFlag });
     };
     render() {
-        const { add, cancel, change, changeAll, vocabulary, timeOff, allFlag, openDayOffChangeWindow, newtimeOff } = this.props;
-        // const { v_add, v_cancel_small } = vocabulary;
+        const {
+            add,
+            cancel,
+            change,
+            changeAll,
+            vocabulary,
+            timeOff,
+            allFlag,
+            openDayOffChangeWindow,
+            newtimeOff,
+        } = this.props;
+
         const { v_user, v_project, v_find, v_select_all, v_select_none, v_apply, v_client } = vocabulary;
-        const { switchAllNotifFlag, publicNotifFlag, showAddDayFlag , timeOffArray} = this.state;
-        console.log(timeOffArray)
+        const { switchAllNotifFlag, publicNotifFlag, showAddDayFlag, timeOffArray } = this.state;
+
         return (
             <div className="timeoff-modal">
                 <div className="timeoff-modal__header">
@@ -192,147 +206,42 @@ export class AddTimeOff extends React.Component {
                 </div>
 
                 <div className="timeoff-modal__body">
-                    {/* <Scrollbars renderTrackHorizontal={props => <div {...props} style={{ display: 'none' }} />}> */}
-                    {/*<div className="timeoff-modal__list-item">*/}
-                    {/*    <div className="timeoff-modal__list-item-left">*/}
-                    {/*        <div className="timeoff-modal__list-item-text">Switch all</div>*/}
-                    {/*    </div>*/}
-                    {/*    <div className="timeoff-modal__list-item-right">*/}
-                    {/*        <IOSSwitch checked={allFlag} onChange={_ => changeAll()} value={'all'} />*/}
-                    {/*        <div className="timeoff-modal__question">*/}
-                    {/*            <i onMouseOver={this.switchAllNotifFlag} onMouseOut={this.switchAllNotifFlag} />*/}
-                    {/*            /!* {switchAllNotifFlag ? ( *!/*/}
-                    {/*            <div*/}
-                    {/*                className={*/}
-                    {/*                    switchAllNotifFlag*/}
-                    {/*                        ? 'timeoff-modal__notification-show'*/}
-                    {/*                        : 'timeoff-modal__notification-hide'*/}
-                    {/*                }*/}
-                    {/*            >*/}
-                    {/*                Laborum ea aute id mollit nisi et in veniam deserunt duis laborum ullamco duis.*/}
-                    {/*                Fugiat aliqua elit non dolore mollit consequat est. Labore ea est eiusmod esse non*/}
-                    {/*                nulla nulla laboris. Ullamco sit ipsum ex non minim ut nulla culpa eu pariatur amet.*/}
-                    {/*            </div>*/}
-                    {/*            /!* ) : null} *!/*/}
-                    {/*        </div>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-                    {/*<div className="timeoff-modal__list-item">*/}
-                    {/*    <div className="timeoff-modal__list-item-left">*/}
-                    {/*        <div*/}
-                    {/*            className="timeoff-modal__list-item-color"*/}
-                    {/*            style={{ background: `${timeOff[0].color}` }}*/}
-                    {/*        />*/}
-                    {/*        <p className="timeoff-modal__list-item-text">{timeOff[0].name}</p>*/}
-                    {/*    </div>*/}
-                    {/*    <div className="timeoff-modal__list-item-right">*/}
-                    {/*        <IOSSwitch*/}
-                    {/*            checked={timeOff[0].checked}*/}
-                    {/*            onChange={_ => change(timeOff[0])}*/}
-                    {/*            value={timeOff[0].name}*/}
-                    {/*        />*/}
-                    {/*        <div className="timeoff-modal__question">*/}
-                    {/*            <i onMouseOver={this.switchPublicNotifFlag} onMouseOut={this.switchPublicNotifFlag} />*/}
-                    {/*            /!* {publicNotifFlag ? ( *!/*/}
-                    {/*            <div*/}
-                    {/*                className={*/}
-                    {/*                    publicNotifFlag*/}
-                    {/*                        ? 'timeoff-modal__notification-show'*/}
-                    {/*                        : 'timeoff-modal__notification-hide'*/}
-                    {/*                }*/}
-                    {/*            >*/}
-                    {/*                Laborum ea aute id mollit nisi et in veniam deserunt duis laborum ullamco duis.*/}
-                    {/*                Fugiat aliqua elit non dolore mollit consequat est. Labore ea est eiusmod esse non*/}
-                    {/*                nulla nulla laboris. Ullamco sit ipsum ex non minim ut nulla culpa eu pariatur amet.*/}
-                    {/*            </div>*/}
-                    {/*            /!* ) : null} *!/*/}
-                    {/*        </div>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-
-                    {/*{timeOff.map(item => {*/}
-                    {/*    if (item.name !== 'public holiday') {*/}
-                    {/*        return (*/}
-                    {/*            <div className="timeoff-modal__list-item" key={item.id}>*/}
-                    {/*                <div className="timeoff-modal__list-item-left">*/}
-                    {/*                    <div*/}
-                    {/*                        className="timeoff-modal__list-item-color"*/}
-                    {/*                        style={{ background: `${item.color}` }}*/}
-                    {/*                    />*/}
-                    {/*                    <p className="timeoff-modal__list-item-text">{item.name}</p>*/}
-                    {/*                </div>*/}
-                    {/*                <div className="timeoff-modal__list-item-right">*/}
-                    {/*                    <IOSSwitch*/}
-                    {/*                        checked={item.checked}*/}
-                    {/*                        onChange={_ => change(item)}*/}
-                    {/*                        value={item.name}*/}
-                    {/*                    />*/}
-                    {/*                    <div className="timeoff-modal__pencil">*/}
-                    {/*                        <PencilSvg*/}
-                    {/*                            openFlag={item.openFlag}*/}
-                    {/*                            action={openDayOffChangeWindow}*/}
-                    {/*                            id={item.id}*/}
-                    {/*                        />*/}
-                    {/*                        {item.openFlag ? (*/}
-                    {/*                            <AddDaysModal*/}
-                    {/*                                timeOff={timeOff}*/}
-                    {/*                                vocabulary={vocabulary}*/}
-                    {/*                                close={openDayOffChangeWindow}*/}
-                    {/*                                initialColor={item.colorName}*/}
-                    {/*                                initialName={item.name}*/}
-                    {/*                                itemId={item.id}*/}
-                    {/*                            />*/}
-                    {/*                        ) : null}*/}
-                    {/*                    </div>*/}
-                    {/*                </div>*/}
-                    {/*            </div>*/}
-                    {/*        );*/}
-                    {/*    } else return null;*/}
-                    {/*})}*/}
-                    {/*{newtimeOff.map((item)=>{*/}
-                    {/*    return <div>*/}
-                    {/*        {item.title}*/}
-                    {/*    </div>*/}
-                    {/*})}*/}
-                      <div className="filter_block" ref={div => (this.selectListUsersRef = div)}>
-                          <div className="search_menu_select">
-                              <input
+                    <div className="filter_block" ref={div => (this.selectListUsersRef = div)}>
+                        <div className="search_menu_select">
+                            <input
                                 type="text"
-                                onKeyUp={_ =>
-                                  this.findDays(newtimeOff, this.smallSelectDaysInputRef.value)
-                                }
+                                onKeyUp={_ => this.findDays(newtimeOff, this.smallSelectDaysInputRef.value)}
                                 ref={input => (this.smallSelectDaysInputRef = input)}
                                 // placeholder={`${v_find}...`}
-                                placeholder='Search'
-                              />
-                              <div ref={div => (this.selectAllUsersRef = div)} onClick={_ => this.selectAllUsers()}>
-                                  {v_select_all}
-                              </div>
-                              <div ref={div => (this.selectNoneUsersRef = div)} onClick={_ => this.selectNoneUsers()}>
-                                  {v_select_none}
-                              </div>
-                              {/*<i className="small_clear" onClick={_ => this.clearUserSearch()} />*/}
-                          </div>
-                          <div className="select_items_container">
-                              {timeOffArray.map((item, index) => (
+                                placeholder="Search"
+                            />
+                            <div ref={div => (this.selectAllUsersRef = div)} onClick={_ => this.selectAllUsers()}>
+                                {v_select_all}
+                            </div>
+                            <div ref={div => (this.selectNoneUsersRef = div)} onClick={_ => this.selectNoneUsers()}>
+                                {v_select_none}
+                            </div>
+                        </div>
+                        <div className="select_items_container">
+                            {timeOffArray.map((item, index) => (
                                 <div className="select_users_item" key={item.id + index}>
                                     <label>
                                         <ThemeProvider theme={materialTheme}>
                                             <Checkbox
-                                              color={'primary'}
-                                              value={item.title || ''}
-                                              checked={this.getCheckedUsers(item.id) || this.state.checkedAll }
-                                              onChange={_ => {
-                                                  this.toggleUser(item);
-                                              }}
+                                                color={'primary'}
+                                                value={item.title || ''}
+                                                checked={this.getCheckedUsers(item.id) || this.state.checkedAll}
+                                                onChange={_ => {
+                                                    this.toggleUser(item);
+                                                }}
                                             />
                                         </ThemeProvider>{' '}
                                         <span className="select_users_item_username">{item.title}</span>
                                     </label>
                                 </div>
-                              ))}
-                          </div>
-                      </div>
+                            ))}
+                        </div>
+                    </div>
 
                     <div className="timeoff-modal__add-days" onClick={this.switchShowAddDayFlag}>
                         <i className="timeoff-modal__plus" />

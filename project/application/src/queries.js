@@ -120,37 +120,34 @@ export function getTimerPlanningListParseFunction(users) {
         user.timer_plannings.forEach((timer_planning, y) => {
             // console.log({ timer_planning });
             let matchedLogIndex = timer_plannings.findIndex(l => l.project_id === timer_planning.project_id);
-            let matchedTimeOffIndex = timer_plannings.findIndex(l => l.timer_off_id === timer_planning.project_id);
-            console.log(matchedLogIndex)
-            const indexUser = user.timer_plannings.find((el)=>{ return el.timer_off_id !== null});
-            if (matchedLogIndex !== -1 ) {
+            let matchedTimeOffIndex = timer_plannings.findIndex(l => l.timer_off_id === timer_planning.timer_off_id);
 
-                console.log(indexUser)
-                if(indexUser ) {
-                    console.log(timer_planning.project)
+            if (matchedLogIndex !== -1) {
+                if (!timer_planning.timer_off && !timer_planning.timer_off_id && timer_planning.project) {
+                    timer_plannings[matchedLogIndex].projects.push({
+                        start_date: timer_planning.start_date,
+                        end_date: timer_planning.end_date,
+                        name: timer_planning.project
+                            ? timer_planning.project.name
+                            : timer_planning.timer_off
+                                ? timer_planning.timer_off.title
+                                : 'day off',
+                        project_color: timer_planning.project ? timer_planning.project.project_color : { name: 'red' },
+                        duration: timer_planning.duration,
+                    });
                 }
-               if(!timer_planning.timer_off && !timer_planning.timer_off_id && timer_planning.project){
 
-                timer_plannings[matchedLogIndex].projects.push({
-                    start_date: timer_planning.start_date,
-                    end_date: timer_planning.end_date,
-                    name: timer_planning.project ? timer_planning.project.name :  timer_planning.timer_off?  timer_planning.timer_off.title:'day off',
-                    project_color: timer_planning.project ? timer_planning.project.project_color : { name: 'red' },
-                    duration: timer_planning.duration,
-                })};
-
-                if(indexUser && timer_planning.timer_off_id) {
-                    timer_plannings.forEach((item, index)=> {
+                if (!timer_planning.project) {
+                    timer_plannings.forEach((item, index) => {
                         timer_plannings[index].timeOff.push({
                             start_date: timer_planning.start_date,
                             end_date: timer_planning.end_date,
                             title: timer_planning.timer_off ? timer_planning.timer_off.title : 'day off',
-                            time_off_color:  'red' ,
+                            time_off_color: 'red',
                             duration: timer_planning.duration,
                         });
                     });
                 }
-
             } else {
                 timer_plannings.push({
                     id: timer_planning.id,
@@ -165,29 +162,34 @@ export function getTimerPlanningListParseFunction(users) {
                     created_by_id: timer_planning.created_by_id,
                     created_by: timer_planning.created_by,
                     created_at: timer_planning.created_at,
-                    projects:timer_planning.project ? [
-
-                        {
-                            start_date: timer_planning.start_date,
-                            end_date: timer_planning.end_date,
-
-                            name: timer_planning.project ? timer_planning.project.name :  timer_planning.timer_off?  timer_planning.timer_off.title:'day off',
-                            project_color: timer_planning.project
-                                ? timer_planning.project.project_color
-                                : { name: 'red' },
-                            duration: timer_planning.duration,
-                        },
-
-                    ]:[],
-                    timeOff:timer_planning.timer_off ? [
-                       {
-                            start_date: timer_planning.start_date,
-                            end_date: timer_planning.end_date,
-                            title: timer_planning.timer_off?  timer_planning.timer_off.title:'day off',
-                            time_off_color:  'red' ,
-                            duration: timer_planning.duration,
-                        },
-                    ]:[],
+                    projects: timer_planning.project
+                        ? [
+                              {
+                                  start_date: timer_planning.start_date,
+                                  end_date: timer_planning.end_date,
+                                  name: timer_planning.project
+                                      ? timer_planning.project.name
+                                      : timer_planning.timer_off
+                                          ? timer_planning.timer_off.title
+                                          : 'day off',
+                                  project_color: timer_planning.project
+                                      ? timer_planning.project.project_color
+                                      : { name: 'red' },
+                                  duration: timer_planning.duration,
+                              },
+                          ]
+                        : [],
+                    timeOff: timer_planning.timer_off
+                        ? [
+                              {
+                                  start_date: timer_planning.start_date,
+                                  end_date: timer_planning.end_date,
+                                  title: timer_planning.timer_off ? timer_planning.timer_off.title : 'day off',
+                                  time_off_color: 'red',
+                                  duration: timer_planning.duration,
+                              },
+                          ]
+                        : [],
                 });
             }
             if (users[i].timer_plannings.length - 1 === y) {
@@ -196,7 +198,6 @@ export function getTimerPlanningListParseFunction(users) {
             }
         })
     );
-
     //modify logged array by projectId
     users.forEach((user, i) =>
         user.logged.forEach((log, y) => {

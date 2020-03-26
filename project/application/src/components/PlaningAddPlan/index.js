@@ -17,7 +17,7 @@ export class AddPlan extends React.Component {
     state = {};
 
     componentDidMount() {
-        this.props.getTimeOff()
+        this.props.getTimeOff();
     }
 
     addPlanClick = data => {
@@ -31,7 +31,7 @@ export class AddPlan extends React.Component {
         } = data;
         addPlanUser({
             userId: idPerson,
-            [this.props.timeOffShow?'timerOffId':'projectId']: idProject,
+            [this.props.timeOffShow ? 'timerOffId' : 'projectId']: idProject,
             startDate: startDate,
             duration: hours,
             endDate: endDate,
@@ -56,7 +56,7 @@ export class AddPlan extends React.Component {
     };
 
     render() {
-        const { users = [], projects = [], add, cancel, vocabulary,  timeOff = [], timeOffShow} = this.props;
+        const { users = [], projects = [], add, cancel, vocabulary, timeOff = [], timeOffShow } = this.props;
         const { v_cancel_small, v_add, v_add_plan, v_v_required } = vocabulary;
         console.log(users);
         console.log(projects);
@@ -118,7 +118,7 @@ export class AddPlan extends React.Component {
                                     <CustomSelect
                                         name="project"
                                         value={formik.values.project.b}
-                                        options={timeOffShow?timeOff:projects}
+                                        options={timeOffShow ? timeOff : projects}
                                         onChange={(a, b, idProject) =>
                                             formik.setFieldValue('project', { a, b, idProject })
                                         }
@@ -177,9 +177,7 @@ const mapStateToProps = state => ({
     user: state.userReducer.user,
 });
 
-const mapDispatchToProps = {
-
-};
+const mapDispatchToProps = {};
 
 export default connect(
     mapStateToProps,

@@ -389,15 +389,15 @@ export const addTimerOff = data =>
     instance({
         url: '/timer-off/add',
         method: 'POST',
-        data
+        data,
     });
 
 export const patchTimerOff = (id, data) =>
-  instance({
-    url: `/timer-off/${id}`,
-    method: 'PATCH',
-    data
-  });
+    instance({
+        url: `/timer-off/${id}`,
+        method: 'PATCH',
+        data,
+    });
 
 export const getTimerPlaningListData = data =>
     instance({

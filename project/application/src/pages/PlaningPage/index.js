@@ -10,7 +10,7 @@ import PlaningUserBlock from '../../components/PlaningUserBlock';
 // import { AddUserProject } from '../../components/PlaningAddUserProject';
 // =======
 import AddUserProject from '../../components/PlaningAddUserProject';
-// >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
+
 import { AddPlan } from '../../components/PlaningAddPlan';
 import { AddTimeOff } from '../../components/PlaningAddTimeOff';
 
@@ -30,10 +30,8 @@ import {
     openDayOffChangeWindow,
     getTimerPlaningList,
     setSelectedUsers,
-
     getTime_Off,
     setTimeOff,
-
     setCurrentTeam,
     deleteUser,
     getProjects,
@@ -56,10 +54,7 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
 
 import { getCurrentDate } from '../../services/timeService';
-// <<<<<<< HEAD
-// import { getCurrentTeamDetailedData } from '../../configAPI'; // theme css file
-//
-// =======
+
 import { getCurrentTeamDetailedData, getProjectsList } from '../../configAPI';
 
 const localeMap = {
@@ -74,7 +69,6 @@ class PlaningPage extends React.Component {
     state = {
         userData: null,
         timerPlaningList: null,
-
         showAddUser: false,
         showAddPlan: false,
         showTimeOff: false,
@@ -95,7 +89,6 @@ class PlaningPage extends React.Component {
         await this.getCurrentTeam();
         getTimerPlaningList();
         getProjects();
-        // this.getProjects();
     }
 
     getCurrentTeam = async () => {
@@ -109,30 +102,10 @@ class PlaningPage extends React.Component {
             users,
         };
 
-
         this.props.setSelectedUsers(users);
 
         this.props.setCurrentTeam(team);
     };
-
-//     getProjects = () =>
-//         getProjectsList(true).then(
-//             result => {
-// // <<<<<<< HEAD
-// //                 let data = getProjectsV2ProjectPageUserParseFunction(result.data);
-// // =======
-//                 let data = getProjectsV2ProjectPageUserParseFunction(result.data.data);
-// // >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
-//                 this.props.projectsPageAction('CREATE_PROJECT', { tableData: data.projectV2 });
-//             },
-//             err => {
-//                 if (err instanceof Response) {
-//                     err.text().then(errorMessage => console.log(errorMessage));
-//                 } else {
-//                     console.log(err);
-//                 }
-//             }
-//         );
 
     nextMonth = () => {
         this.props.nextMonth();
@@ -180,13 +153,9 @@ class PlaningPage extends React.Component {
         this.setState({ showAddUser: true });
     };
     changeAddPlanFlag = () => {
-// <<<<<<< HEAD
         this.setState({ showAddPlan: true, timeOffShow: false });
-// =======
-//         this.setState({ showAddPlan: true });
-// >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
     };
-    changeTimeOffShow= () => {
+    changeTimeOffShow = () => {
         this.setState({ showAddPlan: true, timeOffShow: true });
     };
 
@@ -262,17 +231,12 @@ class PlaningPage extends React.Component {
             changeTimeOffFlag,
             changeAllTimeOff,
             openDayOffChangeWindow,
-
             firstDayOfWeek,
             dateFormat,
             getTimerPlaningList,
-            getTime_Off
+            getTime_Off,
         } = this.props;
-// <<<<<<< HEAD
 
-        // const { month, current, users, newtimeOff, timeOff, swithcAllTimeOff, timerPlaningList } = planingReducer;
-        // const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timeOffShow } = this.state;
-// =======
         const {
             month,
             current,
@@ -285,9 +249,9 @@ class PlaningPage extends React.Component {
             currentTeam,
             projects,
         } = planingReducer;
-        console.log(timerPlaningList)
+        // console.log(timerPlaningList);
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timeOffShow } = this.state;
-// >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
+
         const {
             v_resource_planing,
             v_all_projects,
@@ -318,77 +282,12 @@ class PlaningPage extends React.Component {
 
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
-// <<<<<<< HEAD
-//
-//         console.log({ timerPlaningList });
-// =======
-// >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
+
         return (
             <>
                 <Scrollbars>
                     <div style={{ display: 'flex', minWidth: '100%', minHeight: '100%', overflowX: 'hidden' }}>
-{/*<<<<<<< HEAD*/}
-{/*                        <div className="aside-bar">*/}
-{/*                            <div className="aside-bar__users">*/}
-{/*                                <div className="aside-bar__filler-top" />*/}
-{/*                                <div className="aside-bar__add-user-block" onClick={this.changeAddUserFlag}>*/}
-{/*                                    <i className="aside-bar__add-user" />*/}
-{/*                                    {showAddUser ? (*/}
-{/*                                        <AddUserProject*/}
-{/*                                            cancel={this.closeAllFlags}*/}
-{/*                                            add={console.log} //change to needed function when backend will be done*/}
-{/*                                            users={users}*/}
-{/*                                            projects={projectsArray}*/}
-{/*                                            vocabulary={vocabulary}*/}
-{/*                                        />*/}
-{/*                                    ) : null}*/}
-{/*                                </div>*/}
-{/*                                {users.map(user => (*/}
-{/*                                    <div key={user.id} className="aside-bar__user-info">*/}
-{/*                                        /!*<div*!/*/}
-{/*                                        /!*    className="aside-bar__avatar-block"*!/*/}
-{/*                                        /!*    style={{*!/*/}
-{/*                                        /!*        // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',*!/*/}
-{/*                                        /!*        height: `${user.heightMulti * 60 + 30}px`,*!/*/}
-{/*                                        /!*    }}*!/*/}
-{/*                                        /!*>*!/*/}
-{/*                                        /!*    <div className="aside-bar__avatar">*!/*/}
-{/*                                        /!*        <img src={user.avatar} alt="oops no img"/>*!/*/}
-{/*                                        /!*        <i/>*!/*/}
-{/*                                        /!*    </div>*!/*/}
-{/*                                        /!*</div>*!/*/}
-{/*                                        <div className="aside-bar__show-btn">*/}
-{/*                                            <i*/}
-{/*                                                id={user.id}*/}
-{/*                                                onClick={this.changeUserOpenFlag}*/}
-{/*                                                className={user.openFlag ? 'arrow_up' : 'arrow_down'}*/}
-{/*                                            />*/}
-{/*                                        </div>*/}
-{/*                                    </div>*/}
-{/*                                ))}*/}
-{/*                            </div>*/}
-{/*                        </div>*/}
-                        {/*<div className="planing">*/}
-                        {/*    <div className="planing-header">*/}
-                        {/*        <p>{v_resource_planing}</p>*/}
-                        {/*        <div className="planing-header__info-container">*/}
-                        {/*            <div className="planing-header__counters">*/}
-                        {/*                <p>{`${'TOT_PLANNING'}${v_hour_small} ${v_all_projects} `}</p>*/}
-                        {/*                <p>{`${'TOT_TRACKED'}${v_hour_small} ${v_tracked}`}</p>*/}
-                        {/*            </div>*/}
-                        {/*            <div className="planing-header__add-btn">*/}
-                        {/*                <button onClick={this.changeAddTimeOffFlag}>{v_filter}</button>*/}
-                        {/*                <button*/}
-                        {/*                    style={{ display: 'flex', alignItems: 'center' }}*/}
-                        {/*                    onClick={this.changeAddPlanFlag}*/}
-                        {/*                >*/}
-                        {/*                    {' '}*/}
-                        {/*                    <i className="planing-header__plus" />*/}
-                        {/*                    {v_add_plan}*/}
-                        {/*                </button>*/}
 
-                        {/*                <button onClick={this.changeTimeOffShow}>{v_time_off}</button>*/}
-{/*=======*/}
                         <div className="planing">
                             <div className="planing-header-container">
                                 <div className="aside-bar">
@@ -405,30 +304,7 @@ class PlaningPage extends React.Component {
                                                 />
                                             ) : null}
                                         </div>
-                                        {/*{selectedUsers.map(user => (*/}
-                                        {/*    <div key={user.id} className="aside-bar__user-info">*/}
-                                        {/*        <div*/}
-                                        {/*            className="aside-bar__avatar-block"*/}
-                                        {/*            style={{*/}
-                                        {/*                // height: user.openFlag ? `${user.heightMulti * 60 + 30}px` : '60px',*/}
-                                        {/*                height: 100,*/}
-                                        {/*            }}*/}
-                                        {/*        >*/}
-                                        {/*            <div className="aside-bar__avatar">*/}
-                                        {/*                <img  alt="oops no img"/>*/}
-                                        {/*                <i/>*/}
-                                        {/*            </div>*/}
-                                        {/*        </div>*/}
-                                        {/*        <div className="aside-bar__show-btn">*/}
-                                        {/*            <i*/}
-                                        {/*                id={user.id}*/}
-                                        {/*                onClick={this.changeUserOpenFlag}*/}
-                                        {/*                className={user.openFlag ? 'arrow_up' : 'arrow_down'}*/}
-                                        {/*            />*/}
-                                        {/*        </div>*/}
-                                        {/*    </div>*/}
-                                        {/*))}*/}
-{/*>>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f*/}
+
                                     </div>
                                 </div>
                                 <div className="planing-header">
@@ -452,50 +328,6 @@ class PlaningPage extends React.Component {
                                             <button onClick={this.changeTimeOffShow}>{v_time_off}</button>
                                         </div>
 
-{/*/!*<<<<<<< HEAD*!/*/}
-{/*                                    <div className="planing-header__move-btn">*/}
-{/*                                        <button onClick={this.prevMonth}>{v_prev_month}</button>*/}
-{/*                                        <div className="selects_container">*/}
-{/*                                            <div className="select_header" onClick={e => this.openCalendar()}>*/}
-{/*                                                <span>*/}
-{/*                                                    /!*{moment(this.props.timeRange.startDate).format(dateFormat)} {' - '}*!/*/}
-{/*                                                    /!*{moment(this.props.timeRange.endDate).format(dateFormat)}*!/*/}
-{/*                                                    Month*/}
-{/*                                                </span>*/}
-{/*                                                <i className="arrow_down" />*/}
-{/*                                            </div>*/}
-{/*                                            {this.state.dateSelect && (*/}
-{/*                                                <div className="select_body" ref={div => (this.datePickerSelect = div)}>*/}
-{/*                                                    <DateRange*/}
-{/*                                                        locale={customLocale}*/}
-{/*                                                        dateDisplayFormat={dateFormat}*/}
-{/*                                                        ranges={[*/}
-{/*                                                            {*/}
-{/*                                                                startDate: this.state.selectionRange.startDate,*/}
-{/*                                                                endDate: this.state.selectionRange.endDate,*/}
-{/*                                                                key: 'selection',*/}
-{/*                                                            },*/}
-{/*                                                        ]}*/}
-{/*                                                        // staticRanges={staticRanges(*/}
-{/*                                                        //   v_today,*/}
-{/*                                                        //   v_yesterday,*/}
-{/*                                                        //   v_thisWeek,*/}
-{/*                                                        //   v_lastWeek,*/}
-{/*                                                        //   v_thisMonth,*/}
-{/*                                                        //   v_lastMonth,*/}
-{/*                                                        //   v_this_year,*/}
-{/*                                                        //   firstDayOfWeek*/}
-{/*                                                        // )}*/}
-{/*                                                        inputRanges={inputRanges(*/}
-{/*                                                            v_days_up_to_today,*/}
-{/*                                                            v_days_starting_today,*/}
-{/*                                                            firstDayOfWeek*/}
-{/*                                                        )}*/}
-{/*                                                        onChange={this.handleSelect}*/}
-{/*                                                        moveRangeOnFirstSelection={true}*/}
-{/*                                                        editableDateInputs={true}*/}
-{/*                                                    />*/}
-{/*=======*/}
                                         <div className="planing-header__move-btn">
                                             <button onClick={this.prevMonth}>{v_prev_month}</button>
                                             <div className="selects_container">
@@ -506,7 +338,6 @@ class PlaningPage extends React.Component {
                                                         Month
                                                     </span>
                                                     <i className="arrow_down" />
-{/*>>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f*/}
                                                 </div>
                                                 {this.state.dateSelect && (
                                                     <div
@@ -596,24 +427,11 @@ class PlaningPage extends React.Component {
                                                   addUser={addUser}
                                                   {...vocabulary}
                                                   changeAddPlanFlag={this.changeAddPlanFlag}
-// <<<<<<< HEAD
-// =======
                                                   onDeleteUser={this.handleDeleteUser}
-
                                               />
                                           ))
                                         : null}
                                     <div className="aside-bar-stub" />
-                                    {/*{users.map(user => (*/}
-                                    {/*    <PlaningUserBlock*/}
-                                    {/*        key={user.id}*/}
-                                    {/*        month={month}*/}
-                                    {/*        user={user}*/}
-                                    {/*        addUser={addUser}*/}
-                                    {/*        {...vocabulary}*/}
-                                    {/*        changeAddPlanFlag={this.changeAddPlanFlag}*/}
-                                    {/*    />*/}
-                                    {/*))}*/}
                                 </div>
                             </Scrollbars>
                         </div>
@@ -621,13 +439,9 @@ class PlaningPage extends React.Component {
                 </Scrollbars>
                 {showAddPlan || showTimeOff || showAddPlanTimeOff || showAddUser ? (
                     <ModalPortal>
-{/*<<<<<<< HEAD*/}
                         <div
                             style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%', zIndex: 1 }}
                         >
-{/*=======*/}
-{/*                        <div>*/}
-{/*>>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f*/}
                             {showAddPlan ? (
                                 <AddPlan
                                     cancel={this.closeAllFlags}
@@ -679,10 +493,8 @@ const mapStateToProps = state => ({
     planingReducer: state.planingReducer,
     vocabulary: state.languageReducer.vocabulary,
     projectsArray: state.projectReducer.tableData,
-
     firstDayOfWeek: state.userReducer.firstDayOfWeek,
     dateFormat: state.userReducer.dateFormat,
-    ///
     selectedUsers: state.planingReducer.selectedUsers,
 });
 
@@ -697,20 +509,13 @@ const mapDispatchToProps = {
     changeTimeOffFlag,
     changeAllTimeOff,
     openDayOffChangeWindow,
-    ///
     setSelectedUsers,
     getTimerPlaningList,
-// <<<<<<< HEAD
     getTime_Off,
     setTimeOff,
-// =======
     setCurrentTeam,
     deleteUser,
-// <<<<<<< HEAD
-// // >>>>>>> 6dae0fa9d273167519e817fbe5bbee90a53ebe3f
-// =======
-    getProjects,
-// >>>>>>> a0d8fbc2fb2c6f8d98d6913cacf55d96669f7c0e
+    getProjects
 };
 
 export default connect(
