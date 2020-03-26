@@ -1,0 +1,69 @@
+.planing-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 307px;
+  min-height: 234px;
+  max-height: 329px;
+  margin: auto;
+  border-radius: 7px;
+  background: #ffffff;
+  padding: 20px 16px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Open Sans;
+  font-style: normal;
+
+  &__header {
+    display: flex;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  &__header > p {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 25px;
+    margin: 0;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+  &__label {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 19px;
+  }
+  &__label > small {
+      color:#8E8E8E;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__add-btn,
+  &__cancel-btn {
+    padding: 8.5px 55px;
+    max-width: 134px;
+    border-radius: 2px;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  &__add-btn {
+    background: #02af67;
+  }
+  &__cancel-btn {
+    background: #ff2b2b;
+  }
+}

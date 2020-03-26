@@ -141,12 +141,13 @@ export const getCurrentTime = () =>
         method: 'GET',
     });
 
-export const getProjectsList = (withTimerList = false) =>
+export const getProjectsList = (withTimerList = false, withTeamUsers = false) =>
     instance({
         url: '/project/list',
         method: 'GET',
         params: {
             withTimerList,
+            withTeamUsers,
         },
     });
 
@@ -369,4 +370,38 @@ export const setPassword = ({ password, token }) =>
             password,
             token,
         },
+    });
+
+export const addPlan = data =>
+    instance({
+        url: '/timer-planning/add',
+        method: 'POST',
+        data,
+    });
+
+export const getTimeOff = () =>
+    instance({
+        url: '/timer-off/list',
+        method: 'GET',
+    });
+
+export const addTimerOff = data =>
+    instance({
+        url: '/timer-off/add',
+        method: 'POST',
+        data,
+    });
+
+export const patchTimerOff = (id, data) =>
+    instance({
+        url: `/timer-off/${id}`,
+        method: 'PATCH',
+        data,
+    });
+
+export const getTimerPlaningListData = data =>
+    instance({
+        url: '/timer-planning/list',
+        method: 'POST',
+        data,
     });

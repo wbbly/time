@@ -16,8 +16,8 @@ import './style.scss';
 import { switchMenu } from '../../actions/ResponsiveActions';
 
 class LeftBar extends Component {
-    state={
-        widthMenu:188
+    state = {
+        widthMenu: 188,
     };
     renderTimer = () => {
         const { history, timerTick } = this.props;
@@ -45,11 +45,11 @@ class LeftBar extends Component {
     };
 
     swithMenuHandle = () => {
-        const { switchMenu , isShowMenu } = this.props;
-        if(!isShowMenu) {
+        const { switchMenu, isShowMenu } = this.props;
+        if (!isShowMenu) {
             this.closeMenu();
-        }else {
-            this.openMenu()
+        } else {
+            this.openMenu();
         }
 
         switchMenu();
@@ -57,28 +57,30 @@ class LeftBar extends Component {
 
     swithMenuHandleMob = () => {
         const { switchMenu, isMobile } = this.props;
-        if(isMobile) {
+        if (isMobile) {
             switchMenu();
         }
     };
 
     render() {
         const { switchMenu, isMobile, vocabulary, currentTeam, isShowMenu } = this.props;
-        const { v_timer, v_reports, v_projects, v_team, v_clients } = vocabulary;
+        const { v_timer, v_reports, v_projects, v_team, v_clients, v_planning } = vocabulary;
         const { widthMenu } = this.state;
         return (
-            <div style={{width:!isMobile && widthMenu}} className={classNames('wrapper',
-                {
+            <div
+                style={{ width: !isMobile && widthMenu }}
+                className={classNames('wrapper', {
                     'wrapper--mobile': isMobile,
-                    'wrapper_hide':!isShowMenu && !isMobile
-                })}>
+                    wrapper_hide: !isShowMenu && !isMobile,
+                })}
+            >
                 {!isMobile && (
                     <div className="header-nav">
                         <button onClick={this.swithMenuHandle} className="show-menu-button">
                             <span className={classNames('show-menu-button-icon', 'icon-menu')} />
                         </button>
-                        <Link  to="/timer">
-                            <i style={{opacity:!isShowMenu?'1':'0'}} className="logo_small" />
+                        <Link to="/timer">
+                            <i style={{ opacity: !isShowMenu ? '1' : '0' }} className="logo_small" />
                         </Link>
                     </div>
                 )}
@@ -90,13 +92,15 @@ class LeftBar extends Component {
                         to="/timer"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div title="Timer" className={classNames('navigation_links',
-                            {
-                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
-                            })} >
+                        <div
+                            title="Timer"
+                            className={classNames('navigation_links', {
+                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100,
+                            })}
+                        >
                             <i className="timer" />
-                            <div className="links_text" >{v_timer}</div>
-                            <div className="timer_task" >{this.renderTimer()}</div>
+                            <div className="links_text">{v_timer}</div>
+                            <div className="timer_task">{this.renderTimer()}</div>
                         </div>
                     </NavLink>
                     <NavLink
@@ -109,10 +113,12 @@ class LeftBar extends Component {
                         to="/reports/summary"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div title="Reports" className={classNames('navigation_links',
-                            {
-                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
-                            })}>
+                        <div
+                            title="Reports"
+                            className={classNames('navigation_links', {
+                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100,
+                            })}
+                        >
                             <i className="reports" />
                             <div className="links_text">{v_reports}</div>
                         </div>
@@ -123,10 +129,12 @@ class LeftBar extends Component {
                         to="/projects"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div title="Projects" className={classNames('navigation_links',
-                            {
-                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
-                            })}>
+                        <div
+                            title="Projects"
+                            className={classNames('navigation_links', {
+                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100,
+                            })}
+                        >
                             <i className="projects" />
                             <div className="links_text">{v_projects}</div>
                         </div>
@@ -138,10 +146,12 @@ class LeftBar extends Component {
                             to="/clients"
                             style={{ textDecoration: 'none' }}
                         >
-                            <div title="Clients" className={classNames('navigation_links',
-                                {
-                                    'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
-                                })}>
+                            <div
+                                title="Clients"
+                                className={classNames('navigation_links', {
+                                    'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100,
+                                })}
+                            >
                                 <i className="clients" />
                                 <div className="links_text">{v_clients}</div>
                             </div>
@@ -154,16 +164,34 @@ class LeftBar extends Component {
                             to="/team"
                             style={{ textDecoration: 'none' }}
                         >
-                            <div title="Team" className={classNames('navigation_links',
-                                {
-                                    'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100
-                                })}>
+                            <div
+                                title="Team"
+                                className={classNames('navigation_links', {
+                                    'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100,
+                                })}
+                            >
                                 <i className="team" />
                                 <div className="links_text">{v_team}</div>
                             </div>
                         </NavLink>
                         <TeamSwitcher isMobile={isMobile} isShowMenu={isShowMenu} />
                     </div>
+                    <NavLink
+                        activeClassName="active-link"
+                        onClick={this.swithMenuHandleMob()}
+                        to="/planing"
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <div
+                            title="Planning"
+                            className={classNames('navigation_links', {
+                                'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100,
+                            })}
+                        >
+                            <i className="planning" />
+                            <div className="links_text">{v_planning}</div>
+                        </div>
+                    </NavLink>
                 </div>
                 <UserMenu switchMenu={switchMenu} isShowMenu={isShowMenu} />
             </div>

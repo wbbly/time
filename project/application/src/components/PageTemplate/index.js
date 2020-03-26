@@ -7,7 +7,6 @@ import classNames from 'classnames';
 
 // actions
 import { switchMenu } from '../../actions/ResponsiveActions';
-import { showNotificationAction } from '../../actions/NotificationActions';
 
 // components
 import LeftBar from '../../components/LeftBar';
@@ -18,22 +17,6 @@ import ModalInfo from '../../components/ModalInfo';
 import './style.scss';
 
 class PageTemplate extends Component {
-    teamSwitched = () => {
-        const { currentTeam, vocabulary, showNotificationAction } = this.props;
-        const { v_switch_team_to_the } = vocabulary;
-        showNotificationAction({
-            type: 'team-switched',
-            text: `${v_switch_team_to_the} ${currentTeam.data.name}`,
-        });
-    };
-
-    componentDidUpdate(prevProps) {
-        const { currentTeam } = this.props;
-        if (prevProps.currentTeam.data.name && currentTeam.data.name !== prevProps.currentTeam.data.name) {
-            this.teamSwitched();
-        }
-    }
-
     render() {
         const {
             content: Content,
@@ -44,7 +27,6 @@ class PageTemplate extends Component {
             hideSidebar,
             hideHeader,
             viewport,
-            notificationId,
         } = this.props;
         const { width, height } = viewport;
 
@@ -56,12 +38,12 @@ class PageTemplate extends Component {
                             <Header />
                         </header>
                     )}
-                {notificationId.length ? <ModalInfo /> : null}
+                <ModalInfo />
                 <div className="wrapper-main-content">
                     {!hideSidebar && (
                         <aside
                             className={classNames('aside', {
-                                'aside--hide': !isShowMenu && isMobile ,
+                                'aside--hide': !isShowMenu && isMobile,
                                 'aside--show': isShowMenu && isMobile,
                             })}
                         >
@@ -87,13 +69,10 @@ const mapStateToProps = state => ({
     isShowMenu: state.responsiveReducer.isShowMenu,
     isMobile: state.responsiveReducer.isMobile,
     vocabulary: state.languageReducer.vocabulary,
-    notificationId: state.notificationReducer.notificationId,
-    currentTeam: state.teamReducer.currentTeam,
 });
 
 const mapDispatchToProps = {
     switchMenu,
-    showNotificationAction,
 };
 
 export default withRouter(

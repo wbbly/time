@@ -107,7 +107,7 @@
   border-radius: 0;
   z-index: 2;
   left: 0;
-  transition: left 25ms ease-in-out;
+  transition: left 0.5s linear;
   margin: 0;
 
   .task-item__period-time {
