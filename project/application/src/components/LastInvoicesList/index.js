@@ -20,7 +20,7 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
                     <div className="last-invoices-list-item__top">
                         <div className="last-invoices-list-item__name">{invoice.name}</div>
                         <div className="last-invoices-list-item__thin-text">
-                            {v_invoice} #{invoice.number}
+                            {v_invoice} {`#${invoice.number}`}
                         </div>
                     </div>
                     <div className="last-invoices-list-item__bottom">

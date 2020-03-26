@@ -119,7 +119,7 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
                                 'all-invoices-list-item__status--confirmed': invoice.confirmed,
                             })}
                         />
-                        <div className="all-invoices-list-item__number">#{invoice.number}</div>
+                        <div className="all-invoices-list-item__number">{`#${invoice.number}`}</div>
                         <div className="all-invoices-list-item__name">{invoice.name}</div>
                     </div>
                     <div className="all-invoices-list-item__block">
