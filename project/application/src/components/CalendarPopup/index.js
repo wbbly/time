@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 import moment from 'moment';
 
-import { DatePicker, KeyboardTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { createMuiTheme } from '@material-ui/core';
+import { createMuiTheme, TextField } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 
 import enLocale from 'date-fns/locale/en-GB';
@@ -71,8 +71,8 @@ const muiTheme = createMuiTheme({
 
 class CalendarPopup extends Component {
     state = {
-        startDateTime: null,
-        endDateTime: null,
+        startTimeString: null,
+        endTimeString: null,
         date: null,
         isChangedTime: false,
         isChangedDate: false,
@@ -80,12 +80,12 @@ class CalendarPopup extends Component {
     };
 
     static getDerivedStateFromProps(props, state) {
-        const { startDateTime, endDateTime } = props;
+        const { startDateTime, endDateTime, timeFormat } = props;
         const { initialRender } = state;
         if (initialRender) {
             return {
-                startDateTime: moment(startDateTime).toDate(),
-                endDateTime: moment(endDateTime).toDate(),
+                startTimeString: moment(startDateTime).format(timeFormat === '12' ? 'hh:mm A' : 'HH:mm'),
+                endTimeString: moment(endDateTime).format(timeFormat === '12' ? 'hh:mm A' : 'HH:mm'),
                 date: moment(startDateTime).toDate(),
                 initialRender: false,
             };
@@ -93,17 +93,26 @@ class CalendarPopup extends Component {
         return null;
     }
 
-    changeHandlerStartTime = startTime => {
+    stringToDateString = string => {
+        const { timeFormat } = this.props;
+
+        const timeFormatter = timeFormat === '12' ? 'hh:mm A' : 'HH:mm';
+
+        let date = moment(string, timeFormatter).format(timeFormatter);
+        return date;
+    };
+
+    changeHandlerStartTime = ({ target: { value } }) => {
         this.setState({
             isChangedTime: true,
-            startDateTime: startTime,
+            startTimeString: value,
         });
     };
 
-    changeHandlerEndTime = endTime => {
+    changeHandlerEndTime = ({ target: { value } }) => {
         this.setState({
             isChangedTime: true,
-            endDateTime: endTime,
+            endTimeString: value,
         });
     };
 
@@ -112,6 +121,40 @@ class CalendarPopup extends Component {
             isChangedDate: true,
             date,
         });
+    };
+
+    timeStringToDateTimeStringStartTime = () => {
+        const { startTimeString } = this.state;
+        this.setState({
+            startTimeString: this.stringToDateString(startTimeString),
+        });
+    };
+
+    timeStringToDateTimeStringEndTime = () => {
+        const { endTimeString } = this.state;
+        this.setState({
+            endTimeString: this.stringToDateString(endTimeString),
+        });
+    };
+
+    keyPressHandlerStartTime = ({ key }) => {
+        if (key === 'Enter') {
+            this.timeStringToDateTimeStringStartTime();
+        }
+    };
+
+    keyPressHandlerEndTime = ({ key }) => {
+        if (key === 'Enter') {
+            this.timeStringToDateTimeStringEndTime();
+        }
+    };
+
+    blurHandlerStartTime = () => {
+        this.timeStringToDateTimeStringStartTime();
+    };
+
+    blurHandlerEndTime = () => {
+        this.timeStringToDateTimeStringEndTime();
     };
 
     componentDidMount() {
@@ -132,9 +175,14 @@ class CalendarPopup extends Component {
     }
 
     componentWillUnmount() {
-        const { updateTask, vocabulary, showNotificationAction } = this.props;
+        const { updateTask, vocabulary, showNotificationAction, timeFormat } = this.props;
         const { v_a_time_start_error } = vocabulary;
-        const { startDateTime, endDateTime, date, isChangedTime, isChangedDate } = this.state;
+        const { startTimeString, endTimeString, date, isChangedTime, isChangedDate } = this.state;
+
+        const timeFormatter = timeFormat === '12' ? 'hh:mm A' : 'HH:mm';
+        const startDateTime = moment(startTimeString, timeFormatter).toDate();
+        const endDateTime = moment(endTimeString, timeFormatter).toDate();
+
         if (isChangedTime || isChangedDate) {
             if (moment(startDateTime).isValid() && moment(endDateTime).isValid()) {
                 const startDay = moment(date).format('YYYY-MM-DD');
@@ -162,8 +210,8 @@ class CalendarPopup extends Component {
     }
 
     render() {
-        const { startDateTime, endDateTime, date } = this.state;
-        const { timeFormat, vocabulary, firstDayOfWeek } = this.props;
+        const { date, startTimeString, endTimeString } = this.state;
+        const { vocabulary, firstDayOfWeek } = this.props;
         const { lang, v_time_start, v_time_end } = vocabulary;
 
         const customLocale = localeMap[lang.short];
@@ -176,20 +224,20 @@ class CalendarPopup extends Component {
                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale}>
                             <div className="edit-task-popup_set-time-start">
                                 <div className="edit-task-popup_set-time-label">{v_time_start}</div>
-                                <KeyboardTimePicker
-                                    disableToolbar
-                                    ampm={timeFormat === '12'}
-                                    value={startDateTime}
+                                <TextField
+                                    value={startTimeString}
                                     onChange={this.changeHandlerStartTime}
+                                    onKeyPress={this.keyPressHandlerStartTime}
+                                    onBlur={this.blurHandlerStartTime}
                                 />
                             </div>
                             <div className="edit-task-popup_set-time-end">
                                 <div className="edit-task-popup_set-time-label">{v_time_end}</div>
-                                <KeyboardTimePicker
-                                    disableToolbar
-                                    ampm={timeFormat === '12'}
-                                    value={endDateTime}
+                                <TextField
+                                    value={endTimeString}
                                     onChange={this.changeHandlerEndTime}
+                                    onKeyPress={this.keyPressHandlerEndTime}
+                                    onBlur={this.blurHandlerEndTime}
                                 />
                             </div>
                         </MuiPickersUtilsProvider>

@@ -43,11 +43,7 @@ class UserMenu extends Component {
                     this.openDropdown();
                 }}
             >
-                <div
-                    className={classNames('logout_container', {
-                        'logout_container--show_menu': isShowMenu && !isMobile,
-                    })}
-                >
+                <div className={classNames('logout_container', { 'logout_container--show_menu': isShowMenu  && !isMobile })} >
                     {(!isShowMenu || isMobile) && <div className="user_name">{userName}</div>}
                     {user.avatar ? (
                         <div
@@ -61,11 +57,10 @@ class UserMenu extends Component {
                         <img alt="default_avatar" src={defaultLogo} className="default-logo" />
                     )}
                     {this.state.activeUserMenu && (
-                        <div
-                            className={classNames('user_setting_modal', {
-                                'user_setting_modal--show_menu': isShowMenu && !isMobile,
-                            })}
-                        >
+                        <div className={classNames('user_setting_modal',
+                            {
+                                'user_setting_modal--show_menu': isShowMenu && !isMobile
+                            })} >
                             <Link
                                 onClick={e => {
                                     isMobile && switchMenu();
