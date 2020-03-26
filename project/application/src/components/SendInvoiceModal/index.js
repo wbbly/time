@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-
-import './style.scss';
 import { connect } from 'react-redux';
+
+//Styles
+import './style.scss';
 
 const inputText = `Dear [Tomas],
 
@@ -28,23 +29,20 @@ class SendInvoiceModal extends Component {
         const { inputValue } = this.state;
         const { v_send_invoice, v_send_invoice_placeholder, v_send, v_cancel, v_from, v_to } = vocabulary;
 
-        console.log({ user });
         return (
-            <div className="wrapper_send_invoice_modal">
-                <div className="send_invoice_modal_background" />
-                <div className="send_invoice_modal_container">
+            <div className="send-invoice-modal">
+                <div className="send-invoice-modal__background" />
+                <div className="send-invoice-modal__container">
                     <div>
-                        <div className="send_invoice_modal_header">
-                            <div className="send_invoice_modal_header_title">{v_send_invoice}</div>
-                        </div>
-                        <div className="send_invoice_modal_data">
+                        <div className="send-invoice-modal__header-title">{v_send_invoice}</div>
+                        <div className="send-invoice-modal__data">
                             <div>
-                                <span className="bold">{v_from}:</span> {user.username}
+                                <span className="send-invoice-modal__bold-text">{v_from}:</span> {user.username}
                             </div>
                             <div>
-                                <span className="bold">{v_to}:</span> {openedInvoice.name}
+                                <span className="send-invoice-modal__bold-text">{v_to}:</span> {openedInvoice.name}
                             </div>
-                            <div className="send_invoice_modal_data_input_container">
+                            <div className="send-invoice-modal__input-container">
                                 <textarea
                                     value={inputValue}
                                     placeholder={v_send_invoice_placeholder}
@@ -53,14 +51,11 @@ class SendInvoiceModal extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="send_invoice_modal_button_container">
-                        <button
-                            className="send_invoice_modal_button_container_button"
-                            onClick={e => sendInvoice(inputValue)}
-                        >
+                    <div className="send-invoice-modal__button-container">
+                        <button className="send-invoice-modal__button" onClick={e => closeModal()}>
                             {v_send}
                         </button>
-                        <button className="send_invoice_modal_button_container_button" onClick={closeModal}>
+                        <button className="send-invoice-modal__button" onClick={closeModal}>
                             {v_cancel.toLowerCase()}
                         </button>
                     </div>
@@ -69,6 +64,7 @@ class SendInvoiceModal extends Component {
         );
     }
 }
+
 const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
     openedInvoice: invoicesReducer.openedInvoice,
     user: userReducer.user,
