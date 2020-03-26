@@ -287,7 +287,6 @@ class PlaningPage extends React.Component {
             <>
                 <Scrollbars>
                     <div style={{ display: 'flex', minWidth: '100%', minHeight: '100%', overflowX: 'hidden' }}>
-
                         <div className="planing">
                             <div className="planing-header-container">
                                 <div className="aside-bar">
@@ -304,7 +303,6 @@ class PlaningPage extends React.Component {
                                                 />
                                             ) : null}
                                         </div>
-
                                     </div>
                                 </div>
                                 <div className="planing-header">
@@ -515,7 +513,7 @@ const mapDispatchToProps = {
     setTimeOff,
     setCurrentTeam,
     deleteUser,
-    getProjects
+    getProjects,
 };
 
 export default connect(

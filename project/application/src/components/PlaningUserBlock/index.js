@@ -31,7 +31,6 @@ const OpendBlock = ({ date, v_hour_small, widthPlan, indexHeight, project }) => 
 };
 
 const OpendBlockTimeOff = ({ date, widthPlan, indexHeight, project }) => {
-
     return (
         <div
             style={{
@@ -140,7 +139,6 @@ const ClosedBlock = ({ date, v_hour_small, v_plan, widthPlan }) => {
 };
 
 const AddPlun = ({ changeAddPlanFlag }) => {
-
     return (
         <div>
             <img
@@ -193,15 +191,13 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
 
     const [dataClick, setOpen] = useState(false);
 
-
     const durSum = () => {
-      let durationSum = 0;
-       user.timer_plannings.forEach(timer_planning =>
-        timer_planning.projects.forEach(project => (durationSum += project.duration))
-      );
-       return durationSum
-    }
-
+        let durationSum = 0;
+        user.timer_plannings.forEach(timer_planning =>
+            timer_planning.projects.forEach(project => (durationSum += project.duration))
+        );
+        return durationSum;
+    };
 
     return (
         <div className="user-block">
@@ -301,35 +297,37 @@ const PlaningUserBlock = ({ month, user, v_hour_small, v_plan, addUser, changeAd
                                                             ) : null
                                                     )
                                                 )}
-                                                {user.timer_plannings.map((date, index) =>
-                                                  ((user.timer_plannings.length === 1 && !date.project ) || !!date.projects.length)  &&
-                                                    date.timeOff.map(
-                                                        timeOff =>
-                                                            moment(timeOff.start_date).format('L') ===
-                                                                moment(day.fullDate).format('L') &&
-                                                            week.week.find(el => {
-                                                                return (
-                                                                    moment(timeOff.start_date).format('L') ===
-                                                                    moment(el.fullDate).format('L')
-                                                                );
-                                                            }) ? (
-                                                                <>
-                                                                    <OpendBlockTimeOff
-                                                                        key={index}
-                                                                        date={date}
-                                                                        widthPlan={
-                                                                            (new Date(timeOff.end_date) -
-                                                                                new Date(timeOff.start_date)) /
-                                                                            (1000 * 60 * 60 * 24)
-                                                                        }
-                                                                        v_plan={v_plan}
-                                                                        v_hour_small={v_hour_small}
-                                                                        indexHeight={index}
-                                                                        project={timeOff}
-                                                                    />
-                                                                </>
-                                                            ) : null
-                                                    )
+                                                {user.timer_plannings.map(
+                                                    (date, index) =>
+                                                        ((user.timer_plannings.length === 1 && !date.project) ||
+                                                            !!date.projects.length) &&
+                                                        date.timeOff.map(
+                                                            timeOff =>
+                                                                moment(timeOff.start_date).format('L') ===
+                                                                    moment(day.fullDate).format('L') &&
+                                                                week.week.find(el => {
+                                                                    return (
+                                                                        moment(timeOff.start_date).format('L') ===
+                                                                        moment(el.fullDate).format('L')
+                                                                    );
+                                                                }) ? (
+                                                                    <>
+                                                                        <OpendBlockTimeOff
+                                                                            key={index}
+                                                                            date={date}
+                                                                            widthPlan={
+                                                                                (new Date(timeOff.end_date) -
+                                                                                    new Date(timeOff.start_date)) /
+                                                                                (1000 * 60 * 60 * 24)
+                                                                            }
+                                                                            v_plan={v_plan}
+                                                                            v_hour_small={v_hour_small}
+                                                                            indexHeight={index}
+                                                                            project={timeOff}
+                                                                        />
+                                                                    </>
+                                                                ) : null
+                                                        )
                                                 )}
                                             </div>
                                         );
