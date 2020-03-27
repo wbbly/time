@@ -5,7 +5,7 @@ import moment from 'moment';
 // Styles
 import './style.scss';
 
-const CheckIcon = ({ className, onClick, fill }) => (
+export const CheckIcon = ({ className, onClick, fill }) => (
     <svg
         className={className}
         onClick={onClick}
@@ -22,7 +22,7 @@ const CheckIcon = ({ className, onClick, fill }) => (
     </svg>
 );
 
-const EditIcon = ({ className, onClick }) => (
+export const EditIcon = ({ className, onClick }) => (
     <svg
         className={className}
         onClick={onClick}
@@ -39,7 +39,7 @@ const EditIcon = ({ className, onClick }) => (
     </svg>
 );
 
-const SaveIcon = ({ className, onClick }) => (
+export const SaveIcon = ({ className, onClick }) => (
     <svg
         className={className}
         onClick={onClick}
@@ -56,7 +56,7 @@ const SaveIcon = ({ className, onClick }) => (
     </svg>
 );
 
-const CopyIcon = ({ className, onClick }) => (
+export const CopyIcon = ({ className, onClick }) => (
     <svg
         className={className}
         onClick={onClick}
@@ -73,7 +73,7 @@ const CopyIcon = ({ className, onClick }) => (
     </svg>
 );
 
-const DeleteIcon = ({ className, onClick }) => (
+export const DeleteIcon = ({ className, onClick }) => (
     <svg
         className={className}
         onClick={onClick}
@@ -90,7 +90,7 @@ const DeleteIcon = ({ className, onClick }) => (
     </svg>
 );
 
-const SendIcon = ({ className, onClick }) => (
+export const SendIcon = ({ className, onClick }) => (
     <svg
         className={className}
         onClick={onClick}

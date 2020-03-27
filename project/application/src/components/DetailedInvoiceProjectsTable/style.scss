@@ -1,0 +1,69 @@
+.detailed-invoice-projects-table {
+
+  margin-bottom: 50px;
+
+  &__input {
+    width: 100%;
+    color: #FFFFFF;
+    background: #3F3F3F;
+    border-radius: 4px;
+    padding: 12px 14px;
+    border: none;
+
+    &::placeholder {
+      color: #FFFFFF;
+    }
+
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &__icon-button {
+    cursor: pointer;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 0 36px;
+    height: 50px;
+    background: #292929;
+    font-weight: bold;
+  }
+
+  &__project-column {
+    flex: 6;
+    span{
+      padding-left: 14px;
+    }
+  }
+
+  &__amount-column, &__rate-column, &__tax-column, &__subtotal-column {
+    flex: 3;
+    padding-left: 10px;
+    span{
+      padding-left: 14px;
+    }
+  }
+
+  &__tools-column {
+    flex: 1;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__body {
+
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    padding: 0 36px;
+    height: 50px;
+  }
+}
