@@ -9,6 +9,8 @@
     align-self: stretch;
     height: 50px;
     margin-bottom: 5px;
+    text-decoration: none;
+    color: #FFFFFF;
 
     &__block {
       flex: 3;
@@ -47,6 +49,7 @@
     }
 
     &__instruments {
+      cursor: default;
       flex: 2;
       display: flex;
       justify-content: space-between;

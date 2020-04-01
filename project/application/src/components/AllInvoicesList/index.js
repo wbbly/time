@@ -4,6 +4,7 @@ import moment from 'moment';
 
 // Styles
 import './style.scss';
+import { Link } from 'react-router-dom';
 
 export const CheckIcon = ({ className, onClick, fill }) => (
     <svg
@@ -104,11 +105,16 @@ export const SendIcon = ({ className, onClick }) => (
     </svg>
 );
 
+const prevent = e => {
+    e.preventDefault();
+    e.stopPropagation();
+};
+
 const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
     return (
         <div className="all-invoices-list">
             {invoices.map(invoice => (
-                <div key={invoice.id} className="all-invoices-list-item">
+                <Link to={`/invoices/view/${invoice.id}`} key={invoice.id} className="all-invoices-list-item">
                     <div className="all-invoices-list-item__block">
                         <div
                             className={classNames('all-invoices-list-item__status', {
@@ -129,12 +135,14 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
                             {moment(invoice.deadlineDate).format('MMM Do YYYY')}
                         </div>
                     </div>
-                    <div className="all-invoices-list-item__instruments">
+                    <div className="all-invoices-list-item__instruments" onClick={prevent}>
                         <CheckIcon
                             className="all-invoices-list-item__icon-button"
                             fill={invoice.confirmed ? '#27AE60' : '#EB5757'}
                         />
-                        <EditIcon className="all-invoices-list-item__icon-button" />
+                        <Link to={`/invoices/update/${invoice.id}`}>
+                            <EditIcon className="all-invoices-list-item__icon-button" />
+                        </Link>
                         <SaveIcon className="all-invoices-list-item__icon-button" />
                         <CopyIcon className="all-invoices-list-item__icon-button" />
                         <DeleteIcon className="all-invoices-list-item__icon-button" />
@@ -143,7 +151,7 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
                             onClick={() => toggleSendInvoiceModal(invoice)}
                         />
                     </div>
-                </div>
+                </Link>
             ))}
         </div>
     );

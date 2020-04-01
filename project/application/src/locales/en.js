@@ -257,4 +257,8 @@ export default {
     v_delete: 'Delete',
     v_download: 'Download',
     v_pic_date: 'Pic Date',
+    v_address: 'Address',
+    v_choose_sender: 'Choose sender',
+    v_choose_recipient: 'Choose recipient',
+    v_select_logo_file: 'Select logo file',
 };

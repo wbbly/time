@@ -8,8 +8,12 @@
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
-  line-height: 25px;
+  //line-height: 25px;
   color: #FFFFFF;
+
+  &--horizontal-padding {
+    padding: 0 80px 40px 80px;
+  }
 
   &--disabled {
     background: #292929;
@@ -50,10 +54,19 @@
     cursor: pointer;
   }
 
+  &__calendar-select {
+    margin-top: 5px;
+  }
+
   &__header {
     padding: 46px 60px 32px 60px;
     display: flex;
     align-items: center;
+
+    &--no-horizontal-padding {
+      padding: 46px 0 32px 0;
+
+    }
   }
 
   &__back-button {
@@ -61,13 +74,14 @@
     justify-content: center;
     align-items: center;
     align-self: stretch;
+    padding-right: 20px;
+    cursor: pointer;
   }
 
   &__title {
     font-weight: bold;
     font-size: 36px;
     line-height: 49px;
-    padding-left: 20px;
   }
 
   &__subtitle {
@@ -122,6 +136,7 @@
   }
 
   &__tool-button {
+    padding: 0;
     display: flex;
     cursor: pointer;
     outline: none;
@@ -132,6 +147,7 @@
     font-size: 18px;
     line-height: 25px;
     color: #FFFFFF;
+    text-decoration: none;
 
     span {
       padding-left: 18px;
@@ -141,13 +157,17 @@
   &__logo {
     min-width: 260px;
     min-height: 260px;
-    border: 2px dashed #FFFFFF;
     box-sizing: border-box;
     border-radius: 4px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     margin-right: 27px;
+
+    &--empty {
+      border: 2px dashed #FFFFFF;
+    }
+
   }
 
   &__personal-information {
@@ -208,6 +228,10 @@
   &__summary-currency {
     font-weight: normal;
     padding-left: 14px;
+  }
+
+  &__summary-total {
+    display: flex;
   }
 
   &__comments {

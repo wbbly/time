@@ -18,6 +18,11 @@
       -webkit-appearance: none;
       margin: 0;
     }
+
+    &--disabled {
+      background: none;
+
+    }
   }
 
   &__icon-button {
@@ -35,15 +40,16 @@
 
   &__project-column {
     flex: 6;
-    span{
+    & > span{
       padding-left: 14px;
     }
   }
 
   &__amount-column, &__rate-column, &__tax-column, &__subtotal-column {
     flex: 3;
+    display: flex;
     padding-left: 10px;
-    span{
+    & > span{
       padding-left: 14px;
     }
   }
@@ -61,9 +67,10 @@
   }
 
   &__row {
+    position: relative;
     display: flex;
     align-items: center;
-    padding: 0 36px;
+    margin: 0 36px;
     height: 50px;
   }
 }
