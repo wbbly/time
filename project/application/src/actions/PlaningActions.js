@@ -1,10 +1,11 @@
 import {
     addPlan,
-    getCurrentTeamDetailedData,
     getProjectsList,
     getTimerPlaningListData,
     getTimeOff,
     addTimerOff,
+    deletePlanAndTimeOff,
+    patchPlanAndTimeOff
 } from '../configAPI';
 import { store } from '../store/configureStore';
 import moment from 'moment';
@@ -29,6 +30,8 @@ export const SET_TIME_OFF = 'SET_TIME_OFF';
 
 export const SET_CURRENT_TEAM = 'SET_CURRENT_TEAM';
 export const SET_PROJECTS = 'SET_PROJECTS';
+export const SET_CURENT_DATA = 'SET_CURENT_DATA';
+export const SET_CURRENT_PLAN = 'SET_CURRENT_PLAN';
 
 // const setTimeEntriesListAction = payload => ({
 //     type: GET_TIME_ENTRIES_LIST,
@@ -93,6 +96,7 @@ const incrementMonth = () => ({
 export const nextMonth = () => {
     return async dispatch => {
         dispatch(incrementMonth());
+        dispatch(getTimerPlaningList())
         await dispatch(createMonthArray());
     };
 };
@@ -104,6 +108,7 @@ const decrementMonth = () => ({
 export const prevMonth = () => {
     return async dispatch => {
         dispatch(decrementMonth());
+        dispatch(getTimerPlaningList())
         await dispatch(createMonthArray());
     };
 };
@@ -125,6 +130,16 @@ export const createMonthArray = () => ({
 
 export const addUser = payload => ({
     type: ADD_USER,
+    payload,
+});
+
+export const setCurrentData = payload => ({
+    type: SET_CURENT_DATA,
+    payload,
+});
+
+export const setCurrentPlan = payload => ({
+    type: SET_CURRENT_PLAN,
     payload,
 });
 
@@ -184,6 +199,25 @@ export const getTime_Off = () => {
         } catch (error) {}
     };
 };
+
+export const deletePlan = (id) => {
+    return async dispatch => {
+        try {
+            await deletePlanAndTimeOff(id);
+            dispatch(getTimerPlaningList())
+        } catch (error) {}
+    };
+};
+
+export const patchPlan = (id, data) => {
+    return async dispatch => {
+        try {
+            await patchPlanAndTimeOff(id, data);
+            dispatch(getTimerPlaningList())
+        } catch (error) {}
+    };
+};
+
 
 export const postTimer_Off = data => async dispatch => {
     try {
