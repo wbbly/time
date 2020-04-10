@@ -4,6 +4,8 @@
   width: 100%;
   min-height: 100%;
   background: #1f1f1f;
+  min-width: 100%;
+  overflow: hidden
 }
 
 .planing-header-container {
@@ -14,15 +16,16 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 180px;
+    min-height: 100px;
     max-height: 180px;
     width: 100%;
-    padding: 0 10px 0 20px;
+    padding: 0 10px 40px 20px;
 
     &__info-container {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
+      margin-top: 40px;
     }
 
     &__counters {
@@ -35,6 +38,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+    }
+
+    &__move-btn {
+       margin-left: 100px;
     }
 
     &__add-btn button,
@@ -71,31 +78,33 @@
 
 
 .main-content-wrapper {
+  overflow-y: auto;
+  height: calc(100vh - 110px);
+  width: 100%;
   display: flex;
-   height: 100%;
   flex-direction: column;
   position: relative;
-  // min-width: 100%;
   padding: 0 10px 0 0;
-  // overflow-y: hidden;
-  // overflow-x: auto;
 }
 
 .month-container {
   display: flex;
   width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 9;
 
-
-  &__weeks-block {
+&__weeks-block {
     display: flex;
     margin-left: 20px;
+    background: #1f1f1f
   }
 
   &__week {
     display: flex;
     flex-direction: column;
     max-width: 280px;
-    min-width: 280px;
+    //min-width: 280px;
     height: 55px;
     //margin: 0 10px;
   }
@@ -104,12 +113,15 @@
     display: flex;
     flex: 1;
     width: 100%;
+    align-items: flex-end;
   }
 
   &__day {
     display: flex;
     flex-direction: column;
     flex: 1;
+    max-width: 40px;
+    min-width: 40px;
   }
 }
 
@@ -119,10 +131,14 @@
   border-left: 1px solid #1f1f1f;
   background: #3b3b3b;
   box-sizing: content-box;
+  position: sticky;
+  left: 0;
+  z-index: 10;
 }
 
 .aside-bar {
   // height: 100%;
+
   border-left: 1px solid #1f1f1f;
 
   // &__openers {
@@ -212,7 +228,7 @@
   position: absolute;
   top: 30px;
   right: 10px;
-  z-index: 3;
+  z-index: 20;
   background-color: #f5f5f5;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
 }

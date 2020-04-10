@@ -9,17 +9,17 @@ import moment from 'moment';
 import { addPlanUser } from '../../actions/PlaningActions';
 
 import { connect } from 'react-redux';
-import DateFnsUtils from "@date-io/date-fns";
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-import enLocale from "date-fns/locale/en-GB";
-import ruLocale from "date-fns/locale/ru";
-import deLocale from "date-fns/locale/de";
-import itLocale from "date-fns/locale/it";
-import uaLocale from "date-fns/locale/uk";
-import { createMuiTheme, Input } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/styles";
-import { CloseSvg } from "../PlaningAddTimeOff";
+import enLocale from 'date-fns/locale/en-GB';
+import ruLocale from 'date-fns/locale/ru';
+import deLocale from 'date-fns/locale/de';
+import itLocale from 'date-fns/locale/it';
+import uaLocale from 'date-fns/locale/uk';
+import { createMuiTheme, Input } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
+import { CloseSvg } from '../PlaningAddTimeOff';
 
 const localeMap = {
     en: enLocale,
@@ -41,45 +41,43 @@ const muiTheme = createMuiTheme({
                 minWidth: 78,
                 fontSize: 12,
                 fontWeight: 600,
-                '&:before':{
-                    borderBottom: 'none!important'
+                '&:before': {
+                    borderBottom: 'none!important',
                 },
-                '&:focus':{
-                    borderColor: 'none!important'
-                }
+                '&:focus': {
+                    borderColor: 'none!important',
+                },
             },
             underline: {
-                '&:after':{
-                    borderBottom: 'none!important'
+                '&:after': {
+                    borderBottom: 'none!important',
                 },
-            }
+            },
         },
     },
 });
 
 const MuiDataPicker = ({ value, onChange, firstDayOfWeek, lang, minDate, maxDate }) => {
-
     const customLocale = localeMap[lang.short];
     customLocale.options.weekStartsOn = firstDayOfWeek;
 
-    return(
-      <ThemeProvider theme={muiTheme}>
-        <DatePicker
-          autoOk
-          name="startDate"
-          format="MM.dd.yyyy"
-          disableToolbar={true}
-          allowKeyboardControl={false}
-          variant="inline"
-          value={value}
-          onChange={onChange}
-          minDate={minDate}
-          maxDate={maxDate}
-        />
-      </ThemeProvider>)
-}
-
-
+    return (
+        <ThemeProvider theme={muiTheme}>
+            <DatePicker
+                autoOk
+                name="startDate"
+                format="MM.dd.yyyy"
+                disableToolbar={true}
+                allowKeyboardControl={false}
+                variant="inline"
+                value={value}
+                onChange={onChange}
+                minDate={minDate}
+                maxDate={maxDate}
+            />
+        </ThemeProvider>
+    );
+};
 
 export class AddPlan extends React.Component {
     state = {};
@@ -88,7 +86,7 @@ export class AddPlan extends React.Component {
         this.props.getTimeOff();
     }
 
-    patchPlanClick = (values) => {
+    patchPlanClick = values => {
         const {
             hours,
             startDate,
@@ -102,12 +100,11 @@ export class AddPlan extends React.Component {
             startDate: moment(startDate).format('YYYY-MM-DD'),
             duration: hours,
             endDate: moment(endDate).format('YYYY-MM-DD'),
-        } )
-    }
-
+        });
+    };
 
     addPlanClick = data => {
-        console.log(data);
+
         const {
             hours,
             startDate,
@@ -127,13 +124,23 @@ export class AddPlan extends React.Component {
     };
 
     render() {
-        const { users = [], projects = [], cancel, vocabulary, timeOff = [], timeOffShow, firstDayOfWeek, dataClickAddPlan, deletePlan, currentPlanOrTimeOff } = this.props;
+        const {
+            users = [],
+            projects = [],
+            cancel,
+            vocabulary,
+            timeOff = [],
+            timeOffShow,
+            firstDayOfWeek,
+            dataClickAddPlan,
+            deletePlan,
+            currentPlanOrTimeOff,
+        } = this.props;
 
         const { v_cancel_small, v_add, v_add_plan, v_v_required, lang } = vocabulary;
 
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
-
 
         return (
             <div className="planing-modal">
@@ -147,18 +154,28 @@ export class AddPlan extends React.Component {
                         validateOnChange={false}
                         validateOnBlur={true}
                         initialValues={{
-                            person: {a:'',b: currentPlanOrTimeOff.username, idPerson: currentPlanOrTimeOff.userId},
-                            project:{a:'',b: currentPlanOrTimeOff.projectName, idProject: currentPlanOrTimeOff.projectId},
-                            hours: currentPlanOrTimeOff.duration || '' ,
-                            startDate: currentPlanOrTimeOff.startDate || dataClickAddPlan || new Date() ,
-                            endDate: currentPlanOrTimeOff.endDate || dataClickAddPlan || new Date(),
+                            person: {
+                                a: "",
+                                b: (currentPlanOrTimeOff && currentPlanOrTimeOff.username) || (dataClickAddPlan.user && dataClickAddPlan.user.username) || "",
+                                idPerson: currentPlanOrTimeOff.userId || (dataClickAddPlan.user && dataClickAddPlan.user.id)
+                            },
+                            project: {
+                                a: "",
+                                b: currentPlanOrTimeOff.projectName || (dataClickAddPlan.project && dataClickAddPlan.project.projectName),
+                                idProject: currentPlanOrTimeOff.projectId || (dataClickAddPlan.project && dataClickAddPlan.project.project_id)
+                            },
+                            hours: currentPlanOrTimeOff.duration || '',
+                            startDate: currentPlanOrTimeOff.startDate || dataClickAddPlan.fullDate || new Date(),
+                            endDate: currentPlanOrTimeOff.endDate || dataClickAddPlan.fullDate || new Date(),
                         }}
                         validationSchema={Yup.object({
                             person: Yup.string().required(v_v_required),
                             project: Yup.string().required(v_v_required),
                         })}
                         onSubmit={values => {
-                            !Object.keys(currentPlanOrTimeOff).length ?this.addPlanClick(values):this.patchPlanClick(values);
+                            !Object.keys(currentPlanOrTimeOff).length
+                                ? this.addPlanClick(values)
+                                : this.patchPlanClick(values);
                             cancel();
                         }}
                     >
@@ -207,7 +224,7 @@ export class AddPlan extends React.Component {
                                             display: 'flex',
                                             justifyContent: 'space-between',
                                             alignItems: 'center',
-                                            marginTop: 8
+                                            marginTop: 8,
                                         }}
                                     >
                                         <ThemeProvider theme={muiTheme}>
@@ -215,48 +232,54 @@ export class AddPlan extends React.Component {
                                                 placeholder="Hours"
                                                 name="hours"
                                                 onChange={formik.handleChange}
-                                                type='number'
+                                                type="number"
                                                 value={formik.values.hours}
-                                                inputProps={{ min: "0", max: "1000", step: "1" }}
+                                                inputProps={{ min: '0', max: '1000', step: '1' }}
                                             />
                                         </ThemeProvider>
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={customLocale}>
                                             <MuiDataPicker
-                                              firstDayOfWeek={firstDayOfWeek}
-                                              lang={lang}
-                                              value={formik.values.startDate}
-                                              maxDate={formik.values.endDate}
-                                              onChange={value => formik.setFieldValue("startDate", value)}
+                                                firstDayOfWeek={firstDayOfWeek}
+                                                lang={lang}
+                                                value={formik.values.startDate}
+                                                maxDate={formik.values.endDate}
+                                                onChange={value => formik.setFieldValue('startDate', value)}
                                             />
                                         </MuiPickersUtilsProvider>
                                         to
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={customLocale}>
                                             <MuiDataPicker
-                                              firstDayOfWeek={firstDayOfWeek}
-                                              lang={lang}
-                                              value={formik.values.endDate}
-                                              minDate={formik.values.startDate}
-                                              onChange={value => formik.setFieldValue("endDate", value)}
+                                                firstDayOfWeek={firstDayOfWeek}
+                                                lang={lang}
+                                                value={formik.values.endDate}
+                                                minDate={formik.values.startDate}
+                                                onChange={value => formik.setFieldValue('endDate', value)}
                                             />
                                         </MuiPickersUtilsProvider>
                                     </div>
                                 </label>
-                                {!Object.keys(currentPlanOrTimeOff).length ?<div className="planing-modal__footer">
-                                    <button type="submit" className="planing-modal__add-btn">
-                                        {v_add}
-                                    </button>
-                                    <button className="planing-modal__cancel-btn" onClick={cancel}>
-                                        {v_cancel_small}
-                                    </button>
-                                </div>:
-                                <div className="planing-modal__footer">
-                                    <button type="submit" className="planing-modal__add-btn">
-                                         Save
-                                    </button>
-                                    <button className="planing-modal__cancel-btn" onClick={() => deletePlan(currentPlanOrTimeOff.id)}>
-                                        Delete
-                                    </button>
-                                </div>}
+                                {!Object.keys(currentPlanOrTimeOff).length ? (
+                                    <div className="planing-modal__footer">
+                                        <button type="submit" className="planing-modal__add-btn">
+                                            {v_add}
+                                        </button>
+                                        <button className="planing-modal__cancel-btn" onClick={cancel}>
+                                            {v_cancel_small}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="planing-modal__footer">
+                                        <button type="submit" className="planing-modal__add-btn">
+                                            Save
+                                        </button>
+                                        <button
+                                            className="planing-modal__cancel-btn"
+                                            onClick={() => deletePlan(currentPlanOrTimeOff.id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
                             </form>
                         )}
                     </Formik>
@@ -271,7 +294,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {};
 
-export default  connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(AddPlan);

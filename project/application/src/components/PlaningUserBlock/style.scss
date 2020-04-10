@@ -28,7 +28,6 @@
   .logged {
     flex: 1;
     margin-bottom: 10px;
-    //height: 20px;
 
     &__title {
       color: white;
@@ -38,7 +37,6 @@
 
   .plan {
     flex: 1;
-    //height: 20px;
 
     &__title {
       margin: 0 0 0 20px;
@@ -48,15 +46,14 @@
     }
   }
 
-    &__main-block {
+  &__main-block {
     display: flex;
     border-bottom: 1px solid #1F1F1F;
-      margin-left: 20px;
+    margin-left: 20px;
 
     .week {
       display: flex;
       position: relative;
-      //height: 200px;
       transition: height 0.3s;
 
       .day {
@@ -67,6 +64,56 @@
         border-top: none;
         border-bottom: none;
         outline: none;
+      }
+    }
+  }
+
+  &__week-block{
+    display: flex;
+    position: relative;
+    height: 35px;
+    transition: height 0.3s;
+  }
+
+  &__day-block{
+    width: 40px;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #1F1F1F;
+    border-top: none;
+    border-bottom: none;
+    outline: none;
+  }
+}
+
+.time-off-block {
+  margin-top: 8px;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+
+  .time-off-container{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    .time-off{
+      position: relative;
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+      white-space: pre;;
+      padding: 0 10px;
+
+      >p{
+        color: #FFFFFF;
+        font-size: 10px;
+        font-weight: bold;
+        margin: 5px 0;
       }
     }
   }
@@ -92,8 +139,7 @@
       justify-content: space-between;
       height: 30px;
       overflow: hidden;
-      white-space: pre;
-      margin-bottom: 15px;
+      white-space: pre;;
       padding: 0 10px;
 
       >p{
@@ -128,9 +174,6 @@
   display: flex;
 
   .container {
-    //position: absolute;
-    //left: 0;
-    //top: calc(100% + 8px);
     width: 100%;
     height: 60px;
     display: flex;

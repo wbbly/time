@@ -39,9 +39,9 @@ class CustomSelect extends React.Component {
     }
 
     render() {
-        const { options, value, error, addDays, placeholder, className } = this.props;
+        const { options, value, error, addDays, placeholder } = this.props;
         const { isOpenDropdown } = this.state;
-        console.log(options);
+
         return (
             <div className="dropdown">
                 <div className="dropbtn" style={{ border: error ? '1px solid red' : null }} onClick={this.openDropdown}>

@@ -17,16 +17,18 @@ import {
     SET_CURRENT_TEAM,
     SET_PROJECTS,
     SET_CURENT_DATA,
-    SET_CURRENT_PLAN
+    SET_CURRENT_PLAN,
+    CHANGE_USER_SELECTED
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
 
 const defaultState = {
-    currentPlanOrTimeOff : {},
+    currentPlanOrTimeOff: {},
+    userSelected: [],
     current: null,
     month: [],
-    dataClickAddPlan: '',
+    dataClickAddPlan: {},
     selectedUsers: [],
     users: [],
     timerPlaningList: [],
@@ -90,6 +92,12 @@ export const planingReducer = (state = defaultState, action) => {
             return {
                 ...state,
                 currentPlanOrTimeOff: action.payload,
+            };
+        }
+        case CHANGE_USER_SELECTED: {
+            return {
+                ...state,
+                userSelected: action.payload,
             };
         }
         case SET_PROJECTS: {

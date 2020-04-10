@@ -118,7 +118,6 @@ export function getTimerPlanningListParseFunction(users) {
 
     users.forEach((user, i) =>
         user.timer_plannings.forEach((timer_planning, y) => {
-
             let matchedLogIndex = timer_plannings.findIndex(l => l.project_id === timer_planning.project_id);
 
             if (matchedLogIndex !== -1) {
@@ -133,7 +132,9 @@ export function getTimerPlanningListParseFunction(users) {
                             : timer_planning.timer_off
                                 ? timer_planning.timer_off.title
                                 : 'day off',
-                        project_color: timer_planning.project ? timer_planning.project.project_color : { name: '#C42750' },
+                        project_color: timer_planning.project
+                            ? timer_planning.project.project_color
+                            : { name: '#C42750' },
                         duration: timer_planning.duration,
                     });
                 }

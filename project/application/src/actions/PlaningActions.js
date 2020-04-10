@@ -5,7 +5,7 @@ import {
     getTimeOff,
     addTimerOff,
     deletePlanAndTimeOff,
-    patchPlanAndTimeOff
+    patchPlanAndTimeOff,
 } from '../configAPI';
 import { store } from '../store/configureStore';
 import moment from 'moment';
@@ -32,6 +32,7 @@ export const SET_CURRENT_TEAM = 'SET_CURRENT_TEAM';
 export const SET_PROJECTS = 'SET_PROJECTS';
 export const SET_CURENT_DATA = 'SET_CURENT_DATA';
 export const SET_CURRENT_PLAN = 'SET_CURRENT_PLAN';
+export const CHANGE_USER_SELECTED = 'CHANGE_USER_SELECTED';
 
 // const setTimeEntriesListAction = payload => ({
 //     type: GET_TIME_ENTRIES_LIST,
@@ -96,7 +97,7 @@ const incrementMonth = () => ({
 export const nextMonth = () => {
     return async dispatch => {
         dispatch(incrementMonth());
-        dispatch(getTimerPlaningList())
+        dispatch(getTimerPlaningList());
         await dispatch(createMonthArray());
     };
 };
@@ -108,7 +109,7 @@ const decrementMonth = () => ({
 export const prevMonth = () => {
     return async dispatch => {
         dispatch(decrementMonth());
-        dispatch(getTimerPlaningList())
+        dispatch(getTimerPlaningList());
         await dispatch(createMonthArray());
     };
 };
@@ -135,7 +136,7 @@ export const addUser = payload => ({
 
 export const setCurrentData = payload => ({
     type: SET_CURENT_DATA,
-    payload,
+    payload
 });
 
 export const setCurrentPlan = payload => ({
@@ -160,6 +161,11 @@ const changeTimeOff = payload => ({
 
 const changeUserTimeOff = payload => ({
     type: CHANGE_USER_TIME_OFF,
+    payload,
+});
+
+export const changeUserSelected = payload => ({
+    type: CHANGE_USER_SELECTED,
     payload,
 });
 
@@ -200,11 +206,11 @@ export const getTime_Off = () => {
     };
 };
 
-export const deletePlan = (id) => {
+export const deletePlan = id => {
     return async dispatch => {
         try {
             await deletePlanAndTimeOff(id);
-            dispatch(getTimerPlaningList())
+            dispatch(getTimerPlaningList());
         } catch (error) {}
     };
 };
@@ -213,11 +219,10 @@ export const patchPlan = (id, data) => {
     return async dispatch => {
         try {
             await patchPlanAndTimeOff(id, data);
-            dispatch(getTimerPlaningList())
+            dispatch(getTimerPlaningList());
         } catch (error) {}
     };
 };
-
 
 export const postTimer_Off = data => async dispatch => {
     try {

@@ -1,21 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 //---COMPONENTS---
 import ModalPortal from '../../components/ModalPortal';
-import PlaningUserBlock from '../../components/PlaningUserBlock';
-
-// import { AddUserProject } from '../../components/PlaningAddUserProject';
-// =======
-import AddUserProject from '../../components/PlaningAddUserProject';
 
 import { AddPlan } from '../../components/PlaningAddPlan';
 import { AddTimeOff } from '../../components/PlaningAddTimeOff';
-
-//---SERVICES---
-import { apiCall } from '../../services/apiService';
 
 //---ACTIONS---
 import {
@@ -35,35 +26,25 @@ import {
     setCurrentTeam,
     deleteUser,
     getProjects,
+    setCurrentData,
+    setCurrentPlan,
+    deletePlan,
+    patchPlan,
+    changeUserSelected
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
-// Queries
-import { getProjectsV2ProjectPageUserParseFunction } from '../../queries';
-
-//---CONFIG---
-import { AppConfig } from '../../config';
-
 //---STYLES---
 import './style.scss';
-import { projectReducer } from '../../reducers/ProjectsReducer';
-import { DateRange } from 'react-date-range';
-import { inputRanges, staticRanges } from '../ReportsPage/ranges';
-import { de, enGB, it, ru, ua } from 'react-date-range/dist/locale';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
 
 import { getCurrentDate } from '../../services/timeService';
 
-import { getCurrentTeamDetailedData, getProjectsList } from '../../configAPI';
+import { getCurrentTeamDetailedData } from '../../configAPI';
+import { PlanningHeader } from './components/PlanningHeader';
+import { PlanningBody } from './components/PlanningBody';
 
-const localeMap = {
-    ru: ru,
-    en: enGB,
-    de: de,
-    it: it,
-    uk: ua,
-};
 
 class PlaningPage extends React.Component {
     state = {
@@ -117,34 +98,6 @@ class PlaningPage extends React.Component {
         this.props.currentMonth();
     };
 
-    totalPlaned = () => {
-        const { users } = this.props.planingReducer;
-        return users
-            .map(el =>
-                el.shedule
-                    .map(
-                        item =>
-                            item.projects && item.projects.reduce((a, b) => ({ planed: a.planed + b.planed })).planed
-                    )
-                    .reduce((a, b) => a + b)
-            )
-            .reduce((a, b) => a + b);
-    };
-    totalTracked = () => {
-        const { users } = this.props.planingReducer;
-        return users
-            .map(el =>
-                el.shedule
-                    .map(
-                        item =>
-                            item.projects &&
-                            item.projects.reduce((a, b) => ({ tracked: a.tracked + b.tracked })).tracked
-                    )
-                    .reduce((a, b) => a + b)
-            )
-            .reduce((a, b) => a + b);
-    };
-
     changeUserOpenFlag = e => {
         this.props.changeUserOpenFlag(e.target.id);
     };
@@ -162,41 +115,16 @@ class PlaningPage extends React.Component {
     changeAddTimeOffFlag = () => {
         this.setState({ showTimeOff: true });
     };
-    changeAddPlanTimeOffFlag = () => {
-        this.setState({ showAddPlanTimeOff: true });
-    };
 
     closeAllFlags = e => {
+        this.props.setCurrentData('');
+        this.props.setCurrentPlan({});
         this.setState({
             showAddUser: false,
             showAddPlan: false,
             showTimeOff: false,
             showAddPlanTimeOff: false,
         });
-    };
-
-    openCalendar() {
-        this.setState({ dateSelect: !this.state.dateSelect });
-        document.addEventListener('click', this.closeDropdown);
-    }
-
-    closeDropdown = e => {
-        if (this.datePickerSelect && !this.datePickerSelect.contains(e.target)) {
-            this.setState(
-                {
-                    dateSelect: !this.state.dateSelect,
-                },
-                () => {
-                    document.removeEventListener('click', this.closeDropdown);
-                }
-            );
-        }
-    };
-
-    handleSelect = ranges => {
-        this.setState({ selectionRange: ranges.selection });
-        // this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
-        // this.applySearch(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
     };
 
     handleAddUser = (dataSelected, searchFlag) => {
@@ -227,7 +155,6 @@ class PlaningPage extends React.Component {
             planingReducer,
             vocabulary,
             addUser,
-            projectsArray,
             changeTimeOffFlag,
             changeAllTimeOff,
             openDayOffChangeWindow,
@@ -235,215 +162,73 @@ class PlaningPage extends React.Component {
             dateFormat,
             getTimerPlaningList,
             getTime_Off,
+            setCurrentData,
+            deletePlan,
+            patchPlan,
+            setCurrentPlan,
+            setTimeOff,
+            changeUserSelected
         } = this.props;
 
         const {
             month,
             current,
-            users,
             timeOff,
             swithcAllTimeOff,
             timerPlaningList,
             newtimeOff,
-            selectedUsers,
             currentTeam,
             projects,
+            dataClickAddPlan,
+            currentPlanOrTimeOff,
+            userSelected
         } = planingReducer;
-        // console.log(timerPlaningList);
+
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timeOffShow } = this.state;
-
-        const {
-            v_resource_planing,
-            v_all_projects,
-            v_tracked,
-            v_hour_small,
-            v_next_month,
-            v_prev_month,
-            v_current_month,
-            v_week,
-            v_add_plan,
-            v_time_off,
-            v_filter,
-
-            v_summary_report,
-            v_total,
-            v_export,
-            v_today,
-            v_yesterday,
-            v_thisWeek,
-            v_lastWeek,
-            v_thisMonth,
-            v_lastMonth,
-            v_this_year,
-            v_days_up_to_today,
-            v_days_starting_today,
-            lang,
-        } = vocabulary;
-
-        const customLocale = localeMap[lang.short];
-        customLocale.options.weekStartsOn = firstDayOfWeek;
 
         return (
             <>
-                <Scrollbars>
-                    <div style={{ display: 'flex', minWidth: '100%', minHeight: '100%', overflowX: 'hidden' }}>
-                        <div className="planing">
-                            <div className="planing-header-container">
-                                <div className="aside-bar">
-                                    <div className="aside-bar__users">
-                                        <div className="aside-bar__add-user-block" onClick={this.changeAddUserFlag}>
-                                            <i className="aside-bar__add-user" />
-                                            {showAddUser ? (
-                                                <AddUserProject
-                                                    cancel={this.closeAllFlags}
-                                                    onAddPress={this.handleAddUser}
-                                                    users={currentTeam.users}
-                                                    projects={projects}
-                                                    vocabulary={vocabulary}
-                                                />
-                                            ) : null}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="planing-header">
-                                    <p>{v_resource_planing}</p>
-                                    <div className="planing-header__info-container">
-                                        <div className="planing-header__counters">
-                                            <p>{`${'TOT_PLANNING'}${v_hour_small} ${v_all_projects} `}</p>
-                                            <p>{`${'TOT_TRACKED'}${v_hour_small} ${v_tracked}`}</p>
-                                        </div>
-                                        <div className="planing-header__add-btn">
-                                            <button onClick={this.changeAddTimeOffFlag}>{v_filter}</button>
-                                            <button
-                                                style={{ display: 'flex', alignItems: 'center' }}
-                                                onClick={this.changeAddPlanFlag}
-                                            >
-                                                {' '}
-                                                <i className="planing-header__plus" />
-                                                {v_add_plan}
-                                            </button>
-
-                                            <button onClick={this.changeTimeOffShow}>{v_time_off}</button>
-                                        </div>
-
-                                        <div className="planing-header__move-btn">
-                                            <button onClick={this.prevMonth}>{v_prev_month}</button>
-                                            <div className="selects_container">
-                                                <div className="select_header" onClick={e => this.openCalendar()}>
-                                                    <span>
-                                                        {/*{moment(this.props.timeRange.startDate).format(dateFormat)} {' - '}*/}
-                                                        {/*{moment(this.props.timeRange.endDate).format(dateFormat)}*/}
-                                                        Month
-                                                    </span>
-                                                    <i className="arrow_down" />
-                                                </div>
-                                                {this.state.dateSelect && (
-                                                    <div
-                                                        className="select_body"
-                                                        ref={div => (this.datePickerSelect = div)}
-                                                    >
-                                                        <DateRange
-                                                            locale={customLocale}
-                                                            dateDisplayFormat={dateFormat}
-                                                            ranges={[
-                                                                {
-                                                                    startDate: this.state.selectionRange.startDate,
-                                                                    endDate: this.state.selectionRange.endDate,
-                                                                    key: 'selection',
-                                                                },
-                                                            ]}
-                                                            // staticRanges={staticRanges(
-                                                            //   v_today,
-                                                            //   v_yesterday,
-                                                            //   v_thisWeek,
-                                                            //   v_lastWeek,
-                                                            //   v_thisMonth,
-                                                            //   v_lastMonth,
-                                                            //   v_this_year,
-                                                            //   firstDayOfWeek
-                                                            // )}
-                                                            inputRanges={inputRanges(
-                                                                v_days_up_to_today,
-                                                                v_days_starting_today,
-                                                                firstDayOfWeek
-                                                            )}
-                                                            onChange={this.handleSelect}
-                                                            moveRangeOnFirstSelection={true}
-                                                            editableDateInputs={true}
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                            {/*<button onClick={this.currentMonth}>{v_current_month}</button>*/}
-                                            <button onClick={this.nextMonth}>{v_next_month}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* {-------BODY---------} */}
-                            <Scrollbars>
-                                <div className="main-content-wrapper">
-                                    <div className="month-container">
-                                        <div className="aside-bar">
-                                            <div className="aside-bar__users" />
-                                        </div>
-                                        <div className="month-container__weeks-block">
-                                            {month.map((week, index) => (
-                                                <div className="month-container__week" key={index}>
-                                                    <h2 style={{ whiteSpace: 'nowrap', color: week.weekColor }}>
-                                                        {`${v_week} ${week.weekCount} / ${moment(current).format(
-                                                            'MMM'
-                                                        )} ${week.dayStart} - ${week.dayEnd}`}
-                                                    </h2>
-                                                    <div className="month-container__days-block">
-                                                        {week.week.map((day, index) => (
-                                                            <div className="month-container__day" key={index}>
-                                                                <div
-                                                                    style={{
-                                                                        fontSize: '1em',
-                                                                        whiteSpace: 'nowrap',
-                                                                        textAlign: 'center',
-                                                                        color: day.color,
-                                                                    }}
-                                                                >
-                                                                    {moment(day.fullDate).format('ddd DD')}
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    {timerPlaningList
-                                        ? timerPlaningList.map(user => (
-                                              <PlaningUserBlock
-                                                  key={user.id}
-                                                  month={month}
-                                                  user={user}
-                                                  addUser={addUser}
-                                                  {...vocabulary}
-                                                  changeAddPlanFlag={this.changeAddPlanFlag}
-                                                  onDeleteUser={this.handleDeleteUser}
-                                              />
-                                          ))
-                                        : null}
-                                    <div className="aside-bar-stub" />
-                                </div>
-                            </Scrollbars>
-                        </div>
-                    </div>
-                </Scrollbars>
+                <div className="planing">
+                    <PlanningHeader
+                        showAddUser={showAddUser}
+                        changeAddUserFlag={this.changeAddUserFlag}
+                        vocabulary={vocabulary}
+                        cancel={this.closeAllFlags}
+                        onAddPress={this.handleAddUser}
+                        users={currentTeam}
+                        projects={projects}
+                        firstDayOfWeek={firstDayOfWeek}
+                        dateFormat={dateFormat}
+                        changeAddTimeOffFlag={this.changeAddTimeOffFlag}
+                        changeAddPlanFlag={this.changeAddPlanFlag}
+                        changeTimeOffShow={this.changeTimeOffShow}
+                        prevMonth={this.prevMonth}
+                        nextMonth={this.nextMonth}
+                    />
+                    {/* {-------BODY---------} */}
+                    <PlanningBody
+                        month={month}
+                        vocabulary={vocabulary}
+                        timerPlaningList={timerPlaningList}
+                        current={current}
+                        setCurrentData={setCurrentData}
+                        addUser={addUser}
+                        changeAddPlanFlag={this.changeAddPlanFlag}
+                        changeTimeOffShow={this.changeTimeOffShow}
+                        onDeleteUser={this.handleDeleteUser}
+                        deletePlan={deletePlan}
+                        setCurrentPlan={setCurrentPlan}
+                        currentPlanOrTimeOff={currentPlanOrTimeOff}
+                    />
+                </div>
                 {showAddPlan || showTimeOff || showAddPlanTimeOff || showAddUser ? (
                     <ModalPortal>
                         <div
-                            style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%', zIndex: 1 }}
+                            style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%', zIndex: 10 }}
                         >
                             {showAddPlan ? (
                                 <AddPlan
                                     cancel={this.closeAllFlags}
-                                    add={console.log}
                                     timeOff={newtimeOff}
                                     users={timerPlaningList}
                                     projects={projects}
@@ -451,12 +236,15 @@ class PlaningPage extends React.Component {
                                     getTimerPlaningList={getTimerPlaningList}
                                     getTimeOff={getTime_Off}
                                     timeOffShow={timeOffShow}
+                                    dataClickAddPlan={dataClickAddPlan}
+                                    patchPlan={patchPlan}
+                                    deletePlan={deletePlan}
+                                    currentPlanOrTimeOff={currentPlanOrTimeOff}
                                 />
                             ) : null}
                             {showTimeOff ? (
                                 <AddTimeOff
                                     cancel={this.closeAllFlags}
-                                    add={console.log}
                                     change={changeTimeOffFlag}
                                     changeAll={changeAllTimeOff}
                                     timeOff={timeOff}
@@ -465,8 +253,10 @@ class PlaningPage extends React.Component {
                                     openDayOffChangeWindow={openDayOffChangeWindow}
                                     getTimeOff={getTime_Off}
                                     newtimeOff={newtimeOff}
-                                    setTimeOff={this.props.setTimeOff}
+                                    setTimeOff={setTimeOff}
                                     getTimerPlaningList={getTimerPlaningList}
+                                    changeUserSelected={changeUserSelected}
+                                    userSelected={userSelected}
                                 />
                             ) : null}
                             <div
@@ -514,6 +304,11 @@ const mapDispatchToProps = {
     setCurrentTeam,
     deleteUser,
     getProjects,
+    setCurrentData,
+    deletePlan,
+    patchPlan,
+    setCurrentPlan,
+    changeUserSelected
 };
 
 export default connect(

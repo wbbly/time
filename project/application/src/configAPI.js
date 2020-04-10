@@ -407,14 +407,14 @@ export const getTimerPlaningListData = data =>
     });
 
 export const patchPlanAndTimeOff = (id, data) =>
-  instance({
-    url: `/timer-planning/${id}`,
-    method: 'PATCH',
-    data,
-  });
+    instance({
+        url: `/timer-planning/${id}`,
+        method: 'PATCH',
+        data,
+    });
 
-export const deletePlanAndTimeOff = (id) =>
-  instance({
-    url: `/timer-planning/${id}`,
-    method: 'DELETE'
-  });
+export const deletePlanAndTimeOff = id =>
+    instance({
+        url: `/timer-planning/${id}`,
+        method: 'DELETE',
+    });

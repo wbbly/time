@@ -27,5 +27,5 @@ export const rootReducer = combineReducers({
     notificationReducer,
     clientsReducer,
     invoicesReducer,
-    planingReducer
+    planingReducer,
 });

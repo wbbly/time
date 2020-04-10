@@ -24,6 +24,10 @@
     align-items: center;
     width: 100%;
     margin-bottom: 16px;
+
+    >svg{
+      cursor: pointer;
+    }
   }
   &__header > p {
     font-weight: 600;
