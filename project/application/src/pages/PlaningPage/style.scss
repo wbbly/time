@@ -70,6 +70,24 @@
 
 }
 
+.modal-add_plan{
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+
+  .bg-modal{
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0.7;
+    z-index: 19;
+  }
+
+}
+
 
 .planing-header > p {
   font-size: 24px;
@@ -93,6 +111,13 @@
   position: sticky;
   top: 0;
   z-index: 9;
+
+  .aside-bar{
+    position: sticky;
+    top:0;
+    z-index: 2;
+    left: 0;
+  }
 
 &__weeks-block {
     display: flex;
@@ -122,6 +147,9 @@
     flex: 1;
     max-width: 40px;
     min-width: 40px;
+    font-size: 1em;
+    white-space: nowrap;
+    text-align: center;
   }
 }
 
@@ -149,6 +177,7 @@
   &__users {
     width: 55px;
     height: 100%;
+    padding-top: 7px;
     background: #3b3b3b;
     display: flex;
     align-items: flex-start;

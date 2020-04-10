@@ -25,7 +25,7 @@ import './style.css';
 class TeamSwitcher extends Component {
     handleChange = e => {
         e.preventDefault();
-        const { currentTeam, switchTeamRequestAction, history, switchMenu, currentTimer } = this.props;
+        const { currentTeam, switchTeamRequestAction, history, switchMenu, currentTimer, isMobile } = this.props;
         let teamId = e.target.getAttribute('data-id');
         if (currentTeam.data.id !== teamId) {
             if (currentTimer) {
@@ -34,7 +34,8 @@ class TeamSwitcher extends Component {
             switchTeamRequestAction({ teamId });
         }
         history.push('/team');
-        switchMenu();
+
+        if (isMobile) switchMenu();
     };
 
     render() {

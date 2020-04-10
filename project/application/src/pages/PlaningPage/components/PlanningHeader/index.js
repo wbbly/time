@@ -17,7 +17,6 @@ const localeMap = {
 };
 
 export const PlanningHeader = props => {
-
     const [selectionRange, setSelection] = useState({
         startDate: getCurrentDate(),
         endDate: getCurrentDate(),

@@ -104,7 +104,6 @@ export class AddPlan extends React.Component {
     };
 
     addPlanClick = data => {
-
         const {
             hours,
             startDate,
@@ -155,14 +154,20 @@ export class AddPlan extends React.Component {
                         validateOnBlur={true}
                         initialValues={{
                             person: {
-                                a: "",
-                                b: (currentPlanOrTimeOff && currentPlanOrTimeOff.username) || (dataClickAddPlan.user && dataClickAddPlan.user.username) || "",
-                                idPerson: currentPlanOrTimeOff.userId || (dataClickAddPlan.user && dataClickAddPlan.user.id)
+                                name:
+                                    (currentPlanOrTimeOff && currentPlanOrTimeOff.username) ||
+                                    (dataClickAddPlan.user && dataClickAddPlan.user.username) ||
+                                    '',
+                                idPerson:
+                                    currentPlanOrTimeOff.userId || (dataClickAddPlan.user && dataClickAddPlan.user.id),
                             },
                             project: {
-                                a: "",
-                                b: currentPlanOrTimeOff.projectName || (dataClickAddPlan.project && dataClickAddPlan.project.projectName),
-                                idProject: currentPlanOrTimeOff.projectId || (dataClickAddPlan.project && dataClickAddPlan.project.project_id)
+                                name:
+                                    currentPlanOrTimeOff.projectName ||
+                                    (dataClickAddPlan.project && dataClickAddPlan.project.projectName),
+                                idProject:
+                                    currentPlanOrTimeOff.projectId ||
+                                    (dataClickAddPlan.project && dataClickAddPlan.project.project_id),
                             },
                             hours: currentPlanOrTimeOff.duration || '',
                             startDate: currentPlanOrTimeOff.startDate || dataClickAddPlan.fullDate || new Date(),
@@ -193,10 +198,10 @@ export class AddPlan extends React.Component {
                                     Select Person
                                     <CustomSelect
                                         name="person"
-                                        value={formik.values.person.b}
+                                        value={formik.values.person.name}
                                         options={users}
-                                        onChange={(a, b, idPerson) =>
-                                            formik.setFieldValue('person', { a, b, idPerson })
+                                        onChange={(a, name, idPerson) =>
+                                            formik.setFieldValue('person', { a, name, idPerson })
                                         }
                                         onBlur={formik.setFieldTouched}
                                         error={formik.errors.person}
@@ -207,10 +212,10 @@ export class AddPlan extends React.Component {
                                     Add Project / TimeOff
                                     <CustomSelect
                                         name="project"
-                                        value={formik.values.project.b}
+                                        value={formik.values.project.name}
                                         options={timeOffShow ? timeOff : projects}
-                                        onChange={(a, b, idProject) =>
-                                            formik.setFieldValue('project', { a, b, idProject })
+                                        onChange={(a, name, idProject) =>
+                                            formik.setFieldValue('project', { a, name, idProject })
                                         }
                                         onBlur={formik.setFieldTouched}
                                         error={formik.errors.project}

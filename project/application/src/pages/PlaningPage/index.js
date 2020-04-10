@@ -30,7 +30,7 @@ import {
     setCurrentPlan,
     deletePlan,
     patchPlan,
-    changeUserSelected
+    changeUserSelected,
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -44,7 +44,6 @@ import { getCurrentDate } from '../../services/timeService';
 import { getCurrentTeamDetailedData } from '../../configAPI';
 import { PlanningHeader } from './components/PlanningHeader';
 import { PlanningBody } from './components/PlanningBody';
-
 
 class PlaningPage extends React.Component {
     state = {
@@ -73,6 +72,8 @@ class PlaningPage extends React.Component {
     }
 
     getCurrentTeam = async () => {
+        const { setSelectedUsers, setCurrentTeam } = this.props;
+
         let res = await getCurrentTeamDetailedData();
 
         const teamUsers = res.data.data.team[0].team_users;
@@ -83,9 +84,9 @@ class PlaningPage extends React.Component {
             users,
         };
 
-        this.props.setSelectedUsers(users);
+        setSelectedUsers(users);
 
-        this.props.setCurrentTeam(team);
+        setCurrentTeam(team);
     };
 
     nextMonth = () => {
@@ -167,7 +168,7 @@ class PlaningPage extends React.Component {
             patchPlan,
             setCurrentPlan,
             setTimeOff,
-            changeUserSelected
+            changeUserSelected,
         } = this.props;
 
         const {
@@ -181,7 +182,7 @@ class PlaningPage extends React.Component {
             projects,
             dataClickAddPlan,
             currentPlanOrTimeOff,
-            userSelected
+            userSelected,
         } = planingReducer;
 
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timeOffShow } = this.state;
@@ -223,9 +224,7 @@ class PlaningPage extends React.Component {
                 </div>
                 {showAddPlan || showTimeOff || showAddPlanTimeOff || showAddUser ? (
                     <ModalPortal>
-                        <div
-                            style={{ top: '0', left: '0', position: 'fixed', width: '100%', height: '100%', zIndex: 10 }}
-                        >
+                        <div className="modal-add_plan">
                             {showAddPlan ? (
                                 <AddPlan
                                     cancel={this.closeAllFlags}
@@ -259,15 +258,7 @@ class PlaningPage extends React.Component {
                                     userSelected={userSelected}
                                 />
                             ) : null}
-                            <div
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    background: 'black',
-                                    opacity: '0.7',
-                                    zIndex: '19',
-                                }}
-                            />
+                            <div className="bg-modal" />
                         </div>
                     </ModalPortal>
                 ) : null}
@@ -308,7 +299,7 @@ const mapDispatchToProps = {
     deletePlan,
     patchPlan,
     setCurrentPlan,
-    changeUserSelected
+    changeUserSelected,
 };
 
 export default connect(

@@ -18,7 +18,7 @@ import {
     SET_PROJECTS,
     SET_CURENT_DATA,
     SET_CURRENT_PLAN,
-    CHANGE_USER_SELECTED
+    CHANGE_USER_SELECTED,
 } from '../actions/PlaningActions';
 
 import moment from 'moment';

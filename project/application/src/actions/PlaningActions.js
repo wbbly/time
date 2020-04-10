@@ -136,7 +136,7 @@ export const addUser = payload => ({
 
 export const setCurrentData = payload => ({
     type: SET_CURENT_DATA,
-    payload
+    payload,
 });
 
 export const setCurrentPlan = payload => ({
