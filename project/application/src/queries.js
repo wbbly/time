@@ -118,13 +118,13 @@ export function getTimerPlanningListParseFunction(users) {
 
     users.forEach((user, i) =>
         user.timer_plannings.forEach((timer_planning, y) => {
-            // console.log({ timer_planning });
             let matchedLogIndex = timer_plannings.findIndex(l => l.project_id === timer_planning.project_id);
-            let matchedTimeOffIndex = timer_plannings.findIndex(l => l.timer_off_id === timer_planning.timer_off_id);
 
             if (matchedLogIndex !== -1) {
                 if (!timer_planning.timer_off && !timer_planning.timer_off_id && timer_planning.project) {
                     timer_plannings[matchedLogIndex].projects.push({
+                        id: timer_planning.id,
+                        project_id: timer_planning.project_id,
                         start_date: timer_planning.start_date,
                         end_date: timer_planning.end_date,
                         name: timer_planning.project
@@ -132,7 +132,9 @@ export function getTimerPlanningListParseFunction(users) {
                             : timer_planning.timer_off
                                 ? timer_planning.timer_off.title
                                 : 'day off',
-                        project_color: timer_planning.project ? timer_planning.project.project_color : { name: 'red' },
+                        project_color: timer_planning.project
+                            ? timer_planning.project.project_color
+                            : { name: '#C42750' },
                         duration: timer_planning.duration,
                     });
                 }
@@ -140,10 +142,12 @@ export function getTimerPlanningListParseFunction(users) {
                 if (!timer_planning.project) {
                     timer_plannings.forEach((item, index) => {
                         timer_plannings[index].timeOff.push({
+                            id: timer_planning.id,
+                            timer_off_id: timer_planning.timer_off_id,
                             start_date: timer_planning.start_date,
                             end_date: timer_planning.end_date,
                             title: timer_planning.timer_off ? timer_planning.timer_off.title : 'day off',
-                            time_off_color: 'red',
+                            time_off_color: '#C42750',
                             duration: timer_planning.duration,
                         });
                     });
@@ -165,6 +169,8 @@ export function getTimerPlanningListParseFunction(users) {
                     projects: timer_planning.project
                         ? [
                               {
+                                  id: timer_planning.id,
+                                  project_id: timer_planning.project_id,
                                   start_date: timer_planning.start_date,
                                   end_date: timer_planning.end_date,
                                   name: timer_planning.project
@@ -174,7 +180,7 @@ export function getTimerPlanningListParseFunction(users) {
                                           : 'day off',
                                   project_color: timer_planning.project
                                       ? timer_planning.project.project_color
-                                      : { name: 'red' },
+                                      : { name: '#C42750' },
                                   duration: timer_planning.duration,
                               },
                           ]
@@ -182,10 +188,12 @@ export function getTimerPlanningListParseFunction(users) {
                     timeOff: timer_planning.timer_off
                         ? [
                               {
+                                  id: timer_planning.id,
+                                  timer_off_id: timer_planning.timer_off_id,
                                   start_date: timer_planning.start_date,
                                   end_date: timer_planning.end_date,
                                   title: timer_planning.timer_off ? timer_planning.timer_off.title : 'day off',
-                                  time_off_color: 'red',
+                                  time_off_color: '#C42750',
                                   duration: timer_planning.duration,
                               },
                           ]

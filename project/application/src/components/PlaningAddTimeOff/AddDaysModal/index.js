@@ -31,8 +31,6 @@ const AddDaysModal = ({ close, vocabulary, initialName, postTimer_Off }) => {
                 })}
                 onSubmit={values => {
                     addDayClick(values);
-                    console.log(values);
-                    console.log('test');
                     close();
                 }}
             >

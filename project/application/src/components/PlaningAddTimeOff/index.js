@@ -1,7 +1,4 @@
 import React from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { withStyles } from '@material-ui/core/styles';
-import Switch from '@material-ui/core/Switch';
 
 import AddDaysModal from './AddDaysModal';
 
@@ -9,52 +6,6 @@ import './style.scss';
 import { ThemeProvider } from '@material-ui/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import { createMuiTheme } from '@material-ui/core';
-
-const IOSSwitch = withStyles(theme => ({
-    root: {
-        width: 30,
-        height: 18,
-        padding: 0,
-        margin: 0,
-    },
-    switchBase: {
-        padding: 3,
-        color: '#696969',
-        '&$checked': {
-            transform: 'translateX(13px)',
-            color: '#02AF67',
-            '& + $track': {
-                backgroundColor: '#FFFFFF',
-                opacity: 1,
-            },
-        },
-    },
-    thumb: {
-        width: 12,
-        height: 12,
-    },
-    track: {
-        borderRadius: 25,
-        border: `1px solid #696969`,
-        backgroundColor: '#FFFFFF',
-        opacity: 1,
-    },
-    checked: {},
-    focusVisible: {},
-}))(({ classes, ...props }) => {
-    return (
-        <Switch
-            classes={{
-                root: classes.root,
-                switchBase: classes.switchBase,
-                thumb: classes.thumb,
-                track: classes.track,
-                checked: classes.checked,
-            }}
-            {...props}
-        />
-    );
-});
 
 export const CloseSvg = ({ cancel }) => {
     return (
@@ -112,12 +63,12 @@ export class AddTimeOff extends React.Component {
     }
 
     toggleUser(user) {
-        let daysOff = JSON.parse(JSON.stringify(this.state.userDataSelected));
+        const { userSelected } = this.props;
+        let daysOff = JSON.parse(JSON.stringify(userSelected));
         let exists = false;
         for (let i = 0; i < daysOff.length; i++) {
             const currentUser = daysOff[i];
-            console.log(currentUser);
-            console.log(user.id);
+
             if (currentUser.id === user.id) {
                 exists = true;
                 daysOff.splice(i, 1);
@@ -129,6 +80,7 @@ export class AddTimeOff extends React.Component {
             daysOff.push(user);
         }
         this.setState({ userDataSelected: daysOff });
+        this.props.changeUserSelected(daysOff);
         this.props.getTimerPlaningList(
             daysOff.map(item => {
                 return item.id;
@@ -136,6 +88,7 @@ export class AddTimeOff extends React.Component {
         );
     }
     selectAllUsers() {
+        this.props.changeUserSelected(this.state.timeOffArray);
         this.setState({ userDataSelected: this.state.timeOffArray, checkedAll: false });
         this.props.getTimerPlaningList(
             this.state.timeOffArray.map(item => {
@@ -144,11 +97,13 @@ export class AddTimeOff extends React.Component {
         );
     }
     selectNoneUsers() {
+        this.props.changeUserSelected([]);
         this.setState({ userDataSelected: [], checkedAll: false });
         this.props.getTimerPlaningList([]);
     }
     getCheckedUsers(name) {
-        if (JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
+        const { userSelected } = this.props;
+        if (JSON.stringify(userSelected).indexOf(name) > -1) {
             return true;
         }
     }
@@ -173,30 +128,13 @@ export class AddTimeOff extends React.Component {
         }
     }
 
-    switchAllNotifFlag = () => {
-        this.setState({ switchAllNotifFlag: !this.state.switchAllNotifFlag });
-    };
-    switchPublicNotifFlag = () => {
-        this.setState({ publicNotifFlag: !this.state.publicNotifFlag });
-    };
     switchShowAddDayFlag = () => {
         this.setState({ showAddDayFlag: !this.state.showAddDayFlag });
     };
     render() {
-        const {
-            add,
-            cancel,
-            change,
-            changeAll,
-            vocabulary,
-            timeOff,
-            allFlag,
-            openDayOffChangeWindow,
-            newtimeOff,
-        } = this.props;
-
-        const { v_user, v_project, v_find, v_select_all, v_select_none, v_apply, v_client } = vocabulary;
-        const { switchAllNotifFlag, publicNotifFlag, showAddDayFlag, timeOffArray } = this.state;
+        const { cancel, vocabulary, timeOff, newtimeOff } = this.props;
+        const { v_select_all, v_select_none } = vocabulary;
+        const { showAddDayFlag, timeOffArray } = this.state;
 
         return (
             <div className="timeoff-modal">
@@ -247,7 +185,6 @@ export class AddTimeOff extends React.Component {
                         <i className="timeoff-modal__plus" />
                         <p className="timeoff-modal__list-item-text">Add days</p>
                     </div>
-                    {/* </Scrollbars> */}
                 </div>
                 {showAddDayFlag ? (
                     <AddDaysModal timeOff={timeOff} vocabulary={vocabulary} close={this.switchShowAddDayFlag} />

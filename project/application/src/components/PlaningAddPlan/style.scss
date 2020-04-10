@@ -15,13 +15,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: Open Sans;
+  font-family: Open Sans, sans-serif;
   font-style: normal;
 
   &__header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     margin-bottom: 16px;
+
+    >svg{
+      cursor: pointer;
+    }
   }
   &__header > p {
     font-weight: 600;

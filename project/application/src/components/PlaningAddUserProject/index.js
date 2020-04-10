@@ -106,8 +106,8 @@ class AddUserProject extends React.Component {
     };
 
     render() {
-        const { add, vocabulary } = this.props;
-        const { v_cancel_small, v_add, v_find, v_select_all, v_select_none, v_people, v_projects } = vocabulary;
+        const { vocabulary } = this.props;
+        const { v_cancel_small, v_add, v_find, v_people, v_projects } = vocabulary;
         const { searchFlag, dataSelected, dataFiltered, dataEtalon } = this.state;
         return (
             <div className="add-user-modal">
