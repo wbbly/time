@@ -128,7 +128,7 @@
   &__week {
     display: flex;
     flex-direction: column;
-    max-width: 280px;
+    //max-width: 280px;
     //min-width: 280px;
     height: 55px;
     //margin: 0 10px;
@@ -150,6 +150,16 @@
     font-size: 1em;
     white-space: nowrap;
     text-align: center;
+  }
+
+  &__day-isWeek {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-width: 160px;
+    min-width: 160px;
+    font-size: 1em;
+    white-space: nowrap;
   }
 }
 

@@ -4,8 +4,8 @@ import { DateRange } from 'react-date-range';
 import { inputRanges } from '../../../ReportsPage/ranges';
 
 import { de, enGB, it, ru, ua } from 'react-date-range/dist/locale';
-import { getCurrentDate } from '../../../../services/timeService';
 
+import moment from 'moment';
 import '../../style.scss';
 
 const localeMap = {
@@ -18,8 +18,8 @@ const localeMap = {
 
 export const PlanningHeader = props => {
     const [selectionRange, setSelection] = useState({
-        startDate: getCurrentDate(),
-        endDate: getCurrentDate(),
+        startDate: new Date(),
+        endDate: new Date(),
         key: 'selection',
     });
 
@@ -55,7 +55,20 @@ export const PlanningHeader = props => {
     customLocale.options.weekStartsOn = firstDayOfWeek;
 
     const handleSelect = ranges => {
-        setSelection(ranges.selection);
+        var startOfWeek = moment(ranges.selection.startDate)
+            .startOf('week')
+            .weekday(1)
+            .format('YYYY-MM-DD');
+        var endOfWeek = moment(ranges.selection.startDate)
+            .endOf('week')
+            .weekday(7)
+            .format('YYYY-MM-DD');
+
+        setSelection({
+            startDate: moment(startOfWeek).toDate(),
+            endDate: moment(endOfWeek).toDate(),
+            key: 'selection',
+        });
     };
     const datePickerSelect = useRef();
 
@@ -139,8 +152,8 @@ export const PlanningHeader = props => {
                                             firstDayOfWeek
                                         )}
                                         onChange={handleSelect}
-                                        moveRangeOnFirstSelection={true}
-                                        editableDateInputs={true}
+                                        moveRangeOnFirstSelection={false}
+                                        editableDateInputs={false}
                                     />
                                 </div>
                             )}

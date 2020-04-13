@@ -57,7 +57,9 @@ export const PlanningBody = props => {
                                             !day.opacity && (
                                                 <div
                                                     style={{ color: day.color }}
-                                                    className="month-container__day"
+                                                    className={
+                                                        false ? 'month-container__day-isWeek' : 'month-container__day'
+                                                    }
                                                     key={index}
                                                 >
                                                     {moment(day.fullDate).format('ddd DD')}

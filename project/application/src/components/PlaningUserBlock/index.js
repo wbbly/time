@@ -26,7 +26,7 @@ const PlanBlock = ({ date, v_hour_small, widthPlan, project, changeAddPlanFlag, 
         <div
             onClick={clickPlan}
             style={{
-                width: `${Math.floor(widthPlan + 1) * 40 - 2}px`,
+                width: true ? `${Math.floor(widthPlan + 1) * 40 - 2}px` : `${Math.floor(widthPlan + 1) * 160 - 2}px`,
             }}
             className="plan-block"
         >
@@ -65,7 +65,7 @@ const TimeOffBlock = ({ date, widthPlan, project, changeTimeOffShow, setCurrentP
         <div
             onClick={clickOpen}
             style={{
-                width: `${Math.floor(widthPlan + 1) * 40 - 2}px`,
+                width: true ? `${Math.floor(widthPlan + 1) * 40 - 2}px` : `${Math.floor(widthPlan + 1) * 160 - 2}px`,
             }}
             className="time-off-block"
         >
@@ -96,7 +96,7 @@ const LoggedBlock = ({ log, v_hour_small, entry, logIndex }) => {
         <div
             className="logged-block"
             style={{
-                width: 38,
+                width: true ? 38 : 160,
                 top: 60 * logIndex,
             }}
         >
@@ -108,7 +108,7 @@ const LoggedBlock = ({ log, v_hour_small, entry, logIndex }) => {
                     {entry.days.map((day, i) => (
                         <div
                             key={`${day.formattedDate}_${day.projectId}_${i}`}
-                            className="cell"
+                            className={true ? 'cell' : 'cell-isWeek'}
                             style={{
                                 background: log.project_color.name,
                             }}
@@ -136,13 +136,6 @@ const PlaningUserBlock = ({
     setCurrentPlan,
     currentPlanOrTimeOff,
 }) => {
-    useEffect(
-        () => {
-            addUser();
-        },
-        [user]
-    );
-
     const clickData = ({ user, userId, fullDate, dataProject }) => {
         setOpen({ fullDate: fullDate, project_id: dataProject.project_id });
         setCurrentData({
@@ -196,6 +189,7 @@ const PlaningUserBlock = ({
                                                                 style={{
                                                                     background: day.background,
                                                                     opacity: day.opacity,
+                                                                    width: false ? 160 : 40,
                                                                 }}
                                                                 onClick={() =>
                                                                     clickData({
@@ -317,7 +311,7 @@ const PlaningUserBlock = ({
                                                     <div
                                                         key={index}
                                                         id={`middle_logged_${day.fullDate}`}
-                                                        className="day"
+                                                        className={true ? 'day' : 'day-isWeek'}
                                                         style={{
                                                             background: day.background,
                                                             opacity: day.opacity,
