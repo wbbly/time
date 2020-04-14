@@ -55,6 +55,7 @@
     display: flex;
     border-bottom: 1px solid #1F1F1F;
     margin-left: 20px;
+    overflow: hidden;
 
     .week {
       display: flex;
@@ -73,12 +74,6 @@
 
       .day-isWeek {
         width: 160px;
-        height: 100%;
-        position: relative;
-        border: 1px solid #1F1F1F;
-        border-top: none;
-        border-bottom: none;
-        outline: none;
       }
     }
   }
@@ -96,7 +91,7 @@
   }
 
   &__day-block{
-    width: 40px;
+    width: 4rem;
     height: 100%;
     position: relative;
     cursor: pointer;
@@ -113,6 +108,10 @@
       top: 8px;
     }
 
+  }
+
+  &__day-block--isWeek{
+    width: 16rem;
   }
 }
 
@@ -201,7 +200,10 @@
   position: absolute;
   z-index: 1;
   display: flex;
-
+  width: 3.8rem;
+   &-isWeek {
+     width: 16rem;
+   }
   .container {
     width: 100%;
     height: 60px;
@@ -238,29 +240,10 @@
         border: 1px solid #1F1F1F;
         border-top: none;
         border-bottom: none;
-
-        &:first-child {
-          border-left: 0;
+        &--isWeek {
+          width: 15.8rem;
+          min-width: 15.8rem;
         }
-        &:last-child {
-          border-right: 0;
-        }
-      }
-
-      .cell-isWeek {
-        box-sizing: content-box;
-        position: relative;
-        width: 158px;
-        min-width: 158px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 20px;
-        margin-bottom: 15px;
-        border: 1px solid #1F1F1F;
-        border-top: none;
-        border-bottom: none;
-
         &:first-child {
           border-left: 0;
         }

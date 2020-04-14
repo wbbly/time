@@ -3,6 +3,7 @@ import moment from 'moment';
 import PlaningUserBlock from '../../../../components/PlaningUserBlock';
 
 import '../../style.scss';
+import classNames from 'classnames';
 
 export const PlanningBody = props => {
     const {
@@ -18,6 +19,8 @@ export const PlanningBody = props => {
         deletePlan,
         currentPlanOrTimeOff,
         setCurrentPlan,
+        isWeek,
+        weekCount,
     } = props;
 
     const { v_week } = vocabulary;
@@ -39,36 +42,38 @@ export const PlanningBody = props => {
                 <div className="month-container__weeks-block">
                     {month.map((week, index) => {
                         return (
-                            <div className="month-container__week" key={index}>
-                                <h2
-                                    style={{
-                                        display: opacitySum(week) > 0.9 ? 'none' : 'inherit',
-                                        whiteSpace: 'nowrap',
-                                        color: week.weekColor,
-                                    }}
-                                >
-                                    {`${v_week} ${week.weekCount} / ${moment(current).format('MMM')} ${
-                                        week.dayStart
-                                    } - ${week.dayEnd}`}
-                                </h2>
-                                <div className="month-container__days-block">
-                                    {week.week.map((day, index) => {
-                                        return (
-                                            !day.opacity && (
-                                                <div
-                                                    style={{ color: day.color }}
-                                                    className={
-                                                        false ? 'month-container__day-isWeek' : 'month-container__day'
-                                                    }
-                                                    key={index}
-                                                >
-                                                    {moment(day.fullDate).format('ddd DD')}
-                                                </div>
-                                            )
-                                        );
-                                    })}
+                            ((index === weekCount && isWeek) || !isWeek) && (
+                                <div className="month-container__week" key={index}>
+                                    <h2
+                                        style={{
+                                            display: opacitySum(week) > 0.9 && !isWeek ? 'none' : 'inherit',
+                                            whiteSpace: 'nowrap',
+                                            color: week.weekColor,
+                                        }}
+                                    >
+                                        {`${v_week} ${week.weekCount} / ${moment(current).format('MMM')} ${
+                                            week.dayStart
+                                        } - ${week.dayEnd}`}
+                                    </h2>
+                                    <div className="month-container__days-block">
+                                        {week.week.map((day, index) => {
+                                            return (
+                                                !day.opacity && (
+                                                    <div
+                                                        style={{ color: day.color }}
+                                                        className={classNames('month-container__day', {
+                                                            'month-container__day-isWeek': isWeek,
+                                                        })}
+                                                        key={index}
+                                                    >
+                                                        {moment(day.fullDate).format('ddd DD')}
+                                                    </div>
+                                                )
+                                            );
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
+                            )
                         );
                     })}
                 </div>
@@ -88,6 +93,7 @@ export const PlanningBody = props => {
                           deletePlan={deletePlan}
                           setCurrentPlan={setCurrentPlan}
                           currentPlanOrTimeOff={currentPlanOrTimeOff}
+                          weekCount={weekCount}
                       />
                   ))
                 : null}

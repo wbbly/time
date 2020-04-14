@@ -5,8 +5,10 @@ import plusPlan from '../../images/plusPlan.svg';
 import noAvatar from '../../images/icon-512x512.png';
 
 import './style.scss';
+import classNames from 'classnames';
+import { connect } from 'react-redux';
 
-const PlanBlock = ({ date, v_hour_small, widthPlan, project, changeAddPlanFlag, setCurrentPlan, user }) => {
+const PlanBlock = ({ date, v_hour_small, widthPlan, project, changeAddPlanFlag, setCurrentPlan, user, isWeek }) => {
     const clickPlan = () => {
         changeAddPlanFlag();
 
@@ -26,9 +28,9 @@ const PlanBlock = ({ date, v_hour_small, widthPlan, project, changeAddPlanFlag, 
         <div
             onClick={clickPlan}
             style={{
-                width: true ? `${Math.floor(widthPlan + 1) * 40 - 2}px` : `${Math.floor(widthPlan + 1) * 160 - 2}px`,
+                width: isWeek ? `${Math.floor(widthPlan + 1) * 160 - 2}px` : `${Math.floor(widthPlan + 1) * 40 - 2}px`,
             }}
-            className="plan-block"
+            className={classNames('plan-block')}
         >
             <div className="plan-container">
                 <div
@@ -45,7 +47,7 @@ const PlanBlock = ({ date, v_hour_small, widthPlan, project, changeAddPlanFlag, 
     );
 };
 
-const TimeOffBlock = ({ date, widthPlan, project, changeTimeOffShow, setCurrentPlan, user }) => {
+const TimeOffBlock = ({ date, widthPlan, project, changeTimeOffShow, setCurrentPlan, user, isWeek }) => {
     const clickOpen = () => {
         changeTimeOffShow();
 
@@ -65,7 +67,7 @@ const TimeOffBlock = ({ date, widthPlan, project, changeTimeOffShow, setCurrentP
         <div
             onClick={clickOpen}
             style={{
-                width: true ? `${Math.floor(widthPlan + 1) * 40 - 2}px` : `${Math.floor(widthPlan + 1) * 160 - 2}px`,
+                width: isWeek ? `${Math.floor(widthPlan + 1) * 160 - 2}px` : `${Math.floor(widthPlan + 1) * 40 - 2}px`,
             }}
             className="time-off-block"
         >
@@ -91,12 +93,13 @@ const AddPlun = ({ changeAddPlanFlag }) => {
     );
 };
 
-const LoggedBlock = ({ log, v_hour_small, entry, logIndex }) => {
+const LoggedBlock = ({ log, v_hour_small, entry, logIndex, isWeek }) => {
     return (
         <div
-            className="logged-block"
+            className={classNames('logged-block', {
+                'logged-block-isWeek': isWeek,
+            })}
             style={{
-                width: true ? 38 : 160,
                 top: 60 * logIndex,
             }}
         >
@@ -108,7 +111,9 @@ const LoggedBlock = ({ log, v_hour_small, entry, logIndex }) => {
                     {entry.days.map((day, i) => (
                         <div
                             key={`${day.formattedDate}_${day.projectId}_${i}`}
-                            className={true ? 'cell' : 'cell-isWeek'}
+                            className={classNames('cell', {
+                                'cell--isWeek': isWeek,
+                            })}
                             style={{
                                 background: log.project_color.name,
                             }}
@@ -135,7 +140,11 @@ const PlaningUserBlock = ({
     deletePlan,
     setCurrentPlan,
     currentPlanOrTimeOff,
+    weekCount,
+    planingReducer,
 }) => {
+    const { isWeek } = planingReducer;
+
     const clickData = ({ user, userId, fullDate, dataProject }) => {
         setOpen({ fullDate: fullDate, project_id: dataProject.project_id });
         setCurrentData({
@@ -173,122 +182,149 @@ const PlaningUserBlock = ({
                             (date, index) =>
                                 ((user.timer_plannings.length === 1 && !date.project) || !!date.projects.length) && (
                                     <div key={date.project_id} className="user-block__month-block">
-                                        {month.map((week, index) => (
-                                            <div
-                                                key={index}
-                                                className="user-block__week-block"
-                                                id={`week_${week.week[0].fullDate}`}
-                                            >
-                                                {week.week.map((day, index) => {
-                                                    return (
-                                                        !day.opacity && (
-                                                            <div
-                                                                className="user-block__day-block"
-                                                                key={index}
-                                                                id={`middle_${day.fullDate}`}
-                                                                style={{
-                                                                    background: day.background,
-                                                                    opacity: day.opacity,
-                                                                    width: false ? 160 : 40,
-                                                                }}
-                                                                onClick={() =>
-                                                                    clickData({
-                                                                        user,
-                                                                        userId: date.id,
-                                                                        fullDate: day.fullDate,
-                                                                        dataProject: date,
-                                                                    })
-                                                                }
-                                                                tabIndex={1}
-                                                                onBlur={() =>
-                                                                    setOpen({
-                                                                        fullDate: null,
-                                                                        project_id: null,
-                                                                    })
-                                                                }
-                                                            >
-                                                                {!Object.keys(currentPlanOrTimeOff).length &&
-                                                                    day.fullDate === dataClick.fullDate &&
-                                                                    date.project_id === dataClick.project_id && (
-                                                                        <AddPlun
-                                                                            changeAddPlanFlag={changeAddPlanFlag}
-                                                                        />
-                                                                    )}
-                                                                {date.projects.map((project, index) => {
-                                                                    return moment(project.start_date).format('L') ===
-                                                                        moment(day.fullDate).format('L') &&
-                                                                        week.week.find(el => {
-                                                                            return (
-                                                                                moment(project.start_date).format(
-                                                                                    'L'
-                                                                                ) === moment(el.fullDate).format('L')
-                                                                            );
-                                                                        }) ? (
-                                                                        <PlanBlock
-                                                                            key={project.id}
-                                                                            date={date}
-                                                                            widthPlan={
-                                                                                (new Date(project.end_date) -
-                                                                                    new Date(project.start_date)) /
-                                                                                (1000 * 60 * 60 * 24)
-                                                                            }
-                                                                            v_plan={v_plan}
-                                                                            v_hour_small={v_hour_small}
-                                                                            project={project}
-                                                                            deletePlan={deletePlan}
-                                                                            changeAddPlanFlag={changeAddPlanFlag}
-                                                                            setCurrentPlan={setCurrentPlan}
-                                                                            user={user}
-                                                                        />
-                                                                    ) : null;
-                                                                })}
-                                                                {user.timer_plannings.map(
-                                                                    (date, index) =>
-                                                                        (!date.project || !date.projects.length) &&
-                                                                        date.timeOff.map(
-                                                                            timeOff =>
-                                                                                moment(timeOff.start_date).format(
-                                                                                    'L'
-                                                                                ) ===
-                                                                                    moment(day.fullDate).format('L') &&
+                                        {month.map(
+                                            (week, index) =>
+                                                ((index === weekCount && isWeek) || !isWeek) && (
+                                                    <div
+                                                        key={index}
+                                                        className="user-block__week-block"
+                                                        id={`week_${week.week[0].fullDate}`}
+                                                    >
+                                                        {week.week.map((day, index) => {
+                                                            return (
+                                                                !day.opacity && (
+                                                                    <div
+                                                                        className={classNames('user-block__day-block', {
+                                                                            'user-block__day-block--isWeek': isWeek,
+                                                                        })}
+                                                                        key={index}
+                                                                        id={`middle_${day.fullDate}`}
+                                                                        style={{
+                                                                            background: day.background,
+                                                                            opacity: day.opacity,
+                                                                        }}
+                                                                        onClick={() =>
+                                                                            clickData({
+                                                                                user,
+                                                                                userId: date.id,
+                                                                                fullDate: day.fullDate,
+                                                                                dataProject: date,
+                                                                            })
+                                                                        }
+                                                                        tabIndex={1}
+                                                                        onBlur={() =>
+                                                                            setOpen({
+                                                                                fullDate: null,
+                                                                                project_id: null,
+                                                                            })
+                                                                        }
+                                                                    >
+                                                                        {!Object.keys(currentPlanOrTimeOff).length &&
+                                                                            day.fullDate === dataClick.fullDate &&
+                                                                            date.project_id ===
+                                                                                dataClick.project_id && (
+                                                                                <AddPlun
+                                                                                    changeAddPlanFlag={
+                                                                                        changeAddPlanFlag
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                        {date.projects.map((project, index) => {
+                                                                            return moment(project.start_date).format(
+                                                                                'L'
+                                                                            ) === moment(day.fullDate).format('L') &&
                                                                                 week.week.find(el => {
                                                                                     return (
                                                                                         moment(
-                                                                                            timeOff.start_date
+                                                                                            project.start_date
                                                                                         ).format('L') ===
                                                                                         moment(el.fullDate).format('L')
                                                                                     );
                                                                                 }) ? (
-                                                                                    <TimeOffBlock
-                                                                                        key={timeOff.id}
-                                                                                        date={date}
-                                                                                        widthPlan={
-                                                                                            (new Date(
-                                                                                                timeOff.end_date
-                                                                                            ) -
-                                                                                                new Date(
+                                                                                <PlanBlock
+                                                                                    key={project.id}
+                                                                                    date={date}
+                                                                                    widthPlan={
+                                                                                        (new Date(project.end_date) -
+                                                                                            new Date(
+                                                                                                project.start_date
+                                                                                            )) /
+                                                                                        (1000 * 60 * 60 * 24)
+                                                                                    }
+                                                                                    v_plan={v_plan}
+                                                                                    v_hour_small={v_hour_small}
+                                                                                    project={project}
+                                                                                    deletePlan={deletePlan}
+                                                                                    changeAddPlanFlag={
+                                                                                        changeAddPlanFlag
+                                                                                    }
+                                                                                    setCurrentPlan={setCurrentPlan}
+                                                                                    user={user}
+                                                                                    isWeek={isWeek}
+                                                                                />
+                                                                            ) : null;
+                                                                        })}
+                                                                        {user.timer_plannings.map(
+                                                                            (date, index) =>
+                                                                                (!date.project ||
+                                                                                    !date.projects.length) &&
+                                                                                date.timeOff.map(
+                                                                                    timeOff =>
+                                                                                        moment(
+                                                                                            timeOff.start_date
+                                                                                        ).format('L') ===
+                                                                                            moment(day.fullDate).format(
+                                                                                                'L'
+                                                                                            ) &&
+                                                                                        week.week.find(el => {
+                                                                                            return (
+                                                                                                moment(
                                                                                                     timeOff.start_date
-                                                                                                )) /
-                                                                                            (1000 * 60 * 60 * 24)
-                                                                                        }
-                                                                                        v_plan={v_plan}
-                                                                                        v_hour_small={v_hour_small}
-                                                                                        project={timeOff}
-                                                                                        changeTimeOffShow={
-                                                                                            changeTimeOffShow
-                                                                                        }
-                                                                                        setCurrentPlan={setCurrentPlan}
-                                                                                        user={user}
-                                                                                    />
-                                                                                ) : null
-                                                                        )
-                                                                )}
-                                                            </div>
-                                                        )
-                                                    );
-                                                })}
-                                            </div>
-                                        ))}
+                                                                                                ).format('L') ===
+                                                                                                moment(
+                                                                                                    el.fullDate
+                                                                                                ).format('L')
+                                                                                            );
+                                                                                        }) ? (
+                                                                                            <TimeOffBlock
+                                                                                                key={timeOff.id}
+                                                                                                date={date}
+                                                                                                widthPlan={
+                                                                                                    (new Date(
+                                                                                                        timeOff.end_date
+                                                                                                    ) -
+                                                                                                        new Date(
+                                                                                                            timeOff.start_date
+                                                                                                        )) /
+                                                                                                    (1000 *
+                                                                                                        60 *
+                                                                                                        60 *
+                                                                                                        24)
+                                                                                                }
+                                                                                                v_plan={v_plan}
+                                                                                                v_hour_small={
+                                                                                                    v_hour_small
+                                                                                                }
+                                                                                                project={timeOff}
+                                                                                                changeTimeOffShow={
+                                                                                                    changeTimeOffShow
+                                                                                                }
+                                                                                                setCurrentPlan={
+                                                                                                    setCurrentPlan
+                                                                                                }
+                                                                                                user={user}
+                                                                                                isWeek={isWeek}
+                                                                                            />
+                                                                                        ) : null
+                                                                                )
+                                                                        )}
+                                                                    </div>
+                                                                )
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )
+                                        )}
                                     </div>
                                 )
                         )}
@@ -298,54 +334,62 @@ const PlaningUserBlock = ({
                     <div className="logged">
                         <p className="logged__title">Logged</p>
                         <div className="user-block__main-block">
-                            {month.map((week, index) => (
-                                <div key={index}>
-                                    <div
-                                        id={`week_${week.week[0].fullDate}`}
-                                        className="week"
-                                        style={{ height: 60 * user.logged.length }}
-                                    >
-                                        {week.week.map((day, index) => {
-                                            return (
-                                                !day.opacity && (
-                                                    <div
-                                                        key={index}
-                                                        id={`middle_logged_${day.fullDate}`}
-                                                        className={true ? 'day' : 'day-isWeek'}
-                                                        style={{
-                                                            background: day.background,
-                                                            opacity: day.opacity,
-                                                        }}
-                                                        tabIndex={1}
-                                                    >
-                                                        {user.logged.map((log, logIndex) =>
-                                                            log.timeGroups.map(
-                                                                (entry, entryIndex) =>
-                                                                    moment(entry.formattedDate).format('L') ===
-                                                                        moment(day.fullDate).format('L') &&
-                                                                    week.week.find(el => {
-                                                                        return (
+                            {month.map(
+                                (week, index) =>
+                                    ((index === weekCount && isWeek) || !isWeek) && (
+                                        <div key={index}>
+                                            <div
+                                                id={`week_${week.week[0].fullDate}`}
+                                                className="week"
+                                                style={{ height: 60 * user.logged.length }}
+                                            >
+                                                {week.week.map((day, index) => {
+                                                    return (
+                                                        !day.opacity && (
+                                                            <div
+                                                                key={index}
+                                                                id={`middle_logged_${day.fullDate}`}
+                                                                className={classNames('day', {
+                                                                    'day-isWeek': isWeek,
+                                                                })}
+                                                                style={{
+                                                                    background: day.background,
+                                                                    opacity: day.opacity,
+                                                                }}
+                                                                tabIndex={1}
+                                                            >
+                                                                {user.logged.map((log, logIndex) =>
+                                                                    log.timeGroups.map(
+                                                                        (entry, entryIndex) =>
                                                                             moment(entry.formattedDate).format('L') ===
-                                                                            moment(el.fullDate).format('L')
-                                                                        );
-                                                                    }) ? (
-                                                                        <LoggedBlock
-                                                                            key={index}
-                                                                            logIndex={logIndex}
-                                                                            log={log}
-                                                                            entry={entry}
-                                                                            v_hour_small={v_hour_small}
-                                                                        />
-                                                                    ) : null
-                                                            )
-                                                        )}
-                                                    </div>
-                                                )
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            ))}
+                                                                                moment(day.fullDate).format('L') &&
+                                                                            week.week.find(el => {
+                                                                                return (
+                                                                                    moment(entry.formattedDate).format(
+                                                                                        'L'
+                                                                                    ) ===
+                                                                                    moment(el.fullDate).format('L')
+                                                                                );
+                                                                            }) ? (
+                                                                                <LoggedBlock
+                                                                                    key={index}
+                                                                                    logIndex={logIndex}
+                                                                                    log={log}
+                                                                                    entry={entry}
+                                                                                    v_hour_small={v_hour_small}
+                                                                                    isWeek={isWeek}
+                                                                                />
+                                                                            ) : null
+                                                                    )
+                                                                )}
+                                                            </div>
+                                                        )
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    )
+                            )}
                         </div>
                     </div>
                 )}
@@ -354,4 +398,13 @@ const PlaningUserBlock = ({
     );
 };
 
-export default PlaningUserBlock;
+const mapDispatchToProps = {};
+
+const mapStateToProps = state => ({
+    planingReducer: state.planingReducer,
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(PlaningUserBlock);
