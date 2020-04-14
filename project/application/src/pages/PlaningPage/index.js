@@ -118,8 +118,17 @@ class PlaningPage extends React.Component {
     };
 
     closeAllFlags = e => {
-        this.props.setCurrentData('');
-        this.props.setCurrentPlan({});
+        const { planingReducer } = this.props;
+        const { currentPlanOrTimeOff, dataClickAddPlan } = planingReducer;
+
+        if (Object.keys(dataClickAddPlan).length) {
+            this.props.setCurrentData({});
+        }
+
+        if (Object.keys(currentPlanOrTimeOff).length) {
+            this.props.setCurrentPlan({});
+        }
+
         this.setState({
             showAddUser: false,
             showAddPlan: false,
