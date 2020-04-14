@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-
+import classNames from 'classnames';
 //---COMPONENTS---
 import ModalPortal from '../../components/ModalPortal';
 
@@ -31,6 +31,7 @@ import {
     deletePlan,
     patchPlan,
     changeUserSelected,
+    changeWeekOrMonth,
 } from '../../actions/PlaningActions';
 import projectsPageAction from '../../actions/ProjectsActions';
 
@@ -47,6 +48,7 @@ import { PlanningBody } from './components/PlanningBody';
 
 class PlaningPage extends React.Component {
     state = {
+        weekCount: 0,
         userData: null,
         timerPlaningList: null,
         showAddUser: false,
@@ -90,10 +92,26 @@ class PlaningPage extends React.Component {
     };
 
     nextMonth = () => {
-        this.props.nextMonth();
+        const { planingReducer, nextMonth } = this.props;
+        const { isWeek } = planingReducer;
+        if (isWeek) {
+            this.setState({ weekCount: this.state.weekCount + 1 });
+        }
+        if (this.state.weekCount === 4 || !isWeek) {
+            nextMonth();
+            this.setState({ weekCount: 0 });
+        }
     };
     prevMonth = () => {
-        this.props.prevMonth();
+        const { planingReducer, prevMonth } = this.props;
+        const { isWeek } = planingReducer;
+        if (isWeek) {
+            this.setState({ weekCount: this.state.weekCount - 1 });
+        }
+        if (!isWeek || this.state.weekCount === 0) {
+            prevMonth();
+            this.setState({ weekCount: 4 });
+        }
     };
     currentMonth = () => {
         this.props.currentMonth();
@@ -178,6 +196,7 @@ class PlaningPage extends React.Component {
             setCurrentPlan,
             setTimeOff,
             changeUserSelected,
+            changeWeekOrMonth,
         } = this.props;
 
         const {
@@ -192,6 +211,7 @@ class PlaningPage extends React.Component {
             dataClickAddPlan,
             currentPlanOrTimeOff,
             userSelected,
+            isWeek,
         } = planingReducer;
 
         const { showAddUser, showAddPlan, showTimeOff, showAddPlanTimeOff, timeOffShow } = this.state;
@@ -214,6 +234,8 @@ class PlaningPage extends React.Component {
                         changeTimeOffShow={this.changeTimeOffShow}
                         prevMonth={this.prevMonth}
                         nextMonth={this.nextMonth}
+                        changeWeekOrMonth={changeWeekOrMonth}
+                        isWeek={isWeek}
                     />
                     {/* {-------BODY---------} */}
                     <PlanningBody
@@ -229,6 +251,8 @@ class PlaningPage extends React.Component {
                         deletePlan={deletePlan}
                         setCurrentPlan={setCurrentPlan}
                         currentPlanOrTimeOff={currentPlanOrTimeOff}
+                        isWeek={isWeek}
+                        weekCount={this.state.weekCount}
                     />
                 </div>
                 {showAddPlan || showTimeOff || showAddPlanTimeOff || showAddUser ? (
@@ -309,6 +333,7 @@ const mapDispatchToProps = {
     patchPlan,
     setCurrentPlan,
     changeUserSelected,
+    changeWeekOrMonth,
 };
 
 export default connect(
