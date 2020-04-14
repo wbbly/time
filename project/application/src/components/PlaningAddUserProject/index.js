@@ -52,18 +52,23 @@ class AddUserProject extends React.Component {
     }
 
     selectItem(item) {
-        let newArr = this.state.dataSelected.slice();
-        newArr.find(el => el.id === item.id) ? newArr.splice(newArr.indexOf(item), 1) : newArr.push(item);
+        let newArr = JSON.parse(JSON.stringify(this.state.dataSelected.slice()));
+        let exists = false;
+        for (let i = 0; i < newArr.length; i++) {
+            const currentUser = newArr[i];
+
+            if (currentUser.id === item.id) {
+                exists = true;
+                newArr.splice(i, 1);
+                break;
+            }
+        }
+
+        if (!exists) {
+            newArr.push(item);
+        }
         this.setState({ dataSelected: newArr });
     }
-
-    // selectAll() {
-    //     this.setState({ dataSelected: this.state.dataEtalon });
-    // }
-
-    // selectNone() {
-    //     this.setState({ dataSelected: [] });
-    // }
 
     setFlagTrue = () => {
         const { searchFlag, peopleArray } = this.state;
@@ -109,6 +114,7 @@ class AddUserProject extends React.Component {
         const { vocabulary } = this.props;
         const { v_cancel_small, v_add, v_find, v_people, v_projects } = vocabulary;
         const { searchFlag, dataSelected, dataFiltered, dataEtalon } = this.state;
+        console.log(dataSelected);
         return (
             <div className="add-user-modal">
                 <div className="add-user-modal__header">
@@ -134,12 +140,6 @@ class AddUserProject extends React.Component {
                             placeholder={`${v_find}...`} //TODO probably change to search text
                             autoFocus
                         />
-                        {/* <div  onClick={_ => this.selectAll()}>
-                            {v_select_all}
-                        </div>
-                        <div  onClick={_ => this.selectNone()}>
-                            {v_select_none}
-                        </div> */}
                         <i onClick={_ => this.clearSearch()} />
                     </div>
 
