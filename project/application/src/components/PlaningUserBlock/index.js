@@ -159,7 +159,7 @@ const PlaningUserBlock = ({
         <div key={user.id} className="user-block">
             <div className="aside-bar">
                 <div className="aside-bar__users">
-                    <div className="aside-bar__avatar">
+                    <div title={user.username} className="aside-bar__avatar">
                         <img src={user.avatar ? user.avatar : noAvatar} alt="no img" />
                         <i onClick={() => onDeleteUser(user.id)} />
                     </div>
