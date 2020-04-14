@@ -38,6 +38,8 @@ export const PlanningHeader = props => {
         changeTimeOffShow,
         prevMonth,
         nextMonth,
+        changeWeekOrMonth,
+        isWeek,
     } = props;
 
     const {
@@ -95,6 +97,14 @@ export const PlanningHeader = props => {
         },
         [dateSelect]
     );
+    const clickMonth = () => {
+        if (isWeek) changeWeekOrMonth();
+        setDataSelect(!dateSelect);
+    };
+    const clickWeek = () => {
+        if (!isWeek) changeWeekOrMonth();
+        setDataSelect(!dateSelect);
+    };
 
     return (
         <div className="planing-header-container">
@@ -128,37 +138,39 @@ export const PlanningHeader = props => {
                     </div>
 
                     <div className="planing-header__move-btn">
-                        <button onClick={prevMonth}>{v_prev_month}</button>
+                        <button onClick={prevMonth}>{isWeek ? 'Previous week' : v_prev_month}</button>
                         <div ref={datePickerSelect} className="selects_container">
-                            <div className="select_header" onClick={e => setDataSelect(!dateSelect)}>
-                                <span>Month</span>
+                            <div className="select_header" onClick={() => setDataSelect(!dateSelect)}>
+                                <span>{isWeek ? 'Week' : 'Month'}</span>
                                 <i className="arrow_down" />
                             </div>
                             {dateSelect && (
                                 <div className="select_body">
-                                    <DateRange
-                                        locale={customLocale}
-                                        dateDisplayFormat={dateFormat}
-                                        ranges={[
-                                            {
-                                                startDate: selectionRange.startDate,
-                                                endDate: selectionRange.endDate,
-                                                key: 'selection',
-                                            },
-                                        ]}
-                                        inputRanges={inputRanges(
-                                            v_days_up_to_today,
-                                            v_days_starting_today,
-                                            firstDayOfWeek
-                                        )}
-                                        onChange={handleSelect}
-                                        moveRangeOnFirstSelection={false}
-                                        editableDateInputs={false}
-                                    />
+                                    <div onClick={clickMonth}>Month</div>
+                                    <div onClick={clickWeek}>Week</div>
+                                    {/*<DateRange*/}
+                                    {/*    locale={customLocale}*/}
+                                    {/*    dateDisplayFormat={dateFormat}*/}
+                                    {/*    ranges={[*/}
+                                    {/*        {*/}
+                                    {/*            startDate: selectionRange.startDate,*/}
+                                    {/*            endDate: selectionRange.endDate,*/}
+                                    {/*            key: 'selection',*/}
+                                    {/*        },*/}
+                                    {/*    ]}*/}
+                                    {/*    inputRanges={inputRanges(*/}
+                                    {/*        v_days_up_to_today,*/}
+                                    {/*        v_days_starting_today,*/}
+                                    {/*        firstDayOfWeek*/}
+                                    {/*    )}*/}
+                                    {/*    onChange={handleSelect}*/}
+                                    {/*    moveRangeOnFirstSelection={false}*/}
+                                    {/*    editableDateInputs={false}*/}
+                                    {/*/>*/}
                                 </div>
                             )}
                         </div>
-                        <button onClick={nextMonth}>{v_next_month}</button>
+                        <button onClick={nextMonth}>{isWeek ? 'Next week' : v_next_month}</button>
                     </div>
                 </div>
             </div>

@@ -19,6 +19,7 @@ import {
     SET_CURENT_DATA,
     SET_CURRENT_PLAN,
     CHANGE_USER_SELECTED,
+    CHANGE_IS_WEEK,
 } from '../actions/PlaningActions';
 
 import moment from 'moment';
@@ -28,6 +29,7 @@ const defaultState = {
     userSelected: [],
     current: null,
     month: [],
+    isWeek: false,
     dataClickAddPlan: {},
     selectedUsers: [],
     users: [],
@@ -216,6 +218,14 @@ export const planingReducer = (state = defaultState, action) => {
                 swithcAllTimeOff: !state.swithcAllTimeOff,
             };
         }
+
+        case CHANGE_IS_WEEK: {
+            return {
+                ...state,
+                isWeek: !state.isWeek,
+            };
+        }
+
         case CHANGE_ALL_USER_TIME_OFF: {
             return {
                 ...state,

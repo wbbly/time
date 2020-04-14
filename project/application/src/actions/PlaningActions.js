@@ -33,6 +33,7 @@ export const SET_PROJECTS = 'SET_PROJECTS';
 export const SET_CURENT_DATA = 'SET_CURENT_DATA';
 export const SET_CURRENT_PLAN = 'SET_CURRENT_PLAN';
 export const CHANGE_USER_SELECTED = 'CHANGE_USER_SELECTED';
+export const CHANGE_IS_WEEK = 'CHANGE_IS_WEEK';
 
 // const setTimeEntriesListAction = payload => ({
 //     type: GET_TIME_ENTRIES_LIST,
@@ -176,12 +177,22 @@ export const changeTimeOffFlag = payload => {
     };
 };
 
+export const changeWeekOrMonth = () => {
+    return async dispatch => {
+        dispatch(changeIsWeek());
+    };
+};
+
 const changeMainTimeOffSwitch = () => ({
     type: CHANGE_MAIN_TIME_OFF_SWITCH,
 });
 
 const changeAllUserTimeOff = () => ({
     type: CHANGE_ALL_USER_TIME_OFF,
+});
+
+const changeIsWeek = () => ({
+    type: CHANGE_IS_WEEK,
 });
 
 export const changeAllTimeOff = () => {
