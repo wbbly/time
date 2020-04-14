@@ -51,23 +51,18 @@ class AddUserProject extends React.Component {
         }
     }
 
-    selectItem(item) {
-        let newArr = JSON.parse(JSON.stringify(this.state.dataSelected.slice()));
-        let exists = false;
-        for (let i = 0; i < newArr.length; i++) {
-            const currentUser = newArr[i];
+    selectItem(e, item) {
+        const { checked } = e.target;
 
-            if (currentUser.id === item.id) {
-                exists = true;
-                newArr.splice(i, 1);
-                break;
-            }
+        if (checked) {
+            this.setState(prevState => ({
+                dataSelected: prevState.dataSelected.concat(item),
+            }));
+        } else {
+            this.setState(prevState => ({
+                dataSelected: prevState.dataSelected.filter(i => i.id !== item.id),
+            }));
         }
-
-        if (!exists) {
-            newArr.push(item);
-        }
-        this.setState({ dataSelected: newArr });
     }
 
     setFlagTrue = () => {
@@ -114,7 +109,7 @@ class AddUserProject extends React.Component {
         const { vocabulary } = this.props;
         const { v_cancel_small, v_add, v_find, v_people, v_projects } = vocabulary;
         const { searchFlag, dataSelected, dataFiltered, dataEtalon } = this.state;
-        console.log(dataSelected);
+
         return (
             <div className="add-user-modal">
                 <div className="add-user-modal__header">
@@ -156,8 +151,8 @@ class AddUserProject extends React.Component {
                                             color={'primary'}
                                             value={item.name}
                                             checked={!!dataSelected.find(el => el.id === item.id)}
-                                            onChange={() => {
-                                                this.selectItem(item);
+                                            onChange={e => {
+                                                this.selectItem(e, item);
                                             }}
                                         />
                                         {item.name || item.username}
