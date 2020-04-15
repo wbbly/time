@@ -16,6 +16,7 @@ export const newPlaningReducer = (state = initialState, { type, payload, error }
         case GET_TIMER_PLANING_LIST_REQUEST: {
             return {
                 ...state,
+                error: null,
                 isFetching: true,
             };
         }
@@ -24,6 +25,7 @@ export const newPlaningReducer = (state = initialState, { type, payload, error }
             return {
                 ...state,
                 timerPlaningList: payload,
+                error: null,
                 isFetching: false,
                 isInitialFetching: false,
             };
