@@ -51,8 +51,8 @@ class AddUserProject extends React.Component {
         }
     }
 
-    selectItem(e, item) {
-        const { checked } = e.target;
+    selectItem = item => event => {
+        const { checked } = event.target;
 
         if (checked) {
             this.setState(prevState => ({
@@ -63,7 +63,7 @@ class AddUserProject extends React.Component {
                 dataSelected: prevState.dataSelected.filter(i => i.id !== item.id),
             }));
         }
-    }
+    };
 
     setFlagTrue = () => {
         const { searchFlag, peopleArray } = this.state;
@@ -151,9 +151,7 @@ class AddUserProject extends React.Component {
                                             color={'primary'}
                                             value={item.name}
                                             checked={!!dataSelected.find(el => el.id === item.id)}
-                                            onChange={e => {
-                                                this.selectItem(e, item);
-                                            }}
+                                            onChange={this.selectItem(item)}
                                         />
                                         {item.name || item.username}
                                     </label>
