@@ -1,7 +1,7 @@
 import {
-    GET_TIMER_PLANING_LIST_SUCCESS,
-    GET_TIMER_PLANING_LIST,
-    GET_TIMER_PLANING_LIST_FAIL,
+    GET_TIMER_PLANING_LIST_REQUEST,
+    GET_TIMER_PLANING_LIST_REQUEST_SUCCESS,
+    GET_TIMER_PLANING_LIST_REQUEST_FAIL,
 } from '../actions/newPlaningActions';
 
 const initialState = {
@@ -11,9 +11,16 @@ const initialState = {
     error: null,
 };
 
-export const newPlaningReducer = (state = initialState, { type, payload }) => {
+export const newPlaningReducer = (state = initialState, { type, payload, error }) => {
     switch (type) {
-        case GET_TIMER_PLANING_LIST_SUCCESS: {
+        case GET_TIMER_PLANING_LIST_REQUEST: {
+            return {
+                ...state,
+                isFetching: true,
+            };
+        }
+
+        case GET_TIMER_PLANING_LIST_REQUEST_SUCCESS: {
             return {
                 ...state,
                 timerPlaningList: payload,
@@ -22,17 +29,10 @@ export const newPlaningReducer = (state = initialState, { type, payload }) => {
             };
         }
 
-        case GET_TIMER_PLANING_LIST: {
+        case GET_TIMER_PLANING_LIST_REQUEST_FAIL: {
             return {
                 ...state,
-                isFetching: true,
-            };
-        }
-
-        case GET_TIMER_PLANING_LIST_FAIL: {
-            return {
-                ...state,
-                error: payload,
+                error,
                 isFetching: false,
                 isInitialFetching: false,
             };
