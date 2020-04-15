@@ -178,7 +178,7 @@ export const changeTimeOffFlag = payload => {
 };
 
 export const changeWeekOrMonth = () => {
-    return async dispatch => {
+    return dispatch => {
         dispatch(changeIsWeek());
     };
 };

@@ -23,7 +23,6 @@ import {
     getTime_Off,
     setTimeOff,
     setCurrentTeam,
-    deleteUser,
     getProjects,
     setCurrentData,
     setCurrentPlan,
@@ -171,17 +170,10 @@ class PlaningPage extends React.Component {
         getTimerPlaningList();
     };
 
-    handleDeleteUser = userId => {
-        const { deleteUser, getTimerPlaningList } = this.props;
-        deleteUser(userId);
-        getTimerPlaningList();
-    };
-
     render() {
         const {
             planingReducer,
             vocabulary,
-            addUser,
             changeTimeOffFlag,
             changeAllTimeOff,
             openDayOffChangeWindow,
@@ -189,10 +181,8 @@ class PlaningPage extends React.Component {
             dateFormat,
             getTimerPlaningList,
             getTime_Off,
-            setCurrentData,
             deletePlan,
             patchPlan,
-            setCurrentPlan,
             setTimeOff,
             changeUserSelected,
             changeWeekOrMonth,
@@ -242,13 +232,8 @@ class PlaningPage extends React.Component {
                         vocabulary={vocabulary}
                         timerPlaningList={timerPlaningList}
                         current={current}
-                        setCurrentData={setCurrentData}
-                        addUser={addUser}
                         changeAddPlanFlag={this.changeAddPlanFlag}
                         changeTimeOffShow={this.changeTimeOffShow}
-                        onDeleteUser={this.handleDeleteUser}
-                        deletePlan={deletePlan}
-                        setCurrentPlan={setCurrentPlan}
                         currentPlanOrTimeOff={currentPlanOrTimeOff}
                         isWeek={isWeek}
                         weekCount={this.state.weekCount}
@@ -325,7 +310,6 @@ const mapDispatchToProps = {
     getTime_Off,
     setTimeOff,
     setCurrentTeam,
-    deleteUser,
     getProjects,
     setCurrentData,
     deletePlan,

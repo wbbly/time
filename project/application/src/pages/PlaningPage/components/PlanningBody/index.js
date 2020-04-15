@@ -11,14 +11,9 @@ export const PlanningBody = props => {
         vocabulary,
         timerPlaningList,
         current,
-        setCurrentData,
-        addUser,
         changeAddPlanFlag,
         changeTimeOffShow,
-        onDeleteUser,
-        deletePlan,
         currentPlanOrTimeOff,
-        setCurrentPlan,
         isWeek,
         weekCount,
     } = props;
@@ -81,17 +76,11 @@ export const PlanningBody = props => {
             {timerPlaningList
                 ? timerPlaningList.map(user => (
                       <PlaningUserBlock
-                          setCurrentData={setCurrentData}
                           key={user.id}
                           month={month}
                           user={user}
-                          addUser={addUser}
-                          {...vocabulary}
                           changeAddPlanFlag={changeAddPlanFlag}
                           changeTimeOffShow={changeTimeOffShow}
-                          onDeleteUser={onDeleteUser}
-                          deletePlan={deletePlan}
-                          setCurrentPlan={setCurrentPlan}
                           currentPlanOrTimeOff={currentPlanOrTimeOff}
                           weekCount={weekCount}
                       />
