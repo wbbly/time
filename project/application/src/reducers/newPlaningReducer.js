@@ -7,6 +7,8 @@ import {
 const initialState = {
     timerPlaningList: [],
     isFetching: false,
+    isInitialFetching: true,
+    error:null
 };
 
 export const newPlaningReducer = (state = initialState, { type, payload }) => {
@@ -16,6 +18,7 @@ export const newPlaningReducer = (state = initialState, { type, payload }) => {
                 ...state,
                 timerPlaningList: payload,
                 isFetching: false,
+                isInitialFetching: false
             };
         }
 
@@ -29,7 +32,9 @@ export const newPlaningReducer = (state = initialState, { type, payload }) => {
         case GET_TIMER_PLANING_LIST_FAIL: {
             return {
                 ...state,
+                error: payload,
                 isFetching: false,
+                isInitialFetching: false
             };
         }
 
