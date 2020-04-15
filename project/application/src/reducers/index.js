@@ -13,6 +13,7 @@ import notificationReducer from './NotificationReducer';
 import clientsReducer from './ClientsReducer';
 import invoicesReducer from './InvoicesReducer';
 import { planingReducer } from './PlaningReducer';
+import { newPlaningReducer } from './newPlaningReducer';
 
 export const rootReducer = combineReducers({
     projectReducer,
@@ -28,4 +29,5 @@ export const rootReducer = combineReducers({
     clientsReducer,
     invoicesReducer,
     planingReducer,
+    newPlaningReducer,
 });
