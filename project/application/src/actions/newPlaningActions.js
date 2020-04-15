@@ -1,21 +1,21 @@
-import { getTimerPlaningListData } from "../configAPI";
+import { getTimerPlaningListData } from '../configAPI';
 
-export const GET_TIMER_PLANING_LIST_SUCCESS = 'SET_TIMER_PLANING_LIST';
-export const GET_TIMER_PLANING_LIST = 'GET_TIMER_PLANING_LIST';
-export const GET_TIMER_PLANING_LIST_FAIL = 'GET_TIMER_PLANING_LIST_FAIL';
+export const GET_TIMER_PLANING_LIST_REQUEST = 'GET_TIMER_PLANING_LIST_REQUEST';
+export const GET_TIMER_PLANING_LIST_REQUEST_SUCCESS = 'GET_TIMER_PLANING_LIST_REQUEST_SUCCESS';
+export const GET_TIMER_PLANING_LIST_REQUEST_FAIL = 'GET_TIMER_PLANING_LIST_REQUEST_FAIL';
 
-export const setTimerPlaningList = payload => ({
-    type: GET_TIMER_PLANING_LIST_SUCCESS,
+const getTimerPlaningListRequest = () => ({
+    type: GET_TIMER_PLANING_LIST_REQUEST,
+});
+
+const getTimerPlaningListRequestSuccess = payload => ({
+    type: GET_TIMER_PLANING_LIST_REQUEST_SUCCESS,
     payload,
 });
 
-const getTimerPlaningListRequestFail = payload => ({
-    type: GET_TIMER_PLANING_LIST_FAIL,
-    payload
-});
-
-const getTimerPlaningListRequest = () => ({
-    type: GET_TIMER_PLANING_LIST,
+const getTimerPlaningListRequestFail = error => ({
+    type: GET_TIMER_PLANING_LIST_REQUEST_FAIL,
+    error,
 });
 
 export const getTimerPlaningListAction = () => async dispatch => {
@@ -23,8 +23,7 @@ export const getTimerPlaningListAction = () => async dispatch => {
     try {
         const { data } = await getTimerPlaningListData({});
 
-        dispatch(setTimerPlaningList(data));
-
+        dispatch(getTimerPlaningListRequestSuccess(data));
     } catch (error) {
         dispatch(getTimerPlaningListRequestFail(error));
     }
