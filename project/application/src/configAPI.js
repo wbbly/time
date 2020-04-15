@@ -399,11 +399,16 @@ export const patchTimerOff = (id, data) =>
         data,
     });
 
-export const getTimerPlaningListData = data =>
+export const getTimerPlaningListData = ({ userIds, timerOffIds, startDate, endDate }) =>
     instance({
         url: '/timer-planning/list',
         method: 'POST',
-        data,
+        data: {
+            userIds,
+            timerOffIds,
+            startDate,
+            endDate,
+        },
     });
 
 export const patchPlanAndTimeOff = (id, data) =>

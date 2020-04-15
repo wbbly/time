@@ -8,7 +8,7 @@ const initialState = {
     timerPlaningList: [],
     isFetching: false,
     isInitialFetching: true,
-    error:null
+    error: null,
 };
 
 export const newPlaningReducer = (state = initialState, { type, payload }) => {
@@ -18,7 +18,7 @@ export const newPlaningReducer = (state = initialState, { type, payload }) => {
                 ...state,
                 timerPlaningList: payload,
                 isFetching: false,
-                isInitialFetching: false
+                isInitialFetching: false,
             };
         }
 
@@ -34,7 +34,7 @@ export const newPlaningReducer = (state = initialState, { type, payload }) => {
                 ...state,
                 error: payload,
                 isFetching: false,
-                isInitialFetching: false
+                isInitialFetching: false,
             };
         }
 
