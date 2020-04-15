@@ -1,8 +1,8 @@
 .arrow_down,
 .arrow_up {
-  width: 20px;
-  height: 20px;
-  margin-top: 20px;
+  width: 2rem;
+  height: 2rem;
+  margin-top: 2rem;
   background: url("../../images/icons/arrow_down.svg") no-repeat center;
   transition: transform 0.5s;
 }
@@ -16,7 +16,7 @@
 
 .day-hour {
   color: #FFFFFF;
-  font-size: 10px;
+  font-size: 1rem;
   font-weight: bold;
   padding: 0;
 }
@@ -32,11 +32,11 @@
    }
   .logged {
     flex: 1;
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
 
     &__title {
       color: white;
-      margin-left: 20px;
+      margin-left: 2rem;
     }
   }
 
@@ -44,17 +44,17 @@
     flex: 1;
 
     &__title {
-      margin: 0 0 0 20px;
-      padding: 7px 0 7px 5px;
+      margin: 0 0 0 2rem;
+      padding: 0.7rem 0 0.7rem 0.5rem;
       color: white;
-      border-left: 5px solid #26A1A1;
+      border-left: 0.5rem solid #26A1A1;
     }
   }
 
   &__main-block {
     display: flex;
-    border-bottom: 1px solid #1F1F1F;
-    margin-left: 20px;
+    border-bottom: 0.1rem solid #1F1F1F;
+    margin-left: 2rem;
     overflow: hidden;
 
     .week {
@@ -63,17 +63,17 @@
       transition: height 0.3s;
 
       .day {
-        width: 40px;
+        width: 4rem;
         height: 100%;
         position: relative;
-        border: 1px solid #1F1F1F;
+        border: 0.1rem solid #1F1F1F;
         border-top: none;
         border-bottom: none;
         outline: none;
       }
 
       .day-isWeek {
-        width: 160px;
+        width: 16rem;
       }
     }
   }
@@ -85,7 +85,7 @@
   &__week-block{
     display: flex;
     position: relative;
-    height: 35px;
+    height: 3.5rem;
     transition: height 0.3s;
 
   }
@@ -95,17 +95,17 @@
     height: 100%;
     position: relative;
     cursor: pointer;
-    border: 1px solid #1F1F1F;
+    border: 0.1rem solid #1F1F1F;
     border-top: none;
     border-bottom: none;
     outline: none;
 
     .plus-img{
-      width: 38px;
-      height: 22px;
+      width: 3.8rem;
+      height: 2.2rem;
       z-index: 7;
       position: absolute;
-      top: 8px;
+      top: 0.8rem;
     }
 
   }
@@ -116,7 +116,7 @@
 }
 
 .time-off-block {
-  margin-top: 8px;
+  margin-top: 0.8rem;
   position: absolute;
   z-index: 1;
   display: flex;
@@ -135,20 +135,20 @@
       justify-content: center;
       overflow: hidden;
       white-space: pre;;
-      padding: 0 10px;
+      padding: 0 0.1rem;
 
       >p{
         color: #FFFFFF;
-        font-size: 10px;
+        font-size: 1rem;
         font-weight: bold;
-        margin: 5px 0;
+        margin: 0.5rem 0;
       }
     }
   }
 }
 
 .plan-block {
-  margin-top: 8px;
+  margin-top: 0.8rem;
   position: absolute;
   z-index: 1;
   display: flex;
@@ -165,31 +165,31 @@
       position: relative;
       display: flex;
       justify-content: space-between;
-      height: 30px;
+      height: 3rem;
       overflow: hidden;
       white-space: pre;;
-      padding: 0 10px;
+      padding: 0 0.1rem;
 
       >p{
         color: #FFFFFF;
-        font-size: 10px;
+        font-size: 1rem;
         font-weight: bold;
-        margin: 5px 0;
+        margin: 0.5rem 0;
       }
     }
 
     .time-off{
-      width: 40px;
+      width: 4rem;
       position: relative;
       display: flex;
       justify-content: center;
-      height: 30px;
-      padding: 0 1px;
+      height: 3rem;
+      padding: 0 0.1rem;
 
       >p {
-        margin: 5px 0;
+        margin: 0.5rem 0;
         color: #FFFFFF;
-        font-size: 10px;
+        font-size: 1rem;
         font-weight: bold;
       }
     }
@@ -206,18 +206,18 @@
    }
   .container {
     width: 100%;
-    height: 60px;
+    height: 6rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
 
     .project-title {
       color: white;
-      font-size: 10px;
+      font-size: 1rem;
       font-weight: 500;
       position: absolute;
       width: max-content;
-      padding: 5px 3px;
+      padding: 0.5rem 0.3rem;
       top: 0;
       left: 0;
       margin: 0;
@@ -230,14 +230,14 @@
       .cell {
         box-sizing: content-box;
         position: relative;
-        width: 38px;
-        min-width: 38px;
+        width: 3.8rem;
+        min-width: 3.8rem;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 20px;
-        margin-bottom: 15px;
-        border: 1px solid #1F1F1F;
+        height: 2rem;
+        margin-bottom: 1.5rem;
+        border: 0.1rem solid #1F1F1F;
         border-top: none;
         border-bottom: none;
         &--isWeek {
