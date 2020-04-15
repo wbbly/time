@@ -1,11 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import AddUserProject from '../../../../components/PlaningAddUserProject';
-import { DateRange } from 'react-date-range';
-import { inputRanges } from '../../../ReportsPage/ranges';
 
 import { de, enGB, it, ru, ua } from 'react-date-range/dist/locale';
 
-import moment from 'moment';
 import '../../style.scss';
 
 const localeMap = {
@@ -17,12 +14,6 @@ const localeMap = {
 };
 
 export const PlanningHeader = props => {
-    const [selectionRange, setSelection] = useState({
-        startDate: new Date(),
-        endDate: new Date(),
-        key: 'selection',
-    });
-
     const {
         showAddUser,
         changeAddUserFlag,
@@ -32,7 +23,6 @@ export const PlanningHeader = props => {
         users,
         projects,
         firstDayOfWeek,
-        dateFormat,
         changeAddTimeOffFlag,
         changeAddPlanFlag,
         changeTimeOffShow,
@@ -42,36 +32,11 @@ export const PlanningHeader = props => {
         isWeek,
     } = props;
 
-    const {
-        v_next_month,
-        v_prev_month,
-        v_add_plan,
-        v_time_off,
-        v_filter,
-        v_days_up_to_today,
-        v_days_starting_today,
-        lang,
-    } = vocabulary;
+    const { v_next_month, v_prev_month, v_add_plan, v_time_off, v_filter, lang } = vocabulary;
 
     const customLocale = localeMap[lang.short];
     customLocale.options.weekStartsOn = firstDayOfWeek;
 
-    const handleSelect = ranges => {
-        var startOfWeek = moment(ranges.selection.startDate)
-            .startOf('week')
-            .weekday(1)
-            .format('YYYY-MM-DD');
-        var endOfWeek = moment(ranges.selection.startDate)
-            .endOf('week')
-            .weekday(7)
-            .format('YYYY-MM-DD');
-
-        setSelection({
-            startDate: moment(startOfWeek).toDate(),
-            endDate: moment(endOfWeek).toDate(),
-            key: 'selection',
-        });
-    };
     const datePickerSelect = useRef();
 
     const [dateSelect, setDataSelect] = useState(false);
@@ -148,25 +113,6 @@ export const PlanningHeader = props => {
                                 <div className="select_body">
                                     <div onClick={clickMonth}>Month</div>
                                     <div onClick={clickWeek}>Week</div>
-                                    {/*<DateRange*/}
-                                    {/*    locale={customLocale}*/}
-                                    {/*    dateDisplayFormat={dateFormat}*/}
-                                    {/*    ranges={[*/}
-                                    {/*        {*/}
-                                    {/*            startDate: selectionRange.startDate,*/}
-                                    {/*            endDate: selectionRange.endDate,*/}
-                                    {/*            key: 'selection',*/}
-                                    {/*        },*/}
-                                    {/*    ]}*/}
-                                    {/*    inputRanges={inputRanges(*/}
-                                    {/*        v_days_up_to_today,*/}
-                                    {/*        v_days_starting_today,*/}
-                                    {/*        firstDayOfWeek*/}
-                                    {/*    )}*/}
-                                    {/*    onChange={handleSelect}*/}
-                                    {/*    moveRangeOnFirstSelection={false}*/}
-                                    {/*    editableDateInputs={false}*/}
-                                    {/*/>*/}
                                 </div>
                             )}
                         </div>
