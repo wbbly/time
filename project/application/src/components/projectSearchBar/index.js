@@ -1,19 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import _ from 'lodash';
-
-import Checkbox from '@material-ui/core/Checkbox';
-import { createMuiTheme } from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/styles';
-
-import PropTypes from 'prop-types';
-
-import Checkbox from '@material-ui/core/Checkbox';
-import { createMuiTheme } from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/styles';
-
 // Services
+import _ from 'lodash';
+import Checkbox from '@material-ui/core/Checkbox';
+import { createMuiTheme } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
+import PropTypes from 'prop-types';
 
 // Components
 
@@ -79,7 +72,7 @@ class ProjectSearchBar extends Component {
 
     searchClients = () => {
         const last = this.state.clientDataEtalon.filter(el =>
-            this.state.clientDataSelected.find(item => item === el.client.name)
+            this.state.clientDataSelected.find(item => item === (el.client && el.client.name))
         );
         this.props.projectsPageAction('CHANGE_ARR', { tableData: last.length ? last : this.state.clientDataEtalon });
     };
@@ -135,7 +128,7 @@ class ProjectSearchBar extends Component {
                 obj =>
                     this.state.clientDataSelected.length
                         ? obj.name.toLowerCase().indexOf(this.searchInput.value.toLowerCase().trim()) !== -1 &&
-                          this.state.clientDataSelected.find(item => item === obj.client.name)
+                          this.state.clientDataSelected.find(item => item === (obj.client && obj.client.name))
                         : obj.name.toLowerCase().indexOf(this.searchInput.value.toLowerCase().trim()) !== -1
             );
             this.props.projectsPageAction('CHANGE_ARR', { tableData: afterSearch });
@@ -153,8 +146,14 @@ class ProjectSearchBar extends Component {
     componentDidMount() {
         this.setState({
             clientDataEtalon: this.props.etalonArr,
-            clientArray: [...new Set(this.props.etalonArr.map(el => el.client.name))],
+            clientArray: [
+                ...new Set(this.props.etalonArr.filter(el => el.client && el.client.name).map(el => el.client.name)),
+            ],
         });
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('click', this.closeDropdownClient);
     }
 
     render() {
