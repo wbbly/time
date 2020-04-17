@@ -15,6 +15,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import UserSettings from './pages/UserSettings';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ClientsPage from './pages/ClientsPage';
+import InvoicesPage from './pages/InvoicesPage';
+import PlaningPage from './pages/PlaningPage';
 
 import PageTemplate from './components/PageTemplate';
 
@@ -24,6 +26,7 @@ import './App.scss';
 import './fonts/icomoon/icomoon.css';
 
 import * as responsiveActions from './actions/ResponsiveActions';
+import { showNotificationAction } from './actions/NotificationActions';
 
 const addEvent = (object, type, callback) => {
     if (object === null || typeof object === 'undefined') return false;
@@ -53,13 +56,35 @@ class App extends Component {
         }
     };
 
+    connectionRestore = () => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_connection_restored } = vocabulary;
+        showNotificationAction({
+            type: 'connection-restored',
+            text: v_connection_restored,
+        });
+    };
+
+    connectionLost = () => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_connection_problem } = vocabulary;
+        showNotificationAction({
+            type: 'lost-connection',
+            text: v_connection_problem,
+        });
+    };
+
     componentDidMount() {
         this.setResponsiveReducer();
         addEvent(window, 'resize', this.setResponsiveReducer);
+        window.addEventListener('online', this.connectionRestore);
+        window.addEventListener('offline', this.connectionLost);
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.setResponsiveReducer);
+        window.removeEventListener('online', this.connectionRestore);
+        window.removeEventListener('offline', this.connectionLost);
     }
 
     render() {
@@ -68,19 +93,18 @@ class App extends Component {
         return (
             <Switch>
                 <Route exact path="/" render={redirect('/login')} />
-
                 <PrivateRoute exact path="/timer" render={() => <PageTemplate content={MainPage} />} />
                 <PrivateRoute exact path="/reports/summary" render={() => <PageTemplate content={ReportsPage} />} />
                 <PrivateRoute exact path="/projects" render={() => <PageTemplate content={ProjectsPage} />} />
                 <PrivateRoute exact path="/clients" render={() => <PageTemplate content={ClientsPage} />} />
                 <PrivateRoute exact path="/team" render={() => <PageTemplate content={TeamPage} />} />
+                <PrivateRoute path="/planing" render={() => <PageTemplate content={PlaningPage} />} />
                 <PrivateRoute
                     exact
                     path="/reports/detailed/projects/:projectName/team/:userEmails/from/:dateStart/to/:endDate/"
                     render={() => <PageTemplate content={ReportsByProjectsPage} />}
                 />
                 <PrivateRoute exact path="/user-settings" render={() => <PageTemplate content={UserSettings} />} />
-
                 <Route exact path="/login" render={() => <PageTemplate hideSidebar hideHeader content={AuthPage} />} />
                 <Route
                     exact
@@ -97,7 +121,7 @@ class App extends Component {
                     path="/reset-password"
                     render={() => <PageTemplate hideSidebar hideHeader content={ResetPasswordPage} />}
                 />
-
+                <PrivateRoute exact path="/invoices" render={() => <PageTemplate content={InvoicesPage} />} />
                 <Route render={() => <div>404 not found</div>} />
             </Switch>
         );
@@ -106,10 +130,12 @@ class App extends Component {
 
 const mapStateToProps = state => ({
     isMobile: state.responsiveReducer.isMobile,
+    vocabulary: state.languageReducer.vocabulary,
 });
 
 const mapDispatchToProps = {
     ...responsiveActions,
+    showNotificationAction,
 };
 
 export default withRouter(

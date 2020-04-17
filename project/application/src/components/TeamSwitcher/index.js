@@ -25,7 +25,7 @@ import './style.css';
 class TeamSwitcher extends Component {
     handleChange = e => {
         e.preventDefault();
-        const { currentTeam, switchTeamRequestAction, history, switchMenu, currentTimer } = this.props;
+        const { currentTeam, switchTeamRequestAction, history, switchMenu, currentTimer, isMobile } = this.props;
         let teamId = e.target.getAttribute('data-id');
         if (currentTeam.data.id !== teamId) {
             if (currentTimer) {
@@ -34,42 +34,45 @@ class TeamSwitcher extends Component {
             switchTeamRequestAction({ teamId });
         }
         history.push('/team');
-        switchMenu();
+
+        if (isMobile) switchMenu();
     };
 
     render() {
-        const { isMobile, vocabulary, userTeams, currentTeam } = this.props;
+        const { isMobile, vocabulary, userTeams, currentTeam, isShowMenu } = this.props;
         const { v_active_team, v_set, v_team_is_active } = vocabulary;
         return (
             <Loading flag={userTeams.isInitialFetching} withLogo={false} mode="inline">
-                <div className="team_list">
-                    <ul>
-                        {userTeams.data.map((team, index) => {
-                            const title =
-                                currentTeam.data.id === team.id
-                                    ? `${v_active_team}`
-                                    : `${v_set} ${team.name} ${v_team_is_active}`;
+                {(!isShowMenu || isMobile) && (
+                    <div className="team_list">
+                        <ul>
+                            {userTeams.data.map((team, index) => {
+                                const title =
+                                    currentTeam.data.id === team.id
+                                        ? `${v_active_team}`
+                                        : `${v_set} ${team.name} ${v_team_is_active}`;
 
-                            return (
-                                <li key={team.id} title={title}>
-                                    <div
-                                        className={classNames('team_list-item', {
-                                            active: userTeams.data.length > 1 && currentTeam.data.id === team.id,
-                                        })}
-                                        onClick={this.handleChange}
-                                        data-id={team.id}
-                                        data-name={team.name}
-                                    >
-                                        {team.name + ' '}
-                                        {userTeams.data.length > 1 &&
-                                            currentTeam.data.id === team.id && <div className="active-point" />}
-                                    </div>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                    {!isMobile && <TeamAdd />}
-                </div>
+                                return (
+                                    <li key={team.id} title={title}>
+                                        <div
+                                            className={classNames('team_list-item', {
+                                                active: userTeams.data.length > 1 && currentTeam.data.id === team.id,
+                                            })}
+                                            onClick={this.handleChange}
+                                            data-id={team.id}
+                                            data-name={team.name}
+                                        >
+                                            {team.name + ' '}
+                                            {userTeams.data.length > 1 &&
+                                                currentTeam.data.id === team.id && <div className="active-point" />}
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                        {!isMobile && <TeamAdd />}
+                    </div>
+                )}
             </Loading>
         );
     }

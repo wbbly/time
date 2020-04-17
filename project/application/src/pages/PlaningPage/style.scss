@@ -1,0 +1,277 @@
+.planing {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  background: #1f1f1f;
+  min-width: 100%;
+  overflow: hidden
+}
+
+.planing-header-container {
+
+  display: flex;
+
+  .planing-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100px;
+    max-height: 180px;
+    width: 100%;
+    padding: 0 10px 40px 20px;
+
+    &__info-container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 40px;
+    }
+
+    &__counters {
+      font-size: 16px;
+      color: #ffffff;
+    }
+
+    &__add-btn,
+    &__move-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &__move-btn {
+       margin-left: 100px;
+    }
+
+    &__add-btn button,
+    &__move-btn > button {
+      margin: 0 10px;
+      height: 33px;
+      font-size: 12px;
+      line-height: 16px;
+      font-family: "Open Sans", sans-serif;
+      color: #ffffff;
+      background: #434343;
+      padding: 4px 13px;
+      //border-radius: 3px;
+    }
+
+    &__plus {
+      width: 20px;
+      height: 20px;
+      background: url("../../images/icons/add-plan.svg") no-repeat center;
+    }
+  }
+
+  .aside-bar__users {
+    align-items: flex-end;
+  }
+
+}
+
+.modal-add_plan{
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+
+  .bg-modal{
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0.7;
+    z-index: 19;
+  }
+
+}
+
+
+.planing-header > p {
+  font-size: 24px;
+  color: #ffffff;
+}
+
+
+.main-content-wrapper {
+  overflow-y: auto;
+  height: calc(100vh - 110px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 0 10px 0 0;
+}
+
+.month-container {
+  display: flex;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 9;
+
+  .aside-bar{
+    position: sticky;
+    top:0;
+    z-index: 2;
+    left: 0;
+  }
+
+&__weeks-block {
+    display: flex;
+    margin-left: 20px;
+    background: #1f1f1f
+  }
+
+  &__week {
+    display: flex;
+    flex-direction: column;
+    max-width: 280px;
+    //min-width: 280px;
+    height: 55px;
+    //margin: 0 10px;
+  }
+
+  &__days-block {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    align-items: flex-end;
+  }
+
+  &__day {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-width: 40px;
+    min-width: 40px;
+    font-size: 1em;
+    white-space: nowrap;
+    text-align: center;
+  }
+}
+
+.aside-bar-stub {
+  height: 100%;
+  width: 55px;
+  border-left: 1px solid #1f1f1f;
+  background: #3b3b3b;
+  box-sizing: content-box;
+  position: sticky;
+  left: 0;
+  z-index: 10;
+}
+
+.aside-bar {
+  // height: 100%;
+
+  border-left: 1px solid #1f1f1f;
+
+  // &__openers {
+  //   background-color: transparent;
+  // }
+
+
+  &__users {
+    width: 55px;
+    height: 100%;
+    padding-top: 7px;
+    background: #3b3b3b;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  &__add-user-block {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 55px;
+    max-width: 55px;
+    height: 55px;
+    cursor: pointer;
+  }
+
+  &__add-user {
+    width: 40px;
+    height: 40px;
+    background: url("../../images/icons/add-person.svg") no-repeat center;
+  }
+
+  &__user-info {
+    display: flex;
+    position: relative;
+  }
+
+  &__show-btn {
+    z-index: 1;
+    cursor: pointer;
+  }
+
+  &__avatar-block {
+    display: flex;
+    justify-content: center;
+    min-width: 55px;
+    max-width: 55px;
+    padding-top: 8px;
+    transition: 0.3s;
+    background: #3b3b3b;
+  }
+
+  &__avatar {
+    width: 40px;
+    height: 40px;
+    position: relative;
+  }
+
+  &__avatar > img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #26A1A1;
+  }
+
+  &__avatar > i {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: -9px;
+    margin-right: -5px;
+    height: 20px;
+    width: 20px;
+    background: url("../../images/icons/delete-person.svg") no-repeat center;
+  }
+
+
+}
+
+.selects_container {
+  position: relative;
+}
+
+.select_body {
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  z-index: 20;
+  background-color: #f5f5f5;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+.select_header {
+  display: flex;
+  align-items: center;
+  font-family: "Open Sans", sans-serif;
+  line-height: normal;
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+
+  .arrow_down {
+    margin: 5px 0 0 5px;
+  }
+}

@@ -14,9 +14,37 @@
   overflow-y: auto;
 }
 
+.header-nav{
+  display: flex;
+  margin-bottom: 3.5rem;
+
+  a{
+    width: 100%;
+  }
+}
+
+.show-menu-button-icon {
+  color: #ffffff;
+  font-size: 2rem;
+}
+
+.icon-menu:before {
+  content: "\e901";
+}
+
+.show-menu-button {
+  cursor: pointer;
+  padding: 0 0 0 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  outline: none;
+  border: none;
+}
+
 .logo_small {
   display: block;
-  margin-bottom: 3.5rem;
   height: 26px;
   background: url("../../images/icons/logo.svg") no-repeat center;
   background-size: 111px;
@@ -62,6 +90,9 @@ i {
 .workspaces {
   background: url("../../images/icons/arrow_down.svg") no-repeat center;
 }
+.planning {
+  background: url("../../images/icons/planning.svg") no-repeat center;
+}
 
 .links_text {
   font-family: "Open Sans", sans-serif;
@@ -82,6 +113,18 @@ i {
   padding-left: 21px;
   margin-bottom: 10px;
   cursor: pointer;
+}
+
+.navigation_links-hide_menu{
+  padding-left: 16.5px;
+
+  .links_text{
+    display: none;
+  }
+
+  .timer_task{
+    display: none;
+  }
 }
 
 .navigation_links:hover {
@@ -141,6 +184,11 @@ a {
 @media (min-width: 1024px) {
   .wrapper {
     width: 188px;
+  }
+
+  .wrapper_hide{
+    width: 48px;
+    overflow: hidden;
   }
 
   .wrapper-position-add-team {

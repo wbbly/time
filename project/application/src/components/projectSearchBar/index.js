@@ -144,6 +144,7 @@ class ProjectSearchBar extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props)
         this.setState({
             clientDataEtalon: this.props.etalonArr,
             clientArray: [

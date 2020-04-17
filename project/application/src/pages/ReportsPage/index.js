@@ -72,8 +72,6 @@ class ReportsPage extends Component {
         },
         dateSelect: false,
         dateSelectUsers: false,
-        selectUersData: [],
-        selectUersDataEtalon: [],
         projectsData: [],
         totalUpChartTime: '',
     };
@@ -584,32 +582,13 @@ class ReportsPage extends Component {
         const { lang } = vocabulary;
         moment.locale(lang.short);
         this.setState({ selectionRange: this.props.timeRange });
-        apiCall(AppConfig.apiURL + `user/list`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            result => {
-                let data = result.data;
-                this.setState({ selectUersData: data.user });
-                this.setState({ selectUersDataEtalon: data.user });
-                setTimeout(() => {
-                    this.applySearch(
-                        this.getYear(this.state.selectionRange.startDate),
-                        this.getYear(this.state.selectionRange.endDate)
-                    );
-                }, 500);
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => console.log(errorMessage));
-                } else {
-                    console.log(err);
-                }
-            }
-        );
         getClientsAction();
+        setTimeout(() => {
+            this.applySearch(
+                this.getYear(this.state.selectionRange.startDate),
+                this.getYear(this.state.selectionRange.endDate)
+            );
+        }, 500);
     }
 }
 
