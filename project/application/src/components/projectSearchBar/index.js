@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 // Config
 
 // Styles
-import './style.css';
+import './style.scss';
 
 const materialTheme = createMuiTheme({
     overrides: {
@@ -161,86 +161,97 @@ class ProjectSearchBar extends Component {
         const { vocabulary } = this.props;
         const { v_find, v_select_all, v_select_none, v_apply, v_client } = vocabulary;
         return (
-            <div className="wrapper_project_search_bar">
-                <div className="project_search_bar_search_field_container">
-                    <i className="magnifer" />
+            <div className="project_search_bar">
+                <div className="project_search_bar__search_field_container">
+                    <i className="project_search_bar__search_field_container-magnifer" />
                     <input
+                        className="project_search_bar__search_field_container-input"
                         onChange={e => this.setDefaultArr()}
                         type="text"
                         onKeyUp={e => (e.keyCode === 13 ? this.search() : null)}
                         ref={input => (this.searchInput = input)}
-                        className="project_search_bar_search_field"
                     />
                 </div>
-                <div className="wrapper_project_search_bar_dropmenu">
-                    <div className="project_search_bar_dropmenu_container select">
-                        <div className="dropmenu_select_wrapper">
-                            <div
-                                className="project_search_dropmenu_select_header"
-                                onClick={_ => this.openSelectClient()}
-                                ref={div => (this.clientInputRef = div)}
-                            >
-                                <div>
-                                    {v_client}
-                                    :&nbsp;
-                                    {clientDataSelected.map((item, index) => (
-                                        <span key={item + index}>{index === 0 ? item : `, ${item}`}</span>
-                                    ))}
+                <div className="project_search_bar__dropmenu">
+                    <div className="project_search_bar__dropmenu-select_wrapper">
+                        <div
+                            className="project_search_bar__dropmenu-select_header"
+                            onClick={_ => this.openSelectClient()}
+                            ref={div => (this.clientInputRef = div)}
+                        >
+                            <div className="project_search_bar__dropmenu-select_header-names">
+                                {v_client}
+                                :&nbsp;
+                                {clientDataSelected.join(', ')}
+                            </div>
+                            <i
+                                className={
+                                    toggleSelectClient
+                                        ? 'project_search_bar__dropmenu-arrow_up'
+                                        : 'project_search_bar__dropmenu-arrow_down'
+                                }
+                            />
+                        </div>
+                    </div>
+                    {toggleSelectClient && (
+                        <div
+                            className="project_search_bar__dropmenu-select_body"
+                            ref={div => (this.selectListClientsRef = div)}
+                        >
+                            <div className="project_search_bar__dropmenu-search_menu">
+                                <input
+                                    className="project_search_bar__dropmenu-search_menu-input"
+                                    type="text"
+                                    onKeyUp={_ => this.findClient(clientArray, this.smallSelectClientInputRef.value)}
+                                    ref={input => (this.smallSelectClientInputRef = input)}
+                                    placeholder={`${v_find}...`}
+                                    autoFocus
+                                />
+                                <div
+                                    className="project_search_bar__dropmenu-search_menu-find_all"
+                                    ref={div => (this.selectAllClientsRef = div)}
+                                    onClick={_ => this.selectAllClients()}
+                                >
+                                    {v_select_all}
                                 </div>
-                                <i className={toggleSelectClient ? 'arrow_up' : 'arrow_down'} />
+                                <div
+                                    className="project_search_bar__dropmenu-search_menu-find_none"
+                                    ref={div => (this.selectNoneClientsRef = div)}
+                                    onClick={_ => this.selectNoneClients()}
+                                >
+                                    {v_select_none}
+                                </div>
+                                <i
+                                    className="project_search_bar__dropmenu-search_menu-clear"
+                                    onClick={_ => this.clearClientSearch()}
+                                />
+                            </div>
+                            <div className="project_search_bar__dropmenu-items_container">
+                                {clientDataFiltered.map((item, index) => (
+                                    <div className="project_search_bar__dropmenu-users_item" key={index}>
+                                        <label>
+                                            <ThemeProvider theme={materialTheme}>
+                                                <Checkbox
+                                                    color={'primary'}
+                                                    value={item}
+                                                    checked={!!clientDataSelected.find(el => el === item)}
+                                                    onChange={_ => {
+                                                        this.toggleClient(item);
+                                                    }}
+                                                />
+                                            </ThemeProvider>{' '}
+                                            <span className="project_search_bar__dropmenu_users_item_username">
+                                                {item}
+                                            </span>
+                                        </label>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                        {toggleSelectClient && (
-                            <div className="select_body" ref={div => (this.selectListClientsRef = div)}>
-                                <div className="search_menu_select">
-                                    <input
-                                        type="text"
-                                        onKeyUp={_ =>
-                                            this.findClient(clientArray, this.smallSelectClientInputRef.value)
-                                        }
-                                        ref={input => (this.smallSelectClientInputRef = input)}
-                                        placeholder={`${v_find}...`}
-                                        autoFocus
-                                    />
-                                    <div
-                                        ref={div => (this.selectAllClientsRef = div)}
-                                        onClick={_ => this.selectAllClients()}
-                                    >
-                                        {v_select_all}
-                                    </div>
-                                    <div
-                                        ref={div => (this.selectNoneClientsRef = div)}
-                                        onClick={_ => this.selectNoneClients()}
-                                    >
-                                        {v_select_none}
-                                    </div>
-                                    <i className="small_clear" onClick={_ => this.clearClientSearch()} />
-                                </div>
-                                <div className="select_dropmenu_items_container">
-                                    {clientDataFiltered.map((item, index) => (
-                                        <div className="select_dropmenu_users_item" key={index}>
-                                            <label>
-                                                <ThemeProvider theme={materialTheme}>
-                                                    <Checkbox
-                                                        color={'primary'}
-                                                        value={item}
-                                                        checked={!!clientDataSelected.find(el => el === item)}
-                                                        onChange={_ => {
-                                                            this.toggleClient(item);
-                                                        }}
-                                                    />
-                                                </ThemeProvider>{' '}
-                                                <span className="select_dropmenu_users_item_username">{item}</span>
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    )}
                 </div>
-                <div className="project_search_bar_button_container">
-                    <button className="project_search_bar_button" onClick={e => this.search()}>
+                <div className="project_search_bar__button_container">
+                    <button className="project_search_bar__button_container-button" onClick={e => this.search()}>
                         {v_apply}
                     </button>
                 </div>

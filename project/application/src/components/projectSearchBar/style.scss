@@ -1,0 +1,198 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=cyrillic");
+
+.project_search_bar {
+  width: 100%;
+  height: 59px;
+  background-color: #4f4f4f;
+  display: flex;
+  align-items: center;
+  //------------------------------------------------
+  &__search_field_container {
+    width: 100%;
+    position: relative;
+  }
+  &__search_field_container-magnifer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 100%;
+    background: url("../../images/magnifying-glass.svg") no-repeat center;
+  }
+  &__search_field_container-input {
+    width: calc(100% - 35px);
+    padding: 5px;
+    margin-left: 35px;
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #ffffff;
+  }
+  //------------------------------------------------
+  &__button_container {
+    height: 100%;
+    width: 16%;
+  }
+  &__button_container-button {
+    width: 100%;
+    height: 100%;
+    background-color: #616161;
+    color: white;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  /* -----------DropDown---------- */
+  &__dropmenu {
+    width: 40%;
+    background-color: #4f4f4f;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  //------------------------------------------------
+  &__dropmenu-select_wrapper {
+    position: relative;
+    width: 100%;
+    padding: 0 10px;
+    border-left: 1px solid white;
+  }
+  &__dropmenu-select_header {
+    width: 100%;
+    color: white;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: normal;
+    height: 24px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &__dropmenu-select_header-names {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 75%;
+  }
+  &__dropmenu-arrow_up,
+  &__dropmenu-arrow_down {
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/arrow_down.svg") no-repeat center;
+    transition: all 0.2s ease-in;
+  }
+  &__dropmenu-arrow_up {
+    transform: rotate(180deg);
+  }
+  //------------------------------------------------
+  &__dropmenu-select_body {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 250px;
+    z-index: 3;
+    background-color: #f5f5f5;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+  }
+  //------------------------------------------------
+  &__dropmenu-search_menu {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  &__dropmenu-search_menu-find_all,
+  &__dropmenu-search_menu-find_none {
+    display: flex;
+    align-items: center;
+    height: 32px;
+    padding-left: 12px;
+    font-family: "Open Sans";
+    font-weight: 600;
+    font-size: 14px;
+    line-height: normal;
+    color: #000000;
+    cursor: pointer;
+  }
+  &__dropmenu-search_menu-find_all:hover,
+  &__dropmenu-search_menu-find_none:hover,
+  &__dropmenu-users_item:hover {
+    background-color: #e0e0e0;
+  }
+  &__dropmenu-search_menu-input {
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    padding-left: 6px;
+    padding-right: 12px;
+    margin: 12px;
+    margin-bottom: 0;
+    border: 1px solid #bdbdbd;
+    box-sizing: border-box;
+    height: 32px;
+    outline: none;
+  }
+  &__dropmenu-search_menu-clear {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 24px;
+    right: 24px;
+    background: url("../../images/icons/close6x6.svg") no-repeat center;
+    cursor: pointer;
+    background-size: 10px 10px;
+  }
+  //------------------------------------------------
+  &__dropmenu-items_container {
+    height: 137px;
+    overflow-y: auto;
+  }
+  &__dropmenu-users_item {
+    display: flex;
+    height: 32px;
+    padding: 0 12px;
+
+    font-weight: 600;
+  }
+  &__dropmenu-users_item label {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    cursor: pointer;
+  }
+  &__dropmenu_users_item_username {
+    font-size: 1.6rem;
+    line-height: 2rem;
+  }
+  @media screen and (max-width: 1024px) {
+    &__search_field_container {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #bdbdbd;
+    }
+    &__dropmenu {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    &__dropmenu-select_wrapper {
+      border-left: none;
+      padding: 0;
+    }
+    &__button_container {
+      width: auto;
+    }
+    &__button_container-button {
+      padding: 10px 50px;
+    }
+  }
+}

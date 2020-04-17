@@ -69,8 +69,10 @@
   .project_page_filters {
     margin-top: 30px;
   }
-  .wrapper_project_search_bar {
-    height: 40px;
+  .project_search_bar {
+    height: auto;
+    flex-direction: column;
+    padding: 10px;
   }
   .project_search_bar_search_field_container {
     margin-left: 10px;
@@ -96,7 +98,7 @@
       width: 100%;
       max-width: 350px;
     }
-    .create_projects_modal_data_input_container{
+    .create_projects_modal_data_input_container {
       flex-wrap: wrap;
     }
     .clients_list_wrapper {
@@ -115,7 +117,7 @@
       width: 100%;
       max-width: 350px;
     }
-    .edit_projects_modal_data_input_container{
+    .edit_projects_modal_data_input_container {
       flex-wrap: wrap;
     }
     .edit_projects_modal_button_container {
