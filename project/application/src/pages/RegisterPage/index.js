@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { withRouter, Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Services
+import { setTokenToLocalStorage, getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import { signUp } from '../../configAPI';
 import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 
@@ -24,6 +25,7 @@ import './style.scss';
 class RegisterPage extends Component {
     state = {
         emailFromRedirect: null,
+        haveToken: false,
     };
 
     toLoginPage = event => {
@@ -36,9 +38,10 @@ class RegisterPage extends Component {
         const { v_a_account_create, lang } = vocabulary;
 
         try {
-            await signUp({ ...values, language: lang.short });
+            const response = await signUp({ ...values, language: lang.short });
+            setTokenToLocalStorage(response.data.token);
             showNotificationAction({ text: v_a_account_create, type: 'success' });
-            this.toLoginPage();
+            this.setState({ haveToken: true });
         } catch (error) {
             if (error.response && error.response.data.message) {
                 const errorMsg = error.response.data.message;
@@ -57,10 +60,12 @@ class RegisterPage extends Component {
     }
 
     render() {
-        const { emailFromRedirect } = this.state;
+        const { emailFromRedirect, haveToken } = this.state;
         const { vocabulary } = this.props;
         const { v_already_have_an_account, v_log_in, v_registration_terms_and_policy } = vocabulary;
-        if (getTokenFromLocalStorage()) return <Redirect to={'/timer'} />;
+
+        if (haveToken || getTokenFromLocalStorage()) return <Redirect to={'/timer'} />;
+
         return (
             <div className={classNames('register-block', { 'register-block--mobile': true })}>
                 <div className="fixed_right_corner">
