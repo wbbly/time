@@ -6,7 +6,6 @@ import classNames from 'classnames';
 // Services
 import { setTokenToLocalStorage, getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import { signUp } from '../../configAPI';
-import { getTokenFromLocalStorage } from '../../services/tokenStorageService';
 
 // Components
 import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
