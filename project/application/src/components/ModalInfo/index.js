@@ -90,36 +90,53 @@ const TeamSwitchedIcon = () => (
 );
 
 class ModalInfo extends Component {
-    constructor(props) {
-        super(props);
-        this.timer = null;
+    componentDidMount() {
+        window.addEventListener('online', this.connectionRestore);
+        window.addEventListener('offline', this.connectionLost);
     }
+
+    componentWillUnmount() {
+        window.removeEventListener('online', this.connectionRestore);
+        window.removeEventListener('offline', this.connectionLost);
+    }
+
+    connectionRestore = event => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_connection_restored } = vocabulary;
+        showNotificationAction({
+            type: 'connection-restored',
+            text: v_connection_restored,
+        });
+    };
+
+    connectionLost = event => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_connection_problem } = vocabulary;
+        showNotificationAction({
+            type: 'lost-connection',
+            text: v_connection_problem,
+        });
+    };
+
+    teamSwitched = event => {
+        const { currentTeam, vocabulary, showNotificationAction } = this.props;
+        const { v_switch_team_to_the } = vocabulary;
+        showNotificationAction({
+            type: 'team-switched',
+            text: `${v_switch_team_to_the} ${currentTeam.data.name}`,
+        });
+    };
 
     hideModalInfo = event => {
         const { hideNotificationAction } = this.props;
         hideNotificationAction();
     };
 
-    closeNotificationTimeOut = () => {
-        this.timer = setTimeout(this.hideModalInfo, 2500);
-        window.removeEventListener('mousemove', this.closeNotificationTimeOut);
-    };
-
-    componentDidMount() {
-        window.addEventListener('mousemove', this.closeNotificationTimeOut);
-    }
-
     componentDidUpdate(prevProps, prevState) {
-        const { notificationId } = this.props.notificationReducer;
-        if (prevProps.notificationId !== notificationId) {
-            clearTimeout(this.timer);
-            this.timer = null;
-            window.addEventListener('mousemove', this.closeNotificationTimeOut);
+        const { currentTeam } = this.props;
+        if (prevProps.currentTeam.data.name && currentTeam.data.name !== prevProps.currentTeam.data.name) {
+            this.teamSwitched();
         }
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('mousemove', this.closeNotificationTimeOut);
     }
 
     render() {
@@ -153,6 +170,7 @@ class ModalInfo extends Component {
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     isMobile: state.responsiveReducer.isMobile,
+    currentTeam: state.teamReducer.currentTeam,
     notificationReducer: state.notificationReducer,
 });
 const mapDispatchToProps = {
