@@ -8,9 +8,11 @@ import './style.scss';
 //Components
 import { Loading } from '../../components/Loading';
 import CustomScrollbar from '../../components/CustomScrollbar';
-import LastInvoicesList from '../../components/LastInvoicesList';
-import AllInvoicesList from '../../components/AllInvoicesList';
-import SendInvoiceModal from '../../components/SendInvoiceModal';
+import LastInvoicesList from '../../components/InvoicePageComponents/LastInvoicesList';
+import AllInvoicesList from '../../components/InvoicePageComponents/AllInvoicesList';
+import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoiceModal';
+import TotalInvoiceCounersComponent from '../../components/InvoicePageComponents/TotalInvoiceCounersComponent';
+import { Link } from 'react-router-dom';
 
 class InvoicesPage extends Component {
     state = {
@@ -41,18 +43,20 @@ class InvoicesPage extends Component {
                         >
                             <div className="invoices-page-top__header">
                                 <div className="invoices-page-top__title">{v_invoices}</div>
-                                <button className="invoices-page-top__add-invoice-button" onClick={null}>
+                                <Link to="/invoices/create" className="invoices-page-top__add-invoice-button">
                                     {v_add_new_invoice}
-                                </button>
+                                </Link>
                             </div>
-
+                            <div className="invoices-page-top__totals">
+                                <TotalInvoiceCounersComponent />
+                            </div>
                             <div className="invoices-page-top__last-invoices">
                                 <LastInvoicesList invoices={invoices.slice(0, 4)} vocabulary={vocabulary} />
                             </div>
                         </div>
 
                         <div className="invoices-page-bottom">
-                            <div className="invoices-page-bottom__title">{v_all_invoices}</div>
+                            {/* <div className="invoices-page-bottom__title">{v_all_invoices}</div> */}
                             <div className="invoices-page-bottom__all-invoices">
                                 <AllInvoicesList
                                     toggleSendInvoiceModal={this.toggleSendInvoiceModal}

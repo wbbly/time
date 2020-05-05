@@ -17,6 +17,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import ClientsPage from './pages/ClientsPage';
 import InvoicesPage from './pages/InvoicesPage';
 import PlaningPage from './pages/PlaningPage';
+import InvoicesPageDetailed from './pages/InvoicesPageDetailed';
 
 import PageTemplate from './components/PageTemplate';
 
@@ -99,6 +100,21 @@ class App extends Component {
                     render={() => <PageTemplate hideSidebar hideHeader content={ResetPasswordPage} />}
                 />
                 <PrivateRoute exact path="/invoices" render={() => <PageTemplate content={InvoicesPage} />} />
+                <PrivateRoute
+                    exact
+                    path="/invoices/create"
+                    render={() => <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="create" />} />}
+                />
+                <PrivateRoute
+                    exact
+                    path="/invoices/view/:invoiceId"
+                    render={() => <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="view" />} />}
+                />
+                <PrivateRoute
+                    exact
+                    path="/invoices/update/:invoiceId"
+                    render={() => <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="update" />} />}
+                />
                 <Route render={() => <div>404 not found</div>} />
             </Switch>
         );

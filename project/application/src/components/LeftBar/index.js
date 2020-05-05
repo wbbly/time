@@ -188,7 +188,7 @@ class LeftBar extends Component {
                                 'navigation_links-hide_menu': isShowMenu && !isMobile && widthMenu < 100,
                             })}
                         >
-                            {/*<i className="team" />*/}
+                            <i className="invoices" />
                             <div className="links_text">{v_invoices}</div>
                         </div>
                     </NavLink>

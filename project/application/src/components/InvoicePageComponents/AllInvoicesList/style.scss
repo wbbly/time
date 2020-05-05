@@ -9,6 +9,9 @@
     align-self: stretch;
     height: 50px;
     margin-bottom: 5px;
+    text-decoration: none;
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.06);
 
     &__block {
       flex: 3;
@@ -17,7 +20,7 @@
     }
 
     &__status {
-      background: #EB5757;
+      // background: #EB5757;
       width: 8px;
       height: 50px;
       margin-right: 25px;
@@ -25,10 +28,33 @@
       &--confirmed {
         background: #27AE60;
       }
+      &--overdue {
+        background: #EB5757;
+      }
+      &--draft {
+        background: #626262;
+      }
     }
 
     &__number {
       margin-right: 20px;
+    }
+    &__status-button {
+      display: flex;
+      flex: 1 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      &-container {
+        display: flex;
+        align-items: center;
+        margin-right: 30px;
+
+        &-text {
+          margin-right: 15px;
+        }
+      }
     }
 
     &__name {
@@ -47,6 +73,7 @@
     }
 
     &__instruments {
+      cursor: default;
       flex: 2;
       display: flex;
       justify-content: space-between;

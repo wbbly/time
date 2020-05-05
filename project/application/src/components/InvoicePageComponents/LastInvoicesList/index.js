@@ -1,9 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
-import moment from 'moment';
+import { Link } from 'react-router-dom';
 
+import moment from 'moment';
 // Styles
 import './style.scss';
+
+const prevent = e => {
+    e.preventDefault();
+    e.stopPropagation();
+};
 
 const LastInvoicesList = ({ invoices, vocabulary }) => {
     const { v_invoice, v_total, v_confirm_payment } = vocabulary;
@@ -11,10 +17,13 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
     return (
         <div className="last-invoices-list">
             {invoices.map(invoice => (
-                <div
+                <Link
+                    to={`/invoices/view/${invoice.id}`}
                     key={invoice.id}
                     className={classNames('last-invoices-list-item', {
-                        'last-invoices-list-item--confirmed': invoice.confirmed,
+                        'last-invoices-list-item--confirmed': invoice.status === 'paid',
+                        'last-invoices-list-item--overdue': invoice.status === 'overdue',
+                        'last-invoices-list-item--draft': invoice.status === 'draft',
                     })}
                 >
                     <div className="last-invoices-list-item__top">
@@ -29,8 +38,15 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
                             <div className="last-invoices-list-item__price">
                                 {invoice.currency} {invoice.price.toLocaleString()}
                             </div>
-                            {!invoice.confirmed && (
-                                <button className="last-invoices-list-item__confirm-button">{v_confirm_payment}</button>
+                            {invoice.status === 'overdue' && (
+                                <button onClick={prevent} className="last-invoices-list-item__confirm-button">
+                                    {v_confirm_payment}
+                                </button>
+                            )}
+                            {invoice.status === 'draft' && (
+                                <button onClick={prevent} className="last-invoices-list-item__confirm-button">
+                                    Send Payment
+                                </button>
                             )}
                         </div>
                         <div>
@@ -39,7 +55,7 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </Link>
             ))}
         </div>
     );

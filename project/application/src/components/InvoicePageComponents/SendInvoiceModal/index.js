@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import './style.scss';
 
 //Components
-import ModalPortal from '../ModalPortal';
+import ModalPortal from '../../ModalPortal';
 
 const inputText = `Dear [Tomas],
 
