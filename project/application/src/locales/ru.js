@@ -195,7 +195,7 @@ export default {
     v_chart_label_total: 'Всего часов по дате',
     v_enter_to: 'Ввойдите в',
     v_to_get_token: 'для получения Api токена',
-    v_login_with: 'Ввойти через',
+    v_login_with: 'Войти через',
     v_or: 'или',
     v_date_format: 'Формат даты',
     v_first_day_of_week: 'Первый день недели',
