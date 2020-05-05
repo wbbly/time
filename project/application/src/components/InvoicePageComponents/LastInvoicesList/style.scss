@@ -3,24 +3,31 @@
   height: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
+  // align-items: stretch;
   flex-wrap: wrap;
 
   .last-invoices-list-item {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex: 1;
+    // flex: 1;
+    width: 260px;
     height: 260px;
-    padding: 20px 25px;
-    margin-bottom: 40px;
-    background: #EB5757;
+    padding: 20px 25px 15px;
+    margin-bottom: 20px;
+    // background: #EB5757;
     border-radius: 4px;
-    color: #FFFFFF;
+    color: #ffffff;
     text-decoration: none;
 
     &--confirmed {
-      background: #27AE60;
+      background: #27ae60;
+    }
+    &--overdue {
+      background: #EB5757;
+    }
+    &--draft {
+      background: #626262;
     }
 
     &:last-child {
@@ -70,50 +77,48 @@
       font-weight: bold;
       font-size: 14px;
       line-height: 19px;
-      color: #FFFFFF;
-      background: #1F1F1F;
+      color: #ffffff;
+      background: #1f1f1f;
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.43);
       border-radius: 4px;
       outline: none;
       cursor: pointer;
       margin-top: 7px;
-
     }
   }
 }
 
 @media screen and (min-width: 650px) {
   .last-invoices-list-item {
-    margin-right: 42px;
+    // margin-right: 42px;
   }
 }
 
 @media screen and (max-width: 1440px) {
   .last-invoices-list-item {
-    min-width: 380px;
+    // min-width: 380px;
 
     &:nth-child(2n) {
       margin: 0;
     }
   }
-
 }
 
 @media screen and (max-width: 1080px) {
   .last-invoices-list-item {
-    min-width: 290px;
+    // min-width: 290px;
   }
 }
 
 @media screen and (max-width: 740px) {
   .last-invoices-list-item {
-    min-width: 260px;
+    // min-width: 260px;
   }
 }
 
 @media screen and (max-width: 650px) {
   .last-invoices-list-item {
-    min-width: 285px;
+    // min-width: 285px;
     margin: 0 0 40px 0;
 
     &:nth-child(2n) {
@@ -121,4 +126,3 @@
     }
   }
 }
-

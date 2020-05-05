@@ -15,6 +15,11 @@
       justify-content: space-between;
       padding-bottom: 32px;
     }
+    &__totals {
+      display: flex;
+      width: 100%;
+      margin-bottom: 64px;
+    }
 
     &__add-invoice-button {
       padding: 10px 30px;
@@ -36,7 +41,7 @@
     }
 
     &__last-invoices {
-
+      margin-bottom: 68px;
     }
   }
 

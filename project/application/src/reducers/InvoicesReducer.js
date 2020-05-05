@@ -37,6 +37,7 @@ const initialState = {
                     tax: 10,
                 },
             ],
+            status: 'draft',
         },
         {
             id: '2',
@@ -80,6 +81,7 @@ const initialState = {
                     tax: 10,
                 },
             ],
+            status: 'overdue',
         },
         {
             id: '3',
@@ -115,6 +117,7 @@ const initialState = {
                     tax: 10,
                 },
             ],
+            status: 'paid',
         },
         {
             id: '4',
@@ -142,6 +145,7 @@ const initialState = {
                     tax: 15,
                 },
             ],
+            status: 'paid',
         },
     ],
     invoice: null,

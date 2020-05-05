@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import './style.scss';
 
 //Components
-import { DeleteIcon, EditIcon } from '../AllInvoicesList';
+import { DeleteIcon, EditIcon } from '../InvoicePageComponents/AllInvoicesList';
 import { calculateSubtotal } from '../../pages/InvoicesPageDetailed';
 import ProjectsSelect from '../ProjectsSelect';
 import { Loading } from '../Loading';

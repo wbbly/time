@@ -10,14 +10,15 @@ export const CheckIcon = ({ className, onClick, fill }) => (
     <svg
         className={className}
         onClick={onClick}
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
     >
+        <circle cx="12" cy="12" r="9" fill="white" />
         <path
-            d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM8 15L3 10L4.41 8.59L8 12.17L15.59 4.58L17 6L8 15Z"
+            d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"
             fill={fill}
         />
     </svg>
@@ -118,7 +119,9 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
                     <div className="all-invoices-list-item__block">
                         <div
                             className={classNames('all-invoices-list-item__status', {
-                                'all-invoices-list-item__status--confirmed': invoice.confirmed,
+                                'all-invoices-list-item__status--confirmed': invoice.status === 'paid',
+                                'all-invoices-list-item__status--overdue': invoice.status === 'overdue',
+                                'all-invoices-list-item__status--draft': invoice.status === 'draft',
                             })}
                         />
                         <div className="all-invoices-list-item__number">{`#${invoice.number}`}</div>
@@ -135,11 +138,28 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
                             {moment(invoice.deadlineDate).format('MMM Do YYYY')}
                         </div>
                     </div>
+                    <div className="all-invoices-list-item__status-button">
+                        <div className="all-invoices-list-item__status-button-container">
+                            <span className="all-invoices-list-item__status-button-container-text">
+                                {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                            </span>
+                            <CheckIcon
+                                className="all-invoices-list-item__icon-button"
+                                fill={
+                                    invoice.status === 'paid'
+                                        ? '#27AE60'
+                                        : invoice.status === 'overdue'
+                                            ? '#EB5757'
+                                            : '#626262'
+                                }
+                            />
+                        </div>
+                    </div>
                     <div className="all-invoices-list-item__instruments" onClick={prevent}>
-                        <CheckIcon
+                        {/* <CheckIcon
                             className="all-invoices-list-item__icon-button"
                             fill={invoice.confirmed ? '#27AE60' : '#EB5757'}
-                        />
+                        /> */}
                         <Link to={`/invoices/update/${invoice.id}`}>
                             <EditIcon className="all-invoices-list-item__icon-button" />
                         </Link>

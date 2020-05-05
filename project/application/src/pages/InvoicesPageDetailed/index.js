@@ -8,7 +8,13 @@ import './style.scss';
 
 //Components
 import { Loading } from '../../components/Loading';
-import { CopyIcon, DeleteIcon, EditIcon, SaveIcon, SendIcon } from '../../components/AllInvoicesList';
+import {
+    CopyIcon,
+    DeleteIcon,
+    EditIcon,
+    SaveIcon,
+    SendIcon,
+} from '../../components/InvoicePageComponents/AllInvoicesList';
 import CustomScrollbar from '../../components/CustomScrollbar';
 import DetailedInvoiceProjectsTable from '../../components/DetailedInvoiceProjectsTable';
 import classNames from 'classnames';

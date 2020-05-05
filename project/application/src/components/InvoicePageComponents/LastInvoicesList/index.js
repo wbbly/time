@@ -21,7 +21,9 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
                     to={`/invoices/view/${invoice.id}`}
                     key={invoice.id}
                     className={classNames('last-invoices-list-item', {
-                        'last-invoices-list-item--confirmed': invoice.confirmed,
+                        'last-invoices-list-item--confirmed': invoice.status === 'paid',
+                        'last-invoices-list-item--overdue': invoice.status === 'overdue',
+                        'last-invoices-list-item--draft': invoice.status === 'draft',
                     })}
                 >
                     <div className="last-invoices-list-item__top">
@@ -36,9 +38,14 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
                             <div className="last-invoices-list-item__price">
                                 {invoice.currency} {invoice.price.toLocaleString()}
                             </div>
-                            {!invoice.confirmed && (
+                            {invoice.status === 'overdue' && (
                                 <button onClick={prevent} className="last-invoices-list-item__confirm-button">
                                     {v_confirm_payment}
+                                </button>
+                            )}
+                            {invoice.status === 'draft' && (
+                                <button onClick={prevent} className="last-invoices-list-item__confirm-button">
+                                    Send Payment
                                 </button>
                             )}
                         </div>
