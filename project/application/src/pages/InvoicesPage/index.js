@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+
+import { getInvoicesList } from '../../actions/InvoicesActions';
 
 // Styles
 import './style.scss';
@@ -22,6 +25,7 @@ class InvoicesPage extends Component {
 
     componentDidMount() {
         setTimeout(() => this.setState({ isInitialFetching: false }), 500);
+        this.props.getInvoicesList();
     }
 
     toggleSendInvoiceModal = (sendInvoiceModalData = null) => {
@@ -29,11 +33,11 @@ class InvoicesPage extends Component {
     };
 
     render() {
-        const { vocabulary, isMobile, invoices } = this.props;
+        const { vocabulary, isMobile, invoices, isFetching, history } = this.props;
         const { v_invoices, v_add_new_invoice, v_all_invoices } = vocabulary;
         const { isInitialFetching, sendInvoiceModalData } = this.state;
         return (
-            <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
+            <Loading flag={isInitialFetching || isFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar>
                     <div className="wrapper-invoices-page">
                         <div
@@ -47,24 +51,31 @@ class InvoicesPage extends Component {
                                     {v_add_new_invoice}
                                 </Link>
                             </div>
-                            <div className="invoices-page-top__totals">
-                                <TotalInvoiceCounersComponent />
-                            </div>
-                            <div className="invoices-page-top__last-invoices">
-                                <LastInvoicesList invoices={invoices.slice(0, 4)} vocabulary={vocabulary} />
-                            </div>
+                            {!!invoices.length && (
+                                <div className="invoices-page-top__totals">
+                                    <TotalInvoiceCounersComponent invoices={invoices} />
+                                </div>
+                            )}
+                            {!!invoices.length && (
+                                <div className="invoices-page-top__last-invoices">
+                                    <LastInvoicesList invoices={invoices.slice(0, 4)} vocabulary={vocabulary} />
+                                </div>
+                            )}
                         </div>
 
-                        <div className="invoices-page-bottom">
-                            {/* <div className="invoices-page-bottom__title">{v_all_invoices}</div> */}
-                            <div className="invoices-page-bottom__all-invoices">
-                                <AllInvoicesList
-                                    toggleSendInvoiceModal={this.toggleSendInvoiceModal}
-                                    invoices={invoices}
-                                    vocabulary={vocabulary}
-                                />
+                        {!!invoices.length && (
+                            <div className="invoices-page-bottom">
+                                {/* <div className="invoices-page-bottom__title">{v_all_invoices}</div> */}
+                                <div className="invoices-page-bottom__all-invoices">
+                                    <AllInvoicesList
+                                        toggleSendInvoiceModal={this.toggleSendInvoiceModal}
+                                        invoices={invoices}
+                                        vocabulary={vocabulary}
+                                        history={history}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </CustomScrollbar>
                 {sendInvoiceModalData && (
@@ -81,11 +92,16 @@ class InvoicesPage extends Component {
 
 const mapStateToProps = ({ invoicesReducer }) => ({
     invoices: invoicesReducer.invoices,
+    isFetching: invoicesReducer.isFetching,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    getInvoicesList,
+};
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(InvoicesPage);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(InvoicesPage)
+);
