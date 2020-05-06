@@ -111,7 +111,7 @@ const prevent = e => {
     e.stopPropagation();
 };
 
-const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
+const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history }) => {
     return (
         <div className="all-invoices-list">
             {invoices.map(invoice => (
@@ -119,38 +119,45 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
                     <div className="all-invoices-list-item__block">
                         <div
                             className={classNames('all-invoices-list-item__status', {
-                                'all-invoices-list-item__status--confirmed': invoice.status === 'paid',
-                                'all-invoices-list-item__status--overdue': invoice.status === 'overdue',
-                                'all-invoices-list-item__status--draft': invoice.status === 'draft',
+                                // TODO: enable when will have functionality for different types on backend
+                                // 'all-invoices-list-item__status--confirmed': invoice.status === 'paid',
+                                // 'all-invoices-list-item__status--overdue': invoice.status === 'overdue',
+                                // 'all-invoices-list-item__status--draft': invoice.status === 'draft',
+                                'all-invoices-list-item__status--confirmed': invoice.payment_status,
+                                'all-invoices-list-item__status--overdue': !invoice.payment_status,
                             })}
                         />
-                        <div className="all-invoices-list-item__number">{`#${invoice.number}`}</div>
-                        <div className="all-invoices-list-item__name">{invoice.name}</div>
+                        <div className="all-invoices-list-item__number">{`#${invoice.invoice_number}`}</div>
+                        <div className="all-invoices-list-item__name">{invoice.to.name}</div>
                     </div>
                     <div className="all-invoices-list-item__block">
                         <div className="all-invoices-list-item__price">
-                            {invoice.currency} {invoice.price.toLocaleString()}
+                            {invoice.currency} {invoice.total.toFixed()}
                         </div>
                         <div className="all-invoices-list-item__date">
-                            {moment(invoice.createdAt).format('MMM Do YYYY')}
+                            {moment(invoice.invoice_date).format('MMM Do YYYY')}
                         </div>
                         <div className="all-invoices-list-item__date">
-                            {moment(invoice.deadlineDate).format('MMM Do YYYY')}
+                            {moment(invoice.due_date).format('MMM Do YYYY')}
                         </div>
                     </div>
                     <div className="all-invoices-list-item__status-button">
                         <div className="all-invoices-list-item__status-button-container">
                             <span className="all-invoices-list-item__status-button-container-text">
-                                {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                                {/* TODO: enable when will have functionality for different types on backend */}
+                                {/* {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)} */}
+                                {invoice.payment_status ? 'Paid' : 'Overdue'}
                             </span>
                             <CheckIcon
                                 className="all-invoices-list-item__icon-button"
                                 fill={
-                                    invoice.status === 'paid'
-                                        ? '#27AE60'
-                                        : invoice.status === 'overdue'
-                                            ? '#EB5757'
-                                            : '#626262'
+                                    // TODO: enable when will have functionality for different types on backend
+                                    // invoice.status === 'paid'
+                                    //     ? '#27AE60'
+                                    //     : invoice.status === 'overdue'
+                                    //         ? '#EB5757'
+                                    //         : '#626262'
+                                    invoice.payment_status ? '#27AE60' : '#EB5757'
                                 }
                             />
                         </div>
@@ -160,9 +167,12 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal }) => {
                             className="all-invoices-list-item__icon-button"
                             fill={invoice.confirmed ? '#27AE60' : '#EB5757'}
                         /> */}
-                        <Link to={`/invoices/update/${invoice.id}`}>
-                            <EditIcon className="all-invoices-list-item__icon-button" />
-                        </Link>
+                        {/* <Link to={`/invoices/update/${invoice.id}`}> */}
+                        <EditIcon
+                            className="all-invoices-list-item__icon-button"
+                            onClick={e => history.push(`/invoices/update/${invoice.id}`)}
+                        />
+                        {/* </Link> */}
                         <SaveIcon className="all-invoices-list-item__icon-button" />
                         <CopyIcon className="all-invoices-list-item__icon-button" />
                         <DeleteIcon className="all-invoices-list-item__icon-button" />

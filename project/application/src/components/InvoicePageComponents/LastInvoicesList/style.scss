@@ -6,6 +6,10 @@
   // align-items: stretch;
   flex-wrap: wrap;
 
+  &--not-full {
+    justify-content: space-around;
+  }
+
   .last-invoices-list-item {
     display: flex;
     flex-direction: column;

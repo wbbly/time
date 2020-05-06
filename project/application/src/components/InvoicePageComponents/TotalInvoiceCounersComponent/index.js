@@ -5,12 +5,17 @@ import moment from 'moment';
 // Styles
 import './style.scss';
 
-const TotalInvoiceCounersComponent = () => {
+const TotalInvoiceCounersComponent = ({ invoices }) => {
     return (
         <div className="total-invoice-counters__container">
             <div className="total-invoice-counters__block">
                 <div className="total-invoice-counters__block-title">Overdue</div>
-                <div className="total-invoice-counters__block-summ">12 343 Euro</div>
+                <div className="total-invoice-counters__block-summ">
+                    {/* <span>34 004 Euro</span>
+                    <span>3 004 USD</span>
+                    <span>34 UAH</span> */}
+                    34 004 Euro
+                </div>
             </div>
             <div className="total-invoice-counters__block">
                 <div className="total-invoice-counters__block-title">Total outstanding</div>
