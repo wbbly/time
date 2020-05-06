@@ -45,16 +45,18 @@ const ArrowLeftIcon = ({ className, onClick }) => (
 );
 
 //todo move to queries.js if needed
-export const calculateTaxSum = ({ amount, rate, tax }) => ((amount * rate) / 100) * tax;
+export const calculateTaxSum = ({ amount, rate, tax, hours }) => (((amount || hours) * rate) / 100) * tax;
 
 //todo move to queries.js if needed
-export const calculateSubtotal = ({ amount, rate, tax }) => amount * rate + calculateTaxSum({ amount, rate, tax });
+export const calculateSubtotal = ({ amount, rate, tax, hours }) =>
+    (amount || hours) * rate + calculateTaxSum({ amount, rate, tax, hours }) || 0;
 
 //todo move to queries.js if needed
-export const calculateSubtotals = projects => projects.reduce((sum, { amount, rate }) => sum + amount * rate, 0);
+export const calculateSubtotals = projects =>
+    projects.reduce((sum, { amount, rate, hours }) => sum + (amount || hours) * rate, 0) || 0;
 
 //todo move to queries.js if needed
-export const calculateTaxesSum = projects => projects.reduce((sum, project) => sum + calculateTaxSum(project), 0);
+export const calculateTaxesSum = projects => projects.reduce((sum, project) => sum + calculateTaxSum(project), 0) || 0;
 
 //todo move to queries.js if needed
 export const calculateSubtotalsWithTax = projects =>
@@ -65,8 +67,8 @@ const parseUsersData = users => {
 };
 
 const emptyInvoice = {
-    id: `${Date.now()}`,
-    number: null,
+    id: ``,
+    number: '',
     dateFrom: new Date(),
     dateDue: new Date(),
     currency: 'usd',
@@ -103,19 +105,47 @@ class InvoicesPageDetailed extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        const { invoice } = props;
-        console.log({ invoice });
-
+        const { invoice, mode } = props;
         const stateInvoice = state.invoice;
-        if (!stateInvoice.id && invoice) {
-            console.log({ props });
+        if (!stateInvoice.id && invoice && mode !== 'create') {
             return {
-                invoice,
+                invoice: {
+                    id: invoice.id,
+                    number: invoice.invoice_number,
+                    dateFrom: invoice.invoice_date,
+                    dateDue: invoice.due_date,
+                    currency: invoice.currency,
+                    sender: invoice.from.id,
+                    recipient: invoice.to.id,
+                    image: invoice.logo,
+                    projects: invoice.projects,
+                    comment: invoice.comment,
+                },
             };
         }
 
         return null;
     }
+    // componentDidUpdate(prevProps, prevState) {
+    //     console.log(this.props.invoice, prevProps.invoice, this.state, 'on didupdate')
+    //     if(this.props.invoice && this.props.invoice !== prevProps.invoice) {
+    //         console.log('here', this.props.invoice, prevProps.invoice)
+    //         this.setState({
+    //             invoice: {
+    //                 id: this.props.invoice.id,
+    //                 number: this.props.invoice.invoice_number,
+    //                 dateFrom: this.props.invoice.invoice_date,
+    //                 dateDue: this.props.invoice.due_date,
+    //                 currency: this.props.invoice.currency,
+    //                 sender: this.props.invoice.from,
+    //                 recipient: this.props.invoice.to,
+    //                 image: this.props.invoice.logo,
+    //                 projects: this.props.invoice.projects,
+    //                 comment: this.props.invoice.comment,
+    //             }
+    //         })
+    //     }
+    // }
 
     componentWillUnmount() {
         this.setState({ invoice: emptyInvoice });
@@ -203,7 +233,6 @@ class InvoicesPageDetailed extends Component {
     handleSaveAction = () => {
         const { invoice } = this.state;
         const { updateInvoice, addInvoice } = this.props;
-
         if (this.isUpdateMode) {
             updateInvoice(invoice);
         } else if (this.isCreateMode) {
@@ -213,13 +242,13 @@ class InvoicesPageDetailed extends Component {
             });
         }
 
-        this.goBack();
+        // this.goBack();
     };
 
     goBack = () => this.props.history.goBack();
 
     render() {
-        const { vocabulary, mode, currentTeamDetailedData } = this.props;
+        const { vocabulary, mode, currentTeamDetailedData, clientsList, isFetching } = this.props;
         const {
             v_invoice,
             v_tax,
@@ -244,10 +273,12 @@ class InvoicesPageDetailed extends Component {
             v_choose_recipient,
             v_select_logo_file,
         } = vocabulary;
+        // console.log(this.state, this.props, 'state');
+
         const { isInitialFetching, invoice } = this.state;
 
         return (
-            <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
+            <Loading flag={isInitialFetching || isFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar>
                     <div
                         className={classNames('invoices-page-detailed', {
@@ -284,12 +315,12 @@ class InvoicesPageDetailed extends Component {
                                         <div>
                                             <label>{`${v_invoice_number}:`}</label>
                                             <input
-                                                value={invoice.number}
+                                                value={invoice.number && `#${invoice.number}`}
                                                 onChange={e => this.handleInputChange('number', e)}
                                                 className="invoices-page-detailed__input"
                                                 type="text"
-                                                placeholder={v_enter_number}
-                                                disabled={this.isViewMode}
+                                                placeholder="Will be generated after create"
+                                                disabled
                                             />
                                         </div>
                                         <div>
@@ -359,7 +390,7 @@ class InvoicesPageDetailed extends Component {
                                 <div className="invoices-page-detailed__personal-information-card">
                                     <div className="invoices-page-detailed__subtitle">{v_to}</div>
                                     <PersonSelect
-                                        personsList={parseUsersData(currentTeamDetailedData)}
+                                        personsList={clientsList}
                                         selectedPersonId={invoice.recipient}
                                         onChange={person => this.handlePersonChange('recipient', person)}
                                         placeholder={v_choose_recipient}
@@ -459,6 +490,7 @@ const mapStateToProps = ({ teamReducer, clientsReducer, invoicesReducer }) => ({
     currentTeamDetailedData: teamReducer.currentTeamDetailedData,
     clientsList: clientsReducer.clientsList,
     invoice: invoicesReducer.invoice,
+    isFetching: invoicesReducer.isFetching,
 });
 
 const mapDispatchToProps = {

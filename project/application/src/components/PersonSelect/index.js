@@ -27,20 +27,27 @@ class PersonSelect extends Component {
 
     getPersonData = key => {
         const { personsList, selectedPersonId, placeholder } = this.props;
-        const filteredList = personsList.filter(person => person.id === selectedPersonId);
-        if (!filteredList.length) {
+        try {
+            const filteredList = personsList.filter(person => person.id === selectedPersonId);
+            if (!filteredList.length) {
+                return placeholder;
+            }
+            if (key === 'color') {
+                return filteredList[0].projectColor.name;
+            } else if (key === 'name') {
+                return filteredList[0].name;
+            } else if (key === 'username') {
+                return filteredList[0].username ? filteredList[0].username : filteredList[0].name;
+            }
+
+            if (key) {
+                return filteredList[0][key];
+            }
+            return filteredList[0];
+        } catch (error) {
+            // console.log(error);
             return placeholder;
         }
-        if (key === 'color') {
-            return filteredList[0].projectColor.name;
-        } else if (key === 'name') {
-            return filteredList[0].name;
-        }
-
-        if (key) {
-            return filteredList[0][key];
-        }
-        return filteredList[0];
     };
 
     openDropdown = event => {
@@ -79,7 +86,12 @@ class PersonSelect extends Component {
         const { personsList } = this.props;
         const { inputValue } = this.state;
 
-        const filteredList = personsList.filter(person => person.username.toLowerCase().indexOf(inputValue) !== -1);
+        const filteredList = personsList.filter(
+            person =>
+                person.username
+                    ? person.username.toLowerCase().indexOf(inputValue) !== -1
+                    : person.name.toLowerCase().indexOf(inputValue) !== -1
+        );
         this.setState({
             personsList: initial ? personsList : filteredList,
         });
@@ -161,14 +173,15 @@ class PersonSelect extends Component {
                         />
                         <div className="person-select__dropdown-list">
                             {personsList.map(person => {
-                                const { id, username } = person;
                                 return (
                                     <div
-                                        key={id}
+                                        key={person.id}
                                         className="person-select__dropdown-list-item"
                                         onClick={event => onChange(person)}
                                     >
-                                        <span className="person-select__dropdown-list-item-username">{username}</span>
+                                        <span className="person-select__dropdown-list-item-username">
+                                            {person.username || person.name}
+                                        </span>
                                     </div>
                                 );
                             })}

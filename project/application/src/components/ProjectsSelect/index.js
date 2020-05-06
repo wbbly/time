@@ -43,9 +43,15 @@ class ProjectsSelect extends Component {
 
     getProjectData = key => {
         const { projectsList, selectedProjectId } = this.props;
-        const filteredProjectsList = projectsList.filter(project => project.id === selectedProjectId);
+        let filteredProjectsList = projectsList.filter(project => project.id === selectedProjectId);
         if (!filteredProjectsList.length) {
-            return 'NO_PROJECT';
+            // TODO: Remove this hacks when project object in response invoice object will have
+            // projectId, not only project_name. Or rework ProjectsSelect to work with project_name instead projectId
+            filteredProjectsList = projectsList.filter(project => project.name === selectedProjectId);
+            if (!filteredProjectsList.length) {
+                return 'NO_PROJECT';
+            }
+            // -------------------------------------------------------------------------------------------------
         }
         if (key === 'color') {
             return filteredProjectsList[0].projectColor.name;

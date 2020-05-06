@@ -122,7 +122,14 @@ class DetailedInvoiceProjectsTable extends Component {
             if (name === 'tax') {
                 return `+${project[name]}%`;
             }
-            return project[name];
+            if (name === 'amount') {
+                return project.amount ? project.amount : project.hours;
+            }
+            // TODO: Remove this hacks when project object in response invoice object will have
+            // projectId, not only project_name. Or rework ProjectsSelect to work with project_name instead projectId
+            if (project[name]) return project[name];
+            return project.project_name;
+            // -------------------------------------------------------------------------------------------------
         }
     };
 
