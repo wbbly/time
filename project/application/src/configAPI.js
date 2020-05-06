@@ -418,3 +418,22 @@ export const deletePlanAndTimeOff = id =>
         url: `/timer-planning/${id}`,
         method: 'DELETE',
     });
+
+export const createInvoice = data =>
+    instance({
+        url: '/invoice/add',
+        method: 'POST',
+        data,
+    });
+
+export const getInvoices = () =>
+    instance({
+        url: '/invoice/list',
+        method: 'GET',
+    });
+
+export const getInvoiceById = invoiceId =>
+    instance({
+        url: `/invoice/${invoiceId}`,
+        method: 'GET',
+    });
