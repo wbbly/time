@@ -437,3 +437,16 @@ export const getInvoiceById = invoiceId =>
         url: `/invoice/${invoiceId}`,
         method: 'GET',
     });
+
+export const changeInvoice = ({ invoiceId, data }) =>
+    instance({
+        url: `/invoice/${invoiceId}`,
+        method: 'PATCH',
+        data,
+    });
+
+export const deleteInvoice = invoiceId =>
+    instance({
+        url: `/invoice/${invoiceId}`,
+        method: 'DELETE',
+    });

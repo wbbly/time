@@ -8,6 +8,8 @@ import {
     GET_INVOICE_LIST_SUCCESS,
     GET_INVOICE_BY_ID_REQUEST,
     GET_INVOICE_BY_ID_SUCCESS,
+    CHANGE_INVOICE_REQUEST,
+    DELETE_INVOICE_REQUEST,
 } from '../actions/InvoicesActions';
 
 const initialState = {
@@ -30,11 +32,15 @@ export default function invoicesReducer(state = initialState, { type, payload })
                 isFetching: false,
                 invoice: payload,
             };
-        case UPDATE_INVOICE:
-            const findIndex = state.invoices.findIndex(i => i.id === payload.id);
-            state.invoices[findIndex] = payload;
+        case CHANGE_INVOICE_REQUEST:
             return {
                 ...state,
+                isFetching: true,
+            };
+        case DELETE_INVOICE_REQUEST:
+            return {
+                ...state,
+                isFetching: true,
             };
         case CREATE_INVOICE_REQUEST:
             return {
