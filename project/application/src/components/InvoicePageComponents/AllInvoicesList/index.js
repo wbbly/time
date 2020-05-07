@@ -1,6 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
+import { connect } from 'react-redux';
+
+import { deleteInvoiceById } from '../../../actions/InvoicesActions';
 
 // Styles
 import './style.scss';
@@ -111,7 +114,7 @@ const prevent = e => {
     e.stopPropagation();
 };
 
-const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history }) => {
+const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history, deleteInvoiceById }) => {
     return (
         <div className="all-invoices-list">
             {invoices.map(invoice => (
@@ -175,7 +178,10 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history
                         {/* </Link> */}
                         <SaveIcon className="all-invoices-list-item__icon-button" />
                         <CopyIcon className="all-invoices-list-item__icon-button" />
-                        <DeleteIcon className="all-invoices-list-item__icon-button" />
+                        <DeleteIcon
+                            className="all-invoices-list-item__icon-button"
+                            onClick={() => deleteInvoiceById(invoice.id)}
+                        />
                         <SendIcon
                             className="all-invoices-list-item__icon-button"
                             onClick={() => toggleSendInvoiceModal(invoice)}
@@ -187,4 +193,15 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history
     );
 };
 
-export default AllInvoicesList;
+const mapStateToProps = ({ invoicesReducer }) => ({
+    isFetching: invoicesReducer.isFetching,
+});
+
+const mapDispatchToProps = {
+    deleteInvoiceById,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AllInvoicesList);
