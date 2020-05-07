@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
-import { addInvoice, getInvoice, updateInvoice } from '../../actions/InvoicesActions';
+import { Link, withRouter, Router } from 'react-router-dom';
+import { addInvoice, getInvoice, updateInvoice, deleteInvoiceById } from '../../actions/InvoicesActions';
 
 //Styles
 import './style.scss';
@@ -82,7 +82,18 @@ const emptyInvoice = {
 class InvoicesPageDetailed extends Component {
     state = {
         isInitialFetching: true,
-        invoice: emptyInvoice,
+        invoice: {
+            id: ``,
+            number: '',
+            dateFrom: new Date(),
+            dateDue: new Date(),
+            currency: 'usd',
+            sender: null,
+            recipient: null,
+            image: null,
+            projects: [],
+            comment: '',
+        },
     };
 
     async componentDidMount() {
@@ -95,72 +106,77 @@ class InvoicesPageDetailed extends Component {
             invoice,
             match: { params },
         } = this.props;
-
         if (this.isUpdateMode || this.isViewMode) {
-            getInvoice(params['invoiceId']);
+            await getInvoice(params['invoiceId']);
         }
         await getProjectsListActions();
         await getCurrentTeamDetailedDataAction();
         await getClientsAction();
     }
 
-    static getDerivedStateFromProps(props, state) {
-        const { invoice, mode } = props;
-        const stateInvoice = state.invoice;
-        if (!stateInvoice.id && invoice && mode !== 'create') {
-            return {
-                invoice: {
-                    id: invoice.id,
-                    number: invoice.invoice_number,
-                    dateFrom: invoice.invoice_date,
-                    dateDue: invoice.due_date,
-                    currency: invoice.currency,
-                    sender: invoice.from.id,
-                    recipient: invoice.to.id,
-                    image: invoice.logo,
-                    projects: invoice.projects,
-                    comment: invoice.comment,
-                },
-            };
-        }
-
-        return null;
-    }
-    // componentDidUpdate(prevProps, prevState) {
-    //     console.log(this.props.invoice, prevProps.invoice, this.state, 'on didupdate')
-    //     if(this.props.invoice && this.props.invoice !== prevProps.invoice) {
-    //         console.log('here', this.props.invoice, prevProps.invoice)
-    //         this.setState({
+    // static getDerivedStateFromProps(props, state) {
+    //     const { invoice, mode } = props;
+    //     const stateInvoice = state.invoice;
+    //     if (!stateInvoice.id && invoice && mode !== 'create') {
+    //         return {
     //             invoice: {
-    //                 id: this.props.invoice.id,
-    //                 number: this.props.invoice.invoice_number,
-    //                 dateFrom: this.props.invoice.invoice_date,
-    //                 dateDue: this.props.invoice.due_date,
-    //                 currency: this.props.invoice.currency,
-    //                 sender: this.props.invoice.from,
-    //                 recipient: this.props.invoice.to,
-    //                 image: this.props.invoice.logo,
-    //                 projects: this.props.invoice.projects,
-    //                 comment: this.props.invoice.comment,
-    //             }
-    //         })
+    //                 id: invoice.id,
+    //                 number: invoice.invoice_number,
+    //                 dateFrom: invoice.invoice_date,
+    //                 dateDue: invoice.due_date,
+    //                 currency: invoice.currency,
+    //                 sender: invoice.from.id,
+    //                 recipient: invoice.to.id,
+    //                 image: invoice.logo,
+    //                 projects: invoice.projects,
+    //                 comment: invoice.comment,
+    //             },
+    //         };
     //     }
-    // }
 
-    componentWillUnmount() {
-        this.setState({ invoice: emptyInvoice });
+    //     return null;
+    // }
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.invoice && this.props.invoice !== prevProps.invoice) {
+            const {
+                id,
+                invoice_number,
+                invoice_date,
+                due_date,
+                currency,
+                from,
+                to,
+                logo,
+                projects,
+                comment,
+            } = this.props.invoice;
+            this.setState({
+                invoice: {
+                    id,
+                    number: invoice_number,
+                    dateFrom: invoice_date,
+                    dateDue: due_date,
+                    currency,
+                    sender: from.id,
+                    recipient: to.id,
+                    image: logo,
+                    projects,
+                    comment,
+                },
+            });
+        }
     }
 
     get isCreateMode() {
-        return this.props.mode === 'create';
+        return this.props.match.params.pageType === 'create';
     }
 
     get isViewMode() {
-        return this.props.mode === 'view';
+        return this.props.match.params.pageType === 'view';
     }
 
     get isUpdateMode() {
-        return this.props.mode === 'update';
+        return this.props.match.params.pageType === 'update';
     }
     handleInputChange = (name, e) => {
         let value = e.target.value;
@@ -230,19 +246,27 @@ class InvoicesPageDetailed extends Component {
         this.setState({ invoice: { ...invoice, image: null } });
     };
 
-    handleSaveAction = () => {
+    handleSaveAction = async () => {
         const { invoice } = this.state;
         const { updateInvoice, addInvoice } = this.props;
         if (this.isUpdateMode) {
-            updateInvoice(invoice);
+            await updateInvoice(invoice);
+            this.props.history.push(`/invoices/view/${invoice.id}`);
         } else if (this.isCreateMode) {
-            addInvoice({
+            await addInvoice({
                 ...invoice,
                 price: calculateSubtotalsWithTax(invoice.projects),
             });
         }
+    };
 
-        // this.goBack();
+    handleDeleteInvoice = async () => {
+        const { invoice } = this.state;
+        const { deleteInvoiceById, history } = this.props;
+        if (invoice.id) {
+            await deleteInvoiceById(invoice.id);
+            history.push('/invoices');
+        }
     };
 
     goBack = () => this.props.history.goBack();
@@ -282,16 +306,19 @@ class InvoicesPageDetailed extends Component {
                 <CustomScrollbar>
                     <div
                         className={classNames('invoices-page-detailed', {
-                            'invoices-page-detailed--horizontal-padding': this.isViewMode,
+                            // 'invoices-page-detailed--horizontal-padding': this.isViewMode,
                         })}
                     >
                         <div
                             className={classNames('invoices-page-detailed__header', {
-                                'invoices-page-detailed__header--no-horizontal-padding': this.isViewMode,
+                                // 'invoices-page-detailed__header--no-horizontal-padding': this.isViewMode,
                             })}
                         >
                             {this.isViewMode && (
-                                <div onClick={this.goBack} className="invoices-page-detailed__back-button">
+                                <div
+                                    onClick={() => this.props.history.push('/invoices')}
+                                    className="invoices-page-detailed__back-button"
+                                >
                                     <ArrowLeftIcon />
                                 </div>
                             )}
@@ -364,7 +391,10 @@ class InvoicesPageDetailed extends Component {
                                                 <CopyIcon className="invoices-page-detailed__icon-button" />
                                                 <span>{v_clone}</span>
                                             </button>
-                                            <button className="invoices-page-detailed__tool-button">
+                                            <button
+                                                className="invoices-page-detailed__tool-button"
+                                                onClick={this.handleDeleteInvoice}
+                                            >
                                                 <DeleteIcon className="invoices-page-detailed__icon-button" />
                                                 <span>{v_delete}</span>
                                             </button>
@@ -401,7 +431,7 @@ class InvoicesPageDetailed extends Component {
                         </div>
 
                         <DetailedInvoiceProjectsTable
-                            mode={mode}
+                            mode={this.props.match.params.pageType}
                             vocabulary={vocabulary}
                             projects={invoice.projects}
                             currency={invoice.currency}
@@ -482,9 +512,9 @@ class InvoicesPageDetailed extends Component {
     }
 }
 
-InvoicesPageDetailed.propTypes = {
-    mode: PropTypes.oneOf(['create', 'view', 'update']).isRequired,
-};
+// InvoicesPageDetailed.propTypes = {
+//     mode: PropTypes.oneOf(['create', 'view', 'update']).isRequired,
+// };
 
 const mapStateToProps = ({ teamReducer, clientsReducer, invoicesReducer }) => ({
     currentTeamDetailedData: teamReducer.currentTeamDetailedData,
@@ -500,6 +530,7 @@ const mapDispatchToProps = {
     getInvoice,
     updateInvoice,
     addInvoice,
+    deleteInvoiceById,
 };
 
 export default withRouter(
