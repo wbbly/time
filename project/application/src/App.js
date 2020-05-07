@@ -102,10 +102,15 @@ class App extends Component {
                 <PrivateRoute exact path="/invoices" render={() => <PageTemplate content={InvoicesPage} />} />
                 <PrivateRoute
                     exact
-                    path="/invoices/create"
-                    render={() => <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="create" />} />}
+                    path="/invoices/:pageType"
+                    render={() => <PageTemplate content={InvoicesPageDetailed} />}
                 />
                 <PrivateRoute
+                    exact
+                    path="/invoices/:pageType/:invoiceId"
+                    render={() => <PageTemplate content={InvoicesPageDetailed} />}
+                />
+                {/* <PrivateRoute
                     exact
                     path="/invoices/view/:invoiceId"
                     render={() => <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="view" />} />}
@@ -114,7 +119,7 @@ class App extends Component {
                     exact
                     path="/invoices/update/:invoiceId"
                     render={() => <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="update" />} />}
-                />
+                /> */}
                 <Route render={() => <div>404 not found</div>} />
             </Switch>
         );
