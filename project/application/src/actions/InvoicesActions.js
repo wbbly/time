@@ -1,10 +1,15 @@
-import { createInvoice, getInvoices, getInvoiceById, changeInvoice, deleteInvoice } from '../configAPI';
+import {
+    createInvoice,
+    getInvoices,
+    getInvoiceById,
+    changeInvoice,
+    deleteInvoice,
+    changeInvoiceStatus,
+} from '../configAPI';
 
-export const GET_INVOICE = 'GET_INVOICE';
-export const UPDATE_INVOICE = 'UPDATE_INVOICE';
-export const ADD_INVOICE = 'ADD_INVOICE';
 export const CREATE_INVOICE_REQUEST = 'CREATE_INVOICE_REQUEST';
 export const CHANGE_INVOICE_REQUEST = 'CHANGE_INVOICE_REQUEST';
+export const CHANGE_INVOICE_STATUS_REQUEST = 'CHANGE_INVOICE_STATUS_REQUEST';
 export const DELETE_INVOICE_REQUEST = 'DELETE_INVOICE_REQUEST';
 export const GET_INVOICE_LIST_REQUEST = 'GET_INVOICE_LIST_REQUEST';
 export const GET_INVOICE_LIST_SUCCESS = 'GET_INVOICE_LIST_SUCCESS';
@@ -41,6 +46,10 @@ const deleteInvoiceRequest = () => ({
     type: DELETE_INVOICE_REQUEST,
 });
 
+const changeInvoiceStatusRequest = () => ({
+    type: CHANGE_INVOICE_STATUS_REQUEST,
+});
+
 const fillFormDataWithObject = (formData, obj) => {
     for (let key in obj) {
         if (Array.isArray(obj[key])) {
@@ -57,6 +66,7 @@ const fillFormDataWithObject = (formData, obj) => {
 };
 
 export const addInvoice = payload => async dispatch => {
+    dispatch(createInvoiceRequest());
     let formData = payload.image;
     try {
         let requestBody = {
@@ -143,6 +153,16 @@ export const deleteInvoiceById = invoiceId => async dispatch => {
     dispatch(deleteInvoiceRequest());
     try {
         const res = await deleteInvoice(invoiceId);
+        dispatch(getInvoiceListSuccess(res.data.data.invoices));
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const editInvoicePaymentStatus = (invoiceId, status) => async dispatch => {
+    dispatch(changeInvoiceStatusRequest());
+    try {
+        const res = await changeInvoiceStatus({ invoiceId, paymentStatus: status });
         dispatch(getInvoiceListSuccess(res.data.data.invoices));
     } catch (error) {
         console.log(error);

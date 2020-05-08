@@ -1,8 +1,5 @@
 import moment from 'moment';
 import {
-    ADD_INVOICE,
-    GET_INVOICE,
-    UPDATE_INVOICE,
     CREATE_INVOICE_REQUEST,
     GET_INVOICE_LIST_REQUEST,
     GET_INVOICE_LIST_SUCCESS,
@@ -10,12 +7,14 @@ import {
     GET_INVOICE_BY_ID_SUCCESS,
     CHANGE_INVOICE_REQUEST,
     DELETE_INVOICE_REQUEST,
+    CHANGE_INVOICE_STATUS_REQUEST,
 } from '../actions/InvoicesActions';
 
 const initialState = {
     invoices: [],
     invoice: null,
     isFetching: false,
+    isInitialFetching: false,
 };
 
 export default function invoicesReducer(state = initialState, { type, payload }) {
@@ -37,6 +36,11 @@ export default function invoicesReducer(state = initialState, { type, payload })
                 ...state,
                 isFetching: true,
             };
+        case CHANGE_INVOICE_STATUS_REQUEST:
+            return {
+                ...state,
+                isFetching: true,
+            };
         case DELETE_INVOICE_REQUEST:
             return {
                 ...state,
@@ -50,18 +54,14 @@ export default function invoicesReducer(state = initialState, { type, payload })
         case GET_INVOICE_LIST_REQUEST:
             return {
                 ...state,
-                isFetching: true,
+                isInitialFetching: true,
             };
         case GET_INVOICE_LIST_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
+                isInitialFetching: false,
                 invoices: payload,
-            };
-        case ADD_INVOICE:
-            return {
-                ...state,
-                invoices: [...state.invoices, payload],
             };
         default:
             return state;

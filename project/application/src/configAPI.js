@@ -450,3 +450,12 @@ export const deleteInvoice = invoiceId =>
         url: `/invoice/${invoiceId}`,
         method: 'DELETE',
     });
+
+export const changeInvoiceStatus = ({ invoiceId, paymentStatus }) =>
+    instance({
+        url: `/invoice/${invoiceId}/payment`,
+        method: 'PATCH',
+        data: {
+            paymentStatus,
+        },
+    });
