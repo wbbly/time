@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+import { spaceAndFixNumber } from '../../services/numberHelpers';
+
 //Styles
 import './style.scss';
 
@@ -62,14 +64,21 @@ class DetailedInvoiceProjectsTable extends Component {
         const { editingProject } = this.state;
         if (name === 'project') {
             const { name, id } = e;
-            console.log(name, id);
-            this.setState({ editingProject: { ...editingProject, name, projectId: id } });
+            if (editingProject.project_name) {
+                this.setState({ editingProject: { ...editingProject, project_name: name } });
+            } else {
+                this.setState({ editingProject: { ...editingProject, name, projectId: id } });
+            }
             return this.finishEditing(true);
         }
 
         const value = e.target.value;
 
-        this.setState({ editingProject: { ...editingProject, [name]: value } });
+        if (name === 'amount' && !editingProject.name) {
+            this.setState({ editingProject: { ...editingProject, hours: value } });
+        } else {
+            this.setState({ editingProject: { ...editingProject, [name]: value } });
+        }
     };
 
     handleKeyDown = e => {
@@ -117,6 +126,12 @@ class DetailedInvoiceProjectsTable extends Component {
     getProjectValue = (project, name) => {
         const { editingProject } = this.state;
         if (project.id === editingProject.id) {
+            if (!!editingProject.project_name && name === 'projectId') {
+                return editingProject.project_name;
+            }
+            if (!!editingProject.project_name && name === 'amount') {
+                return editingProject.hours;
+            }
             return editingProject[name];
         } else {
             if (name === 'tax') {
@@ -227,7 +242,11 @@ class DetailedInvoiceProjectsTable extends Component {
                                 <div className="detailed-invoice-projects-table__subtotal-column">
                                     <span>{currency.toUpperCase()}</span>
                                     <span>
-                                        {calculateSubtotal(editingProject.id === project.id ? editingProject : project)}
+                                        {spaceAndFixNumber(
+                                            calculateSubtotal(
+                                                editingProject.id === project.id ? editingProject : project
+                                            )
+                                        )}
                                     </span>
                                 </div>
                                 {!this.isViewMode && (

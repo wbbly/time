@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter, Router } from 'react-router-dom';
+
 import { addInvoice, getInvoice, updateInvoice, deleteInvoiceById } from '../../actions/InvoicesActions';
 import { AppConfig } from '../../config';
+import { spaceAndFixNumber } from '../../services/numberHelpers';
 //Styles
 import './style.scss';
 
@@ -257,6 +259,7 @@ class InvoicesPageDetailed extends Component {
                 ...invoice,
                 price: calculateSubtotalsWithTax(invoice.projects),
             });
+            history.push(`/invoices/`);
         }
     };
 
@@ -452,7 +455,7 @@ class InvoicesPageDetailed extends Component {
                                     <div>
                                         {invoice.currency.toUpperCase()}
                                         <span className="invoices-page-detailed__summary-price">
-                                            {calculateSubtotals(invoice.projects)}
+                                            {spaceAndFixNumber(calculateSubtotals(invoice.projects))}
                                         </span>
                                     </div>
                                 </div>
@@ -461,7 +464,7 @@ class InvoicesPageDetailed extends Component {
                                     <div>
                                         {invoice.currency.toUpperCase()}
                                         <span className="invoices-page-detailed__summary-price">
-                                            {calculateTaxesSum(invoice.projects)}
+                                            {spaceAndFixNumber(calculateTaxesSum(invoice.projects))}
                                         </span>
                                     </div>
                                 </div>
@@ -480,7 +483,7 @@ class InvoicesPageDetailed extends Component {
                                     <div>
                                         {invoice.currency.toUpperCase()}
                                         <span className="invoices-page-detailed__summary-price">
-                                            {calculateSubtotalsWithTax(invoice.projects)}
+                                            {spaceAndFixNumber(calculateSubtotalsWithTax(invoice.projects))}
                                         </span>
                                     </div>
                                 </div>
