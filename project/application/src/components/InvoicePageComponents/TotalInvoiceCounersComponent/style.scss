@@ -4,6 +4,19 @@
       justify-content: space-between;
       width: 100%;
     }
+    &__dropdown-arrow {
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      right: 7px;
+      transform: translate(-50%, 50%) rotate(0deg);
+      display: flex;
+      transition: 0.3s all linear;
+
+      &--rotate {
+        transform: translate(-50%, 50%) rotate(-180deg);
+      }
+    }
     &__block {
       min-width: 350px;
   
@@ -11,7 +24,7 @@
         font-size: 24px;
         margin-bottom: 10px;
       }
-      &-summ {
+      &-summ-container {
         font-size: 36px;
         font-weight: 900;
         background-color: rgba(255, 255, 255, 0.06);
@@ -19,6 +32,30 @@
         padding: 23px 0;
         box-shadow: 0px 4px 19px rgba(0, 0, 0, 0.15);
         border-radius: 4px;
+        position: relative;
+        height: 88px;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        transition: 0.3s height linear;
+        cursor: pointer;
+
+        &--opened {
+          height: 215px;
+        }
+      }
+      &-summ {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+
+        &-number {
+          padding-bottom: 23px;
+
+          &:last-child {
+            padding-bottom: 0;
+          }
+        }
       }
     }
   }

@@ -128,7 +128,7 @@ export const updateInvoice = payload => async dispatch => {
             invoiceDate: payload.dateFrom,
             dueDate: payload.dateDue,
             currency: payload.currency,
-            comment: payload.comment,
+            comment: payload.comment || '',
             invoiceProjects: payload.projects.reduce((acc, project) => {
                 acc.push({
                     projectName: project.project_name || project.name,
