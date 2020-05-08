@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter, Router } from 'react-router-dom';
 import { addInvoice, getInvoice, updateInvoice, deleteInvoiceById } from '../../actions/InvoicesActions';
-
+import { AppConfig } from '../../config';
 //Styles
 import './style.scss';
 
@@ -248,10 +248,10 @@ class InvoicesPageDetailed extends Component {
 
     handleSaveAction = async () => {
         const { invoice } = this.state;
-        const { updateInvoice, addInvoice } = this.props;
+        const { updateInvoice, addInvoice, history } = this.props;
         if (this.isUpdateMode) {
             await updateInvoice(invoice);
-            this.props.history.push(`/invoices/view/${invoice.id}`);
+            history.push(`/invoices/`);
         } else if (this.isCreateMode) {
             await addInvoice({
                 ...invoice,
@@ -332,11 +332,15 @@ class InvoicesPageDetailed extends Component {
                                             'invoices-page-detailed__logo--empty': !invoice.image,
                                         })}
                                     >
+                                        {/* {invoice.image ? <img src={`${AppConfig.apiURL}${invoice.image}`} alt="invoice image" /> :  */}
                                         <ImagePicker
                                             onFileLoaded={this.handleFileLoad}
                                             onDeleteImage={this.handleFileDelete}
                                             placeholder={v_select_logo_file}
+                                            imageUrl={invoice.image ? `${AppConfig.apiURL}${invoice.image}` : null}
+                                            isViewMode={this.isViewMode}
                                         />
+                                        {/* } */}
                                     </div>
                                     <div className="invoices-page-detailed__main-data-form">
                                         <div>

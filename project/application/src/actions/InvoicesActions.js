@@ -41,14 +41,29 @@ const deleteInvoiceRequest = () => ({
     type: DELETE_INVOICE_REQUEST,
 });
 
+const fillFormDataWithObject = (formData, obj) => {
+    for (let key in obj) {
+        if (Array.isArray(obj[key])) {
+            for (let i = 0; i < obj[key].length; i++) {
+                for (let arrObjKey in obj[key][i]) {
+                    formData.append(`${key}[${i}][${arrObjKey}]`, obj[key][i][arrObjKey]);
+                }
+            }
+        } else {
+            formData.append(key, obj[key]);
+        }
+    }
+    return formData;
+};
+
 export const addInvoice = payload => async dispatch => {
-    dispatch(createInvoiceRequest());
+    let formData = payload.image;
     try {
-        const requestBody = {
+        let requestBody = {
             vendorId: payload.sender,
             clientId: payload.recipient,
-            invoiceDate: payload.dateFrom,
-            dueDate: payload.dateDue,
+            invoiceDate: payload.dateFrom.toISOString(),
+            dueDate: payload.dateDue.toISOString(),
             currency: payload.currency,
             comment: payload.comment,
             invoiceProjects: payload.projects.reduce((acc, project) => {
@@ -61,6 +76,9 @@ export const addInvoice = payload => async dispatch => {
                 return acc;
             }, []),
         };
+        if (formData instanceof FormData) {
+            requestBody = fillFormDataWithObject(formData, requestBody);
+        }
         const res = await createInvoice(requestBody);
         dispatch(getInvoiceListSuccess(res.data.data.invoices));
     } catch (error) {
@@ -91,8 +109,10 @@ export const getInvoicesList = () => async dispatch => {
 
 export const updateInvoice = payload => async dispatch => {
     dispatch(changeInvoiceRequest());
+    let formData = payload.image;
+    // console.log(payload)
     try {
-        const requestBody = {
+        let requestBody = {
             vendorId: payload.sender,
             clientId: payload.recipient,
             invoiceDate: payload.dateFrom,
@@ -109,6 +129,9 @@ export const updateInvoice = payload => async dispatch => {
                 return acc;
             }, []),
         };
+        if (formData instanceof FormData) {
+            requestBody = fillFormDataWithObject(formData, requestBody);
+        }
         const res = await changeInvoice({ invoiceId: payload.id, data: requestBody });
         dispatch(getInvoiceListSuccess(res.data.data.invoices));
     } catch (error) {

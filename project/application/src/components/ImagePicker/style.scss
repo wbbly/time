@@ -7,6 +7,10 @@
     visibility: visible;
   }
 
+  &--view-mode {
+    cursor: default;
+  }
+
   &__img {
     display: flex;
     justify-content: center;

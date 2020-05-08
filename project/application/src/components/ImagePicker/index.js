@@ -92,12 +92,16 @@ class ImagePicker extends Component {
     };
 
     render() {
-        const { vocabulary, imageUrl, placeholder } = this.props;
+        const { vocabulary, imageUrl, placeholder, logo, isViewMode } = this.props;
         const { v_upload_image, v_delete_image } = vocabulary;
         const { isOpenDropdown, loadedImage, loadingImage } = this.state;
 
         return (
-            <div className="image-picker">
+            <div
+                className={classNames('image-picker', {
+                    'image-picker--view-mode': isViewMode,
+                })}
+            >
                 <Loading flag={loadingImage} mode="overlay" withLogo={false}>
                     <div
                         className="image-picker__img"
@@ -109,10 +113,12 @@ class ImagePicker extends Component {
                     >
                         {!loadedImage && !imageUrl && <span>{placeholder}</span>}
                     </div>
-                    <div className="image-picker__settings" onClick={this.openDropdown}>
-                        <SettingsIcon />
-                        <ArrowIcon />
-                    </div>
+                    {!isViewMode && (
+                        <div className="image-picker__settings" onClick={this.openDropdown}>
+                            <SettingsIcon />
+                            <ArrowIcon />
+                        </div>
+                    )}
                     <ul
                         className={classNames('image-picker__settings-menu', {
                             'image-picker__settings-menu--hidden': !isOpenDropdown,
