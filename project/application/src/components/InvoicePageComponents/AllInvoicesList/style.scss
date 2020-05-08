@@ -2,6 +2,9 @@
   font-size: 14px;
   line-height: 19px;
 
+  .all-invoices-list-item-container {
+    position: relative;
+  }
   .all-invoices-list-item {
     display: flex;
     justify-content: space-between;
@@ -65,7 +68,8 @@
       font-weight: bold;
       margin-right: 50px;
       text-transform: uppercase;
-      min-width: 80px;
+      min-width: 120px;
+      white-space: nowrap;
     }
 
     &__date {

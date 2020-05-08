@@ -3,7 +3,8 @@ import classNames from 'classnames';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import { deleteInvoiceById } from '../../../actions/InvoicesActions';
+import { deleteInvoiceById, editInvoicePaymentStatus } from '../../../actions/InvoicesActions';
+import { spaceAndFixNumber } from '../../../services/numberHelpers';
 
 // Styles
 import './style.scss';
@@ -114,7 +115,27 @@ const prevent = e => {
     e.stopPropagation();
 };
 
-const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history, deleteInvoiceById }) => {
+const AllInvoicesList = ({
+    invoices,
+    vocabulary,
+    toggleSendInvoiceModal,
+    history,
+    deleteInvoiceById,
+    editInvoicePaymentStatus,
+    isFetching,
+}) => {
+    const getInvoiceType = invoice => {
+        if (invoice.payment_status) {
+            return 'paid';
+        } else {
+            if (moment().isBefore(moment(invoice.due_date))) {
+                return 'draft';
+            } else {
+                return 'overdue';
+            }
+        }
+    };
+
     return (
         <div className="all-invoices-list">
             {invoices.map(invoice => (
@@ -122,12 +143,9 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history
                     <div className="all-invoices-list-item__block">
                         <div
                             className={classNames('all-invoices-list-item__status', {
-                                // TODO: enable when will have functionality for different types on backend
-                                // 'all-invoices-list-item__status--confirmed': invoice.status === 'paid',
-                                // 'all-invoices-list-item__status--overdue': invoice.status === 'overdue',
-                                // 'all-invoices-list-item__status--draft': invoice.status === 'draft',
-                                'all-invoices-list-item__status--confirmed': invoice.payment_status,
-                                'all-invoices-list-item__status--overdue': !invoice.payment_status,
+                                'all-invoices-list-item__status--confirmed': getInvoiceType(invoice) === 'paid',
+                                'all-invoices-list-item__status--overdue': getInvoiceType(invoice) === 'overdue',
+                                'all-invoices-list-item__status--draft': getInvoiceType(invoice) === 'draft',
                             })}
                         />
                         <div className="all-invoices-list-item__number">{`#${invoice.invoice_number}`}</div>
@@ -135,7 +153,7 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history
                     </div>
                     <div className="all-invoices-list-item__block">
                         <div className="all-invoices-list-item__price">
-                            {invoice.currency} {invoice.total.toFixed()}
+                            {invoice.currency} {spaceAndFixNumber(invoice.total)}
                         </div>
                         <div className="all-invoices-list-item__date">
                             {moment(invoice.invoice_date).format('MMM Do YYYY')}
@@ -144,24 +162,23 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history
                             {moment(invoice.due_date).format('MMM Do YYYY')}
                         </div>
                     </div>
-                    <div className="all-invoices-list-item__status-button">
+                    <div className="all-invoices-list-item__status-button" onClick={e => prevent(e)}>
                         <div className="all-invoices-list-item__status-button-container">
                             <span className="all-invoices-list-item__status-button-container-text">
-                                {/* TODO: enable when will have functionality for different types on backend */}
-                                {/* {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)} */}
-                                {invoice.payment_status ? 'Paid' : 'Overdue'}
+                                {getInvoiceType(invoice)
+                                    .charAt(0)
+                                    .toUpperCase() + getInvoiceType(invoice).slice(1)}
                             </span>
                             <CheckIcon
                                 className="all-invoices-list-item__icon-button"
                                 fill={
-                                    // TODO: enable when will have functionality for different types on backend
-                                    // invoice.status === 'paid'
-                                    //     ? '#27AE60'
-                                    //     : invoice.status === 'overdue'
-                                    //         ? '#EB5757'
-                                    //         : '#626262'
-                                    invoice.payment_status ? '#27AE60' : '#EB5757'
+                                    getInvoiceType(invoice) === 'paid'
+                                        ? '#27AE60'
+                                        : getInvoiceType(invoice) === 'overdue'
+                                            ? '#EB5757'
+                                            : '#626262'
                                 }
+                                onClick={e => editInvoicePaymentStatus(invoice.id, !invoice.payment_status)}
                             />
                         </div>
                     </div>
@@ -199,6 +216,7 @@ const mapStateToProps = ({ invoicesReducer }) => ({
 
 const mapDispatchToProps = {
     deleteInvoiceById,
+    editInvoicePaymentStatus,
 };
 
 export default connect(

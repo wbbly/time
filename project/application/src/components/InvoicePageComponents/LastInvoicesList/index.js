@@ -1,8 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-
+import { connect } from 'react-redux';
 import moment from 'moment';
+
+import { editInvoicePaymentStatus } from '../../../actions/InvoicesActions';
+import { spaceAndFixNumber } from '../../../services/numberHelpers';
+
 // Styles
 import './style.scss';
 
@@ -11,8 +15,20 @@ const prevent = e => {
     e.stopPropagation();
 };
 
-const LastInvoicesList = ({ invoices, vocabulary }) => {
+const LastInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, editInvoicePaymentStatus }) => {
     const { v_invoice, v_total, v_confirm_payment } = vocabulary;
+
+    const getInvoiceType = invoice => {
+        if (invoice.payment_status) {
+            return 'paid';
+        } else {
+            if (moment().isBefore(moment(invoice.due_date))) {
+                return 'draft';
+            } else {
+                return 'overdue';
+            }
+        }
+    };
 
     return (
         <div
@@ -26,12 +42,9 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
                     to={`/invoices/view/${invoice.id}`}
                     key={invoice.id}
                     className={classNames('last-invoices-list-item', {
-                        // TODO: enable when will have functionality for different types on backend
-                        // 'last-invoices-list-item--confirmed': invoice.status === 'paid',
-                        // 'last-invoices-list-item--overdue': invoice.status === 'overdue',
-                        // 'last-invoices-list-item--draft': invoice.status === 'draft',
-                        'last-invoices-list-item--confirmed': invoice.payment_status,
-                        'last-invoices-list-item--overdue': !invoice.payment_status,
+                        'last-invoices-list-item--confirmed': getInvoiceType(invoice) === 'paid',
+                        'last-invoices-list-item--overdue': getInvoiceType(invoice) === 'overdue',
+                        'last-invoices-list-item--draft': getInvoiceType(invoice) === 'draft',
                     })}
                 >
                     <div className="last-invoices-list-item__top">
@@ -44,19 +57,33 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
                         <div>
                             <div className="last-invoices-list-item__total">{v_total}</div>
                             <div className="last-invoices-list-item__price">
-                                {invoice.currency} {invoice.total.toFixed()}
+                                <span>{invoice.currency}</span>{' '}
+                                <span className="last-invoices-list-item__price-number">
+                                    {spaceAndFixNumber(invoice.total)}
+                                </span>
                             </div>
-                            {!invoice.payment_status && (
-                                <button onClick={prevent} className="last-invoices-list-item__confirm-button">
+                            {getInvoiceType(invoice) === 'overdue' && (
+                                <button
+                                    onClick={e => {
+                                        prevent(e);
+                                        editInvoicePaymentStatus(invoice.id, !invoice.payment_status);
+                                    }}
+                                    className="last-invoices-list-item__confirm-button"
+                                >
                                     {v_confirm_payment}
                                 </button>
                             )}
-                            {/* TODO: enable when will have functionality for different types on backend */}
-                            {/* {invoice.status === 'draft' && (
-                                <button onClick={prevent} className="last-invoices-list-item__confirm-button">
+                            {getInvoiceType(invoice) === 'draft' && (
+                                <button
+                                    onClick={e => {
+                                        prevent(e);
+                                        toggleSendInvoiceModal(invoice);
+                                    }}
+                                    className="last-invoices-list-item__confirm-button"
+                                >
                                     Send Payment
                                 </button>
-                            )} */}
+                            )}
                         </div>
                         <div>
                             <div className="last-invoices-list-item__thin-text">
@@ -70,4 +97,15 @@ const LastInvoicesList = ({ invoices, vocabulary }) => {
     );
 };
 
-export default LastInvoicesList;
+const mapStateToProps = ({ invoicesReducer }) => ({
+    isFetching: invoicesReducer.isFetching,
+});
+
+const mapDispatchToProps = {
+    editInvoicePaymentStatus,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(LastInvoicesList);
