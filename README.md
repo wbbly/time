@@ -3,8 +3,8 @@
 ## CLONE REPO
 
 ```
-git clone git@github.com:lazy-ants/lazy-time.git
-cd lazy-time
+git clone git@github.com:wbbly/time.git
+cd time
 ```
 
 ## CREATE APP CONFIG FILES
