@@ -20,12 +20,18 @@ cp project/application/src/config.js.dist project/application/src/config.js
 - in development mode, http://localhost:3000
 
 ```
-bash dev.sh
+docker-compose up -d --build
+docker exec -ti <nodejs-container-name> npm install
+docker exec -ti <nodejs-container-name> bash -c 'npm run copy:libs'
+docker exec -ti <nodejs-container-name> bash -c 'npm start'
 ```
 
-- in production mode, http://wobbly.me
+- in production mode, https://wobbly.me
 
 ```
-bash prod.sh
+docker-compose up -d --build
+docker exec -ti <nodejs-container-name> npm install
+docker exec -ti <nodejs-container-name> bash -c 'npm run copy:libs'
+docker exec -ti <nodejs-container-name> bash -c 'npm run build -- --prod'
 ```
 

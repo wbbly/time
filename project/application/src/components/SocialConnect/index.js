@@ -12,6 +12,9 @@ import { showNotificationAction } from '../../actions/NotificationActions';
 // axios requests
 import { setSocialConnect } from '../../configAPI';
 
+// app config
+import { AppConfig } from '../../config';
+
 // Styles
 import './style.scss';
 
@@ -84,7 +87,7 @@ class SocialConnect extends Component {
                         return (
                             <FacebookLogin
                                 key={type}
-                                appId="543553739782396"
+                                appId={AppConfig.socialAuth.fbAppId}
                                 autoLoad={false}
                                 fields="name,email"
                                 callback={this.responseFacebook}

@@ -29,22 +29,27 @@ http {
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
     server_names_hash_bucket_size 64;
     server {
-        server_name time.lazy-ants.com;
+        server_name time.wobbly.me;
         expires 0;
 
         location / {
-            root /var/www/lazy-time/build;
+            add_header 'Last-Modified' $date_gmt;
+            add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+            if_modified_since off;
+            expires off;
+            etag off;
+            root /var/www/app/build;
             try_files $uri $uri/ /index.html =404;
         }
 
         location ~* \.(ico|css|js|json|ico|gif|jpeg|jpg|png|woff|ttf|otf|svg|woff2|eot)$ {
-            root /var/www/lazy-time/build;
+            root /var/www/app/build;
             access_log off;
             expires 1y;
         }
 
         location ~ "/team/(?<teamId>[^/]+)/invite/(?<inviteId>[^/]+)" {
-            return 301 https://api.wobbly.me.lazy-ants.com/team/$teamId/invite/$inviteId;
+            return 301 https://api.wobbly.me/team/$teamId/invite/$inviteId;
         }
 
         location /robots.txt {
@@ -52,8 +57,8 @@ http {
             return 200 "User-agent: *\nDisallow: /\n";
         }
 
-        error_log /var/log/nginx/lazy-time_error.log;
-        access_log /var/log/nginx/lazy-time_access.log;
+        error_log /var/log/nginx/app_error.log;
+        access_log /var/log/nginx/app_access.log;
     }
 
     open_file_cache max=100;

@@ -1,3 +1,7 @@
 export const AppConfig = {
     apiURL: '<apiURL>',
+    socialAuth: {
+        active: false,
+        fbAppId: '<fbAppId>'
+    },
 };
