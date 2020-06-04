@@ -97,7 +97,7 @@ class StartEditTaskModal extends Component {
     };
 
     static getDerivedStateFromProps(props, state) {
-        const { timeEntriesList, editMode, task } = props;
+        const { timeEntriesList, projectsList, editMode, task } = props;
         const { selectedProject } = state;
         if (!selectedProject) {
             if (editMode) {
@@ -108,8 +108,11 @@ class StartEditTaskModal extends Component {
                     endDateTime: moment(task.endDatetime).toDate(),
                 };
             }
+
+            const project = timeEntriesList[0] ? timeEntriesList[0].project : projectsList[0];
+
             return {
-                selectedProject: timeEntriesList[0].project,
+                selectedProject: project,
             };
         }
         return null;
