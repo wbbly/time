@@ -29,6 +29,7 @@ import SwitchJiraType from '../../components/SwitchJiraType';
 import { verifyJiraToken, requestChangeUserData } from '../../configAPI';
 
 //Config
+import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
@@ -269,7 +270,7 @@ class UserSetting extends Component {
                     <div className="body_user_setting">
                         <div className="column column-avatar-social">
                             <Avatar />
-                            <SocialConnect />
+                            {AppConfig.socialAuth.active && (<SocialConnect />)}
                         </div>
                         <Formik
                             enableReinitialize={true}

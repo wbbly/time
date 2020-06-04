@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 
 import FacebookLogin from 'react-facebook-login';
 
+// axios requests
 import { loginWithFacebook } from '../../configAPI';
+
+// app config
+import { AppConfig } from '../../config';
 
 import { setTokenToLocalStorage } from '../../services/tokenStorageService';
 
@@ -57,7 +61,7 @@ class FacebookButton extends Component {
                 textButton={`${v_login_with} Facebook`}
                 icon={<FacebookIcon />}
                 cssClass="facebook-button"
-                appId="543553739782396"
+                appId={AppConfig.socialAuth.fbAppId}
                 autoLoad={false}
                 fields="name,email"
                 callback={this.responseFacebook}

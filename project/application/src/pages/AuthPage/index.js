@@ -18,6 +18,7 @@ import { showNotificationAction } from '../../actions/NotificationActions';
 // Queries
 
 // Config
+import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
@@ -64,7 +65,7 @@ class AuthPage extends Component {
                 <i className="page_title" />
                 <div className="authorisation_container">
                     <LoginForm submitForm={this.submitForm} />
-                    {!isMobile && (
+                    {AppConfig.socialAuth.active && !isMobile && (
                         <>
                             <div className={'or'}>{v_or}</div>
                             <FacebookButton setHaveToken={this.setHaveToken} login={this.login} />
