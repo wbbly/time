@@ -14,6 +14,7 @@ import AddTask from '../../components/AddTask';
 import StartTaskMobile from '../../components/StartTaskMobile';
 import TutorialComponent from '../../components/TutorialComponent';
 import CustomScrollbar from '../../components/CustomScrollbar';
+import {BlankListComponent} from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 
 // Actions
 import { getTimeEntriesListAction, restorePaginationAction } from '../../actions/MainPageAction';
@@ -21,6 +22,7 @@ import { getProjectsListActions } from '../../actions/ProjectsActions';
 
 // Styles
 import './style.scss';
+
 
 class MainPage extends Component {
     state = {
@@ -119,6 +121,11 @@ class MainPage extends Component {
                         <AddTask />
                         <CustomScrollbar>
                             <div className="main-page__list">
+                                {   
+                                    timeEntriesList &&
+                                        timeEntriesList.length === 0
+                                        &&  BlankListComponent("No recent entries to show ", "It's been a long time since you've tracked your tasks!")
+                                }
                                 {this.splitTimersByDay(timeEntriesList).map((day, index, arr) => (
                                     <div
                                         className={classNames('main-page__day', {

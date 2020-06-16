@@ -1,0 +1,30 @@
+
+.cat-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .animation-cat{
+    width: 496.83px;
+    height: 500px;
+  }
+  .animation-cat-comment{
+    color:#ffffff;
+    text-align: center;
+    margin-top: -100px;
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+  }
+.smaller{
+    width: 440px;
+    height: 460px;
+}
+@media screen and (max-width: 410px) {
+  .animation-cat{
+    width: 430px;
+    height: 420px;
+  }
+}
