@@ -216,4 +216,8 @@ export default {
 
     v_v_required: 'Pflichtfeld',
     v_v_incorect_url: 'Falsche URL',
+    v_no_report: 'Kein Bericht zu zeigen!',
+    v_no_entries: 'Keine aktuellen Einträge zu zeigen.',
+    v_no_entries_sub: 'Es ist lange her, dass Sie Ihre Aufgaben verfolgt haben!',
+    v_no_clients: 'Keine Kunden zu zeigen!',
 };

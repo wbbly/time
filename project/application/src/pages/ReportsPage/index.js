@@ -14,7 +14,6 @@ import 'moment/locale/en-gb';
 import 'moment/locale/de';
 
 import { connect } from 'react-redux';
-import { Bar } from 'react-chartjs-2';
 
 // dependencies
 import classNames from 'classnames';
@@ -33,10 +32,10 @@ import {
 import { apiCall } from '../../services/apiService';
 
 // Components
-import ProjectsContainer from '../../components/ProjectsContainer';
 import ReportsSearchBar from '../../components/reportsSearchBar';
 import { Loading } from '../../components/Loading';
-
+import { UnitedReportsComponents } from './UnitedReportsComponents';
+import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { getClientsAction } from '../../actions/ClientsActions';
@@ -235,45 +234,27 @@ class ReportsPage extends Component {
                                 inputClientData={this.props.clientsList}
                             />
                         )}
-                        {this.state.toggleBar &&
-                            this.state.toggleChar && (
-                                <div className="total_time_container">
-                                    <span className="total_time_name">{v_total}</span>
-                                    <span className="total_time_time">
-                                        {typeof this.state.totalUpChartTime === 'number'
-                                            ? getTimeDurationByGivenTimestamp(
-                                                  this.state.totalUpChartTime,
-                                                  durationTimeFormat
-                                              )
-                                            : getTimeDurationByGivenTimestamp(0, durationTimeFormat)}
-                                    </span>
-                                    <span className="export_button" onClick={e => this.export()}>
-                                        {v_export}
-                                    </span>
-                                </div>
-                            )}
-                        {this.state.toggleBar &&
-                            this.state.toggleChar && (
-                                <div className="line_chart_container">
-                                    <Bar
-                                        ref={Bar => (this.barChart = Bar)}
-                                        data={this.props.dataBarChat}
-                                        height={isMobile ? 150 : 50}
-                                        options={this.lineChartOption(durationTimeFormat)}
-                                    />
-                                </div>
-                            )}
-                        {this.state.toggleBar &&
-                            this.state.toggleChar && (
-                                <div className="projects_chart_container">
-                                    <ProjectsContainer
-                                        selectionRange={this.props.timeRange}
-                                        usersArr={this.props.inputUserData}
-                                        projectsArr={this.props.projectsArr}
-                                        dataDoughnutChat={this.props.dataDoughnutChat}
-                                    />
-                                </div>
-                            )}
+                        {this.props.projectsArr.length > 0 ? (
+                            <UnitedReportsComponents
+                                toggleBar={this.state.toggleBar}
+                                toggleChar={this.state.toggleChar}
+                                v_total={v_total}
+                                totalUpChartTime={this.state.totalUpChartTime}
+                                getTimeDurationByGivenTimestamp={getTimeDurationByGivenTimestamp}
+                                durationTimeFormat={durationTimeFormat}
+                                export={this.export.bind(this)}
+                                v_export={v_export}
+                                data={this.props.dataBarChat}
+                                height={isMobile ? 150 : 50}
+                                lineChartOption={this.lineChartOption}
+                                selectionRange={this.props.timeRange}
+                                usersArr={this.props.inputUserData}
+                                projectsArr={this.props.projectsArr}
+                                dataDoughnutChat={this.props.dataDoughnutChat}
+                            />
+                        ) : (
+                            BlankListComponent(this.props.vocabulary.v_no_report, null, { bottom: '-70px' })
+                        )}
                     </div>
                 </div>
             </Loading>

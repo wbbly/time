@@ -7,6 +7,7 @@ import classNames from 'classnames';
 // Components
 import { Loading } from '../../components/Loading';
 import ClientModal from '../../components/ClientModal';
+import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 
 // Actions
 import { getClientsAction, setClientAction, editClientNameAction } from '../../actions/ClientsActions';
@@ -17,6 +18,7 @@ import { checkIsAdminByRole } from '../../services/authentication';
 
 // Styles
 import './style.scss';
+import animation_cat from '../../images/animation_cat.gif';
 
 class ClientsPage extends Component {
     state = {
@@ -148,7 +150,10 @@ class ClientsPage extends Component {
                                 </button>
                             </div>
                         </div>
-                        <div className="clients_list_container">
+                        <div className={classNames('clients_list_container', { borderOf: clientsList.length === 0 })}>
+                            {clientsList &&
+                                clientsList.length === 0 &&
+                                BlankListComponent(this.props.vocabulary.v_no_clients, null, null)}
                             {clientsList.map((item, index) => (
                                 <div className="clients_list_item" key={item.id}>
                                     <div className="client_name" data-label={`${v_client_name}: `}>

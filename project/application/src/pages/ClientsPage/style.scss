@@ -96,6 +96,9 @@
     margin-top: 53px;
     border-top: 1px solid #bdbdbd;
   }
+  .borderOf{
+    border-top: none;
+  }
   .clients_list_item {
     padding: 16px 0;
     display: flex;
@@ -155,6 +158,10 @@
   }
   .blue {
     background-color: blue;
+  }
+  .animation_cat{
+    width: 430px;
+    height: 420px;
   }
 }
 .wrapper_clients_page--mobile {
