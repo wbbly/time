@@ -205,7 +205,10 @@ export default {
     v_cofirm_password_required: 'Password confirm is required',
     v_add_old_password: 'Add current password',
     v_add_new_password: 'Add your new password',
-
     v_v_required: 'Required field',
     v_v_incorect_url: 'Incorrect URL',
+    v_no_report: 'No report to show!',
+    v_no_entries: 'No recent entries to show.',
+    v_no_entries_sub: "It's been a long time since you've tracked your tasks!",
+    v_no_clients: 'No clients to show!',
 };

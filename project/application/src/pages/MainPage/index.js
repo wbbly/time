@@ -14,6 +14,7 @@ import AddTask from '../../components/AddTask';
 import StartTaskMobile from '../../components/StartTaskMobile';
 import TutorialComponent from '../../components/TutorialComponent';
 import CustomScrollbar from '../../components/CustomScrollbar';
+import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 
 // Actions
 import { getTimeEntriesListAction, restorePaginationAction } from '../../actions/MainPageAction';
@@ -119,6 +120,13 @@ class MainPage extends Component {
                         <AddTask />
                         <CustomScrollbar>
                             <div className="main-page__list">
+                                {timeEntriesList &&
+                                    timeEntriesList.length === 0 &&
+                                    BlankListComponent(
+                                        this.props.vocabulary.v_no_entries,
+                                        this.props.vocabulary.v_no_entries_sub,
+                                        { bottom: '-175px' }
+                                    )}
                                 {this.splitTimersByDay(timeEntriesList).map((day, index, arr) => (
                                     <div
                                         className={classNames('main-page__day', {

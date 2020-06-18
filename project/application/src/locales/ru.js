@@ -208,7 +208,10 @@ export default {
     v_cofirm_password_required: 'Требуется подтверждение пароля',
     v_add_old_password: 'Введите текущий пароль',
     v_add_new_password: 'Введите новый пароль',
-
     v_v_required: 'Обязательное поле',
     v_v_incorect_url: 'Неверный URL',
+    v_no_report: 'Нет отчета для отображения!',
+    v_no_entries: 'Нет записей для отображения.',
+    v_no_entries_sub: 'Прошло много времени с тех пор, как вы записывали свои задачи!',
+    v_no_clients: 'Нет клиентов для отображения!',
 };

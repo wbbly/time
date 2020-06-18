@@ -208,7 +208,10 @@ export default {
     v_cofirm_password_required: 'È richiesta la conferma della password',
     v_add_old_password: 'Aggiungi la password corrente',
     v_add_new_password: 'Inserisci la tua nuova password',
-
     v_v_required: 'Campo obbligatorio',
     v_v_incorect_url: 'URL errato',
+    v_no_report: 'Nessun rapporto da mostrare!',
+    v_no_entries: 'Nessuna voce recente da mostrare.',
+    v_no_entries_sub: 'È passato molto tempo da quando hai seguito le tue attività!',
+    v_no_clients: 'Nessun cliente da mostrare!',
 };

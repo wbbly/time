@@ -270,7 +270,7 @@ class UserSetting extends Component {
                     <div className="body_user_setting">
                         <div className="column column-avatar-social">
                             <Avatar />
-                            {AppConfig.socialAuth.active && (<SocialConnect />)}
+                            {AppConfig.socialAuth.active && <SocialConnect />}
                         </div>
                         <Formik
                             enableReinitialize={true}
