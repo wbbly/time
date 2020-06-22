@@ -10,44 +10,9 @@
     left: 0;
     right: 0;
     background-color: #333333;
-    padding-top: 47px;
     padding-left: 56px;
     padding-right: 56px;
     overflow-y: auto;
-  }
-
-  .projects_page_header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .projects_page_title {
-    font-family: "Open Sans", sans-serif;
-    line-height: normal;
-    font-size: 36px;
-    color: #ffffff;
-  }
-
-  .create_project_button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 208px;
-    height: 41px;
-    font-family: "Open Sans", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    line-height: normal;
-    font-size: 14px;
-    color: #ffffff;
-    background-color: #27ae60;
-    outline: none;
-    cursor: pointer;
-  }
-
-  .project_page_filters {
-    margin-top: 67px;
   }
 
   .project_data_wrapper {
@@ -96,7 +61,7 @@
       width: 100%;
       max-width: 350px;
     }
-    .create_projects_modal_data_input_container{
+    .create_projects_modal_data_input_container {
       flex-wrap: wrap;
     }
     .clients_list_wrapper {
@@ -115,7 +80,7 @@
       width: 100%;
       max-width: 350px;
     }
-    .edit_projects_modal_data_input_container{
+    .edit_projects_modal_data_input_container {
       flex-wrap: wrap;
     }
     .edit_projects_modal_button_container {

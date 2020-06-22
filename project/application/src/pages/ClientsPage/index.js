@@ -7,6 +7,7 @@ import classNames from 'classnames';
 // Components
 import { Loading } from '../../components/Loading';
 import ClientModal from '../../components/ClientModal';
+import ComponentHeader from '../../components/ComponentHeader';
 import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 
 // Actions
@@ -125,14 +126,12 @@ class ClientsPage extends Component {
                         />
                     )}
                     <div className="data_container_clients_page">
-                        <div className="clients_page_header">
-                            <div className="clients_page_title">{v_clients}</div>
-                            {true && (
-                                <button className="add_client_button" onClick={e => this.setState({ showModal: true })}>
-                                    {v_add_new_client}
-                                </button>
-                            )}
-                        </div>
+                        <ComponentHeader
+                            title={v_clients}
+                            buttonName={v_add_new_client}
+                            onClick={() => this.setState({ showModal: true })}
+                        />
+
                         <div className="wrapper_clients_search_bar">
                             <div className="clients_search_bar_search_field_container">
                                 <i className="magnifer" />

@@ -1,0 +1,32 @@
+.component_page_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "Open Sans", sans-serif;
+  color: #ffffff;
+  margin-top: 51px;
+  margin-bottom: 35px;
+}
+
+.component_page_title {
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 49px;
+}
+
+.create_component_button {
+  width: 208px;
+  height: 41px;
+  border-radius: 4px;
+  outline: none;
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 19px;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #27ae60;
+  cursor: pointer;
+}

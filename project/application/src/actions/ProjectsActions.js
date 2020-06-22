@@ -1,6 +1,7 @@
-import { getProjectsList } from '../configAPI';
+import { getProjectsList, getRelationProjectsList } from '../configAPI';
 
 export const SET_PROJECTS_LIST = 'SET_PROJECTS_LIST';
+export const SET_RELATION_PROJECTS_LIST = 'SET_RELATION_PROJECTS_LIST';
 
 export default function projectsPageAction(actionType, action) {
     if (actionType === 'CREATE_PROJECT') {
@@ -41,6 +42,11 @@ const setProjectsListAction = payload => ({
     payload,
 });
 
+const setRelationProjectsListAction = payload => ({
+    type: SET_RELATION_PROJECTS_LIST,
+    payload,
+});
+
 export const getProjectsListActions = (withTimerList = false) => async dispatch => {
     try {
         const { data } = await getProjectsList(withTimerList);
@@ -75,5 +81,14 @@ export const getProjectsListActions = (withTimerList = false) => async dispatch 
         dispatch(setProjectsListAction(formattedList));
     } catch {
         dispatch(setProjectsListAction([]));
+    }
+};
+
+export const getRelationProjectsListAction = (syncType = 'jira') => async dispatch => {
+    try {
+        const { data } = await getRelationProjectsList(syncType);
+        dispatch(setRelationProjectsListAction(data));
+    } catch (error) {
+        dispatch(setRelationProjectsListAction([]));
     }
 };

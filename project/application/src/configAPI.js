@@ -2,6 +2,8 @@ import axios from 'axios';
 
 import { logoutByUnauthorized } from './services/authentication';
 
+import { getDataStorageDateByPlan } from './services/timeService';
+
 import { AppConfig } from './config';
 
 import { getTokenFromLocalStorage } from './services/tokenStorageService';
@@ -148,6 +150,12 @@ export const getProjectsList = (withTimerList = false) =>
         params: {
             withTimerList,
         },
+    });
+
+export const getRelationProjectsList = syncType =>
+    instance({
+        url: `/project/${syncType}/list`,
+        method: 'GET',
     });
 
 // keys for data: issue, projectId, startDatetime, endDatetime
@@ -369,4 +377,10 @@ export const setPassword = ({ password, token }) =>
             password,
             token,
         },
+    });
+
+export const syncAllTasksWithJira = () =>
+    instance({
+        url: `sync/jira/worklog?dateFrom=${getDataStorageDateByPlan(-30)}`, // change to needed start date, by donut plane
+        method: 'POST',
     });

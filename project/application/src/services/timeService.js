@@ -155,3 +155,9 @@ function padTime(item) {
 
     return item;
 }
+
+export function getDataStorageDateByPlan(days = 0) {
+    const date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + days);
+
+    return moment(date).format('YYYY-MM-DD');
+}

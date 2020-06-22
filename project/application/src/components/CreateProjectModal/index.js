@@ -9,10 +9,12 @@ import { apiCall } from '../../services/apiService';
 
 // Components
 import ClientsDropdown from '../ClientsDropdown';
+import ProjectsDropdown from '../ProjectsDropdown';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
 import { getClientsAction } from '../../actions/ClientsActions';
+import { getRelationProjectsListAction } from '../../actions/ProjectsActions';
 
 // Queries
 
@@ -32,6 +34,8 @@ class CreateProjectModal extends Component {
         selectValue: [],
         selectedClient: null,
         clientsList: null,
+        selectedProject: null,
+        relationProjectsList: null,
     };
 
     setItem(value) {
@@ -45,13 +49,18 @@ class CreateProjectModal extends Component {
             listOpen: !this.state.listOpen,
         });
     }
+
     clientSelect = data => {
         this.setState({ selectedClient: data ? data : null });
     };
 
+    projectSelect = data => {
+        this.setState({ selectedProject: data ? data : null });
+    };
+
     addProject() {
         const { vocabulary, showNotificationAction } = this.props;
-        const { selectedClient } = this.state;
+        const { selectedClient, selectedProject } = this.state;
         const { v_a_project_existed, v_a_project_created_error } = vocabulary;
         const project = addProjectPreProcessing(
             this.createProjectInput.value,
@@ -72,6 +81,7 @@ class CreateProjectModal extends Component {
                     name: project.name,
                     projectColorId: project.colorProject.id,
                     clientId: selectedClient ? selectedClient.id : null,
+                    jiraProjectId: selectedProject ? selectedProject.id : null,
                 },
             }),
         }).then(
@@ -105,17 +115,21 @@ class CreateProjectModal extends Component {
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.closeList);
     }
+
     componentDidUpdate(prevProps, prevState) {
-        const { clientsList } = this.props;
+        const { clientsList, relationProjectsList } = this.props;
         if (prevProps.clientsList !== clientsList) {
             this.setState({ clientsList });
+        }
+        if (prevProps.relationProjectsList !== relationProjectsList) {
+            this.setState({ relationProjectsList });
         }
     }
 
     render() {
         const { vocabulary } = this.props;
         const { v_create_project, v_project_name, v_add_project_name } = vocabulary;
-        const { clientsList } = this.state;
+        const { clientsList, relationProjectsList } = this.state;
         let selectItems = this.state.selectValue.map(value => {
             const { id, name } = value;
             return (
@@ -161,6 +175,13 @@ class CreateProjectModal extends Component {
                                 clientSelect={this.clientSelect}
                                 vocabulary={vocabulary}
                             />
+                            {this.props.userReducer.user.tokenJira && (
+                                <ProjectsDropdown
+                                    relationProjectsList={relationProjectsList}
+                                    projectSelect={this.projectSelect}
+                                    vocabulary={vocabulary}
+                                />
+                            )}
                         </div>
                     </div>
                     <div className="create_projects_modal_button_container">
@@ -197,6 +218,7 @@ class CreateProjectModal extends Component {
         );
         document.addEventListener('mousedown', this.closeList);
         this.props.getClientsAction();
+        this.props.userReducer.user.tokenJira && this.props.getRelationProjectsListAction();
     }
 }
 
@@ -207,11 +229,14 @@ CreateProjectModal.propTypes = {
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     clientsList: state.clientsReducer.clientsList,
+    relationProjectsList: state.projectReducer.relationProjectsList,
+    userReducer: state.userReducer,
 });
 
 const mapDispatchToProps = {
     showNotificationAction,
     getClientsAction,
+    getRelationProjectsListAction,
 };
 
 export default connect(

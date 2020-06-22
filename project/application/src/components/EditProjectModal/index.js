@@ -8,10 +8,12 @@ import { apiCall } from '../../services/apiService';
 
 // Components
 import ClientsDropdown from '../ClientsDropdown';
+import ProjectsDropdown from '../ProjectsDropdown';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
 import { getClientsAction } from '../../actions/ClientsActions';
+import { getRelationProjectsListAction } from '../../actions/ProjectsActions';
 
 // Queries
 
@@ -31,6 +33,8 @@ class EditProjectModal extends Component {
         selectValue: [],
         projectId: '',
         selectedClient: null,
+        selectedProject: null,
+        relationProjectsList: null,
     };
 
     setItem(value) {
@@ -48,7 +52,7 @@ class EditProjectModal extends Component {
     changeProject() {
         const { vocabulary, showNotificationAction } = this.props;
         const { v_a_project_existed, v_a_project_edit_error } = vocabulary;
-        const { selectedClient } = this.state;
+        const { selectedClient, selectedProject } = this.state;
         const project = addProjectPreProcessing(
             this.editProjectInput.value,
             this.state.selectedValue.id,
@@ -75,6 +79,7 @@ class EditProjectModal extends Component {
                     name: this.editProjectInput.value,
                     projectColorId: this.state.selectedValue.id,
                     clientId: selectedClient ? selectedClient.id : null,
+                    jiraProjectId: selectedProject ? selectedProject.id : null,
                 },
             }),
         }).then(
@@ -102,8 +107,13 @@ class EditProjectModal extends Component {
     closeModal = () => {
         this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', { tableData: false });
     };
+
     clientSelect = data => {
         this.setState({ selectedClient: data ? data : null });
+    };
+
+    projectSelect = data => {
+        this.setState({ selectedProject: data ? data : null });
     };
 
     componentDidMount() {
@@ -134,12 +144,17 @@ class EditProjectModal extends Component {
         }).then(
             result => {
                 let data = result.data;
-                this.setState({ projectId: data.project_v2[0].id, selectedClient: data.project_v2[0].client });
-                this.setItem({
-                    id: data.project_v2[0].project_color.id,
-                    name: data.project_v2[0].project_color.name,
+                const { id, client, jira_project_id, project_color, name } = data.project_v2[0];
+                this.setState({
+                    projectId: id,
+                    selectedClient: client,
+                    selectedProject: jira_project_id,
                 });
-                this.editProjectInput.value = data.project_v2[0].name;
+                this.setItem({
+                    id: project_color.id,
+                    name: project_color.name,
+                });
+                this.editProjectInput.value = name;
             },
             err => {
                 if (err instanceof Response) {
@@ -151,19 +166,30 @@ class EditProjectModal extends Component {
         );
         this.props.getClientsAction();
         document.addEventListener('mousedown', this.closeList);
+        this.props.userReducer.user.tokenJira && this.props.getRelationProjectsListAction();
     }
+
     closeList = e => {
         const { listOpen } = this.state;
         if (listOpen && !e.target.closest('.edit_projects_modal_data_select_container')) {
             this.setState({ listOpen: false });
         }
     };
+
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.closeList);
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { relationProjectsList } = this.props;
+        if (prevProps.relationProjectsList !== relationProjectsList) {
+            this.setState({ relationProjectsList });
+        }
+    }
+
     render() {
         const { vocabulary } = this.props;
-        const { selectedClient } = this.state;
+        const { selectedClient, relationProjectsList, selectedProject } = this.state;
         const { v_edit_project, v_project_name, v_edit_project_name } = vocabulary;
 
         let selectItems = this.state.selectValue.map(value => {
@@ -209,6 +235,14 @@ class EditProjectModal extends Component {
                                 clientsList={this.props.clientsList}
                                 vocabulary={vocabulary}
                             />
+                            {this.props.userReducer.user.tokenJira && (
+                                <ProjectsDropdown
+                                    relationProjectsList={relationProjectsList}
+                                    projectSelect={this.projectSelect}
+                                    vocabulary={vocabulary}
+                                    selectedProject={selectedProject}
+                                />
+                            )}
                         </div>
                     </div>
                     <div className="edit_projects_modal_button_container">
@@ -228,11 +262,14 @@ class EditProjectModal extends Component {
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     clientsList: state.clientsReducer.clientsList,
+    relationProjectsList: state.projectReducer.relationProjectsList,
+    userReducer: state.userReducer,
 });
 
 const mapDispatchToProps = {
     showNotificationAction,
     getClientsAction,
+    getRelationProjectsListAction,
 };
 
 export default connect(

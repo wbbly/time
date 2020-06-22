@@ -12,7 +12,7 @@ export default {
         'Добавление ворклога в Jira было завершено с ошибкой. Убедитесь, что доступы к Jira верны и название задачи соотвествует формату "JIRA-1 Comment".',
     'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': 'Текущая задача уже была добавлена в ворклог Jira.',
 
-    'ERROR.TIMER.JIRA_SYNC_SUCCESS': 'Тестовое соединение с Jira было успешно установленно.',
+    'TIMER.JIRA_SYNC_SUCCESS': 'Тестовое соединение с Jira было успешно установленно.',
     'ERROR.TIMER.JIRA_SYNC_FAILED':
         'Тестовое соединение с Jira не было установлено. Убедитесь, что введенные данные верны.',
 
@@ -193,6 +193,9 @@ export default {
     v_edit_client_name: 'Редактировать имя клиента',
     v_edit_client: 'Редактировать',
     v_select_client: 'Выберите клиента',
+    v_sync_with_jira_project: 'Синхронизация с проектом Jira',
+    v_jira_synchronization_problem: 'Задачи из Jira не были синхронизированы. Убедитесь, что доступы к Jira верны',
+    v_jira_synchronization_ok: 'Задачи были успешно синхронизированы из Jira',
     v_add_project_name: 'Добавьте название проекта',
     v_edit_project_name: 'Измените имя проекта',
     v_verify: 'Проверить',
@@ -208,6 +211,8 @@ export default {
     v_cofirm_password_required: 'Требуется подтверждение пароля',
     v_add_old_password: 'Введите текущий пароль',
     v_add_new_password: 'Введите новый пароль',
+    v_jira_synchronization_confirm: 'Вы действительно хотите выполнить синхронизацию?',
+
     v_v_required: 'Обязательное поле',
     v_v_incorect_url: 'Неверный URL',
     v_no_report: 'Нет отчета для отображения!',

@@ -11,7 +11,7 @@ export default {
         'The adding worklog to Jira was completed with an error. Make sure that the access to Jira is correct and the name of the task is in the format "JIRA-1 Comment".',
     'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': 'The current task has already been added to the Jira worklog.',
 
-    'ERROR.TIMER.JIRA_SYNC_SUCCESS': 'A test connection with Jira has been established.',
+    'TIMER.JIRA_SYNC_SUCCESS': 'A test connection with Jira has been established.',
     'ERROR.TIMER.JIRA_SYNC_FAILED':
         'A test connection with Jira has not been established. Make sure the entered data is correct.',
 
@@ -190,6 +190,10 @@ export default {
     v_edit_client_name: 'Edit client name',
     v_edit_client: 'Edit',
     v_select_client: 'Select client',
+    v_sync_with_jira_project: 'Sync with Jira project',
+    v_jira_synchronization_problem:
+        'The tasks from the Jira were not synchronized. Make sure that the access to Jira is correct',
+    v_jira_synchronization_ok: 'The tasks from the Jira were synchronized',
     v_add_project_name: 'Add project name',
     v_edit_project_name: 'Edit project name',
     v_verify: 'Verify',
@@ -205,6 +209,8 @@ export default {
     v_cofirm_password_required: 'Password confirm is required',
     v_add_old_password: 'Add current password',
     v_add_new_password: 'Add your new password',
+    v_jira_synchronization_confirm: 'Are you sure you want to sync?',
+
     v_v_required: 'Required field',
     v_v_incorect_url: 'Incorrect URL',
     v_no_report: 'No report to show!',

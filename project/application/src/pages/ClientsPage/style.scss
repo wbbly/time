@@ -3,29 +3,7 @@
   color: #ffffff;
 
   .data_container_clients_page {
-    padding: 47px 56px 0;
-  }
-  .clients_page_header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 67px;
-  }
-  .clients_page_title {
-    font-size: 36px;
-  }
-  .add_client_button {
-    width: 208px;
-    height: 41px;
-    font-family: "Open Sans", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    line-height: normal;
-    font-size: 14px;
-    color: #ffffff;
-    background-color: #27ae60;
-    outline: none;
-    cursor: pointer;
+    padding: 0px 56px 0;
   }
 
   .wrapper_clients_search_bar {
@@ -138,7 +116,7 @@
     display: flex;
     align-items: center;
   }
-  .clients_project:not(:last-child){
+  .clients_project:not(:last-child) {
     padding-bottom: 15px;
   }
   .clients_project-color-circle {
