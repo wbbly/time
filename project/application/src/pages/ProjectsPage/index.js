@@ -13,6 +13,7 @@ import ProjectSearchBar from '../../components/projectSearchBar';
 import ProjectData from '../../components/ProjectsData';
 import CreateProjectModal from '../../components/CreateProjectModal';
 import { Loading } from '../../components/Loading';
+import ComponentHeader from '../../components/ComponentHeader';
 
 // Actions
 import projectsPageAction from '../../actions/ProjectsActions';
@@ -81,17 +82,13 @@ class ProjectsPage extends Component {
                         />
                     )}
                     <div className="data_container_projects_page">
-                        <div className="projects_page_header">
-                            <div className="projects_page_title">{v_projects}</div>
-                            {checkIsAdminByRole(currentTeam.data.role) && (
-                                <button
-                                    className="create_project_button"
-                                    onClick={e => projectsPageAction('TOGGLE_MODAL', { toggle: true })}
-                                >
-                                    {v_create_new_project}
-                                </button>
-                            )}
-                        </div>
+                        <ComponentHeader
+                            title={v_projects}
+                            buttonName={v_create_new_project}
+                            onClick={() => projectsPageAction('TOGGLE_MODAL', { toggle: true })}
+                            access={checkIsAdminByRole(currentTeam.data.role)}
+                        />
+
                         <div className="project_page_filters">
                             <ProjectSearchBar
                                 tableInfo={this.props.tableData}

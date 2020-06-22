@@ -6,6 +6,7 @@ import moment from 'moment';
 import classNames from 'classnames';
 
 import { getDateInString } from '../../services/timeService';
+import { syncAllTasksWithJira } from '../../configAPI';
 
 // Components
 import { Loading } from '../../components/Loading';
@@ -14,11 +15,13 @@ import AddTask from '../../components/AddTask';
 import StartTaskMobile from '../../components/StartTaskMobile';
 import TutorialComponent from '../../components/TutorialComponent';
 import CustomScrollbar from '../../components/CustomScrollbar';
+import ComponentHeader from '../../components/ComponentHeader';
 import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 
 // Actions
-import { getTimeEntriesListAction, restorePaginationAction } from '../../actions/MainPageAction';
 import { getProjectsListActions } from '../../actions/ProjectsActions';
+import { showNotificationAction } from '../../actions/NotificationActions';
+import { getTimeEntriesListAction, restorePaginationAction } from '../../actions/MainPageAction';
 
 // Styles
 import './style.scss';
@@ -71,6 +74,43 @@ class MainPage extends Component {
         return getDateInString(totalTime, durationTimeFormat);
     };
 
+    jiraSynchronizationHandleClick = e => {
+        const { vocabulary, showNotificationAction, getTimeEntriesListAction, getProjectsListActions } = this.props;
+        const {
+            v_jira_synchronization_problem,
+            v_jira_synchronization_ok,
+            v_jira_synchronization_confirm,
+        } = vocabulary;
+
+        if (!window.confirm(v_jira_synchronization_confirm)) return;
+        this.setState({
+            isInitialFetching: true,
+        });
+
+        syncAllTasksWithJira()
+            .then(() => {
+                getTimeEntriesListAction();
+                getProjectsListActions();
+            })
+            .then(() => {
+                showNotificationAction({
+                    text: `${v_jira_synchronization_ok}`,
+                    type: 'success',
+                });
+            })
+            .catch(err => {
+                showNotificationAction({
+                    text: `${v_jira_synchronization_problem}`,
+                    type: 'error',
+                });
+            })
+            .finally(() => {
+                this.setState({
+                    isInitialFetching: false,
+                });
+            });
+    };
+
     async componentDidMount() {
         const { getTimeEntriesListAction, getProjectsListActions } = this.props;
         await getTimeEntriesListAction();
@@ -117,7 +157,7 @@ class MainPage extends Component {
                             'main-page--mobile': isMobile,
                         })}
                     >
-                        <AddTask />
+                        <AddTask handleJiraSync={this.jiraSynchronizationHandleClick} />
                         <CustomScrollbar>
                             <div className="main-page__list">
                                 {timeEntriesList &&
@@ -186,6 +226,7 @@ const mapDispatchToProps = {
     getTimeEntriesListAction,
     getProjectsListActions,
     restorePaginationAction,
+    showNotificationAction,
 };
 
 export default connect(

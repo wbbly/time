@@ -40,6 +40,44 @@ const StopIcon = props => {
     );
 };
 
+const SyncIcon = props => {
+    const { className, onClick, name } = props;
+    return (
+        <svg
+            className={className}
+            onClick={onClick}
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M0.833252 3.33334V8.33334H5.83325"
+                stroke="#C1C0C0"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M19.1668 16.6667V11.6667H14.1667"
+                stroke="#C1C0C0"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M17.0749 7.50001C16.6523 6.30567 15.934 5.23785 14.987 4.39619C14.0401 3.55454 12.8954 2.96648 11.6597 2.68689C10.424 2.4073 9.13762 2.4453 7.92059 2.79732C6.70356 3.14935 5.59554 3.80394 4.69992 4.70001L0.833252 8.33334M19.1666 11.6667L15.2999 15.3C14.4043 16.1961 13.2963 16.8507 12.0792 17.2027C10.8622 17.5547 9.57584 17.5927 8.34016 17.3131C7.10447 17.0335 5.95975 16.4455 5.01281 15.6038C4.06586 14.7622 3.34756 13.6944 2.92492 12.5"
+                stroke="#C1C0C0"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <title>{name}</title>
+        </svg>
+    );
+};
+
 class AddTask extends Component {
     state = {
         issue: '',
@@ -137,12 +175,11 @@ class AddTask extends Component {
         this.setState({
             issue: value,
         });
-        if (currentTimer) {
-            if (currentTimer.issue === value.trim()) {
-                this.setState({ isUpdating: false }, () => this.updateTaskIssueDebounced.cancel());
-            } else if (currentTimer.issue !== value.trim() && currentTimer && value.trim()) {
-                this.setState({ isUpdating: true }, () => this.updateTaskIssueDebounced());
-            }
+
+        if (currentTimer && currentTimer.issue === value.trim()) {
+            this.setState({ isUpdating: false }, () => this.updateTaskIssueDebounced.cancel());
+        } else if (currentTimer && currentTimer.issue !== value.trim() && currentTimer && value.trim()) {
+            this.setState({ isUpdating: true }, () => this.updateTaskIssueDebounced());
         }
     };
 
@@ -214,8 +251,8 @@ class AddTask extends Component {
 
     render() {
         const { issue, projectId, isUpdating } = this.state;
-        const { currentTimer, vocabulary, timerTick, isMobile } = this.props;
-        const { v_add_your_task_name } = vocabulary;
+        const { currentTimer, vocabulary, timerTick, isMobile, handleJiraSync, user } = this.props;
+        const { v_add_your_task_name, v_jira_synchronization } = vocabulary;
         return (
             !isMobile && (
                 <div className={classNames('add-task')}>
@@ -229,6 +266,13 @@ class AddTask extends Component {
                         placeholder={v_add_your_task_name}
                         className="add-task__input"
                     />
+                    {user.tokenJira && (
+                        <SyncIcon
+                            className={classNames('add-task__sync')}
+                            onClick={handleJiraSync}
+                            name={v_jira_synchronization}
+                        />
+                    )}
                     <ProjectsListPopup
                         withFolder
                         disabled={isUpdating}

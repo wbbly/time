@@ -12,7 +12,7 @@ export default {
         "L'aggiunta del 'worklog' a Jira è stata completata con un errore. Assicurati che l'accesso a Jira sia corretto e che il nome del compito sia nel formato 'JIRA-1 Commento'.",
     'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED': "Il compito è stato già aggiunto al 'worklog' di Jira.",
 
-    'ERROR.TIMER.JIRA_SYNC_SUCCESS': 'È stata stabilita una connessione di test con Jira.',
+    'TIMER.JIRA_SYNC_SUCCESS': 'È stata stabilita una connessione di test con Jira.',
     'ERROR.TIMER.JIRA_SYNC_FAILED':
         'Non è stato possibile stabilire una connessione di test con Jira. Assicurarsi che i dati inseriti siano corretti.',
 
@@ -193,6 +193,10 @@ export default {
     v_edit_client_name: 'Modifica il nome del cliente',
     v_edit_client: 'Modifica',
     v_select_client: 'Seleziona cliente',
+    v_sync_with_jira_project: 'Sincronizzazione con il progetto Jira',
+    v_jira_synchronization_problem:
+        "I compito di Jira non erano sincronizzati. Assicurati che l'accesso a Jira sia corretto.",
+    v_jira_synchronization_ok: 'I compito di Jira erano sincronizzati',
     v_add_project_name: 'Aggiungi il nome del progetto',
     v_edit_project_name: 'Modifica il nome del progetto',
     v_verify: 'Verificare',
@@ -208,6 +212,8 @@ export default {
     v_cofirm_password_required: 'È richiesta la conferma della password',
     v_add_old_password: 'Aggiungi la password corrente',
     v_add_new_password: 'Inserisci la tua nuova password',
+    v_jira_synchronization_confirm: 'Sei sicuro di voler sincronizzare?',
+
     v_v_required: 'Campo obbligatorio',
     v_v_incorect_url: 'URL errato',
     v_no_report: 'Nessun rapporto da mostrare!',

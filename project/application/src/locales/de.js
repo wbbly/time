@@ -13,7 +13,7 @@ export default {
     'ERROR.TIMER.JIRA_WORKLOG_ALREADY_ADDED':
         'Die aktuelle Aufgabe wurde bereits zu Jiras Arbeitsprotokoll hinzugefügt.',
 
-    'ERROR.TIMER.JIRA_SYNC_SUCCESS': 'Testverbindung mit Jira wurde erfolgreich hergestellt.',
+    'TIMER.JIRA_SYNC_SUCCESS': 'Testverbindung mit Jira wurde erfolgreich hergestellt.',
     'ERROR.TIMER.JIRA_SYNC_FAILED':
         'Eine Testverbindung mit Jira wurde nicht hergestellt. Stellen Sie sicher, dass die eingegebenen Daten korrekt sind. ',
 
@@ -198,6 +198,10 @@ export default {
     v_edit_client_name: 'Bearbeiten Sie den Client-Namen',
     v_edit_client: 'Bearbeiten',
     v_select_client: 'Wählen Sie den Client aus',
+    v_sync_with_jira_project: 'Mit dem Jira-Projekt synchronisieren',
+    v_jira_synchronization_problem:
+        'Die Tasks aus Jira war nicht synchronisiert. Vergewissern Sie sich, dass verbindung korrekt ist',
+    v_jira_synchronization_ok: 'Die Tasks war aus Jira synchronisiert',
     v_add_project_name: 'Projektnamen hinzufügen',
     v_edit_project_name: 'Ändern Sie den Projektnamen',
     v_verify: 'Überprüfen',
@@ -213,6 +217,7 @@ export default {
     v_cofirm_password_required: 'Passwortbestätigung ist erforderlich',
     v_add_old_password: 'Aktuelles Passwort hinzufügen',
     v_add_new_password: 'Gib dein neues Passwort ein',
+    v_jira_synchronization_confirm: 'Möchten Sie synchronisieren?',
 
     v_v_required: 'Pflichtfeld',
     v_v_incorect_url: 'Falsche URL',
