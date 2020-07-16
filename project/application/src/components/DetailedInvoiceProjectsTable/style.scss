@@ -1,0 +1,178 @@
+.detailed-invoice-projects-table {
+  margin-bottom: 26px;
+
+  &__input {
+    width: 100%;
+    color: #ffffff;
+    background: #3f3f3f;
+    border-radius: 3px;
+    padding: 8px 10px 8px 16px;
+    border: none;
+    line-height: normal;
+    word-wrap: initial;
+
+    &::placeholder {
+      color: #ffffff;
+    }
+    &::-webkit-input-placeholder {
+      line-height: normal !important;
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &--disabled {
+      background: none;
+    }
+    &--empty {
+      border: 1px solid #d84e4e;
+    }
+  }
+
+  &__icon-button {
+    cursor: pointer;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 0 5px 0 16px ;
+    height: 50px;
+    background: #292929;
+    font-weight: bold;
+    margin-bottom: 3px;
+    border-radius: 3px;
+  }
+
+  &__project-column {
+    width: 20%;
+  }
+  &__tax-column {
+    width: 15%;
+    display: flex;
+    padding-left: 10px;
+    & > span {
+      padding-left: 9px;
+    }
+  }
+  &__rate-column {
+    width: 15%;
+    display: flex;
+    padding-left: 10px;
+    & > span {
+      padding-left: 7px;
+    }
+  }
+  &__amount-column {
+    width: 15%;
+    display: flex;
+    padding-left: 8px;
+    & > span {
+      padding-left: 3px;
+    }
+  }
+  &__subtotal-column {
+    
+    width: 20%;
+    display: flex;
+    padding-left: 10px;
+    & > span {
+      padding-left: 5px;
+      
+    }
+  }
+  &__subtotal-column span:first-child{
+    padding-left: 0;
+    
+  }
+  &__subtotal-column span:last-child{
+    word-break: break-all;
+    
+  }
+  &__tools-column {
+    width: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+  }
+
+  &__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    height: 50px;
+    .detailed-invoice-projects-table__subtotal-column{
+      padding-left: 12px;
+    }
+  }
+}
+@media screen and (max-width: 520px) {
+  .detailed-invoice-projects-table {
+    overflow-x: scroll;
+    margin-bottom: 10px;
+    font-size: 14px;
+    &__header {
+      display: inline-flex;
+    }
+    &__project-column {
+      width: 110px;
+      input{
+        width:100px;
+      }
+    }
+    &__tax-column {
+      width: 105px;
+      input{
+        width: 80px;
+      }
+    }
+    &__rate-column {
+      width: 100px;
+      input{
+        width: 80px;
+      }
+    }
+    &__amount-column {
+      width: 90px;
+      input{
+        width: 80px;
+      }
+      & > span {
+        padding-left: 0;
+      }
+    }
+    &__subtotal-column {
+      display: flex;
+      width: 120px;
+      padding-left: 5px;
+      span{
+        width: 100%;
+      }
+    }
+
+    &__tools-column {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      svg {
+        height: 15px;
+      }
+    }
+    .detailed-invoice-projects-table__subtotal-column{
+      span:first-child{
+        width: fit-content;
+      }
+    }
+    .detailed-invoice-projects-table__subtotal-column{
+      span:last-child{
+        width: 200px;
+      }
+    }
+  }
+  
+}

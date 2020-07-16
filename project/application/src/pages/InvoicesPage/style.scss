@@ -1,0 +1,85 @@
+.wrapper-invoices-page {
+  font-family: "Open Sans", sans-serif;
+  color: #ffffff;
+  position: relative;
+  width: 100%;
+  .cat-wrapper{
+    position: absolute;
+    top: 250%;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+  .invoices-page-top {
+    padding: 28px 40px 0;
+    &__last-invoices{
+      margin-top: 34px;
+      margin-bottom: 34px;
+    }
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 34px;
+    }
+    &__totals {
+      display: flex;
+      width: 100%;
+    }
+
+    &__add-invoice-button {
+      padding: 10px 30px;
+      font-family: "Open Sans", sans-serif;
+      font-style: normal;
+      font-weight: bold;
+      line-height: normal;
+      font-size: 14px;
+      color: #ffffff;
+      background-color: #27ae60;
+      outline: none;
+      cursor: pointer;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+
+    &__title {
+      font-size: 26px;
+    }
+
+    @media screen and (max-width: 414px) {
+      &__add-invoice-button{
+        padding: 10px;
+      }
+      &__header {
+        padding-bottom: 15px;
+      }
+      &__title {
+        font-size: 18px;
+      }
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .invoices-page-top {
+      padding: 10px 10px 0 10px;
+    }
+  }
+
+  .invoices-page-bottom {
+    height: 100%;
+    padding: 0 40px;
+
+    &__title {
+      padding: 0 40px;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 25px;
+      text-transform: uppercase;
+    }
+
+  }
+  @media screen and (max-width: 600px) {
+    .invoices-page-bottom{
+      padding: 0 10px 10px 10px;
+    }
+  }
+}
