@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { createMuiTheme } from '@material-ui/core';
+import { createMuiTheme, Checkbox } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 
 // Services
@@ -114,7 +114,7 @@ class EditTeamModal extends Component {
 
     render() {
         const { vocabulary } = this.props;
-        const { v_name, v_team_role, v_team_access, v_edit_user, v_active, v_not_active } = vocabulary;
+        const { v_name, v_team_role, v_team_access, v_edit_user, v_active, v_not_active, v_delete_member } = vocabulary;
         return (
             <div className="edit_team_modal_wrapper">
                 <div className="edit_team_modal_data">
@@ -171,6 +171,15 @@ class EditTeamModal extends Component {
                                     label={v_not_active}
                                 />
                             </RadioGroup>
+                        </ThemeProvider>
+                    </div>
+                    <div className="delete_team_modal_input_container">
+                        <ThemeProvider theme={materialTheme}>
+                            <FormControlLabel
+                                value={USER_STATUS.NOT_ACTIVE}
+                                control={<Checkbox color="primary" />}
+                                label={v_delete_member}
+                            />
                         </ThemeProvider>
                     </div>
                     <button onClick={e => this.addUser()}>{v_edit_user}</button>

@@ -9,6 +9,7 @@ const formatCurrentTeamData = responseData => {
         id: team.id,
         name: team.name,
         role: role_collaboration.title,
+        owner_id: team.owner_id,
     };
 };
 

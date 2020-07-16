@@ -6,6 +6,7 @@ import { store } from '../store/configureStore';
 import { resetAll } from '../actions/UserActions';
 
 import { closeSocket } from '../configSocket';
+import { func } from 'prop-types';
 
 const APP_VERSION = 'v1.0.7';
 

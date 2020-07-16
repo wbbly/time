@@ -32,7 +32,7 @@ class UserMenu extends Component {
     }
 
     render() {
-        const { switchMenu, vocabulary, isMobile, user } = this.props;
+        const { switchMenu, vocabulary, isMobile, user, isShowMenu } = this.props;
         const { v_log_out, v_profile_settings, v_more_option } = vocabulary;
 
         const { username: userName } = user;
@@ -43,8 +43,12 @@ class UserMenu extends Component {
                     this.openDropdown();
                 }}
             >
-                <div className="logout_container">
-                    <div className="user_name">{userName}</div>
+                <div
+                    className={classNames('logout_container', {
+                        'logout_container--show_menu': isShowMenu && !isMobile,
+                    })}
+                >
+                    {(!isShowMenu || isMobile) && <div className="user_name">{userName}</div>}
                     {user.avatar ? (
                         <div
                             id="avatar-img-small"
@@ -57,10 +61,14 @@ class UserMenu extends Component {
                         <img alt="default_avatar" src={defaultLogo} className="default-logo" />
                     )}
                     {this.state.activeUserMenu && (
-                        <div className="user_setting_modal">
+                        <div
+                            className={classNames('user_setting_modal', {
+                                'user_setting_modal--show_menu': isShowMenu && !isMobile,
+                            })}
+                        >
                             <Link
                                 onClick={e => {
-                                    switchMenu();
+                                    isMobile && switchMenu();
                                 }}
                                 to="/user-settings"
                                 style={{ textDecoration: 'none' }}

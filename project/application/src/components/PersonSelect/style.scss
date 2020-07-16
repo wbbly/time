@@ -1,0 +1,130 @@
+.person-select {
+  cursor: pointer;
+  position: relative;
+  background: #3f3f3f;
+  border-radius: 3px;
+  height: 104px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  line-height: 15px;
+
+  &--disabled {
+    cursor: default;
+  }
+
+  &--error {
+    border: 1px solid #d84e4e;
+  }
+
+  &__title {
+    font-weight: bold;
+  }
+
+  &__selected-person {
+    display: flex;
+    margin: 16px 0 0 16px;
+    .avatar-img-small {
+      display: inline-block;
+      border-radius: 50%;
+      background-repeat: no-repeat;
+      background-position: top center;
+      background-size: cover;
+      width: 48px;
+      height: 42px;
+      margin-right: 20px;
+    }
+    .data-wrapper{
+      display: flex;
+      flex-direction: column;
+      padding-right: 5px;
+    }
+  }
+  &__selected-email {
+    margin-top: 5px;
+  }
+  .default-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  &__selected-person-row {
+    display: flex;
+
+    :last-child {
+      // flex: 3;
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    z-index: 1;
+    padding: 1rem;
+    width: 100%;
+    top: 105%;
+    left: 0;
+    background: white;
+    border-radius: 0.4rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    animation: slowVisibility 0.3s;
+  }
+
+  &__dropdown-list-input {
+    min-width: 100%;
+    font-family: "Open Sans", sans-serif;
+    font-size: 1.6rem;
+    line-height: 1.9rem;
+    color: #000000;
+    padding: 0.6rem 0.5rem;
+    margin: 0 0 0.5rem 0;
+    border: 1px solid #bdbdbd;
+  }
+
+  &__dropdown-list {
+    overflow-y: auto;
+    height: 230px;
+  }
+
+  &__dropdown-list-item {
+    display: flex;
+    min-width: 100%;
+    align-items: center;
+    margin: 0 0 0.5rem 0;
+    padding: 0.7rem 0.5rem;
+    border-radius: 0.4rem;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+  &__add-icon {
+    display: flex;
+    margin-right: 8px;
+  }
+
+  &__dropdown-list-item-username {
+    color: #000000;
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+  }
+}
+@media screen and (max-width: 414px) {
+  .person-select {
+    span {
+      width: 100%;
+    }
+  }
+}
+
+// Mobile styles
+.person-select--mobile {
+  width: 100%;
+  height: 80px;
+  word-wrap: break-word;
+  margin-bottom: 10px;
+}

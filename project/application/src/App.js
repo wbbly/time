@@ -15,6 +15,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import UserSettings from './pages/UserSettings';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ClientsPage from './pages/ClientsPage';
+import InvoicesPage from './pages/InvoicesPage';
+import InvoicesPageDetailed from './pages/InvoicesPageDetailed';
 
 import PageTemplate from './components/PageTemplate';
 
@@ -64,6 +66,7 @@ class App extends Component {
 
     render() {
         const redirect = to => () => <Redirect to={to} />;
+        const { isOwner } = this.props;
 
         return (
             <Switch>
@@ -98,6 +101,43 @@ class App extends Component {
                     render={() => <PageTemplate hideSidebar hideHeader content={ResetPasswordPage} />}
                 />
 
+                <PrivateRoute
+                    exact
+                    path="/invoices"
+                    render={() => (isOwner ? <PageTemplate content={InvoicesPage} /> : '')}
+                />
+                <PrivateRoute
+                    exact
+                    path="/invoices/:pageType"
+                    render={() => (isOwner ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
+                />
+                <PrivateRoute
+                    exact
+                    path="/invoices/:pageType/:invoiceId"
+                    render={() => (isOwner ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
+                />
+                <PrivateRoute
+                    exact
+                    path="/invoices/view/:invoiceId"
+                    render={() =>
+                        isOwner ? (
+                            <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="view" />} />
+                        ) : (
+                            ''
+                        )
+                    }
+                />
+                <PrivateRoute
+                    exact
+                    path="/invoices/update/:invoiceId"
+                    render={() =>
+                        isOwner ? (
+                            <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="update" />} />
+                        ) : (
+                            ''
+                        )
+                    }
+                />
                 <Route render={() => <div>404 not found</div>} />
             </Switch>
         );
@@ -106,6 +146,7 @@ class App extends Component {
 
 const mapStateToProps = state => ({
     isMobile: state.responsiveReducer.isMobile,
+    isOwner: state.teamReducer.currentTeam.data.owner_id,
 });
 
 const mapDispatchToProps = {

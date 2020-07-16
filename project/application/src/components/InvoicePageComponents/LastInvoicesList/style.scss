@@ -1,0 +1,133 @@
+.last-invoices-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  &--not-full {
+    justify-content: space-around;
+  }
+
+  .last-invoices-list-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 5px;
+    margin-left: 5px;
+    // flex: 1;
+    width: 249px;
+    height: 208px;
+    padding: 16px;
+    // background: #EB5757;
+    border-radius: 4px;
+    color: #ffffff;
+    text-decoration: none;
+
+    &--confirmed {
+      background: #27ae60;
+    }
+    &--overdue {
+      background: #EB5757;
+    }
+    &--draft {
+      background: #626262;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &__top {
+      flex: 10;
+    }
+
+    &__name {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 19px;
+    }
+
+    &__thin-text {
+      font-size: 14px;
+      line-height: 19px;
+    }
+
+    &__bottom {
+      flex-grow: 5;
+      flex-shrink: 1;
+      flex-basis: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    &__total {
+      margin-top: 12px;
+      font-size: 14px;
+      line-height: 25px;
+    }
+
+    &__price {
+      font-weight: bold;
+      font-size: 18px;
+      text-transform: uppercase;
+
+      &-number {
+        white-space: nowrap;
+      }
+    }
+
+    &__confirm-button {
+      height: 38px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 19px;
+      color: #ffffff;
+      background: #333;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.43);
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+  }
+}
+
+@media screen and (max-width: 1305px) {
+  .last-invoices-list{
+    .last-invoices-list-item{
+      margin-bottom: 20px;
+      // &:nth-child(3) {
+      //   margin-bottom: 20px;
+      // }
+    }
+  }
+}
+@media screen and (max-width: 1024px) {
+  .last-invoices-list{
+    justify-content: space-between;
+    .last-invoices-list-item{
+    &:nth-child(3) {
+      margin-bottom: 20px;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+  } 
+  }
+}
+@media screen and (max-width: 540px) {
+  .last-invoices-list{
+    justify-content: center;
+    .last-invoices-list-item{
+    &:nth-child(3) {
+      margin-bottom: 20px;
+    }
+  }
+  }
+}

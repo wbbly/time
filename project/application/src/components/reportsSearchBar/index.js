@@ -414,7 +414,7 @@ class ReportsSearchBar extends Component {
             },
         }).then(
             result => {
-                const teamUsers = result.data.team[0].team_users.filter(user => user.is_active);
+                const teamUsers = result.data.team[0].team_users;
                 const users = teamUsers.map(teamUser => teamUser.user[0]);
                 this.setState({ userDataEtalon: users });
                 const inputUserData = this.props.inputUserData;

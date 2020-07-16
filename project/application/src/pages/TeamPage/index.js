@@ -83,6 +83,7 @@ class TeamPage extends Component {
             v_team_role,
             v_team_access,
             v_phone,
+            v_owner,
         } = vocabulary;
         const headerItemsElements = this.headerItems().map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
@@ -123,8 +124,11 @@ class TeamPage extends Component {
                     </td>
                     <td data-label="E-mail">{email}</td>
                     <td data-label={v_team_role}>
-                        {checkIsMemberByRole(role) && <div className="access_container">{roleMap[role]}</div>}
-                        {checkIsAdminByRole(role) && <div className="access_container red">{roleMap[role]}</div>}
+                        {currentTeam && currentTeam.data.owner_id ? (
+                            <div className="access_container red">{v_owner}</div>
+                        ) : (
+                            checkIsMemberByRole(role) && <div className="access_container">{roleMap[role]}</div>
+                        )}
                     </td>
                     <td data-label={v_team_access}>
                         <div

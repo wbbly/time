@@ -1,0 +1,133 @@
+.total-invoice-counters {
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  &__dropdown-arrow {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    top: 0;
+    left: 90%;
+    transform: translate(-50%, 50%) rotate(0deg);
+    display: flex;
+    transition: 0.3s all linear;
+    cursor: pointer;
+
+    &--rotate {
+      transform: translate(-50%, 50%) rotate(-180deg);
+    }
+  }
+  &__block {
+    min-width: 32%;
+    position: relative;
+    transition: height 0.5s;
+    &-title {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    &-summ-container {
+      height: max-content;
+      font-size: 18px;
+      font-weight: 900;
+      background-color: rgba(255, 255, 255, 0.06);
+      text-align: center;
+      padding: 10px 0;
+      box-shadow: 0px 4px 19px rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+      position: relative;
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+      cursor: pointer;
+      max-height: 70px;
+      .total-invoice-counters__block-title {
+        font-weight: normal;
+        text-align: center;
+      }
+      &--opened {
+        transition: all 0.4s;
+        height: 100%;
+        max-height: unset;
+        cursor: pointer;
+      }
+    }
+
+    &-summ {
+      display: flex;
+      flex-direction: column;
+      span {
+        text-align: end;
+      }
+      &-number {
+        padding-bottom: 12px;
+
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 1180px) {
+    &__block {
+      .total-invoice-counters__dropdown-arrow {
+      left: 50%;
+      top: 100%;
+      transform: translate(-50%, 0) rotate(0deg);
+      &--rotate {
+        transform: translate(-50%, 0) rotate(-180deg);
+      }
+    }
+  }
+  }
+  @media screen and (max-width: 700px) {
+    &__block {
+      min-width: 30%;
+      &-title {
+        font-size: 12px;
+      }
+      &-summ-container {
+        height: max-content;
+        height: 40px;
+        &--opened {
+          transition: all 0.4s;
+          height: 100%;
+        }
+      }
+      .total-invoice-counters__dropdown-arrow {
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%, 0) rotate(0deg);
+        &--rotate {
+          transform: translate(-50%, 0) rotate(-180deg);
+        }
+      }
+
+      &-summ-container {
+        font-size: 12px;
+        padding: 5px 3px;
+        .total-invoice-counters__block-title {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+    &__block {
+      margin-right: 5px;
+      &-title {
+        margin-bottom: 5px;
+      }
+      &-summ {
+        span {
+          padding-bottom: 5px;
+        }
+      }
+    }
+  }
+
+  &__block:last-child {
+    margin-right: 0;
+  }
+}

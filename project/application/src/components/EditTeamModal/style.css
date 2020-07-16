@@ -80,3 +80,22 @@
     background: url("../../images/icons/forbidden-mark.svg") no-repeat center;
     cursor: pointer;
 }
+.delete_team_modal_input_container{
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    margin-top: 5px;
+}
+.delete_team_modal_input_container span {
+    font-size: 1.4rem;
+    font-weight: 400;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    line-height: 2rem;
+}
+@media (max-width: 320px) {
+    .edit_team_modal_wrapper i{
+        top: 20px;
+        right: 27px;
+    }
+}

@@ -384,3 +384,44 @@ export const syncAllTasksWithJira = () =>
         url: `sync/jira/worklog?dateFrom=${getDataStorageDateByPlan(-30)}`, // change to needed start date, by donut plane
         method: 'POST',
     });
+
+export const createInvoice = data =>
+    instance({
+        url: '/invoice/add',
+        method: 'POST',
+        data,
+    });
+
+export const getInvoices = () =>
+    instance({
+        url: '/invoice/list',
+        method: 'GET',
+    });
+
+export const getInvoiceById = invoiceId =>
+    instance({
+        url: `/invoice/${invoiceId}`,
+        method: 'GET',
+    });
+
+export const changeInvoice = ({ invoiceId, data }) =>
+    instance({
+        url: `/invoice/${invoiceId}`,
+        method: 'PATCH',
+        data,
+    });
+
+export const deleteInvoice = invoiceId =>
+    instance({
+        url: `/invoice/${invoiceId}`,
+        method: 'DELETE',
+    });
+
+export const changeInvoiceStatus = ({ invoiceId, paymentStatus }) =>
+    instance({
+        url: `/invoice/${invoiceId}/payment`,
+        method: 'PATCH',
+        data: {
+            paymentStatus,
+        },
+    });

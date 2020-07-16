@@ -36,7 +36,6 @@ class PrivateRoute extends Component {
             user,
             currentTimer,
             setTimerTickAction,
-            getTimeEntriesListAction,
         } = this.props;
 
         if (!checkAppVersion()) return logoutByUnauthorized();

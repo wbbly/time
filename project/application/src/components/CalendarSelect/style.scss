@@ -1,0 +1,51 @@
+.calendar-select {
+  cursor: pointer;
+  position: relative;
+  background: #3f3f3f;
+  border-radius: 4px;
+  
+  padding: 12px 16px;
+
+  &--disabled {
+    background: #3f3f3f;
+    cursor: default;
+    padding: 16px 16px;
+  }
+
+  &__selected-date {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__date {
+    font-size: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 20rem;
+  }
+
+  &__dropdown {
+    position: absolute;
+    z-index: 1;
+    padding: 1rem;
+    color: #333333;
+    top: 130%;
+    left: 0;
+    background: white;
+    border-radius: 0.4rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    animation: slowVisibility 0.3s;
+  }
+}
+
+
+
+// Mobile styles
+.calendar-select--mobile {
+  &__date {
+    margin: 0 1rem 0 0;
+    max-width: 100px;
+  }
+}

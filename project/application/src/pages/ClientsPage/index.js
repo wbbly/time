@@ -19,7 +19,6 @@ import { checkIsAdminByRole } from '../../services/authentication';
 
 // Styles
 import './style.scss';
-import animation_cat from '../../images/animation_cat.gif';
 
 class ClientsPage extends Component {
     state = {
