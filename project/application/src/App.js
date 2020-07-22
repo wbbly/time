@@ -66,7 +66,12 @@ class App extends Component {
 
     render() {
         const redirect = to => () => <Redirect to={to} />;
-        const { isOwner } = this.props;
+        const { isOwner, user } = this.props;
+
+        let userId = '';
+        if (user) {
+            userId = user.id;
+        }
 
         return (
             <Switch>
@@ -104,17 +109,17 @@ class App extends Component {
                 <PrivateRoute
                     exact
                     path="/invoices"
-                    render={() => (isOwner ? <PageTemplate content={InvoicesPage} /> : '')}
+                    render={() => (isOwner == userId ? <PageTemplate content={InvoicesPage} /> : '')}
                 />
                 <PrivateRoute
                     exact
                     path="/invoices/:pageType"
-                    render={() => (isOwner ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
+                    render={() => (isOwner == userId ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
                 />
                 <PrivateRoute
                     exact
                     path="/invoices/:pageType/:invoiceId"
-                    render={() => (isOwner ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
+                    render={() => (isOwner == userId ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
                 />
                 <PrivateRoute
                     exact
@@ -147,6 +152,7 @@ class App extends Component {
 const mapStateToProps = state => ({
     isMobile: state.responsiveReducer.isMobile,
     isOwner: state.teamReducer.currentTeam.data.owner_id,
+    user: state.userReducer.user,
 });
 
 const mapDispatchToProps = {

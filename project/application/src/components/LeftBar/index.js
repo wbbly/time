@@ -24,8 +24,14 @@ class LeftBar extends Component {
     };
 
     render() {
-        const { switchMenu, isMobile, vocabulary, currentTeam, isOwner } = this.props;
+        const { switchMenu, isMobile, vocabulary, currentTeam, isOwner, user } = this.props;
         const { v_timer, v_reports, v_projects, v_team, v_clients, v_invoices } = vocabulary;
+
+        let userId = '';
+        if (user) {
+            userId = user.id;
+        }
+
         return (
             <div className={classNames('wrapper', { 'wrapper--mobile': isMobile })}>
                 {!isMobile && (
@@ -100,7 +106,7 @@ class LeftBar extends Component {
                         </NavLink>
                         <TeamSwitcher isMobile={isMobile} />
                     </div>
-                    {isOwner && (
+                    {isOwner == userId && (
                         <NavLink
                             activeClassName="active-link"
                             onClick={switchMenu}
@@ -126,6 +132,7 @@ const mapStateToProps = state => ({
     currentTeam: state.teamReducer.currentTeam,
     timerTick: state.mainPageReducer.timerTick,
     isOwner: state.teamReducer.currentTeam.data.owner_id,
+    user: state.userReducer.user,
 });
 
 const mapDispatchToProps = {

@@ -6,13 +6,19 @@ import { store } from '../store/configureStore';
 import { resetAll } from '../actions/UserActions';
 
 import { closeSocket } from '../configSocket';
-import { func } from 'prop-types';
 
 const APP_VERSION = 'v1.0.7';
 
 export const ROLES = {
     ROLE_ADMIN: 'ROLE_ADMIN',
     ROLE_MEMBER: 'ROLE_MEMBER',
+    ROLE_OWNER: 'ROLE_OWNER',
+};
+
+export const ROLES_TITLES = {
+    [ROLES.ROLE_ADMIN]: 'Admin',
+    [ROLES.ROLE_MEMBER]: 'Member',
+    [ROLES.ROLE_OWNER]: 'Owner',
 };
 
 export const checkAppVersion = () => {
@@ -33,6 +39,10 @@ export function checkIsAdminByRole(role) {
 
 export function checkIsMemberByRole(role) {
     return role === ROLES.ROLE_MEMBER;
+}
+
+export function checkIsOwnerByRole(role) {
+    return role === ROLES.ROLE_OWNER;
 }
 
 export function logoutByUnauthorized() {
