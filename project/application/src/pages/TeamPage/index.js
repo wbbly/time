@@ -6,7 +6,13 @@ import defaultLogo from '../../images/icons/Group20.svg';
 import classNames from 'classnames';
 
 // Services
-import { checkIsAdminByRole, checkIsMemberByRole } from '../../services/authentication';
+import {
+    ROLES,
+    ROLES_TITLES,
+    checkIsAdminByRole,
+    checkIsMemberByRole,
+    checkIsOwnerByRole,
+} from '../../services/authentication';
 
 // Components
 import AddToTeamModal from '../../components/AddToTeamModal';
@@ -25,11 +31,6 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
-
-const roleMap = {
-    ROLE_ADMIN: 'Admin',
-    ROLE_MEMBER: 'Member',
-};
 
 class TeamPage extends Component {
     state = {
@@ -72,7 +73,7 @@ class TeamPage extends Component {
     };
 
     render() {
-        const { isMobile, vocabulary, currentTeamDetailedData, currentTeam, switchTeam } = this.props;
+        const { isMobile, vocabulary, currentTeamDetailedData, currentTeam, switchTeam, owner_id } = this.props;
         const {
             v_team,
             v_rename_team,
@@ -91,8 +92,14 @@ class TeamPage extends Component {
         const items = currentTeamDetailedData.data.map((item, index) => {
             const currentUser = item.user[0] || {};
             const { username, email, phone, avatar } = currentUser;
-            const role = item.role_collaboration.title;
             const isActive = item.is_active;
+            let role = item.role_collaboration.title;
+
+            if (currentUser) {
+                if (currentUser.id === owner_id) {
+                    role = ROLES.ROLE_OWNER;
+                }
+            }
 
             return (
                 <tr key={item.user[0].id}>
@@ -124,10 +131,12 @@ class TeamPage extends Component {
                     </td>
                     <td data-label="E-mail">{email}</td>
                     <td data-label={v_team_role}>
-                        {currentTeam && currentTeam.data.owner_id ? (
-                            <div className="access_container red">{v_owner}</div>
-                        ) : (
-                            checkIsMemberByRole(role) && <div className="access_container">{roleMap[role]}</div>
+                        {checkIsMemberByRole(role) && <div className="access_container">{ROLES_TITLES[role]}</div>}
+                        {checkIsAdminByRole(role) && <div className="access_container red">{ROLES_TITLES[role]}</div>}
+                        {checkIsOwnerByRole(role) && (
+                            <div className="access_container red" style={{ backgroundColor: 'rgb(255, 174, 0)' }}>
+                                {ROLES_TITLES[role]}
+                            </div>
                         )}
                     </td>
                     <td data-label={v_team_access}>
@@ -236,6 +245,7 @@ const mapStateToProps = store => ({
     currentTeamDetailedData: store.teamReducer.currentTeamDetailedData,
     currentTeam: store.teamReducer.currentTeam,
     switchTeam: store.teamReducer.switchTeam,
+    owner_id: store.teamReducer.currentTeam.data.owner_id,
 });
 
 const mapDispatchToProps = dispatch => {

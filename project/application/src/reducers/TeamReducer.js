@@ -32,6 +32,7 @@ const initialState = {
             {
                 id: '',
                 name: '',
+                owner_id: '',
             },
         ],
         error: null,
