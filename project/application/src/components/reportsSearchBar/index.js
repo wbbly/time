@@ -61,6 +61,18 @@ class ReportsSearchBar extends Component {
         clientDataEtalon: [],
     };
 
+    sortEtalonUser = (a, b) => {
+        let nameA = (a.username || '').trim().toLowerCase();
+        let nameB = (b.username || '').trim().toLowerCase();
+        if (nameA > nameB) {
+            return 1;
+        }
+
+        if (nameA < nameB) {
+            return -1;
+        }
+    };
+
     openSelectUser() {
         this.setState({ toggleSelectUser: true });
         this.findUser(this.state.userDataEtalon);
@@ -467,6 +479,15 @@ class ReportsSearchBar extends Component {
                 }
             }
         );
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.userDataEtalon !== this.state.userDataEtalon) {
+            let userDataEtalonSorted = this.state.userDataEtalon;
+            this.setState({
+                userDataEtalon: userDataEtalonSorted.sort((a, b) => this.sortEtalonUser(a, b)),
+            });
+        }
     }
 
     render() {
