@@ -74,6 +74,7 @@ export default {
     v_a_client_existed: 'Клієнт вже існує',
     v_a_client_name_empty_error: "Ім'я клієнта не може бути порожнім!",
 
+    v_help: 'Допомога',
     v_upload_image: 'Завантажити зображення',
     v_delete_image: 'Видалити зображення',
     v_phone: 'Телефон',

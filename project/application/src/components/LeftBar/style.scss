@@ -33,6 +33,7 @@ i {
 .navigation_links > i {
   width: 15px;
   height: 15px;
+
 }
 
 .navigation_links_container {
@@ -50,6 +51,10 @@ i {
 
 .projects {
   background: url("../../images/icons/folder.svg") no-repeat center;
+}
+
+.help {
+  background: url("../../images/icons/help-circle.svg") no-repeat center;
 }
 
 .team {
@@ -78,6 +83,16 @@ i {
   text-transform: capitalize;
 }
 
+.external_link {
+  margin: 0;
+  text-decoration: none;
+  display: block;
+}
+
+.active_external_link{
+    background: #4f4f4f;
+}
+
 .navigation_links {
   display: flex;
   align-items: center;
@@ -86,6 +101,7 @@ i {
   padding-left: 21px;
   margin-bottom: 10px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .navigation_links:hover {
