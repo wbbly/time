@@ -73,6 +73,7 @@ export default {
     v_a_client_existed: 'Client is already exists',
     v_a_client_name_empty_error: "Client name can't be empty!",
 
+    v_help: 'Help',
     v_upload_image: 'Upload image',
     v_delete_image: 'Delete image',
     v_phone: 'Phone',

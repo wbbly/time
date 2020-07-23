@@ -25,7 +25,7 @@ class LeftBar extends Component {
 
     render() {
         const { switchMenu, isMobile, vocabulary, currentTeam, isOwner, user } = this.props;
-        const { v_timer, v_reports, v_projects, v_team, v_clients, v_invoices } = vocabulary;
+        const { v_help, v_timer, v_reports, v_projects, v_team, v_clients, v_invoices } = vocabulary;
 
         let userId = '';
         if (user) {
@@ -120,6 +120,10 @@ class LeftBar extends Component {
                         </NavLink>
                     )}
                 </div>
+                <a className="navigation_links" target="_blank" href="https://telegra.ph/Wobbly-help-07-09">
+                    <i className="help" />
+                    <div className="links_text">{v_help}</div>
+                </a>
                 <UserMenu switchMenu={switchMenu} />
             </div>
         );
