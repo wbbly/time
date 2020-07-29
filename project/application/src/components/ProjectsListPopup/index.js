@@ -45,9 +45,13 @@ class ProjectsListPopup extends Component {
         const { projectsList, selectedProjectId } = this.props;
         const filteredProjectsList = projectsList.filter(project => project.id === selectedProjectId);
         if (key === 'color') {
-            return filteredProjectsList[0].projectColor.name;
+            if (filteredProjectsList.length > 0) {
+                return filteredProjectsList[0].projectColor.name;
+            }
         } else if (key === 'name') {
-            return filteredProjectsList[0].name;
+            if (filteredProjectsList.length > 0) {
+                return filteredProjectsList[0].name;
+            }
         }
         return filteredProjectsList[0];
     };
