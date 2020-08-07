@@ -128,6 +128,7 @@ class DetailedInvoiceProjectsTable extends Component {
     };
 
     addProject = async () => {
+        this.props.onChangeInput();
         const { newProject } = this.state;
         if (newProject.tax == 0) {
             newProject.tax = '';
@@ -192,7 +193,11 @@ class DetailedInvoiceProjectsTable extends Component {
             v_pic_tax,
         } = vocabulary;
         return (
-            <div className="detailed-invoice-projects-table">
+            <div
+                className={classNames('detailed-invoice-projects-table', {
+                    'detailed-invoice-projects-table--empty': isError,
+                })}
+            >
                 <div className="detailed-invoice-projects-table__header">
                     <div className="detailed-invoice-projects-table__project-column">
                         <span>{v_project}</span>

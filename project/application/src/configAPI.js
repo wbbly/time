@@ -425,3 +425,18 @@ export const changeInvoiceStatus = ({ invoiceId, paymentStatus }) =>
             paymentStatus,
         },
     });
+
+export const searchTechnologies = title =>
+    instance({
+        url: `technology/list?title=${title}`,
+        method: 'GET',
+    });
+
+export const addTechnology = title =>
+    instance({
+        url: 'technology/add',
+        method: 'POST',
+        data: {
+            title,
+        },
+    });

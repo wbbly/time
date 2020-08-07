@@ -264,4 +264,16 @@ export default {
     v_send_payment: 'Надіслати платіж',
     v_no_invoices: 'Немає рахунків для показу',
     v_owner: 'Власник',
+    v_country: 'Країна',
+    v_city: 'Місто',
+    v_state: 'Область',
+    v_zip: 'Iндекс',
+    v_address_lowC: 'адреса',
+    e_mail: 'Ел. пошта',
+    v_billing_code_error: 'Недійсний поштовий індекс',
+
+    v_enter_text: 'Введіть текст',
+    v_technologies: 'Технології',
+    v_add_technology: 'Додати технологію',
+    v_company_name: 'Назва компанії',
 };

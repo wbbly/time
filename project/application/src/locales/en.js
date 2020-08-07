@@ -263,4 +263,16 @@ export default {
     v_send_payment: 'Send payment',
     v_no_invoices: 'No invoices to show',
     v_owner: 'Owner',
+    v_country: 'Country',
+    v_city: 'City',
+    v_state: 'State',
+    v_zip: 'Zip',
+    v_address_lowC: 'address',
+    e_mail: 'E-Mail',
+    v_billing_code_error: 'Invalid zip code',
+
+    v_enter_text: 'Enter text',
+    v_technologies: 'Technology',
+    v_add_technology: 'Add technology',
+    v_company_name: 'Company name',
 };

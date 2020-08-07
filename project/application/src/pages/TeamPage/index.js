@@ -234,6 +234,11 @@ class TeamPage extends Component {
         const { getCurrentTeamDetailedDataAction } = this.props;
         getCurrentTeamDetailedDataAction();
     }
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps != this.props) {
+            console.log(this.props);
+        }
+    }
 }
 
 const mapStateToProps = store => ({

@@ -271,4 +271,16 @@ export default {
     v_send_payment: 'Send Payment',
     v_no_invoices: 'No invoices to show',
     v_owner: 'Owner',
+    v_country: 'Land',
+    v_city: 'Die Stadt',
+    v_state: 'Zustand',
+    v_zip: 'PLZ',
+    v_address_lowC: 'adresse',
+    e_mail: 'E-Mail',
+    v_billing_code_error: 'Ungültige Postleitzahl',
+
+    v_enter_text: 'Text eingeben',
+    v_technologies: 'Technologie',
+    v_add_technology: 'Technologie hinzufügen',
+    v_company_name: 'Name der Firma',
 };

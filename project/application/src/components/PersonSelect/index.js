@@ -149,16 +149,15 @@ class PersonSelect extends Component {
 
     render() {
         let isAvatar = this.getPersonData('avatar');
-        const { vocabulary, onChange, isMobile, disabled, withAddLink, history, isError } = this.props;
+        const { vocabulary, onChange, isMobile, disabled, withAddLink, history, isError, isErrorSender } = this.props;
         const { v_find } = vocabulary;
         const { isOpen, personsList, inputValue } = this.state;
-
         return (
             <div
                 className={classNames('person-select', {
                     'person-select--mobile': isMobile,
                     'person-select--disabled': disabled,
-                    'person-select--error': isError,
+                    'person-select--error': isError || isErrorSender,
                 })}
                 onClick={this.openDropdown}
             >

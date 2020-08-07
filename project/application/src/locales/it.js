@@ -266,4 +266,16 @@ export default {
     v_send_payment: 'Send Payment',
     v_no_invoices: 'No invoices to show',
     v_owner: 'Owner',
+    v_country: 'Nazione',
+    v_city: 'Cittadina',
+    v_state: 'Stato',
+    v_zip: 'Codice postale',
+    v_address_lowC: 'indirizzo',
+    e_mail: 'E-Mail',
+    v_billing_code_error: 'Codice postale errato',
+
+    v_enter_text: 'Inserire il testo',
+    v_technologies: 'Tecnologia',
+    v_add_technology: 'Aggiungi tecnologia',
+    v_company_name: 'Nome della ditta',
 };

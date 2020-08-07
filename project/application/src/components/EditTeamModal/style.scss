@@ -1,47 +1,47 @@
 .edit_team_modal_wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(89, 89, 89, 0.5);
-    z-index: 1;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(89, 89, 89, 0.5);
+  z-index: 1;
 
-.edit_team_modal_wrapper .edit_team_modal_data {
+  & .edit_team_modal_data {
     position: relative;
-    min-width: 350px;
+    width: 400px;
     padding: 28px 28px 28px 28px;
     background-color: #ffffff;
     box-shadow: 0 4px 34px rgba(0, 0, 0, 0.25);
     border-radius: 4px;
-}
+  }
 
-.edit_team_modal_wrapper .edit_team_modal_input_container {
+  & .edit_team_modal_input_container {
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
     font-size: 14px;
     margin-top: 23px;
-}
+  }
 
-.edit_team_modal_wrapper .edit_team_modal_input_container span {
-    
-    font-size: 1.4rem;
-    font-weight: 400;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    line-height: 2rem;
-}
+  & .edit_team_modal_input_container {
+    & span {
+      font-size: 1.4rem;
+      font-weight: 400;
+      font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+      line-height: 2rem;
+    }
+  }
 
-.edit_team_modal_wrapper .edit_team_modal_input_container:nth-of-type(1) {
+  & .edit_team_modal_input_container:nth-of-type(1) {
     margin-top: 0;
-}
+  }
 
-.edit_team_modal_wrapper .edit_team_modal_input {
+  & .edit_team_modal_input {
     margin-top: 9px;
     width: 100%;
     padding-left: 24px;
@@ -50,13 +50,13 @@
     border: 1px solid #828282;
     box-sizing: border-box;
     border-radius: 4px;
-}
+  }
 
-.edit_team_modal_wrapper input {
+  & input {
     color: black;
-}
+  }
 
-.edit_team_modal_wrapper button {
+  & .save_button {
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: bold;
@@ -68,9 +68,9 @@
     height: 50px;
     background: #27ae60;
     border-radius: 5px;
-}
+  }
 
-.edit_team_modal_wrapper i {
+  & i {
     position: absolute;
     top: 7px;
     right: 7px;
@@ -79,6 +79,12 @@
     height: 24px;
     background: url("../../images/icons/forbidden-mark.svg") no-repeat center;
     cursor: pointer;
+  }
+
+  & .edit-team-modal__technology-title{
+      margin: 23px 0 10px 0;
+
+  }
 }
 .delete_team_modal_input_container{
     font-family: "Open Sans", sans-serif;
