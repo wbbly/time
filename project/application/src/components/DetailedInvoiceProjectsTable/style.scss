@@ -29,9 +29,14 @@
     }
     &--empty {
       border: 1px solid #d84e4e;
-    }
-  }
 
+    }
+
+  }
+  &--empty {
+    border: 1px solid #d84e4e;
+    border-radius: 4px;
+  }
   &__icon-button {
     cursor: pointer;
   }

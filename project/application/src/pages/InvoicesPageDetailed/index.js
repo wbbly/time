@@ -242,7 +242,7 @@ class InvoicesPageDetailed extends Component {
     handleSaveAction = async () => {
         const { invoice } = this.state;
         const { updateInvoice, addInvoice, history, showNotificationAction } = this.props;
-        let errorCounter = 0;
+        let error = !invoice.sender || !invoice.recipient || !this.validateProjects(invoice.projects);
         if (!invoice.recipient) {
             this.setState(prevState => ({
                 ...prevState,
@@ -251,20 +251,17 @@ class InvoicesPageDetailed extends Component {
                     recipient: true,
                 },
             }));
-            errorCounter++;
         }
         if (!invoice.sender) {
-            if (!invoice.recipient) {
-                this.setState(prevState => ({
-                    ...prevState,
-                    errors: {
-                        ...prevState.errors,
-                        sender: true,
-                    },
-                }));
-                errorCounter++;
-            }
+            this.setState(prevState => ({
+                ...prevState,
+                errors: {
+                    ...prevState.errors,
+                    sender: true,
+                },
+            }));
         }
+
         if (!this.validateProjects(invoice.projects)) {
             this.setState(prevState => ({
                 ...prevState,
@@ -273,14 +270,11 @@ class InvoicesPageDetailed extends Component {
                     projects: true,
                 },
             }));
-
-            errorCounter++;
         }
-        if (errorCounter > 0) {
+        if (error) {
             showNotificationAction({ text: 'Please fill all required fields', type: 'error' });
             return;
         }
-
         if (this.isUpdateMode) {
             await updateInvoice(invoice);
             history.push(`/invoices/`);
@@ -334,7 +328,6 @@ class InvoicesPageDetailed extends Component {
             v_select_logo_file,
             v_will_generate,
         } = vocabulary;
-
         const { isInitialFetching, invoice, errors } = this.state;
         return (
             <Loading flag={isInitialFetching || isFetching} mode="parentSize" withLogo={false}>
@@ -465,7 +458,7 @@ class InvoicesPageDetailed extends Component {
                                             }}
                                             placeholder={v_add_sender}
                                             disabled={this.isViewMode}
-                                            isError={errors.sender}
+                                            isErrorSender={errors.sender}
                                         />
                                     </div>
                                     <div className="invoices-page-detailed__personal-information-card">
