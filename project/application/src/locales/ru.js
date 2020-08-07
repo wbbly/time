@@ -265,4 +265,16 @@ export default {
     v_send_payment: 'Отправить платеж',
     v_no_invoices: 'Нет счетов, чтобы показать',
     v_owner: 'Владелец',
+    v_country: 'Страна',
+    v_city: 'Город',
+    v_state: 'Область',
+    v_zip: 'Индекс',
+    v_address_lowC: 'адрес',
+    e_mail: 'Эл. почта',
+    v_billing_code_error: 'Неверный почтовый индекс',
+
+    v_enter_text: 'Введите текст',
+    v_technologies: 'Технологии',
+    v_add_technology: 'Добавить технологию',
+    v_company_name: 'Название компании',
 };

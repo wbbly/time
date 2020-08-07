@@ -12,6 +12,7 @@ import { ROLES } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
 
 // Components
+import TechnologyComponent from '../TechnologyComponent';
 
 // Actions
 import { changeUserData } from '../../actions/UserActions';
@@ -24,7 +25,7 @@ import { showNotificationAction } from '../../actions/NotificationActions';
 import { AppConfig } from '../../config';
 
 // Styles
-import './style.css';
+import './style.scss';
 
 const materialTheme = createMuiTheme({
     overrides: {
@@ -46,6 +47,7 @@ class EditTeamModal extends Component {
         id: null,
         value: ROLES.ROLE_MEMBER,
         valueStatus: USER_STATUS.NOT_ACTIVE,
+        userTechnologies: [],
     };
 
     closeModal() {
@@ -65,6 +67,7 @@ class EditTeamModal extends Component {
                 username: this.name.value,
                 isActive: this.state.valueStatus === USER_STATUS.ACTIVE,
                 roleName: this.state.value,
+                technologies: this.state.userTechnologies.map(item => item.id),
             }),
         }).then(
             result => {
@@ -99,7 +102,7 @@ class EditTeamModal extends Component {
 
     componentDidMount() {
         const currentUser = this.props.editedUser.user[0] || {};
-        const { id, username, email } = currentUser;
+        const { id, username, email, userTechnologies } = currentUser;
         const role = this.props.editedUser.role_collaboration.title;
         const isActive = this.props.editedUser.is_active;
 
@@ -107,6 +110,7 @@ class EditTeamModal extends Component {
             id,
             value: role,
             valueStatus: isActive ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE,
+            userTechnologies: userTechnologies.map(item => item.technology),
         });
         this.email.value = email;
         this.name.value = username;
@@ -114,7 +118,17 @@ class EditTeamModal extends Component {
 
     render() {
         const { vocabulary } = this.props;
-        const { v_name, v_team_role, v_team_access, v_edit_user, v_active, v_not_active, v_delete_member } = vocabulary;
+        const {
+            v_name,
+            v_team_role,
+            v_team_access,
+            v_edit_user,
+            v_active,
+            v_not_active,
+            v_delete_member,
+            v_technologies,
+        } = vocabulary;
+
         return (
             <div className="edit_team_modal_wrapper">
                 <div className="edit_team_modal_data">
@@ -172,6 +186,17 @@ class EditTeamModal extends Component {
                                 />
                             </RadioGroup>
                         </ThemeProvider>
+                        <div className="edit-team-modal__technology">
+                            <div className="edit-team-modal__technology-title">{v_technologies}</div>
+                            <TechnologyComponent
+                                userTechnologies={this.state.userTechnologies}
+                                setUserTechnologies={techArr => {
+                                    this.setState({ userTechnologies: techArr });
+                                }}
+                                vocabulary={vocabulary}
+                                themeLight={true}
+                            />
+                        </div>
                     </div>
                     <div className="delete_team_modal_input_container">
                         <ThemeProvider theme={materialTheme}>
@@ -182,7 +207,9 @@ class EditTeamModal extends Component {
                             />
                         </ThemeProvider>
                     </div>
-                    <button onClick={e => this.addUser()}>{v_edit_user}</button>
+                    <button className="save_button" onClick={e => this.addUser()}>
+                        {v_edit_user}
+                    </button>
                 </div>
             </div>
         );

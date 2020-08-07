@@ -32,7 +32,7 @@ class Input extends Component {
                         'wrapper-base-input--error': errorMsg && withValidation,
                     })}
                 >
-                    <input {...rest} id={id} type={type === 'password' ? typeInput : type} />
+                    <input placeholder={label} {...rest} id={id} type={type === 'password' ? typeInput : type} />
                     {config.type === 'password' && (
                         <span
                             className="wrapper-base-input__icon-eye"
