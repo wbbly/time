@@ -9,9 +9,10 @@ import { Loading } from '../../components/Loading';
 import ClientModal from '../../components/ClientModal';
 import ComponentHeader from '../../components/ComponentHeader';
 import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
-
+import { ClientComponent } from '../../components/ClientComponent/index';
+import CustomScrollbar from '../../components/CustomScrollbar';
 // Actions
-import { getClientsAction, setClientAction, editClientNameAction } from '../../actions/ClientsActions';
+import { getClientsAction, setClientAction, editClientThunk, deleteClientThunk } from '../../actions/ClientsActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Services
@@ -24,53 +25,50 @@ class ClientsPage extends Component {
     state = {
         showModal: false,
         searchValue: '',
-        editedItem: null,
+        editedClient: null,
         clientsList: [],
+        isOpenDropdown: false,
     };
 
     closeModal = () => {
-        this.setState({ showModal: false, editedItem: null });
+        this.setState({ showModal: false, editedClient: null });
     };
 
-    editClient = (clientName, id) => {
-        const { showNotificationAction, vocabulary } = this.props;
-        const { v_a_client_existed, v_a_client_name_empty_error } = vocabulary;
-        const { editedItem } = this.state;
-        if (clientName.length === 0) {
-            showNotificationAction({ text: v_a_client_name_empty_error, type: 'warning' });
-            return;
-        } else if (clientName === editedItem.name) {
-            this.closeModal();
-            return;
-        } else if (this.checkClientName(clientName)) {
-            showNotificationAction({ text: v_a_client_existed, type: 'warning' });
-            return;
-        } else {
-            this.props.editClientNameAction(clientName, id);
-            this.closeModal();
-        }
+    editClient = (client, id, logoFile) => {
+        const { editClientThunk } = this.props;
+
+        editClientThunk(client, id, logoFile);
+        this.closeModal();
+    };
+    deleteClient = id => {
+        this.props.deleteClientThunk(id);
+        this.closeModal();
     };
 
     searchClient = async () => {
         const { searchValue } = this.state;
         const { clientsList } = this.props;
         let afterSearch = clientsList.filter(
-            obj => obj.name.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1
+            obj => obj.company_name.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1
         );
         this.setState({ clientsList: afterSearch });
     };
 
-    addNewClient = client => {
+    addNewClient = (client, logoFile) => {
         const { showNotificationAction, vocabulary } = this.props;
-        const { v_a_client_existed, v_a_client_name_empty_error } = vocabulary;
+        const { v_a_client_existed, v_a_client_name_empty_error, client_was_created } = vocabulary;
         if (client.length === 0) {
             showNotificationAction({ text: v_a_client_name_empty_error, type: 'warning' });
             return;
-        } else if (this.checkClientName(client)) {
+        } else if (this.checkClientName(client.company_name)) {
             showNotificationAction({ text: v_a_client_existed, type: 'warning' });
             return;
         } else {
-            this.props.setClientAction(client);
+            this.props.setClientAction(client, logoFile);
+            showNotificationAction({
+                text: client_was_created,
+                type: 'success',
+            });
             this.closeModal();
         }
     };
@@ -85,7 +83,12 @@ class ClientsPage extends Component {
 
     checkClientName = name => {
         const { clientsList } = this.props;
-        return clientsList.some(obj => obj.name.toLowerCase().trim() === name.toLowerCase().trim());
+        const isTheSameName = clientsList.some(obj => {
+            if (obj.company_name) {
+                return obj.company_name.toLowerCase().trim() === name.toLowerCase().trim();
+            }
+        });
+        return isTheSameName;
     };
 
     componentDidMount() {
@@ -105,83 +108,72 @@ class ClientsPage extends Component {
     }
 
     render() {
-        const { showModal, searchValue, editedItem, clientsList } = this.state;
+        const { showModal, searchValue, editedClient, clientsList } = this.state;
         const { vocabulary, isMobile, currentTeam, isInitialFetching } = this.props;
-        const { v_clients, v_add_new_client, v_apply, v_client_name } = vocabulary;
+        const { v_clients, v_add_new_client, v_apply } = vocabulary;
+
+        const editClient = index => {
+            this.setState({ editedClient: clientsList[index], showModal: true });
+        };
         return (
             <Loading flag={isInitialFetching || currentTeam.isFetching} mode="parentSize" withLogo={false}>
-                <div
-                    className={classNames('wrapper_clients_page', {
-                        'wrapper_clients_page--mobile': isMobile,
-                    })}
-                >
-                    {showModal && (
-                        <ClientModal
-                            closeModal={this.closeModal}
-                            addNewClient={this.addNewClient}
-                            editClient={this.editClient}
-                            editedItem={editedItem}
-                            vocabulary={vocabulary}
-                        />
-                    )}
-                    <div className="data_container_clients_page">
-                        <ComponentHeader
-                            title={v_clients}
-                            buttonName={v_add_new_client}
-                            onClick={() => this.setState({ showModal: true })}
-                        />
+                <CustomScrollbar>
+                    <div
+                        className={classNames('wrapper_clients_page', {
+                            'wrapper_clients_page--mobile': isMobile,
+                        })}
+                    >
+                        {showModal && (
+                            <ClientModal
+                                closeModal={this.closeModal}
+                                addNewClient={this.addNewClient}
+                                toEditClient={this.editClient}
+                                deleteClient={this.deleteClient}
+                                editedClient={editedClient}
+                                vocabulary={vocabulary}
+                            />
+                        )}
+                        <div className="data_container_clients_page">
+                            <ComponentHeader
+                                title={v_clients}
+                                buttonName={v_add_new_client}
+                                onClick={() => this.setState({ showModal: true })}
+                            />
 
-                        <div className="wrapper_clients_search_bar">
-                            <div className="clients_search_bar_search_field_container">
-                                <i className="magnifer" />
-                                <input
-                                    onChange={this.handleChange}
-                                    type="text"
-                                    value={searchValue}
-                                    onKeyUp={e => (e.keyCode === 13 ? this.searchClient() : null)}
-                                    className="clients_search_bar_search_field"
-                                />
-                            </div>
-                            <div className="clients_search_bar_button_container">
-                                <button className="clients_search_bar_button" onClick={this.searchClient}>
-                                    {v_apply}
-                                </button>
-                            </div>
-                        </div>
-                        <div className={classNames('clients_list_container', { borderOf: clientsList.length === 0 })}>
-                            {clientsList &&
-                                clientsList.length === 0 &&
-                                BlankListComponent(this.props.vocabulary.v_no_clients, null, null)}
-                            {clientsList.map((item, index) => (
-                                <div className="clients_list_item" key={item.id}>
-                                    <div className="client_name" data-label={`${v_client_name}: `}>
-                                        {item.name}
-                                    </div>
-                                    <i
-                                        className="client_edit"
-                                        onClick={() =>
-                                            this.setState({ editedItem: clientsList[index], showModal: true })
-                                        }
+                            <div className="wrapper_clients_search_bar">
+                                <div className="clients_search_bar_search_field_container">
+                                    <i className="magnifer" />
+                                    <input
+                                        onChange={this.handleChange}
+                                        type="text"
+                                        value={searchValue}
+                                        onKeyUp={e => (e.keyCode === 13 ? this.searchClient() : null)}
+                                        className="clients_search_bar_search_field"
                                     />
-                                    {item.project.length !== 0 && (
-                                        <div className="clients_project_container">
-                                            {item.project.map((item, index) => (
-                                                <div className="clients_project" key={index}>
-                                                    <div
-                                                        className={`clients_project-color-circle ${
-                                                            item.project_color.name
-                                                        }`}
-                                                    />
-                                                    <div className="clients-project-name">{item.name}</div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
                                 </div>
-                            ))}
+                                <div className="clients_search_bar_button_container">
+                                    <button className="clients_search_bar_button" onClick={this.searchClient}>
+                                        {v_apply}
+                                    </button>
+                                </div>
+                            </div>
+                            <div className={classNames('clients_list_container')}>
+                                {clientsList &&
+                                    clientsList.length === 0 &&
+                                    BlankListComponent(this.props.vocabulary.v_no_clients, null, null)}
+                                {clientsList.map((item, index) => (
+                                    <ClientComponent
+                                        client={item}
+                                        vocabulary={vocabulary}
+                                        index={index}
+                                        editClient={editClient}
+                                        key={index}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </CustomScrollbar>
             </Loading>
         );
     }
@@ -198,7 +190,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     getClientsAction,
     setClientAction,
-    editClientNameAction,
+    editClientThunk,
+    deleteClientThunk,
     showNotificationAction,
 };
 
