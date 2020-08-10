@@ -1,0 +1,129 @@
+.clients-list__item {
+  padding: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #4a4a4a;
+  .email-edit-wrapper {
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+  }
+  &-data-wrapper {
+    min-width: 45%;
+    display: flex;
+    align-items: center;
+    .arrow-space{
+      cursor: pointer;
+    }
+    .arrow-up,
+    .arrow-down {
+      margin-bottom: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+      margin-right: 16px;
+      height: 7px;
+      width: 11px;
+      background: url("../../images/icons/arrow_down.svg") no-repeat center;
+      transition: all 0.3s;
+    }
+    .arrow-up {
+      transform: rotate(180deg);
+    }
+  }
+
+  .clients_list_item-avatar {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    margin-right: 22px;
+  }
+  .client_name {
+    display: flex;
+    width: 100%;
+    div:first-child{
+      margin-right: 8px;
+    }
+  }
+  
+}
+
+.client_edit {
+  width: 25px;
+  height: 25px;
+  background: url("../../images/icons/baseline-create-24px.svg") no-repeat;
+  background-size: contain;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+}
+.clients_project_container {
+  margin-top: 20px;
+  width: 100%;
+}
+.clients-list__additional-information {
+  transition-delay: 500ms;
+  padding-left:26px;
+  margin-top: 16px;
+  border-bottom: 1px solid #4a4a4a;
+  
+  &-data {
+    display: inline-flex;
+    flex-direction: column;
+    margin-bottom: 22px;
+    margin-right: 20px;
+    div{
+      margin-bottom: 22px;
+    }
+    div:last-child{
+      margin-bottom: 0;
+    }
+    
+    .project {
+      display: flex;
+      div{
+        margin-bottom: 0;
+        display: flex;
+        margin-right: 18px;
+      }
+      .project-title {
+        display: flex;
+        align-items: center;
+      }
+      .circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+    }
+  }
+}
+@media (max-width: 680px) {
+  .clients-list__item {
+    .client_name{
+      
+      flex-direction: column;
+    }
+    .client_mail {
+      margin: 0;
+      max-width: 60%;
+      word-break: break-all;
+    }
+    .clients_list_item-avatar {
+      margin-right: 5px;
+    }
+    .arrow-down,
+    .arrow-up {
+      margin-right: 6px;
+      margin-left: 3px;
+    }
+  }
+}

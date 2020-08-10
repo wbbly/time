@@ -30,3 +30,10 @@
   background-color: #27ae60;
   cursor: pointer;
 }
+@media (max-width: 680px) {
+  .create_component_button {
+    width: 130px;
+    height: fit-content;
+    padding:7px 0;
+  }
+}

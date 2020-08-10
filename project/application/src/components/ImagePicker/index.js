@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import defaultAvatarImg from '../../images/icons/Group20.svg';
 
 // Default image-picker
-import { MyDropzone } from '../../components/DropZoneComponent/index';
+import { AppConfig } from '../../config';
 
 // Actions
 import { setUserAvatarAction, deleteUserAvatarAction } from '../../actions/UserActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
-
+//Component
+import { MyDropzone } from '../DropZoneComponent/index';
 // Styles
 import './style.scss';
 import { Loading } from '../Loading';
@@ -55,14 +55,15 @@ class ImagePicker extends Component {
     };
 
     fileHandler = event => {
+        const { onFileLoaded, vocabulary, showNotificationAction } = this.props;
+        const { v_a_avatar_upload_error } = vocabulary;
         let img = null;
+
         if (!event[0]) {
             img = event.nativeEvent.target.files[event.nativeEvent.target.files.length - 1];
         } else {
             img = event[0];
         }
-        const { onFileLoaded, vocabulary, showNotificationAction } = this.props;
-        const { v_a_avatar_upload_error } = vocabulary;
 
         if (img) {
             if (img.type.split('/')[0] !== 'image' || img.size > 1000000) {
@@ -87,22 +88,12 @@ class ImagePicker extends Component {
 
             onFileLoaded(formData);
         }
-        if (!event[0]) {
-            event.target.value = '';
-        }
-    };
-
-    handleDeleteImage = () => {
-        const { onDeleteImage } = this.props;
-        onDeleteImage();
-        this.setState({ loadedImage: null });
     };
 
     render() {
-        const { vocabulary, imageUrl, placeholder, isViewMode } = this.props;
+        const { vocabulary, placeholder, isViewMode, clientImage, onDeleteImage } = this.props;
         const { v_upload_image, v_delete_image } = vocabulary;
         const { isOpenDropdown, loadedImage, loadingImage } = this.state;
-
         return (
             <div
                 className={classNames('image-picker', {
@@ -113,19 +104,19 @@ class ImagePicker extends Component {
                     <div
                         className="image-picker__img"
                         style={{
-                            backgroundImage: `url("${loadedImage ||
-                                imageUrl ||
-                                (defaultAvatarImg && !placeholder ? defaultAvatarImg : null)}")`,
+                            backgroundImage: loadedImage
+                                ? `url(${loadedImage})`
+                                : `url("${!(clientImage instanceof FormData) &&
+                                      clientImage &&
+                                      AppConfig.clientUrl + clientImage}`,
                         }}
                     >
-                        {!isViewMode && (
-                            <MyDropzone
-                                fileHandler={this.fileHandler}
-                                loadedImage={loadedImage}
-                                imageUrl={imageUrl}
-                                placeholder={placeholder}
-                            />
-                        )}
+                        <MyDropzone
+                            fileHandler={this.fileHandler}
+                            loadedImage={loadedImage}
+                            imageUrl={clientImage}
+                            placeholder={placeholder}
+                        />
                     </div>
                     {!isViewMode && (
                         <div className="image-picker__settings" onClick={this.openDropdown}>
@@ -150,7 +141,7 @@ class ImagePicker extends Component {
                                 />
                             </label>
                         </li>
-                        <li className="image-picker__settings-menu-item" onClick={this.handleDeleteImage}>
+                        <li className="image-picker__settings-menu-item" onClick={onDeleteImage}>
                             {v_delete_image}
                         </li>
                     </ul>

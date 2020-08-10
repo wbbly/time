@@ -101,27 +101,32 @@ export const tutorialChecked = (id, key) =>
             onboardingMobile: key,
         },
     });
-export const getClientsList = () =>
-    instance({
+
+export const getClientsList = async () => {
+    return instance({
         url: '/client/list',
         method: 'GET',
     });
+};
 
-export const setClient = client =>
+export const setClient = data =>
     instance({
-        url: '/client/add',
+        url: 'client/add',
         method: 'POST',
-        data: {
-            name: client,
-        },
+        data,
     });
+
 export const editClient = (data, id) =>
     instance({
         url: `client/${id}`,
         method: 'PATCH',
-        data: {
-            name: data,
-        },
+        data,
+    });
+
+export const deleteClient = id =>
+    instance({
+        url: `client/${id}`,
+        method: 'DELETE',
     });
 
 export const deleteTask = id =>

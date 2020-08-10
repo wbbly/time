@@ -1,76 +1,83 @@
 .image-picker {
-  position: relative;
-  cursor: pointer;
-  width: 100%;
-
-  &:hover .image-picker__settings {
-    visibility: visible;
-  }
-
-  &--view-mode {
-    cursor: default;
-  }
-
-  &__img {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-repeat: no-repeat;
-    background-position: top center;
-    background-size: cover;
+    position: relative;
+    cursor: pointer;
     width: 100%;
-    height: 100%;
-  }
-
-  &__settings {
-    visibility: hidden;
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 7px 9px;
-    background-image: linear-gradient(#f5f5f5, #eee);
-
-    .settings-icon {
-      margin: 0 5px 0 0;
+    span{
+        color: #1E1E1E;
+        width: 94px;
+        padding: 0 3px;
+    }
+    &:hover .image-picker__settings {
+      visibility: visible;
+    }
+  
+    &--view-mode {
+      cursor: default;
+    }
+  
+    &__img {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-repeat: no-repeat;
+      background-position: top center;
+      background-size: cover;
+      width: 100%;
+      height: 100%;
+    }
+  
+    &__settings {
+      visibility: hidden;
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 7px 9px;
+      background-image: linear-gradient(#f5f5f5, #eee);
+  
+      .settings-icon {
+        margin: 0 5px 0 0;
+      }
+    }
+  
+    &__settings-menu {
+      position: absolute;
+      top: 32px;
+      right: -64px;
+      background: white;
+      color: #333333;
+      padding: 5px 0;
+      z-index: 1;
+      border-radius: 4px;
+  
+      &--hidden {
+        display: none;
+      }
+    }
+  
+    &__settings-menu-item {
+      font-family: "Open Sans", sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      margin: 0 0 5px 0;
+      padding: 5px 10px;
+  
+      &:last-child {
+        margin: 0;
+      }
+  
+      &:hover {
+        background-color: #cecece;
+      }
+    }
+    .drog-ang-drop{
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
     }
   }
-  .drog-ang-drop {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-  &__settings-menu {
-    position: absolute;
-    top: 32px;
-    right: -64px;
-    background: white;
-    color: #333333;
-    padding: 5px 0;
-    z-index: 1;
-    border-radius: 4px;
-
-    &--hidden {
-      display: none;
-    }
-  }
-
-  &__settings-menu-item {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    margin: 0 0 5px 0;
-    padding: 5px 10px;
-
-    &:last-child {
-      margin: 0;
-    }
-
-    &:hover {
-      background-color: #cecece;
-    }
-  }
-}
