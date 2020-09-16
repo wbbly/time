@@ -7,6 +7,7 @@ import {
     fixNumberHundredths,
     fixNumberHundredthsLimits8,
     fixNumberHundredthsLimits10,
+    internationalFormatNum,
 } from '../../services/numberHelpers';
 
 //Styles
@@ -291,10 +292,12 @@ class DetailedInvoiceProjectsTable extends Component {
                                 <div className="detailed-invoice-projects-table__subtotal-column">
                                     <span>{currency.toUpperCase()}</span>
                                     <span>
-                                        {fixNumberHundredths(
-                                            spaceAndFixNumber(
-                                                calculateSubtotalWithoutTax(
-                                                    editingProject.id === project.id ? editingProject : project
+                                        {internationalFormatNum(
+                                            fixNumberHundredths(
+                                                spaceAndFixNumber(
+                                                    calculateSubtotalWithoutTax(
+                                                        editingProject.id === project.id ? editingProject : project
+                                                    )
                                                 )
                                             )
                                         )}
@@ -378,7 +381,9 @@ class DetailedInvoiceProjectsTable extends Component {
                                             {currency.toUpperCase()}
                                         </span>
                                         <span className="detailed-invoice-projects-table__subtotal-column-price">
-                                            {fixNumberHundredths(calculateSubtotalWithoutTax(newProject))}
+                                            {internationalFormatNum(
+                                                fixNumberHundredths(calculateSubtotalWithoutTax(newProject))
+                                            )}
                                         </span>
                                     </div>
                                     <div className="detailed-invoice-projects-table__tools-column">

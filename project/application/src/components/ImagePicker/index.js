@@ -91,7 +91,7 @@ class ImagePicker extends Component {
     };
 
     render() {
-        const { vocabulary, placeholder, isViewMode, clientImage, onDeleteImage } = this.props;
+        const { vocabulary, placeholder, isViewMode, clientImage, imageUrl, onDeleteImage } = this.props;
         const { v_upload_image, v_delete_image } = vocabulary;
         const { isOpenDropdown, loadedImage, loadingImage } = this.state;
         return (
@@ -104,17 +104,13 @@ class ImagePicker extends Component {
                     <div
                         className="image-picker__img"
                         style={{
-                            backgroundImage: loadedImage
-                                ? `url(${loadedImage})`
-                                : `url("${!(clientImage instanceof FormData) &&
-                                      clientImage &&
-                                      AppConfig.clientUrl + clientImage}`,
+                            backgroundImage: `url("${loadedImage || imageUrl}")`,
                         }}
                     >
                         <MyDropzone
                             fileHandler={this.fileHandler}
                             loadedImage={loadedImage}
-                            imageUrl={clientImage}
+                            imageUrl={imageUrl}
                             placeholder={placeholder}
                         />
                     </div>

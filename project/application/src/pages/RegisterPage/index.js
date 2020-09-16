@@ -63,7 +63,7 @@ class RegisterPage extends Component {
         const { vocabulary } = this.props;
         const { v_already_have_an_account, v_log_in, v_registration_terms_and_policy } = vocabulary;
 
-        if (haveToken || getTokenFromLocalStorage()) return <Redirect to={'/timer'} />;
+        if (haveToken || getTokenFromLocalStorage()) return <Redirect to={'/user-settings'} />;
 
         return (
             <div className={classNames('register-block', { 'register-block--mobile': true })}>

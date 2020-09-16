@@ -110,7 +110,7 @@ class EditTeamModal extends Component {
             id,
             value: role,
             valueStatus: isActive ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE,
-            userTechnologies: userTechnologies.map(item => item.technology),
+            userTechnologies: userTechnologies && userTechnologies.map(item => item.technology),
         });
         this.email.value = email;
         this.name.value = username;

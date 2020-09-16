@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
-import { AppConfig } from '../../config';
 // Actions
 import { scrollToAction } from '../../actions/ResponsiveActions';
-
+import { setClientAction } from '../../actions/ClientsActions';
+import { showNotificationAction } from '../../actions/NotificationActions';
 // Styles
 import './style.scss';
-import defaultLogo from '../../images/icons/Group20.svg';
+import clientSelect from '../../images/icons/add_client.svg';
+
+// Components
+import InvoiceSenderRecipienModal from '../InvoiceSenderRecipienModal/index';
 
 const PlusSvg = () => {
     return (
@@ -32,6 +35,7 @@ class PersonSelect extends Component {
         isOpen: false,
         inputValue: '',
         isAvatar: false,
+        openModal: false,
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -44,24 +48,6 @@ class PersonSelect extends Component {
         return null;
     }
 
-    getPersonData = key => {
-        const { personsList, selectedPersonId, placeholder } = this.props;
-        if (personsList) {
-            const filteredList = personsList.filter(person => person.id === selectedPersonId);
-            if (!filteredList.length && key !== 'email' && key !== 'avatar') {
-                return placeholder;
-            } else if (filteredList.length) {
-                if (key === 'avatar' && filteredList.length) {
-                    return filteredList[0].avatar;
-                } else if (key === 'username') {
-                    return filteredList[0].username ? filteredList[0].username : filteredList[0].name;
-                } else if (key === 'email') {
-                    return filteredList[0]['email'] ? filteredList[0]['email'] : '';
-                }
-            }
-        }
-    };
-
     openDropdown = event => {
         const { onChangeVisibility, disabled } = this.props;
         if (disabled) return;
@@ -73,7 +59,14 @@ class PersonSelect extends Component {
         );
         document.addEventListener('click', this.closeDropdown);
     };
-
+    openModal() {
+        const { disabled } = this.props;
+        if (disabled) return;
+        this.setState({ openModal: true });
+    }
+    closeModal = () => {
+        this.setState({ openModal: false });
+    };
     closeDropdown = event => {
         if (!event.target.classList.contains('person-select__dropdown-list-input')) {
             const { onChangeVisibility } = this.props;
@@ -97,13 +90,16 @@ class PersonSelect extends Component {
     filterList = initial => {
         const { personsList } = this.props;
         const { inputValue } = this.state;
-
-        const filteredList = personsList.filter(
-            person =>
-                person.username
-                    ? person.username.toLowerCase().indexOf(inputValue) !== -1
-                    : person.name.toLowerCase().indexOf(inputValue) !== -1
-        );
+        let filteredList = [];
+        if (personsList) {
+            filteredList = personsList.filter(person => {
+                if (person.company_name) {
+                    return person.company_name.toLowerCase().indexOf(inputValue) !== -1;
+                } else if (person.name) {
+                    return person.name.toLowerCase().indexOf(inputValue) !== -1;
+                }
+            });
+        }
         this.setState({
             personsList: initial ? personsList : filteredList,
         });
@@ -139,6 +135,9 @@ class PersonSelect extends Component {
                 this.filterList(true);
             }
         }
+        if (this.props.clientsList !== prevProps.clientsList) {
+            this.setState({ personsList: this.props.clientsList });
+        }
     }
 
     componentWillUnmount() {
@@ -146,80 +145,161 @@ class PersonSelect extends Component {
         onChangeVisibility(false);
         document.removeEventListener('click', this.closeDropdown);
     }
+    checkClientName = name => {
+        const { clientsList } = this.props;
+        const isTheSameName = clientsList.some(obj => {
+            if (obj.company_name) {
+                return obj.company_name.toLowerCase().trim() === name.toLowerCase().trim();
+            }
+        });
+        return isTheSameName;
+    };
+    addNewClient = client => {
+        const { showNotificationAction, vocabulary, placeholder, clientsList } = this.props;
+        const { v_a_client_existed, v_a_client_name_empty_error, client_was_created } = vocabulary;
+        if (client.length === 0) {
+            showNotificationAction({ text: v_a_client_name_empty_error, type: 'warning' });
+            return;
+        } else if (this.checkClientName(client.company_name)) {
+            showNotificationAction({ text: v_a_client_existed, type: 'warning' });
+            return;
+        } else {
+            const promise = this.props.setClientAction(client);
+
+            showNotificationAction({
+                text: client_was_created,
+                type: 'success',
+            });
+            promise.then(clients => {
+                const lastClient = clients.data.client.length - 1;
+                this.props.onChange(clients.data.client[lastClient]);
+                this.closeModal();
+            });
+        }
+    };
 
     render() {
-        let isAvatar = this.getPersonData('avatar');
-        const { vocabulary, onChange, isMobile, disabled, withAddLink, history, isError, isErrorSender } = this.props;
-        const { v_find } = vocabulary;
-        const { isOpen, personsList, inputValue } = this.state;
+        const {
+            vocabulary,
+            onChange,
+            isMobile,
+            disabled,
+            withAddLink,
+            history,
+            isError,
+            isErrorSender,
+            userSender,
+            selectedRecipient,
+        } = this.props;
+        const { v_find, v_add_new_client, v_add_client } = vocabulary;
+        const { isOpen, personsList, inputValue, openModal } = this.state;
+        const setSender = values => {
+            onChange(values);
+            this.closeModal();
+        };
         return (
-            <div
-                className={classNames('person-select', {
-                    'person-select--mobile': isMobile,
-                    'person-select--disabled': disabled,
-                    'person-select--error': isError || isErrorSender,
-                })}
-                onClick={this.openDropdown}
-            >
-                <div className="person-select__selected-person">
-                    {isAvatar ? (
-                        <span
-                            className="avatar-img-small"
-                            style={{
-                                backgroundImage: `url("${AppConfig.apiURL}${isAvatar}")`,
-                            }}
-                        />
-                    ) : (
-                        <img alt="person-select__default_avatar" src={defaultLogo} className="default-logo" />
-                    )}
-                    <div className="data-wrapper">
-                        <div className="person-select__selected-person-row">
-                            <span>{this.getPersonData('username')}</span>
-                        </div>
-                        <div className="person-select__selected-email">
-                            <span>{this.getPersonData('email')}</span>
-                        </div>
-                    </div>
-                </div>
-                {isOpen && (
-                    <div ref="dropdown" className="person-select__dropdown">
-                        <input
-                            className="person-select__dropdown-list-input"
-                            ref={(this.input = React.createRef())}
-                            value={inputValue}
-                            onChange={this.onChangeInput}
-                            type="text"
-                            placeholder={`${v_find}...`}
-                        />
-                        <div className="person-select__dropdown-list">
-                            {withAddLink && (
-                                <div
-                                    className="person-select__dropdown-list-item"
-                                    onClick={event => history.push('/clients')}
-                                >
-                                    <span className="person-select__add-icon">
-                                        <PlusSvg />
-                                    </span>
-                                    <span className="person-select__dropdown-list-item-username">Add client</span>
+            <>
+                <div
+                    className={classNames('person-select', {
+                        'person-select--mobile': isMobile,
+                        'person-select--disabled': disabled,
+                        'person-select--error': isError || isErrorSender,
+                    })}
+                    onClick={() => {
+                        if (userSender) {
+                            this.openModal();
+                        } else {
+                            this.openDropdown();
+                        }
+                    }}
+                >
+                    {userSender && (
+                        <div className="person-select__selected-person">
+                            <div className="data-wrapper">
+                                <div className="person-select__selected-person-row">
+                                    {userSender.company_name && <div>{userSender.company_name}</div>}
+                                    {userSender.companyName && <div>{userSender.companyName}</div>}
+                                    {userSender.username && <div>{userSender.username}</div>}
+                                    {userSender.name && <div>{userSender.name}</div>}
+                                    {userSender.email && <div>{userSender.email}</div>}
+                                    <div>{`${(userSender.country && userSender.country) || '-'}${(userSender.state &&
+                                        ', ' + userSender.state) ||
+                                        ''}${(userSender.city && ', ' + userSender.city) || ''}${(userSender.zip &&
+                                        ', ' + userSender.zip) ||
+                                        ''}`}</div>
                                 </div>
-                            )}
-                            {personsList.map(person => {
-                                return (
-                                    <div
-                                        key={person.id}
-                                        className="person-select__dropdown-list-item"
-                                        onClick={event => onChange(person)}
-                                    >
-                                        <span className="person-select__dropdown-list-item-username">
-                                            {person.username || person.name}
-                                        </span>
-                                    </div>
-                                );
-                            })}
+                            </div>
                         </div>
-                    </div>
+                    )}
+                    {selectedRecipient ? (
+                        <div className="person-select__selected-person">
+                            <div className="data-wrapper">
+                                <div className="person-select__selected-person-row">
+                                    <div>{selectedRecipient.company_name}</div>
+                                    {selectedRecipient.name && <div>{selectedRecipient.name}</div>}
+                                    {selectedRecipient.email && <div>{selectedRecipient.email}</div>}
+                                    <div>{`${(selectedRecipient.country && selectedRecipient.country) ||
+                                        '-'}${(selectedRecipient.state && ', ' + selectedRecipient.state) ||
+                                        ''}${(selectedRecipient.city && ', ' + selectedRecipient.city) ||
+                                        ''}${(selectedRecipient.zip = !'null' && ', ' + selectedRecipient.zip) ||
+                                        ''}`}</div>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        !userSender && (
+                            <div className="person-select__selected-person">
+                                <div className="person-select__selected-person-container">
+                                    <div className="client-select">
+                                        <img src={clientSelect} alt="client select" />
+                                        <div className={'text-client'}>{v_add_client}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    )}
+                    {isOpen && (
+                        <div ref="dropdown" className="person-select__dropdown">
+                            <input
+                                className="person-select__dropdown-list-input"
+                                ref={(this.input = React.createRef())}
+                                value={inputValue}
+                                onChange={this.onChangeInput}
+                                type="text"
+                                placeholder={`${v_find}...`}
+                            />
+                            <div className="person-select__dropdown-list">
+                                {personsList &&
+                                    personsList.map(person => {
+                                        return (
+                                            <div
+                                                key={person.id}
+                                                className="person-select__dropdown-list-item"
+                                                onClick={event => onChange(person)}
+                                            >
+                                                <span className="person-select__dropdown-list-item-username">
+                                                    {person.company_name || person.name}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                            </div>
+                            <div className="person-select__dropdown-btn" onClick={() => this.openModal()}>
+                                <div>{v_add_new_client}</div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                {openModal && (
+                    <InvoiceSenderRecipienModal
+                        vocabulary={vocabulary}
+                        closeModal={this.closeModal}
+                        addNewClient={this.addNewClient}
+                        userSender={userSender}
+                        setSender={setSender}
+                    />
                 )}
-            </div>
+            </>
         );
     }
 }
@@ -231,10 +311,13 @@ PersonSelect.defaultProps = {
 const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     isMobile: state.responsiveReducer.isMobile,
+    clientsList: state.clientsReducer.clientsList,
 });
 
 const mapDispatchToProps = {
     scrollToAction,
+    setClientAction,
+    showNotificationAction,
 };
 
 export default withRouter(

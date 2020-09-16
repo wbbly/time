@@ -59,7 +59,7 @@
   }
   @media screen and (max-width: 600px) {
     .invoices-page-top {
-      padding: 10px 10px 0 10px;
+      padding: 10px 15px 0;
     }
   }
 
@@ -81,5 +81,17 @@
     .invoices-page-bottom{
       padding: 0 10px 10px 10px;
     }
+  }
+  @media screen and (max-width: 375px) {
+    .invoices-page-bottom{
+      padding: 0 0 10px;
+    }
+  }
+  .blank-invoice{
+    height: 75%;
+    width:75%;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
 }

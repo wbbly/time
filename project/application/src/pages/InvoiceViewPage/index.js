@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
-import {
-    addInvoice,
-    getInvoice,
-    updateInvoice,
-    deleteInvoiceById,
-    deleteAvatarThunk,
-} from '../../actions/InvoicesActions';
+import { getInvoiceViewDataThunk } from '../../actions/InvoicesActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 import { AppConfig } from '../../config';
 import { spaceAndFixNumber, fixNumberHundredths, internationalFormatNum } from '../../services/numberHelpers';
@@ -22,7 +16,6 @@ import {
     EditIcon,
     SaveIcon,
     SendIcon,
-    SaveInvoice,
 } from '../../components/InvoicePageComponents/AllInvoicesList';
 import CustomScrollbar from '../../components/CustomScrollbar';
 import DetailedInvoiceProjectsTable from '../../components/DetailedInvoiceProjectsTable';
@@ -36,8 +29,6 @@ import PersonSelect from '../../components/PersonSelect';
 import { getClientsAction } from '../../actions/ClientsActions';
 import ImagePicker from '../../components/ImagePicker';
 import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoiceModal';
-import ReactTooltip from 'react-tooltip';
-import DeleteInvoiceModal from '../../components/DeleteInvoiceModal/index';
 import { downloadPDF } from '../../services/downloadPDF';
 import { downloadInvoicePDF } from '../../configAPI';
 
@@ -82,12 +73,10 @@ const parseUsersData = users => {
     return users.data.map(user => user.user[0]);
 };
 
-class InvoicesPageDetailed extends Component {
+class InvoiceViewPage extends Component {
     state = {
         isInitialFetching: true,
         invoice: {
-            vendorId: this.props.defaultUserSender.id,
-            invoiceNumber: '',
             id: ``,
             number: '',
             dateFrom: new Date(),
@@ -95,16 +84,15 @@ class InvoicesPageDetailed extends Component {
             timezoneOffset: new Date().getTimezoneOffset() * 60 * 1000,
             currency: 'usd',
             sender: {
-                city: this.props.defaultUserSender.city || '',
-                company_name: this.props.defaultUserSender.companyName || '',
-                country: this.props.defaultUserSender.country || '',
-                email: this.props.defaultUserSender.email || '',
-                id: this.props.defaultUserSender.id || '',
-                language: this.props.defaultUserSender.language || '',
-                phone: this.props.defaultUserSender.phone || '',
-                state: this.props.defaultUserSender.state || '',
-                username: this.props.defaultUserSender.username || '',
-                zip: this.props.defaultUserSender.zip || '',
+                city: '',
+                company_name: '',
+                country: '',
+                email: '',
+                id: '',
+                language: '',
+                phone: '',
+                state: '',
+                zip: '',
             },
             recipient: null,
             image: null,
@@ -119,80 +107,30 @@ class InvoicesPageDetailed extends Component {
             hours: false,
         },
         sendInvoiceModalData: false,
-        deleteInvoiceModal: false,
     };
 
     async componentDidMount() {
         setTimeout(() => this.setState({ isInitialFetching: false }), 500);
-        const {
-            getProjectsListActions,
-            getCurrentTeamDetailedDataAction,
-            getClientsAction,
-            getInvoice,
-            match: { params },
-        } = this.props;
+        const { getInvoiceViewDataThunk } = this.props;
 
-        if (this.isUpdateMode || this.isViewMode) {
-            getInvoice(params['invoiceId']);
-        }
-        await getProjectsListActions();
-        await getCurrentTeamDetailedDataAction();
-        await getClientsAction();
-    }
+        let invoiceId = this.props.match.params.invoiceId;
+        let paramsString = this.props.location.search;
+        let searchParams = new URLSearchParams(paramsString);
+        const token = searchParams.get('token');
 
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props.invoice && this.props.invoice !== prevProps.invoice) {
-            const {
-                id,
-                invoice_number,
-                invoice_date,
-                due_date,
-                timezone_offset,
-                currency,
-                to,
-                logo,
-                projects,
-                comment,
-                invoice_vendor,
-                from,
-            } = this.props.invoice;
-            this.setState({
-                invoice: {
-                    id,
-                    vendorId: this.props.defaultUserSender.id,
-                    invoiceNumber: invoice_number,
-                    dateFrom: invoice_date,
-                    dateDue: due_date,
-                    timezoneOffset: timezone_offset,
-                    currency,
-                    sender: invoice_vendor,
-                    recipient: to,
-                    image: logo,
-                    projects,
-                    comment,
-                },
-            });
-        } else if (this.props.sameInvoiceNumberErr !== prevProps.sameInvoiceNumberErr) {
-            this.setState({ invoice: prevState.invoice });
-        }
-    }
+        await getInvoiceViewDataThunk(invoiceId);
 
-    get isCreateMode() {
-        return this.props.match.params.pageType === 'create';
+        this.setState({ invoice: this.props.invoices }, () => {
+            console.log(this.state.invoice);
+        });
     }
 
     get isViewMode() {
-        return this.props.match.params.pageType === 'view';
+        var paramsString = '?token=c873efc0-0993-4dad-89f1-4e14a240e4c6';
+        var searchParams = new URLSearchParams(paramsString);
+        const token = searchParams.get('token');
+        return token;
     }
-
-    get isUpdateMode() {
-        return this.props.match.params.pageType === 'update';
-    }
-    handleInputChange = (name, e) => {
-        let value = e.target.value;
-        const { invoice } = this.state;
-        this.setState({ invoice: { ...invoice, [name]: value } });
-    };
 
     handleUpdateProject = project => {
         let { invoice } = this.state;
@@ -227,27 +165,6 @@ class InvoicesPageDetailed extends Component {
         this.setState({ invoice });
     };
 
-    onChangeCurrency = currency => {
-        let { invoice } = this.state;
-        invoice.currency = currency;
-
-        this.setState({ invoice });
-    };
-
-    handleDateChange = (name, value) => {
-        let { invoice } = this.state;
-        invoice[name] = value;
-        this.setState({ invoice });
-    };
-
-    handlePersonChange = (name, value) => {
-        let { invoice } = this.state;
-        invoice[name] = value;
-        invoice.vendorId = this.props.defaultUserSender.id;
-        invoice.sender.id = this.props.defaultUserSender.id;
-        this.setState({ invoice });
-    };
-
     handleFileLoad = image => {
         const { invoice } = this.state;
         this.setState({ invoice: { ...invoice, image } });
@@ -261,115 +178,6 @@ class InvoicesPageDetailed extends Component {
             deleteAvatarThunk(invoice);
         }
     };
-
-    validateProjects = projectList => {
-        return !!projectList.length && projectList.every(project => project.project_name && project.hours);
-    };
-
-    handleSaveAction = async () => {
-        const { invoice } = this.state;
-        const { updateInvoice, addInvoice, history, showNotificationAction } = this.props;
-        const { v_fill_fields, v_fill_fields_company_name, v_invoice_number_exist } = this.props.vocabulary;
-        let error =
-            !invoice.sender ||
-            !invoice.recipient ||
-            !this.validateProjects(invoice.projects) ||
-            !invoice.sender.company_name;
-        if (!invoice.recipient) {
-            this.setState(prevState => ({
-                ...prevState,
-                errors: {
-                    ...prevState.errors,
-                    recipient: true,
-                },
-            }));
-        }
-        if (!invoice.sender) {
-            this.setState(prevState => ({
-                ...prevState,
-                errors: {
-                    ...prevState.errors,
-                    sender: true,
-                },
-            }));
-        }
-        if (!invoice.sender.company_name) {
-            this.setState(prevState => ({
-                ...prevState,
-                errors: {
-                    ...prevState.errors,
-                    sender: true,
-                },
-            }));
-        }
-
-        if (!this.validateProjects(invoice.projects)) {
-            this.setState(prevState => ({
-                ...prevState,
-                errors: {
-                    ...prevState.errors,
-                    projects: true,
-                },
-            }));
-        }
-        if (error) {
-            if (!invoice.sender.company_name) {
-                showNotificationAction({ text: v_fill_fields_company_name, type: 'error' });
-                return;
-            } else {
-                return;
-            }
-        }
-        if (this.isUpdateMode) {
-            await updateInvoice(invoice);
-            if (this.props.sameInvoiceNumberErr) {
-                if (this.props.sameInvoiceNumberErr === 'ERROR.CHECK_REQUEST_PARAMS(INVOICE_NUM_ALREADY_EXISTS)') {
-                    showNotificationAction({ text: v_invoice_number_exist, type: 'error' });
-                } else {
-                    showNotificationAction({ text: this.props.sameInvoiceNumberErr, type: 'error' });
-                }
-            } else {
-                history.push(`/invoices/`);
-            }
-        } else if (this.isCreateMode) {
-            await addInvoice({
-                ...invoice,
-                price: calculateSubtotalsWithTax(invoice.projects),
-            });
-            if (this.props.sameInvoiceNumberErr) {
-                if (this.props.sameInvoiceNumberErr === 'ERROR.CHECK_REQUEST_PARAMS(INVOICE_NUM_ALREADY_EXISTS)') {
-                    showNotificationAction({ text: v_invoice_number_exist, type: 'error' });
-                } else {
-                    showNotificationAction({ text: this.props.sameInvoiceNumberErr, type: 'error' });
-                }
-            } else {
-                history.push(`/invoices/`);
-            }
-        }
-    };
-
-    handleDeleteInvoice = async () => {
-        const { invoice } = this.state;
-        const { deleteInvoiceById, history } = this.props;
-        if (invoice.id) {
-            await deleteInvoiceById(invoice.id);
-            history.push('/invoices');
-        }
-    };
-    handleCloneInvoice = async () => {
-        const { addInvoice, showNotificationAction } = this.props;
-        const { v_clone_invoice } = this.props.vocabulary;
-        const { invoice } = this.state;
-        await addInvoice({ ...invoice, price: calculateSubtotalsWithTax(invoice.projects) }, true);
-        showNotificationAction({ text: v_clone_invoice, type: 'success' });
-    };
-    toggleSendInvoiceModal = (sendInvoiceModalData = null) => {
-        this.setState({ sendInvoiceModalData });
-    };
-    closeDeleteModal = () => {
-        this.setState({ deleteInvoiceModal: false });
-    };
-    goBack = () => this.props.history.goBack();
 
     render() {
         const { vocabulary, currentTeamDetailedData, clientsList, isFetching, showNotificationAction } = this.props;
@@ -390,20 +198,20 @@ class InvoicesPageDetailed extends Component {
             v_add_sender,
             v_add_client,
             v_select_logo_file,
-            v_enter_number,
-            v_edit_client,
-            v_download,
-            v_copy,
-            v_send,
-            v_delete,
+            v_will_generate,
         } = vocabulary;
         const { isInitialFetching, invoice, errors } = this.state;
+
+        var paramsString = `${this.props.location.search}`;
+        var searchParams = new URLSearchParams(paramsString);
+        const token = searchParams.get('token');
+
         return (
             <Loading flag={isInitialFetching || isFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar>
                     <div className="invoices-page-detailed-wrapper">
                         <div className={classNames('invoices-page-detailed-wrapper__header', {})}>
-                            {this.isViewMode && (
+                            {!this.isViewMode && (
                                 <div
                                     onClick={() => this.props.history.push('/invoices')}
                                     className="invoices-page-detailed__back-button"
@@ -413,7 +221,7 @@ class InvoicesPageDetailed extends Component {
                             )}
                             <div className="invoices-page-detailed__title">{v_invoice}</div>
                         </div>
-                        <div className={'invoices-page-detailed-form-wrapper'}>
+                        <div className="invoices-page-detailed-form-wrapper">
                             <div
                                 className={classNames('invoices-page-detailed', {
                                     'invoices-page-detailed--horizontal-padding': this.isViewMode,
@@ -428,32 +236,30 @@ class InvoicesPageDetailed extends Component {
                                                 })}
                                             >
                                                 <ImagePicker
-                                                    onFileLoaded={this.handleFileLoad}
                                                     onDeleteImage={this.handleFileDelete}
+                                                    onFileLoaded={this.handleFileLoad}
                                                     placeholder={v_select_logo_file}
                                                     imageUrl={
                                                         invoice.image ? `${AppConfig.apiURL}${invoice.image}` : null
                                                     }
                                                     isViewMode={this.isViewMode}
+                                                    disabled={false}
                                                 />
                                             </div>
                                             <div className="invoices-page-detailed__main-data-form">
                                                 <div className="input-wrapper">
                                                     <div>
                                                         <label>{`${v_invoice_number}:`}</label>
-                                                        <div className="invoice-number">
-                                                            <input
-                                                                value={invoice.invoiceNumber}
-                                                                onChange={e =>
-                                                                    this.handleInputChange('invoiceNumber', e)
-                                                                }
-                                                                className="invoices-page-detailed__input "
-                                                                type="text"
-                                                                maxlength="15"
-                                                                placeholder={v_enter_number}
-                                                                disabled={this.isViewMode}
-                                                            />
-                                                        </div>
+                                                        <input
+                                                            value={
+                                                                invoice.invoice_number && `#${invoice.invoice_number}`
+                                                            }
+                                                            onChange={e => this.handleInputChange('number', e)}
+                                                            className="invoices-page-detailed__input"
+                                                            type="text"
+                                                            placeholder={v_will_generate}
+                                                            disabled
+                                                        />
                                                     </div>
                                                     <div className="input-wrapper__second-input">
                                                         <label>{`${v_invoice_due}:`}</label>
@@ -489,7 +295,7 @@ class InvoicesPageDetailed extends Component {
                                             <PersonSelect
                                                 personsList={parseUsersData(currentTeamDetailedData)}
                                                 invoice={invoice}
-                                                userSender={invoice.sender}
+                                                userSender={invoice.invoice_vendor}
                                                 onChange={person => {
                                                     this.setState(prevState => ({
                                                         ...prevState,
@@ -529,7 +335,7 @@ class InvoicesPageDetailed extends Component {
                                 </div>
 
                                 <DetailedInvoiceProjectsTable
-                                    mode={this.props.match.params.pageType}
+                                    mode={'view'}
                                     vocabulary={vocabulary}
                                     projects={invoice.projects}
                                     currency={invoice.currency}
@@ -622,7 +428,6 @@ class InvoicesPageDetailed extends Component {
                                         closeModal={this.toggleSendInvoiceModal}
                                         vocabulary={vocabulary}
                                         invoice={this.props.invoice}
-                                        isInvoicePageDetailed={true}
                                     />
                                 )}
                                 {!this.isViewMode && (
@@ -641,36 +446,13 @@ class InvoicesPageDetailed extends Component {
                             </div>
                             <div className="invoices-page-detailed__tools">
                                 <div className="invoices-page-detailed__tools-container">
-                                    {this.isViewMode ? (
-                                        <Link
-                                            data-tip={v_edit_client}
-                                            to={`/invoices/update/${invoice.id}`}
-                                            className="invoices-page-detailed__tool-button"
-                                        >
-                                            <EditIcon className="invoices-page-detailed__icon-button" />
-                                        </Link>
-                                    ) : (
-                                        <div data-tip={v_save} data-for="save">
-                                            <SaveInvoice
-                                                className="invoices-page-detailed__icon-button"
-                                                onClick={this.handleSaveAction}
-                                            />
-                                        </div>
-                                    )}
-                                    <button
-                                        className={classNames('invoices-page-detailed__tool-button', {
-                                            disabled: !this.isViewMode,
-                                        })}
-                                        data-tip={v_download}
-                                    >
+                                    <button className="invoices-page-detailed__tool-button">
                                         <SaveIcon
-                                            className={classNames('invoices-page-detailed__icon-button', {
-                                                disabled: !this.isViewMode,
-                                            })}
+                                            className="invoices-page-detailed__icon-button"
                                             onClick={async () => {
                                                 try {
                                                     let responce = await downloadInvoicePDF(invoice.id);
-                                                    downloadPDF(responce.data, `${invoice.invoiceNumber}.pdf`);
+                                                    downloadPDF(responce.data, `${invoice.invoice_number}.pdf`);
                                                 } catch (error) {
                                                     console.log(error);
                                                     showNotificationAction({
@@ -681,77 +463,39 @@ class InvoicesPageDetailed extends Component {
                                             }}
                                         />
                                     </button>
-                                    <button
-                                        className={classNames('invoices-page-detailed__tool-button', {
-                                            disabled: !this.isViewMode,
-                                        })}
-                                        onClick={() => {
-                                            if (this.isViewMode) {
-                                                this.handleCloneInvoice();
-                                            }
-                                        }}
-                                        data-tip={v_copy}
-                                    >
-                                        <CopyIcon
-                                            className={classNames('invoices-page-detailed__icon-button', {
-                                                disabled: !this.isViewMode,
-                                            })}
-                                        />
-                                    </button>
-                                    <button
-                                        className={classNames('invoices-page-detailed__tool-button', {
-                                            disabled: !this.isViewMode,
-                                        })}
-                                        data-tip={v_send}
-                                    >
-                                        <SendIcon
-                                            className={classNames('invoices-page-detailed__icon-button', {
-                                                disabled: !this.isViewMode,
-                                            })}
-                                            onClick={() => {
-                                                if (this.isViewMode) {
-                                                    this.setState({ sendInvoiceModalData: true });
-                                                }
-                                            }}
-                                        />
-                                    </button>
-                                    <button
-                                        className={classNames('invoices-page-detailed__tool-button', {
-                                            disabled: !this.isViewMode,
-                                        })}
-                                        onClick={() => {
-                                            if (this.isViewMode) {
-                                                this.setState({ deleteInvoiceModal: true });
-                                            }
-                                        }}
-                                        data-tip={v_delete}
-                                    >
-                                        <DeleteIcon
-                                            className={classNames('invoices-page-detailed__icon-button', {
-                                                disabled: !this.isViewMode,
-                                            })}
-                                        />
-                                    </button>
-                                    {this.isViewMode && (
-                                        <ReactTooltip className={'tool-tip'} arrowColor={' #FFFFFF'} place="right" />
-                                    )}
-                                    {!this.isViewMode && (
-                                        <ReactTooltip
-                                            id="save"
-                                            className={'tool-tip'}
-                                            arrowColor={' #FFFFFF'}
-                                            place="right"
-                                        />
-                                    )}
                                 </div>
+                                {!this.isViewMode && (
+                                    <div className="invoices-page-detailed__tools-container">
+                                        <Link
+                                            to={`/invoices/update/${invoice.id}`}
+                                            className="invoices-page-detailed__tool-button"
+                                        >
+                                            <EditIcon className="invoices-page-detailed__icon-button" />
+                                        </Link>
+                                        <button className="invoices-page-detailed__tool-button">
+                                            <SendIcon
+                                                className="invoices-page-detailed__icon-button"
+                                                onClick={() => {
+                                                    this.setState({ sendInvoiceModalData: true });
+                                                }}
+                                            />
+                                        </button>
+                                        <button
+                                            className="invoices-page-detailed__tool-button"
+                                            onClick={() => this.handleCloneInvoice()}
+                                        >
+                                            <CopyIcon className="invoices-page-detailed__icon-button" />
+                                        </button>
+                                        <button
+                                            className="invoices-page-detailed__tool-button"
+                                            onClick={this.handleDeleteInvoice}
+                                        >
+                                            <DeleteIcon className="invoices-page-detailed__icon-button" />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                        {this.state.deleteInvoiceModal && (
-                            <DeleteInvoiceModal
-                                deleteInvoice={this.handleDeleteInvoice}
-                                openCloseModal={this.closeDeleteModal}
-                            />
-                        )}
                     </div>
                 </CustomScrollbar>
             </Loading>
@@ -762,27 +506,17 @@ class InvoicesPageDetailed extends Component {
 const mapStateToProps = ({ teamReducer, clientsReducer, invoicesReducer, userReducer }) => ({
     currentTeamDetailedData: teamReducer.currentTeamDetailedData,
     clientsList: clientsReducer.clientsList,
-    invoice: invoicesReducer.invoice,
+    invoices: invoicesReducer.invoices,
     isFetching: invoicesReducer.isFetching,
-    defaultUserSender: userReducer.user,
-    sameInvoiceNumberErr: invoicesReducer.error,
 });
 
 const mapDispatchToProps = {
-    getProjectsListActions,
-    getCurrentTeamDetailedDataAction,
-    getClientsAction,
-    getInvoice,
-    updateInvoice,
-    addInvoice,
-    deleteInvoiceById,
-    showNotificationAction,
-    deleteAvatarThunk,
+    getInvoiceViewDataThunk,
 };
 
 export default withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps
-    )(InvoicesPageDetailed)
+    )(InvoiceViewPage)
 );

@@ -10,6 +10,7 @@ import { checkIsAdminByRole } from '../../services/authentication';
 // Components
 import TeamSwitcher from '../TeamSwitcher';
 import UserMenu from '../UserMenu';
+import CustomScrollbar from '../../components/CustomScrollbar';
 
 // Styles
 import './style.scss';
@@ -34,6 +35,7 @@ class LeftBar extends Component {
 
         return (
             <div className={classNames('wrapper', { 'wrapper--mobile': isMobile })}>
+                {/* </CustomScrollbar> */}
                 {!isMobile && (
                     <Link onClick={switchMenu} to="/timer">
                         <i className="logo_small" />
@@ -125,6 +127,7 @@ class LeftBar extends Component {
                     <div className="links_text">{v_help}</div>
                 </a>
                 <UserMenu switchMenu={switchMenu} />
+                {/* </CustomScrollbar> */}
             </div>
         );
     }

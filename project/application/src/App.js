@@ -3,6 +3,7 @@ import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import PrivateRoute from './components/CustomRoutes/PrivateRoute';
+import RouteInvoiceView from './components/RouteInvoiceView/RouteInvoiceView';
 
 import MainPage from './pages/MainPage';
 import ReportsPage from './pages/ReportsPage';
@@ -17,6 +18,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import ClientsPage from './pages/ClientsPage';
 import InvoicesPage from './pages/InvoicesPage';
 import InvoicesPageDetailed from './pages/InvoicesPageDetailed';
+import InvoiceViewPage from './pages/InvoiceViewPage';
 
 import PageTemplate from './components/PageTemplate';
 
@@ -26,6 +28,7 @@ import './App.scss';
 import './fonts/icomoon/icomoon.css';
 
 import * as responsiveActions from './actions/ResponsiveActions';
+import { showNotificationAction } from './actions/NotificationActions';
 
 const addEvent = (object, type, callback) => {
     if (object === null || typeof object === 'undefined') return false;
@@ -54,14 +57,35 @@ class App extends Component {
             setIsMobile(true);
         }
     };
+    connectionRestore = () => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_connection_restored } = vocabulary;
+        showNotificationAction({
+            type: 'connection-restored',
+            text: v_connection_restored,
+        });
+    };
+
+    connectionLost = () => {
+        const { vocabulary, showNotificationAction } = this.props;
+        const { v_connection_problem } = vocabulary;
+        showNotificationAction({
+            type: 'lost-connection',
+            text: v_connection_problem,
+        });
+    };
 
     componentDidMount() {
         this.setResponsiveReducer();
         addEvent(window, 'resize', this.setResponsiveReducer);
+        window.addEventListener('online', this.connectionRestore);
+        window.addEventListener('offline', this.connectionLost);
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.setResponsiveReducer);
+        window.removeEventListener('online', this.connectionRestore);
+        window.removeEventListener('offline', this.connectionLost);
     }
 
     render() {
@@ -125,18 +149,23 @@ class App extends Component {
                     exact
                     path="/invoices/view/:invoiceId"
                     render={() =>
-                        isOwner ? (
+                        isOwner == userId ? (
                             <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="view" />} />
                         ) : (
                             ''
                         )
                     }
                 />
+                <RouteInvoiceView
+                    exact
+                    path="/invoice/:invoiceId"
+                    render={() => <PageTemplate content={props => <InvoiceViewPage {...props} mode="view" />} />}
+                />
                 <PrivateRoute
                     exact
                     path="/invoices/update/:invoiceId"
                     render={() =>
-                        isOwner ? (
+                        isOwner == userId ? (
                             <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="update" />} />
                         ) : (
                             ''
@@ -153,10 +182,12 @@ const mapStateToProps = state => ({
     isMobile: state.responsiveReducer.isMobile,
     isOwner: state.teamReducer.currentTeam.data.owner_id,
     user: state.userReducer.user,
+    vocabulary: state.languageReducer.vocabulary,
 });
 
 const mapDispatchToProps = {
     ...responsiveActions,
+    showNotificationAction,
 };
 
 export default withRouter(

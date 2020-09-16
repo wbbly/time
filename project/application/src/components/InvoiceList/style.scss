@@ -1,0 +1,187 @@
+
+    .all-invoices-list-item-container {
+      position: relative;
+    }
+    .all-invoices-list-item {
+      padding: 5px 0;
+      height: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      align-self: stretch;
+      margin-bottom: 5px;
+      text-decoration: none;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+      &--confirmed {
+        border-left: 8px solid #27ae60;
+      }
+      &--overdue {
+        border-left: 8px solid #eb5757;
+      }
+      &--draft {
+        border-left: 8px solid #626262;
+      }
+      &--awaiting{
+        border-left:8px solid rgb(255, 174, 0);
+      }
+      &__block {
+        width: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      // @media screen and (max-width: 900px) {
+      //   &__block {
+      //     width: 50%;
+      //     display: flex;
+      //     align-items: center;
+      //     justify-content: space-between;
+      //   }
+      // }
+      &__block:first-child{
+        width: 30%;
+      }
+     
+      .all-invoices-list-item__wrapper {
+        padding-left: 20px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+      @media screen and (max-width: 750px) {
+        &__block{
+          width: 50%;
+        }
+        .all-invoices-list-item__wrapper {
+          flex-direction: column;
+          padding-left: 10px;
+          div{
+            width: 100%;
+          }
+        }
+      }
+      &__number {
+        width: 50%;
+      }
+      &__name{
+        width: 50%;
+      }
+      &__status-button {
+        display: flex;
+        justify-content: center;
+        width: 10%;
+        align-items: center;
+  
+        &-container {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+        }
+      }
+      &__price {
+        display: flex;
+        font-weight: bold;
+        // margin-left: 20px;
+        width:40%;
+        text-transform: uppercase;
+        white-space: nowrap;
+        div {
+          margin-right: 5px;
+        }
+      }
+      @media screen and (max-width: 610px) {
+        &__price {
+          flex-direction: column;
+         align-items: flex-start;
+        }
+      }
+      &__date-wrapper {
+        display: flex;
+        width: 60%;
+        justify-content: space-between;
+        .all-invoices-list-item__date{
+          width: 50%;
+        }
+      }
+      @media screen and (max-width: 750px) {
+        &__date-wrapper{
+          flex-direction: column;;
+        }
+      }
+  
+      &__instruments {
+        cursor: default;
+        width: 20%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-right: 15px;
+        margin-left: 10px;
+        svg{
+          fill: white;
+        }
+      }
+  
+      &__icon-button {
+        cursor: pointer;
+        height: 20px;
+        width: 20px;
+      }
+    }
+    @media screen and (max-width: 750px) {
+      .all-invoices-list-item {
+        position: relative;
+        padding-top: 25px;
+        &__number {
+          font-size: 14px;
+          width: auto;
+          position: absolute;
+          top: 8px;
+          left: 10px;
+        }
+      }
+    }
+    @media screen and (max-width: 550px) {
+      .all-invoices-list-item{
+        font-size: 12px;
+        &__name {
+          word-spacing: 100vw;
+        }
+      }
+    }
+    .menu-btn {
+      background-image: url(../../images/icons/menu_3dots.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 20px;
+      width: 20px;
+      background-color: transparent;
+    }
+    .dropdown-menu {
+      position: relative;
+      display: inline-block;
+      svg{
+        fill: white;
+  
+      }
+    }
+    .menu-content {
+      display: none;
+      position: absolute;
+      bottom: 50px;
+      background-color: transparent;
+      z-index: 1;
+      background-color: #333;
+    }
+    .open .menu-content {
+      display: block;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      bottom: 25px;
+      svg {
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+      }
+    }

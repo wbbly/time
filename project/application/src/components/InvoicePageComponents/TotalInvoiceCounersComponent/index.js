@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import moment from 'moment';
 
 import { spaceAndFixNumber, fixNumberHundredths } from '../../../services/numberHelpers';
-
+import { internationalFormatNum } from '../../../services/numberHelpers';
 // Styles
 import './style.scss';
 import { Loading } from '../../Loading';
@@ -33,17 +33,6 @@ const TotalInvoiceCounersComponent = ({ invoices, vocabulary }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { v_overdue, v_total_outstanding, v_draft } = vocabulary;
 
-    const getInvoiceType = invoice => {
-        if (invoice.payment_status) {
-            return 'paid';
-        } else {
-            if (moment().isBefore(moment(invoice.due_date))) {
-                return 'draft';
-            } else {
-                return 'overdue';
-            }
-        }
-    };
     const countTotals = invoices => {
         const initialObject = {
             overdue: {},
@@ -52,7 +41,7 @@ const TotalInvoiceCounersComponent = ({ invoices, vocabulary }) => {
         };
 
         return invoices.reduce((acc, invoice) => {
-            if (getInvoiceType(invoice) === 'overdue') {
+            if (invoice.status === 'overdue') {
                 if (acc.overdue[invoice.currency] === undefined) {
                     acc.overdue[invoice.currency] = 0;
                     acc.total[invoice.currency] = 0;
@@ -61,7 +50,15 @@ const TotalInvoiceCounersComponent = ({ invoices, vocabulary }) => {
                 acc.total[invoice.currency] += invoice.total;
                 return acc;
             }
-            if (getInvoiceType(invoice) === 'draft') {
+            if (invoice.status === 'awaiting') {
+                if (acc.total[invoice.currency] === undefined) {
+                    acc.overdue[invoice.currency] = 0;
+                    acc.total[invoice.currency] = 0;
+                }
+                acc.total[invoice.currency] += invoice.total;
+                return acc;
+            }
+            if (invoice.status === 'draft') {
                 if (acc.draft[invoice.currency] === undefined) {
                     acc.draft[invoice.currency] = 0;
                 }
@@ -110,8 +107,8 @@ const TotalInvoiceCounersComponent = ({ invoices, vocabulary }) => {
                                     {Object.keys(totalSumm.overdue).map((currency, index) => {
                                         return (
                                             <span className="total-invoice-counters__block-summ-number" key={index}>
-                                                {`${fixNumberHundredths(
-                                                    spaceAndFixNumber(totalSumm.overdue[currency])
+                                                {`${internationalFormatNum(
+                                                    fixNumberHundredths(spaceAndFixNumber(totalSumm.overdue[currency]))
                                                 )}  ${currency.toUpperCase()}`}
                                             </span>
                                         );
@@ -156,8 +153,8 @@ const TotalInvoiceCounersComponent = ({ invoices, vocabulary }) => {
                                     {Object.keys(totalSumm.total).map((currency, index) => {
                                         return (
                                             <span className="total-invoice-counters__block-summ-number" key={index}>
-                                                {`${fixNumberHundredths(
-                                                    spaceAndFixNumber(totalSumm.total[currency])
+                                                {`${internationalFormatNum(
+                                                    fixNumberHundredths(spaceAndFixNumber(totalSumm.total[currency]))
                                                 )}  ${currency.toUpperCase()}`}
                                             </span>
                                         );
@@ -202,8 +199,8 @@ const TotalInvoiceCounersComponent = ({ invoices, vocabulary }) => {
                                     {Object.keys(totalSumm.draft).map((currency, index) => {
                                         return (
                                             <span className="total-invoice-counters__block-summ-number" key={index}>
-                                                {`${fixNumberHundredths(
-                                                    spaceAndFixNumber(totalSumm.draft[currency])
+                                                {`${internationalFormatNum(
+                                                    fixNumberHundredths(spaceAndFixNumber(totalSumm.draft[currency]))
                                                 )}  ${currency.toUpperCase()}`}
                                             </span>
                                         );

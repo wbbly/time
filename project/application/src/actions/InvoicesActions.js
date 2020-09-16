@@ -5,6 +5,8 @@ import {
     changeInvoice,
     deleteInvoice,
     changeInvoiceStatus,
+    getInvoiceViewData,
+    sendInvoiceLetter,
 } from '../configAPI';
 
 export const CREATE_INVOICE_REQUEST = 'CREATE_INVOICE_REQUEST';
@@ -16,7 +18,7 @@ export const GET_INVOICE_LIST_SUCCESS = 'GET_INVOICE_LIST_SUCCESS';
 export const GET_INVOICE_BY_ID_REQUEST = 'GET_INVOICE_BY_ID_REQUEST';
 export const GET_INVOICE_BY_ID_SUCCESS = 'GET_INVOICE_BY_ID_SUCCESS';
 export const SET_SENDER_ID = 'SET-SENDER-ID';
-
+export const ADD_INVOICE_ERROR = 'ADD_INVOICE_ERROR';
 const getInvoiceByIdRequest = () => ({
     type: GET_INVOICE_BY_ID_REQUEST,
 });
@@ -54,9 +56,18 @@ export const setSenderIdAC = payload => ({
     type: SET_SENDER_ID,
     payload,
 });
-
+const addInvoiceError = payload => ({
+    type: ADD_INVOICE_ERROR,
+    payload,
+});
 const fillFormDataWithObject = (formData, obj) => {
     for (let key in obj) {
+        if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
+            for (let ObjKey in obj[key]) {
+                formData.append(`${key}[${ObjKey}]`, obj[key][ObjKey]);
+            }
+        }
+
         if (Array.isArray(obj[key])) {
             for (let i = 0; i < obj[key].length; i++) {
                 for (let arrObjKey in obj[key][i]) {
@@ -64,7 +75,7 @@ const fillFormDataWithObject = (formData, obj) => {
                 }
             }
         } else {
-            formData.append(key, obj[key]);
+            if (Object.prototype.toString.call(obj[key]) !== '[object Object]') formData.append(key, obj[key]);
         }
     }
     return formData;
@@ -77,12 +88,15 @@ export const addInvoice = (payload, isClone) => async dispatch => {
     try {
         if (!isClone) {
             requestBody = {
-                vendorId: payload.sender,
-                clientId: payload.recipient,
+                invoiceNumber: payload.invoiceNumber,
+                vendorId: payload.vendorId,
+                clientId: payload.recipient.id,
                 invoiceDate: payload.dateFrom.toISOString(),
                 dueDate: payload.dateDue.toISOString(),
+                timezoneOffset: payload.timezoneOffset,
                 currency: payload.currency,
                 comment: payload.comment,
+                invoiceVendor: payload.sender,
                 invoiceProjects: payload.projects.reduce((acc, project) => {
                     acc.push({
                         projectName: project.project_name,
@@ -95,12 +109,15 @@ export const addInvoice = (payload, isClone) => async dispatch => {
             };
         } else {
             requestBody = {
-                vendorId: payload.sender,
-                clientId: payload.recipient,
+                invoiceNumber: '',
+                vendorId: payload.vendorId,
+                clientId: payload.recipient.id,
                 invoiceDate: payload.dateFrom,
                 dueDate: payload.dateDue,
+                timezoneOffset: payload.timezoneOffset,
                 currency: payload.currency,
                 comment: payload.comment,
+                invoiceVendor: payload.sender,
                 originalLogo: payload.image,
                 invoiceProjects: payload.projects.reduce((acc, project) => {
                     acc.push({
@@ -120,6 +137,9 @@ export const addInvoice = (payload, isClone) => async dispatch => {
         dispatch(getInvoiceListSuccess(res.data.data.invoices));
     } catch (error) {
         console.log(error);
+        if (error.response) {
+            dispatch(addInvoiceError(error.response.data.message));
+        }
     }
 };
 
@@ -127,7 +147,20 @@ export const getInvoice = invoiceId => async dispatch => {
     dispatch(getInvoiceByIdRequest());
     try {
         const res = await getInvoiceById(invoiceId);
-        dispatch(getInvoiceByIdSuccess(res.data.data.invoice));
+        dispatch(getInvoiceByIdSuccess(res.data));
+    } catch (error) {
+        console.log(error);
+    }
+};
+export const sendInvoiceLetterThunk = (invoiceId, data, isInvoicePageDetailed) => async dispatch => {
+    if (!isInvoicePageDetailed) {
+        dispatch(changeInvoiceStatusRequest());
+    }
+    try {
+        const res = await sendInvoiceLetter(invoiceId, data);
+        if (!isInvoicePageDetailed) {
+            dispatch(getInvoiceByIdSuccess(res.data.data.invoices));
+        }
     } catch (error) {
         console.log(error);
     }
@@ -146,18 +179,28 @@ export const getInvoicesList = () => async dispatch => {
         console.log(error);
     }
 };
-
+export const getInvoiceViewDataThunk = id => async dispatch => {
+    try {
+        const res = await getInvoiceViewData(id);
+        dispatch(getInvoiceListSuccess(res.data));
+    } catch (error) {
+        console.log(error);
+    }
+};
 export const updateInvoice = payload => async dispatch => {
     dispatch(changeInvoiceRequest());
     let formData = payload.image;
     try {
         let requestBody = {
-            vendorId: payload.sender,
-            clientId: payload.recipient,
+            invoiceNumber: payload.invoiceNumber,
+            vendorId: payload.vendorId,
+            clientId: payload.recipient.id,
             invoiceDate: payload.dateFrom,
             dueDate: payload.dateDue,
+            timezoneOffset: payload.timezoneOffset,
             currency: payload.currency,
             comment: payload.comment || '',
+            invoiceVendor: payload.sender,
             invoiceProjects: payload.projects.reduce((acc, project) => {
                 acc.push({
                     projectName: project.project_name || project.name,
@@ -176,6 +219,9 @@ export const updateInvoice = payload => async dispatch => {
         dispatch(getInvoiceListSuccess(res.data.data.invoices));
     } catch (error) {
         console.log(error);
+        if (error.response) {
+            dispatch(addInvoiceError(error.response.data.message));
+        }
     }
 };
 export const deleteAvatarThunk = payload => async dispatch => {
@@ -185,6 +231,7 @@ export const deleteAvatarThunk = payload => async dispatch => {
             clientId: payload.recipient,
             invoiceDate: payload.dateFrom,
             dueDate: payload.dateDue,
+            timezoneOffset: payload.timezoneOffset,
             currency: payload.currency,
             comment: payload.comment || '',
             invoiceProjects: payload.projects.reduce((acc, project) => {

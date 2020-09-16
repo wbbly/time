@@ -402,13 +402,22 @@ export const getInvoices = () =>
         url: '/invoice/list',
         method: 'GET',
     });
-
+export const getInvoiceViewData = id =>
+    instance({
+        url: `/invoice/${id}`,
+        method: 'GET',
+    });
 export const getInvoiceById = invoiceId =>
     instance({
         url: `/invoice/${invoiceId}`,
         method: 'GET',
     });
-
+export const sendInvoiceLetter = (invoiceId, data) =>
+    instance({
+        url: `/invoice/${invoiceId}/sendInvoice`,
+        method: 'POST',
+        data,
+    });
 export const changeInvoice = ({ invoiceId, data }) =>
     instance({
         url: `/invoice/${invoiceId}`,
@@ -429,6 +438,13 @@ export const changeInvoiceStatus = ({ invoiceId, paymentStatus }) =>
         data: {
             paymentStatus,
         },
+    });
+
+export const downloadInvoicePDF = id =>
+    instance({
+        url: `/invoice/${id}/generatePDF`,
+        responseType: 'blob',
+        method: 'GET',
     });
 
 export const searchTechnologies = title =>

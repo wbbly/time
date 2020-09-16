@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 
 //Styles
 import './style.scss';
-
+// Actions
+import { sendInvoiceLetterThunk } from '../../../actions/InvoicesActions';
 //Components
 import ModalPortal from '../../ModalPortal';
+import { showNotificationAction } from '../../../actions/NotificationActions';
 
 class SendInvoiceModal extends Component {
     state = {
@@ -14,7 +16,7 @@ class SendInvoiceModal extends Component {
 Please, look at invoice ${this.props.invoice.invoice_number} for ${this.props.invoice.projects.map(
             project => project.project_name
         )} here:
-https://time.wobbly.me/team
+${window.location.origin}/invoice/${this.props.invoice.id}
         
 A reminder of my payment terms: payment is due on ${this.props.invoice.due_date}.
         
@@ -29,9 +31,26 @@ Wobbly team`,
     };
 
     render() {
-        const { closeModal, vocabulary, user, invoice } = this.props;
+        const {
+            closeModal,
+            vocabulary,
+            user,
+            invoice,
+            sendInvoiceLetterThunk,
+            isInvoicePageDetailed,
+            showNotificationAction,
+        } = this.props;
         const { inputValue } = this.state;
         const { v_send_invoice, v_send_invoice_placeholder, v_send, v_cancel, v_from, v_to } = vocabulary;
+        const sendInvoiceLetter = () => {
+            let data = {
+                message: this.state.inputValue,
+                sendingStatus: true,
+            };
+            sendInvoiceLetterThunk(invoice.id, data, isInvoicePageDetailed);
+            closeModal();
+            showNotificationAction({ text: 'Invoice was sent', type: 'success' });
+        };
         return (
             <ModalPortal>
                 <div className="send-invoice-modal">
@@ -56,7 +75,7 @@ Wobbly team`,
                             </div>
                         </div>
                         <div className="send-invoice-modal__button-container">
-                            <button className="send-invoice-modal__button" onClick={e => closeModal()}>
+                            <button className="send-invoice-modal__button" onClick={e => sendInvoiceLetter()}>
                                 {v_send}
                             </button>
                             <button className="send-invoice-modal__button" onClick={() => closeModal()}>
@@ -69,9 +88,15 @@ Wobbly team`,
         );
     }
 }
-
+const mapDispatchToProps = {
+    sendInvoiceLetterThunk,
+    showNotificationAction,
+};
 const mapStateToProps = ({ userReducer }) => ({
     user: userReducer.user,
 });
 
-export default connect(mapStateToProps)(SendInvoiceModal);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(SendInvoiceModal);
