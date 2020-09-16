@@ -7,12 +7,10 @@ export function MyDropzone({ fileHandler, loadedImage, imageUrl, placeholder }) 
     }, []);
 
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
     return (
         <div {...getRootProps()} className="drog-ang-drop">
             <input {...getInputProps()} />
-            {!loadedImage && imageUrl === null && <span>{placeholder}</span>}
-            {imageUrl === '' && !loadedImage && <span>{placeholder}</span>}
+            {!loadedImage && !imageUrl && <span>{placeholder}</span>}
         </div>
     );
 }

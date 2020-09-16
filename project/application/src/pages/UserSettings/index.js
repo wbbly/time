@@ -289,6 +289,7 @@ class UserSetting extends Component {
             e_mail,
             v_technologies,
             v_company_name,
+            v_tags,
         } = vocabulary;
 
         const { inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
@@ -334,8 +335,7 @@ class UserSetting extends Component {
                                         .email('v_a_incorect_email')
                                         .required('v_v_required'),
                                     userName: Yup.string().required('v_v_required'),
-                                    country: Yup.string().required('v_v_required'),
-                                    city: Yup.string().required('v_v_required'),
+                                    companyName: Yup.string().required('v_v_required'),
                                     jiraUrl:
                                         checked &&
                                         Yup.string()
@@ -438,7 +438,8 @@ class UserSetting extends Component {
                                                 onBlur: formik.handleBlur,
                                                 value: formik.values.companyName,
                                             }}
-                                            label={v_company_name}
+                                            label={`${v_company_name}*`}
+                                            errorMsg={formik.errors.companyName}
                                             withValidation
                                             dark
                                         />
@@ -482,8 +483,7 @@ class UserSetting extends Component {
                                                         onBlur: formik.handleBlur,
                                                         value: formik.values.city,
                                                     }}
-                                                    errorMsg={formik.errors.city}
-                                                    label={`${v_city}, ${v_address_lowC}*`}
+                                                    label={`${v_city}, ${v_address_lowC}`}
                                                     withValidation
                                                     dark
                                                 />
@@ -515,7 +515,7 @@ class UserSetting extends Component {
                                             </div>
                                         </div>
                                         <div className="user-settings__technology">
-                                            <div className="user-settings__technology-title">{v_technologies}</div>
+                                            <div className="user-settings__technology-title">{v_tags}</div>
                                             <TechnologyComponent
                                                 userTechnologies={this.state.userTechnologies}
                                                 setUserTechnologies={techArr =>

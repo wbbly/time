@@ -82,26 +82,27 @@ const TechnologyComponent = ({ userTechnologies, setUserTechnologies, themeLight
                     'technology--light': themeLight,
                 })}
             >
-                {!!techList.length && (
-                    <div className={classnames('technology__list')}>
-                        {techList.map((technology, index) => (
-                            <div
-                                className={classnames('technology__list-tag', {
-                                    'technology__list-tag--light': themeLight,
-                                })}
-                                key={index}
-                            >
-                                <span className={classnames('technology__list-tag-title')}>{technology.title}</span>
-                                <span
-                                    className={classnames('technology__list-tag-remove-icon')}
-                                    onClick={e => removeTechnologyFromList(technology.id)}
+                {techList &&
+                    !!techList.length && (
+                        <div className={classnames('technology__list')}>
+                            {techList.map((technology, index) => (
+                                <div
+                                    className={classnames('technology__list-tag', {
+                                        'technology__list-tag--light': themeLight,
+                                    })}
+                                    key={index}
                                 >
-                                    <RemoveSvg ligthMode={themeLight} />
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                                    <span className={classnames('technology__list-tag-title')}>{technology.title}</span>
+                                    <span
+                                        className={classnames('technology__list-tag-remove-icon')}
+                                        onClick={e => removeTechnologyFromList(technology.id)}
+                                    >
+                                        <RemoveSvg ligthMode={themeLight} />
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 <div className={classnames('technology__search')}>
                     <input
                         type="text"
@@ -112,41 +113,43 @@ const TechnologyComponent = ({ userTechnologies, setUserTechnologies, themeLight
                         onChange={e => setSearchInput(e.target.value)}
                         placeholder={v_enter_text}
                     />
-                    {!!searchInput.length && (
-                        <button
-                            className={classnames('technology__search-add')}
-                            disabled={isFetching}
-                            onClick={e => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                createTechnology();
-                            }}
-                        >
-                            {v_add_technology}
-                        </button>
-                    )}
+                    {searchInput &&
+                        !!searchInput.length && (
+                            <button
+                                className={classnames('technology__search-add')}
+                                disabled={isFetching}
+                                onClick={e => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    createTechnology();
+                                }}
+                            >
+                                {v_add_technology}
+                            </button>
+                        )}
                 </div>
             </div>
-            {!!searchItems.length && (
-                <div
-                    className={classnames('technology__suggestions', {
-                        'technology__suggestions--light': themeLight,
-                    })}
-                    ref={wrapperRef}
-                >
-                    {searchItems.map((item, index) => (
-                        <div
-                            key={index}
-                            className={classnames('technology__suggestions-item', {
-                                'technology__suggestions-item--light': themeLight,
-                            })}
-                            onClick={e => addTechnologyToList(item)}
-                        >
-                            {item.title}
-                        </div>
-                    ))}
-                </div>
-            )}
+            {searchItems &&
+                !!searchItems.length && (
+                    <div
+                        className={classnames('technology__suggestions', {
+                            'technology__suggestions--light': themeLight,
+                        })}
+                        ref={wrapperRef}
+                    >
+                        {searchItems.map((item, index) => (
+                            <div
+                                key={index}
+                                className={classnames('technology__suggestions-item', {
+                                    'technology__suggestions-item--light': themeLight,
+                                })}
+                                onClick={e => addTechnologyToList(item)}
+                            >
+                                {item.title}
+                            </div>
+                        ))}
+                    </div>
+                )}
         </div>
     );
 };

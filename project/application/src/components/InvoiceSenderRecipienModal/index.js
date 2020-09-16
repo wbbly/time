@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import { connect } from 'react-redux';
 // Components
 import Input from '../BaseComponents/Input';
-import Checkbox from '@material-ui/core/Checkbox';
 import ReactFlagsSelect from 'react-flags-select';
 
 // Styles
@@ -13,8 +12,8 @@ import 'react-flags-select/scss/react-flags-select.scss';
 // actions
 import { showNotificationAction } from '../../actions/NotificationActions';
 
-const phoneRegExp = /^[0-9\-\+]{9,20}$/;
-class ClientModal extends Component {
+const phoneRegExp = /^[0-9\-\+_ ]{9,20}$/;
+class InvoiceSenderRecipienModal extends Component {
     state = {
         deleteCheckbox: false,
         logoFile: null,
@@ -42,15 +41,7 @@ class ClientModal extends Component {
         }
     }
     render() {
-        const {
-            closeModal,
-            vocabulary,
-            addNewClient,
-            toEditClient,
-            editedClient,
-            deleteClient,
-            showNotificationAction,
-        } = this.props;
+        const { closeModal, vocabulary, addNewClient, editedClient, userSender, setSender } = this.props;
         const {
             v_zip_code,
             v_country,
@@ -72,6 +63,7 @@ class ClientModal extends Component {
             v_save,
             v_address,
             v_edit_client_title,
+            v_edit_sender,
         } = vocabulary;
         const { logoFile } = this.state;
 
@@ -79,20 +71,21 @@ class ClientModal extends Component {
             if (editedClient) {
                 return editedClient[valueName] ? editedClient[valueName] : '';
             } else {
-                return '';
+                if (userSender) {
+                    return userSender[valueName] ? userSender[valueName] : '';
+                }
             }
         };
-
         return (
-            <div className="client-modal">
-                <div className="client-modal__background" />
+            <div className="sender-recipient-modal">
+                <div className="sender-recipient-modal__background" />
 
-                <div className="client-modal__container">
-                    <div className="client-modal__container-header">
-                        <div className="client-modal__container-header-title">
-                            {editedClient ? v_edit_client_title : v_add_client}
+                <div className="sender-recipient-modal__container">
+                    <div className="sender-recipient-modal__container-header">
+                        <div className="sender-recipient-modal__container-header-title">
+                            {userSender ? v_edit_sender : v_add_client}
                         </div>
-                        <i className="client-modal__container-header-close" onClick={() => closeModal()} />
+                        <i className="sender-recipient-modal__container-header-close" onClick={() => closeModal()} />
                     </div>
 
                     <Formik
@@ -106,9 +99,9 @@ class ClientModal extends Component {
                             language: getValue('language'),
                             phone: getValue('phone'),
                             zip: getValue('zip'),
-                            name: getValue('name'),
+                            username: getValue('username'),
                             email: getValue('email'),
-                            company_name: getValue('company_name'),
+                            company_name: getValue('company_name') || getValue('companyName'),
                         }}
                         validationSchema={Yup.object({
                             zip: Yup.number()
@@ -119,24 +112,10 @@ class ClientModal extends Component {
                             phone: Yup.string().matches(phoneRegExp, 'no_valid_number'),
                         })}
                         onSubmit={values => {
-                            if (this.state.deleteCheckbox) {
-                                deleteClient(editedClient.id);
-                                showNotificationAction({
-                                    text: client_was_deleted,
-                                    type: 'success',
-                                });
+                            if (userSender) {
+                                setSender(values);
                             } else {
-                                editedClient
-                                    ? (() => {
-                                          toEditClient(values, editedClient.id, logoFile);
-                                          showNotificationAction({
-                                              text: client_was_edited,
-                                              type: 'success',
-                                          });
-                                      })()
-                                    : (() => {
-                                          addNewClient(values, logoFile);
-                                      })();
+                                addNewClient(values);
                             }
                         }}
                     >
@@ -159,12 +138,12 @@ class ClientModal extends Component {
                                 <section className="client-info__section">
                                     <Input
                                         config={{
-                                            id: 'name',
-                                            name: 'name',
+                                            id: 'username',
+                                            name: 'username',
                                             type: 'text',
                                             onChange: formik.handleChange,
                                             onBlur: formik.handleBlur,
-                                            value: formik.values.name,
+                                            value: formik.values.username,
                                             placeholder: v_enter_text,
                                         }}
                                         label={full_name}
@@ -270,19 +249,8 @@ class ClientModal extends Component {
                                         withValidation
                                     />
                                 </section>
-
-                                {editedClient && (
-                                    <section className="client-info__section-delete">
-                                        <Checkbox
-                                            color="primary"
-                                            onChange={this.handleChangeCheckbox}
-                                            inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                        />
-                                        <span>{v_delete_client}</span>
-                                    </section>
-                                )}
-                                <button type="submit" className="client-modal__container-form-button">
-                                    {editedClient ? v_save : v_add_client}
+                                <button type="submit" className="sender-recipient-modal__container-form-button">
+                                    {userSender ? v_save : v_add_client}
                                 </button>
                             </form>
                         )}
@@ -304,4 +272,4 @@ const mapDispatchToProps = {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ClientModal);
+)(InvoiceSenderRecipienModal);

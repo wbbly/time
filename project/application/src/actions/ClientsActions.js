@@ -57,8 +57,8 @@ export const setClientAction = (client, logoFile) => async dispatch => {
             requestBody = fillFormDataWithObject(formData, requestBody);
         }
         const { data } = await setClient(requestBody);
-
         dispatch(getClientsRequestSuccess(data.data.client));
+        return data;
     } catch (error) {
         dispatch(getClientsRequestError(error));
     }

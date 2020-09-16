@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
+// Actions
 import { getInvoicesList, addInvoice } from '../../actions/InvoicesActions';
 
 // Styles
@@ -12,12 +12,11 @@ import './style.scss';
 //Components
 import { Loading } from '../../components/Loading';
 import CustomScrollbar from '../../components/CustomScrollbar';
-import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 import LastInvoicesList from '../../components/InvoicePageComponents/LastInvoicesList';
 import AllInvoicesList from '../../components/InvoicePageComponents/AllInvoicesList';
 import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoiceModal';
 import TotalInvoiceCounersComponent from '../../components/InvoicePageComponents/TotalInvoiceCounersComponent';
-// import CustomPagination from '../../components/CustomPagination/index';
+import blankInvoice from '../../images/invoice_picture.png';
 
 class InvoicesPage extends Component {
     state = {
@@ -29,16 +28,23 @@ class InvoicesPage extends Component {
         setTimeout(() => this.setState({ isInitialFetching: false }), 500);
         this.props.getInvoicesList();
     }
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.isFetching !== this.props.isFetching) {
+            this.props.getInvoicesList();
+        }
+    }
 
     toggleSendInvoiceModal = (sendInvoiceModalData = null) => {
         this.setState({ sendInvoiceModalData });
     };
     prepareBodyRequest = oldObject => {
         let newObject = {};
-        newObject.sender = this.props.senderId;
-        newObject.recipient = oldObject.to.id;
+        newObject.vendorId = this.props.defaultUserSender.id;
+        newObject.sender = oldObject.invoice_vendor;
+        newObject.recipient = oldObject.to;
         newObject.dateFrom = oldObject.invoice_date;
         newObject.dateDue = oldObject.due_date;
+        newObject.timezoneOffset = oldObject.timezone_offset;
         newObject.currency = oldObject.currency;
         newObject.comment = oldObject.comment;
         newObject.projects = oldObject.projects;
@@ -79,6 +85,7 @@ class InvoicesPage extends Component {
                                 {!!invoices.length && (
                                     <div className="invoices-page-top__last-invoices">
                                         <LastInvoicesList
+                                            invoicesNumber={invoices.length}
                                             invoices={invoices.slice(0, 4)}
                                             vocabulary={vocabulary}
                                             toggleSendInvoiceModal={this.toggleSendInvoiceModal}
@@ -101,10 +108,9 @@ class InvoicesPage extends Component {
                                     </div>
                                 </div>
                             )}
-                            {invoices && invoices.length === 0 && BlankListComponent(v_no_invoices, null, null)}
+                            {invoices && invoices.length === 0 && <img src={blankInvoice} className="blank-invoice" />}
                         </Loading>
                     </div>
-                    {/* <CustomPagination /> */}
                 </CustomScrollbar>
                 {sendInvoiceModalData && (
                     <SendInvoiceModal
@@ -118,11 +124,12 @@ class InvoicesPage extends Component {
     }
 }
 
-const mapStateToProps = ({ invoicesReducer }) => ({
+const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
     invoices: invoicesReducer.invoices,
     isFetching: invoicesReducer.isFetching,
     isInitialFetching: invoicesReducer.isInitialFetching,
     senderId: invoicesReducer.senderId,
+    defaultUserSender: userReducer.user,
 });
 
 const mapDispatchToProps = {

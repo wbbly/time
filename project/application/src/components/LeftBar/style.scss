@@ -4,14 +4,31 @@
   padding: 34px 0 2rem 0;
   background-color: #3b3b3b;
   box-shadow: 6px 0 20px rgba(0, 0, 0, 0.14);
-
+height: 100%;
+width: 100%;
   position: inherit;
   z-index: 1;
 
+}
+.wrapper-position-add-team {
   width: 100%;
-  height: 100%;
+  height: 150px;
   overflow-x: hidden;
   overflow-y: auto;
+}
+.wrapper-position-add-team::-webkit-scrollbar {
+  width: 12px;
+}
+.wrapper-position-add-team::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0,  0.2);
+  border-radius: 10px;
+  border: 3px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+}
+.wrapper-position-add-team::-webkit-scrollbar-track {
+  border-radius: 10px;
+  border: 5px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
 }
 
 .logo_small {

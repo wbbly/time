@@ -29,10 +29,17 @@
     }
     &--empty {
       border: 1px solid #d84e4e;
-
+      border-radius: 4px;
     }
-
   }
+  &--empty {
+    border: 1px solid #d84e4e;
+    border-radius: 4px;
+  }
+
+    
+
+  
   &--empty {
     border: 1px solid #d84e4e;
     border-radius: 4px;
@@ -103,6 +110,9 @@
     justify-content: space-between;
     align-items: center;
     margin-left: 10px;
+    svg{
+      fill: white;
+    }
   }
 
   &__row {

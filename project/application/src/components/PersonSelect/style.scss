@@ -3,7 +3,7 @@
   position: relative;
   background: #3f3f3f;
   border-radius: 3px;
-  height: 104px;
+  height: 80%;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -23,18 +23,25 @@
 
   &__selected-person {
     display: flex;
-    margin: 16px 0 0 16px;
-    .avatar-img-small {
-      display: inline-block;
-      border-radius: 50%;
-      background-repeat: no-repeat;
-      background-position: top center;
-      background-size: cover;
-      width: 48px;
-      height: 42px;
-      margin-right: 20px;
+    margin: 10px 0 5px 16px;
+    position: relative;
+    height: 100%;
+    &-container {
+      width: 100%;
+      height: 100%;
+      .client-select {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        .text-client{
+          margin-top: 8px;
+        }
+      }
     }
-    .data-wrapper{
+
+    .data-wrapper {
       display: flex;
       flex-direction: column;
       padding-right: 5px;
@@ -51,9 +58,9 @@
   }
   &__selected-person-row {
     display: flex;
-
-    :last-child {
-      // flex: 3;
+    flex-direction: column;
+    div {
+      padding: 5px;
     }
   }
 
@@ -68,6 +75,16 @@
     border-radius: 0.4rem;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
     animation: slowVisibility 0.3s;
+    &-btn {
+      color: white;
+      background-color: #27ae60;
+      min-height: 30px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
   }
 
   &__dropdown-list-input {
@@ -83,7 +100,7 @@
 
   &__dropdown-list {
     overflow-y: auto;
-    height: 230px;
+    height: 180px;
   }
 
   &__dropdown-list-item {
@@ -124,7 +141,7 @@
 // Mobile styles
 .person-select--mobile {
   width: 100%;
-  height: 80px;
+  height: 80%;
   word-wrap: break-word;
   margin-bottom: 10px;
 }

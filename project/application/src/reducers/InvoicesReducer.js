@@ -8,6 +8,7 @@ import {
     DELETE_INVOICE_REQUEST,
     CHANGE_INVOICE_STATUS_REQUEST,
     SET_SENDER_ID,
+    ADD_INVOICE_ERROR,
 } from '../actions/InvoicesActions';
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
     isFetching: false,
     isInitialFetching: false,
     senderId: '',
+    error: null,
 };
 
 export default function invoicesReducer(state = initialState, { type, payload }) {
@@ -68,6 +70,13 @@ export default function invoicesReducer(state = initialState, { type, payload })
             return {
                 ...state,
                 senderId: payload,
+            };
+        case ADD_INVOICE_ERROR:
+            return {
+                ...state,
+                isFetching: false,
+                isInitialFetching: false,
+                error: payload,
             };
         default:
             return state;

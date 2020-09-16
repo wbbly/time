@@ -47,3 +47,6 @@ export const fixNumberHundredthsLimits8 = (number, fixedValue = 2) => {
         return result;
     }
 };
+export function internationalFormatNum(num) {
+    return num.toLocaleString('en-US', { useGrouping: true, minimumFractionDigits: 2 });
+}

@@ -33,6 +33,9 @@
     &--draft {
       background: #626262;
     }
+    &--awaiting{
+      background: rgb(255, 174, 0);
+    }
 
     &:last-child {
       margin-bottom: 0;
@@ -125,9 +128,22 @@
   .last-invoices-list{
     justify-content: center;
     .last-invoices-list-item{
-    &:nth-child(3) {
-      margin-bottom: 20px;
+      margin-left: 0;
+      margin-right: 0;
+      width: 288px;
+      height: auto;
+      &__total, &__price {
+        display: inline-block;
+      }
+      &__price {
+        margin-left: 10px;
+      }
+      &__confirm-button {
+        margin-bottom: 10px;
+      }
+      &:nth-child(3) {
+        margin-bottom: 20px;
+      }
     }
-  }
   }
 }
