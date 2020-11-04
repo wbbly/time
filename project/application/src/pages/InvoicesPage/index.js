@@ -17,6 +17,7 @@ import AllInvoicesList from '../../components/InvoicePageComponents/AllInvoicesL
 import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoiceModal';
 import TotalInvoiceCounersComponent from '../../components/InvoicePageComponents/TotalInvoiceCounersComponent';
 import blankInvoice from '../../images/invoice_picture.png';
+import PageHeader from '../../components/PageHeader/index';
 
 class InvoicesPage extends Component {
     state = {
@@ -69,12 +70,11 @@ class InvoicesPage extends Component {
                                     'invoices-page-top--mobile': isMobile,
                                 })}
                             >
-                                <div className="invoices-page-top__header">
-                                    <div className="invoices-page-top__title">{v_invoices}</div>
-                                    <Link to="/invoices/create" className="invoices-page-top__add-invoice-button">
+                                <PageHeader title={v_invoices}>
+                                    <Link to="/invoices/create" className="header-wrapper__child-button">
                                         {v_add_new_invoice}
                                     </Link>
-                                </div>
+                                </PageHeader>
 
                                 {!!invoices.length && (
                                     <div className="invoices-page-top__totals">

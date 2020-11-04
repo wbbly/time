@@ -25,11 +25,18 @@ const FolderIcon = ({ className }) => (
 );
 
 class ProjectsListPopup extends Component {
-    state = {
-        projectsList: null,
-        isOpen: false,
-        inputValue: '',
-    };
+    constructor(props) {
+        super(props);
+
+        this.dropdown = React.createRef();
+        this.input = React.createRef();
+
+        this.state = {
+            projectsList: null,
+            isOpen: false,
+            inputValue: '',
+        };
+    }
 
     static getDerivedStateFromProps(props, state) {
         if (state.projectsList === null) {
@@ -103,13 +110,12 @@ class ProjectsListPopup extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { isOpen, inputValue } = this.state;
         const { scrollToAction, withFolder } = this.props;
-        const { dropdown } = this.refs;
 
         if (!prevState.isOpen && isOpen) {
             this.input.current.focus();
             if (!withFolder) {
                 const height = window.innerHeight || window.document.documentElement.clientHeight;
-                const boundingClientRect = dropdown.getBoundingClientRect();
+                const boundingClientRect = this.dropdown.current.getBoundingClientRect();
                 const { bottom } = boundingClientRect;
                 if (bottom > height) {
                     const diff = bottom - height;
@@ -156,10 +162,10 @@ class ProjectsListPopup extends Component {
                     {withFolder && <FolderIcon className="project-list-popup__folder-icon" />}
                 </div>
                 {isOpen && (
-                    <div ref="dropdown" className={classNames('project-list-popup__dropdown')}>
+                    <div ref={this.dropdown} className={classNames('project-list-popup__dropdown')}>
                         <input
                             className="project-list-popup__dropdown-list-input"
-                            ref={(this.input = React.createRef())}
+                            ref={this.input}
                             value={inputValue}
                             onChange={this.onChangeInput}
                             type="text"

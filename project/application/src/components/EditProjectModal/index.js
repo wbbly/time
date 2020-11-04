@@ -190,7 +190,7 @@ class EditProjectModal extends Component {
     render() {
         const { vocabulary } = this.props;
         const { selectedClient, relationProjectsList, selectedProject } = this.state;
-        const { v_edit_project, v_project_name, v_edit_project_name } = vocabulary;
+        const { v_edit_project, v_project_name, v_edit_project_name, v_save } = vocabulary;
 
         let selectItems = this.state.selectValue.map(value => {
             const { id, name } = value;
@@ -250,7 +250,7 @@ class EditProjectModal extends Component {
                             className="edit_projects_modal_button_container_button"
                             onClick={e => this.changeProject()}
                         >
-                            {v_edit_project}
+                            {v_save}
                         </button>
                     </div>
                 </div>

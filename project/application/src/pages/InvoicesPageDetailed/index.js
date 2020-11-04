@@ -449,7 +449,7 @@ class InvoicesPageDetailed extends Component {
                                                                 }
                                                                 className="invoices-page-detailed__input "
                                                                 type="text"
-                                                                maxlength="15"
+                                                                maxLength="15"
                                                                 placeholder={v_enter_number}
                                                                 disabled={this.isViewMode}
                                                             />

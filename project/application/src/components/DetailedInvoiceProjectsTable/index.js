@@ -14,7 +14,7 @@ import {
 import './style.scss';
 
 //Components
-import { DeleteIcon, EditIcon } from '../InvoicePageComponents/AllInvoicesList';
+import { DeleteIcon, EditIcon, SaveInvoice } from '../InvoicePageComponents/AllInvoicesList';
 import { calculateSubtotalWithoutTax } from '../../pages/InvoicesPageDetailed';
 import { Loading } from '../Loading';
 
@@ -72,9 +72,9 @@ class DetailedInvoiceProjectsTable extends Component {
         } else if (isTaxLess30 && isPositiveNumber) {
             value = fixNumberHundredthsLimits10(+e.target.value);
         } else if (name === 'project_name') {
-            if (e.target.value.length < 30) {
-                value = e.target.value;
-            }
+            // if (e.target.value.length < 30) {
+            value = e.target.value;
+            // }
         }
         const { newProject } = this.state;
         this.setState({ newProject: { ...newProject, [name]: value } });
@@ -101,9 +101,10 @@ class DetailedInvoiceProjectsTable extends Component {
         } else if (isTaxLess30 && isPositiveNumber) {
             value = fixNumberHundredthsLimits10(+e.target.value);
         } else if (name === 'project_name') {
-            if (e.target.value.length < 30) {
-                value = e.target.value;
-            }
+            console.log('clear');
+            // if (e.target.value.length < 30) {
+            value = e.target.value;
+            // }
         }
 
         this.setState({ editingProject: { ...editingProject, [name]: value } });
@@ -240,7 +241,7 @@ class DetailedInvoiceProjectsTable extends Component {
                                         type="text"
                                         placeholder={v_enter_project}
                                         disabled={editingProject.id !== project.id}
-                                        onKeyDown={this.handleKeyDown}
+                                        // onKeyDown={this.handleKeyDown}
                                     />
                                 </div>
                                 <div className="detailed-invoice-projects-table__amount-column">
@@ -253,10 +254,13 @@ class DetailedInvoiceProjectsTable extends Component {
                                             'detailed-invoice-projects-table__input--empty':
                                                 this.getProjectValue(project, 'hours') == 0,
                                         })}
-                                        type="number"
+                                        type="text"
+                                        onInput={event => {
+                                            event.target.value = event.target.value.replace(/[^0-9]/g, '');
+                                        }}
                                         placeholder={v_enter_number}
                                         disabled={editingProject.id !== project.id}
-                                        onKeyDown={this.handleKeyDown}
+                                        // onKeyDown={this.handleKeyDown}
                                     />
                                 </div>
                                 <div className="detailed-invoice-projects-table__rate-column">
@@ -269,10 +273,13 @@ class DetailedInvoiceProjectsTable extends Component {
                                             'detailed-invoice-projects-table__input--empty':
                                                 this.getProjectValue(project, 'rate') == 0,
                                         })}
-                                        type="number"
+                                        type="text"
+                                        onInput={event => {
+                                            event.target.value = event.target.value.replace(/[^0-9]/g, '');
+                                        }}
                                         placeholder={editingProject.id !== project.id ? '' : v_enter_number}
                                         disabled={editingProject.id !== project.id}
-                                        onKeyDown={this.handleKeyDown}
+                                        // onKeyDown={this.handleKeyDown}
                                     />
                                 </div>
                                 <div className="detailed-invoice-projects-table__tax-column">
@@ -283,10 +290,16 @@ class DetailedInvoiceProjectsTable extends Component {
                                             'detailed-invoice-projects-table__input--disabled':
                                                 editingProject.id !== project.id,
                                         })}
-                                        type={editingProject.id === project.id ? 'number' : 'text'}
+                                        // type={editingProject.id === project.id ? 'number' : 'text'}
+                                        type="text"
+                                        onInput={event => {
+                                            if (editingProject.id === project.id) {
+                                                event.target.value = event.target.value.replace(/[^0-9]/g, '');
+                                            }
+                                        }}
                                         placeholder={editingProject.id !== project.id ? '' : v_enter_number}
                                         disabled={editingProject.id !== project.id}
-                                        onKeyDown={this.handleKeyDown}
+                                        // onKeyDown={this.handleKeyDown}
                                     />
                                 </div>
                                 <div className="detailed-invoice-projects-table__subtotal-column">
@@ -306,18 +319,34 @@ class DetailedInvoiceProjectsTable extends Component {
                                 {!this.isViewMode && (
                                     <div className="detailed-invoice-projects-table__tools-column">
                                         <div>
-                                            <EditIcon
-                                                onClick={() => {
-                                                    const isProjectName = editingProject.project_name.length > 0;
-                                                    const isHours = editingProject.hours > 0;
-                                                    const isRate = editingProject.rate > 0;
-                                                    this.initEditing(project);
-                                                    if (isProjectName && isHours && isRate) {
-                                                        this.finishEditing();
-                                                    }
-                                                }}
-                                                className="detailed-invoice-projects-table__icon-button"
-                                            />
+                                            {editingProject.id === project.id ? (
+                                                <SaveInvoice
+                                                    width={'24'}
+                                                    height={'24'}
+                                                    onClick={() => {
+                                                        const isProjectName = editingProject.project_name.length > 0;
+                                                        const isHours = editingProject.hours > 0;
+                                                        const isRate = editingProject.rate > 0;
+                                                        if (isProjectName && isHours && isRate) {
+                                                            this.finishEditing();
+                                                        }
+                                                    }}
+                                                    className="detailed-invoice-projects-table__icon-button"
+                                                />
+                                            ) : (
+                                                <EditIcon
+                                                    onClick={async () => {
+                                                        const isProjectName = editingProject.project_name.length > 0;
+                                                        const isHours = editingProject.hours > 0;
+                                                        const isRate = editingProject.rate > 0;
+                                                        if (isProjectName && isHours && isRate) {
+                                                            await this.finishEditing();
+                                                        }
+                                                        this.initEditing(project);
+                                                    }}
+                                                    className="detailed-invoice-projects-table__icon-button"
+                                                />
+                                            )}
                                         </div>
                                         <div>
                                             <DeleteIcon
@@ -348,11 +377,16 @@ class DetailedInvoiceProjectsTable extends Component {
                                     <div className="detailed-invoice-projects-table__amount-column">
                                         <input
                                             value={newProject.hours}
-                                            onChange={e => this.handleInputChange('hours', e)}
+                                            onChange={e => {
+                                                this.handleInputChange('hours', e);
+                                            }}
                                             className={classNames('detailed-invoice-projects-table__input', {
                                                 'detailed-invoice-projects-table__input--empty': isHoursError,
                                             })}
-                                            type="number"
+                                            type="text"
+                                            onInput={event => {
+                                                event.target.value = event.target.value.replace(/[^0-9]/g, '');
+                                            }}
                                             placeholder={v_enter_number}
                                         />
                                     </div>
@@ -363,7 +397,10 @@ class DetailedInvoiceProjectsTable extends Component {
                                             className={classNames('detailed-invoice-projects-table__input', {
                                                 'detailed-invoice-projects-table__input--empty': isRateError,
                                             })}
-                                            type="number"
+                                            type="text"
+                                            onInput={event => {
+                                                event.target.value = event.target.value.replace(/[^0-9]/g, '');
+                                            }}
                                             placeholder={v_enter_number}
                                         />
                                     </div>
@@ -372,7 +409,10 @@ class DetailedInvoiceProjectsTable extends Component {
                                             value={newProject.tax}
                                             onChange={e => this.handleInputChange('tax', e)}
                                             className="detailed-invoice-projects-table__input"
-                                            type="number"
+                                            type="text"
+                                            onInput={event => {
+                                                event.target.value = event.target.value.replace(/[^0-9]/g, '');
+                                            }}
                                             placeholder={v_pic_tax}
                                         />
                                     </div>

@@ -7,10 +7,10 @@ import classNames from 'classnames';
 // Components
 import { Loading } from '../../components/Loading';
 import ClientModal from '../../components/ClientModal';
-import ComponentHeader from '../../components/ComponentHeader';
 import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 import { ClientComponent } from '../../components/ClientComponent/index';
 import CustomScrollbar from '../../components/CustomScrollbar';
+import PageHeader from '../../components/PageHeader/index';
 // Actions
 import { getClientsAction, setClientAction, editClientThunk, deleteClientThunk } from '../../actions/ClientsActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
@@ -134,11 +134,14 @@ class ClientsPage extends Component {
                             />
                         )}
                         <div className="data_container_clients_page">
-                            <ComponentHeader
-                                title={v_clients}
-                                buttonName={v_add_new_client}
-                                onClick={() => this.setState({ showModal: true })}
-                            />
+                            <PageHeader title={v_clients}>
+                                <button
+                                    className="header-wrapper__child-button"
+                                    onClick={() => this.setState({ showModal: true })}
+                                >
+                                    {v_add_new_client}
+                                </button>
+                            </PageHeader>
 
                             <div className="wrapper_clients_search_bar">
                                 <div className="clients_search_bar_search_field_container">

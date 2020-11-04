@@ -19,6 +19,7 @@ import AddToTeamModal from '../../components/AddToTeamModal';
 import RenameTeamModal from '../../components/RenameTeamModal';
 import EditTeamModal from '../../components/EditTeamModal';
 import { Loading } from '../../components/Loading';
+import PageHeader from '../../components/PageHeader/index';
 
 // Actions
 import teamPageAction from '../../actions/TeamPageAction';
@@ -187,35 +188,33 @@ class TeamPage extends Component {
                         />
                     )}
                     <div className="data_container_team_page">
-                        <div className="team_page_header">
-                            <div className="page_name">
-                                {v_team}: {currentTeam.data.name}
-                            </div>
-                            <div className="team_page_main-controls">
-                                <div className="invite_container">
-                                    {checkIsAdminByRole(currentTeam.data.role) && (
-                                        <button
-                                            onClick={e => {
-                                                this.openRenameModal();
-                                            }}
-                                        >
-                                            {v_rename_team}
-                                        </button>
-                                    )}
-                                </div>
-                                <div className="invite_container">
-                                    {checkIsAdminByRole(currentTeam.data.role) && (
-                                        <button
-                                            onClick={e => {
-                                                this.openAddUserModal();
-                                            }}
-                                        >
-                                            {v_invite_to_team}
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
+                        <PageHeader title={`${v_team}: ${currentTeam.data.name}`}>
+                            {/* <div className="team_page_main-controls"> */}
+
+                            {checkIsAdminByRole(currentTeam.data.role) && (
+                                <button
+                                    className="header-wrapper__child-button"
+                                    onClick={e => {
+                                        this.openRenameModal();
+                                    }}
+                                >
+                                    {v_rename_team}
+                                </button>
+                            )}
+
+                            {checkIsAdminByRole(currentTeam.data.role) && (
+                                <button
+                                    className="header-wrapper__child-button"
+                                    onClick={e => {
+                                        this.openAddUserModal();
+                                    }}
+                                >
+                                    {v_invite_to_team}
+                                </button>
+                            )}
+
+                            {/* </div> */}
+                        </PageHeader>
                         <div className="team_page_data">
                             <table>
                                 <thead>

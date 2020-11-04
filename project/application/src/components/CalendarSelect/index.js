@@ -84,9 +84,15 @@ const CalendarIcon = className => (
 );
 
 class CalendarSelect extends Component {
-    state = {
-        isOpen: false,
-    };
+    constructor(props) {
+        super(props);
+
+        this.dropdown = React.createRef();
+
+        this.state = {
+            isOpen: false,
+        };
+    }
 
     openDropdown = event => {
         const { onChangeVisibility, disabled } = this.props;
@@ -129,12 +135,11 @@ class CalendarSelect extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { isOpen } = this.state;
         const { scrollToAction, withFolder } = this.props;
-        const { dropdown } = this.refs;
 
         if (!prevState.isOpen && isOpen) {
             if (!withFolder) {
                 const height = window.innerHeight || window.document.documentElement.clientHeight;
-                const boundingClientRect = dropdown.getBoundingClientRect();
+                const boundingClientRect = this.dropdown.current.getBoundingClientRect();
                 const { bottom } = boundingClientRect;
                 if (bottom > height) {
                     const diff = bottom - height;
@@ -178,7 +183,7 @@ class CalendarSelect extends Component {
                     {!disabled && <CalendarIcon />}
                 </div>
                 {isOpen && (
-                    <div ref="dropdown" className={classNames('calendar-select__dropdown')}>
+                    <div ref={this.dropdown} className={classNames('calendar-select__dropdown')}>
                         <ThemeProvider theme={muiTheme}>
                             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={customLocale}>
                                 <DatePicker

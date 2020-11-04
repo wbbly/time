@@ -36,6 +36,7 @@ import ReportsSearchBar from '../../components/reportsSearchBar';
 import { Loading } from '../../components/Loading';
 import { UnitedReportsComponents } from './UnitedReportsComponents';
 import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
+import PageHeader from '../../components/PageHeader/index';
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { getClientsAction } from '../../actions/ClientsActions';
@@ -171,7 +172,6 @@ class ReportsPage extends Component {
 
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
-
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
                 <div
@@ -180,8 +180,7 @@ class ReportsPage extends Component {
                     })}
                 >
                     <div className="data_container_reports_page">
-                        <div className="header">
-                            <div className="header_name">{v_summary_report}</div>
+                        <PageHeader title={v_summary_report}>
                             <div className="selects_container">
                                 <div className="select_header" onClick={e => this.openCalendar()}>
                                     <span>
@@ -222,7 +221,7 @@ class ReportsPage extends Component {
                                     </div>
                                 )}
                             </div>
-                        </div>
+                        </PageHeader>
                         {checkIsAdminByRole(currentTeam.data.role) && (
                             <ReportsSearchBar
                                 applySearch={e => this.applySearch()}
@@ -516,7 +515,7 @@ class ReportsPage extends Component {
                 }
             }
         );
-
+        this.setState({ isInitialFetching: true });
         apiCall(
             AppConfig.apiURL +
                 `timer/reports-list?startDate=${convertDateToISOString(
@@ -547,6 +546,7 @@ class ReportsPage extends Component {
                     this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(datePeriod, sumTimeEntriesByDay))
                 );
                 this.setState({ toggleBar: true });
+                this.setState({ isInitialFetching: false });
             },
             err => {
                 if (err instanceof Response) {

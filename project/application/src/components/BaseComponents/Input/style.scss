@@ -45,11 +45,16 @@
     cursor: pointer;
     display: block;
     position: absolute;
-    top: calc(50% - 20px);
+    top: calc(50% - 17px);
     right: 24px;
     width: 24px;
     height: 24px;
-    background: url("../../../images/icons/eye.svg") no-repeat 50%;
+    &_text {
+      background: url("../../../images/icons/eye.svg") no-repeat 50%;      
+    }
+    &_password {
+      background: url("../../../images/icons/eye-crossed.svg") no-repeat 50%;
+    }
   }
 }
 

@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { store } from './store/configureStore';
 
-import createBrowserHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -16,11 +16,14 @@ import App from './App';
 export const history = createBrowserHistory();
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Router history={history}>
-            <App />
-        </Router>
-    </Provider>,
+    <React.StrictMode>
+        <Provider store={store}>
+            <Router history={history}>
+                <App />
+            </Router>
+        </Provider>
+    </React.StrictMode>,
+
     document.getElementById('root')
 );
 

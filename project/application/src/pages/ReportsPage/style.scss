@@ -8,9 +8,7 @@
     height: 100%;
     width: 100%;
     background-color: #333333;
-    padding-top: 51px;
-    padding-left: 56px;
-    padding-right: 56px;
+    padding: 25px 40px 0;
   }
 
   .data_container_reports_page .header {
@@ -22,8 +20,9 @@
   .data_container_reports_page .header .header_name {
     font-family: "Open Sans", sans-serif;
     line-height: normal;
-    font-size: 36px;
+    font-size: 26px;
     color: #ffffff;
+    font-weight: bold;
   }
 
   .line_chart_container {
@@ -40,6 +39,7 @@
 
   .selects_container {
     position: relative;
+    padding: 6px 0;
   }
 
   .select_header {

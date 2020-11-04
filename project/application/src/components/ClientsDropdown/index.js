@@ -3,12 +3,18 @@ import React, { Component } from 'react';
 import './style.scss';
 
 class ClientsDropdown extends Component {
-    state = {
-        clientsList: [],
-        showList: false,
-        inputValue: '',
-        selectedItem: null,
-    };
+    constructor(props) {
+        super(props);
+
+        this.searchClientInput = React.createRef();
+
+        this.state = {
+            clientsList: [],
+            showList: false,
+            inputValue: '',
+            selectedItem: null,
+        };
+    }
 
     closeDropdown = e => {
         const { showList } = this.state;
@@ -95,7 +101,7 @@ class ClientsDropdown extends Component {
                 {showList && (
                     <div className="clients_list_dropdown">
                         <input
-                            ref={(this.searchClientInput = React.createRef())}
+                            ref={this.searchClientInput}
                             className="clients_list_input"
                             placeholder={`${v_find}...`}
                             type="text"

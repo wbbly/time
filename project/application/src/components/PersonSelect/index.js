@@ -30,13 +30,20 @@ const PlusSvg = () => {
 };
 
 class PersonSelect extends Component {
-    state = {
-        personsList: null,
-        isOpen: false,
-        inputValue: '',
-        isAvatar: false,
-        openModal: false,
-    };
+    constructor(props) {
+        super(props);
+
+        this.dropdown = React.createRef();
+        this.input = React.createRef();
+
+        this.state = {
+            personsList: null,
+            isOpen: false,
+            inputValue: '',
+            isAvatar: false,
+            openModal: false,
+        };
+    }
 
     static getDerivedStateFromProps(props, state) {
         if (state.personsList === null) {
@@ -108,13 +115,12 @@ class PersonSelect extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { isOpen, inputValue } = this.state;
         const { scrollToAction, withFolder } = this.props;
-        const { dropdown } = this.refs;
 
         if (!prevState.isOpen && isOpen) {
             this.input.current.focus();
             if (!withFolder) {
                 const height = window.innerHeight || window.document.documentElement.clientHeight;
-                const boundingClientRect = dropdown.getBoundingClientRect();
+                const boundingClientRect = this.dropdown.current.getBoundingClientRect();
                 const { bottom } = boundingClientRect;
                 if (bottom > height) {
                     const diff = bottom - height;
@@ -259,10 +265,10 @@ class PersonSelect extends Component {
                         )
                     )}
                     {isOpen && (
-                        <div ref="dropdown" className="person-select__dropdown">
+                        <div ref={this.dropdown} className="person-select__dropdown">
                             <input
                                 className="person-select__dropdown-list-input"
-                                ref={(this.input = React.createRef())}
+                                ref={this.input}
                                 value={inputValue}
                                 onChange={this.onChangeInput}
                                 type="text"

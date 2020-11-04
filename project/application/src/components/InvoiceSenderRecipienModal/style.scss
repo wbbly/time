@@ -21,6 +21,8 @@
     font-size: 1.4rem;
     line-height: 1.9rem;
     height: 41px;
+    padding-bottom: 0;
+
     .flag-select__option--placeholder {
       padding-bottom: 0;
     }
@@ -28,7 +30,7 @@
       padding: 0 2px;
       color: black;
       font-family: "Open Sans", sans-serif;
-      font-size:  1.4rem !important;
+      font-size: 1.4rem !important;
     }
     .flag-select__btn::after {
       position: absolute;
@@ -70,7 +72,7 @@
 
       &-title {
         font-size: 16px;
-        color:  #333333;
+        color: #333333;
         font-weight: 600;
       }
 
