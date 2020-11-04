@@ -8,9 +8,12 @@
   justify-content: center;
   margin: 0;
 
-  .duration-time-format__title {
-    color: #fff;
-    margin: 0 0 1rem 0;
+  &__title {
+    font-weight: 600;
+    margin-bottom: 3px;
+    font-size: 14px;
+    color: #C9C9C9;
+    font-family: "Open Sans", sans-serif;
   }
 
   .duration-time-format_select {

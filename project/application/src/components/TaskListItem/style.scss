@@ -107,7 +107,7 @@
   border-radius: 0;
   z-index: 2;
   left: 0;
-  transition: left 0.5s linear;
+  transition: left 0.2s linear;
   margin: 0;
 
   .task-item__period-time {
@@ -173,9 +173,6 @@
       background: #f2994a;
     }
 
-    .task-item__bottom-layer-edit-button-text {
-    }
-
     .task-item__bottom-layer-edit-button-icon {
       width: 1.9rem;
       height: 2rem;
@@ -192,10 +189,6 @@
       min-width: 50%;
       background: #eb5757;
     }
-
-    .task-item__bottom-layer-delete-button-text {
-    }
-
     .task-item__bottom-layer-delete-button-icon {
       width: 1.8rem;
       height: 2rem;

@@ -73,7 +73,7 @@ class RenameTeamModal extends Component {
 
     render() {
         const { vocabulary } = this.props;
-        const { v_rename_team, v_team_name, v_edit_team_name } = vocabulary;
+        const { v_team_name, v_edit_team_name, v_save } = vocabulary;
         return (
             <div className="wrapper_rename_team_modal">
                 <div className="rename_team_modal_background" />
@@ -89,7 +89,7 @@ class RenameTeamModal extends Component {
                     </div>
                     <div className="rename_team_modal_button_container">
                         <button className="rename_team_modal_button_container_button" onClick={e => this.renameTeam()}>
-                            {v_rename_team}
+                            {v_save}
                         </button>
                     </div>
                 </div>

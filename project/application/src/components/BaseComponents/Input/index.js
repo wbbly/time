@@ -35,7 +35,8 @@ class Input extends Component {
                     <input placeholder={label} {...rest} id={id} type={type === 'password' ? typeInput : type} />
                     {config.type === 'password' && (
                         <span
-                            className="wrapper-base-input__icon-eye"
+                            className={`wrapper-base-input__icon-eye ${'wrapper-base-input__icon-eye_' +
+                                this.state.typeInput}`}
                             onClick={event => {
                                 this.switchPasswordVisibility();
                                 checkFakePassword();

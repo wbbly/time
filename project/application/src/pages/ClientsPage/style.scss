@@ -3,7 +3,7 @@
   color: #ffffff;
   font-size: 14px;
   .data_container_clients_page {
-    padding: 0px 56px 0;
+    padding: 25px 40px 0;
   }
 
   .wrapper_clients_search_bar {
@@ -68,12 +68,12 @@
   }
   .clients_list_container {
     margin-top: 53px;
-    border-top: 1px solid #4A4A4A;
+    border-top: 1px solid #4a4a4a;
   }
   .borderOf {
     border-top: none;
   }
-  
+
   .animation_cat {
     width: 430px;
     height: 420px;
@@ -104,7 +104,7 @@
     }
     .clients_list_container {
       margin-top: 30px;
-      border-top: 1px solid #4A4A4A;
+      border-top: 1px solid #4a4a4a;
     }
     .clients_list_item.list-header {
       display: none;
@@ -123,11 +123,10 @@
     .client_list_item_right_container {
       margin-top: 25px;
     }
-    
   }
 }
 @media (max-width: 680px) {
-  .wrapper_clients_page{
+  .wrapper_clients_page {
     font-size: 12px;
   }
 }

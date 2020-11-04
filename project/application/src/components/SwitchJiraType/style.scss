@@ -42,7 +42,7 @@
   }
 
   &.wrapper-switch-type--dropdown {
-    font-size: 1.8rem;
+    font-size: 14px;
     line-height: 2.5rem;
     color: #000;
     display: flex;
@@ -51,8 +51,11 @@
     margin: 0 0 16px 0;
 
     .wrapper-switch-type__title {
-      color: #fff;
-      margin: 0 0 1rem 0;
+      font-weight: 600;
+      margin-bottom: 3px;
+      font-size: 14px;
+      color: #C9C9C9;
+      font-family: "Open Sans", sans-serif;
     }
 
     .wrapper-switch-type__select {

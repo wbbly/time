@@ -70,14 +70,20 @@ const muiTheme = createMuiTheme({
 });
 
 class CalendarPopup extends Component {
-    state = {
-        startDateTime: null,
-        endDateTime: null,
-        date: null,
-        isChangedTime: false,
-        isChangedDate: false,
-        initialRender: true,
-    };
+    constructor(props) {
+        super(props);
+
+        this.editTaskPopupRef = React.createRef();
+
+        this.state = {
+            startDateTime: null,
+            endDateTime: null,
+            date: null,
+            isChangedTime: false,
+            isChangedDate: false,
+            initialRender: true,
+        };
+    }
 
     static getDerivedStateFromProps(props, state) {
         const { startDateTime, endDateTime } = props;
@@ -170,7 +176,7 @@ class CalendarPopup extends Component {
         customLocale.options.weekStartsOn = firstDayOfWeek;
 
         return (
-            <div ref={(this.editTaskPopupRef = React.createRef())} className="edit-task-popup">
+            <div ref={this.editTaskPopupRef} className="edit-task-popup">
                 <ThemeProvider theme={muiTheme}>
                     <div className="edit-task-popup_set-time">
                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale}>
