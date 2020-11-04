@@ -287,9 +287,11 @@ class UserSetting extends Component {
             v_address_lowC,
             v_zip,
             e_mail,
-            v_technologies,
+            full_name,
             v_company_name,
             v_tags,
+            v_physical_address,
+            v_time_date,
         } = vocabulary;
 
         const { inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
@@ -300,7 +302,7 @@ class UserSetting extends Component {
         const { email, username, companyName, country, state, city, zip, tokenJira, urlJira, loginJira } = user;
 
         return (
-            <div className={classNames('wrapper_user_setting_page', { 'wrapper_user_setting_page--mobile': isMobile })}>
+            <div className={classNames('user-settings', { 'wrapper_user_setting_page--mobile': isMobile })}>
                 {Object.prototype.toString.call(userReducer.changePasswordModal) === '[object Boolean]' &&
                     userReducer.changePasswordModal && <ChangePasswordModal />}
                 <div className="data_container">
@@ -382,69 +384,79 @@ class UserSetting extends Component {
                                             type="password"
                                             name="fakepasswordremembered"
                                         />
-                                        <Input
-                                            config={{
-                                                id: 'userName',
-                                                name: 'userName',
-                                                type: 'text',
-                                                onChange: formik.handleChange,
-                                                onBlur: formik.handleBlur,
-                                                value: formik.values.userName,
-                                            }}
-                                            errorMsg={formik.errors.userName}
-                                            label={`${v_your_name}*`}
-                                            withValidation
-                                            dark
-                                        />
-                                        <Input
-                                            config={{
-                                                id: 'email',
-                                                name: 'email',
-                                                type: 'email',
-                                                onChange: formik.handleChange,
-                                                onBlur: formik.handleBlur,
-                                                value: formik.values.email,
-                                            }}
-                                            errorMsg={formik.errors.email}
-                                            label={`${e_mail}*`}
-                                            withValidation
-                                            dark
-                                        />
-                                        <div className="input_container_phone">
-                                            <span className="input_title">{v_phone}</span>
-                                            <ReactPhoneInput
-                                                defaultCountry="de"
-                                                countryCodeEditable={false}
-                                                autoFormat={false}
-                                                placeholder=""
-                                                inputExtraProps={{ value: phone.value }}
-                                                value={phone.value}
-                                                onChange={(value, data) => {
-                                                    this.setState({
-                                                        phone: {
-                                                            value: this.checkValidPhone(value, data.dialCode),
-                                                        },
-                                                    });
+                                        <div className="first-inputs-wrapper">
+                                            <Input
+                                                config={{
+                                                    id: 'userName',
+                                                    name: 'userName',
+                                                    type: 'text',
+                                                    onChange: formik.handleChange,
+                                                    onBlur: formik.handleBlur,
+                                                    value: formik.values.userName,
                                                 }}
+                                                errorMsg={formik.errors.userName}
+                                                label={`${full_name}*`}
+                                                withValidation
+                                                dark
+                                            />
+                                            <Input
+                                                config={{
+                                                    id: 'email',
+                                                    name: 'email',
+                                                    type: 'email',
+                                                    onChange: formik.handleChange,
+                                                    onBlur: formik.handleBlur,
+                                                    value: formik.values.email,
+                                                }}
+                                                errorMsg={formik.errors.email}
+                                                label={`${e_mail}*`}
+                                                withValidation
+                                                dark
                                             />
                                         </div>
-                                        <SwitchLanguage dropdown />
-                                        <Input
-                                            config={{
-                                                id: 'companyName',
-                                                name: 'companyName',
-                                                type: 'text',
-                                                onChange: formik.handleChange,
-                                                onBlur: formik.handleBlur,
-                                                value: formik.values.companyName,
-                                            }}
-                                            label={`${v_company_name}*`}
-                                            errorMsg={formik.errors.companyName}
-                                            withValidation
-                                            dark
-                                        />
+                                        <div className="second-inputs-wrapper">
+                                            <div className="input_container_phone">
+                                                <span className="input_title">{v_phone}</span>
+                                                <ReactPhoneInput
+                                                    defaultCountry="de"
+                                                    countryCodeEditable={false}
+                                                    autoFormat={false}
+                                                    placeholder=""
+                                                    inputExtraProps={{ value: phone.value }}
+                                                    value={phone.value}
+                                                    onChange={(value, data) => {
+                                                        this.setState({
+                                                            phone: {
+                                                                value: this.checkValidPhone(value, data.dialCode),
+                                                            },
+                                                        });
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <Input
+                                                config={{
+                                                    id: 'companyName',
+                                                    name: 'companyName',
+                                                    type: 'text',
+                                                    onChange: formik.handleChange,
+                                                    onBlur: formik.handleBlur,
+                                                    value: formik.values.companyName,
+                                                }}
+                                                label={`${v_company_name}*`}
+                                                errorMsg={formik.errors.companyName}
+                                                withValidation
+                                                dark
+                                            />
+                                        </div>
+                                        <div className="third-input-container">
+                                            <SwitchLanguage dropdown />
+                                        </div>
                                         <div className="user-settings__select-location">
-                                            <div className="user-settings__select-adress">
+                                            <div className="user-settings__select-location-title">
+                                                {v_physical_address}
+                                            </div>
+                                            <div className="user-settings__select-location-address">
                                                 <div className="flag-input-container">
                                                     <div className="flag-input-container-title">{`${v_country}`}</div>
                                                     <ReactFlagsSelect
@@ -473,7 +485,7 @@ class UserSetting extends Component {
                                                     dark
                                                 />
                                             </div>
-                                            <div className="user-settings__select-adress">
+                                            <div className="user-settings__select-location-address">
                                                 <Input
                                                     config={{
                                                         id: 'city',
@@ -505,6 +517,9 @@ class UserSetting extends Component {
                                         </div>
 
                                         <div className="user-settings__date-time-format-block">
+                                            <div className="user-settings__date-time-format-block-title">
+                                                {v_time_date}
+                                            </div>
                                             <div className="user-settings__date-time-format-block--row">
                                                 <SelectDateFormat />
                                                 <SelectFirstDayOfWeek />
@@ -522,6 +537,7 @@ class UserSetting extends Component {
                                                     this.setState({ userTechnologies: techArr })
                                                 }
                                                 vocabulary={vocabulary}
+                                                showNotificationAction={this.props.showNotificationAction}
                                             />
                                         </div>
                                         <div className="wrapper-jira-sync">
@@ -559,99 +575,114 @@ class UserSetting extends Component {
                                             {checked &&
                                                 userSetJiraSync && (
                                                     <>
-                                                        <SwitchJiraType
-                                                            dropdown
-                                                            onSelect={this.selectedJiraType}
-                                                            selectedType={jiraType.value}
-                                                            v_type={v_type}
-                                                        />
-                                                        <Input
-                                                            config={{
-                                                                id: 'jiraUrl',
-                                                                name: 'jiraUrl',
-                                                                type: 'text',
-                                                                onChange: formik.handleChange,
-                                                                onBlur: formik.handleBlur,
-                                                                value: formik.values.jiraUrl,
-                                                            }}
-                                                            errorMsg={formik.errors.jiraUrl}
-                                                            label={'Jira url'}
-                                                            withValidation
-                                                            dark
-                                                        />
-                                                        <Input
-                                                            name="jiraUserInput"
-                                                            config={{
-                                                                id: 'jiraUserName',
-                                                                name: 'jiraUserName',
-                                                                type: 'text',
-                                                                onChange: e => {
-                                                                    e.preventDefault();
-                                                                    formik.handleChange(e);
-                                                                    if (formik.values.jiraPassword === fakePassword) {
-                                                                        formik.setFieldValue('jiraPassword', '');
-                                                                    }
-                                                                },
-                                                                onBlur: formik.handleBlur,
-                                                                value: formik.values.jiraUserName,
-                                                            }}
-                                                            errorMsg={formik.errors.jiraUserName}
-                                                            label={v_login}
-                                                            withValidation
-                                                            dark
-                                                        />
-                                                        <label className="input_container">
-                                                            <span className="input_title">
-                                                                {v_password}
-                                                                {formik.values.jiraPassword &&
-                                                                    formik.values.jiraPassword !== fakePassword && (
-                                                                        <i
-                                                                            onClick={event => {
-                                                                                event.preventDefault();
-                                                                                this.verifyJiraAction(formik);
-                                                                            }}
-                                                                            className={classNames('verify-arrow-loop', {
-                                                                                'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
-                                                                            })}
-                                                                            title={v_verify}
-                                                                        />
-                                                                    )}
-                                                            </span>
-                                                            {jiraType.value === 'cloud' && (
-                                                                <span className="input_subtitle">
-                                                                    ({v_enter_to}{' '}
-                                                                    <a
-                                                                        href="https://id.atlassian.com/manage/api-tokens"
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                    >
-                                                                        https://id.atlassian.com/manage/api-tokens
-                                                                    </a>{' '}
-                                                                    {v_to_get_token})
-                                                                </span>
-                                                            )}
+                                                        <div className="fourth-inputs-wrapper">
+                                                            <SwitchJiraType
+                                                                dropdown
+                                                                onSelect={this.selectedJiraType}
+                                                                selectedType={jiraType.value}
+                                                                v_type={v_type}
+                                                            />
                                                             <Input
                                                                 config={{
-                                                                    id: 'jiraPassword',
-                                                                    name: 'jiraPassword',
-                                                                    type: 'password',
+                                                                    id: 'jiraUrl',
+                                                                    name: 'jiraUrl',
+                                                                    type: 'text',
                                                                     onChange: formik.handleChange,
                                                                     onBlur: formik.handleBlur,
-                                                                    onFocus: event => {
-                                                                        event.preventDefault();
+                                                                    value: formik.values.jiraUrl,
+                                                                }}
+                                                                errorMsg={formik.errors.jiraUrl}
+                                                                label={'Jira url'}
+                                                                withValidation
+                                                                dark
+                                                            />
+                                                        </div>
+                                                        <div className="fifth-inputs-wrapper">
+                                                            <Input
+                                                                name="jiraUserInput"
+                                                                config={{
+                                                                    id: 'jiraUserName',
+                                                                    name: 'jiraUserName',
+                                                                    type: 'text',
+                                                                    onChange: e => {
+                                                                        e.preventDefault();
+                                                                        formik.handleChange(e);
                                                                         if (
                                                                             formik.values.jiraPassword === fakePassword
                                                                         ) {
                                                                             formik.setFieldValue('jiraPassword', '');
                                                                         }
                                                                     },
-                                                                    value: formik.values.jiraPassword,
+                                                                    onBlur: formik.handleBlur,
+                                                                    value: formik.values.jiraUserName,
                                                                 }}
-                                                                errorMsg={formik.errors.jiraPassword}
+                                                                errorMsg={formik.errors.jiraUserName}
+                                                                label={v_login}
                                                                 withValidation
                                                                 dark
                                                             />
-                                                        </label>
+
+                                                            <label className="input_container">
+                                                                <span className="input_title">
+                                                                    {v_password}
+                                                                    {formik.values.jiraPassword &&
+                                                                        formik.values.jiraPassword !== fakePassword && (
+                                                                            <i
+                                                                                onClick={event => {
+                                                                                    event.preventDefault();
+                                                                                    this.verifyJiraAction(formik);
+                                                                                }}
+                                                                                className={classNames(
+                                                                                    'verify-arrow-loop',
+                                                                                    {
+                                                                                        'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
+                                                                                    }
+                                                                                )}
+                                                                                title={v_verify}
+                                                                            />
+                                                                        )}
+                                                                </span>
+
+                                                                <Input
+                                                                    config={{
+                                                                        id: 'jiraPassword',
+                                                                        name: 'jiraPassword',
+                                                                        type: 'password',
+                                                                        onChange: formik.handleChange,
+                                                                        onBlur: formik.handleBlur,
+                                                                        onFocus: event => {
+                                                                            event.preventDefault();
+                                                                            if (
+                                                                                formik.values.jiraPassword ===
+                                                                                fakePassword
+                                                                            ) {
+                                                                                formik.setFieldValue(
+                                                                                    'jiraPassword',
+                                                                                    ''
+                                                                                );
+                                                                            }
+                                                                        },
+                                                                        value: formik.values.jiraPassword,
+                                                                    }}
+                                                                    errorMsg={formik.errors.jiraPassword}
+                                                                    withValidation
+                                                                    dark
+                                                                />
+                                                                {jiraType.value === 'cloud' && (
+                                                                    <span className="input_subtitle">
+                                                                        ({v_enter_to}{' '}
+                                                                        <a
+                                                                            href="https://id.atlassian.com/manage/api-tokens"
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                        >
+                                                                            https://id.atlassian.com/manage/api-tokens
+                                                                        </a>{' '}
+                                                                        {v_to_get_token})
+                                                                    </span>
+                                                                )}
+                                                            </label>
+                                                        </div>
                                                     </>
                                                 )}
                                         </div>

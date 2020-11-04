@@ -8,9 +8,12 @@
   justify-content: center;
   margin: 0;
 
-  .first-day-week-format__title {
-    color: #fff;
-    margin: 0 0 1rem 0;
+  &__title {
+    font-weight: 600;
+    color: #C9C9C9;
+    margin-bottom: 3px;
+    font-size: 14px;
+    font-family: "Open Sans", sans-serif;
   }
 
   .first-day-week-format_select {

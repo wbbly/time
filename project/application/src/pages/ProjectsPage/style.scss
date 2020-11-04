@@ -10,8 +10,7 @@
     left: 0;
     right: 0;
     background-color: #333333;
-    padding-left: 56px;
-    padding-right: 56px;
+    padding: 25px 40px 0;
     overflow-y: auto;
   }
 
@@ -46,17 +45,6 @@
   }
 
   @media screen and (max-width: 894px) {
-    .projects_page_title {
-      width: 100%;
-      text-align: center;
-    }
-    .projects_page_header {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .create_project_button {
-      margin-top: 20px;
-    }
     .create_projects_modal_container {
       width: 100%;
       max-width: 350px;

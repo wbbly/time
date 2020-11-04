@@ -5,6 +5,7 @@ import './style.scss';
 
 import { searchTechnologies, addTechnology } from '../../configAPI';
 import { useDebounce, useOutsideClick } from '../../services/hookHelpers';
+import { object } from 'prop-types';
 
 const RemoveSvg = ({ ligthMode }) => (
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +16,13 @@ const RemoveSvg = ({ ligthMode }) => (
     </svg>
 );
 
-const TechnologyComponent = ({ userTechnologies, setUserTechnologies, themeLight, vocabulary }) => {
+const TechnologyComponent = ({
+    userTechnologies,
+    setUserTechnologies,
+    themeLight,
+    vocabulary,
+    showNotificationAction,
+}) => {
     const [searchInput, setSearchInput] = useState('');
     const [techList, setTechList] = useState([]);
     const [searchItems, setSearchItems] = useState([]);
@@ -65,13 +72,22 @@ const TechnologyComponent = ({ userTechnologies, setUserTechnologies, themeLight
     };
 
     const createTechnology = async () => {
+        const { v_err_technology_exist } = vocabulary;
         setIsFetching(true);
-        const res = await addTechnology(searchInput);
-        techList.push({ title: searchInput, id: res.data.data.insert_technology.returning[0].id });
-        setUserTechnologies(techList);
-        setSearchItems([]);
-        setSearchInput('');
-        setIsFetching(false);
+        let res = null;
+        try {
+            res = await addTechnology(searchInput);
+            techList.push({ title: searchInput, id: res.data.data.insert_technology.returning[0].id });
+            setUserTechnologies(techList);
+            setSearchItems([]);
+            setSearchInput('');
+            setIsFetching(false);
+        } catch (e) {
+            if (e.response.data.message === 'ERROR.TECHNOLOGY.CREATE_TECHNOLOGY_FAILED') {
+                showNotificationAction({ text: v_err_technology_exist, type: 'error' });
+            }
+            setIsFetching(false);
+        }
     };
 
     const { v_enter_text, v_add_technology } = vocabulary;
@@ -117,7 +133,7 @@ const TechnologyComponent = ({ userTechnologies, setUserTechnologies, themeLight
                         !!searchInput.length && (
                             <button
                                 className={classnames('technology__search-add')}
-                                disabled={isFetching}
+                                disabled={isFetching || searchItems.length > 0}
                                 onClick={e => {
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -135,7 +151,7 @@ const TechnologyComponent = ({ userTechnologies, setUserTechnologies, themeLight
                         className={classnames('technology__suggestions', {
                             'technology__suggestions--light': themeLight,
                         })}
-                        ref={wrapperRef}
+                        // ref={wrapperRef}
                     >
                         {searchItems.map((item, index) => (
                             <div

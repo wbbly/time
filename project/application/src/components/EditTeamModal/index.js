@@ -118,11 +118,12 @@ class EditTeamModal extends Component {
 
     render() {
         const { vocabulary } = this.props;
+
         const {
             v_name,
             v_team_role,
             v_team_access,
-            v_edit_user,
+            v_save,
             v_active,
             v_not_active,
             v_delete_member,
@@ -193,6 +194,7 @@ class EditTeamModal extends Component {
                                 setUserTechnologies={techArr => {
                                     this.setState({ userTechnologies: techArr });
                                 }}
+                                showNotificationAction={this.props.showNotificationAction}
                                 vocabulary={vocabulary}
                                 themeLight={true}
                             />
@@ -208,7 +210,7 @@ class EditTeamModal extends Component {
                         </ThemeProvider>
                     </div>
                     <button className="save_button" onClick={e => this.addUser()}>
-                        {v_edit_user}
+                        {v_save}
                     </button>
                 </div>
             </div>

@@ -18,11 +18,17 @@ const ArrowIcon = className => (
 );
 
 class CurrencySelect extends Component {
-    state = {
-        isOpen: false,
-        inputValue: '',
-        currencyList: [],
-    };
+    constructor(props) {
+        super(props);
+
+        this.dropdown = React.createRef();
+
+        this.state = {
+            isOpen: false,
+            inputValue: '',
+            currencyList: [],
+        };
+    }
 
     // static getDerivedStateFromProps(props, state) {
     //     if (state.projectsList === null) {
@@ -82,12 +88,11 @@ class CurrencySelect extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { isOpen } = this.state;
         const { scrollToAction, withFolder } = this.props;
-        const { dropdown } = this.refs;
 
         if (!prevState.isOpen && isOpen) {
             if (!withFolder) {
                 const height = window.innerHeight || window.document.documentElement.clientHeight;
-                const boundingClientRect = dropdown.getBoundingClientRect();
+                const boundingClientRect = this.dropdown.current.getBoundingClientRect();
                 const { bottom } = boundingClientRect;
                 if (bottom > height) {
                     const diff = bottom - height;
@@ -127,7 +132,7 @@ class CurrencySelect extends Component {
                     {!isViewMode && <ArrowIcon />}
                 </div>
                 {isOpen && (
-                    <div ref="dropdown" className={classNames('currency-select__dropdown')}>
+                    <div ref={this.dropdown} className={classNames('currency-select__dropdown')}>
                         <div className="currency-select__dropdown-input">
                             <input
                                 className="currency-select__dropdown-list-input"

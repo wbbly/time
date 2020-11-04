@@ -10,20 +10,21 @@ import { Scrollbars } from 'react-custom-scrollbars';
 class CustomScrollbar extends Component {
     constructor(props, ...rest) {
         super(props, ...rest);
+
+        this.scrollbars = React.createRef();
     }
 
     animateScroll = () => {
         const { scrollTo, scrollToAction } = this.props;
-        const { scrollbars } = this.refs;
 
-        const top = scrollbars.getScrollTop();
+        const top = this.scrollbars.current.getScrollTop();
 
         let startTime = performance.now();
         const animate = timestamp => {
             const runtime = timestamp - startTime;
             const progress = runtime / 300;
             const procent = progress >= 0 ? Math.min(progress, 1) : 0;
-            scrollbars.scrollTop(procent * (scrollTo + 10) + top);
+            this.scrollbars.current.scrollTop(procent * (scrollTo + 10) + top);
             if (procent < 1) {
                 requestAnimationFrame(animate);
             } else {
@@ -59,7 +60,7 @@ class CustomScrollbar extends Component {
 
     render() {
         const { children } = this.props;
-        return <Scrollbars ref="scrollbars" children={children} onScrollFrame={this.handleScrollFrame} />;
+        return <Scrollbars ref={this.scrollbars} children={children} onScrollFrame={this.handleScrollFrame} />;
     }
 }
 

@@ -68,7 +68,10 @@
       padding: 0 0.8rem;
       white-space: nowrap;
       padding:10px 5px;
-      
+      &:disabled {
+        background:#ADADAD;
+        cursor: not-allowed;
+      }
     }
     @media screen and (max-width: 894px){
       &-add { 

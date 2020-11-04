@@ -59,7 +59,15 @@ class TutorialComponent extends Component {
                         </div>
                     </div>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div className="slide" style={{ backgroundImage: `url(${slide5})` }}>
+                        <div
+                            className="slide"
+                            onClick={e => {
+                                if (e.target.className !== 'skip-link') {
+                                    this.onSwipeLeft();
+                                }
+                            }}
+                            style={{ backgroundImage: `url(${slide5})` }}
+                        >
                             <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
@@ -70,7 +78,15 @@ class TutorialComponent extends Component {
                         </div>
                     </Swipe>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div className="slide" style={{ backgroundImage: `url(${slide4})` }}>
+                        <div
+                            className="slide"
+                            onClick={e => {
+                                if (e.target.className !== 'skip-link') {
+                                    this.onSwipeLeft();
+                                }
+                            }}
+                            style={{ backgroundImage: `url(${slide4})` }}
+                        >
                             <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
@@ -81,7 +97,15 @@ class TutorialComponent extends Component {
                         </div>
                     </Swipe>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div className="slide" style={{ backgroundImage: `url(${slide3})` }}>
+                        <div
+                            className="slide"
+                            onClick={e => {
+                                if (e.target.className !== 'skip-link') {
+                                    this.onSwipeLeft();
+                                }
+                            }}
+                            style={{ backgroundImage: `url(${slide3})` }}
+                        >
                             <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
@@ -92,7 +116,15 @@ class TutorialComponent extends Component {
                         </div>
                     </Swipe>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div className="slide" style={{ backgroundImage: `url(${slide2})` }}>
+                        <div
+                            className="slide"
+                            onClick={e => {
+                                if (e.target.className !== 'skip-link') {
+                                    this.onSwipeLeft();
+                                }
+                            }}
+                            style={{ backgroundImage: `url(${slide2})` }}
+                        >
                             <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
@@ -103,16 +135,25 @@ class TutorialComponent extends Component {
                         </div>
                     </Swipe>
                     <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div className="slide" style={{ backgroundImage: `url(${slide1})` }}>
-                            <a href="# " onClick={this.finishTutorial} className="skip-link">
+                        <div
+                            className="slide"
+                            onClick={e => {
+                                if (e.target.className !== 'skip-link') {
+                                    this.onSwipeLeft();
+                                }
+                            }}
+                            style={{ backgroundImage: `url(${slide1})` }}
+                        >
+                            <a href="# " className="skip-link">
                                 Skip tutorial
                             </a>
+                            {/* onClick={this.finishTutorial} */}
                             <div className="slide-title">
                                 <h1>Wellcome to wobbly!</h1>
                                 <p>Begin to track your time now</p>
                             </div>
                             <div className="instruction" style={{ bottom: '14%', right: '10%' }}>
-                                <p>To start click on the play button</p>
+                                <p>To start the timer click on the play button</p>
                                 <i className="arrow-tutorial" />
                             </div>
                         </div>
