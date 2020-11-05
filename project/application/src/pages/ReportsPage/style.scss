@@ -5,6 +5,8 @@
   overflow-y: auto;
 
   .data_container_reports_page {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     width: 100%;
     background-color: #333333;
@@ -23,6 +25,11 @@
     font-size: 26px;
     color: #ffffff;
     font-weight: bold;
+  }
+
+  .content_wrapper {
+    position: relative;
+    flex-grow: 1;
   }
 
   .line_chart_container {

@@ -37,6 +37,8 @@ import { Loading } from '../../components/Loading';
 import { UnitedReportsComponents } from './UnitedReportsComponents';
 import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 import PageHeader from '../../components/PageHeader/index';
+import Spinner from '../../components/Spinner';
+
 // Actions
 import reportsPageAction from '../../actions/ReportsPageAction';
 import { getClientsAction } from '../../actions/ClientsActions';
@@ -62,6 +64,7 @@ const localeMap = {
 class ReportsPage extends Component {
     state = {
         isInitialFetching: true,
+        isFetching: false,
         toggleBar: false,
         toggleChar: false,
         projectsArr: [],
@@ -168,7 +171,7 @@ class ReportsPage extends Component {
             lang,
         } = vocabulary;
 
-        const { isInitialFetching } = this.state;
+        const { isInitialFetching, isFetching } = this.state;
 
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
@@ -222,36 +225,39 @@ class ReportsPage extends Component {
                                 )}
                             </div>
                         </PageHeader>
-                        {checkIsAdminByRole(currentTeam.data.role) && (
-                            <ReportsSearchBar
-                                applySearch={e => this.applySearch()}
-                                inputProjectData={this.props.inputProjectData}
-                                inputUserData={this.props.inputUserData}
-                                reportsPageAction={this.props.reportsPageAction}
-                                inputClientData={this.props.clientsList}
-                            />
-                        )}
-                        {this.props.projectsArr.length > 0 ? (
-                            <UnitedReportsComponents
-                                toggleBar={this.state.toggleBar}
-                                toggleChar={this.state.toggleChar}
-                                v_total={v_total}
-                                totalUpChartTime={this.state.totalUpChartTime}
-                                getTimeDurationByGivenTimestamp={getTimeDurationByGivenTimestamp}
-                                durationTimeFormat={durationTimeFormat}
-                                export={this.export.bind(this)}
-                                v_export={v_export}
-                                data={this.props.dataBarChat}
-                                height={isMobile ? 150 : 50}
-                                lineChartOption={this.lineChartOption}
-                                selectionRange={this.props.timeRange}
-                                usersArr={this.props.inputUserData}
-                                projectsArr={this.props.projectsArr}
-                                dataDoughnutChat={this.props.dataDoughnutChat}
-                            />
-                        ) : (
-                            BlankListComponent(this.props.vocabulary.v_no_report, null, { bottom: '-70px' })
-                        )}
+                        <div className={'content_wrapper'}>
+                            {isFetching && <Spinner withLogo={false} mode={'overlay'} />}
+                            {checkIsAdminByRole(currentTeam.data.role) && (
+                                <ReportsSearchBar
+                                    applySearch={e => this.applySearch()}
+                                    inputProjectData={this.props.inputProjectData}
+                                    inputUserData={this.props.inputUserData}
+                                    reportsPageAction={this.props.reportsPageAction}
+                                    inputClientData={this.props.clientsList}
+                                />
+                            )}
+                            {this.props.projectsArr.length > 0 ? (
+                                <UnitedReportsComponents
+                                    toggleBar={this.state.toggleBar}
+                                    toggleChar={this.state.toggleChar}
+                                    v_total={v_total}
+                                    totalUpChartTime={this.state.totalUpChartTime}
+                                    getTimeDurationByGivenTimestamp={getTimeDurationByGivenTimestamp}
+                                    durationTimeFormat={durationTimeFormat}
+                                    export={this.export.bind(this)}
+                                    v_export={v_export}
+                                    data={this.props.dataBarChat}
+                                    height={isMobile ? 150 : 50}
+                                    lineChartOption={this.lineChartOption}
+                                    selectionRange={this.props.timeRange}
+                                    usersArr={this.props.inputUserData}
+                                    projectsArr={this.props.projectsArr}
+                                    dataDoughnutChat={this.props.dataDoughnutChat}
+                                />
+                            ) : (
+                                BlankListComponent(this.props.vocabulary.v_no_report, null, { bottom: '-70px' })
+                            )}
+                        </div>
                     </div>
                 </div>
             </Loading>
@@ -515,7 +521,7 @@ class ReportsPage extends Component {
                 }
             }
         );
-        this.setState({ isInitialFetching: true });
+        this.setState({ isFetching: true });
         apiCall(
             AppConfig.apiURL +
                 `timer/reports-list?startDate=${convertDateToISOString(
@@ -546,7 +552,7 @@ class ReportsPage extends Component {
                     this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(datePeriod, sumTimeEntriesByDay))
                 );
                 this.setState({ toggleBar: true });
-                this.setState({ isInitialFetching: false });
+                this.setState({ isFetching: false });
             },
             err => {
                 if (err instanceof Response) {
