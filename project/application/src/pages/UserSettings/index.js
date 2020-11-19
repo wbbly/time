@@ -269,7 +269,7 @@ class UserSetting extends Component {
         const {
             v_my_profile,
             v_your_name,
-            v_save_changes,
+            v_save,
             v_change_password,
             v_phone,
             v_jira_synchronization,
@@ -687,7 +687,7 @@ class UserSetting extends Component {
                                                 )}
                                         </div>
                                         <button className="save_btn" type="submit">
-                                            {v_save_changes}
+                                            {v_save}
                                         </button>
                                     </form>
                                 )}
