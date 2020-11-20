@@ -18,6 +18,10 @@
     color: #ffffff;
   }
 
+  .team_page_searchBar {
+    margin-bottom: 30px;
+  }
+
   .team_page_data table {
     width: 100%;
     border-spacing: inherit;
@@ -32,6 +36,19 @@
     text-align: left;
     color: #ffffff;
     border-bottom: 1px solid #bdbdbd;
+    &:nth-child(1) {
+      width: 29%;
+    }
+    &:nth-child(2) {
+      width: 17%;
+    }
+    &:nth-child(3) {
+      width: 26%;
+    }
+    &:nth-child(4),
+    &:nth-child(5) {
+      width: 14%;
+    }
   }
 
   .team_page_data table td {

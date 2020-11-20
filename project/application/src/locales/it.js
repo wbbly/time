@@ -162,6 +162,9 @@ export default {
     v_team_access: 'Accesso',
     v_connection_problem: 'Connessione Internet persa',
     v_connection_restored: 'Connessione a Internet ripristinata',
+    v_all_role: 'Tutti ruoli',
+    v_all_access: 'Tutti accesso',
+    v_all: 'Tutti',
     v_active: 'Garantito',
     v_not_active: 'Negato',
     v_today: 'Oggi',
@@ -314,4 +317,8 @@ export default {
     v_physical_address: 'Indirizzo fisico',
     v_time_date: 'Ora e data',
     v_err_technology_exist: 'La tecnologia già aggiunge',
+
+    v_search: 'Ricerca',
+    v_reset: 'Ripristina',
+    v_result: 'Risultati',
 };

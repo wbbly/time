@@ -1,0 +1,48 @@
+.search-component {
+  width: 100%;
+  border-bottom: 1px solid rgba(193, 192, 192, 0.4);
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 0;
+  @media screen and (max-width: 768px) {
+    border-bottom: none;
+  }
+  &__form {
+      width: 100%;
+      display: flex;
+  }
+  &__input {
+    width: 100%;
+    margin-left: 0.8rem;
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    color: #ffffff;
+    padding: 0;
+
+    &::placeholder {
+      color: #BEBBBB;
+    }
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+      display: none;
+    }
+    &::-ms-clear {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    &::-ms-reveal {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+  }
+  &__icon-container {
+      display: flex;
+      cursor: pointer;
+  }
+}

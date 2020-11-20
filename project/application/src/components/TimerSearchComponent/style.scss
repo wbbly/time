@@ -1,0 +1,113 @@
+.timer-search {
+  display: flex;
+  align-items: center;
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  &__search-input {
+    width: 300px;
+    margin-right: 3rem;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+      margin: 0;
+      background: #4f4f4f;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.4rem;
+    }
+  }
+  &__date-select {
+    position: relative;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    // margin-right: 2.5rem;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+
+      .rdrDateRangePickerWrapper {
+        display: flex;
+        flex-wrap: wrap-reverse;
+      }
+      .rdrDefinedRangesWrapper {
+        width: 100%;
+      }
+      .rdrCalendarWrapper {
+        width: 100%;
+      }
+      .rdrMonth {
+        width: 100%;
+      }
+      .rdrStaticRanges {
+        flex-wrap: wrap;
+        flex-direction: row;
+      }
+      .rdrStaticRange {
+          width: 50%;
+      }
+      .rdrMonth {
+          padding-bottom: 0;
+      }
+      .rdrInputRanges {
+          display: flex;
+      }
+      .rdrStaticRangeLabel {
+          padding: 8px 20px;
+      }
+      .rdrInputRange {
+        padding: 0px 20px;
+      }
+    }
+
+    &-header {
+      display: flex;
+      align-items: center;
+      font-family: "Open Sans", sans-serif;
+      line-height: normal;
+      font-size: 2rem;
+      color: #ffffff;
+      cursor: pointer;
+      margin-right: 2.5rem;
+      white-space: nowrap;
+    }
+    &-arrow-down {
+      margin-left: 1rem;
+      width: 2.4rem;
+      height: 2.4rem;
+      background: url("../../images/icons/arrow_down.svg") no-repeat center;
+      @media screen and (max-width: 768px) {
+        margin-left: 0;
+      }
+    }
+    &-body {
+      position: absolute;
+      top: 4rem;
+      right: 0;
+      z-index: 7;
+      background-color: #f5f5f5;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+
+      @media screen and (max-width: 768px) {
+          right: 0;
+          top: 46px;
+          max-height: 400px;
+          overflow: scroll;
+        //   max-height: 365px;
+      }
+    }
+  }
+  &__reset-btn {
+    color: #ffffff;
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    background: #4F4F4F;
+    border-radius: 2px;
+    padding: .5rem 1.2rem;
+
+    @media screen and (max-width: 768px) {
+      padding: .5rem 2.2rem;
+    }
+  }
+}

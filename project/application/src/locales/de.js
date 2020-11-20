@@ -166,6 +166,9 @@ export default {
     v_team_access: 'Zugriff',
     v_connection_problem: 'Internetverbindung verloren',
     v_connection_restored: 'Verbindung wiederhergestellt',
+    v_all_role: 'Alles rollen',
+    v_all_access: 'Alles zugriff',
+    v_all: 'Alles',
     v_active: 'Gewährt',
     v_not_active: 'Verweigert',
     v_today: 'Heute',
@@ -319,4 +322,8 @@ export default {
     v_physical_address: 'Physikalische Adresse',
     v_time_date: 'Zeit und datum',
     v_err_technology_exist: 'Technologie bereits hinzufügen',
+
+    v_search: 'Suche',
+    v_reset: 'Zurücksetzen',
+    v_result: 'Ergebnisse',
 };

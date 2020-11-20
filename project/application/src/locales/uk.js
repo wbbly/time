@@ -159,6 +159,9 @@ export default {
     v_team_access: 'Доступ',
     v_connection_problem: "Втрачено інтернет з'єднання",
     v_connection_restored: "З'єднання відновлено",
+    v_all_role: 'Все ролі',
+    v_all_access: 'Все доступи',
+    v_all: 'Все',
     v_active: 'Дозволено',
     v_not_active: 'Заборонено',
     v_today: 'Сьогодні',
@@ -311,4 +314,8 @@ export default {
     v_physical_address: 'Фізична адреса',
     v_time_date: 'Час і дата',
     v_err_technology_exist: 'Технологія вже додана',
+
+    v_search: 'Пошук',
+    v_reset: 'Cкинути',
+    v_result: 'Результати',
 };

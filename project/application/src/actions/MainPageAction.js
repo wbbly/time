@@ -14,6 +14,8 @@ export const INC_PAGINATION = 'INC_PAGINATION';
 export const GET_TIME_ENTRIES_LIST_PAGINATION = 'GET_TIME_ENTRIES_LIST_PAGINATION';
 export const DISABLE_PAGINATION = 'DISABLE_PAGINATION';
 export const RESTORE_PAGINATION = 'RESTORE_PAGINATION';
+export const START_SEARCH_MODE = 'START_SEARCH_MODE';
+export const END_SEARCH_MODE = 'END_SEARCH_MODE';
 
 const setTimeEntriesListAction = payload => ({
     type: GET_TIME_ENTRIES_LIST,
@@ -21,18 +23,31 @@ const setTimeEntriesListAction = payload => ({
 });
 
 export const getTimeEntriesListAction = byPage => async dispatch => {
-    const { page, limit, disabled } = store.getState().mainPageReducer.pagination;
+    const { searchValue, searchDateRange, isSearchMode, pagination } = store.getState().mainPageReducer;
+    const { page, limit, disabled } = pagination;
+
     let res = [];
 
     if (disabled) {
-        res = await getTimeEntriesList();
+        res = await getTimeEntriesList(isSearchMode ? { ...searchDateRange, searchValue } : undefined);
     } else if (page === 1) {
-        res = await getTimeEntriesList({ page, limit });
+        res = await getTimeEntriesList(
+            isSearchMode ? { page, limit, ...searchDateRange, searchValue } : { page, limit }
+        );
     } else {
-        res = await getTimeEntriesList({
-            page: 1,
-            limit: page * limit,
-        });
+        res = await getTimeEntriesList(
+            isSearchMode
+                ? {
+                      page: 1,
+                      limit: page * limit,
+                      ...searchDateRange,
+                      searchValue,
+                  }
+                : {
+                      page: 1,
+                      limit: page * limit,
+                  }
+        );
     }
     const parsedList = getTodayTimeEntriesParseFunction(res.data.data);
     const { timerV2 } = parsedList;
@@ -86,9 +101,16 @@ const disablePaginationAction = () => ({
 });
 
 export const getTimeEntriesListPaginationAction = () => async dispatch => {
-    const { page, limit } = store.getState().mainPageReducer.pagination;
+    const { searchValue, searchDateRange, isSearchMode, pagination } = store.getState().mainPageReducer;
+    const { page, limit } = pagination;
 
-    const res = await getTimeEntriesList({ page, limit });
+    let res = [];
+    if (isSearchMode) {
+        res = await getTimeEntriesList({ page, limit, ...searchDateRange, searchValue });
+    } else {
+        res = await getTimeEntriesList({ page, limit });
+    }
+
     if (res.data.data.timer_v2.length) {
         const parsedList = getTodayTimeEntriesParseFunction(res.data.data);
         const { timerV2 } = parsedList;
@@ -97,3 +119,12 @@ export const getTimeEntriesListPaginationAction = () => async dispatch => {
         dispatch(disablePaginationAction());
     }
 };
+
+export const startSearchMode = payload => ({
+    type: START_SEARCH_MODE,
+    payload,
+});
+
+export const endSearchMode = () => ({
+    type: END_SEARCH_MODE,
+});

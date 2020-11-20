@@ -20,6 +20,8 @@ import RenameTeamModal from '../../components/RenameTeamModal';
 import EditTeamModal from '../../components/EditTeamModal';
 import { Loading } from '../../components/Loading';
 import PageHeader from '../../components/PageHeader/index';
+import TeamSearchBar from '../../components/TeamSearchBar';
+import SelectTeamRoleAccess from '../../components/SelectTeamRoleAccess';
 
 // Actions
 import teamPageAction from '../../actions/TeamPageAction';
@@ -37,12 +39,33 @@ class TeamPage extends Component {
     state = {
         renameModal: false,
         teamId: '',
+        searchValue: '',
+        roleValue: 'all',
+        accessValue: 'granted',
+    };
+
+    setSearch = value => {
+        this.setState({ searchValue: value });
+    };
+
+    setTeamRole = value => {
+        this.setState({ roleValue: value });
+    };
+
+    setAccess = value => {
+        this.setState({ accessValue: value });
     };
 
     headerItems = () => {
         const { vocabulary } = this.props;
         const { v_name, v_team_role, v_team_access, v_phone } = vocabulary;
-        return [v_name, v_phone, 'E-mail', v_team_role, v_team_access];
+        return [
+            v_name,
+            v_phone,
+            'E-mail',
+            <SelectTeamRoleAccess type="role" value={this.state.roleValue} setTeamRoleAccess={this.setTeamRole} />,
+            <SelectTeamRoleAccess type="access" value={this.state.accessValue} setTeamRoleAccess={this.setAccess} />,
+        ];
     };
 
     changingName = false;
@@ -73,6 +96,37 @@ class TeamPage extends Component {
         event.target.nextSibling.style.transform = 'scale(0)';
     };
 
+    filterData = data => {
+        const { searchValue, roleValue, accessValue } = this.state;
+        const { vocabulary, owner_id } = this.props;
+        const { v_active, v_not_active } = vocabulary;
+        return data
+            .filter(item => roleValue === 'all' || item.role_collaboration.title === 'ROLE_' + roleValue.toUpperCase())
+            .filter(
+                item =>
+                    accessValue === 'all' ||
+                    (accessValue === 'granted' && item.is_active) ||
+                    (accessValue === 'denied' && !item.is_active)
+            )
+            .filter(
+                item =>
+                    searchValue === '' ||
+                    ((item.user[0] || {}).username || '').toLowerCase().indexOf(searchValue.toLowerCase()) !== -1 ||
+                    ((item.user[0] || {}).email || '').toLowerCase().indexOf(searchValue.toLowerCase()) !== -1 ||
+                    ((item.user[0] || {}).phone || '')
+                        .replace(/\D/g, '')
+                        .indexOf(searchValue.replace(/\D/g, '') || 'none') !== -1 ||
+                    ((item.user[0] || {}).id === owner_id && 'owner'.indexOf(searchValue.toLowerCase()) !== -1) ||
+                    ((item.user[0] || {}).id !== owner_id &&
+                        item.role_collaboration.title
+                            .slice(5)
+                            .toLowerCase()
+                            .indexOf(searchValue.toLowerCase()) !== -1) ||
+                    (item.is_active && v_active.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1) ||
+                    (!item.is_active && v_not_active.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1)
+            );
+    };
+
     render() {
         const { isMobile, vocabulary, currentTeamDetailedData, currentTeam, switchTeam, owner_id } = this.props;
         const {
@@ -90,7 +144,8 @@ class TeamPage extends Component {
         const headerItemsElements = this.headerItems().map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
         ));
-        const items = currentTeamDetailedData.data.map((item, index) => {
+        const filteredItems = this.filterData(currentTeamDetailedData.data);
+        const items = filteredItems.map((item, index) => {
             const currentUser = item.user[0] || {};
             const { username, email, phone, avatar } = currentUser;
             const isActive = item.is_active;
@@ -215,6 +270,9 @@ class TeamPage extends Component {
 
                             {/* </div> */}
                         </PageHeader>
+                        <div className="team_page_searchBar">
+                            <TeamSearchBar search={this.setSearch} />
+                        </div>
                         <div className="team_page_data">
                             <table>
                                 <thead>
