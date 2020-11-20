@@ -13,6 +13,14 @@
     height: 100%;
     // -webkit-overflow-scrolling: touch;
   }
+  .main-page__results-title {
+    font-weight: 600;
+    font-size: 1.8rem;
+    line-height: 2.5rem;
+    color: #E0E0E0;
+    margin-bottom: 1.2rem;
+    z-index: 10;
+  }
 
   .main-page__day {
     margin: 0 0 2.6rem 0;

@@ -1,0 +1,56 @@
+.team-role-access {
+  font-size: 1.8rem;
+  line-height: 2.5rem;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+
+  &_select {
+    width: 135px;
+    position: relative;
+    padding: 1rem 2rem 1rem 0;
+    border-radius: 0.4rem;
+    font-size: 18px;
+    line-height: 2.2rem;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  &__list {
+    position: absolute;
+    z-index: 15;
+    width: 100%;
+    right: 0;
+    top: 110%;
+    border-radius: 0.4rem;
+    color: #333333;
+    background: #ffffff;
+    overflow: hidden;
+  }
+
+  &__list-item {
+    padding: 0.5rem 0.5rem 0.5rem 1.3rem;
+    cursor: pointer;
+
+    &:hover {
+      color: #ffffff;
+      background-color: #616161;
+    }
+  }
+
+  &__icon-arrow {
+    position: absolute;
+    top: 11px;
+    right: 10px;
+    height: 21px;
+    width: 11px;
+    background: url("../../images/icons/arrow_down.svg") no-repeat center;
+    cursor: pointer;
+
+    &-open {
+      transform: rotate(-180deg);
+    }
+  }
+}

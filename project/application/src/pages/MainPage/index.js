@@ -24,6 +24,8 @@ import { getTimeEntriesListAction, restorePaginationAction } from '../../actions
 
 // Styles
 import './style.scss';
+import PageHeader from '../../components/PageHeader';
+import TimerSearchComponent from '../../components/TimerSearchComponent';
 
 class MainPage extends Component {
     state = {
@@ -144,8 +146,10 @@ class MainPage extends Component {
             currentTimer,
             isFetchingTimeEntriesList,
             pagination,
+            isFetchingSearch,
+            isSearchMode,
         } = this.props;
-        const { v_total_time } = vocabulary;
+        const { v_total_time, v_timer, v_result } = vocabulary;
         const { isInitialFetching } = this.state;
 
         return (
@@ -156,52 +160,58 @@ class MainPage extends Component {
                             'main-page--mobile': isMobile,
                         })}
                     >
+                        <PageHeader title={v_timer} disabledTitle={isMobile}>
+                            <TimerSearchComponent />
+                        </PageHeader>
                         <AddTask handleJiraSync={this.jiraSynchronizationHandleClick} />
-                        <CustomScrollbar>
-                            <div className="main-page__list">
-                                {timeEntriesList &&
-                                    timeEntriesList.length === 0 &&
-                                    BlankListComponent(
-                                        this.props.vocabulary.v_no_entries,
-                                        this.props.vocabulary.v_no_entries_sub,
-                                        { bottom: '-175px' }
-                                    )}
-                                {this.splitTimersByDay(timeEntriesList).map((day, index, arr) => (
-                                    <div
-                                        className={classNames('main-page__day', {
-                                            'main-page__day--last-child': index === arr.length - 1,
-                                        })}
-                                        key={index}
-                                    >
-                                        <div className="main-page__day-header">
-                                            <div className="main-page__day-date">
-                                                {this.renderDayDateString(day[0].startDatetime)}
+                        <Loading mode="overlay" withLogo={false} flag={isFetchingSearch} width="100%" height="100%">
+                            {isSearchMode && <div className="main-page__results-title">{v_result}</div>}
+                            <CustomScrollbar>
+                                <div className="main-page__list">
+                                    {timeEntriesList &&
+                                        timeEntriesList.length === 0 &&
+                                        BlankListComponent(
+                                            this.props.vocabulary.v_no_entries,
+                                            this.props.vocabulary.v_no_entries_sub,
+                                            { bottom: '-175px' }
+                                        )}
+                                    {this.splitTimersByDay(timeEntriesList).map((day, index, arr) => (
+                                        <div
+                                            className={classNames('main-page__day', {
+                                                'main-page__day--last-child': index === arr.length - 1,
+                                            })}
+                                            key={index}
+                                        >
+                                            <div className="main-page__day-header">
+                                                <div className="main-page__day-date">
+                                                    {this.renderDayDateString(day[0].startDatetime)}
+                                                </div>
+                                                <div className="main-page__day-date-all-time">
+                                                    {v_total_time}: {this.renderTotalTimeByDay(day)}
+                                                </div>
                                             </div>
-                                            <div className="main-page__day-date-all-time">
-                                                {v_total_time}: {this.renderTotalTimeByDay(day)}
-                                            </div>
+                                            {day.map(task => (
+                                                <TaskListItem key={task.id} task={task} />
+                                            ))}
                                         </div>
-                                        {day.map(task => (
-                                            <TaskListItem key={task.id} task={task} />
-                                        ))}
-                                    </div>
-                                ))}
-                                {isFetchingTimeEntriesList && (
-                                    <Loading
-                                        mode="overlay"
-                                        withLogo={false}
-                                        flag={isFetchingTimeEntriesList}
-                                        width="100%"
-                                        height="100%"
-                                    >
-                                        <div className="main-page__lazy-load-spinner" />
-                                    </Loading>
-                                )}
-                                {isMobile &&
-                                    !currentTimer &&
-                                    pagination.disabled && <div className="main-page__empty-block" />}
-                            </div>
-                        </CustomScrollbar>
+                                    ))}
+                                    {isFetchingTimeEntriesList && (
+                                        <Loading
+                                            mode="overlay"
+                                            withLogo={false}
+                                            flag={isFetchingTimeEntriesList}
+                                            width="100%"
+                                            height="100%"
+                                        >
+                                            <div className="main-page__lazy-load-spinner" />
+                                        </Loading>
+                                    )}
+                                    {isMobile &&
+                                        !currentTimer &&
+                                        pagination.disabled && <div className="main-page__empty-block" />}
+                                </div>
+                            </CustomScrollbar>
+                        </Loading>
                         <StartTaskMobile />
                     </div>
                 </TutorialComponent>
@@ -219,6 +229,8 @@ const mapStateToProps = state => ({
     currentTimer: state.mainPageReducer.currentTimer,
     pagination: state.mainPageReducer.pagination,
     isFetchingTimeEntriesList: state.mainPageReducer.isFetchingTimeEntriesList,
+    isFetchingSearch: state.mainPageReducer.isFetchingSearch,
+    isSearchMode: state.mainPageReducer.isSearchMode,
 });
 
 const mapDispatchToProps = {

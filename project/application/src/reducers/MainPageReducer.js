@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
     SET_CURRENT_TIMER,
     SET_SERVER_CLIENT_TIMEDIFF,
@@ -7,6 +8,8 @@ import {
     GET_TIME_ENTRIES_LIST_PAGINATION,
     DISABLE_PAGINATION,
     RESTORE_PAGINATION,
+    START_SEARCH_MODE,
+    END_SEARCH_MODE,
 } from '../actions/MainPageAction';
 
 const initialState = {
@@ -20,12 +23,25 @@ const initialState = {
         limit: 50,
         disabled: false,
     },
+    isSearchMode: false,
+    searchValue: '',
+    searchDateRange: {
+        startDateTime: moment()
+            .startOf('month')
+            .utc()
+            .toISOString(),
+        endDateTime: moment()
+            .endOf('month')
+            .utc()
+            .toISOString(),
+    },
+    isFetchingSearch: false,
 };
 
 export function mainPageReducer(state = initialState, { type, payload }) {
     switch (type) {
         case GET_TIME_ENTRIES_LIST:
-            return { ...state, timeEntriesList: payload };
+            return { ...state, timeEntriesList: payload, isFetchingSearch: false };
         case 'CHANGE_ARR':
             return { ...state, timeEntriesList: payload.timeEntriesList };
         case SET_CURRENT_TIMER:
@@ -66,6 +82,27 @@ export function mainPageReducer(state = initialState, { type, payload }) {
                 ...state,
                 isFetchingTimeEntriesList: false,
                 timeEntriesList: state.timeEntriesList.concat(payload),
+            };
+        case START_SEARCH_MODE:
+            return {
+                ...state,
+                pagination: {
+                    ...initialState.pagination,
+                },
+                isSearchMode: true,
+                searchValue: payload.searchValue,
+                searchDateRange: payload.searchDateRange,
+                isFetchingSearch: true,
+            };
+        case END_SEARCH_MODE:
+            return {
+                ...state,
+                pagination: {
+                    ...initialState.pagination,
+                },
+                isSearchMode: false,
+                searchValue: '',
+                isFetchingSearch: true,
             };
         case 'RESET_ALL':
             return initialState;
