@@ -1,8 +1,8 @@
 .team_list {
   width: 100%;
   z-index: inherit;
-  margin-bottom: 30px;
-  height: 150px;
+  margin-bottom: 10px;
+  max-height: 150px;
   overflow-x: hidden;
   overflow-y: auto;
 }

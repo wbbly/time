@@ -22,6 +22,7 @@ class CurrencySelect extends Component {
         super(props);
 
         this.dropdown = React.createRef();
+        this.input = React.createRef();
 
         this.state = {
             isOpen: false,
@@ -90,6 +91,7 @@ class CurrencySelect extends Component {
         const { scrollToAction, withFolder } = this.props;
 
         if (!prevState.isOpen && isOpen) {
+            this.input.current.focus();
             if (!withFolder) {
                 const height = window.innerHeight || window.document.documentElement.clientHeight;
                 const boundingClientRect = this.dropdown.current.getBoundingClientRect();
@@ -111,7 +113,8 @@ class CurrencySelect extends Component {
     }
 
     render() {
-        const { onChange, listItem, isMobile, selectedCurrency, isViewMode } = this.props;
+        const { onChange, listItem, isMobile, selectedCurrency, isViewMode, vocabulary } = this.props;
+        const { v_select_currency } = vocabulary;
         const { isOpen, inputValue, currencyList } = this.state;
 
         return (
@@ -133,12 +136,14 @@ class CurrencySelect extends Component {
                 </div>
                 {isOpen && (
                     <div ref={this.dropdown} className={classNames('currency-select__dropdown')}>
+                        <div className="currency-select__dropdown-title">{v_select_currency}</div>
                         <div className="currency-select__dropdown-input">
                             <input
                                 className="currency-select__dropdown-list-input"
                                 type="text"
                                 onChange={this.searchCurrency}
                                 value={inputValue}
+                                ref={this.input}
                             />
                         </div>
                         <div className="currency-select__dropdown-list">

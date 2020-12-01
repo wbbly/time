@@ -5,14 +5,19 @@ import {
     GET_INVOICE_BY_ID_REQUEST,
     GET_INVOICE_BY_ID_SUCCESS,
     CHANGE_INVOICE_REQUEST,
+    CHANGE_INVOICE_SUCCESS,
     DELETE_INVOICE_REQUEST,
     CHANGE_INVOICE_STATUS_REQUEST,
     SET_SENDER_ID,
+    CHANGE_PAGE,
     ADD_INVOICE_ERROR,
 } from '../actions/InvoicesActions';
 
 const initialState = {
     invoices: [],
+    page: 0,
+    limit: 10,
+    pageCount: 1,
     invoice: null,
     isFetching: false,
     isInitialFetching: false,
@@ -39,6 +44,11 @@ export default function invoicesReducer(state = initialState, { type, payload })
                 ...state,
                 isFetching: true,
             };
+        case CHANGE_INVOICE_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+            };
         case CHANGE_INVOICE_STATUS_REQUEST:
             return {
                 ...state,
@@ -64,12 +74,19 @@ export default function invoicesReducer(state = initialState, { type, payload })
                 ...state,
                 isFetching: false,
                 isInitialFetching: false,
-                invoices: payload,
+                invoices: payload.invoices,
+                page: payload.page,
+                pageCount: payload.pageCount,
             };
         case SET_SENDER_ID:
             return {
                 ...state,
                 senderId: payload,
+            };
+        case CHANGE_PAGE:
+            return {
+                ...state,
+                page: payload,
             };
         case ADD_INVOICE_ERROR:
             return {

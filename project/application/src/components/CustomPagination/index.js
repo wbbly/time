@@ -2,10 +2,18 @@ import React from 'react';
 import ReactPaginate from 'react-paginate';
 import './style.scss';
 
-const CustomPagination = () => {
+const CustomPagination = ({ page, pageCount, changePage }) => {
     return (
         <div className="custom-pagination">
-            <ReactPaginate previousLabel={'<'} nextLabel={'>'} />
+            <ReactPaginate
+                pageCount={pageCount}
+                pageRangeDisplayed={2}
+                marginPagesDisplayed={2}
+                previousLabel={'<'}
+                nextLabel={'>'}
+                onPageChange={changePage}
+                initialPage={page}
+            />
         </div>
     );
 };

@@ -68,7 +68,6 @@ class ImagePicker extends Component {
         if (img) {
             if (img.type.split('/')[0] !== 'image' || img.size > 1000000) {
                 showNotificationAction({ text: v_a_avatar_upload_error, type: 'error' });
-                event.target.value = '';
                 return;
             }
 
@@ -90,8 +89,13 @@ class ImagePicker extends Component {
         }
     };
 
+    deleteHandler = event => {
+        const { onDeleteImage } = this.props;
+        this.setState({ loadedImage: null }, () => onDeleteImage(event));
+    };
+
     render() {
-        const { vocabulary, placeholder, isViewMode, clientImage, imageUrl, onDeleteImage } = this.props;
+        const { vocabulary, placeholder, isViewMode, imageUrl, onDeleteImage } = this.props;
         const { v_upload_image, v_delete_image } = vocabulary;
         const { isOpenDropdown, loadedImage, loadingImage } = this.state;
         return (
@@ -107,12 +111,14 @@ class ImagePicker extends Component {
                             backgroundImage: `url("${loadedImage || imageUrl}")`,
                         }}
                     >
-                        <MyDropzone
-                            fileHandler={this.fileHandler}
-                            loadedImage={loadedImage}
-                            imageUrl={imageUrl}
-                            placeholder={placeholder}
-                        />
+                        {!isViewMode && (
+                            <MyDropzone
+                                fileHandler={this.fileHandler}
+                                loadedImage={loadedImage}
+                                imageUrl={imageUrl}
+                                placeholder={placeholder}
+                            />
+                        )}
                     </div>
                     {!isViewMode && (
                         <div className="image-picker__settings" onClick={this.openDropdown}>
@@ -137,7 +143,7 @@ class ImagePicker extends Component {
                                 />
                             </label>
                         </li>
-                        <li className="image-picker__settings-menu-item" onClick={onDeleteImage}>
+                        <li className="image-picker__settings-menu-item" onClick={this.deleteHandler}>
                             {v_delete_image}
                         </li>
                     </ul>

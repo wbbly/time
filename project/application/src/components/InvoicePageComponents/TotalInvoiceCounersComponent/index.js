@@ -44,15 +44,12 @@ const TotalInvoiceCounersComponent = ({ invoices, vocabulary }) => {
             if (invoice.status === 'overdue') {
                 if (acc.overdue[invoice.currency] === undefined) {
                     acc.overdue[invoice.currency] = 0;
-                    acc.total[invoice.currency] = 0;
                 }
                 acc.overdue[invoice.currency] += invoice.total;
-                acc.total[invoice.currency] += invoice.total;
                 return acc;
             }
             if (invoice.status === 'awaiting') {
                 if (acc.total[invoice.currency] === undefined) {
-                    acc.overdue[invoice.currency] = 0;
                     acc.total[invoice.currency] = 0;
                 }
                 acc.total[invoice.currency] += invoice.total;
@@ -63,7 +60,6 @@ const TotalInvoiceCounersComponent = ({ invoices, vocabulary }) => {
                     acc.draft[invoice.currency] = 0;
                 }
                 acc.draft[invoice.currency] += invoice.total;
-
                 return acc;
             }
 

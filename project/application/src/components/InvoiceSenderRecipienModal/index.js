@@ -12,7 +12,7 @@ import 'react-flags-select/scss/react-flags-select.scss';
 // actions
 import { showNotificationAction } from '../../actions/NotificationActions';
 
-const phoneRegExp = /^[0-9\-\+_ ]{9,20}$/;
+const phoneRegExp = /^\+[0-9() -]{9,20}$/;
 class InvoiceSenderRecipienModal extends Component {
     state = {
         deleteCheckbox: false,
@@ -121,35 +121,35 @@ class InvoiceSenderRecipienModal extends Component {
                     >
                         {formik => (
                             <form className="billing-modal__container-form" onSubmit={formik.handleSubmit} noValidate>
-                                <Input
-                                    config={{
-                                        id: 'company_name',
-                                        name: 'company_name',
-                                        type: 'text',
-                                        onChange: formik.handleChange,
-                                        onBlur: formik.handleBlur,
-                                        value: formik.values.company_name,
-                                        placeholder: v_enter_text,
-                                    }}
-                                    errorMsg={formik.errors.company_name}
-                                    label={`${company_name}*`}
-                                    withValidation
-                                />
                                 <section className="client-info__section">
                                     <Input
                                         config={{
-                                            id: 'username',
-                                            name: 'username',
+                                            id: 'company_name',
+                                            name: 'company_name',
                                             type: 'text',
                                             onChange: formik.handleChange,
                                             onBlur: formik.handleBlur,
-                                            value: formik.values.username,
+                                            value: formik.values.company_name,
                                             placeholder: v_enter_text,
                                         }}
-                                        label={full_name}
+                                        errorMsg={formik.errors.company_name}
+                                        label={`${company_name}*`}
                                         withValidation
                                     />
-                                    <div className="flag-input-container">
+                                    <div
+                                        className="flag-input-container"
+                                        onClick={e => {
+                                            e.persist();
+                                            setTimeout(() => {
+                                                let flagInput = document.querySelectorAll(
+                                                    '.filterBox input[type=text]'
+                                                )[0];
+                                                if (flagInput) {
+                                                    flagInput.focus();
+                                                }
+                                            }, 700);
+                                        }}
+                                    >
                                         <div className="flag-input-container-title">{v_country}</div>
                                         <ReactFlagsSelect
                                             searchable={true}
@@ -164,6 +164,19 @@ class InvoiceSenderRecipienModal extends Component {
                                 <section className="client-info__section">
                                     <Input
                                         config={{
+                                            id: 'username',
+                                            name: 'username',
+                                            type: 'text',
+                                            onChange: formik.handleChange,
+                                            onBlur: formik.handleBlur,
+                                            value: formik.values.username,
+                                            placeholder: v_enter_text,
+                                        }}
+                                        label={full_name}
+                                        withValidation
+                                    />
+                                    <Input
+                                        config={{
                                             id: 'email',
                                             name: 'email',
                                             type: 'text',
@@ -174,6 +187,19 @@ class InvoiceSenderRecipienModal extends Component {
                                         }}
                                         errorMsg={formik.errors.email}
                                         label={v_email}
+                                        withValidation
+                                    />
+                                </section>
+                                <section className="client-info__section">
+                                    <Input
+                                        config={{
+                                            id: 'city',
+                                            name: 'city',
+                                            type: 'text',
+                                            onChange: formik.handleChange,
+                                            onBlur: formik.handleBlur,
+                                        }}
+                                        label={`${v_city}, ${v_address.toLowerCase()}`}
                                         withValidation
                                     />
                                     <Input
@@ -205,35 +231,6 @@ class InvoiceSenderRecipienModal extends Component {
                                         label={v_phone}
                                         withValidation
                                     />
-                                    <Input
-                                        config={{
-                                            id: 'city',
-                                            name: 'city',
-                                            type: 'text',
-                                            onChange: formik.handleChange,
-                                            onBlur: formik.handleBlur,
-                                            value: formik.values.city,
-                                            placeholder: v_enter_text,
-                                        }}
-                                        label={`${v_city}, ${v_address.toLowerCase()}`}
-                                        withValidation
-                                    />
-                                </section>
-                                <section className="client-info__section">
-                                    <Input
-                                        config={{
-                                            id: 'language',
-                                            name: 'language',
-                                            type: 'text',
-                                            onChange: formik.handleChange,
-                                            onBlur: formik.handleBlur,
-                                            value: formik.values.language,
-                                            placeholder: v_enter_language,
-                                        }}
-                                        label={v_language}
-                                        withValidation
-                                    />
-
                                     <Input
                                         config={{
                                             id: 'zip',

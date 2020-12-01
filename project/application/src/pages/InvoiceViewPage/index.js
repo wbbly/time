@@ -32,23 +32,6 @@ import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoice
 import { downloadPDF } from '../../services/downloadPDF';
 import { downloadInvoicePDF } from '../../configAPI';
 
-const ArrowLeftIcon = ({ className, onClick }) => (
-    <svg
-        className={className}
-        onClick={onClick}
-        width="42"
-        height="24"
-        viewBox="0 0 42 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-    >
-        <path
-            d="M0.939339 10.9393C0.353554 11.5251 0.353554 12.4749 0.939339 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97919 12.6066 1.3934C12.0208 0.807611 11.0711 0.807611 10.4853 1.3934L0.939339 10.9393ZM42 10.5L2 10.5V13.5L42 13.5V10.5Z"
-            fill="white"
-        />
-    </svg>
-);
-
 //todo move to queries.js if needed
 export const calculateTaxSum = ({ amount, rate, tax, hours }) => (((amount || hours) * rate) / 100) * tax;
 
@@ -114,13 +97,10 @@ class InvoiceViewPage extends Component {
         const { getInvoiceViewDataThunk } = this.props;
 
         let invoiceId = this.props.match.params.invoiceId;
-        let paramsString = this.props.location.search;
-        let searchParams = new URLSearchParams(paramsString);
-        const token = searchParams.get('token');
 
         await getInvoiceViewDataThunk(invoiceId);
 
-        this.setState({ invoice: this.props.invoices }, () => {
+        this.setState({ invoice: this.props.invoice }, () => {
             console.log(this.state.invoice);
         });
     }
@@ -172,11 +152,7 @@ class InvoiceViewPage extends Component {
 
     handleFileDelete = () => {
         const { invoice } = this.state;
-        const { deleteAvatarThunk } = this.props;
         this.setState({ invoice: { ...invoice, image: null, removeFile: true } });
-        if (invoice.image) {
-            deleteAvatarThunk(invoice);
-        }
     };
 
     render() {
@@ -195,16 +171,11 @@ class InvoiceViewPage extends Component {
             v_invoice_due,
             v_from,
             v_to,
-            v_add_sender,
             v_add_client,
             v_select_logo_file,
             v_will_generate,
         } = vocabulary;
         const { isInitialFetching, invoice, errors } = this.state;
-
-        var paramsString = `${this.props.location.search}`;
-        var searchParams = new URLSearchParams(paramsString);
-        const token = searchParams.get('token');
 
         return (
             <Loading flag={isInitialFetching || isFetching} mode="parentSize" withLogo={false}>
@@ -215,9 +186,7 @@ class InvoiceViewPage extends Component {
                                 <div
                                     onClick={() => this.props.history.push('/invoices')}
                                     className="invoices-page-detailed__back-button"
-                                >
-                                    <ArrowLeftIcon />
-                                </div>
+                                />
                             )}
                             <div className="invoices-page-detailed__title">{v_invoice}</div>
                         </div>
@@ -232,7 +201,7 @@ class InvoiceViewPage extends Component {
                                         <div className="invoices-page-detailed__left">
                                             <div
                                                 className={classNames('invoices-page-detailed__logo', {
-                                                    'invoices-page-detailed__logo--empty': !invoice.image,
+                                                    'invoices-page-detailed__logo--empty': !invoice.logo,
                                                 })}
                                             >
                                                 <ImagePicker
@@ -240,7 +209,7 @@ class InvoiceViewPage extends Component {
                                                     onFileLoaded={this.handleFileLoad}
                                                     placeholder={v_select_logo_file}
                                                     imageUrl={
-                                                        invoice.image ? `${AppConfig.apiURL}${invoice.image}` : null
+                                                        invoice.logo ? `${AppConfig.apiURL}${invoice.logo}` : null
                                                     }
                                                     isViewMode={this.isViewMode}
                                                     disabled={false}
@@ -439,7 +408,7 @@ class InvoiceViewPage extends Component {
                                             {v_save}
                                         </button>
                                         <button onClick={this.goBack} className="invoices-page-detailed__action-button">
-                                            {v_cancel.toLowerCase()}
+                                            {v_cancel}
                                         </button>
                                     </div>
                                 )}
@@ -506,7 +475,7 @@ class InvoiceViewPage extends Component {
 const mapStateToProps = ({ teamReducer, clientsReducer, invoicesReducer, userReducer }) => ({
     currentTeamDetailedData: teamReducer.currentTeamDetailedData,
     clientsList: clientsReducer.clientsList,
-    invoices: invoicesReducer.invoices,
+    invoice: invoicesReducer.invoice,
     isFetching: invoicesReducer.isFetching,
 });
 

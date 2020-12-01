@@ -60,7 +60,7 @@ const LastInvoicesList = ({
                                         {internationalFormatNum(fixNumberHundredths(spaceAndFixNumber(invoice.total)))}
                                     </span>
                                 </div>
-                                {invoice.status === 'overdue' && (
+                                {(invoice.status === 'overdue' || invoice.status === 'awaiting') && (
                                     <button
                                         onClick={e => {
                                             prevent(e);

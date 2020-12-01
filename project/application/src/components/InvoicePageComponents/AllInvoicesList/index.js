@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { deleteInvoiceById, editInvoicePaymentStatus } from '../../../actions/InvoicesActions';
 import DeleteInvoiceModal from '../../../components/DeleteInvoiceModal/index';
 import InvoiceList from '../../InvoiceList/index';
+import CustomPagination from '../../CustomPagination/index';
 
 // Styles
 import './style.scss';
@@ -47,6 +48,52 @@ export const CheckIcon = ({ className, onClick, fill }) => {
         );
     }
 };
+
+export const CopyLinkIcon = ({ className, onClick, valueTip }) => (
+    // <svg
+    //     data-tip={valueTip}
+    //     className={className}
+    //     onClick={onClick}
+    //     aria-hidden="true"
+    //     focusable="false"
+    //     dataprefix="fas"
+    //     dataicon="link"
+    //     role="img"
+    //     xmlns="http://www.w3.org/2000/svg"
+    //     viewBox="0 0 512 512"
+    //     width="19px"
+    //     height="19px"
+    // >
+    //     <path
+    //         d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"
+    //     />
+    // </svg>
+    <svg
+        className={className}
+        onClick={onClick}
+        data-tip={valueTip}
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M7.5 9.74997C7.82209 10.1806 8.23302 10.5369 8.70491 10.7947C9.17681 11.0525 9.69863 11.2058 10.235 11.2442C10.7713 11.2826 11.3097 11.2052 11.8135 11.0173C12.3173 10.8294 12.7748 10.5353 13.155 10.155L15.405 7.90497C16.0881 7.19772 16.4661 6.25046 16.4575 5.26722C16.449 4.28398 16.0546 3.34343 15.3593 2.64815C14.664 1.95287 13.7235 1.55849 12.7403 1.54995C11.757 1.5414 10.8098 1.91938 10.1025 2.60247L8.8125 3.88497"
+            stroke="#333333"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M10.5006 8.24992C10.1785 7.81933 9.76762 7.46304 9.29572 7.20522C8.82383 6.9474 8.30201 6.79409 7.76565 6.75567C7.22929 6.71726 6.69095 6.79465 6.18713 6.98259C5.68331 7.17053 5.2258 7.46462 4.84564 7.84492L2.59564 10.0949C1.91255 10.8022 1.53457 11.7494 1.54311 12.7327C1.55165 13.7159 1.94604 14.6565 2.64132 15.3517C3.3366 16.047 4.27715 16.4414 5.26038 16.45C6.24362 16.4585 7.19088 16.0805 7.89814 15.3974L9.18064 14.1149"
+            stroke="#333333"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
 
 export const EditIcon = ({ className, onClick, valueTip }) => (
     <svg
@@ -131,7 +178,17 @@ export const SendIcon = ({ className, onClick, color }) => (
     </svg>
 );
 
-const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history, deleteInvoiceById, copyInvoice }) => {
+const AllInvoicesList = ({
+    invoices,
+    vocabulary,
+    toggleSendInvoiceModal,
+    history,
+    deleteInvoiceById,
+    copyInvoice,
+    page,
+    pageCount,
+    changePage,
+}) => {
     const {
         v_draft,
         v_paid,
@@ -160,12 +217,14 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history
             }
         }
     };
+
     const [modalOpeningId, openCloseModal] = useState(false);
 
     const deleteInvoice = id => {
         openCloseModal(false);
         deleteInvoiceById(id);
     };
+
     return (
         <div className="all-invoices-list">
             <div className="all-invoices-list__title-wrapper">
@@ -204,6 +263,7 @@ const AllInvoicesList = ({ invoices, vocabulary, toggleSendInvoiceModal, history
                     />
                 );
             })}
+            <CustomPagination page={page} pageCount={pageCount} changePage={changePage} />
             {modalOpeningId && (
                 <DeleteInvoiceModal
                     deleteInvoice={deleteInvoice}

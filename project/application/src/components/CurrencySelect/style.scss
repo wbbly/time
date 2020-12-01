@@ -36,6 +36,14 @@
     width: 300px;
     // overflow: auto;
   }
+  
+  .currency-select__dropdown-title {
+    color: #000000;
+    font-size: 1.4rem;
+    font-weight: bold;
+    line-height: 1.9rem;
+    margin-bottom: 0.5rem;
+  }
 
   .currency-select__dropdown-list {
     overflow-y: auto;

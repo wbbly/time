@@ -39,7 +39,7 @@
         }
       }
       .invoice-client-title {
-        width: 50%;
+        width: 60%;
       }
       .date-wrapper {
         display: flex;
@@ -80,7 +80,7 @@
       }
     }
     .data-wrapper:first-child {
-      width: 30%;
+      width: 34%;
       padding-left: 20px;
     }
     @media screen and (max-width: 750px) {
@@ -91,14 +91,14 @@
     }
 
     .invoice-status-title {
-      width: 10%;
+      width: 12%;
       display: flex;
       justify-content: center;
       // margin-left: -35px;
       // margin-left: -40px;
     }
     .invoice-instruments-title {
-      width: 20%;
+      width: 9%;
       margin-right: 15px;
       margin-left: 10px;
     }
