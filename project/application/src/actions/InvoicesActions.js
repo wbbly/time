@@ -194,7 +194,7 @@ export const getInvoicesList = (page, limit) => async dispatch => {
         }
         const newPage =
             +res.data.data.pagination.page > +res.data.data.pagination.pagesAmount
-                ? +res.data.data.pagination.pagesAmount
+                ? +res.data.data.pagination.pagesAmount || 1
                 : +res.data.data.pagination.page;
         dispatch(
             getInvoiceListSuccess({
