@@ -170,7 +170,9 @@ class PersonSelect extends Component {
             showNotificationAction({ text: v_a_client_existed, type: 'warning' });
             return;
         } else {
-            const promise = this.props.setClientAction(client);
+            const phone = client.phone ? '+' + client.phone.replace(/[^0-9]/g, '') : null;
+            const data = { ...client, phone: phone };
+            const promise = this.props.setClientAction(data);
 
             showNotificationAction({
                 text: client_was_created,

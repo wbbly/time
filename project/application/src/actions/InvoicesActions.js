@@ -11,7 +11,9 @@ import {
 
 export const CREATE_INVOICE_REQUEST = 'CREATE_INVOICE_REQUEST';
 export const CHANGE_INVOICE_REQUEST = 'CHANGE_INVOICE_REQUEST';
+export const CHANGE_INVOICE_SUCCESS = 'CHANGE_INVOICE_SUCCESS';
 export const CHANGE_INVOICE_STATUS_REQUEST = 'CHANGE_INVOICE_STATUS_REQUEST';
+export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const DELETE_INVOICE_REQUEST = 'DELETE_INVOICE_REQUEST';
 export const GET_INVOICE_LIST_REQUEST = 'GET_INVOICE_LIST_REQUEST';
 export const GET_INVOICE_LIST_SUCCESS = 'GET_INVOICE_LIST_SUCCESS';
@@ -19,6 +21,7 @@ export const GET_INVOICE_BY_ID_REQUEST = 'GET_INVOICE_BY_ID_REQUEST';
 export const GET_INVOICE_BY_ID_SUCCESS = 'GET_INVOICE_BY_ID_SUCCESS';
 export const SET_SENDER_ID = 'SET-SENDER-ID';
 export const ADD_INVOICE_ERROR = 'ADD_INVOICE_ERROR';
+
 const getInvoiceByIdRequest = () => ({
     type: GET_INVOICE_BY_ID_REQUEST,
 });
@@ -33,7 +36,11 @@ const createInvoiceRequest = () => ({
 });
 
 const changeInvoiceRequest = () => ({
-    type: CREATE_INVOICE_REQUEST,
+    type: CHANGE_INVOICE_REQUEST,
+});
+
+const changeInvoiceSuccess = () => ({
+    type: CHANGE_INVOICE_SUCCESS,
 });
 
 const getInvoiceListRequest = () => ({
@@ -45,6 +52,11 @@ const getInvoiceListSuccess = payload => ({
     payload,
 });
 
+export const changePage = payload => ({
+    type: CHANGE_PAGE,
+    payload,
+});
+
 const deleteInvoiceRequest = () => ({
     type: DELETE_INVOICE_REQUEST,
 });
@@ -52,14 +64,17 @@ const deleteInvoiceRequest = () => ({
 const changeInvoiceStatusRequest = () => ({
     type: CHANGE_INVOICE_STATUS_REQUEST,
 });
+
 export const setSenderIdAC = payload => ({
     type: SET_SENDER_ID,
     payload,
 });
+
 const addInvoiceError = payload => ({
     type: ADD_INVOICE_ERROR,
     payload,
 });
+
 const fillFormDataWithObject = (formData, obj) => {
     for (let key in obj) {
         if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
@@ -106,6 +121,7 @@ export const addInvoice = (payload, isClone) => async dispatch => {
                     });
                     return acc;
                 }, []),
+                discount: payload.discount,
             };
         } else {
             requestBody = {
@@ -128,13 +144,14 @@ export const addInvoice = (payload, isClone) => async dispatch => {
                     });
                     return acc;
                 }, []),
+                discount: payload.discount,
             };
         }
         if (formData instanceof FormData) {
             requestBody = fillFormDataWithObject(formData, requestBody);
         }
         const res = await createInvoice(requestBody);
-        dispatch(getInvoiceListSuccess(res.data.data.invoices));
+        dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);
         if (error.response) {
@@ -152,6 +169,7 @@ export const getInvoice = invoiceId => async dispatch => {
         console.log(error);
     }
 };
+
 export const sendInvoiceLetterThunk = (invoiceId, data, isInvoicePageDetailed) => async dispatch => {
     if (!isInvoicePageDetailed) {
         dispatch(changeInvoiceStatusRequest());
@@ -159,34 +177,47 @@ export const sendInvoiceLetterThunk = (invoiceId, data, isInvoicePageDetailed) =
     try {
         const res = await sendInvoiceLetter(invoiceId, data);
         if (!isInvoicePageDetailed) {
-            dispatch(getInvoiceByIdSuccess(res.data.data.invoices));
+            dispatch(changeInvoiceSuccess());
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const getInvoicesList = () => async dispatch => {
+export const getInvoicesList = (page, limit) => async dispatch => {
     dispatch(getInvoiceListRequest());
     try {
-        const res = await getInvoices();
+        const res = await getInvoices(page + 1, limit);
         if (res.data.data.invoices.length > 0) {
             const senderId = res.data.data.invoices[0].from.id;
             dispatch(setSenderIdAC(senderId));
         }
-        dispatch(getInvoiceListSuccess(res.data.data.invoices));
+        const newPage =
+            +res.data.data.pagination.page > +res.data.data.pagination.pagesAmount
+                ? +res.data.data.pagination.pagesAmount
+                : +res.data.data.pagination.page;
+        dispatch(
+            getInvoiceListSuccess({
+                invoices: res.data.data.invoices,
+                page: newPage - 1,
+                pageCount: +res.data.data.pagination.pagesAmount,
+            })
+        );
     } catch (error) {
         console.log(error);
     }
 };
+
 export const getInvoiceViewDataThunk = id => async dispatch => {
+    dispatch(getInvoiceByIdRequest());
     try {
         const res = await getInvoiceViewData(id);
-        dispatch(getInvoiceListSuccess(res.data));
+        dispatch(getInvoiceByIdSuccess(res.data));
     } catch (error) {
         console.log(error);
     }
 };
+
 export const updateInvoice = payload => async dispatch => {
     dispatch(changeInvoiceRequest());
     let formData = payload.image;
@@ -211,12 +242,13 @@ export const updateInvoice = payload => async dispatch => {
                 return acc;
             }, []),
             removeFile: payload.removeFile,
+            discount: payload.discount,
         };
         if (formData instanceof FormData) {
             requestBody = fillFormDataWithObject(formData, requestBody);
         }
         const res = await changeInvoice({ invoiceId: payload.id, data: requestBody });
-        dispatch(getInvoiceListSuccess(res.data.data.invoices));
+        dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);
         if (error.response) {
@@ -224,16 +256,20 @@ export const updateInvoice = payload => async dispatch => {
         }
     }
 };
+
 export const deleteAvatarThunk = payload => async dispatch => {
+    dispatch(changeInvoiceRequest());
     try {
         let requestBody = {
-            vendorId: payload.sender,
-            clientId: payload.recipient,
+            invoiceNumber: payload.invoiceNumber,
+            vendorId: payload.vendorId,
+            clientId: payload.recipient.id,
             invoiceDate: payload.dateFrom,
             dueDate: payload.dateDue,
             timezoneOffset: payload.timezoneOffset,
             currency: payload.currency,
             comment: payload.comment || '',
+            invoiceVendor: payload.sender,
             invoiceProjects: payload.projects.reduce((acc, project) => {
                 acc.push({
                     projectName: project.project_name || project.name,
@@ -246,16 +282,17 @@ export const deleteAvatarThunk = payload => async dispatch => {
             removeFile: true,
         };
         const res = await changeInvoice({ invoiceId: payload.id, data: requestBody });
-        dispatch(getInvoiceListSuccess(res.data.data.invoices));
+        dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);
     }
 };
+
 export const deleteInvoiceById = invoiceId => async dispatch => {
     dispatch(deleteInvoiceRequest());
     try {
         const res = await deleteInvoice(invoiceId);
-        dispatch(getInvoiceListSuccess(res.data.data.invoices));
+        dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);
     }
@@ -265,7 +302,7 @@ export const editInvoicePaymentStatus = (invoiceId, status) => async dispatch =>
     dispatch(changeInvoiceStatusRequest());
     try {
         const res = await changeInvoiceStatus({ invoiceId, paymentStatus: status });
-        dispatch(getInvoiceListSuccess(res.data.data.invoices));
+        dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-
+import TextareaAutosize from 'react-textarea-autosize';
 import {
     addInvoice,
     getInvoice,
@@ -23,6 +23,7 @@ import {
     SaveIcon,
     SendIcon,
     SaveInvoice,
+    CopyLinkIcon,
 } from '../../components/InvoicePageComponents/AllInvoicesList';
 import CustomScrollbar from '../../components/CustomScrollbar';
 import DetailedInvoiceProjectsTable from '../../components/DetailedInvoiceProjectsTable';
@@ -40,23 +41,7 @@ import ReactTooltip from 'react-tooltip';
 import DeleteInvoiceModal from '../../components/DeleteInvoiceModal/index';
 import { downloadPDF } from '../../services/downloadPDF';
 import { downloadInvoicePDF } from '../../configAPI';
-
-const ArrowLeftIcon = ({ className, onClick }) => (
-    <svg
-        className={className}
-        onClick={onClick}
-        width="42"
-        height="24"
-        viewBox="0 0 42 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-    >
-        <path
-            d="M0.939339 10.9393C0.353554 11.5251 0.353554 12.4749 0.939339 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97919 12.6066 1.3934C12.0208 0.807611 11.0711 0.807611 10.4853 1.3934L0.939339 10.9393ZM42 10.5L2 10.5V13.5L42 13.5V10.5Z"
-            fill="white"
-        />
-    </svg>
-);
+import DiscountInvoiceModal from '../../components/DiscountInvoiceModal';
 
 //todo move to queries.js if needed
 export const calculateTaxSum = ({ amount, rate, tax, hours }) => (((amount || hours) * rate) / 100) * tax;
@@ -73,6 +58,14 @@ export const calculateSubtotals = projects =>
 
 //todo move to queries.js if needed
 export const calculateTaxesSum = projects => projects.reduce((sum, project) => sum + calculateTaxSum(project), 0) || 0;
+
+export const subtotalWithDiscount = (subtotal, discount = 0) => (subtotal / 100) * discount;
+
+const calculateTotal = (projects, discount = 0) => {
+    let subtotal = calculateSubtotals(projects);
+
+    return subtotal - subtotalWithDiscount(subtotal, discount) + calculateTaxesSum(projects);
+};
 
 //todo move to queries.js if needed
 export const calculateSubtotalsWithTax = projects =>
@@ -93,6 +86,7 @@ class InvoicesPageDetailed extends Component {
             dateFrom: new Date(),
             dateDue: new Date(),
             timezoneOffset: new Date().getTimezoneOffset() * 60 * 1000,
+            discount: 0,
             currency: 'usd',
             sender: {
                 city: this.props.defaultUserSender.city || '',
@@ -120,7 +114,11 @@ class InvoicesPageDetailed extends Component {
         },
         sendInvoiceModalData: false,
         deleteInvoiceModal: false,
+        linkCopied: false,
+        discountModalIsOpen: false,
     };
+
+    copyLinkRef = React.createRef();
 
     async componentDidMount() {
         setTimeout(() => this.setState({ isInitialFetching: false }), 500);
@@ -153,8 +151,8 @@ class InvoicesPageDetailed extends Component {
                 logo,
                 projects,
                 comment,
+                discount,
                 invoice_vendor,
-                from,
             } = this.props.invoice;
             this.setState({
                 invoice: {
@@ -170,6 +168,7 @@ class InvoicesPageDetailed extends Component {
                     image: logo,
                     projects,
                     comment,
+                    discount,
                 },
             });
         } else if (this.props.sameInvoiceNumberErr !== prevProps.sameInvoiceNumberErr) {
@@ -255,11 +254,7 @@ class InvoicesPageDetailed extends Component {
 
     handleFileDelete = () => {
         const { invoice } = this.state;
-        const { deleteAvatarThunk } = this.props;
         this.setState({ invoice: { ...invoice, image: null, removeFile: true } });
-        if (invoice.image) {
-            deleteAvatarThunk(invoice);
-        }
     };
 
     validateProjects = projectList => {
@@ -269,7 +264,7 @@ class InvoicesPageDetailed extends Component {
     handleSaveAction = async () => {
         const { invoice } = this.state;
         const { updateInvoice, addInvoice, history, showNotificationAction } = this.props;
-        const { v_fill_fields, v_fill_fields_company_name, v_invoice_number_exist } = this.props.vocabulary;
+        const { v_fill_fields_company_name, v_invoice_number_exist } = this.props.vocabulary;
         let error =
             !invoice.sender ||
             !invoice.recipient ||
@@ -369,7 +364,67 @@ class InvoicesPageDetailed extends Component {
     closeDeleteModal = () => {
         this.setState({ deleteInvoiceModal: false });
     };
-    goBack = () => this.props.history.goBack();
+    goBack = () => {
+        const {
+            id,
+            invoice_number,
+            invoice_date,
+            due_date,
+            timezone_offset,
+            currency,
+            to,
+            logo,
+            projects,
+            comment,
+            invoice_vendor,
+            from,
+        } = this.props.invoice;
+        this.setState({
+            invoice: {
+                id,
+                vendorId: this.props.defaultUserSender.id,
+                invoiceNumber: invoice_number,
+                dateFrom: invoice_date,
+                dateDue: due_date,
+                timezoneOffset: timezone_offset,
+                currency,
+                sender: invoice_vendor,
+                recipient: to,
+                image: logo,
+                projects,
+                comment,
+            },
+        });
+        this.props.history.goBack();
+    };
+
+    copyToClipBoard = invoice => {
+        if (this.state.linkCopied || !this.isViewMode) return;
+        ReactTooltip.hide(this.copyLinkRef.current);
+        const el = document.createElement('textarea');
+        el.value = `${window.location.origin}/invoice/${invoice && invoice.id}`;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        this.setState({ linkCopied: true });
+        setTimeout(() => {
+            ReactTooltip.show(this.copyLinkRef.current);
+        }, 0);
+    };
+
+    closeDiscountModal = () => {
+        this.setState({ discountModalIsOpen: false });
+    };
+
+    saveDiscount = discount => {
+        let { invoice } = this.state;
+        invoice.discount = discount;
+
+        this.setState({ invoice });
+
+        this.closeDiscountModal();
+    };
 
     render() {
         const { vocabulary, currentTeamDetailedData, clientsList, isFetching, showNotificationAction } = this.props;
@@ -387,29 +442,31 @@ class InvoicesPageDetailed extends Component {
             v_invoice_due,
             v_from,
             v_to,
-            v_add_sender,
             v_add_client,
             v_select_logo_file,
             v_enter_number,
-            v_edit_client,
             v_download,
-            v_copy,
-            v_send,
             v_delete,
+            v_edit,
+            v_clone,
+            v_send_by_email,
+            v_link_copied,
+            v_copy_link,
+            v_add_discount,
+            v_discount,
         } = vocabulary;
-        const { isInitialFetching, invoice, errors } = this.state;
+        const { isInitialFetching, discountModalIsOpen, invoice, errors, linkCopied } = this.state;
+
         return (
             <Loading flag={isInitialFetching || isFetching} mode="parentSize" withLogo={false}>
-                <CustomScrollbar>
+                <CustomScrollbar disableTimeEntriesFetch>
                     <div className="invoices-page-detailed-wrapper">
                         <div className={classNames('invoices-page-detailed-wrapper__header', {})}>
                             {this.isViewMode && (
                                 <div
                                     onClick={() => this.props.history.push('/invoices')}
                                     className="invoices-page-detailed__back-button"
-                                >
-                                    <ArrowLeftIcon />
-                                </div>
+                                />
                             )}
                             <div className="invoices-page-detailed__title">{v_invoice}</div>
                         </div>
@@ -432,7 +489,9 @@ class InvoicesPageDetailed extends Component {
                                                     onDeleteImage={this.handleFileDelete}
                                                     placeholder={v_select_logo_file}
                                                     imageUrl={
-                                                        invoice.image ? `${AppConfig.apiURL}${invoice.image}` : null
+                                                        invoice.image && typeof invoice.image === 'string'
+                                                            ? `${AppConfig.apiURL}${invoice.image}`
+                                                            : null
                                                     }
                                                     isViewMode={this.isViewMode}
                                                 />
@@ -567,6 +626,71 @@ class InvoicesPageDetailed extends Component {
                                                 </div>
                                             </div>
                                             <div className="invoices-page-detailed__summary-table-row">
+                                                <button
+                                                    className="invoices-page-detailed__summary-discount"
+                                                    onClick={() => {
+                                                        if (this.isViewMode) return;
+                                                        this.setState({ discountModalIsOpen: true });
+                                                    }}
+                                                >
+                                                    {invoice.discount
+                                                        ? `${invoice.discount}% ${v_discount}`
+                                                        : v_add_discount}
+                                                </button>
+                                                {invoice.discount || this.isViewMode ? (
+                                                    <div className="invoices-page-detailed__summary-price">
+                                                        {invoice.currency.toUpperCase()}
+                                                        <span>
+                                                            -
+                                                            {internationalFormatNum(
+                                                                fixNumberHundredths(
+                                                                    spaceAndFixNumber(
+                                                                        subtotalWithDiscount(
+                                                                            calculateSubtotals(invoice.projects),
+                                                                            invoice.discount
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                ) : null}
+
+                                                {invoice.discount ? (
+                                                    <button
+                                                        className={classNames(
+                                                            'invoices-page-detailed__tool-button',
+                                                            'invoices-page-detailed__tool-discount',
+                                                            {
+                                                                disabled: !this.isViewMode,
+                                                            }
+                                                        )}
+                                                        onClick={() => {
+                                                            if (this.isViewMode) return;
+                                                            this.saveDiscount(null);
+                                                        }}
+                                                        data-tip={v_delete}
+                                                    >
+                                                        <DeleteIcon
+                                                            className={classNames(
+                                                                'invoices-page-detailed__icon-button',
+                                                                {
+                                                                    disabled: !this.isViewMode,
+                                                                }
+                                                            )}
+                                                        />
+                                                    </button>
+                                                ) : null}
+                                                {discountModalIsOpen && (
+                                                    <DiscountInvoiceModal
+                                                        saveDiscount={this.saveDiscount}
+                                                        closeModal={this.closeDiscountModal}
+                                                        initDiscount={invoice.discount}
+                                                    />
+                                                )}
+                                            </div>
+
+                                            <div className="invoices-page-detailed__summary-table-row">
                                                 <span className="invoices-page-detailed__summary-title">{v_tax}</span>
                                                 <div className="invoices-page-detailed__summary-price">
                                                     {invoice.currency.toUpperCase()}
@@ -597,7 +721,7 @@ class InvoicesPageDetailed extends Component {
                                                         {internationalFormatNum(
                                                             fixNumberHundredths(
                                                                 spaceAndFixNumber(
-                                                                    calculateSubtotalsWithTax(invoice.projects)
+                                                                    calculateTotal(invoice.projects, invoice.discount)
                                                                 )
                                                             )
                                                         )}
@@ -610,7 +734,7 @@ class InvoicesPageDetailed extends Component {
                                 <div className="invoices-page-detailed__comments">
                                     <div className="invoices-page-detailed__subtitle">{v_comments}</div>
 
-                                    <textarea
+                                    <TextareaAutosize
                                         value={invoice.comment || ''}
                                         onChange={e => this.handleInputChange('comment', e)}
                                         className="invoices-page-detailed__input invoices-page-detailed__textarea"
@@ -634,7 +758,7 @@ class InvoicesPageDetailed extends Component {
                                             {v_save}
                                         </button>
                                         <button onClick={this.goBack} className="invoices-page-detailed__action-button">
-                                            {v_cancel.toLowerCase()}
+                                            {v_cancel}
                                         </button>
                                     </div>
                                 )}
@@ -643,14 +767,18 @@ class InvoicesPageDetailed extends Component {
                                 <div className="invoices-page-detailed__tools-container">
                                     {this.isViewMode ? (
                                         <Link
-                                            data-tip={v_edit_client}
+                                            data-tip={v_edit}
                                             to={`/invoices/update/${invoice.id}`}
                                             className="invoices-page-detailed__tool-button"
                                         >
                                             <EditIcon className="invoices-page-detailed__icon-button" />
                                         </Link>
                                     ) : (
-                                        <div data-tip={v_save} data-for="save">
+                                        <div
+                                            data-tip={v_save}
+                                            data-for="save"
+                                            className="invoices-page-detailed__tool-button"
+                                        >
                                             <SaveInvoice
                                                 className="invoices-page-detailed__icon-button"
                                                 onClick={this.handleSaveAction}
@@ -668,15 +796,17 @@ class InvoicesPageDetailed extends Component {
                                                 disabled: !this.isViewMode,
                                             })}
                                             onClick={async () => {
-                                                try {
-                                                    let responce = await downloadInvoicePDF(invoice.id);
-                                                    downloadPDF(responce.data, `${invoice.invoiceNumber}.pdf`);
-                                                } catch (error) {
-                                                    console.log(error);
-                                                    showNotificationAction({
-                                                        type: 'error',
-                                                        text: error.message,
-                                                    });
+                                                if (this.isViewMode) {
+                                                    try {
+                                                        let responce = await downloadInvoicePDF(invoice.id);
+                                                        downloadPDF(responce.data, `${invoice.invoiceNumber}.pdf`);
+                                                    } catch (error) {
+                                                        console.log(error);
+                                                        showNotificationAction({
+                                                            type: 'error',
+                                                            text: error.message,
+                                                        });
+                                                    }
                                                 }
                                             }}
                                         />
@@ -690,7 +820,7 @@ class InvoicesPageDetailed extends Component {
                                                 this.handleCloneInvoice();
                                             }
                                         }}
-                                        data-tip={v_copy}
+                                        data-tip={v_clone}
                                     >
                                         <CopyIcon
                                             className={classNames('invoices-page-detailed__icon-button', {
@@ -702,7 +832,7 @@ class InvoicesPageDetailed extends Component {
                                         className={classNames('invoices-page-detailed__tool-button', {
                                             disabled: !this.isViewMode,
                                         })}
-                                        data-tip={v_send}
+                                        data-tip={v_send_by_email}
                                     >
                                         <SendIcon
                                             className={classNames('invoices-page-detailed__icon-button', {
@@ -713,6 +843,21 @@ class InvoicesPageDetailed extends Component {
                                                     this.setState({ sendInvoiceModalData: true });
                                                 }
                                             }}
+                                        />
+                                    </button>
+                                    <button
+                                        className={classNames('invoices-page-detailed__tool-button', {
+                                            disabled: !this.isViewMode,
+                                        })}
+                                        data-tip={linkCopied ? v_link_copied : v_copy_link}
+                                        ref={this.copyLinkRef}
+                                        onMouseLeave={() => this.setState({ linkCopied: false })}
+                                    >
+                                        <CopyLinkIcon
+                                            className={classNames('invoices-page-detailed__icon-button icon-fill', {
+                                                disabled: !this.isViewMode,
+                                            })}
+                                            onClick={() => this.copyToClipBoard(invoice)}
                                         />
                                     </button>
                                     <button
@@ -732,17 +877,18 @@ class InvoicesPageDetailed extends Component {
                                             })}
                                         />
                                     </button>
-                                    {this.isViewMode && (
+                                    {/* {this.isViewMode && (
                                         <ReactTooltip className={'tool-tip'} arrowColor={' #FFFFFF'} place="right" />
                                     )}
-                                    {!this.isViewMode && (
-                                        <ReactTooltip
-                                            id="save"
-                                            className={'tool-tip'}
-                                            arrowColor={' #FFFFFF'}
-                                            place="right"
-                                        />
-                                    )}
+                                    {!this.isViewMode && ( */}
+                                    <ReactTooltip
+                                        id={this.isViewMode ? null : 'save'}
+                                        className={'tool-tip'}
+                                        arrowColor={' #FFFFFF'}
+                                        place="right"
+                                        effect={'solid'}
+                                    />
+                                    {/* )} */}
                                 </div>
                             </div>
                         </div>

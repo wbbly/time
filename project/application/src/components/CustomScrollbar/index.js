@@ -40,8 +40,10 @@ class CustomScrollbar extends Component {
             isFetchingTimeEntriesList,
             getTimeEntriesListPaginationAction,
             pagination,
+            disableTimeEntriesFetch,
         } = this.props;
         const { top } = values;
+        if (disableTimeEntriesFetch) return;
         if (top > 0.7) {
             if (!isFetchingTimeEntriesList && !pagination.disabled) {
                 incPaginationAction();

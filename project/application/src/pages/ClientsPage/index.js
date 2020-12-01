@@ -28,6 +28,7 @@ class ClientsPage extends Component {
         editedClient: null,
         clientsList: [],
         isOpenDropdown: false,
+        isInitialFetching: true,
     };
 
     closeModal = () => {
@@ -37,7 +38,9 @@ class ClientsPage extends Component {
     editClient = (client, id, logoFile) => {
         const { editClientThunk } = this.props;
 
-        editClientThunk(client, id, logoFile);
+        const phone = client.phone ? '+' + client.phone.replace(/[^0-9]/g, '') : null;
+        const data = { ...client, phone: phone };
+        editClientThunk(data, id, logoFile);
         this.closeModal();
     };
     deleteClient = id => {
@@ -64,7 +67,9 @@ class ClientsPage extends Component {
             showNotificationAction({ text: v_a_client_existed, type: 'warning' });
             return;
         } else {
-            this.props.setClientAction(client, logoFile);
+            const phone = client.phone ? '+' + client.phone.replace(/[^0-9]/g, '') : null;
+            const data = { ...client, phone: phone };
+            this.props.setClientAction(data, logoFile);
             showNotificationAction({
                 text: client_was_created,
                 type: 'success',
@@ -103,13 +108,13 @@ class ClientsPage extends Component {
             }
         }
         if (prevProps.clientsList !== clientsList) {
-            this.setState({ clientsList });
+            this.setState({ clientsList, isInitialFetching: false });
         }
     }
 
     render() {
-        const { showModal, searchValue, editedClient, clientsList } = this.state;
-        const { vocabulary, isMobile, currentTeam, isInitialFetching } = this.props;
+        const { showModal, searchValue, editedClient, clientsList, isInitialFetching } = this.state;
+        const { vocabulary, isMobile, currentTeam } = this.props;
         const { v_clients, v_add_new_client, v_apply } = vocabulary;
 
         const editClient = index => {
@@ -164,15 +169,16 @@ class ClientsPage extends Component {
                                 {clientsList &&
                                     clientsList.length === 0 &&
                                     BlankListComponent(this.props.vocabulary.v_no_clients, null, null)}
-                                {clientsList.map((item, index) => (
-                                    <ClientComponent
-                                        client={item}
-                                        vocabulary={vocabulary}
-                                        index={index}
-                                        editClient={editClient}
-                                        key={index}
-                                    />
-                                ))}
+                                {!!clientsList.length &&
+                                    clientsList.map((item, index) => (
+                                        <ClientComponent
+                                            client={item}
+                                            vocabulary={vocabulary}
+                                            index={index}
+                                            editClient={editClient}
+                                            key={index}
+                                        />
+                                    ))}
                             </div>
                         </div>
                     </div>

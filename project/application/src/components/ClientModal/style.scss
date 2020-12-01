@@ -80,7 +80,7 @@
         display: block;
         width: 24px;
         height: 24px;
-        background: url("../../images/icons/forbidden-mark.svg") no-repeat;
+        background: url("../../images/icons/close_black.svg") no-repeat;
         background-position: center;
         cursor: pointer;
       }
@@ -114,6 +114,11 @@
       .input_container:first-child {
         margin-right: 28px;
       }
+    }
+    .client-info__section.section-solo .input_container {
+      margin-right: 0;
+      width: 50%;
+      padding-right: 13px;
     }
     .client-info__section-delete {
       width: 100%;
@@ -162,6 +167,10 @@
         .wrapper-base-input__error-message {
           height: 1rem;
         }
+      }
+      .client-info__section.section-solo .input_container {
+        width: 100%;
+        padding: 0;
       }
       .client-info__section {
         .input_container:first-child {

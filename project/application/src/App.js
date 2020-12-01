@@ -77,7 +77,7 @@ class App extends Component {
 
     componentDidMount() {
         this.setResponsiveReducer();
-        addEvent(window, 'resize', this.setResponsiveReducer);
+        window.addEventListener('resize', this.setResponsiveReducer);
         window.addEventListener('online', this.connectionRestore);
         window.addEventListener('offline', this.connectionLost);
     }

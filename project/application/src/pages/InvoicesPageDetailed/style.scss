@@ -7,6 +7,14 @@
   max-width: 685px;
   width: 100%;
   margin-bottom: 20px;
+  @media screen and (max-width: 670px) {
+    position: relative;
+    top: 0;
+    right: 0;
+    transform: translate(0, 0);
+    width: auto;
+    margin-right: 17px;
+  }
   .invoices-page-detailed-form-wrapper {
     display: flex;
   }
@@ -77,6 +85,9 @@
       min-height: 92px;
       background: #3f3f3f;
       resize: none;
+      outline: none;
+      resize: horizontal;
+      overflow: hidden;
     }
     @media screen and (max-width: 414px) {
       &__textarea {
@@ -86,16 +97,35 @@
     &__icon-button {
       cursor: pointer;
     }
+    &__icon-button.icon-fill path{
+      stroke: white;
+      fill: none;
+    }
+    &__icon-button.icon-fill.disabled path {
+      stroke: gray;
+      cursor: default;
+    }
+    &__icon-button.icon-fill.disabled:hover {
+      path {
+        stroke: gray;
+      }
+    } 
+    &__icon-button.icon-fill:hover {
+      path {
+        stroke: #27ae60;
+      }
+
+    }
 
     &__calendar-select {
       margin-top: 5px;
     }
 
     &__back-button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      align-self: stretch;
+      display: block;
+      width: 24px;
+      height: 24px;
+      background: url("../../images/icons/arrow-left.svg") no-repeat center;
       padding-right: 20px;
       cursor: pointer;
     }
@@ -110,6 +140,7 @@
       font-weight: 600;
       font-size: 14px;
       line-height: 19px;
+      text-align: center;
       margin-bottom: 3px;
     }
 
@@ -205,27 +236,25 @@
       display: flex;
       flex-direction: column;
       margin-left: 23px;
-      svg{
+      svg {
         cursor: pointer;
-        margin-bottom: 26px;
         height: 20px;
-        width:20px;
+        width: 20px;
         fill: white;
       }
-      svg:hover{
+      svg:hover {
         fill: #27ae60;
       }
-      .disabled{
+      .disabled {
         fill: gray;
         cursor: default;
         .__react_component_tooltip {
           display: none;
         }
       }
-      .disabled:hover{
+      .disabled:hover {
         fill: gray;
       }
- 
     }
     @media screen and (max-width: 830px) {
       &__tools-container {
@@ -248,6 +277,7 @@
       line-height: 25px;
       fill: #ffffff;
       text-decoration: none;
+      margin-bottom: 20px;
       svg {
         height: 20px;
         width: 20px;
@@ -260,6 +290,12 @@
         padding-left: 18px;
       }
     }
+
+    &__tool-discount {
+      position: absolute;
+      right: -10px;
+    }
+
     &__logo {
       width: 130px;
       height: 130px;
@@ -336,6 +372,7 @@
         width: 45%;
 
         .invoices-page-detailed__summary-table-row {
+          position: relative;
           .invoices-page-detailed__summary-price {
             width: 60%;
             text-align: end;
@@ -382,6 +419,11 @@
 
     &__summary-title {
       font-weight: bold;
+    }
+    &__summary-discount {
+      color: #299bc1;
+      padding: 0;
+      background: transparent;
     }
     &__summary-price {
       padding-left: 14px;
@@ -430,14 +472,25 @@
     }
   }
   @media screen and (max-width: 670px) {
+    .invoices-page-detailed__back-button {
+      padding-left: 10px;
+    }
+    .invoices-page-detailed-form-wrapper {
+      flex-direction: column-reverse;
+    }
     .invoices-page-detailed {
       padding: 12px 10px;
+      width: 100%;
+      box-sizing: border-box;
       &__comments {
         margin-top: 10px;
       }
       &__summary-table-row {
         padding-right: 0;
       }
+    }
+    .invoices-page-detailed__tools-container {
+      flex-direction: row;
     }
   }
 }
