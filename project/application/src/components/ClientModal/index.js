@@ -13,7 +13,7 @@ import 'react-flags-select/scss/react-flags-select.scss';
 // actions
 import { showNotificationAction } from '../../actions/NotificationActions';
 
-const phoneRegExp = /^[0-9\-\+]{9,20}$/;
+const phoneRegExp = /^\+[0-9() -]{9,20}$/;
 class ClientModal extends Component {
     state = {
         deleteCheckbox: false,
@@ -170,7 +170,20 @@ class ClientModal extends Component {
                                         label={full_name}
                                         withValidation
                                     />
-                                    <div className="flag-input-container">
+                                    <div
+                                        className="flag-input-container"
+                                        onClick={e => {
+                                            e.persist();
+                                            setTimeout(() => {
+                                                let flagInput = document.querySelectorAll(
+                                                    '.filterBox input[type=text]'
+                                                )[0];
+                                                if (flagInput) {
+                                                    flagInput.focus();
+                                                }
+                                            }, 700);
+                                        }}
+                                    >
                                         <div className="flag-input-container-title">{v_country}</div>
                                         <ReactFlagsSelect
                                             searchable={true}
@@ -240,8 +253,8 @@ class ClientModal extends Component {
                                         withValidation
                                     />
                                 </section>
-                                <section className="client-info__section">
-                                    <Input
+                                <section className="client-info__section section-solo">
+                                    {/* <Input
                                         config={{
                                             id: 'language',
                                             name: 'language',
@@ -253,7 +266,7 @@ class ClientModal extends Component {
                                         }}
                                         label={v_language}
                                         withValidation
-                                    />
+                                    /> */}
 
                                     <Input
                                         config={{

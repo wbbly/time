@@ -457,7 +457,20 @@ class UserSetting extends Component {
                                                 {v_physical_address}
                                             </div>
                                             <div className="user-settings__select-location-address">
-                                                <div className="flag-input-container">
+                                                <div
+                                                    className="flag-input-container"
+                                                    onClick={e => {
+                                                        e.persist();
+                                                        setTimeout(() => {
+                                                            let flagInput = document.querySelectorAll(
+                                                                '.filterBox input[type=text]'
+                                                            )[0];
+                                                            if (flagInput) {
+                                                                flagInput.focus();
+                                                            }
+                                                        }, 700);
+                                                    }}
+                                                >
                                                     <div className="flag-input-container-title">{`${v_country}`}</div>
                                                     <ReactFlagsSelect
                                                         searchable={true}

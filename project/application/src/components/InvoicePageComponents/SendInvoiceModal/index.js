@@ -11,23 +11,16 @@ import { showNotificationAction } from '../../../actions/NotificationActions';
 
 class SendInvoiceModal extends Component {
     state = {
-        inputValue: `Dear ${this.props.invoice.to.name},
-
-Please, look at invoice ${this.props.invoice.invoice_number} for ${this.props.invoice.projects.map(
-            project => project.project_name
-        )} here:
-${window.location.origin}/invoice/${this.props.invoice.id}
-        
-A reminder of my payment terms: payment is due on ${this.props.invoice.due_date}.
-        
-If you have any questions about your invoice, please contact ${this.props.invoice.from.username} at ${
-            this.props.invoice.from.email
-        }.
-        
-Thank you for your business.
-We appreciate the opportunity to do business with you.
-        
-Wobbly team`,
+        inputValue: `Dear ${this.props.invoice.to.name},<br>
+            Please, look at invoice ${this.props.invoice.invoice_number} for 
+            ${this.props.invoice.projects.map(project => project.project_name + ' ')}here:
+            ${window.location.origin}/invoice/${this.props.invoice.id}.<br>
+            A reminder of my payment terms: payment is due on ${this.props.invoice.due_date}.<br>
+            If you have any questions about your invoice, please contact ${this.props.invoice.from.username} at 
+            ${this.props.invoice.from.email}.<br> 
+            Thank you for your business.<br>
+            We appreciate the opportunity to do business with you.<br>
+            Wobbly team`,
     };
 
     render() {
@@ -79,7 +72,7 @@ Wobbly team`,
                                 {v_send}
                             </button>
                             <button className="send-invoice-modal__button" onClick={() => closeModal()}>
-                                {v_cancel.toLowerCase()}
+                                {v_cancel}
                             </button>
                         </div>
                     </div>

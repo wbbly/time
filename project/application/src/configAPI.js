@@ -397,27 +397,31 @@ export const createInvoice = data =>
         data,
     });
 
-export const getInvoices = () =>
+export const getInvoices = (page, limit) =>
     instance({
-        url: '/invoice/list',
+        url: `/invoice/list?page=${page}&limit=${limit}`,
         method: 'GET',
     });
+
 export const getInvoiceViewData = id =>
     instance({
         url: `/invoice/${id}`,
         method: 'GET',
     });
+
 export const getInvoiceById = invoiceId =>
     instance({
         url: `/invoice/${invoiceId}`,
         method: 'GET',
     });
+
 export const sendInvoiceLetter = (invoiceId, data) =>
     instance({
         url: `/invoice/${invoiceId}/sendInvoice`,
         method: 'POST',
         data,
     });
+
 export const changeInvoice = ({ invoiceId, data }) =>
     instance({
         url: `/invoice/${invoiceId}`,

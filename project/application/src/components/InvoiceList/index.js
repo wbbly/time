@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -12,6 +12,9 @@ import ReactTooltip from 'react-tooltip';
 // Styles
 import './style.scss';
 import { Link } from 'react-router-dom';
+import InvoiceActionsDropdown from '../InvoicePageComponents/InvoiceActionsDropdown';
+import { useOutsideClick } from '../../services/hookHelpers';
+import InvoiceCopyLinkModal from '../InvoicePageComponents/InvoiceCopyLinkModal';
 
 const CheckIcon = ({ className, onClick, fill, vocabulary }) => {
     const { v_paid, v_awaiting, v_overdue, v_draft } = vocabulary;
@@ -80,7 +83,7 @@ const CheckIcon = ({ className, onClick, fill, vocabulary }) => {
                     stroke="white"
                     strokeWidth="2"
                     strokeLinecap="round"
-                    stroke-linejoin="round"
+                    strokeLinejoin="round"
                 />
             </svg>
         );
@@ -110,6 +113,33 @@ const CheckIcon = ({ className, onClick, fill, vocabulary }) => {
         );
     }
 };
+export const CopyLinkIcon = ({ className, onClick, valueTip }) => (
+    <svg
+        onClick={onClick}
+        className={className}
+        data-tip={valueTip}
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M7.5 9.74997C7.82209 10.1806 8.23302 10.5369 8.70491 10.7947C9.17681 11.0525 9.69863 11.2058 10.235 11.2442C10.7713 11.2826 11.3097 11.2052 11.8135 11.0173C12.3173 10.8294 12.7748 10.5353 13.155 10.155L15.405 7.90497C16.0881 7.19772 16.4661 6.25046 16.4575 5.26722C16.449 4.28398 16.0546 3.34343 15.3593 2.64815C14.664 1.95287 13.7235 1.55849 12.7403 1.54995C11.757 1.5414 10.8098 1.91938 10.1025 2.60247L8.8125 3.88497"
+            // stroke="#333333"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M10.5006 8.24992C10.1785 7.81933 9.76762 7.46304 9.29572 7.20522C8.82383 6.9474 8.30201 6.79409 7.76565 6.75567C7.22929 6.71726 6.69095 6.79465 6.18713 6.98259C5.68331 7.17053 5.2258 7.46462 4.84564 7.84492L2.59564 10.0949C1.91255 10.8022 1.53457 11.7494 1.54311 12.7327C1.55165 13.7159 1.94604 14.6565 2.64132 15.3517C3.3366 16.047 4.27715 16.4414 5.26038 16.45C6.24362 16.4585 7.19088 16.0805 7.89814 15.3974L9.18064 14.1149"
+            // stroke="#333333"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
 export const EditIcon = ({ className, onClick, valueTip }) => (
     <svg
         data-tip={valueTip}
@@ -176,6 +206,40 @@ export const SendIcon = ({ className, onClick, color }) => (
     </svg>
 );
 
+export const MoreIcon = ({ className, onClick, valueTip }) => (
+    <svg
+        onClick={onClick}
+        className={className}
+        width="18"
+        height="18"
+        data-tip={valueTip}
+        viewBox="0 0 18 18"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M9 9.75C9.41421 9.75 9.75 9.41421 9.75 9C9.75 8.58579 9.41421 8.25 9 8.25C8.58579 8.25 8.25 8.58579 8.25 9C8.25 9.41421 8.58579 9.75 9 9.75Z"
+            // fill="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M14.25 9.75C14.6642 9.75 15 9.41421 15 9C15 8.58579 14.6642 8.25 14.25 8.25C13.8358 8.25 13.5 8.58579 13.5 9C13.5 9.41421 13.8358 9.75 14.25 9.75Z"
+            // fill="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M3.75 9.75C4.16421 9.75 4.5 9.41421 4.5 9C4.5 8.58579 4.16421 8.25 3.75 8.25C3.33579 8.25 3 8.58579 3 9C3 9.41421 3.33579 9.75 3.75 9.75Z"
+            // fill="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
+
 const prevent = e => {
     e.preventDefault();
     e.stopPropagation();
@@ -194,13 +258,39 @@ const InvoiceList = ({
     showNotificationAction,
 }) => {
     const [openMenu, setOpenMenu] = useState(false);
+    const [showCopyModal, setShowCopyModal] = useState(false);
+    const [showActionsMenu, setShowActionsMenu] = useState(false);
+    const [showNotif, setShowNotif] = useState(false);
+
+    const wrapperRef = useRef(null);
+
+    useOutsideClick(wrapperRef, () => setShowActionsMenu(false));
 
     const toggleOpenMenu = () => {
         setOpenMenu(!openMenu);
     };
+
+    const handleShowActionsMenu = show => {
+        setShowActionsMenu(show);
+    };
+
     const styleSpan = { whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', width: '50px' };
     const switchMenu = window.innerWidth < 1200;
-    const { v_draft, v_paid, v_overdue, v_edit_client, v_download, v_copy, v_send, v_delete } = vocabulary;
+
+    const { v_edit, v_clone, v_show_more, v_link_copied } = vocabulary;
+
+    const copyToClipBoard = invoice => {
+        const el = document.createElement('textarea');
+        el.value = `${window.location.origin}/invoice/${invoice && invoice.id}`;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        setShowNotif(true);
+        setTimeout(() => {
+            setShowNotif(false);
+        }, 2000);
+    };
 
     return (
         <Link
@@ -243,59 +333,49 @@ const InvoiceList = ({
                 </div>
             </div>
 
-            {switchMenu && (
-                <div
-                    className={classNames('dropdown-menu', { open: openMenu })}
-                    onClick={e => {
-                        toggleOpenMenu();
-                        prevent(e);
-                    }}
-                    onBlur={e => {
-                        if (openMenu) {
-                            setTimeout(() => {
-                                toggleOpenMenu();
-                            }, 200);
-                        }
-                    }}
-                >
-                    <button className="menu-btn" />
-                    <div className="menu-content">
-                        <EditIcon
-                            className="all-invoices-list-item__icon-button"
-                            onClick={e => history.push(`/invoices/update/${invoice.id}`)}
-                        />
-
-                        <SaveIcon className="all-invoices-list-item__icon-button" />
-                        <CopyIcon
-                            className="all-invoices-list-item__icon-button"
-                            onClick={() => copyInvoice(invoice)}
-                        />
-
-                        <SendIcon
-                            className="all-invoices-list-item__icon-button"
-                            onClick={() => toggleSendInvoiceModal(invoice)}
-                        />
-                        <DeleteIcon
-                            className="all-invoices-list-item__icon-button"
-                            onClick={() => {
-                                openCloseModal(invoice.id);
+            <div className="all-invoices-list-item__instruments" onClick={prevent}>
+                {!switchMenu && (
+                    <>
+                        <div data-tip={v_edit}>
+                            <EditIcon
+                                className="all-invoices-list-item__icon-button"
+                                onClick={e => history.push(`/invoices/update/${invoice.id}`)}
+                            />
+                        </div>
+                        <div data-tip={v_clone}>
+                            <CopyIcon
+                                className="all-invoices-list-item__icon-button"
+                                onClick={() => copyInvoice(invoice)}
+                            />
+                        </div>
+                    </>
+                )}
+                <div className="all-invoices-list-item__more-icon" ref={wrapperRef}>
+                    <MoreIcon
+                        valueTip={v_show_more}
+                        className={classNames('all-invoices-list-item__icon-button icon-stroke', {
+                            'icon-stroke--active': showActionsMenu,
+                            'icon-stroke--rotated': switchMenu,
+                        })}
+                        onClick={() => {
+                            ReactTooltip.hide();
+                            handleShowActionsMenu(!showActionsMenu);
+                        }}
+                    />
+                    {showActionsMenu && (
+                        <InvoiceActionsDropdown
+                            isMobile={switchMenu}
+                            vocabulary={vocabulary}
+                            editHandler={() => {
+                                setShowActionsMenu(false);
+                                history.push(`/invoices/update/${invoice.id}`);
                             }}
-                        />
-                    </div>
-                </div>
-            )}
-            {!switchMenu && (
-                <div className="all-invoices-list-item__instruments" onClick={prevent}>
-                    <div data-tip={v_edit_client}>
-                        <EditIcon
-                            className="all-invoices-list-item__icon-button"
-                            onClick={e => history.push(`/invoices/update/${invoice.id}`)}
-                        />
-                    </div>
-                    <div data-tip={v_download}>
-                        <SaveIcon
-                            className="all-invoices-list-item__icon-button"
-                            onClick={async () => {
+                            copyHandler={() => {
+                                setShowActionsMenu(false);
+                                copyInvoice(invoice);
+                            }}
+                            downloadHandler={async () => {
+                                setShowActionsMenu(false);
                                 try {
                                     let responce = await downloadInvoicePDF(invoice.id);
                                     downloadPDF(responce.data, `${invoice.invoice_number}.pdf`);
@@ -307,29 +387,37 @@ const InvoiceList = ({
                                     });
                                 }
                             }}
+                            sendHandler={() => {
+                                toggleSendInvoiceModal(invoice);
+                                setShowActionsMenu(false);
+                            }}
+                            deleteHandler={() => {
+                                openCloseModal(invoice.id);
+                                setShowActionsMenu(false);
+                            }}
+                            shareHandler={() => {
+                                setShowActionsMenu(false);
+                                if (switchMenu) {
+                                    copyToClipBoard(invoice);
+                                } else {
+                                    setShowCopyModal(true);
+                                }
+                            }}
                         />
-                    </div>
-                    <div data-tip={v_copy}>
-                        <CopyIcon
-                            className="all-invoices-list-item__icon-button"
-                            onClick={() => copyInvoice(invoice)}
-                        />
-                    </div>
-                    <div data-tip={v_send}>
-                        <SendIcon
-                            className="all-invoices-list-item__icon-button"
-                            onClick={() => toggleSendInvoiceModal(invoice)}
-                        />
-                    </div>
-                    <div data-tip={v_delete}>
-                        <DeleteIcon
-                            className="all-invoices-list-item__icon-button"
-                            onClick={() => openCloseModal(invoice.id)}
-                        />
-                    </div>
-                    <ReactTooltip className={'tool-tip'} arrowColor={' #FFFFFF'} place="top" />
+                    )}
                 </div>
-            )}
+                {!switchMenu && (
+                    <ReactTooltip className={'tool-tip'} arrowColor={' #FFFFFF'} place="right" effect={'solid'} />
+                )}
+                {showCopyModal && (
+                    <InvoiceCopyLinkModal
+                        handleClose={() => setShowCopyModal(false)}
+                        invoiceLink={`${window.location.origin}/invoice/${invoice && invoice.id}`}
+                        vocabulary={vocabulary}
+                    />
+                )}
+                {showNotif && <div className="all-invoices-list-item__mobile-notif">{v_link_copied}</div>}
+            </div>
         </Link>
     );
 };

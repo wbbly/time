@@ -7,6 +7,14 @@
   max-width: 685px;
   width: 100%;
   margin-bottom: 20px;
+  @media screen and (max-width: 670px) {
+    position: relative;
+    top: 0;
+    right: 0;
+    transform: translate(0, 0);
+    width: auto;
+    margin-right: 17px;
+  }
   &__header {
     .invoices-page-detailed__title{
       padding: 0 0 0 25px;
@@ -80,10 +88,10 @@
     }
 
     &__back-button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      align-self: stretch;
+      display: block;
+      width: 24px;
+      height: 24px;
+      background: url("../../images/icons/arrow-left.svg") no-repeat center;
       padding-right: 20px;
       cursor: pointer;
     }
@@ -381,14 +389,26 @@
     }
   }
   @media screen and (max-width: 670px) {
+    .invoices-page-detailed__back-button {
+      padding-left: 10px;
+    }
+    .invoices-page-detailed-form-wrapper {
+      flex-direction: column-reverse;
+    }
     .invoices-page-detailed {
       padding: 12px 10px;
+      width: 100%;
+      box-sizing: border-box;
       &__comments {
         margin-top: 10px;
       }
       &__summary-table-row {
         padding-right: 0;
       }
+    }
+    .invoices-page-detailed__tools-container {
+      flex-direction: row;
+      margin-right: 32px;
     }
   }
 }

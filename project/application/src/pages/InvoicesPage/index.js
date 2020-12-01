@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 // Actions
-import { getInvoicesList, addInvoice } from '../../actions/InvoicesActions';
+import { getInvoicesList, addInvoice, changePage } from '../../actions/InvoicesActions';
 
 // Styles
 import './style.scss';
@@ -27,17 +27,26 @@ class InvoicesPage extends Component {
 
     componentDidMount() {
         setTimeout(() => this.setState({ isInitialFetching: false }), 500);
-        this.props.getInvoicesList();
+        this.props.getInvoicesList(this.props.page, this.props.limit);
     }
+
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.isFetching !== this.props.isFetching) {
-            this.props.getInvoicesList();
+        if (
+            (prevProps.isFetching !== this.props.isFetching && !this.props.isFetching) ||
+            prevProps.page !== this.props.page
+        ) {
+            this.props.getInvoicesList(this.props.page, this.props.limit);
         }
     }
 
     toggleSendInvoiceModal = (sendInvoiceModalData = null) => {
         this.setState({ sendInvoiceModalData });
     };
+
+    changePage = page => {
+        this.props.changePage(page.selected);
+    };
+
     prepareBodyRequest = oldObject => {
         let newObject = {};
         newObject.vendorId = this.props.defaultUserSender.id;
@@ -52,12 +61,14 @@ class InvoicesPage extends Component {
         newObject.image = oldObject.logo;
         return newObject;
     };
+
     copyInvoice = oldInvoice => {
         const newInvoice = this.prepareBodyRequest(oldInvoice);
         this.props.addInvoice(newInvoice, true);
     };
+
     render() {
-        const { vocabulary, isMobile, invoices, isFetching, history, isInitialFetching } = this.props;
+        const { vocabulary, isMobile, invoices, page, pageCount, isFetching, history, isInitialFetching } = this.props;
         const { v_invoices, v_add_new_invoice, v_no_invoices } = vocabulary;
         const { sendInvoiceModalData } = this.state;
         return (
@@ -104,6 +115,9 @@ class InvoicesPage extends Component {
                                             history={history}
                                             copyInvoice={this.copyInvoice}
                                             isMobile={isMobile}
+                                            page={page}
+                                            pageCount={pageCount}
+                                            changePage={this.changePage}
                                         />
                                     </div>
                                 </div>
@@ -126,6 +140,9 @@ class InvoicesPage extends Component {
 
 const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
     invoices: invoicesReducer.invoices,
+    page: invoicesReducer.page,
+    limit: invoicesReducer.limit,
+    pageCount: invoicesReducer.pageCount,
     isFetching: invoicesReducer.isFetching,
     isInitialFetching: invoicesReducer.isInitialFetching,
     senderId: invoicesReducer.senderId,
@@ -135,6 +152,7 @@ const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
 const mapDispatchToProps = {
     getInvoicesList,
     addInvoice,
+    changePage,
 };
 
 export default withRouter(
