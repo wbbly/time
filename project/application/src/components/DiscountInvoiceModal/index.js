@@ -21,14 +21,14 @@ class DiscountInvoiceModal extends Component {
     render() {
         const { closeModal, vocabulary, saveDiscount } = this.props;
         const { discountField } = this.state;
-        const { v_add_discount, v_discount_subtotal, v_cancel } = vocabulary;
+        const { v_add_a_discount, v_add_discount, v_discount_subtotal, v_cancel } = vocabulary;
 
         return (
             <div className="discount-modal">
                 <div className="discount-modal__background" onClick={() => closeModal()} />
                 <div className="discount-modal__container">
                     <div className="discount-modal__container-header">
-                        <div className="discount-modal__container-header-title">{v_add_discount}</div>
+                        <div className="discount-modal__container-header-title">{v_add_a_discount}</div>
                         <i className="discount-modal__container-header-close" onClick={() => closeModal()} />
                     </div>
 

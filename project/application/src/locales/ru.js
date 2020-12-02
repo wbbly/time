@@ -328,6 +328,7 @@ export default {
     v_copy_link: 'Скопировать Cсылку',
     v_done: 'Готово',
     v_link_copied: 'Ссылка скопирована',
+    v_add_a_discount: 'Добавить скидку',
     v_add_discount: 'Добавить скидку',
     v_discount: 'Скидка',
     v_discount_subtotal: 'от суммы промежуточного счета',
