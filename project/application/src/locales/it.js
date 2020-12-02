@@ -330,6 +330,7 @@ export default {
     v_copy_link: 'Copia link',
     v_done: 'Fatto',
     v_link_copied: 'Link copiato',
+    v_add_a_discount: 'Aggiungi uno sconto',
     v_add_discount: 'Aggiungi uno sconto',
     v_discount: 'Sconto',
     v_discount_subtotal: 'del totale parziale della fattura',

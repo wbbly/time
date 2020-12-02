@@ -335,6 +335,7 @@ export default {
     v_copy_link: 'Link kopieren',
     v_done: 'Erledigt',
     v_link_copied: 'Link kopiert',
+    v_add_a_discount: 'Fügen Sie einen Rabatt hinzu',
     v_add_discount: 'Fügen Sie einen Rabatt hinzu',
     v_discount: 'Rabatt',
     v_discount_subtotal: 'der Rechnungssumme',

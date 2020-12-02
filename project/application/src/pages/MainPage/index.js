@@ -201,7 +201,7 @@ class MainPage extends Component {
                                             withLogo={false}
                                             flag={isFetchingTimeEntriesList}
                                             width="100%"
-                                            height="100%"
+                                            height="50px"
                                         >
                                             <div className="main-page__lazy-load-spinner" />
                                         </Loading>
