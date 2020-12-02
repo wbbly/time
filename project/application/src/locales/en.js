@@ -331,7 +331,8 @@ export default {
     v_copy_link: 'Copy Link',
     v_done: 'Done',
     v_link_copied: 'Link copied',
-    v_add_discount: 'Add a Discount',
+    v_add_a_discount: 'Add a Discount',
+    v_add_discount: 'Add Discount',
     v_discount: 'Discount',
     v_discount_subtotal: 'of invoice subtotal',
 };

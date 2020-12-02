@@ -327,6 +327,7 @@ export default {
     v_copy_link: 'Скопіювати Посилання',
     v_done: 'Готово',
     v_link_copied: 'Посилання скопійовано',
+    v_add_a_discount: 'Додати знижку',
     v_add_discount: 'Додати знижку',
     v_discount: 'Знижка',
     v_discount_subtotal: 'від суми проміжного рахунку',

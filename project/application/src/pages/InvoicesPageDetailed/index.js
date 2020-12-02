@@ -452,7 +452,7 @@ class InvoicesPageDetailed extends Component {
             v_send_by_email,
             v_link_copied,
             v_copy_link,
-            v_add_discount,
+            v_add_a_discount,
             v_discount,
         } = vocabulary;
         const { isInitialFetching, discountModalIsOpen, invoice, errors, linkCopied } = this.state;
@@ -635,7 +635,7 @@ class InvoicesPageDetailed extends Component {
                                                 >
                                                     {invoice.discount
                                                         ? `${invoice.discount}% ${v_discount}`
-                                                        : v_add_discount}
+                                                        : v_add_a_discount}
                                                 </button>
                                                 {invoice.discount || this.isViewMode ? (
                                                     <div className="invoices-page-detailed__summary-price">
