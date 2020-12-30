@@ -47,6 +47,7 @@ class EditTeamModal extends Component {
         id: null,
         value: ROLES.ROLE_MEMBER,
         valueStatus: USER_STATUS.NOT_ACTIVE,
+        valueDeleteMember: false,
         userTechnologies: [],
     };
 
@@ -57,39 +58,65 @@ class EditTeamModal extends Component {
     addUser = () => {
         const { vocabulary, changeUserData, getCurrentTeamDetailedDataAction, showNotificationAction } = this.props;
 
-        apiCall(AppConfig.apiURL + `user/${this.state.id}/team`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: this.email.value,
-                username: this.name.value,
-                isActive: this.state.valueStatus === USER_STATUS.ACTIVE,
-                roleName: this.state.value,
-                technologies: this.state.userTechnologies.map(item => item.id),
-            }),
-        }).then(
-            result => {
-                if (result.mesage) {
-                    showNotificationAction({ text: vocabulary[result.mesage], type: 'success' });
-                } else {
-                    changeUserData(result);
+        if (this.state.valueDeleteMember) {
+            apiCall(AppConfig.apiURL + `user/${this.state.id}/team/remove-from-team`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({}),
+            }).then(
+                result => {
+                    if (result.message) {
+                        showNotificationAction({ text: vocabulary[result.message], type: 'success' });
+                    }
+                    this.closeModal();
+                    getCurrentTeamDetailedDataAction();
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => {
+                            const textError = JSON.parse(errorMessage).message;
+                            showNotificationAction({ text: vocabulary[textError], type: 'error' });
+                        });
+                    } else {
+                        console.log(err);
+                    }
                 }
-                this.closeModal();
-                getCurrentTeamDetailedDataAction();
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => {
-                        const textError = JSON.parse(errorMessage).message;
-                        showNotificationAction({ text: vocabulary[textError], type: 'error' });
-                    });
-                } else {
-                    console.log(err);
+            );
+        } else {
+            apiCall(AppConfig.apiURL + `user/${this.state.id}/team`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: this.email.value,
+                    username: this.name.value,
+                    isActive: this.state.valueStatus === USER_STATUS.ACTIVE,
+                    roleName: this.state.value,
+                    technologies: this.state.userTechnologies.map(item => item.id),
+                }),
+            }).then(
+                result => {
+                    if (result.message) {
+                        showNotificationAction({ text: vocabulary[result.message], type: 'success' });
+                    } else {
+                        changeUserData(result);
+                    }
+                    this.closeModal();
+                    getCurrentTeamDetailedDataAction();
+                },
+                err => {
+                    if (err instanceof Response) {
+                        err.text().then(errorMessage => {
+                            const textError = JSON.parse(errorMessage).message;
+                            showNotificationAction({ text: vocabulary[textError], type: 'error' });
+                        });
+                    } else {
+                        console.log(err);
+                    }
                 }
-            }
-        );
+            );
+        }
     };
 
     handleChange = event => {
@@ -98,6 +125,10 @@ class EditTeamModal extends Component {
 
     handleChangeStatus = event => {
         this.setState({ valueStatus: event.target.value });
+    };
+
+    handleChangeDeleteMember = event => {
+        this.setState({ valueDeleteMember: event.target.checked });
     };
 
     componentDidMount() {
@@ -110,7 +141,7 @@ class EditTeamModal extends Component {
             id,
             value: role,
             valueStatus: isActive ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE,
-            userTechnologies: userTechnologies && userTechnologies.map(item => item.technology),
+            userTechnologies: userTechnologies ? userTechnologies.map(item => item.technology) : [],
         });
         this.email.value = email;
         this.name.value = username;
@@ -127,7 +158,7 @@ class EditTeamModal extends Component {
             v_active,
             v_not_active,
             v_delete_member,
-            v_technologies,
+            v_tags,
         } = vocabulary;
 
         return (
@@ -188,7 +219,7 @@ class EditTeamModal extends Component {
                             </RadioGroup>
                         </ThemeProvider>
                         <div className="edit-team-modal__technology">
-                            <div className="edit-team-modal__technology-title">{v_technologies}</div>
+                            <div className="edit-team-modal__technology-title">{v_tags}</div>
                             <TechnologyComponent
                                 userTechnologies={this.state.userTechnologies}
                                 setUserTechnologies={techArr => {
@@ -201,13 +232,16 @@ class EditTeamModal extends Component {
                         </div>
                     </div>
                     <div className="delete_team_modal_input_container">
-                        <ThemeProvider theme={materialTheme}>
-                            <FormControlLabel
-                                value={USER_STATUS.NOT_ACTIVE}
-                                control={<Checkbox color="primary" />}
-                                label={v_delete_member}
-                            />
-                        </ThemeProvider>
+                        {this.props.editedUser.role_collaboration.title === ROLES.ROLE_MEMBER && (
+                            <ThemeProvider theme={materialTheme}>
+                                <FormControlLabel
+                                    value={this.state.valueDeleteMember}
+                                    control={<Checkbox color="primary" />}
+                                    label={v_delete_member}
+                                    onChange={this.handleChangeDeleteMember}
+                                />
+                            </ThemeProvider>
+                        )}
                     </div>
                     <button className="save_button" onClick={e => this.addUser()}>
                         {v_save}

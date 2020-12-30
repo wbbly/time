@@ -14,10 +14,6 @@
   margin-left: 30px;
 }
 
-
-
-
-
 .reports_search_bar_search_field_container {
   /*width: 100%;*/
   position: relative;
@@ -62,7 +58,12 @@
   margin-left: 5px;
   width: 24px;
   height: 24px;
-  background: url("../../images/icons/arrow_down.svg") no-repeat center;
+  background: url("../../images/icons/arrow-down.svg") no-repeat center;
+  transition: all 0.3s;
+}
+
+.wrapper_reports_search_bar .arrow_up {
+  transform: rotate(-180deg);
 }
 
 .reports_search_select_wrapper {
@@ -92,24 +93,33 @@
   display: flex;
   align-items: center;
   height: 32px;
-  padding: 0 12px;
   cursor: pointer;
   font-weight: 600;
+  color: white;
 }
 
 .select_users_item:hover {
   background: #e0e0e0;
+  color: #333333;
+}
+
+.select_users_item .MuiCheckbox-root {
+  color: white !important;
+}
+
+.select_users_item:hover .MuiCheckbox-root {
+  color: #333333 !important;
 }
 
 .wrapper_reports_search_bar .select_body {
   position: absolute;
   top: 30px;
-  left: 13px;
   width: 94%;
   max-height: 250px;
   z-index: 3;
-  background-color: #f5f5f5;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+  background:#27292A;
+  box-shadow: 2px 2px 4px black;
+  padding: 5px;
 }
 
 .wrapper_reports_search_bar .select_items_container {
@@ -129,21 +139,25 @@
 .wrapper_reports_search_bar .search_menu_select input {
   font-size: 1.4rem;
   line-height: 1.9rem;
-  padding-left: 6px;
-  padding-right: 12px;
-  margin: 12px;
-  margin-bottom: 0;
-  border: 1px solid #bdbdbd;
+  padding: 5px 10px;
+  margin: 5px 10px;
+  border: none;
+  background-color: #333333;
+  color: white;
   box-sizing: border-box;
   height: 32px;
   outline: none;
+}
+
+.wrapper_reports_search_bar .search_menu_select input::placeholder {
+  color: white;
 }
 
 .small_clear {
   position: absolute;
   width: 10px;
   height: 10px;
-  top: 24px;
+  top: 17px;
   right: 24px;
   background: url("../../images/icons/close6x6.svg") no-repeat center;
   cursor: pointer;
@@ -154,17 +168,17 @@
   display: flex;
   align-items: center;
   height: 32px;
-  height: 32px;
-  padding-left: 55px;
+  padding-left: 10px;
   font-family: "Open Sans";
   font-weight: 600;
   font-size: 14px;
   line-height: normal;
-  color: #000000;
+  color: white;
 }
 
 .wrapper_reports_search_bar .search_menu_select div:hover {
   background-color: #e0e0e0;
+  color: #333333;
 }
 
 .reports_search_select_header input {

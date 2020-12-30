@@ -25,7 +25,7 @@
       margin-right: 16px;
       height: 7px;
       width: 11px;
-      background: url("../../images/icons/arrow_down.svg") no-repeat center;
+      background: url("../../images/icons/arrow-down.svg") no-repeat center;
       transition: all 0.3s;
     }
     .arrow-up {
@@ -56,9 +56,9 @@
 }
 
 .client_edit {
-  width: 25px;
-  height: 25px;
-  background: url("../../images/icons/baseline-create-24px.svg") no-repeat;
+  width: 20px;
+  height: 20px;
+  background: url("../../images/icons/edit.svg") no-repeat;
   background-size: contain;
   margin-right: 10px;
   cursor: pointer;

@@ -84,9 +84,11 @@
   .task-item__edit-icon {
     cursor: pointer;
     margin: 0 1rem 0 0;
-    fill: #6fcf97;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    path {
+      stroke: #27ae60;
+    }
   }
 
   .task-item__delete-icon {

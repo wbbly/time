@@ -14,7 +14,9 @@ export class UnitedReportsComponents extends Component {
                             <span className="total_time_time">
                                 {typeof this.props.totalUpChartTime === 'number'
                                     ? this.props.getTimeDurationByGivenTimestamp(
-                                          this.props.totalUpChartTime,
+                                          this.props.projectsArr.reduce((acc, project) => {
+                                              return acc + project.duration;
+                                          }, 0),
                                           this.props.durationTimeFormat
                                       )
                                     : this.props.getTimeDurationByGivenTimestamp(0, this.props.durationTimeFormat)}

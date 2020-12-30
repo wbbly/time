@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import defaultLogo from '../../images/icons/Group20.svg';
 
 // dependencies
 import classNames from 'classnames';
@@ -42,6 +41,7 @@ class TeamPage extends Component {
         searchValue: '',
         roleValue: 'all',
         accessValue: 'granted',
+        technologyValue: '',
     };
 
     setSearch = value => {
@@ -56,11 +56,15 @@ class TeamPage extends Component {
         this.setState({ accessValue: value });
     };
 
+    setTechnology = value => {
+        this.setState({ technologyValue: value });
+    };
+
     headerItems = () => {
         const { vocabulary } = this.props;
         const { v_name, v_team_role, v_team_access, v_phone } = vocabulary;
         return [
-            v_name,
+            <span onClick={() => this.setTechnology('')}>{v_name}</span>,
             v_phone,
             'E-mail',
             <SelectTeamRoleAccess type="role" value={this.state.roleValue} setTeamRoleAccess={this.setTeamRole} />,
@@ -111,24 +115,60 @@ class TeamPage extends Component {
             .filter(
                 item =>
                     searchValue === '' ||
-                    ((item.user[0] || {}).username || '').toLowerCase().indexOf(searchValue.toLowerCase()) !== -1 ||
-                    ((item.user[0] || {}).email || '').toLowerCase().indexOf(searchValue.toLowerCase()) !== -1 ||
+                    ((item.user[0] || {}).username || '').toLowerCase().indexOf(searchValue.toLowerCase().trim()) !==
+                        -1 ||
+                    ((item.user[0] || {}).userTechnologies || []).findIndex(
+                        item => item.technology.title.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1
+                    ) !== -1 ||
+                    ((item.user[0] || {}).email || '').toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1 ||
                     ((item.user[0] || {}).phone || '')
                         .replace(/\D/g, '')
                         .indexOf(searchValue.replace(/\D/g, '') || 'none') !== -1 ||
-                    ((item.user[0] || {}).id === owner_id && 'owner'.indexOf(searchValue.toLowerCase()) !== -1) ||
+                    ((item.user[0] || {}).id === owner_id &&
+                        'owner'.indexOf(searchValue.toLowerCase().trim()) !== -1) ||
                     ((item.user[0] || {}).id !== owner_id &&
                         item.role_collaboration.title
                             .slice(5)
                             .toLowerCase()
-                            .indexOf(searchValue.toLowerCase()) !== -1) ||
-                    (item.is_active && v_active.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1) ||
-                    (!item.is_active && v_not_active.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1)
+                            .indexOf(searchValue.toLowerCase().trim()) !== -1) ||
+                    (item.is_active && v_active.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1) ||
+                    (!item.is_active && v_not_active.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1)
             );
     };
 
+    sortData = data => {
+        const { technologyValue } = this.state;
+        let hasTechnology = [];
+        let hasntTechnology = [];
+        data.forEach(item => {
+            if (
+                ((item.user[0] || {}).userTechnologies || []).findIndex(
+                    item => item.technology.title.toLowerCase().trim() === technologyValue
+                ) !== -1
+            ) {
+                hasTechnology.push(item);
+            } else {
+                hasntTechnology.push(item);
+            }
+        });
+        return hasTechnology.concat(hasntTechnology);
+    };
+
+    transformTechnologiesList = list => {
+        let newList = [];
+        list.forEach(item => {
+            if (!newList.find(tech => tech.technology.title === item.technology.title.toLowerCase().trim())) {
+                newList.push({
+                    ...item,
+                    technology: { ...item.technology, title: item.technology.title.toLowerCase().trim() },
+                });
+            }
+        });
+        return newList;
+    };
+
     render() {
-        const { isMobile, vocabulary, currentTeamDetailedData, currentTeam, switchTeam, owner_id } = this.props;
+        const { isMobile, vocabulary, currentTeamDetailedData, currentTeam, switchTeam, owner_id, user } = this.props;
         const {
             v_team,
             v_rename_team,
@@ -145,29 +185,34 @@ class TeamPage extends Component {
             <th key={'team-group-header_' + index}>{element}</th>
         ));
         const filteredItems = this.filterData(currentTeamDetailedData.data);
-        const items = filteredItems.map((item, index) => {
+        const sortedItems = this.sortData(filteredItems);
+        const items = sortedItems.map((item, index) => {
             const currentUser = item.user[0] || {};
-            const { username, email, phone, avatar } = currentUser;
+            const { username, email, phone, avatar, userTechnologies } = currentUser;
             const isActive = item.is_active;
-            let role = item.role_collaboration.title;
 
+            let role = item.role_collaboration.title;
             if (currentUser) {
                 if (currentUser.id === owner_id) {
                     role = ROLES.ROLE_OWNER;
                 }
+            }
+            let currentTeamRole = currentTeam.data.role;
+            if (user.id === owner_id) {
+                currentTeamRole = ROLES.ROLE_OWNER;
             }
 
             return (
                 <tr key={item.user[0].id}>
                     <td data-label={v_name} className="user-container">
                         {!avatar ? (
-                            <img alt="avatar_img" src={defaultLogo} className="avatar-small" />
+                            <div className="avatar-small" />
                         ) : (
                             <>
                                 <div
                                     onMouseEnter={this.showBigAvatar}
                                     onMouseLeave={this.hideBigAvatar}
-                                    className="avatar-small"
+                                    className="avatar-small avatar-cover"
                                     style={{
                                         backgroundImage: `url(${AppConfig.apiURL}${avatar})`,
                                     }}
@@ -180,7 +225,22 @@ class TeamPage extends Component {
                                 />
                             </>
                         )}
-                        <span>{username}</span>
+                        <div style={{ marginBottom: '10px' }}>
+                            <div className="user-name">{username}</div>
+                            <div className="technology_container">
+                                {(this.transformTechnologiesList(userTechnologies) || []).map((item, key) => {
+                                    return (
+                                        <span
+                                            key={key}
+                                            className="technology"
+                                            onClick={() => this.setTechnology(item.technology.title)}
+                                        >
+                                            {item.technology.title}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </td>
                     <td data-label={v_phone} className="phone_container">
                         {phone ? phone : '-'}
@@ -201,14 +261,19 @@ class TeamPage extends Component {
                                 'team-access-container-admin': checkIsAdminByRole(currentTeam.data.role),
                             })}
                             onClick={e =>
-                                isMobile && checkIsAdminByRole(currentTeam.data.role) ? this.openEditModal(item) : null
+                                isMobile &&
+                                (checkIsOwnerByRole(currentTeamRole) ||
+                                    (checkIsAdminByRole(currentTeamRole) && checkIsMemberByRole(role)))
+                                    ? this.openEditModal(item)
+                                    : null
                             }
                         >
                             {isActive ? v_active : v_not_active}
+                            {(checkIsOwnerByRole(currentTeamRole) ||
+                                (checkIsAdminByRole(currentTeamRole) && checkIsMemberByRole(role))) && (
+                                <i onClick={e => this.openEditModal(item)} className="edit_button item_button" />
+                            )}
                         </div>
-                        {checkIsAdminByRole(currentTeam.data.role) && (
-                            <i onClick={e => this.openEditModal(item)} className="edit_button item_button" />
-                        )}
                     </td>
                 </tr>
             );
@@ -303,6 +368,7 @@ const mapStateToProps = store => ({
     currentTeam: store.teamReducer.currentTeam,
     switchTeam: store.teamReducer.switchTeam,
     owner_id: store.teamReducer.currentTeam.data.owner_id,
+    user: store.userReducer.user,
 });
 
 const mapDispatchToProps = dispatch => {

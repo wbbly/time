@@ -12,11 +12,13 @@ import 'moment/locale/ru';
 import 'moment/locale/it';
 import 'moment/locale/en-gb';
 import 'moment/locale/de';
+import InputMask from 'react-input-mask';
 
 import { connect } from 'react-redux';
 
 // dependencies
 import classNames from 'classnames';
+import _ from 'lodash';
 
 // Services
 import { checkIsAdminByRole } from '../../services/authentication';
@@ -64,7 +66,8 @@ const localeMap = {
 class ReportsPage extends Component {
     state = {
         isInitialFetching: true,
-        isFetching: false,
+        isFetchingProjects: false,
+        isFetchingList: false,
         toggleBar: false,
         toggleChar: false,
         projectsArr: [],
@@ -77,7 +80,10 @@ class ReportsPage extends Component {
         dateSelectUsers: false,
         projectsData: [],
         totalUpChartTime: '',
+        startDateValue: moment(getCurrentDate()).format(this.props.dateFormat),
+        endDateValue: moment(getCurrentDate()).format(this.props.dateFormat),
     };
+
     lineChartOption = durationTimeFormat => ({
         scales: {
             xAxes: [
@@ -125,23 +131,95 @@ class ReportsPage extends Component {
         return newObject;
     }
 
+    addDebounceToSearch = _.debounce(selection => {
+        this.props.reportsPageAction('SET_TIME', { data: selection });
+        this.applySearch(this.getYear(selection.startDate), this.getYear(selection.endDate));
+    }, 1000);
+
     handleSelect = ranges => {
-        this.setState({ selectionRange: ranges.selection });
-        this.props.reportsPageAction('SET_TIME', { data: ranges.selection });
-        this.applySearch(this.getYear(ranges.selection.startDate), this.getYear(ranges.selection.endDate));
+        let { dateFormat } = this.props;
+        if (moment(ranges.selection.startDate).diff(moment([1919, 11, 18])) === 0) {
+            this.setState({
+                selectionRange: ranges.selection,
+                startDateValue: moment(ranges.selection.startDate).format(dateFormat),
+                endDateValue: moment(ranges.selection.endDate).format(dateFormat),
+            });
+            return;
+        }
+        this.setState(
+            {
+                selectionRange: ranges.selection,
+                startDateValue: moment(ranges.selection.startDate).format(dateFormat),
+                endDateValue: moment(ranges.selection.endDate).format(dateFormat),
+            },
+            () => {
+                this.addDebounceToSearch(ranges.selection);
+            }
+        );
     };
+
+    setStartDate(date) {
+        this.setState({ startDateValue: date });
+        let { dateFormat } = this.props;
+        let formattedDate = date.replace(/\D+/g, '');
+        if (formattedDate && formattedDate.length == 8 && moment(date, dateFormat)._isValid) {
+            let newDate = new Date(moment(date, dateFormat));
+            if (newDate < this.state.selectionRange.endDate) {
+                let timeStart = {
+                    selection: {
+                        ...this.state.selectionRange,
+                        startDate: newDate,
+                        endDate: this.state.selectionRange.endDate,
+                    },
+                };
+                this.handleSelect(timeStart);
+            }
+        }
+    }
+
+    setEndDate(date) {
+        this.setState({ endDateValue: date });
+        let { dateFormat } = this.props;
+        let formattedDate = date.replace(/\D+/g, '');
+        if (formattedDate && formattedDate.length == 8 && moment(date, dateFormat)._isValid) {
+            let newDate = new Date(moment(date, dateFormat));
+            if (newDate > this.state.selectionRange.startDate) {
+                let timeStart = {
+                    selection: {
+                        ...this.state.selectionRange,
+                        endDate: newDate,
+                        startDate: this.state.selectionRange.startDate,
+                    },
+                };
+                this.handleSelect(timeStart);
+            }
+        }
+    }
 
     getYear(date) {
         return moment(date).format('YYYY-MM-DD');
     }
 
     openCalendar() {
-        this.setState({ dateSelect: !this.state.dateSelect });
-        document.addEventListener('click', this.closeDropdown);
+        if (!this.state.dateSelect) {
+            this.setState({ dateSelect: true }, () => {
+                document.addEventListener('click', this.closeDropdown);
+            });
+        }
+    }
+
+    toggleCalendar() {
+        this.setState({ dateSelect: !this.state.dateSelect }, () => {
+            if (this.state.dateSelect) {
+                document.addEventListener('click', this.closeDropdown);
+            } else {
+                document.removeEventListener('click', this.closeDropdown);
+            }
+        });
     }
 
     closeDropdown = e => {
-        if (this.datePickerSelect && !this.datePickerSelect.contains(e.target)) {
+        if (this.datePickerSelect && !this.datePickerSelect.contains(e.target) && this.state.dateSelect) {
             this.setState(
                 {
                     dateSelect: !this.state.dateSelect,
@@ -166,12 +244,13 @@ class ReportsPage extends Component {
             v_thisMonth,
             v_lastMonth,
             v_this_year,
+            v_last_year,
             v_days_up_to_today,
             v_days_starting_today,
             lang,
         } = vocabulary;
 
-        const { isInitialFetching, isFetching } = this.state;
+        const { isInitialFetching, isFetchingProjects, isFetchingList, startDateValue, endDateValue } = this.state;
 
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
@@ -184,16 +263,32 @@ class ReportsPage extends Component {
                 >
                     <div className="data_container_reports_page">
                         <PageHeader title={v_summary_report}>
-                            <div className="selects_container">
-                                <div className="select_header" onClick={e => this.openCalendar()}>
-                                    <span>
-                                        {moment(this.props.timeRange.startDate).format(dateFormat)} {' - '}
-                                        {moment(this.props.timeRange.endDate).format(dateFormat)}
+                            <div className="selects_container" ref={div => (this.datePickerSelect = div)}>
+                                <div className="select_header">
+                                    <span onClick={e => this.openCalendar()}>
+                                        <InputMask
+                                            className="select_input"
+                                            onChange={e => this.setStartDate(e.target.value)}
+                                            mask={dateFormat.toLowerCase()}
+                                            formatChars={{ d: '[0-9]', m: '[0-9]', y: '[0-9]' }}
+                                            value={startDateValue}
+                                        />
+                                        {'-'}
+                                        <InputMask
+                                            className="select_input"
+                                            onChange={e => this.setEndDate(e.target.value)}
+                                            mask={dateFormat.toLowerCase()}
+                                            formatChars={{ d: '[0-9]', m: '[0-9]', y: '[0-9]' }}
+                                            value={endDateValue}
+                                        />
                                     </span>
-                                    <i className="arrow_down" />
+                                    <i
+                                        className={`arrow_down ${this.state.dateSelect ? 'arrow_down_up' : ''}`}
+                                        onClick={e => this.toggleCalendar()}
+                                    />
                                 </div>
                                 {this.state.dateSelect && (
-                                    <div className="select_body" ref={div => (this.datePickerSelect = div)}>
+                                    <div className="select_body">
                                         <DateRangePicker
                                             locale={customLocale}
                                             dateDisplayFormat={dateFormat}
@@ -212,6 +307,7 @@ class ReportsPage extends Component {
                                                 v_thisMonth,
                                                 v_lastMonth,
                                                 v_this_year,
+                                                v_last_year,
                                                 firstDayOfWeek
                                             )}
                                             inputRanges={inputRanges(
@@ -226,7 +322,7 @@ class ReportsPage extends Component {
                             </div>
                         </PageHeader>
                         <div className={'content_wrapper'}>
-                            {isFetching && <Spinner withLogo={false} mode={'overlay'} />}
+                            {(isFetchingProjects || isFetchingList) && <Spinner withLogo={false} mode={'overlay'} />}
                             {checkIsAdminByRole(currentTeam.data.role) && (
                                 <ReportsSearchBar
                                     applySearch={e => this.applySearch()}
@@ -368,7 +464,7 @@ class ReportsPage extends Component {
         const sumTimeEntriesByDay = {};
         if (this.checkYearPeriod()) {
             const sumTimeEntriesByMonth = {};
-            const copyTimeEntries = JSON.parse(JSON.stringify(timeEntries));
+            const copyTimeEntries = _.cloneDeep(timeEntries);
             const { selectionRange } = this.state;
             const { startDate, endDate } = selectionRange;
             const range = moment.range(startDate, endDate);
@@ -378,8 +474,10 @@ class ReportsPage extends Component {
                 const date = months[i].format('YYYY-MM');
                 sumTimeEntriesByMonth[date] = [];
             }
+
             copyTimeEntries.forEach(item => {
-                sumTimeEntriesByMonth[moment(item.start_datetime).format('YYYY-MM')].push(item);
+                sumTimeEntriesByMonth[moment(item.start_datetime).format('YYYY-MM')] &&
+                    sumTimeEntriesByMonth[moment(item.start_datetime).format('YYYY-MM')].push(item);
             });
             const entries = Object.keys(sumTimeEntriesByMonth).map(item => {
                 const taskArr = sumTimeEntriesByMonth[item];
@@ -479,6 +577,7 @@ class ReportsPage extends Component {
         dateFrom = this.getYear(this.state.selectionRange.startDate),
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
+        this.setState({ isFetchingProjects: true, isFetchingList: true });
         let inputUserData =
             !!this.props.inputUserData && !!this.props.inputUserData.length
                 ? getParametersString('userEmails', this.props.inputUserData)
@@ -510,10 +609,10 @@ class ReportsPage extends Component {
                 this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
                 let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
                 this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
-                this.setState({ toggleChar: true, isInitialFetching: false });
+                this.setState({ toggleChar: true, isInitialFetching: false, isFetchingProjects: false });
             },
             err => {
-                this.setState({ isInitialFetching: false });
+                this.setState({ isInitialFetching: false, isFetchingProjects: false });
                 if (err instanceof Response) {
                     err.text().then(errorMessage => console.log(errorMessage));
                 } else {
@@ -521,7 +620,6 @@ class ReportsPage extends Component {
                 }
             }
         );
-        this.setState({ isFetching: true });
         apiCall(
             AppConfig.apiURL +
                 `timer/reports-list?startDate=${convertDateToISOString(
@@ -551,8 +649,7 @@ class ReportsPage extends Component {
                     'SET_LINE_GRAPH',
                     this.setDataToGraph(this.props.dataBarChat, this.getLablesAndTime(datePeriod, sumTimeEntriesByDay))
                 );
-                this.setState({ toggleBar: true });
-                this.setState({ isFetching: false });
+                this.setState({ toggleBar: true, isFetchingList: false });
             },
             err => {
                 if (err instanceof Response) {
@@ -560,6 +657,7 @@ class ReportsPage extends Component {
                 } else {
                     console.log(err);
                 }
+                this.setState({ isFetchingList: false });
             }
         );
     }

@@ -8,19 +8,12 @@ import { AppConfig } from '../../config';
 // Default avatar
 import dafaultAvatarImg from '../../images/icons/Group20.svg';
 
-// Dropdown icons
-import settingsIcon from '../../images/icons/settings.svg';
-import arrowDown from '../../images/icons/avatar_arrow_down.svg';
-
 // Actions
 import { setUserAvatarAction, deleteUserAvatarAction } from '../../actions/UserActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Styles
 import './style.scss';
-
-const SettingsIcon = () => <img src={settingsIcon} alt="Settings" />;
-const ArrowIcon = () => <img src={arrowDown} alt="Arrow down" />;
 
 class Avatar extends Component {
     state = {
@@ -74,8 +67,8 @@ class Avatar extends Component {
                 )}
 
                 <div className="avatar-settings" onClick={this.openDropdown}>
-                    <SettingsIcon />
-                    <ArrowIcon />
+                    <i className="settings" />
+                    <i className={`arrow_down ${isOpenDropdown ? 'arrow_down_up' : ''}`} />
                 </div>
                 <ul
                     className={classNames('avatar-settings-menu', {

@@ -38,6 +38,9 @@
           }
         }
       }
+      .invoice-number-title {
+        width: 40%;
+      }
       .invoice-client-title {
         width: 60%;
       }
@@ -102,21 +105,12 @@
       margin-right: 15px;
       margin-left: 10px;
     }
-    @media screen and (max-width: 1200px) {
-      .invoice-instruments-title {
-        width: 20px;
-        margin: 0;
-      }
-    }
   }
   .tool-tip {
     background-color: #ffffff;
     color: #333333;
-    width: fit-content;
-    height: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 5px 10px;
+    white-space: nowrap;
   }
   .all-invoices-list-item-container {
     position: relative;

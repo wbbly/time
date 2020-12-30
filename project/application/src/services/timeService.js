@@ -64,13 +64,27 @@ export function getTimeDurationByGivenTimestamp(milliseconds, durationTimeFormat
         seconds = seconds % 60;
         hour = Math.floor(minute / 60);
         minute = minute % 60;
+        if (hour !== 0 || minute !== 0) {
+            if (seconds >= 30) {
+                minute += 1;
+                seconds = 0;
+                if (minute === 60) {
+                    hour += 1;
+                    minute = 0;
+                }
+            } else {
+                seconds = 0;
+            }
+        }
 
         if (hour === 0 && minute === 0) {
-            return `${padTime(seconds)} s`;
+            return `${seconds} s`;
         } else if (hour === 0 && minute !== 0) {
-            return `${padTime(minute)}:${padTime(seconds)} min`;
-        } else if (hour !== 0) {
-            return `${padTime(hour)}:${padTime(minute)}:${padTime(seconds)}`;
+            return `${minute} min`;
+        } else if (hour !== 0 && minute !== 0) {
+            return `${hour} h ${minute} min`;
+        } else if (hour !== 0 && minute === 0) {
+            return `${hour} h`;
         }
     };
 

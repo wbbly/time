@@ -27,30 +27,50 @@
     }
   
     &__settings {
+      width: 58px;
+      height: 27px;
       visibility: hidden;
       position: absolute;
       top: 0;
-      right: 0;
+      right: 0px;
       display: inline-flex;
-      justify-content: center;
+      justify-content: space-around;
       align-items: center;
       padding: 7px 9px;
-      background-image: linear-gradient(#f5f5f5, #eee);
+      background: #3f3f3f;
+      border-radius: 0px;
   
       .settings-icon {
         margin: 0 5px 0 0;
+      }
+
+      .settings {
+        margin-right: 6px;
+        width: 18px;
+        height: 18px;
+        background: url("../../images/icons/settings.svg") no-repeat center;
+      }
+      .arrow_down {
+        width: 11px;
+        height: 18px;
+        background: url("../../images/icons/arrow-down.svg") no-repeat center;
+        transition: all 0.3s;
+    
+        &_up {
+          transform: rotate(-180deg);
+        }
       }
     }
   
     &__settings-menu {
       position: absolute;
-      top: 32px;
-      right: -64px;
-      background: white;
-      color: #333333;
-      padding: 5px 0;
+      top: 30px;
+      right: -84px;
+      background:#27292A;
+      box-shadow: 2px 2px 4px black;
+      color: white;
       z-index: 1;
-      border-radius: 4px;
+      padding: 5px;
   
       &--hidden {
         display: none;
@@ -61,15 +81,11 @@
       font-family: "Open Sans", sans-serif;
       font-weight: 500;
       font-size: 14px;
-      margin: 0 0 5px 0;
       padding: 5px 10px;
-  
-      &:last-child {
-        margin: 0;
-      }
   
       &:hover {
         background-color: #cecece;
+        color: #333333;
       }
     }
     .drog-ang-drop{

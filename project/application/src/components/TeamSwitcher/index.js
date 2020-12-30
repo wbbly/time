@@ -39,40 +39,40 @@ class TeamSwitcher extends Component {
     };
 
     render() {
-        const { isMobile, vocabulary, userTeams, currentTeam, isShowMenu } = this.props;
-        const { v_active_team, v_set, v_team_is_active } = vocabulary;
+        const { isMobile, vocabulary, userTeams, currentTeam, isShowMenu, openTeamList, closeTeamList } = this.props;
+
         return (
             <Loading flag={userTeams.isInitialFetching} withLogo={false} mode="inline">
-                {(!isShowMenu || isMobile) && (
-                    <div className="team_list">
-                        <ul>
-                            {userTeams.data.map((team, index) => {
+                <div className="team_list">
+                    <ul>
+                        {/* {userTeams.data.map((team, index) => {
                                 const title =
                                     currentTeam.data.id === team.id
                                         ? `${v_active_team}`
-                                        : `${v_set} ${team.name} ${v_team_is_active}`;
+                                        : `${v_set} ${team.name} ${v_team_is_active}`; */}
 
-                                return (
-                                    <li key={team.id} title={title}>
-                                        <div
-                                            className={classNames('team_list-item', {
-                                                active: userTeams.data.length > 1 && currentTeam.data.id === team.id,
-                                            })}
-                                            onClick={this.handleChange}
-                                            data-id={team.id}
-                                            data-name={team.name}
-                                        >
-                                            {team.name + ' '}
-                                            {userTeams.data.length > 1 &&
-                                                currentTeam.data.id === team.id && <div className="active-point" />}
-                                        </div>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                        {!isMobile && <TeamAdd />}
-                    </div>
-                )}
+                        <li>
+                            <div
+                                className={classNames('team_list-item', {
+                                    active: true,
+                                })}
+                                // onClick={this.handleChange}
+                            >
+                                {currentTeam.data.name + ' '}
+                                <div className="active-point" />
+                            </div>
+                        </li>
+                    </ul>
+                    <TeamAdd
+                        isMobile={isMobile}
+                        userTeams={userTeams}
+                        currentTeam={currentTeam}
+                        vocabulary={vocabulary}
+                        handleChange={this.handleChange}
+                        openTeamList={openTeamList}
+                        closeTeamList={closeTeamList}
+                    />
+                </div>
             </Loading>
         );
     }

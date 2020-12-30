@@ -16,6 +16,7 @@ export const SET_USER_AVATAR_REQUEST = 'SET_USER_AVATAR_REQUEST';
 export const SET_USER_AVATAR_REQUEST_SUCCESS = 'SET_USER_AVATAR_REQUEST_SUCCESS';
 export const SET_USER_AVATAR_REQUEST_FAIL = 'SET_USER_AVATAR_REQUEST_FAIL';
 export const RESET_ALL = 'RESET_ALL';
+export const RESET_INITIAL_FETCHING = 'RESET_INITIAL_FETCHING';
 export const CHANGE_USER_DATA = 'CHANGE_USER_DATA';
 export const TOGGLE_MODAL = 'TOGGLE_MODAL';
 export const SET_DATE_FORMAT = 'SET_DATE_FORMAT';
@@ -64,6 +65,10 @@ export const changeUserData = payload => ({
 
 export const resetAll = () => ({
     type: RESET_ALL,
+});
+
+export const resetInitialFetching = () => ({
+    type: RESET_INITIAL_FETCHING,
 });
 
 export const toggleModal = payload => ({

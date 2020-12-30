@@ -7,6 +7,7 @@ import {
     updateInvoice,
     deleteInvoiceById,
     deleteAvatarThunk,
+    setCopiedInvoiceId,
 } from '../../actions/InvoicesActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 import { AppConfig } from '../../config';
@@ -121,12 +122,16 @@ class InvoicesPageDetailed extends Component {
     copyLinkRef = React.createRef();
 
     async componentDidMount() {
+        let dateDue = new Date();
+        dateDue.setDate(dateDue.getDate() + 1);
+        this.setState({ invoice: { ...this.state.invoice, dateDue: dateDue } });
         setTimeout(() => this.setState({ isInitialFetching: false }), 500);
         const {
             getProjectsListActions,
             getCurrentTeamDetailedDataAction,
             getClientsAction,
             getInvoice,
+            setCopiedInvoiceId,
             match: { params },
         } = this.props;
 
@@ -136,6 +141,7 @@ class InvoicesPageDetailed extends Component {
         await getProjectsListActions();
         await getCurrentTeamDetailedDataAction();
         await getClientsAction();
+        await setCopiedInvoiceId('');
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -365,36 +371,39 @@ class InvoicesPageDetailed extends Component {
         this.setState({ deleteInvoiceModal: false });
     };
     goBack = () => {
-        const {
-            id,
-            invoice_number,
-            invoice_date,
-            due_date,
-            timezone_offset,
-            currency,
-            to,
-            logo,
-            projects,
-            comment,
-            invoice_vendor,
-            from,
-        } = this.props.invoice;
-        this.setState({
-            invoice: {
+        if (this.props.invoice && this.props.invoice.id) {
+            const {
                 id,
-                vendorId: this.props.defaultUserSender.id,
-                invoiceNumber: invoice_number,
-                dateFrom: invoice_date,
-                dateDue: due_date,
-                timezoneOffset: timezone_offset,
+                invoice_number,
+                invoice_date,
+                due_date,
+                timezone_offset,
                 currency,
-                sender: invoice_vendor,
-                recipient: to,
-                image: logo,
+                to,
+                logo,
                 projects,
                 comment,
-            },
-        });
+                discount,
+                invoice_vendor,
+            } = this.props.invoice;
+            this.setState({
+                invoice: {
+                    id,
+                    vendorId: this.props.defaultUserSender.id,
+                    invoiceNumber: invoice_number,
+                    dateFrom: invoice_date,
+                    dateDue: due_date,
+                    timezoneOffset: timezone_offset,
+                    currency,
+                    sender: invoice_vendor,
+                    recipient: to,
+                    image: logo,
+                    projects,
+                    comment,
+                    discount,
+                },
+            });
+        }
         this.props.history.goBack();
     };
 
@@ -667,7 +676,7 @@ class InvoicesPageDetailed extends Component {
                                                         )}
                                                         onClick={() => {
                                                             if (this.isViewMode) return;
-                                                            this.saveDiscount(null);
+                                                            this.saveDiscount('0');
                                                         }}
                                                         data-tip={v_delete}
                                                     >
@@ -924,6 +933,7 @@ const mapDispatchToProps = {
     deleteInvoiceById,
     showNotificationAction,
     deleteAvatarThunk,
+    setCopiedInvoiceId,
 };
 
 export default withRouter(

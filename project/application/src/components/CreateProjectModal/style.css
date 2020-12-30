@@ -173,7 +173,7 @@
 }
 
 .create_projects_modal_data .green {
-    background-color: green;
+    background-color: #27ae60;
 }
 
 .create_projects_modal_data .red {
@@ -216,5 +216,11 @@
     width: 24px;
     height: 24px;
     margin-left: 5px;
-    background: url("../../images/icons/Vector.svg") no-repeat center;
+    background: url("../../images/icons/arrow-down-gray.svg") no-repeat center;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.create_projects_modal_container i.vector_up {
+  transform: rotate(-180deg);
 }

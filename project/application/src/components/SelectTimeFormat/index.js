@@ -62,7 +62,7 @@ class SelectTimeFormat extends Component {
                             ))}
                         </div>
                     )}
-                    <i className="time-format__icon-arrow" />
+                    <i className={`time-format__icon-arrow ${isOpenDropdown ? 'time-format__icon-arrow_up' : ''}`} />
                 </div>
             </div>
         );
