@@ -34,28 +34,33 @@
       font-size: 14px;
   }
   .clients_list_input {
-    font-family: "Open Sans", sans-serif;
-    outline: none;
-    padding: 0.5rem;
-    border: 1px solid #bdbdbd;
-    margin: 0;
-    width: 100%;
-    margin-bottom: 10px;
+    padding: 5px 10px;
+    input {
+      font-family: "Open Sans", sans-serif;
+      font-size: 14px;
+      line-height: 14px;
+      background-color: white;
+      color: #333333 !important;
+      padding: 5px 10px;
+      border: 1px solid #828282;
+      width: 100%;
+      margin: 0;
+      &::placeholder {
+        color: #828282;
+      }
+    }
   }
 
   .clients_list_dropdown {
     flex-grow: 1;
-    // overflow: hidden;
     position: absolute;
+    top: 110%;
+    font-size: 14px;
     width: 100%;
     background: white;
-    font-size: 14px;
-    // min-height: 210px;
-    border: 1px solid grey;
-    border-radius: 4px;
-    top: 110%;
-    padding: 10px;
-    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.25);
+    padding: 5px;
+    border-radius: 0.4rem;
+    border: 1px solid #828282;
   }
   .clients_list {
     height: 18.5rem;
@@ -66,29 +71,27 @@
     color: #4f4f4f;
   }
   .clients_list_item {
-    display: flex;
-    align-items: center;
-    margin: 0 0 0.5rem 0;
-    padding: 0.3rem 0.5rem;
-    border-radius: 0.4rem;
+    padding: 5px 10px;
+    color: #333333;
     cursor: pointer;
 
     &:hover {
       background-color: #e0e0e0;
-    }
-
-    &:last-child {
-      margin: 0;
+      color: #333333;
     }
   }
   .clients-vector {
     position: absolute;
     width: 24px;
     height: 24px;
-    background: url("../../images/icons/Vector.svg") no-repeat center;
+    background: url("../../images/icons/arrow-down-gray.svg") no-repeat center;
+    transition: all 0.3s;
     right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 10px;
+    cursor: pointer;
+  }
+  .clients-vector_up {
+    transform: rotate(-180deg);
   }
   .client-remove {
     width: 30px;

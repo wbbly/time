@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import TextareaAutosize from 'react-textarea-autosize';
 
 import {
     spaceAndFixNumber,
@@ -22,13 +23,14 @@ const PlusIcon = ({ className, onClick }) => (
     <svg
         className={className}
         onClick={onClick}
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
     >
-        <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="white" />
+        <path d="M10 4.16602V15.8327" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4.16602 10H15.8327" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
@@ -185,7 +187,7 @@ class DetailedInvoiceProjectsTable extends Component {
         } = this.state;
         const { vocabulary, projects, currency, isError } = this.props;
         const {
-            v_project,
+            v_description,
             v_amount,
             v_rate,
             v_tax,
@@ -202,7 +204,7 @@ class DetailedInvoiceProjectsTable extends Component {
             >
                 <div className="detailed-invoice-projects-table__header">
                     <div className="detailed-invoice-projects-table__project-column">
-                        <span>{v_project}</span>
+                        <span>{v_description}</span>
                     </div>
                     <div className="detailed-invoice-projects-table__amount-column">
                         <span>{v_amount}</span>
@@ -227,21 +229,19 @@ class DetailedInvoiceProjectsTable extends Component {
                                 withLogo={false}
                             >
                                 <div className="detailed-invoice-projects-table__project-column">
-                                    <input
+                                    <TextareaAutosize
                                         value={this.getProjectValue(project, 'project_name')}
                                         onChange={e => this.handleEditProject('project_name', e)}
-                                        className={classNames('detailed-invoice-projects-table__input', {
-                                            'detailed-invoice-projects-table__input--disabled':
+                                        className={classNames('detailed-invoice-projects-table__textarea', {
+                                            'detailed-invoice-projects-table__textarea--disabled':
                                                 editingProject.id !== project.id,
-                                            'detailed-invoice-projects-table__input--empty': !this.getProjectValue(
+                                            'detailed-invoice-projects-table__textarea--empty': !this.getProjectValue(
                                                 project,
                                                 'project_name'
                                             ),
                                         })}
-                                        type="text"
                                         placeholder={v_enter_project}
                                         disabled={editingProject.id !== project.id}
-                                        // onKeyDown={this.handleKeyDown}
                                     />
                                 </div>
                                 <div className="detailed-invoice-projects-table__amount-column">
@@ -321,8 +321,6 @@ class DetailedInvoiceProjectsTable extends Component {
                                         <div>
                                             {editingProject.id === project.id ? (
                                                 <SaveInvoice
-                                                    width={'24'}
-                                                    height={'24'}
                                                     onClick={() => {
                                                         const isProjectName = editingProject.project_name.length > 0;
                                                         const isHours = editingProject.hours > 0;
@@ -364,13 +362,12 @@ class DetailedInvoiceProjectsTable extends Component {
                             <div className="detailed-invoice-projects-table__row">
                                 <Loading mode="overlay" flag={isAdding} withLogo={false}>
                                     <div className="detailed-invoice-projects-table__project-column">
-                                        <input
+                                        <TextareaAutosize
                                             value={newProject.project_name}
                                             onChange={e => this.handleInputChange('project_name', e)}
-                                            className={classNames('detailed-invoice-projects-table__input', {
-                                                'detailed-invoice-projects-table__input--empty': projectNameError,
+                                            className={classNames('detailed-invoice-projects-table__textarea', {
+                                                'detailed-invoice-projects-table__textarea--empty': projectNameError,
                                             })}
-                                            type="text"
                                             placeholder={v_enter_project}
                                         />
                                     </div>

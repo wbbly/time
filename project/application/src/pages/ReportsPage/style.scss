@@ -59,6 +59,16 @@
     cursor: pointer;
   }
 
+  .select_input {
+    width: 110px;
+    background-color: #333333;
+    color: white;
+    border: none;
+    &::placeholder {
+      color: white;
+    }
+  }
+
   .select_header.users {
     font-size: 20px;
   }
@@ -67,7 +77,12 @@
     margin-left: 24px;
     width: 24px;
     height: 24px;
-    background: url("../../images/icons/arrow_down.svg") no-repeat center;
+    background: url("../../images/icons/arrow-down.svg") no-repeat center;
+    transition: all 0.3s;
+
+    &_up {
+      transform: rotate(-180deg);
+    }
   }
 
   .selects_container.select_users .select_body {
@@ -92,8 +107,8 @@
     top: 30px;
     right: 10px;
     z-index: 3;
-    background-color: #f5f5f5;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+    background:#27292A;
+    box-shadow: 0px 3px 18px black;
   }
 
   .reports_search_bar_search_field_container.select {

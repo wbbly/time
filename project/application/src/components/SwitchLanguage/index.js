@@ -64,7 +64,11 @@ class SwitchLanguage extends Component {
                                     ))}
                                 </div>
                             )}
-                            <i className="wrapper-switch-language__icon-arrow" />
+                            <i
+                                className={`wrapper-switch-language__icon-arrow ${
+                                    isOpenDropdown ? 'wrapper-switch-language__icon-arrow_up' : ''
+                                }`}
+                            />
                         </div>
                     </>
                 ) : (

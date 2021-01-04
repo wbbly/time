@@ -30,12 +30,11 @@
 
     &:hover {
         color: #27ae60;
-      .invoice-action-dropdown__item-icon.copy-icon {
-        fill: none;
+      .invoice-action-dropdown__item-icon.copy-icon path {
         stroke: #27ae60;
       }
-      .invoice-action-dropdown__item-icon.action-icon {
-        fill: #27ae60;
+      .invoice-action-dropdown__item-icon.action-icon path {
+        stroke: #27ae60;
       }
     }
 
@@ -49,18 +48,23 @@
       display: flex;
       justify-content: center;
       margin-right: 0.8rem;
-      fill: #333333;
+      path {
+        stroke: #333333;
+      }
     }
     &-icon {
       height: 2rem;
       width: 2rem;
-      fill: #333333;
       transition: all .1s linear;
+      path {
+        stroke: #333333;
+      }
     }
     &-icon.copy-icon {
-      fill: none;
-      stroke: #333333;
       transition: all .1s linear;
+      path {
+        stroke: #333333;
+      }
     }
     &-text {
       white-space: nowrap;

@@ -30,10 +30,6 @@
   justify-content: flex-start;
 }
 
-.logout_container .user_setting_modal_item {
-  padding: 10px 10px 10px 21px;
-}
-
 .logout_container span {
   margin-left: 7px;
   font-family: "Open Sans";
@@ -42,19 +38,6 @@
   font-size: 14px;
   line-height: normal;
   color: #ffffff;
-}
-
-.logout {
-  width: 15px;
-  height: 15px;
-  background: url("../../images/icons/logout.svg") no-repeat center;
-}
-
-.user_settings {
-  min-width: 15px;
-  min-height: 15px;
-  background: url("../../images/icons/cog-wheel-silhouette.svg") no-repeat
-    center;
 }
 
 .wrapper_user_menu .user_name {
@@ -84,8 +67,16 @@
   background-size: cover;
 }
 .default-logo {
+  display: inline-block;
   width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #4f4f4f;
+  background-image: url('../../images/icons/user.svg');
 }
 
 i.profile_user {
@@ -102,26 +93,38 @@ i.profile_user {
 .wrapper_user_menu .user_setting_modal {
   display: block;
   height: auto;
-  padding-left: 0;
-  background-color: white;
-  border-radius: 4px;
   position: absolute;
   bottom: 20px;
   left: 183px;
   min-width: 150px;
   z-index: 15;
+  background:#3f3f3f;
+  box-shadow: 2px 2px 4px black;
+  padding: 5px;
 }
 
 .wrapper_user_menu .user_setting_modal--show_menu{
   left: 58px;
 }
 
-.user_setting_modal .user_setting_modal_item:hover {
-  background-color: #cecece;
+.logout_container .user_setting_modal_item {
+  padding: 5px 10px;
+  span {
+    color: white;
+  }
 }
 
-.user_setting_modal div span {
-  color: #000;
+.user_setting_modal .user_setting_modal_item:hover {
+  background-color: #e0e0e0;
+  span {
+    color: #333333;
+  }
+  .user_settings path {
+    stroke: #333333;
+  }
+  .logout path {
+    fill: #333333;
+  }
 }
 
 .wrapper_user_menu--mobile {

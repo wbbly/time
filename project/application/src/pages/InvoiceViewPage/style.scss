@@ -4,7 +4,7 @@
   transform: translate(50%, 0);
   top: 20px;
   color: #ffffff;
-  max-width: 685px;
+  max-width: 928px;
   width: 100%;
   margin-bottom: 20px;
   @media screen and (max-width: 670px) {
@@ -13,7 +13,6 @@
     right: 0;
     transform: translate(0, 0);
     width: auto;
-    margin-right: 17px;
   }
   &__header {
     .invoices-page-detailed__title{
@@ -122,7 +121,7 @@
 
     &__main-data-form {
       display: flex;
-      width: 470px;
+      width: calc(100% - 150px);
       justify-content: space-between;
 
       .input-wrapper {
@@ -258,7 +257,7 @@
       flex: 1;
 
       &:first-child {
-        margin-right: 32px;
+        margin-right: 20px;
       }
     }
     @media screen and (max-width: 670px) {
@@ -289,7 +288,7 @@
 
       &-summary {
         padding: 0;
-        width: 45%;
+        width: 49%;
        
 
         .invoices-page-detailed__summary-table-row {
@@ -298,7 +297,11 @@
             width: 60%;
             text-align: end;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
+            span {
+              padding-left: 20px;
+              width: 60%;
+            }
           }
           height: 46px;
         }

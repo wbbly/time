@@ -11,6 +11,7 @@ import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 // Actions
 import { getCurrentTeamAction, getUserTeamsAction, getCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
+import { switchMenu } from '../../actions/ResponsiveActions';
 
 // Queries
 
@@ -91,6 +92,8 @@ class CreateTeamModal extends Component {
     closeModal() {
         this.removeZIndexFromWrapper();
         this.props.teamAddPageAction('TOGGLE_TEAM_ADD_MODAL', { toggle: false });
+        this.props.closeTeamList();
+        this.props.isMobile && this.props.switchMenu();
     }
 
     render() {
@@ -104,12 +107,13 @@ class CreateTeamModal extends Component {
                 <div className="create_team_modal_background" />
                 <div className="create_team_modal_container">
                     <div className="create_team_modal_header">
-                        <div className="create_team_modal_header_title">{v_create_team}</div>
+                        {v_create_team}
                         <i className="create_team_modal_header_close" onClick={e => this.closeModal()} />
                     </div>
                     <div className="create_team_modal_data">
                         <div className="create_team_modal_data_input_container">
                             <input
+                                autoFocus
                                 type="text"
                                 ref={input => {
                                     this.createTeamInput = input;
@@ -138,6 +142,7 @@ const mapDispatchToProps = {
     getCurrentTeamAction,
     getCurrentTeamDetailedDataAction,
     showNotificationAction,
+    switchMenu,
 };
 
 export default withRouter(

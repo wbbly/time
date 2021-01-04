@@ -20,29 +20,34 @@
     max-width: 20rem;
   }
 
+  .arrow_down {
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/arrow-down.svg") no-repeat center;
+    transition: all 0.3s;
+
+    &_up {
+      transform: rotate(-180deg);
+    }
+  }
 
   .currency-select__dropdown {
     position: absolute;
     z-index: 1;
-    padding: 1rem;
-    //width: 100px;
+    padding: 5px;
     top: 130%;
-    left: -45px;
-    background: white;
-    border-radius: 0.4rem;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-    animation: slowVisibility 0.3s;
-    // max-height: 200px;
+    left: -48px;
+    background:#27292A;
+    box-shadow: 2px 2px 4px black;
     width: 300px;
-    // overflow: auto;
   }
   
   .currency-select__dropdown-title {
-    color: #000000;
+    color: white;
     font-size: 1.4rem;
     font-weight: bold;
     line-height: 1.9rem;
-    margin-bottom: 0.5rem;
+    margin: 5px 10px;
   }
 
   .currency-select__dropdown-list {
@@ -50,38 +55,40 @@
     height: 231px;
   }
 
+  .currency-select__dropdown-input {
+    margin: 5px 10px;
+  }
+
   .currency-select__dropdown-list-input {
-    min-width: 100%;
+    width: 100%;
     font-family: "Open Sans", sans-serif;
     font-size: 14px;
     line-height: 14px;
-    color: #000000;
-    padding: 0.6rem 0.5rem;
-    margin: 0 0 0.5rem 0;
-    border: 1px solid #bdbdbd;
+    background-color: #333333;
+    color: white;
+    padding: 5px 10px;
+    border: none;
   }
 
   .currency-select__dropdown-list-item {
     display: flex;
     min-width: 100%;
     align-items: center;
-    margin: 0 0 0.5rem 0;
-    padding: 0.7rem 0.5rem;
-    border-radius: 0.4rem;
+    padding: 5px 10px;
 
     &:hover {
       background-color: #e0e0e0;
     }
 
-    &:last-child {
-      margin: 0;
+    .currency-select__dropdown-list-item-currency-name {
+      color: white;
+      font-size: 1.4rem;
+      line-height: 1.9rem;
     }
-  }
 
-  .currency-select__dropdown-list-item-currency-name {
-    color: #000000;
-    font-size: 1.4rem;
-    line-height: 1.9rem;
+    &:hover .currency-select__dropdown-list-item-currency-name {
+      color: #333333;
+    }
   }
 }
 

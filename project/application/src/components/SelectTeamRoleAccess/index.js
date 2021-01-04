@@ -55,7 +55,7 @@ class SelectTeamRoleAccess extends Component {
                         <span>{listMap[type][value]}</span>
                         <i
                             className={`team-role-access__icon-arrow ${
-                                isOpenDropdown ? 'team-role-access__icon-arrow-open' : ''
+                                isOpenDropdown ? 'team-role-access__icon-arrow_up' : ''
                             }`}
                         />
                     </div>

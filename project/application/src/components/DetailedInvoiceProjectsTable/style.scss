@@ -6,9 +6,9 @@
     color: #ffffff;
     background: #3f3f3f;
     border-radius: 3px;
-    padding: 8px 10px 8px 16px;
+    padding: 10px 8px;
     border: none;
-    line-height: normal;
+    line-height: 30px;
     word-wrap: initial;
 
     &::placeholder {
@@ -32,18 +32,48 @@
       border-radius: 4px;
     }
   }
+
+  &__textarea {
+    width: 100%;
+    min-height: 50px;
+    resize: none;
+    color: #ffffff;
+    background: #3f3f3f;
+    border-radius: 3px;
+    padding: 15px 10px 10px;
+    border: none;
+    line-height: 20px;
+    word-wrap: initial;
+    overflow: hidden;
+
+    &::placeholder {
+      color: #ffffff;
+      line-height: 20px;
+    }
+    &::-webkit-input-placeholder {
+      line-height: 20px !important;
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &--disabled {
+      background: none;
+    }
+    &--empty {
+      border: 1px solid #d84e4e;
+      border-radius: 4px;
+    }
+  }
+
   &--empty {
     border: 1px solid #d84e4e;
     border-radius: 4px;
   }
 
-    
-
-  
-  &--empty {
-    border: 1px solid #d84e4e;
-    border-radius: 4px;
-  }
   &__icon-button {
     cursor: pointer;
   }
@@ -51,7 +81,6 @@
   &__header {
     display: flex;
     align-items: center;
-    padding: 0 5px 0 16px ;
     height: 50px;
     background: #292929;
     font-weight: bold;
@@ -60,39 +89,49 @@
   }
 
   &__project-column {
-    width: 20%;
+    width: 49%;
+    & > span {
+      padding: 10px 0 10px 10px;
+    }
   }
   &__tax-column {
-    width: 15%;
+    width: 8%;
+    height: 50px;
     display: flex;
-    padding-left: 10px;
+    padding-left: 5px;
+    line-height: 30px;
     & > span {
-      padding-left: 9px;
+      padding: 10px 0 10px 8px;
     }
   }
   &__rate-column {
-    width: 15%;
+    width: 10%;
+    height: 50px;
     display: flex;
-    padding-left: 10px;
+    padding-left: 5px;
+    line-height: 30px;
     & > span {
-      padding-left: 7px;
+      padding: 10px 0 10px 8px;
     }
   }
   &__amount-column {
-    width: 15%;
+    width: 12%;
+    height: 50px;
     display: flex;
-    padding-left: 8px;
+    padding-left: 2%;
+    line-height: 30px;
     & > span {
-      padding-left: 3px;
+      padding: 10px 0 10px 8px;
     }
   }
-  &__subtotal-column {
-    
-    width: 20%;
+  &__subtotal-column {    
+    width: 14%;
+    height: 50px;
     display: flex;
-    padding-left: 10px;
+    padding: 10px 0 10px 5px;
+    line-height: 30px;
     & > span {
-      padding-left: 5px;
+      padding-left: 3px;
       
     }
   }
@@ -102,28 +141,25 @@
   }
   &__subtotal-column span:last-child{
     word-break: break-all;
+    white-space: nowrap;
     
   }
   &__tools-column {
-    width: 10%;
+    width: 7%;
+    height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 10px;
-    svg{
-      fill: white;
+    padding-left: 5px;
+    svg path{
+      stroke: white;
     }
   }
 
   &__row {
     position: relative;
     display: flex;
-    align-items: center;
     margin: 0;
-    height: 50px;
-    .detailed-invoice-projects-table__subtotal-column{
-      padding-left: 12px;
-    }
   }
 }
 @media screen and (max-width: 520px) {

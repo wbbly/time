@@ -10,6 +10,7 @@ import ReactPhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/dist/style.css';
 
 import ReactFlagsSelect from 'react-flags-select';
+import ReactTooltip from 'react-tooltip';
 
 // Actions
 import { toggleModal, changeUserData } from '../../actions/UserActions';
@@ -37,7 +38,6 @@ import { AppConfig } from '../../config';
 // Styles
 import './style.scss';
 import 'react-flags-select/scss/react-flags-select.scss';
-const fakePassword = '8d8ae757-81ca-408f-a0b8-00d1e9f9923f';
 
 const OpenJiraMenuIfValidationFails = props => {
     const { formik, open, onSubmissionError } = props;
@@ -162,7 +162,7 @@ class UserSetting extends Component {
                 userData.loginJira = '';
             }
         }
-        if (userData.tokenJira && jiraPassword === fakePassword) {
+        if (userData.tokenJira && jiraPassword === '') {
             delete userData.tokenJira;
         }
 
@@ -290,8 +290,10 @@ class UserSetting extends Component {
             full_name,
             v_company_name,
             v_tags,
+            v_tags_tooltip,
             v_physical_address,
             v_time_date,
+            v_add_your_password,
         } = vocabulary;
 
         const { inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
@@ -306,7 +308,7 @@ class UserSetting extends Component {
                 {Object.prototype.toString.call(userReducer.changePasswordModal) === '[object Boolean]' &&
                     userReducer.changePasswordModal && <ChangePasswordModal />}
                 <div className="data_container">
-                    <CustomScrollbar>
+                    <CustomScrollbar disableTimeEntriesFetch>
                         <div className="header_user_setting">
                             <div>{v_my_profile}</div>
                             <button onClick={e => this.openChangePasswordModal()}>{v_change_password}</button>
@@ -330,7 +332,7 @@ class UserSetting extends Component {
                                     zip: zip || '',
                                     jiraUrl: urlJira,
                                     jiraUserName: loginJira,
-                                    jiraPassword: tokenJira ? fakePassword : '',
+                                    jiraPassword: '',
                                 }}
                                 validationSchema={Yup.object({
                                     email: Yup.string()
@@ -344,7 +346,6 @@ class UserSetting extends Component {
                                             .url('v_v_incorect_url')
                                             .required('v_v_required'),
                                     jiraUserName: checked && Yup.string().required('v_v_required'),
-                                    jiraPassword: checked && Yup.string().required('v_v_required'),
                                     zip: Yup.number()
                                         .integer('v_billing_code_error')
                                         .positive('v_billing_code_error'),
@@ -543,7 +544,19 @@ class UserSetting extends Component {
                                             </div>
                                         </div>
                                         <div className="user-settings__technology">
-                                            <div className="user-settings__technology-title">{v_tags}</div>
+                                            <div className="user-settings__technology-title">
+                                                {v_tags}
+                                                <span
+                                                    className="user-settings__technology-info"
+                                                    data-tip={v_tags_tooltip}
+                                                />
+                                            </div>
+                                            <ReactTooltip
+                                                className={'tool-tip'}
+                                                arrowColor={'transparent'}
+                                                place="right"
+                                                effect={'solid'}
+                                            />
                                             <TechnologyComponent
                                                 userTechnologies={this.state.userTechnologies}
                                                 setUserTechnologies={techArr =>
@@ -564,7 +577,7 @@ class UserSetting extends Component {
                                                             this.changeSyncJiraStatus(event);
                                                             formik.setValues({
                                                                 ...formik.values,
-                                                                jiraPassword: tokenJira ? fakePassword : '',
+                                                                jiraPassword: '',
                                                                 jiraUserName: loginJira || '',
                                                                 jiraUrl: urlJira || '',
                                                             });
@@ -620,11 +633,6 @@ class UserSetting extends Component {
                                                                     onChange: e => {
                                                                         e.preventDefault();
                                                                         formik.handleChange(e);
-                                                                        if (
-                                                                            formik.values.jiraPassword === fakePassword
-                                                                        ) {
-                                                                            formik.setFieldValue('jiraPassword', '');
-                                                                        }
                                                                     },
                                                                     onBlur: formik.handleBlur,
                                                                     value: formik.values.jiraUserName,
@@ -638,22 +646,18 @@ class UserSetting extends Component {
                                                             <label className="input_container">
                                                                 <span className="input_title">
                                                                     {v_password}
-                                                                    {formik.values.jiraPassword &&
-                                                                        formik.values.jiraPassword !== fakePassword && (
-                                                                            <i
-                                                                                onClick={event => {
-                                                                                    event.preventDefault();
-                                                                                    this.verifyJiraAction(formik);
-                                                                                }}
-                                                                                className={classNames(
-                                                                                    'verify-arrow-loop',
-                                                                                    {
-                                                                                        'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
-                                                                                    }
-                                                                                )}
-                                                                                title={v_verify}
-                                                                            />
-                                                                        )}
+                                                                    {formik.values.jiraPassword && (
+                                                                        <i
+                                                                            onClick={event => {
+                                                                                event.preventDefault();
+                                                                                this.verifyJiraAction(formik);
+                                                                            }}
+                                                                            className={classNames('verify-arrow-loop', {
+                                                                                'verify-arrow-loop--rotate-arrow': rotateArrowLoop,
+                                                                            })}
+                                                                            title={v_verify}
+                                                                        />
+                                                                    )}
                                                                 </span>
 
                                                                 <Input
@@ -665,17 +669,9 @@ class UserSetting extends Component {
                                                                         onBlur: formik.handleBlur,
                                                                         onFocus: event => {
                                                                             event.preventDefault();
-                                                                            if (
-                                                                                formik.values.jiraPassword ===
-                                                                                fakePassword
-                                                                            ) {
-                                                                                formik.setFieldValue(
-                                                                                    'jiraPassword',
-                                                                                    ''
-                                                                                );
-                                                                            }
                                                                         },
                                                                         value: formik.values.jiraPassword,
+                                                                        placeholder: v_add_your_password,
                                                                     }}
                                                                     errorMsg={formik.errors.jiraPassword}
                                                                     withValidation

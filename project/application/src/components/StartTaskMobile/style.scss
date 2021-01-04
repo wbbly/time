@@ -14,13 +14,13 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1rem 0;
   color: #ffffff;
 
   .current-task-mobile__task-info {
+    height: 5rem;
     display: flex;
     flex-grow: 1;
-    margin: 0 1rem 0 0;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -39,12 +39,28 @@
   }
 
   .current-task-mobile__stop-icon-wrapper {
-    position: relative;
-    display: inline-block;
+    position: absolute;
+    right: 1rem;
+    height: 5rem;
+    width: 5rem;
+    background-color: #333333;
+    &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -3rem;
+        height: 5rem;
+        width: 3rem;
+        background: linear-gradient(
+            to left,
+            rgba(51, 51, 51, 1) 0%,
+            rgba(51, 51, 51, 0) 100%
+        );
+    }
   }
 
   .current-task-mobile__stop-icon {
-    min-width: 5rem;
-    min-height: 5rem;
+    width: 5rem;
+    height: 5rem;
   }
 }

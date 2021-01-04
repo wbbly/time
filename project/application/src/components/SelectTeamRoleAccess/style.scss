@@ -23,20 +23,22 @@
     z-index: 15;
     width: 100%;
     right: 0;
-    top: 110%;
-    border-radius: 0.4rem;
-    color: #333333;
-    background: #ffffff;
+    top: 100%;
+    background:#27292A;
+    box-shadow: 2px 2px 4px black;
+    padding: 5px;
     overflow: hidden;
   }
 
   &__list-item {
-    padding: 0.5rem 0.5rem 0.5rem 1.3rem;
+    padding: 5px 10px;
+    color: white;
+    font-size: 14px;
     cursor: pointer;
 
     &:hover {
-      color: #ffffff;
-      background-color: #616161;
+      background-color: #e0e0e0;
+      color: #333333;
     }
   }
 
@@ -46,10 +48,11 @@
     right: 10px;
     height: 21px;
     width: 11px;
-    background: url("../../images/icons/arrow_down.svg") no-repeat center;
+    background: url("../../images/icons/arrow-down.svg") no-repeat center;
+    transition: all 0.3s;
     cursor: pointer;
 
-    &-open {
+    &_up {
       transform: rotate(-180deg);
     }
   }

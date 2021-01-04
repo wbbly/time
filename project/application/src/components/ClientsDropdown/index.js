@@ -97,17 +97,21 @@ class ClientsDropdown extends Component {
                         {selectedItem ? <i className="client-remove" onClick={this.removeSelectedClient} /> : null}
                     </span>
                 </div>
-                <i className="clients-vector" onClick={e => this.setState({ showList: !showList })} />
+                <i
+                    className={`clients-vector ${showList ? 'clients-vector_up' : ''}`}
+                    onClick={e => this.setState({ showList: !showList })}
+                />
                 {showList && (
                     <div className="clients_list_dropdown">
-                        <input
-                            ref={this.searchClientInput}
-                            className="clients_list_input"
-                            placeholder={`${v_find}...`}
-                            type="text"
-                            value={inputValue}
-                            onChange={this.searchClient}
-                        />
+                        <div className="clients_list_input">
+                            <input
+                                ref={this.searchClientInput}
+                                placeholder={`${v_find}...`}
+                                type="text"
+                                value={inputValue}
+                                onChange={this.searchClient}
+                            />
+                        </div>
                         <div className="clients_list">
                             {clientsList.length === 0 && <div className="empty-list">{v_empty}</div>}
                             {clientsList.map(client => {
