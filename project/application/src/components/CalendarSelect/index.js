@@ -70,16 +70,34 @@ const muiTheme = createMuiTheme({
 const CalendarIcon = className => (
     <svg
         className={className}
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
     >
         <path
-            d="M9 11H7V13H9V11ZM13 11H11V13H13V11ZM17 11H15V13H17V11ZM19 4H18V2H16V4H8V2H6V4H5C3.89 4 3.01 4.9 3.01 6L3 20C3 21.1 3.89 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4ZM19 20H5V9H19V20Z"
-            fill="white"
+            d="M15.8333 3.33398H4.16667C3.24619 3.33398 2.5 4.08018 2.5 5.00065V16.6673C2.5 17.5878 3.24619 18.334 4.16667 18.334H15.8333C16.7538 18.334 17.5 17.5878 17.5 16.6673V5.00065C17.5 4.08018 16.7538 3.33398 15.8333 3.33398Z"
+            stroke="#D3DCE6"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
         />
+        <path
+            d="M13.334 1.66602V4.99935"
+            stroke="#D3DCE6"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M6.66602 1.66602V4.99935"
+            stroke="#D3DCE6"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path d="M2.5 8.33398H17.5" stroke="#D3DCE6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 

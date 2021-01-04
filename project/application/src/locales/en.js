@@ -44,6 +44,9 @@ export default {
     'ERROR.USER.UPDATE_ACTIVE_STATUS_FAILED': "You can't be able to set your account as inactive in your own team.",
     'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED':
         "You can't be able to set the team owner's account as inactive.",
+    'SUCCESS.USER.DELETE_USER_FROM_TEAM_FAILED': 'The user was successfully deleted from team.',
+    'SUCCESS.USER.DELETE_USER_FROM_TEAM_SUCCEED': 'The user was successfully deleted from team.',
+    'ERROR.USER.DELETE_USER_FROM_TEAM_FAILED': 'An error occurred while deleting from team.',
 
     v_a_avatar_upload_error: 'Loading error! The download file is not an image or its size exceeds 1 Mb.',
     v_a_data_updated_ok: 'Your data has been updated',
@@ -52,6 +55,8 @@ export default {
     v_a_password_same_error: 'The passwords are not the same!',
     v_a_invite_sent: 'Invite has been sent!',
     v_a_invite_sent_error: 'An error occured while sending an invite to the user!',
+    v_a_project_created: 'Project created',
+    v_a_project_updated: 'Project updated',
     v_a_project_existed: 'Project is already exists',
     v_a_project_created_error: "Project can't be created",
     v_a_team_name_empty_error: "Team name can't be empty!",
@@ -73,6 +78,8 @@ export default {
     v_a_client_existed: 'Client is already exists',
     v_a_client_name_empty_error: "Client name can't be empty!",
 
+    v_set_default: 'set as default',
+    v_default: 'default',
     v_help: 'Help',
     v_upload_image: 'Upload image',
     v_delete_image: 'Delete image',
@@ -92,6 +99,7 @@ export default {
     v_profile_settings: 'Profile settings',
     v_change_password: 'Change password',
     v_new_password: 'New password',
+    v_new_team: 'New team',
     v_send: 'Send',
     v_check_email: 'If your email is registered in Wobbly check your mail and follow the instructions in the letter',
     v_enter_email: 'Add your email',
@@ -117,6 +125,7 @@ export default {
     v_reports: 'Reports',
     v_projects: 'Projects',
     v_project: 'Project',
+    v_description: 'Description',
     v_team: 'Team',
     v_add_team: 'Add team',
     v_add_your_password: 'Add your password',
@@ -170,6 +179,7 @@ export default {
     v_thisMonth: 'This month',
     v_lastMonth: 'Last month',
     v_this_year: 'This year',
+    v_last_year: 'Last year',
     v_days_up_to_today: 'days until today',
     v_days_starting_today: 'days starting today',
     v_jira_synchronization: 'Jira synchronization',
@@ -266,7 +276,7 @@ export default {
 
     v_delete_member: 'Delete Member',
     v_clone_invoice: 'Your invoice was cloned',
-    v_send_payment: 'Send payment',
+    v_send_payment: 'Send invoice',
     v_no_invoices: 'No invoices to show',
     v_owner: 'Owner',
 
@@ -282,7 +292,7 @@ export default {
 
     v_enter_text: 'Enter text',
     v_technologies: 'Technology',
-    v_add_technology: 'Add technology',
+    v_add_technology: 'Add',
     v_company_name: 'Company name',
 
     client_was_deleted: 'Client was deleted',
@@ -309,6 +319,7 @@ export default {
     v_fill_fields: 'Please fill all required fields',
     v_fill_fields_company_name: 'Please fill company name in sender field',
     v_tags: 'Tags',
+    v_tags_tooltip: 'Skills, technologies, etc.',
     v_edit_sender: 'Edit sender',
     v_copy: 'Copy',
     v_delete_invoice: 'Delete Invoice',
@@ -320,7 +331,7 @@ export default {
     v_status: 'Status',
     v_physical_address: 'Physical Address',
     v_time_date: 'Time and date',
-    v_err_technology_exist: 'Technology exist',
+    v_err_technology_exist: 'Tag exist',
 
     v_search: 'Search',
     v_reset: 'Reset',
@@ -328,6 +339,7 @@ export default {
 
     v_copy_and_share: 'Copy and share link',
     v_show_more: 'Show more',
+    v_copy_the_link: 'Copy the Link',
     v_copy_link: 'Copy Link',
     v_done: 'Done',
     v_link_copied: 'Link copied',

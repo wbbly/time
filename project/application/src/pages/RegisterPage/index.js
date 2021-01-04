@@ -12,6 +12,7 @@ import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
 import RegisterForm from '../../components/RegisterForm';
 
 // Actions
+import { resetInitialFetching } from '../../actions/UserActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Queries
@@ -52,6 +53,10 @@ class RegisterPage extends Component {
     };
 
     componentDidMount() {
+        if (!this.props.isInitialFetching) {
+            this.props.resetInitialFetching();
+        }
+
         if (window.location.href.indexOf('email') > 0) {
             let emailInput = window.location.href.split('=');
             this.setState({ emailFromRedirect: emailInput[emailInput.length - 1] });
@@ -90,13 +95,18 @@ class RegisterPage extends Component {
     }
 }
 
+const mapStateToProps = state => ({
+    isInitialFetching: state.userReducer.isInitialFetching,
+});
+
 const mapDispatchToProps = {
     showNotificationAction,
+    resetInitialFetching,
 };
 
 export default withRouter(
     connect(
-        null,
+        mapStateToProps,
         mapDispatchToProps
     )(RegisterPage)
 );

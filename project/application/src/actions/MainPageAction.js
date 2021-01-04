@@ -29,7 +29,11 @@ export const getTimeEntriesListAction = byPage => async dispatch => {
     let res = [];
 
     if (disabled) {
-        res = await getTimeEntriesList(isSearchMode ? { ...searchDateRange, searchValue } : undefined);
+        res = await getTimeEntriesList(
+            isSearchMode
+                ? { page: 1, limit: page * limit, ...searchDateRange, searchValue }
+                : { page: 1, limit: page * limit }
+        );
     } else if (page === 1) {
         res = await getTimeEntriesList(
             isSearchMode ? { page, limit, ...searchDateRange, searchValue } : { page, limit }

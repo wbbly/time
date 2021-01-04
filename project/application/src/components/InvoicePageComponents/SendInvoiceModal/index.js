@@ -11,23 +11,23 @@ import { showNotificationAction } from '../../../actions/NotificationActions';
 
 class SendInvoiceModal extends Component {
     state = {
-        inputValue: `Dear ${this.props.invoice.to.name},<br>
-            Please, look at invoice ${this.props.invoice.invoice_number} for 
-            ${this.props.invoice.projects.map(project => project.project_name + ' ')}here:
-            ${window.location.origin}/invoice/${this.props.invoice.id}.<br>
-            A reminder of my payment terms: payment is due on ${this.props.invoice.due_date}.<br>
-            If you have any questions about your invoice, please contact ${this.props.invoice.from.username} at 
-            ${this.props.invoice.from.email}.<br> 
-            Thank you for your business.<br>
-            We appreciate the opportunity to do business with you.<br>
-            Wobbly team`,
+        inputValue: `Dear ${this.props.invoice.to.name},
+Please, look at invoice ${this.props.invoice.invoice_number} for ${window.location.origin}/invoice/${
+            this.props.invoice.id
+        }
+A reminder of my payment terms: payment is due on ${this.props.invoice.due_date}
+If you have any questions about your invoice, please contact ${this.props.invoice.from.username} at ${
+            this.props.invoice.from.email
+        }
+Thank you
+We appreciate the opportunity to do business with you
+Wobbly team`,
     };
 
     render() {
         const {
             closeModal,
             vocabulary,
-            user,
             invoice,
             sendInvoiceLetterThunk,
             isInvoicePageDetailed,
@@ -36,8 +36,9 @@ class SendInvoiceModal extends Component {
         const { inputValue } = this.state;
         const { v_send_invoice, v_send_invoice_placeholder, v_send, v_cancel, v_from, v_to } = vocabulary;
         const sendInvoiceLetter = () => {
+            const message = this.state.inputValue.replace(/\n/g, '<br>');
             let data = {
-                message: this.state.inputValue,
+                message: message,
                 sendingStatus: true,
             };
             sendInvoiceLetterThunk(invoice.id, data, isInvoicePageDetailed);
@@ -53,10 +54,12 @@ class SendInvoiceModal extends Component {
                             <div className="send-invoice-modal__header-title">{v_send_invoice}</div>
                             <div className="send-invoice-modal__data">
                                 <div>
-                                    <span className="send-invoice-modal__bold-text">{v_from}:</span> {user.username}
+                                    <span className="send-invoice-modal__bold-text">{v_from}:</span>{' '}
+                                    {invoice.from.username} ({invoice.from.email})
                                 </div>
                                 <div>
-                                    <span className="send-invoice-modal__bold-text">{v_to}:</span> {invoice.to.name}
+                                    <span className="send-invoice-modal__bold-text">{v_to}:</span> {invoice.to.name} (
+                                    {invoice.to.email})
                                 </div>
                                 <div className="send-invoice-modal__input-container">
                                     <textarea

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { DateRangePicker } from 'react-date-range';
 import { enGB, ru, de, it, ua } from 'react-date-range/src/locale';
+import InputMask from 'react-input-mask';
 
 import { inputRanges, staticRanges } from '../../pages/ReportsPage/ranges';
 import { useOutsideClick } from '../../services/hookHelpers';
@@ -36,6 +37,8 @@ const TimerSearchComponent = ({
         endDate: moment().endOf('month'),
         key: 'selection',
     });
+    const [startDateValue, setStartDateValue] = useState(moment(moment().startOf('month')).format(dateFormat));
+    const [endDateValue, setEndDateValue] = useState(moment(moment().endOf('month')).format(dateFormat));
 
     useEffect(() => {
         return () => {
@@ -62,6 +65,7 @@ const TimerSearchComponent = ({
         v_thisMonth,
         v_lastMonth,
         v_this_year,
+        v_last_year,
         v_days_up_to_today,
         v_days_starting_today,
         lang,
@@ -92,6 +96,8 @@ const TimerSearchComponent = ({
 
     const handleSelect = async ranges => {
         setSelectionRange(ranges.selection);
+        setStartDateValue(moment(ranges.selection.startDate).format(dateFormat));
+        setEndDateValue(moment(ranges.selection.endDate).format(dateFormat));
         startSearchMode({
             searchValue,
             searchDateRange: {
@@ -107,6 +113,42 @@ const TimerSearchComponent = ({
         await getTimeEntriesListAction();
     };
 
+    const setStartDate = date => {
+        setStartDateValue(date);
+        let formattedDate = date.replace(/\D+/g, '');
+        if (formattedDate && formattedDate.length == 8 && moment(date, dateFormat)._isValid) {
+            let newDate = new Date(moment(date, dateFormat));
+            if (newDate < selectionRange.endDate) {
+                let timeStart = {
+                    selection: {
+                        ...selectionRange,
+                        startDate: newDate,
+                        endDate: selectionRange.endDate,
+                    },
+                };
+                handleSelect(timeStart);
+            }
+        }
+    };
+
+    const setEndDate = date => {
+        setEndDateValue(date);
+        let formattedDate = date.replace(/\D+/g, '');
+        if (formattedDate && formattedDate.length == 8 && moment(date, dateFormat)._isValid) {
+            let newDate = new Date(moment(date, dateFormat));
+            if (newDate > selectionRange.startDate) {
+                let timeStart = {
+                    selection: {
+                        ...selectionRange,
+                        endDate: newDate,
+                        startDate: selectionRange.startDate,
+                    },
+                };
+                handleSelect(timeStart);
+            }
+        }
+    };
+
     const handleReset = async () => {
         if (!isSearchMode) {
             return;
@@ -117,6 +159,8 @@ const TimerSearchComponent = ({
             endDate: moment().endOf('month'),
             key: 'selection',
         });
+        setStartDateValue(moment(moment().startOf('month')).format(dateFormat));
+        setEndDateValue(moment(moment().endOf('month')).format(dateFormat));
         endSearchMode();
         await getTimeEntriesListAction();
     };
@@ -132,12 +176,30 @@ const TimerSearchComponent = ({
                 />
             </div>
             <div className="timer-search__date-select" ref={wrapperRef}>
-                <div className="timer-search__date-select-header" onClick={() => setShowCallendar(!showCallendar)}>
-                    <span>
-                        {moment(selectionRange.startDate).format(dateFormat)} {' - '}
-                        {moment(selectionRange.endDate).format(dateFormat)}
+                <div className="timer-search__date-select-header">
+                    <span onClick={() => (!showCallendar ? setShowCallendar(true) : null)}>
+                        <InputMask
+                            className="select_input"
+                            onChange={e => setStartDate(e.target.value)}
+                            mask={dateFormat.toLowerCase()}
+                            formatChars={{ d: '[0-9]', m: '[0-9]', y: '[0-9]' }}
+                            value={startDateValue}
+                        />
+                        {'-'}
+                        <InputMask
+                            className="select_input"
+                            onChange={e => setEndDate(e.target.value)}
+                            mask={dateFormat.toLowerCase()}
+                            formatChars={{ d: '[0-9]', m: '[0-9]', y: '[0-9]' }}
+                            value={endDateValue}
+                        />
                     </span>
-                    <i className="timer-search__date-select-arrow-down" />
+                    <i
+                        className={`timer-search__date-select-arrow-down ${
+                            showCallendar ? 'timer-search__date-select-arrow-down_up' : ''
+                        }`}
+                        onClick={() => setShowCallendar(!showCallendar)}
+                    />
                 </div>
                 {showCallendar && (
                     <div
@@ -162,6 +224,7 @@ const TimerSearchComponent = ({
                                 v_thisMonth,
                                 v_lastMonth,
                                 v_this_year,
+                                v_last_year,
                                 firstDayOfWeek
                             )}
                             inputRanges={inputRanges(v_days_up_to_today, v_days_starting_today, firstDayOfWeek)}

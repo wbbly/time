@@ -39,6 +39,11 @@
     }
 
     &-close {
+      display: block;
+      width: 24px;
+      height: 24px;
+      background: url("../../../images/icons/close_black.svg") no-repeat;
+      background-position: center;
       cursor: pointer;
     }
   }

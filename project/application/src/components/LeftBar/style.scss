@@ -12,11 +12,6 @@
 .wrapper-position-add-team {
   width: 100%;
 }
-.wrapper-position-add-team::-webkit-scrollbar-track {
-  border-radius: 10px;
-  border: 5px solid rgba(0, 0, 0, 0);
-  background-clip: padding-box;
-}
 
 .logo_small {
   display: block;
@@ -35,8 +30,8 @@ i {
 }
 
 .navigation_links > i {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
 }
 
 .navigation_links_container {
@@ -44,16 +39,39 @@ i {
   width: 100%;
 }
 
+.arrow_closed,
+.arrow_open,
+.arrow_closed_mobile,
+.arrow_open_mobile {
+  width: 28px;
+  height: 28px;
+  background: url("../../images/icons/arrow-down.svg") no-repeat center;
+  transition: all 0.3s;
+}
+
+.arrow_closed {
+  transform: rotate(-90deg);
+}
+.arrow_open {
+  transform: rotate(90deg);
+}
+.arrow_closed_mobile {
+  transform: rotate(180deg);
+}
+.arrow_open_mobile {
+  transform: rotate(0deg);
+}
+
 .timer {
-  background: url("../../images/icons/clock.svg") no-repeat center;
+  background: url("../../images/icons/time.svg") no-repeat center;
 }
 
 .reports {
-  background: url("../../images/icons/newspaper.svg") no-repeat center;
+  background: url("../../images/icons/reports.svg") no-repeat center;
 }
 
 .projects {
-  background: url("../../images/icons/folder.svg") no-repeat center;
+  background: url("../../images/icons/projects.svg") no-repeat center;
 }
 
 .help {
@@ -61,6 +79,8 @@ i {
 }
 
 .team {
+  width: 20px;
+  height: 20px;
   background: url("../../images/icons/team.svg") no-repeat center;
 }
 .clients {
@@ -68,7 +88,7 @@ i {
 }
 
 .workspaces {
-  background: url("../../images/icons/arrow_down.svg") no-repeat center;
+  background: url("../../images/icons/arrow-down.svg") no-repeat center;
 }
 
 .invoices {
@@ -94,6 +114,15 @@ i {
 
 .active_external_link {
   background: #4f4f4f;
+}
+
+.team_link {
+  justify-content: space-between !important;
+  padding: 0 21px;
+}
+.team_link > span:hover {
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .navigation_links {

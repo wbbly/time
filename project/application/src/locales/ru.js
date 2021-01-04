@@ -46,6 +46,9 @@ export default {
         'Вы не можете установить свою учетную запись как неактивную в своей собственной команде.',
     'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED':
         'Вы не можете установить учетную запись владельца команды как неактивную.',
+    'SUCCESS.USER.DELETE_USER_FROM_TEAM_FAILED': 'Пользователь был успешно удален из команды.',
+    'SUCCESS.USER.DELETE_USER_FROM_TEAM_SUCCEED': 'Пользователь был успешно удален из команды.',
+    'ERROR.USER.DELETE_USER_FROM_TEAM_FAILED': 'Произошла ошибка при удалении из команды.',
 
     v_a_avatar_upload_error:
         'Ошибка загрузки! Загружаемый файл не является изображением или его размер превышает 1 Мб.',
@@ -55,6 +58,8 @@ export default {
     v_a_password_same_error: 'Пароли не совпадают!',
     v_a_invite_sent: 'Приглашение отправлено!',
     v_a_invite_sent_error: 'Произошла ошибка при отправке приглашения пользователю!',
+    v_a_project_created: 'Проект создан',
+    v_a_project_updated: 'Проект обновлен',
     v_a_project_existed: 'Проект уже существует',
     v_a_project_created_error: 'Проект не может быть создан',
     v_a_team_name_empty_error: 'Имя команды не может быть пустым!',
@@ -76,6 +81,8 @@ export default {
     v_a_client_existed: 'Клиент уже существует',
     v_a_client_name_empty_error: 'Имя клиента не может быть пустым!',
 
+    v_set_default: 'выбрать',
+    v_default: 'по умолчанию',
     v_help: 'Помощь',
     v_upload_image: 'Загрузить изображение',
     v_delete_image: 'Удалить изображение',
@@ -93,6 +100,7 @@ export default {
     v_your_name: 'Имя',
     v_my_profile: 'Профиль',
     v_profile_settings: 'Настройки',
+    v_new_team: 'Новая команда',
     v_change_password: 'Изменить пароль',
     v_new_password: 'Новый пароль',
     v_send: 'Отправить',
@@ -120,6 +128,7 @@ export default {
     v_reports: 'Отчет',
     v_projects: 'Проекты',
     v_project: 'Проект',
+    v_description: 'Описание',
     v_team: 'Команда',
     v_add_team: 'Новая команда',
     v_add_your_password: 'Введите пароль',
@@ -173,6 +182,7 @@ export default {
     v_thisMonth: 'Текущий месяц',
     v_lastMonth: 'Прошлый месяц',
     v_this_year: 'Текущий год',
+    v_last_year: 'Прошлый год',
     v_days_up_to_today: 'дней до сегодня',
     v_days_starting_today: 'дней от сегодня',
     v_jira_synchronization: 'Jira синхронизация',
@@ -267,7 +277,7 @@ export default {
 
     v_delete_member: 'Удалить участника',
     v_clone_invoice: 'Ваш счет был скопирован',
-    v_send_payment: 'Отправить платеж',
+    v_send_payment: 'Отправить счет',
     v_no_invoices: 'Нет счетов, чтобы показать',
     v_owner: 'Владелец',
     v_country: 'Страна',
@@ -279,7 +289,7 @@ export default {
 
     v_enter_text: 'Введите текст',
     v_technologies: 'Технологии',
-    v_add_technology: 'Добавить технологию',
+    v_add_technology: 'Добавить',
     v_company_name: 'Название компании',
 
     client_was_deleted: 'Клиент был удален',
@@ -306,6 +316,7 @@ export default {
     v_fill_fields: 'Пожалуйста, заполните все обязательные поля',
     v_fill_fields_company_name: 'Пожалуйста, укажите название компании в поле отправителя',
     v_tags: 'Теги',
+    v_tags_tooltip: 'Навыки, технологии и др.',
     v_edit_sender: 'Изменить отправителя',
     v_copy: 'Копировать',
     v_delete_invoice: 'Удалить Счет',
@@ -317,7 +328,7 @@ export default {
     v_status: 'Статус',
     v_physical_address: 'Физический адрес',
     v_time_date: 'Время и дата',
-    v_err_technology_exist: 'Технология уже добавлена',
+    v_err_technology_exist: 'Тег уже добавлен',
 
     v_search: 'Поиск',
     v_reset: 'Сброс',
@@ -325,6 +336,7 @@ export default {
 
     v_copy_and_share: 'Скопировать и поделиться ссылкой',
     v_show_more: 'Показать больше',
+    v_copy_the_link: 'Скопировать Cсылку',
     v_copy_link: 'Скопировать Cсылку',
     v_done: 'Готово',
     v_link_copied: 'Ссылка скопирована',

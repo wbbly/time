@@ -61,7 +61,7 @@ class CreateProjectModal extends Component {
     addProject() {
         const { vocabulary, showNotificationAction } = this.props;
         const { selectedClient, selectedProject } = this.state;
-        const { v_a_project_existed, v_a_project_created_error } = vocabulary;
+        const { v_a_project_created, v_a_project_existed, v_a_project_created_error } = vocabulary;
         const project = addProjectPreProcessing(
             this.createProjectInput.value,
             this.state.selectedValue,
@@ -81,13 +81,14 @@ class CreateProjectModal extends Component {
                     name: project.name,
                     projectColorId: project.colorProject.id,
                     clientId: selectedClient ? selectedClient.id : null,
-                    jiraProjectId: selectedProject ? selectedProject.id : null,
+                    jiraProjectId: selectedProject ? selectedProject : null,
                 },
             }),
         }).then(
             result => {
                 this.props.getProjects();
                 this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false });
+                showNotificationAction({ text: v_a_project_created, type: 'success' });
             },
             err => {
                 if (err instanceof Response) {
@@ -167,7 +168,7 @@ class CreateProjectModal extends Component {
                                 <div className="select_main">
                                     <div className={`circle ${this.state.selectedValue.name}`} />
                                 </div>
-                                <i className="vector" />
+                                <i className={`vector ${this.state.listOpen ? 'vector_up' : ''}`} />
                                 {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                             </div>
                             <ClientsDropdown

@@ -23,6 +23,7 @@ class InvoicesPage extends Component {
     state = {
         isInitialFetching: true,
         sendInvoiceModalData: null,
+        copiedInvoice: false,
     };
 
     componentDidMount() {
@@ -35,7 +36,14 @@ class InvoicesPage extends Component {
             (prevProps.isFetching !== this.props.isFetching && !this.props.isFetching) ||
             prevProps.page !== this.props.page
         ) {
-            this.props.getInvoicesList(this.props.page, this.props.limit);
+            if (this.state.copiedInvoice) {
+                this.props.getInvoicesList(0, this.props.limit);
+                this.setState({ copiedInvoice: false }, () => {
+                    this.props.history.push(`/invoices/update/${this.props.copiedInvoiceId}`);
+                });
+            } else {
+                this.props.getInvoicesList(this.props.page, this.props.limit);
+            }
         }
     }
 
@@ -48,23 +56,27 @@ class InvoicesPage extends Component {
     };
 
     prepareBodyRequest = oldObject => {
+        let dateDue = new Date();
+        dateDue.setDate(dateDue.getDate() + 1);
         let newObject = {};
         newObject.vendorId = this.props.defaultUserSender.id;
         newObject.sender = oldObject.invoice_vendor;
         newObject.recipient = oldObject.to;
-        newObject.dateFrom = oldObject.invoice_date;
-        newObject.dateDue = oldObject.due_date;
+        newObject.dateFrom = new Date();
+        newObject.dateDue = dateDue;
         newObject.timezoneOffset = oldObject.timezone_offset;
         newObject.currency = oldObject.currency;
         newObject.comment = oldObject.comment;
         newObject.projects = oldObject.projects;
         newObject.image = oldObject.logo;
+        newObject.discount = oldObject.discount;
         return newObject;
     };
 
     copyInvoice = oldInvoice => {
         const newInvoice = this.prepareBodyRequest(oldInvoice);
         this.props.addInvoice(newInvoice, true);
+        this.setState({ copiedInvoice: true });
     };
 
     render() {
@@ -73,7 +85,7 @@ class InvoicesPage extends Component {
         const { sendInvoiceModalData } = this.state;
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
-                <CustomScrollbar>
+                <CustomScrollbar disableTimeEntriesFetch>
                     <div className="wrapper-invoices-page">
                         <Loading flag={isFetching} mode="overlay" withLogo={false}>
                             <div
@@ -147,6 +159,7 @@ const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
     isInitialFetching: invoicesReducer.isInitialFetching,
     senderId: invoicesReducer.senderId,
     defaultUserSender: userReducer.user,
+    copiedInvoiceId: invoicesReducer.copiedInvoiceId,
 });
 
 const mapDispatchToProps = {

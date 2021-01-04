@@ -179,7 +179,7 @@ class InvoiceViewPage extends Component {
 
         return (
             <Loading flag={isInitialFetching || isFetching} mode="parentSize" withLogo={false}>
-                <CustomScrollbar>
+                <CustomScrollbar disableTimeEntriesFetch>
                     <div className="invoices-page-detailed-wrapper">
                         <div className={classNames('invoices-page-detailed-wrapper__header', {})}>
                             {!this.isViewMode && (

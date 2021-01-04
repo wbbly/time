@@ -2,23 +2,9 @@
   width: 100%;
   z-index: inherit;
   margin-bottom: 10px;
-  max-height: 150px;
+  max-height: 156px;
   overflow-x: hidden;
   overflow-y: auto;
-}
-.team_list::-webkit-scrollbar {
-  width: 12px;
-}
-.team_list::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  border: 4px solid rgba(0, 0, 0, 0);
-  background-clip: padding-box;
-}
-.team_list::-webkit-scrollbar-track {
-  border-radius: 10px;
-  border: 2 px solid rgba(0, 0, 0, 0);
-  background-clip: padding-box;
 }
 .team_list ul {
   padding-inline-start: 0;
@@ -34,7 +20,6 @@
 
 .team_list ul li {
   color: #fff;
-  cursor: pointer;
   font-family: "Open Sans", sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -55,7 +40,6 @@
 .team_list ul li div.team_list-item.active {
   padding: 6px 20px 6px 20px;
   margin: 0 13px 0 25px;
-  background: #2b2b2b;
   border-radius: 60px;
 }
 

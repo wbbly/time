@@ -20,7 +20,7 @@ const initialState = {
     serverClientTimediff: 0,
     pagination: {
         page: 1,
-        limit: 50,
+        limit: 100,
         disabled: false,
     },
     isSearchMode: false,

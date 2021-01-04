@@ -38,6 +38,7 @@
     border-bottom: 1px solid #bdbdbd;
     &:nth-child(1) {
       width: 29%;
+      cursor: pointer;
     }
     &:nth-child(2) {
       width: 17%;
@@ -53,28 +54,34 @@
 
   .team_page_data table td {
     position: relative;
-    height: 50px;
+    min-height: 50px;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: normal;
     font-size: 16px;
     color: #ffffff;
+    vertical-align: top;
+    padding: 15px 0;
   }
   .team_page_data table .avatar-small {
     display: inline-block;
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
-    min-height: 24px;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
     border-radius: 50%;
     background-repeat: no-repeat;
-    background-position: top center;
+    background-position: center;
+    background-color: #4f4f4f;
+    background-image: url("../../images/icons/user.svg");
+  }
+  .team_page_data table .avatar-cover {
     background-size: cover;
   }
   .team_page_data table .user-container {
     display: flex;
-    align-items: center;
   }
   .team_page_data table .user-container span {
     margin-left: 5px;
@@ -82,6 +89,29 @@
   .team_page_data table .user-container .avatar-big {
     position: absolute;
     transition: transform 0.4s ease;
+  }
+  .team_page_data table .user-container .user-name {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    // margin-left: 10px;
+  }
+  .team_page_data table .user-container .technology_container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .team_page_data table .user-container .technology {
+    word-break: break-all;
+    width: auto;
+    font-size: 12px;
+    line-height: 12px;
+    color: white;
+    background: #4f4f4f;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 4px 8px;
+    margin: 5px 10px 0 0;
+    cursor: pointer;
   }
   .team_page_data table .phone_container {
     min-width: 100px;
@@ -112,10 +142,9 @@
     margin-top: -2px;
     margin-left: 18px;
     margin-right: 0px;
-    width: 15px;
-    height: 15px;
-    background: url("../../images/icons/baseline-create-24px.svg") no-repeat
-      center;
+    width: 20px;
+    height: 20px;
+    background: url("../../images/icons/edit.svg") no-repeat center;
     cursor: pointer;
     background-size: 20px;
   }
@@ -189,42 +218,44 @@
     }
     td:nth-child(1),
     td:nth-child(2),
-    td:nth-child(3) {
-      width: 60%;
-    }
+    td:nth-child(3),
     td:nth-child(4),
     td:nth-child(5) {
-      width: 40%;
+      width: 100%;
     }
+    // td:nth-child(4),
+    // td:nth-child(5) {
+    //   width: 20%;
+    // }
     tr {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       flex-direction: column;
       position: relative;
-      height: 160px;
+      // height: 160px;
       border-bottom: 1px solid rgba(156, 156, 156, 0.4);
       margin-top: 15px;
     }
-    td:nth-child(4) {
-      justify-content: flex-end;
-    }
-    td:nth-child(5) {
-      justify-content: flex-end;
-    }
-    .team_page_data table .user-container span {
-      margin-left: 0;
-    }
-    .team_page_data table .team-access-container {
-      min-width: auto;
-    }
+    // td:nth-child(4) {
+    //   justify-content: flex-end;
+    // }
+    // td:nth-child(5) {
+    //   justify-content: flex-end;
+    // }
+    // .team_page_data table .user-container span {
+    //   margin-left: 0;
+    // }
+    // .team_page_data table .team-access-container {
+    //   min-width: auto;
+    // }
     .team_page_data table .access_container {
       height: auto;
       width: 75px;
-      margin-top: 5px;
+      // margin-top: 5px;
     }
-    .team-access-container-admin {
-      padding-right: 20px;
-    }
+    // .team-access-container-admin {
+    //   padding-right: 20px;
+    // }
   }
 }

@@ -75,7 +75,11 @@ class SwitchJiraType extends Component {
                             ))}
                         </div>
                     )}
-                    <i className="wrapper-switch-type__icon-arrow" />
+                    <i
+                        className={`wrapper-switch-type__icon-arrow ${
+                            isOpenDropdown ? 'wrapper-switch-type__icon-arrow_up' : ''
+                        }`}
+                    />
                 </div>
             </div>
         );

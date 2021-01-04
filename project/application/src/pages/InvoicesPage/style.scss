@@ -2,8 +2,7 @@
   font-family: "Open Sans", sans-serif;
   color: #ffffff;
   position: relative;
-  margin-right: 17px;
-  margin-bottom: 17px;
+  margin-bottom: 6px;
   .cat-wrapper {
     position: absolute;
     top: 250%;
@@ -28,8 +27,7 @@
   }
 
   .invoices-page-bottom {
-    height: 100%;
-    padding: 0 40px;
+    padding: 0 40px 40px;
 
     &__title {
       padding: 0 40px;
