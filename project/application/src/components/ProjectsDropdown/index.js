@@ -3,12 +3,17 @@ import React, { Component } from 'react';
 import './style.scss';
 
 class ProjectsDropdown extends Component {
-    state = {
-        relationProjectsList: [],
-        showList: false,
-        inputValue: '',
-        selectedItem: null,
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            relationProjectsList: [],
+            showList: false,
+            inputValue: '',
+            selectedItem: null,
+        };
+
+        this.searchProjectInput = React.createRef();
+    }
 
     closeDropdown = e => {
         const { showList } = this.state;
@@ -30,7 +35,7 @@ class ProjectsDropdown extends Component {
 
     projectSelect = (name, id) => {
         this.setState({ inputValue: '', showList: false, selectedItem: { name, id } });
-        this.props.projectSelect({ name, id });
+        this.props.projectSelect(id);
     };
 
     removeSelectedProject = event => {
@@ -93,17 +98,21 @@ class ProjectsDropdown extends Component {
                         {selectedItem ? <i className="client-remove" onClick={this.removeSelectedProject} /> : null}
                     </span>
                 </div>
-                <i className="projects-vector" onClick={e => this.setState({ showList: !showList })} />
+                <i
+                    className={`projects-vector ${showList ? 'projects-vector_up' : ''}`}
+                    onClick={e => this.setState({ showList: !showList })}
+                />
                 {showList && (
                     <div className="projects_list_dropdown">
-                        <input
-                            ref={(this.searchProjectInput = React.createRef())}
-                            className="projects_list_input"
-                            placeholder={`${v_find}...`}
-                            type="text"
-                            value={inputValue}
-                            onChange={this.searchProject}
-                        />
+                        <div className="projects_list_input">
+                            <input
+                                ref={this.searchProjectInput}
+                                placeholder={`${v_find}...`}
+                                type="text"
+                                value={inputValue}
+                                onChange={this.searchProject}
+                            />
+                        </div>
                         <div className="projects_list">
                             {relationProjectsList.length === 0 && <div className="empty-list">{v_empty}</div>}
                             {relationProjectsList.map(project => {

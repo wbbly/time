@@ -92,8 +92,16 @@ const ConnectedIcon = props => {
 const PlusIcon = props => {
     const { className } = props;
     return (
-        <svg className={className} xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 357 357">
-            <path d="M357,204H204v153h-51V204H0v-51h153V0h51v153h153V204z" fill="white" />
+        <svg
+            className={className}
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path d="M8 3.33334V12.6667" stroke="white" strokeWidth="2" />
+            <path d="M3.3335 8H12.6668" stroke="white" strokeWidth="2" />
         </svg>
     );
 };
@@ -128,9 +136,9 @@ export const SocialConnectButton = props => {
                 'social-connect-button__is-fetching': isFetching,
             })}
         >
-            {type === 'facebook' && <FacebookIcon className="social-connect-button__social-icon" />}
+            {/* {type === 'facebook' && <FacebookIcon className="social-connect-button__social-icon" />}
             {type === 'linkedin' && <LinkedInIcon className="social-connect-button__social-icon" />}
-            {type === 'google' && <GoogleIcon className="social-connect-button__social-icon" />}
+            {type === 'google' && <GoogleIcon className="social-connect-button__social-icon" />} */}
             <span className="social-connect-button__text">{textButton}</span>
             {connected ? (
                 <>

@@ -1,25 +1,107 @@
 .team_add_wrapper {
-    position: absolute;
-    top: 0;
-    right: 21px;
-    cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 21px;
+}
+.team_add_wrapper_mobile {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 /* .team_add_wrapper:hover {
     background-color: #4f4f4f;
 } */
 
-.team_add {
-    /* text-decoration: underline;
+/* .team_add { */
+/* text-decoration: underline;
     font-weight: 700;
     font-size: 1.1em; */
+/* } */
+
+.customeTheme,
+.customTheme_mobile {
+  position: absolute;
+  top: -150%;
+  left: calc(100% + 20px);
+  border-radius: 2px;
+  padding: 20px 12px 0 12px;
+  background-color: #2d2d2d !important;
+  filter: drop-shadow(2px 4px 16px rgba(0, 0, 0, 0.3));
+  z-index: 3;
+  max-width: 304px;
+  width: 10000px;
 }
 
-.team_add .team_add_plus {
-    width: 28px;
-    height: 28px;
-    /* margin-left: 10px; */
-    background: url("../../images/icons/plus.svg") no-repeat center;
+.customTheme_mobile {
+  width: calc(100% - 42px);
+  top: 45%;
+  left: 0;
+  margin: 0 21px;
+  max-width: 100%;
 }
 
+.add_team_container {
+  position: relative;
+  background-color: #333;
+  border-bottom: 1px solid #8492a5;
 
+  max-height: 173px;
+}
+
+.team_item,
+.team_item_selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 19px;
+  color: #ffffff;
+  background-color: #2d2d2d;
+  cursor: pointer;
+}
+
+.team_item:hover > .team_selection {
+  display: block;
+}
+
+.team_item_selected {
+  background-color: #3f3f3f;
+  padding: 4px 16px;
+}
+
+.team_selection {
+  color: #28cd6a;
+  display: none;
+}
+
+.team_selection_default {
+  color: #00bfff;
+  padding: 4px 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+}
+.add_team_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 19px;
+  cursor: pointer;
+  padding: 20px 0;
+}
+
+.add_team_btn > i {
+  width: 17px;
+  height: 17px;
+  background: url("../../images/icons/white_pluse.svg") no-repeat center;
+  margin-right: 17px;
+}

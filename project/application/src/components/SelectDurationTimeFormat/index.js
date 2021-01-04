@@ -41,7 +41,7 @@ class SelectDurationTimeFormat extends Component {
         const { vocabulary } = this.props;
         const { v_duration_display_format, v_classic, v_improved, v_decimal } = vocabulary;
         const durationMap = {
-            classic: `${v_classic} (32:08 min)`,
+            classic: `${v_classic} (1h 32m; 32m; 16s)`,
             improved: `${v_improved} (0:42:03)`,
             decimal: `${v_decimal} (0.67 h)`,
         };
@@ -67,7 +67,11 @@ class SelectDurationTimeFormat extends Component {
                             ))}
                         </div>
                     )}
-                    <i className="duration-time-format__icon-arrow" />
+                    <i
+                        className={`duration-time-format__icon-arrow ${
+                            isOpenDropdown ? 'duration-time-format__icon-arrow_up' : ''
+                        }`}
+                    />
                 </div>
             </div>
         );

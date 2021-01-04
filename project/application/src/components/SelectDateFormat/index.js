@@ -70,7 +70,7 @@ class SelectDateFormat extends Component {
                             ))}
                         </div>
                     )}
-                    <i className="date-format__icon-arrow" />
+                    <i className={`date-format__icon-arrow ${isOpenDropdown ? 'date-format__icon-arrow_up' : ''}`} />
                 </div>
             </div>
         );

@@ -83,3 +83,22 @@ input:focus {
 //         font-size: 12px;
 //     }
 // }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 3px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: #333333;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

@@ -7,6 +7,7 @@ import {
     SET_USER_AVATAR_REQUEST_SUCCESS,
     SET_USER_AVATAR_REQUEST_FAIL,
     RESET_ALL,
+    RESET_INITIAL_FETCHING,
     CHANGE_USER_DATA,
     TOGGLE_MODAL,
     SET_DATE_FORMAT,
@@ -139,6 +140,12 @@ export default (state = initialState, { type, payload }) => {
             return {
                 ...initialState,
                 isInitialFetching: false,
+            };
+
+        case RESET_INITIAL_FETCHING:
+            return {
+                ...state,
+                isInitialFetching: true,
             };
 
         default:

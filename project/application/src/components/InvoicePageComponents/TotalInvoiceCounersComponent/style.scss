@@ -70,18 +70,18 @@
       }
     }
   }
-  @media screen and (max-width: 1180px) {
-    &__block {
-      .total-invoice-counters__dropdown-arrow {
-      left: 50%;
-      top: 100%;
-      transform: translate(-50%, 0) rotate(0deg);
-      &--rotate {
-        transform: translate(-50%, 0) rotate(-180deg);
-      }
-    }
-  }
-  }
+  // @media screen and (max-width: 1180px) {
+  //   &__block {
+  //     .total-invoice-counters__dropdown-arrow {
+  //       left: 50%;
+  //       top: 100%;
+  //       transform: translate(-50%, 0) rotate(0deg);
+  //       &--rotate {
+  //         transform: translate(-50%, 0) rotate(-180deg);
+  //       }
+  //     }
+  //   }
+  // }
   @media screen and (max-width: 700px) {
     &__block {
       min-width: 30%;

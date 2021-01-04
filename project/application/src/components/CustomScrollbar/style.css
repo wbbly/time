@@ -1,0 +1,4 @@
+.scroll-bar > div:first-child {
+  overflow: hidden scroll !important;
+  margin-bottom: 0 !important;
+}

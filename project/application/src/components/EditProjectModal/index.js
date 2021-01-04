@@ -51,7 +51,7 @@ class EditProjectModal extends Component {
 
     changeProject() {
         const { vocabulary, showNotificationAction } = this.props;
-        const { v_a_project_existed, v_a_project_edit_error } = vocabulary;
+        const { v_a_project_updated, v_a_project_existed, v_a_project_edit_error } = vocabulary;
         const { selectedClient, selectedProject } = this.state;
         const project = addProjectPreProcessing(
             this.editProjectInput.value,
@@ -79,13 +79,14 @@ class EditProjectModal extends Component {
                     name: this.editProjectInput.value,
                     projectColorId: this.state.selectedValue.id,
                     clientId: selectedClient ? selectedClient.id : null,
-                    jiraProjectId: selectedProject ? selectedProject.id : null,
+                    jiraProjectId: selectedProject ? selectedProject : null,
                 },
             }),
         }).then(
             result => {
                 this.props.getProjects();
                 this.closeModal();
+                showNotificationAction({ text: v_a_project_updated, type: 'success' });
             },
             err => {
                 if (err instanceof Response) {
@@ -226,7 +227,7 @@ class EditProjectModal extends Component {
                                 <div className="select_main">
                                     <div className={`circle ${this.state.selectedValue.name}`} />
                                 </div>
-                                <i className="vector" />
+                                <i className={`vector ${this.state.listOpen ? 'vector_up' : ''}`} />
                                 {this.state.listOpen && <div className="select_list">{selectItems}</div>}
                             </div>
                             <ClientsDropdown

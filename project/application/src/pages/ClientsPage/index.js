@@ -122,7 +122,7 @@ class ClientsPage extends Component {
         };
         return (
             <Loading flag={isInitialFetching || currentTeam.isFetching} mode="parentSize" withLogo={false}>
-                <CustomScrollbar>
+                <CustomScrollbar disableTimeEntriesFetch>
                     <div
                         className={classNames('wrapper_clients_page', {
                             'wrapper_clients_page--mobile': isMobile,

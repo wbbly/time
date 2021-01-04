@@ -230,6 +230,7 @@ class PersonSelect extends Component {
                                     {userSender.username && <div>{userSender.username}</div>}
                                     {userSender.name && <div>{userSender.name}</div>}
                                     {userSender.email && <div>{userSender.email}</div>}
+                                    {userSender.phone && <div>{userSender.phone}</div>}
                                     <div>{`${(userSender.country && userSender.country) || '-'}${(userSender.state &&
                                         ', ' + userSender.state) ||
                                         ''}${(userSender.city && ', ' + userSender.city) || ''}${(userSender.zip &&
@@ -246,11 +247,11 @@ class PersonSelect extends Component {
                                     <div>{selectedRecipient.company_name}</div>
                                     {selectedRecipient.name && <div>{selectedRecipient.name}</div>}
                                     {selectedRecipient.email && <div>{selectedRecipient.email}</div>}
+                                    {selectedRecipient.phone && <div>{selectedRecipient.phone}</div>}
                                     <div>{`${(selectedRecipient.country && selectedRecipient.country) ||
                                         '-'}${(selectedRecipient.state && ', ' + selectedRecipient.state) ||
                                         ''}${(selectedRecipient.city && ', ' + selectedRecipient.city) ||
-                                        ''}${(selectedRecipient.zip = !'null' && ', ' + selectedRecipient.zip) ||
-                                        ''}`}</div>
+                                        ''}${(selectedRecipient.zip && ', ' + selectedRecipient.zip) || ''}`}</div>
                                 </div>
                             </div>
                         </div>
@@ -268,14 +269,15 @@ class PersonSelect extends Component {
                     )}
                     {isOpen && (
                         <div ref={this.dropdown} className="person-select__dropdown">
-                            <input
-                                className="person-select__dropdown-list-input"
-                                ref={this.input}
-                                value={inputValue}
-                                onChange={this.onChangeInput}
-                                type="text"
-                                placeholder={`${v_find}...`}
-                            />
+                            <div className="person-select__dropdown-list-input">
+                                <input
+                                    ref={this.input}
+                                    value={inputValue}
+                                    onChange={this.onChangeInput}
+                                    type="text"
+                                    placeholder={`${v_find}...`}
+                                />
+                            </div>
                             <div className="person-select__dropdown-list">
                                 {personsList &&
                                     personsList.map(person => {

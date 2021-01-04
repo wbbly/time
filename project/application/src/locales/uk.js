@@ -45,6 +45,9 @@ export default {
         'Ви не можете встановити свій обліковий запис як неактивний у своїй власній команді.',
     'ERROR.USER.UPDATE_TEAM_OWNER_ACTIVE_STATUS_FAILED':
         'Ви не можете встановити обліковий запис власника команди як неактивний.',
+    'SUCCESS.USER.DELETE_USER_FROM_TEAM_FAILED': 'Користувача було успішно видалено з команди.',
+    'SUCCESS.USER.DELETE_USER_FROM_TEAM_SUCCEED': 'Користувача було успішно видалено з команди.',
+    'ERROR.USER.DELETE_USER_FROM_TEAM_FAILED': 'Під час видалення з команди сталася помилка.',
 
     v_a_avatar_upload_error: 'Помилка завантаження! Завантажений файл не є зображенням або його розмір перевищує 1 Мб.',
     v_a_data_updated_ok: 'Ваші дані були оновлені',
@@ -53,6 +56,8 @@ export default {
     v_a_password_same_error: 'Паролі не співпадають!',
     v_a_invite_sent: 'Запрошення відправлено!',
     v_a_invite_sent_error: 'Сталася помилка під час надсилання запрошення користувачеві!',
+    v_a_project_created: 'Проект створено',
+    v_a_project_updated: 'Проект оновлено',
     v_a_project_existed: 'Проект вже існує',
     v_a_project_created_error: 'Проект не може бути створений',
     v_a_team_name_empty_error: "Ім'я команди не може бути порожнім!",
@@ -74,6 +79,8 @@ export default {
     v_a_client_existed: 'Клієнт вже існує',
     v_a_client_name_empty_error: "Ім'я клієнта не може бути порожнім!",
 
+    v_set_default: 'вибрати',
+    v_default: 'обрана',
     v_help: 'Допомога',
     v_upload_image: 'Завантажити зображення',
     v_delete_image: 'Видалити зображення',
@@ -93,6 +100,7 @@ export default {
     v_profile_settings: 'Налаштування',
     v_change_password: 'Змінити пароль',
     v_new_password: 'Новий пароль',
+    v_new_team: 'Нова команда',
     v_send: 'Надіслати',
     v_check_email: 'Еякщо ваш email зареєстрований в Wobbly перевірте вашу пошту та дотримуйтеся інструкції в листі',
     v_enter_email: 'Введіть email',
@@ -118,6 +126,7 @@ export default {
     v_reports: 'Звіт',
     v_projects: 'Проекти',
     v_project: 'Проект',
+    v_description: 'Опис',
     v_team: 'Команда',
     v_add_team: 'Нова команда',
     v_add_your_password: 'Введіть пароль',
@@ -171,6 +180,7 @@ export default {
     v_thisMonth: 'Поточний місяць',
     v_lastMonth: 'Минулий місяць',
     v_this_year: 'Поточний рік',
+    v_last_year: 'Минулий рік',
     v_days_up_to_today: 'днів до сьогодні',
     v_days_starting_today: 'днів від сьогодні',
     v_jira_synchronization: 'Jira синхронізація',
@@ -266,7 +276,7 @@ export default {
 
     v_delete_member: 'Видалити учасника',
     v_clone_invoice: 'Ваш рахунок був зкопійован',
-    v_send_payment: 'Надіслати платіж',
+    v_send_payment: 'Надіслати рахунок',
     v_no_invoices: 'Немає рахунків для показу',
     v_owner: 'Власник',
     v_country: 'Країна',
@@ -278,7 +288,7 @@ export default {
 
     v_enter_text: 'Введіть текст',
     v_technologies: 'Технології',
-    v_add_technology: 'Додати технологію',
+    v_add_technology: 'Додати',
     v_company_name: 'Назва компанії',
 
     client_was_deleted: 'Клієнта видалено',
@@ -305,6 +315,7 @@ export default {
     v_fill_fields: 'Заповніть усі необхідні поля',
     v_fill_fields_company_name: 'Введіть назву компанії в полі відправника',
     v_tags: 'Теги',
+    v_tags_tooltip: 'Навички, технології тощо.',
     v_edit_sender: 'Редагувати відправника',
     v_copy: 'Скопіювати',
     v_delete_invoice: 'Видалити Рахунок',
@@ -316,7 +327,7 @@ export default {
     v_status: 'Статус',
     v_physical_address: 'Фізична адреса',
     v_time_date: 'Час і дата',
-    v_err_technology_exist: 'Технологія вже додана',
+    v_err_technology_exist: 'Тег вже додан',
 
     v_search: 'Пошук',
     v_reset: 'Cкинути',
@@ -324,6 +335,7 @@ export default {
 
     v_copy_and_share: 'Скопіювати і поділитися посиланням',
     v_show_more: 'Показати більше',
+    v_copy_the_link: 'Скопіювати Посилання',
     v_copy_link: 'Скопіювати Посилання',
     v_done: 'Готово',
     v_link_copied: 'Посилання скопійовано',

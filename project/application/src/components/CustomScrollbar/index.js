@@ -7,6 +7,8 @@ import { incPaginationAction, getTimeEntriesListPaginationAction } from '../../a
 
 import { Scrollbars } from 'react-custom-scrollbars';
 
+import './style.css';
+
 class CustomScrollbar extends Component {
     constructor(props, ...rest) {
         super(props, ...rest);
@@ -62,7 +64,14 @@ class CustomScrollbar extends Component {
 
     render() {
         const { children } = this.props;
-        return <Scrollbars ref={this.scrollbars} children={children} onScrollFrame={this.handleScrollFrame} />;
+        return (
+            <Scrollbars
+                className="scroll-bar"
+                ref={this.scrollbars}
+                children={children}
+                onScrollFrame={this.handleScrollFrame}
+            />
+        );
     }
 }
 

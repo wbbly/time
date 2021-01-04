@@ -45,14 +45,28 @@ const PlayIcon = ({ className, onClick }) => (
             fillRule="evenodd"
             clipRule="evenodd"
             d="M11.3513 6.43723L1.92647 0.14824C1.64784 -0.0274411 1.30186 0.00182833 1.04056 0.00182833C-0.00463631 0.00182833 3.58597e-07 0.856458 3.58597e-07 1.07297V13.927C3.58597e-07 14.11 -0.00457534 14.9982 1.04056 14.9982C1.30186 14.9982 1.6479 15.0273 1.92647 14.8517L11.3513 8.56279C12.1248 8.07529 11.9912 7.49998 11.9912 7.49998C11.9912 7.49998 12.1249 6.92467 11.3513 6.43723Z"
-            fill="#6FCF97"
+            fill="#27ae60"
         />
     </svg>
 );
 
 const EditIcon = ({ className, onClick }) => (
-    <svg className={className} onClick={onClick} viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.8147 3.20179L15.6797 7.06678L5.89624 16.8502L2.0334 12.9852L11.8147 3.20179ZM18.6125 2.26964L16.8889 0.545986C16.2227 -0.120146 15.1411 -0.120146 14.4727 0.545986L12.8216 2.19707L16.6866 6.0621L18.6125 4.1362C19.1292 3.61951 19.1292 2.7863 18.6125 2.26964ZM0.0107555 18.4178C-0.0595831 18.7344 0.226226 19.018 0.542821 18.941L4.84975 17.8968L0.98691 14.0318L0.0107555 18.4178Z" />
+    <svg
+        className={className}
+        onClick={onClick}
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M14.166 2.5009C14.3849 2.28203 14.6447 2.10842 14.9307 1.98996C15.2167 1.87151 15.5232 1.81055 15.8327 1.81055C16.1422 1.81055 16.4487 1.87151 16.7347 1.98996C17.0206 2.10842 17.2805 2.28203 17.4993 2.5009C17.7182 2.71977 17.8918 2.97961 18.0103 3.26558C18.1287 3.55154 18.1897 3.85804 18.1897 4.16757C18.1897 4.4771 18.1287 4.7836 18.0103 5.06956C17.8918 5.35553 17.7182 5.61537 17.4993 5.83424L6.24935 17.0842L1.66602 18.3342L2.91602 13.7509L14.166 2.5009Z"
+            stroke="white"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
     </svg>
 );
 
@@ -208,16 +222,13 @@ class TaskListItem extends Component {
     handlePaste = event => {
         const { cursorPosition } = this.state;
         const elem = event.target;
-        const initialCursorPosition = cursorPosition;
-        let data = event.clipboardData.getData('text/html') || event.clipboardData.getData('text/plain');
         const currentValue = elem.textContent;
-        var tempDiv = document.createElement('DIV');
-        tempDiv.innerHTML = data;
         const splitted = currentValue.split('');
         const lengthOfSelected = cursorPosition[1] - cursorPosition[0];
-        splitted.splice(cursorPosition[0], lengthOfSelected, tempDiv.innerText);
+        const clipboardData = event.clipboardData.getData('text/plain') || window.clipboardData.getData('text');
+        splitted.splice(cursorPosition[0], lengthOfSelected, clipboardData);
         elem.textContent = splitted.join('');
-        const newCursorPosition = initialCursorPosition[0] + tempDiv.innerText.length;
+        const newCursorPosition = cursorPosition[0] + clipboardData.length;
         this.setCaretPosition(elem, newCursorPosition);
         this.setCaretPositionToState();
         this.setState({
@@ -230,9 +241,15 @@ class TaskListItem extends Component {
         const { isMobile } = this.props;
         if (isMobile) return;
         const sel = window.getSelection();
-        this.setState({
-            cursorPosition: [sel.anchorOffset, sel.focusOffset],
-        });
+        if (sel.anchorOffset <= sel.focusOffset) {
+            this.setState({
+                cursorPosition: [sel.anchorOffset, sel.focusOffset],
+            });
+        } else {
+            this.setState({
+                cursorPosition: [sel.focusOffset, sel.anchorOffset],
+            });
+        }
     };
 
     handleStartTimer = event => {

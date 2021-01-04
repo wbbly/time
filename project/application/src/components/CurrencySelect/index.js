@@ -11,12 +11,6 @@ import './style.scss';
 import currenciesList from '../../services/currenciesList.json';
 // const currencies = ['usd', 'eur', 'uah'];
 
-const ArrowIcon = className => (
-    <svg className={className} width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M5.5 7L0.73686 0.25L10.2631 0.250001L5.5 7Z" fill="white" />
-    </svg>
-);
-
 class CurrencySelect extends Component {
     constructor(props) {
         super(props);
@@ -73,8 +67,8 @@ class CurrencySelect extends Component {
         } else {
             let filteredCurrency = Object.values(currenciesList).filter(
                 item =>
-                    item.code.toLowerCase().indexOf(event.target.value.toLowerCase()) >= 0 ||
-                    item.name.toLowerCase().indexOf(event.target.value.toLowerCase()) >= 0
+                    item.code.toLowerCase().indexOf(event.target.value.toLowerCase().trim()) >= 0 ||
+                    item.name.toLowerCase().indexOf(event.target.value.toLowerCase().trim()) >= 0
             );
             this.setState({ currencyList: filteredCurrency });
         }
@@ -132,7 +126,7 @@ class CurrencySelect extends Component {
             >
                 <div className="currency-select__selected-currency">
                     <span className="currency-select__currency-name">{selectedCurrency.toUpperCase()}</span>
-                    {!isViewMode && <ArrowIcon />}
+                    {!isViewMode && <i className={`arrow_down ${isOpen ? 'arrow_down_up' : ''}`} />}
                 </div>
                 {isOpen && (
                     <div ref={this.dropdown} className={classNames('currency-select__dropdown')}>

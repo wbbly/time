@@ -10,18 +10,20 @@ import {
     CHANGE_INVOICE_STATUS_REQUEST,
     SET_SENDER_ID,
     CHANGE_PAGE,
+    SET_COPIED_INVOICE_ID,
     ADD_INVOICE_ERROR,
 } from '../actions/InvoicesActions';
 
 const initialState = {
     invoices: [],
     page: 0,
-    limit: 10,
+    limit: 5,
     pageCount: 1,
     invoice: null,
     isFetching: false,
     isInitialFetching: false,
     senderId: '',
+    copiedInvoiceId: '',
     error: null,
 };
 
@@ -87,6 +89,11 @@ export default function invoicesReducer(state = initialState, { type, payload })
             return {
                 ...state,
                 page: payload,
+            };
+        case SET_COPIED_INVOICE_ID:
+            return {
+                ...state,
+                copiedInvoiceId: payload,
             };
         case ADD_INVOICE_ERROR:
             return {

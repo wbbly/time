@@ -43,10 +43,17 @@
         padding: 0 2px;
       }
       .flag-select__btn::after {
+        width: 24px;
+        height: 24px;
+        background: url("../../images/icons/arrow-down.svg") no-repeat center;
+        transition: all 0.3s;
         position: absolute;
-        top: 20px;
-        right: 10px;
-        border-top: 5px solid #d8d8d8;
+        top: 10px;
+        right: 3px;
+        border: none;
+      }
+      .flag-select__btn[aria-expanded="true"]:after {
+        transform: rotate(-180deg);
       }
       .flag-select__btn::before {
         z-index: 14;
@@ -54,10 +61,35 @@
       .flag-select__options {
         margin-top: 50px;
         width: 100%;
-        background: #4f4f4f;
-        input {
-          border: 1px solid gray;
-          background: #4f4f4f;
+        background:#4f4f4f;
+        box-shadow: 2px 2px 4px black;
+        padding: 5px;
+        border-radius: 0;
+        .filterBox {
+          padding: 5px 10px;
+          input {
+            font-family: "Open Sans", sans-serif;
+            font-size: 14px;
+            line-height: 14px;
+            background-color: #333333;
+            color: white !important;
+            padding: 5px 10px;
+            border: none;
+            width: 100%;
+            margin: 0;
+            &::placeholder {
+              color: white;
+            }
+          }
+        }
+        li {
+          padding: 5px 10px;
+          color: white;
+      
+          &:hover {
+            background-color: #e0e0e0;
+            color: #333333;
+          }
         }
       }
       .filterBox {
@@ -72,7 +104,7 @@
       right: 10px;
       height: 7px;
       width: 11px;
-      background: url("/static/media/arrow_down.b976035c.svg") no-repeat center;
+      background: url("/static/media/arrow-down.svg") no-repeat center;
     }
   }
   .input_container {
@@ -110,10 +142,14 @@
     }
   }
 
+  .header_user_setting div {
+    width: 165px;
+  }
+
   .header_user_setting button {
     width: 160px;
     height: 36px;
-    margin-left: 27px;
+    margin-left: 5px;
     border: 1px solid #27ae60;
     border-radius: 4px;
     font-family: "Open Sans";
@@ -270,20 +306,20 @@
     }
 
     .arrow {
+      width: 24px;
+      height: 24px;
+      background: url("../../images/icons/arrow-down.svg") no-repeat center;
+      transition: all 0.3s;
       position: relative;
-      top: 50%;
+      top: -4px;
+      left: 15px;
       margin-top: -2px;
-      left: 20px;
-      width: 0;
-      height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 7px solid #d8d8d8;
+      border: none;
     }
 
     .arrow.up {
-      border-top: none;
-      border-bottom: 7px solid #d8d8d8;
+      transform: rotate(-180deg);
+      border: none;
     }
 
     .selected-flag {
@@ -293,14 +329,26 @@
     }
 
     .country-list {
-      width: 300px;
-      border-radius: 0.4rem;
-      background: #4f4f4f;
-      box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+      width: 312px;
+      top: 40px;
+      background: #4f4f4f;;
+      box-shadow: 2px 2px 4px black;
+      padding: 5px;
+    }
+
+    .country {
+      padding: 5px 10px;
+      color: white;
+
+      &:hover {
+        background-color: #e0e0e0;
+        color: #333333;
+      }
     }
 
     .highlight {
       background-color: #333333 !important;
+      color: white !important;
     }
   }
 
@@ -375,13 +423,34 @@
   }
   &__technology {
     margin-top:30px;
-   margin-bottom: 30px;
+    margin-bottom: 30px;
   }
   &__technology-title {
     margin-bottom: 3px;
     font-size: 14px;
+    font-weight: 600;
     color: #c9c9c9;
     font-family: "Open Sans", sans-serif;
+    line-height: 24px;
+    vertical-align: middle;
+  }
+  &__technology-info {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url("../../images/icons/alert-circle.svg") no-repeat center;
+    margin-left: 10px;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+  &__technology-info:hover {
+    background: url("../../images/icons/alert-circle-blue.svg") no-repeat center;
+  }
+  .tool-tip {
+    background-color: #ffffff;
+    color: #333333;
+    padding: 5px 10px;
+    white-space: nowrap;
   }
 
   .wrapper-jira-sync {

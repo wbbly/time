@@ -78,7 +78,11 @@ class SelectFirstDayOfWeek extends Component {
                             ))}
                         </div>
                     )}
-                    <i className="first-day-week-format__icon-arrow" />
+                    <i
+                        className={`first-day-week-format__icon-arrow ${
+                            isOpenDropdown ? 'first-day-week-format__icon-arrow_up' : ''
+                        }`}
+                    />
                 </div>
             </div>
         );

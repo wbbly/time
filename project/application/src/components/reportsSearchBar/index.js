@@ -167,7 +167,7 @@ class ReportsSearchBar extends Component {
 
     findProject(items, searchText = '') {
         if (searchText.length > 0) {
-            searchText = searchText.toLowerCase();
+            searchText = searchText.toLowerCase().trim();
             const filteredArr = items.filter(it => {
                 const values = [];
                 values.push(it['name']);
@@ -187,7 +187,7 @@ class ReportsSearchBar extends Component {
 
     findUser(items, searchText = '') {
         if (searchText.length > 0) {
-            searchText = searchText.toLowerCase();
+            searchText = searchText.toLowerCase().trim();
             const filteredArr = items.filter(it => {
                 const values = [];
                 values.push(it['username']);
@@ -208,7 +208,7 @@ class ReportsSearchBar extends Component {
 
     findClient(items, searchText = '') {
         if (searchText.length > 0) {
-            searchText = searchText.toLowerCase();
+            searchText = searchText.toLowerCase().trim();
             const filteredArr = items.filter(it => {
                 const values = [];
                 values.push(it['name']);
@@ -427,7 +427,9 @@ class ReportsSearchBar extends Component {
         }).then(
             result => {
                 const teamUsers = result.data.team[0].team_users;
-                const users = teamUsers.map(teamUser => teamUser.user[0]);
+                const users = teamUsers.map(teamUser => {
+                    return { ...teamUser.user[0], is_active: teamUser.is_active };
+                });
                 this.setState({ userDataEtalon: users });
                 const inputUserData = this.props.inputUserData;
                 for (let i = 0; i < inputUserData.length; i++) {
@@ -490,9 +492,25 @@ class ReportsSearchBar extends Component {
         }
     }
 
+    sortData = data => {
+        let selectedData = [];
+        let noSelectedData = [];
+        data.forEach(item => {
+            if (item.is_active) {
+                if (this.getCheckedUsers(item.email)) {
+                    selectedData.push(item);
+                } else {
+                    noSelectedData.push(item);
+                }
+            }
+        });
+        return selectedData.concat(noSelectedData);
+    };
+
     render() {
         const { vocabulary } = this.props;
         const { v_user, v_project, v_find, v_select_all, v_select_none, v_apply, v_client } = vocabulary;
+        const sortedData = this.sortData(this.state.userDataFiltered);
         return (
             <div className="wrapper_reports_search_bar">
                 <div className="reports_search_bar_search_field_container select">
@@ -511,7 +529,7 @@ class ReportsSearchBar extends Component {
                                     </span>
                                 ))}
                             </div>
-                            <i className="arrow_down" />
+                            <i className={`arrow_down ${this.state.toggleSelectUser ? 'arrow_up' : ''}`} />
                         </div>
                     </div>
                     {this.state.toggleSelectUser && (
@@ -534,7 +552,7 @@ class ReportsSearchBar extends Component {
                                 <i className="small_clear" onClick={_ => this.clearUserSearch()} />
                             </div>
                             <div className="select_items_container">
-                                {this.state.userDataFiltered.map((item, index) => (
+                                {sortedData.map((item, index) => (
                                     <div className="select_users_item" key={item.email + index}>
                                         <label>
                                             <ThemeProvider theme={materialTheme}>
@@ -569,7 +587,7 @@ class ReportsSearchBar extends Component {
                                     <span key={item.name + index}>{index === 0 ? item.name : `, ${item.name}`}</span>
                                 ))}
                             </div>
-                            <i className="arrow_down" />
+                            <i className={`arrow_down ${this.state.toggleSelectProject ? 'arrow_up' : ''}`} />
                         </div>
                     </div>
                     {this.state.toggleSelectProject && (
@@ -636,7 +654,7 @@ class ReportsSearchBar extends Component {
                                     <span key={item.name + index}>{index === 0 ? item.name : `, ${item.name}`}</span>
                                 ))}
                             </div>
-                            <i className="arrow_down" />
+                            <i className={`arrow_down ${this.state.toggleSelectClient ? 'arrow_up' : ''}`} />
                         </div>
                     </div>
                     {this.state.toggleSelectClient && (

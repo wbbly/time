@@ -11,15 +11,32 @@ import './style.scss';
 const FolderIcon = ({ className }) => (
     <svg
         className={className}
-        width="24"
+        width="20"
         height="20"
-        viewBox="0 0 24 20"
+        viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
     >
         <path
-            d="M9.6 0.399902H2.4C1.08 0.399902 0 1.4799 0 2.7999V17.1999C0 18.5199 1.08 19.5999 2.4 19.5999H21.6C22.92 19.5999 24 18.5199 24 17.1999V5.1999C24 3.8799 22.92 2.7999 21.6 2.7999H12L9.6 0.399902Z"
-            fill="#C1C0C0"
+            d="M9.99935 1.66602L1.66602 5.83268L9.99935 9.99935L18.3327 5.83268L9.99935 1.66602Z"
+            stroke="#C1C0C0"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M1.66602 14.166L9.99935 18.3327L18.3327 14.166"
+            stroke="#C1C0C0"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M1.66602 10L9.99935 14.1667L18.3327 10"
+            stroke="#C1C0C0"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
         />
     </svg>
 );
@@ -163,14 +180,15 @@ class ProjectsListPopup extends Component {
                 </div>
                 {isOpen && (
                     <div ref={this.dropdown} className={classNames('project-list-popup__dropdown')}>
-                        <input
-                            className="project-list-popup__dropdown-list-input"
-                            ref={this.input}
-                            value={inputValue}
-                            onChange={this.onChangeInput}
-                            type="text"
-                            placeholder={`${v_find}...`}
-                        />
+                        <div className="project-list-popup__dropdown-list-input">
+                            <input
+                                ref={this.input}
+                                value={inputValue}
+                                onChange={this.onChangeInput}
+                                type="text"
+                                placeholder={`${v_find}...`}
+                            />
+                        </div>
                         <div className="project-list-popup__dropdown-list">
                             {projectsList.map(project => {
                                 const { id, name, projectColor } = project;

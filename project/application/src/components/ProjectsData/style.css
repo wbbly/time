@@ -81,7 +81,7 @@
 }
 
 .create_projects_modal_data .green {
-    background-color: green;
+    background-color: #27ae60;
 }
 
 .create_projects_modal_data .red {
@@ -103,9 +103,9 @@
     right: 8px;
     margin-top: -2px;
     margin-left: 18px;
-    width: 15px;
-    height: 15px;
-    background: url("../../images/icons/baseline-create-24px.svg") no-repeat
+    width: 20px;
+    height: 20px;
+    background: url("../../images/icons/edit.svg") no-repeat
     center;
     cursor: pointer;
     background-size: 20px;

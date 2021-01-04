@@ -115,7 +115,9 @@ class StartTaskMobile extends Component {
                         <div className="current-task-mobile__task-name">{currentTimer.issue}</div>
                     </div>
                     <Loading mode="overlay" flag={isStoppingTask} withLogo={false} width="50px" height="50px">
-                        <StopIcon className="current-task-mobile__stop-icon" onClick={this.handleStopTask} />
+                        <div className="current-task-mobile__stop-icon-wrapper">
+                            <StopIcon className="current-task-mobile__stop-icon" onClick={this.handleStopTask} />
+                        </div>
                     </Loading>
                 </div>
             ) : (

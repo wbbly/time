@@ -20,6 +20,7 @@ export const GET_INVOICE_LIST_SUCCESS = 'GET_INVOICE_LIST_SUCCESS';
 export const GET_INVOICE_BY_ID_REQUEST = 'GET_INVOICE_BY_ID_REQUEST';
 export const GET_INVOICE_BY_ID_SUCCESS = 'GET_INVOICE_BY_ID_SUCCESS';
 export const SET_SENDER_ID = 'SET-SENDER-ID';
+export const SET_COPIED_INVOICE_ID = 'SET_COPIED_INVOICE_ID';
 export const ADD_INVOICE_ERROR = 'ADD_INVOICE_ERROR';
 
 const getInvoiceByIdRequest = () => ({
@@ -57,6 +58,11 @@ export const changePage = payload => ({
     payload,
 });
 
+export const setCopiedInvoiceId = payload => ({
+    type: SET_COPIED_INVOICE_ID,
+    payload,
+});
+
 const deleteInvoiceRequest = () => ({
     type: DELETE_INVOICE_REQUEST,
 });
@@ -79,14 +85,14 @@ const fillFormDataWithObject = (formData, obj) => {
     for (let key in obj) {
         if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
             for (let ObjKey in obj[key]) {
-                formData.append(`${key}[${ObjKey}]`, obj[key][ObjKey]);
+                formData.append(`${key}[${ObjKey}]`, obj[key][ObjKey] || '');
             }
         }
 
         if (Array.isArray(obj[key])) {
             for (let i = 0; i < obj[key].length; i++) {
                 for (let arrObjKey in obj[key][i]) {
-                    formData.append(`${key}[${i}][${arrObjKey}]`, obj[key][i][arrObjKey]);
+                    formData.append(`${key}[${i}][${arrObjKey}]`, obj[key][i][arrObjKey] || '');
                 }
             }
         } else {
@@ -100,6 +106,9 @@ export const addInvoice = (payload, isClone) => async dispatch => {
     dispatch(createInvoiceRequest());
     let formData = payload.image;
     let requestBody = null;
+    let d = payload.dateDue;
+    d.setHours(23, 59, 59, 0);
+    const dateDue = d.toISOString();
     try {
         if (!isClone) {
             requestBody = {
@@ -107,7 +116,7 @@ export const addInvoice = (payload, isClone) => async dispatch => {
                 vendorId: payload.vendorId,
                 clientId: payload.recipient.id,
                 invoiceDate: payload.dateFrom.toISOString(),
-                dueDate: payload.dateDue.toISOString(),
+                dueDate: dateDue,
                 timezoneOffset: payload.timezoneOffset,
                 currency: payload.currency,
                 comment: payload.comment,
@@ -116,8 +125,8 @@ export const addInvoice = (payload, isClone) => async dispatch => {
                     acc.push({
                         projectName: project.project_name,
                         hours: project.hours,
-                        rate: project.rate || 0,
-                        tax: project.tax || 0,
+                        rate: project.rate || '0',
+                        tax: project.tax || '0',
                     });
                     return acc;
                 }, []),
@@ -129,7 +138,7 @@ export const addInvoice = (payload, isClone) => async dispatch => {
                 vendorId: payload.vendorId,
                 clientId: payload.recipient.id,
                 invoiceDate: payload.dateFrom,
-                dueDate: payload.dateDue,
+                dueDate: dateDue,
                 timezoneOffset: payload.timezoneOffset,
                 currency: payload.currency,
                 comment: payload.comment,
@@ -139,8 +148,8 @@ export const addInvoice = (payload, isClone) => async dispatch => {
                     acc.push({
                         projectName: project.project_name,
                         hours: project.hours,
-                        rate: project.rate || 0,
-                        tax: project.tax || 0,
+                        rate: project.rate || '0',
+                        tax: project.tax || '0',
                     });
                     return acc;
                 }, []),
@@ -151,6 +160,7 @@ export const addInvoice = (payload, isClone) => async dispatch => {
             requestBody = fillFormDataWithObject(formData, requestBody);
         }
         const res = await createInvoice(requestBody);
+        if (isClone) dispatch(setCopiedInvoiceId(res.data.id));
         dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);
@@ -236,8 +246,8 @@ export const updateInvoice = payload => async dispatch => {
                 acc.push({
                     projectName: project.project_name || project.name,
                     hours: project.hours || project.amount,
-                    rate: project.rate || 0,
-                    tax: project.tax || 0,
+                    rate: project.rate || '0',
+                    tax: project.tax || '0',
                 });
                 return acc;
             }, []),
@@ -247,6 +257,7 @@ export const updateInvoice = payload => async dispatch => {
         if (formData instanceof FormData) {
             requestBody = fillFormDataWithObject(formData, requestBody);
         }
+        console.log(requestBody);
         const res = await changeInvoice({ invoiceId: payload.id, data: requestBody });
         dispatch(changeInvoiceSuccess());
     } catch (error) {
@@ -274,8 +285,8 @@ export const deleteAvatarThunk = payload => async dispatch => {
                 acc.push({
                     projectName: project.project_name || project.name,
                     hours: project.hours || project.amount,
-                    rate: project.rate || 0,
-                    tax: project.tax || 0,
+                    rate: project.rate || '0',
+                    tax: project.tax || '0',
                 });
                 return acc;
             }, []),

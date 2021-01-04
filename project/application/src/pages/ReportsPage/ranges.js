@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
     addDays,
     endOfDay,
@@ -7,6 +8,7 @@ import {
     startOfYear,
     endOfYear,
     addMonths,
+    addYears,
     startOfWeek,
     endOfWeek,
     isSameDay,
@@ -28,6 +30,8 @@ const defineds = weekStartsOn => ({
     endOfLastMonth: endOfMonth(addMonths(new Date(), -1)),
     startOfYear: startOfYear(new Date()),
     endOfYear: endOfYear(new Date()),
+    startOfLastYear: startOfYear(addYears(new Date(), -1)),
+    endOfLastYear: endOfYear(addYears(new Date(), -1)),
 });
 
 const staticRangeHandler = {
@@ -42,7 +46,17 @@ function createStaticRanges(ranges) {
     return ranges.map(range => ({ ...staticRangeHandler, ...range }));
 }
 
-export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, lastMonth, thisYear, weekStartsOn) =>
+export const staticRanges = (
+    today,
+    yesterday,
+    thisWeek,
+    lastWeek,
+    thisMonth,
+    lastMonth,
+    thisYear,
+    lastYear,
+    weekStartsOn
+) =>
     createStaticRanges([
         {
             label: today,
@@ -90,8 +104,15 @@ export const staticRanges = (today, yesterday, thisWeek, lastWeek, thisMonth, la
         {
             label: thisYear,
             range: () => ({
-                startDate: defineds().startOfYear,
-                endDate: defineds().endOfYear,
+                startDate: defineds(weekStartsOn).startOfYear,
+                endDate: defineds(weekStartsOn).endOfYear,
+            }),
+        },
+        {
+            label: lastYear,
+            range: () => ({
+                startDate: defineds(weekStartsOn).startOfLastYear,
+                endDate: defineds(weekStartsOn).endOfLastYear,
             }),
         },
     ]);
@@ -100,30 +121,40 @@ export const inputRanges = (daysUpToToday, daysStartingToday, weekStartsOn) => [
     {
         label: daysUpToToday,
         range(value) {
+            if (value > 366) {
+                value = 366;
+            }
             return {
-                startDate: addDays(defineds(weekStartsOn).startOfToday, (Math.max(Number(value), 1) - 1) * -1),
+                startDate: addDays(defineds(weekStartsOn).startOfToday, Math.max(Number(value), 0) * -1),
                 endDate: defineds(weekStartsOn).endOfToday,
             };
         },
         getCurrentValue(range) {
-            if (!isSameDay(range.endDate, defineds(weekStartsOn).endOfToday)) return '-';
+            if (!isSameDay(range.endDate, defineds(weekStartsOn).endOfToday)) return '';
             if (!range.startDate) return '∞';
-            return differenceInCalendarDays(defineds(weekStartsOn).endOfToday, range.startDate) + 1;
+            return differenceInCalendarDays(defineds(weekStartsOn).endOfToday, range.startDate)
+                ? differenceInCalendarDays(defineds(weekStartsOn).endOfToday, range.startDate)
+                : '';
         },
     },
     {
         label: daysStartingToday,
         range(value) {
+            if (value > 366) {
+                value = 366;
+            }
             const today = new Date();
             return {
                 startDate: today,
-                endDate: addDays(today, Math.max(Number(value), 1) - 1),
+                endDate: addDays(today, Math.max(Number(value), 0)),
             };
         },
         getCurrentValue(range) {
-            if (!isSameDay(range.startDate, defineds(weekStartsOn).startOfToday)) return '-';
+            if (!isSameDay(range.startDate, defineds(weekStartsOn).startOfToday)) return '';
             if (!range.endDate) return '∞';
-            return differenceInCalendarDays(range.endDate, defineds(weekStartsOn).startOfToday) + 1;
+            return differenceInCalendarDays(range.endDate, defineds(weekStartsOn).startOfToday)
+                ? differenceInCalendarDays(range.endDate, defineds(weekStartsOn).startOfToday)
+                : '';
         },
     },
 ];

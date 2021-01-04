@@ -38,18 +38,19 @@
     width: 100%;
     right: 0;
     top: 110%;
-    border-radius: 0.4rem;
-    background: #4f4f4f;
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    background:#4f4f4f;
+    box-shadow: 2px 2px 4px black;
+    padding: 5px;
   }
 
   .duration-time-format__list-item {
-    padding: 0.5rem 0.5rem 0.5rem 1.3rem;
-    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+    padding: 5px 10px;
+    color: white;
 
     &:hover {
       cursor: pointer;
-      background-color: #333333;
+      background-color: #e0e0e0;
+      color: #333333;
     }
   }
 
@@ -59,6 +60,11 @@
     right: 10px;
     height: 7px;
     width: 11px;
-    background: url("../../images/icons/arrow_down.svg") no-repeat center;
+    background: url("../../images/icons/arrow-down.svg") no-repeat center;
+    transition: all 0.3s;
+
+    &_up {
+      transform: rotate(-180deg);
+    }
   }
 }
