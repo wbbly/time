@@ -23,6 +23,8 @@ import { stopTimerSocket } from '../../configSocket';
 import './style.css';
 
 class TeamSwitcher extends Component {
+    state = { openTeamList: false };
+
     handleChange = e => {
         e.preventDefault();
         const { currentTeam, switchTeamRequestAction, history, switchMenu, currentTimer, isMobile } = this.props;
@@ -33,36 +35,41 @@ class TeamSwitcher extends Component {
             }
             switchTeamRequestAction({ teamId });
         }
+        this.setState({ openTeamList: false });
         history.push('/team');
 
         if (isMobile) switchMenu();
     };
 
     render() {
-        const { isMobile, vocabulary, userTeams, currentTeam, isShowMenu, openTeamList, closeTeamList } = this.props;
+        const { openTeamList } = this.state;
+        const { isMobile, vocabulary, userTeams, currentTeam } = this.props;
+        const { v_team } = vocabulary;
 
         return (
             <Loading flag={userTeams.isInitialFetching} withLogo={false} mode="inline">
                 <div className="team_list">
-                    <ul>
-                        {/* {userTeams.data.map((team, index) => {
-                                const title =
-                                    currentTeam.data.id === team.id
-                                        ? `${v_active_team}`
-                                        : `${v_set} ${team.name} ${v_team_is_active}`; */}
-
-                        <li>
-                            <div
-                                className={classNames('team_list-item', {
-                                    active: true,
-                                })}
-                                // onClick={this.handleChange}
-                            >
-                                {currentTeam.data.name + ' '}
-                                <div className="active-point" />
-                            </div>
-                        </li>
-                    </ul>
+                    <div
+                        className="team_link"
+                        onClick={e => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            this.setState({ openTeamList: !openTeamList });
+                        }}
+                    >
+                        <div style={{ display: 'flex' }}>
+                            <i className="team" />
+                            <div className="team_text">{v_team}</div>
+                        </div>
+                        <i
+                            className={classNames({
+                                arrow_closed: !openTeamList && !isMobile,
+                                arrow_open: openTeamList && !isMobile,
+                                arrow_closed_mobile: !openTeamList && isMobile,
+                                arrow_open_mobile: openTeamList && isMobile,
+                            })}
+                        />
+                    </div>
                     <TeamAdd
                         isMobile={isMobile}
                         userTeams={userTeams}
@@ -70,7 +77,7 @@ class TeamSwitcher extends Component {
                         vocabulary={vocabulary}
                         handleChange={this.handleChange}
                         openTeamList={openTeamList}
-                        closeTeamList={closeTeamList}
+                        closeTeamList={e => this.setState({ openTeamList: false })}
                     />
                 </div>
             </Loading>

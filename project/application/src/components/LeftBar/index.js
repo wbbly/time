@@ -16,8 +16,6 @@ import './style.scss';
 import { switchMenu } from '../../actions/ResponsiveActions';
 
 class LeftBar extends Component {
-    state = { openTeamList: false };
-
     renderTimer = () => {
         const { history, timerTick } = this.props;
         if (history.location.pathname !== '/timer') {
@@ -26,7 +24,6 @@ class LeftBar extends Component {
     };
 
     render() {
-        const { openTeamList } = this.state;
         const { switchMenu, isMobile, vocabulary, currentTeam, isOwner, user } = this.props;
         const { v_help, v_timer, v_reports, v_projects, v_team, v_clients, v_invoices } = vocabulary;
 
@@ -111,41 +108,18 @@ class LeftBar extends Component {
                     )}
                 </div>
                 <div className="wrapper-position-add-team">
+                    <TeamSwitcher isMobile={isMobile} />
                     <NavLink
                         activeClassName="active-link"
                         onClick={switchMenu}
                         to="/team"
                         style={{ textDecoration: 'none' }}
                     >
-                        <div className={classNames('navigation_links team_link')}>
-                            <div style={{ display: 'flex' }}>
-                                <i className="team" />
-                                <div className="links_text">{v_team}</div>
-                            </div>
-                            <span
-                                className="team_add"
-                                onClick={e => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    this.setState({ openTeamList: !openTeamList });
-                                }}
-                            >
-                                <i
-                                    className={classNames({
-                                        arrow_closed: !openTeamList && !isMobile,
-                                        arrow_open: openTeamList && !isMobile,
-                                        arrow_closed_mobile: !openTeamList && isMobile,
-                                        arrow_open_mobile: openTeamList && isMobile,
-                                    })}
-                                />
-                            </span>
+                        <div className={classNames('navigation_links active_team')}>
+                            {currentTeam.data.name + ' '}
+                            <div className="active-point" />
                         </div>
                     </NavLink>
-                    <TeamSwitcher
-                        isMobile={isMobile}
-                        openTeamList={openTeamList}
-                        closeTeamList={e => this.setState({ openTeamList: false })}
-                    />
                 </div>
                 <a className="navigation_links" target="_blank" href="https://telegra.ph/Wobbly-help-07-09">
                     <i className="help" />
