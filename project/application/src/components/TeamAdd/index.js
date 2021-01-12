@@ -94,7 +94,7 @@ class TeamAdd extends Component {
                                             team_item_selected: team.id === currentTeam.data.id,
                                         })}
                                     >
-                                        {team.name}
+                                        <div className="team_item_name">{team.name}</div>
                                         <div
                                             className={cn({
                                                 team_selection: team.id !== currentTeam.data.id,

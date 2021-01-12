@@ -11,6 +11,14 @@
     overflow-y: auto;
   }
 
+  .team_page_main-controls {
+    white-space: nowrap;
+      .header-wrapper__child-button {
+          margin-left: 10px;
+          margin-top: 10px;
+      }
+  }
+
   .page_name {
     font-family: "Open Sans", sans-serif;
     line-height: normal;

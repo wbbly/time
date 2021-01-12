@@ -309,31 +309,29 @@ class TeamPage extends Component {
                     )}
                     <div className="data_container_team_page">
                         <PageHeader title={`${v_team}: ${currentTeam.data.name}`}>
-                            {/* <div className="team_page_main-controls"> */}
+                            <div className="team_page_main-controls">
+                                {checkIsAdminByRole(currentTeam.data.role) && (
+                                    <button
+                                        className="header-wrapper__child-button"
+                                        onClick={e => {
+                                            this.openRenameModal();
+                                        }}
+                                    >
+                                        {v_rename_team}
+                                    </button>
+                                )}
 
-                            {checkIsAdminByRole(currentTeam.data.role) && (
-                                <button
-                                    className="header-wrapper__child-button"
-                                    onClick={e => {
-                                        this.openRenameModal();
-                                    }}
-                                >
-                                    {v_rename_team}
-                                </button>
-                            )}
-
-                            {checkIsAdminByRole(currentTeam.data.role) && (
-                                <button
-                                    className="header-wrapper__child-button"
-                                    onClick={e => {
-                                        this.openAddUserModal();
-                                    }}
-                                >
-                                    {v_invite_to_team}
-                                </button>
-                            )}
-
-                            {/* </div> */}
+                                {checkIsAdminByRole(currentTeam.data.role) && (
+                                    <button
+                                        className="header-wrapper__child-button"
+                                        onClick={e => {
+                                            this.openAddUserModal();
+                                        }}
+                                    >
+                                        {v_invite_to_team}
+                                    </button>
+                                )}
+                            </div>
                         </PageHeader>
                         <div className="team_page_searchBar">
                             <TeamSearchBar search={this.setSearch} />

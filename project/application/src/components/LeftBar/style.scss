@@ -108,6 +108,12 @@ i {
 }
 
 .active_team {
+  position: relative;
+  padding-left: 49px;
+  padding-right: 39px;
+}
+
+.active_team span{
   color: #fff;
   font-family: "Open Sans", sans-serif;
   font-style: normal;
@@ -117,8 +123,6 @@ i {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  position: relative;
-  padding-left: 49px;
 }
 
 .active_team .active-point {

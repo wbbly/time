@@ -116,7 +116,7 @@ class LeftBar extends Component {
                         style={{ textDecoration: 'none' }}
                     >
                         <div className={classNames('navigation_links active_team')}>
-                            {currentTeam.data.name + ' '}
+                            <span>{currentTeam.data.name + ' '}</span>
                             <div className="active-point" />
                         </div>
                     </NavLink>

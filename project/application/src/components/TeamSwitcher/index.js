@@ -28,7 +28,7 @@ class TeamSwitcher extends Component {
     handleChange = e => {
         e.preventDefault();
         const { currentTeam, switchTeamRequestAction, history, switchMenu, currentTimer, isMobile } = this.props;
-        let teamId = e.target.getAttribute('data-id');
+        let teamId = e.currentTarget.getAttribute('data-id');
         if (currentTeam.data.id !== teamId) {
             if (currentTimer) {
                 stopTimerSocket();
