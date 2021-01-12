@@ -17,7 +17,7 @@ import {
 const initialState = {
     invoices: [],
     page: 0,
-    limit: 5,
+    limit: 10,
     pageCount: 1,
     invoice: null,
     isFetching: false,
