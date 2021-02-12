@@ -29,7 +29,7 @@ http {
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
     server_names_hash_bucket_size 64;
     server {
-        server_name time.wobbly.me;
+        server_name 127.0.0.1;
         expires 0;
 
         location / {
@@ -49,7 +49,7 @@ http {
         }
 
         location ~ "/team/(?<teamId>[^/]+)/invite/(?<inviteId>[^/]+)" {
-            return 301 https://api.wobbly.me/team/$teamId/invite/$inviteId;
+            return 301 http://127.0.0.1:8081/team/$teamId/invite/$inviteId;
         }
 
         location /robots.txt {
