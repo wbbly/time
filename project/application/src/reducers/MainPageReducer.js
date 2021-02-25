@@ -102,7 +102,7 @@ export function mainPageReducer(state = initialState, { type, payload }) {
                 },
                 isSearchMode: false,
                 searchValue: '',
-                isFetchingSearch: true,
+                isFetchingSearch: false,
             };
         case 'RESET_ALL':
             return initialState;

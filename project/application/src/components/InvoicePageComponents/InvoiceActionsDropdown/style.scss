@@ -29,11 +29,14 @@
     cursor: pointer;
 
     &:hover {
-        color: #27ae60;
+      color: #27ae60;
       .invoice-action-dropdown__item-icon.copy-icon path {
         stroke: #27ae60;
       }
       .invoice-action-dropdown__item-icon.action-icon path {
+        stroke: #27ae60;
+      }
+      .invoice-action-dropdown__item-icon circle {
         stroke: #27ae60;
       }
     }
@@ -55,13 +58,16 @@
     &-icon {
       height: 2rem;
       width: 2rem;
-      transition: all .1s linear;
+      transition: all 0.1s linear;
       path {
+        stroke: #333333;
+      }
+      circle {
         stroke: #333333;
       }
     }
     &-icon.copy-icon {
-      transition: all .1s linear;
+      transition: all 0.1s linear;
       path {
         stroke: #333333;
       }
@@ -70,7 +76,7 @@
       white-space: nowrap;
       font-size: 12px;
       line-height: 16px;
-      transition: all .1s linear;
+      transition: all 0.1s linear;
     }
   }
 }

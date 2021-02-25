@@ -44,6 +44,7 @@ export class UnitedReportsComponents extends Component {
                                 selectionRange={this.props.selectionRange}
                                 usersArr={this.props.usersArr}
                                 projectsArr={this.props.projectsArr}
+                                userProjectsArr={this.props.userProjectsArr}
                                 dataDoughnutChat={this.props.dataDoughnutChat}
                             />
                         </div>

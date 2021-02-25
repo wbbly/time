@@ -4,12 +4,15 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import _ from 'lodash';
 
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
+
 import classNames from 'classnames';
 
 import ReactPhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/dist/style.css';
 
-import ReactFlagsSelect from 'react-flags-select';
 import ReactTooltip from 'react-tooltip';
 
 // Actions
@@ -29,6 +32,7 @@ import SocialConnect from '../../components/SocialConnect';
 import SwitchJiraType from '../../components/SwitchJiraType';
 import TechnologyComponent from '../../components/TechnologyComponent';
 import CustomScrollbar from '../../components/CustomScrollbar';
+import CountriesDropdown from '../../components/CountriesDropdown/';
 //Services
 import { verifyJiraToken, requestChangeUserData } from '../../configAPI';
 
@@ -37,7 +41,8 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
-import 'react-flags-select/scss/react-flags-select.scss';
+
+import countries from '../../components/CountriesDropdown/countriesFlat.json';
 
 const OpenJiraMenuIfValidationFails = props => {
     const { formik, open, onSubmissionError } = props;
@@ -50,6 +55,16 @@ const OpenJiraMenuIfValidationFails = props => {
     React.useEffect(effect, [formik.submitCount, formik.errors]);
     return null;
 };
+
+const materialTheme = createMuiTheme({
+    overrides: {
+        MuiSvgIcon: {
+            root: {
+                fontSize: '24px',
+            },
+        },
+    },
+});
 
 class UserSetting extends Component {
     state = {
@@ -81,6 +96,7 @@ class UserSetting extends Component {
             },
         },
         userTechnologies: [],
+        isOpenCountriesDropdown: false,
     };
 
     checkValidPhone = (phone, code) => {
@@ -133,7 +149,7 @@ class UserSetting extends Component {
         const { vocabulary, showNotificationAction } = this.props;
         const { inputs, userSetJiraSync } = this.state;
         const { syncJiraStatus, jiraType } = inputs;
-        const { jiraUserName, jiraPassword, jiraUrl, zip } = values;
+        const { jiraUserName, jiraPassword, jiraUrl } = values;
         const userData = Object.keys(values).reduce((acc, curr) => {
             if (curr === 'jiraUserName' || curr === 'jiraPassword' || curr === 'jiraUrl') return acc;
             return { ...acc, [curr]: values[curr] };
@@ -232,8 +248,20 @@ class UserSetting extends Component {
         }));
     };
 
+    closeDropdown = e => {
+        const { isOpenCountriesDropdown } = this.state;
+        if (isOpenCountriesDropdown && !e.target.closest('.flag-input-container')) {
+            this.setState({ isOpenCountriesDropdown: false });
+        }
+    };
+
     componentDidMount() {
         this.setDataToForm();
+        document.addEventListener('mousedown', this.closeDropdown);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.closeDropdown);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -268,7 +296,6 @@ class UserSetting extends Component {
         const { vocabulary, isMobile, userReducer } = this.props;
         const {
             v_my_profile,
-            v_your_name,
             v_save,
             v_change_password,
             v_phone,
@@ -294,14 +321,17 @@ class UserSetting extends Component {
             v_physical_address,
             v_time_date,
             v_add_your_password,
+            v_search,
+            v_empty,
+            select_country,
         } = vocabulary;
 
-        const { inputs, phone, userSetJiraSync, rotateArrowLoop } = this.state;
+        const { inputs, phone, userSetJiraSync, rotateArrowLoop, isOpenCountriesDropdown } = this.state;
         const { syncJiraStatus, jiraType } = inputs;
         const { checked } = syncJiraStatus;
 
         const { user } = this.props.userReducer;
-        const { email, username, companyName, country, state, city, zip, tokenJira, urlJira, loginJira } = user;
+        const { email, username, companyName, country, state, city, zip, urlJira, loginJira } = user;
 
         return (
             <div className={classNames('user-settings', { 'wrapper_user_setting_page--mobile': isMobile })}>
@@ -319,7 +349,7 @@ class UserSetting extends Component {
                                 {AppConfig.socialAuth.active && <SocialConnect />}
                             </div>
                             <Formik
-                                enableReinitialize={true}
+                                // enableReinitialize={true}
                                 validateOnChange={false}
                                 validateOnBlur={false}
                                 initialValues={{
@@ -473,13 +503,54 @@ class UserSetting extends Component {
                                                     }}
                                                 >
                                                     <div className="flag-input-container-title">{`${v_country}`}</div>
-                                                    <ReactFlagsSelect
-                                                        searchable={true}
-                                                        defaultCountry={formik.values.country}
-                                                        onSelect={countryCode => {
-                                                            formik.values.country = countryCode;
-                                                        }}
-                                                    />
+                                                    <div
+                                                        className="flag-input-container-select"
+                                                        onClick={() =>
+                                                            this.setState(prevState => {
+                                                                return {
+                                                                    ...prevState,
+                                                                    isOpenCountriesDropdown: !prevState.isOpenCountriesDropdown,
+                                                                };
+                                                            })
+                                                        }
+                                                    >
+                                                        <div className="flag-input-container-selected">
+                                                            {countries[formik.values.country] ? (
+                                                                <>
+                                                                    <img
+                                                                        className="flag-input-container-selected-flag"
+                                                                        src={countries[formik.values.country].flag}
+                                                                        alt=""
+                                                                    />
+                                                                    <span className="flag-input-container-selected-text">
+                                                                        {countries[formik.values.country].name.common}
+                                                                    </span>
+                                                                </>
+                                                            ) : (
+                                                                <span className="flag-input-container-selected-text-empty">
+                                                                    {select_country}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <div
+                                                            className={classNames('flag-input-container-select-arrow', {
+                                                                rotated: isOpenCountriesDropdown,
+                                                            })}
+                                                        />
+                                                    </div>
+                                                    {isOpenCountriesDropdown && (
+                                                        <div className="flag-input-container-select-dropdown">
+                                                            <CountriesDropdown
+                                                                inputPlaceholder={`${v_search}...`}
+                                                                epmtyText={v_empty}
+                                                                onSelect={item => {
+                                                                    formik.values.country = item.code;
+                                                                    this.setState({ isOpenCountriesDropdown: false });
+                                                                }}
+                                                                theme="dark"
+                                                            />
+                                                        </div>
+                                                    )}
                                                     <div
                                                         className="wrapper-base-input__error-message"
                                                         style={{ height: '1rem' }}
@@ -569,20 +640,23 @@ class UserSetting extends Component {
                                         <div className="wrapper-jira-sync">
                                             <div className="jira-sync-labels-wrapper">
                                                 <label className="input_container input_checkbox_jira">
-                                                    <input
-                                                        type={syncJiraStatus.type}
-                                                        checked={syncJiraStatus.checked}
-                                                        name={syncJiraStatus.name}
-                                                        onChange={event => {
-                                                            this.changeSyncJiraStatus(event);
-                                                            formik.setValues({
-                                                                ...formik.values,
-                                                                jiraPassword: '',
-                                                                jiraUserName: loginJira || '',
-                                                                jiraUrl: urlJira || '',
-                                                            });
-                                                        }}
-                                                    />
+                                                    <ThemeProvider theme={materialTheme}>
+                                                        <Checkbox
+                                                            name={syncJiraStatus.name}
+                                                            checked={syncJiraStatus.checked}
+                                                            color="primary"
+                                                            style={{ backgroundColor: 'transparent' }}
+                                                            onChange={event => {
+                                                                this.changeSyncJiraStatus(event);
+                                                                formik.setValues({
+                                                                    ...formik.values,
+                                                                    jiraPassword: '',
+                                                                    jiraUserName: loginJira || '',
+                                                                    jiraUrl: urlJira || '',
+                                                                });
+                                                            }}
+                                                        />
+                                                    </ThemeProvider>{' '}
                                                     <span className="input_title">{v_jira_synchronization}</span>
                                                 </label>
                                                 <label>

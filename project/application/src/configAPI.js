@@ -26,7 +26,7 @@ export const setSocialConnect = (userId, { socialId, socialName }) =>
         },
     });
 
-export const loginWithFacebook = ({ email = '', id, name: username, language }) =>
+export const loginWithFacebook = ({ email = '', id, name: username, language, timezoneOffset }) =>
     instance({
         url: '/user/login-fb',
         method: 'POST',
@@ -35,6 +35,7 @@ export const loginWithFacebook = ({ email = '', id, name: username, language }) 
             id,
             username,
             language,
+            timezoneOffset,
         },
     });
 
@@ -102,10 +103,11 @@ export const tutorialChecked = (id, key) =>
         },
     });
 
-export const getClientsList = async () => {
+export const getClientsList = async (params = {}) => {
     return instance({
         url: '/client/list',
         method: 'GET',
+        params,
     });
 };
 
@@ -250,17 +252,18 @@ export const renameTeam = ({ teamId, newName }) =>
         },
     });
 
-export const signIn = ({ email, password }) =>
+export const signIn = ({ email, password, timezoneOffset }) =>
     instance({
         url: '/user/login',
         method: 'POST',
         data: {
             email,
             password,
+            timezoneOffset,
         },
     });
 
-export const signUp = ({ email, password, language }) =>
+export const signUp = ({ email, password, language, timezoneOffset }) =>
     instance({
         url: '/user/register',
         method: 'POST',
@@ -268,6 +271,7 @@ export const signUp = ({ email, password, language }) =>
             email,
             password,
             language,
+            timezoneOffset,
         },
     });
 
@@ -397,10 +401,18 @@ export const createInvoice = data =>
         data,
     });
 
-export const getInvoices = (page, limit) =>
+export const getInvoices = params =>
     instance({
-        url: `/invoice/list?page=${page}&limit=${limit}`,
+        url: `/invoice/list`,
         method: 'GET',
+        params,
+    });
+
+export const getInvoicesTotal = params =>
+    instance({
+        url: `/invoice/total`,
+        method: 'GET',
+        params,
     });
 
 export const getInvoiceViewData = id =>

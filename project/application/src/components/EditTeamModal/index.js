@@ -46,6 +46,7 @@ class EditTeamModal extends Component {
     state = {
         id: null,
         value: ROLES.ROLE_MEMBER,
+        isOwner: false,
         valueStatus: USER_STATUS.NOT_ACTIVE,
         valueDeleteMember: false,
         userTechnologies: [],
@@ -92,7 +93,7 @@ class EditTeamModal extends Component {
                     email: this.email.value,
                     username: this.name.value,
                     isActive: this.state.valueStatus === USER_STATUS.ACTIVE,
-                    roleName: this.state.value,
+                    roleName: this.state.isOwner ? this.props.editedUser.role_collaboration.title : this.state.value,
                     technologies: this.state.userTechnologies.map(item => item.id),
                 }),
             }).then(
@@ -134,12 +135,14 @@ class EditTeamModal extends Component {
     componentDidMount() {
         const currentUser = this.props.editedUser.user[0] || {};
         const { id, username, email, userTechnologies } = currentUser;
-        const role = this.props.editedUser.role_collaboration.title;
+        const isOwner = id === this.props.owner_id;
+        const role = isOwner ? ROLES.ROLE_OWNER : this.props.editedUser.role_collaboration.title;
         const isActive = this.props.editedUser.is_active;
 
         this.setState({
             id,
             value: role,
+            isOwner: isOwner,
             valueStatus: isActive ? USER_STATUS.ACTIVE : USER_STATUS.NOT_ACTIVE,
             userTechnologies: userTechnologies ? userTechnologies.map(item => item.technology) : [],
         });
@@ -193,12 +196,21 @@ class EditTeamModal extends Component {
                                     value={ROLES.ROLE_ADMIN}
                                     control={<Radio color="primary" />}
                                     label="Admin"
+                                    disabled={this.state.isOwner}
                                 />
                                 <FormControlLabel
                                     value={ROLES.ROLE_MEMBER}
                                     control={<Radio color="primary" />}
                                     label="User"
+                                    disabled={this.state.isOwner}
                                 />
+                                {this.state.isOwner && (
+                                    <FormControlLabel
+                                        value={ROLES.ROLE_OWNER}
+                                        control={<Radio color="primary" />}
+                                        label="Owner"
+                                    />
+                                )}
                             </RadioGroup>
                         </ThemeProvider>
                     </div>
@@ -232,7 +244,7 @@ class EditTeamModal extends Component {
                         </div>
                     </div>
                     <div className="delete_team_modal_input_container">
-                        {this.props.editedUser.role_collaboration.title === ROLES.ROLE_MEMBER && (
+                        {!this.state.isOwner && (
                             <ThemeProvider theme={materialTheme}>
                                 <FormControlLabel
                                     value={this.state.valueDeleteMember}
@@ -252,8 +264,9 @@ class EditTeamModal extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    vocabulary: state.languageReducer.vocabulary,
+const mapStateToProps = store => ({
+    vocabulary: store.languageReducer.vocabulary,
+    owner_id: store.teamReducer.currentTeam.data.owner_id,
 });
 
 const mapDispatchToProps = {

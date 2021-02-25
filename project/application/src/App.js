@@ -30,16 +30,16 @@ import './fonts/icomoon/icomoon.css';
 import * as responsiveActions from './actions/ResponsiveActions';
 import { showNotificationAction } from './actions/NotificationActions';
 
-const addEvent = (object, type, callback) => {
-    if (object === null || typeof object === 'undefined') return false;
-    if (object.addEventListener) {
-        object.addEventListener(type, callback, false);
-    } else if (object.attachEvent) {
-        object.attachEvent('on' + type, callback);
-    } else {
-        object['on' + type] = callback;
-    }
-};
+// const addEvent = (object, type, callback) => {
+//     if (object === null || typeof object === 'undefined') return false;
+//     if (object.addEventListener) {
+//         object.addEventListener(type, callback, false);
+//     } else if (object.attachEvent) {
+//         object.attachEvent('on' + type, callback);
+//     } else {
+//         object['on' + type] = callback;
+//     }
+// };
 
 class App extends Component {
     setResponsiveReducer = event => {
@@ -49,11 +49,11 @@ class App extends Component {
             height: window.innerHeight,
         });
 
-        if (window.innerWidth >= 1024 && isMobile) {
+        if (window.innerWidth >= 1062 && isMobile) {
             setIsMobile(false);
         }
 
-        if (window.innerWidth < 1024 && !isMobile) {
+        if (window.innerWidth < 1062 && !isMobile) {
             setIsMobile(true);
         }
     };
@@ -133,23 +133,23 @@ class App extends Component {
                 <PrivateRoute
                     exact
                     path="/invoices"
-                    render={() => (isOwner == userId ? <PageTemplate content={InvoicesPage} /> : '')}
+                    render={() => (isOwner === userId ? <PageTemplate content={InvoicesPage} /> : '')}
                 />
                 <PrivateRoute
                     exact
                     path="/invoices/:pageType"
-                    render={() => (isOwner == userId ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
+                    render={() => (isOwner === userId ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
                 />
                 <PrivateRoute
                     exact
                     path="/invoices/:pageType/:invoiceId"
-                    render={() => (isOwner == userId ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
+                    render={() => (isOwner === userId ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
                 />
                 <PrivateRoute
                     exact
                     path="/invoices/view/:invoiceId"
                     render={() =>
-                        isOwner == userId ? (
+                        isOwner === userId ? (
                             <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="view" />} />
                         ) : (
                             ''
@@ -165,7 +165,7 @@ class App extends Component {
                     exact
                     path="/invoices/update/:invoiceId"
                     render={() =>
-                        isOwner == userId ? (
+                        isOwner === userId ? (
                             <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="update" />} />
                         ) : (
                             ''

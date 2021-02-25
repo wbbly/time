@@ -6,7 +6,6 @@ import cn from 'classnames';
 
 // Components
 import CreateTeamModal from '../CreateTeamModal';
-import ReactTooltip from 'react-tooltip';
 import CustomScrollbar from '../../components/CustomScrollbar';
 import ModalPortal from '../../components/ModalPortal';
 

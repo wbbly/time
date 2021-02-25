@@ -4,12 +4,12 @@ import { Link, NavLink, withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
 // Services
-import { checkIsAdminByRole } from '../../services/authentication';
+import { checkIsAdminByRole, checkIsOwnerByRole } from '../../services/authentication';
 
 // Components
 import TeamSwitcher from '../TeamSwitcher';
 import UserMenu from '../UserMenu';
-import CustomScrollbar from '../../components/CustomScrollbar';
+// import CustomScrollbar from '../../components/CustomScrollbar';
 
 // Styles
 import './style.scss';
@@ -25,7 +25,7 @@ class LeftBar extends Component {
 
     render() {
         const { switchMenu, isMobile, vocabulary, currentTeam, isOwner, user } = this.props;
-        const { v_help, v_timer, v_reports, v_projects, v_team, v_clients, v_invoices } = vocabulary;
+        const { v_help, v_timer, v_reports, v_projects, v_clients, v_invoices } = vocabulary;
 
         let userId = '';
         if (user) {
@@ -80,7 +80,7 @@ class LeftBar extends Component {
                             <div className="links_text">{v_projects}</div>
                         </div>
                     </NavLink>
-                    {checkIsAdminByRole(currentTeam.data.role) && (
+                    {(checkIsAdminByRole(currentTeam.data.role) || checkIsOwnerByRole(currentTeam.data.role)) && (
                         <NavLink
                             activeClassName="active-link"
                             onClick={switchMenu}
@@ -93,7 +93,7 @@ class LeftBar extends Component {
                             </div>
                         </NavLink>
                     )}
-                    {isOwner == userId && (
+                    {isOwner === userId && (
                         <NavLink
                             activeClassName="active-link"
                             onClick={switchMenu}
@@ -121,7 +121,12 @@ class LeftBar extends Component {
                         </div>
                     </NavLink>
                 </div>
-                <a className="navigation_links" target="_blank" href="https://telegra.ph/Wobbly-help-07-09">
+                <a
+                    className="navigation_links"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://telegra.ph/Wobbly-help-07-09"
+                >
                     <i className="help" />
                     <div className="links_text">{v_help}</div>
                 </a>

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { apiCall } from '../../services/apiService';
+import { vocabularyInterpolation } from '../../services/vocabulary';
 
 // Components
 import ClientsDropdown from '../ClientsDropdown';
@@ -51,7 +52,12 @@ class EditProjectModal extends Component {
 
     changeProject() {
         const { vocabulary, showNotificationAction } = this.props;
-        const { v_a_project_updated, v_a_project_existed, v_a_project_edit_error } = vocabulary;
+        const {
+            v_a_project_updated,
+            v_a_project_existed,
+            v_a_project_edit_error,
+            v_sync_with_jira_project_exist,
+        } = vocabulary;
         const { selectedClient, selectedProject } = this.state;
         const project = addProjectPreProcessing(
             this.editProjectInput.value,
@@ -91,11 +97,21 @@ class EditProjectModal extends Component {
             err => {
                 if (err instanceof Response) {
                     err.text().then(error => {
-                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
-                        if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                            showNotificationAction({ text: v_a_project_existed, type: 'warning' });
-                        } else {
-                            showNotificationAction({ text: v_a_project_edit_error, type: 'error' });
+                        const errorParsed = JSON.parse(error);
+                        if (Array.isArray(error)) {
+                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(errorParsed));
+                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                                showNotificationAction({ text: v_a_project_existed, type: 'warning' });
+                            } else {
+                                showNotificationAction({ text: v_a_project_edit_error, type: 'error' });
+                            }
+                        } else if (errorParsed.message && errorParsed.message === 'ERROR.PROJECT.SYNC_FAILED') {
+                            showNotificationAction({
+                                text: vocabularyInterpolation(v_sync_with_jira_project_exist, {
+                                    projectName: errorParsed.project,
+                                }),
+                                type: 'warning',
+                            });
                         }
                     });
                 } else {
@@ -165,7 +181,10 @@ class EditProjectModal extends Component {
                 }
             }
         );
-        this.props.getClientsAction();
+        this.props.getClientsAction({
+            order_by: 'company_name',
+            sort: 'asc',
+        });
         document.addEventListener('mousedown', this.closeList);
         this.props.userReducer.user.tokenJira && this.props.getRelationProjectsListAction();
     }

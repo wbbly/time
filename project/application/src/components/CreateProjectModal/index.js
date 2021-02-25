@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
 import { apiCall } from '../../services/apiService';
+import { vocabularyInterpolation } from '../../services/vocabulary';
 
 // Components
 import ClientsDropdown from '../ClientsDropdown';
@@ -61,7 +62,12 @@ class CreateProjectModal extends Component {
     addProject() {
         const { vocabulary, showNotificationAction } = this.props;
         const { selectedClient, selectedProject } = this.state;
-        const { v_a_project_created, v_a_project_existed, v_a_project_created_error } = vocabulary;
+        const {
+            v_a_project_created,
+            v_a_project_existed,
+            v_a_project_created_error,
+            v_sync_with_jira_project_exist,
+        } = vocabulary;
         const project = addProjectPreProcessing(
             this.createProjectInput.value,
             this.state.selectedValue,
@@ -93,11 +99,21 @@ class CreateProjectModal extends Component {
             err => {
                 if (err instanceof Response) {
                     err.text().then(error => {
-                        const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(error));
-                        if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                            showNotificationAction({ text: v_a_project_existed, type: 'warning' });
-                        } else {
-                            showNotificationAction({ text: v_a_project_created_error, type: 'error' });
+                        const errorParsed = JSON.parse(error);
+                        if (Array.isArray(error)) {
+                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(errorParsed));
+                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                                showNotificationAction({ text: v_a_project_existed, type: 'warning' });
+                            } else {
+                                showNotificationAction({ text: v_a_project_created_error, type: 'error' });
+                            }
+                        } else if (errorParsed.message && errorParsed.message === 'ERROR.PROJECT.SYNC_FAILED') {
+                            showNotificationAction({
+                                text: vocabularyInterpolation(v_sync_with_jira_project_exist, {
+                                    projectName: errorParsed.project,
+                                }),
+                                type: 'warning',
+                            });
                         }
                     });
                 } else {
@@ -218,7 +234,10 @@ class CreateProjectModal extends Component {
             }
         );
         document.addEventListener('mousedown', this.closeList);
-        this.props.getClientsAction();
+        this.props.getClientsAction({
+            order_by: 'company_name',
+            sort: 'asc',
+        });
         this.props.userReducer.user.tokenJira && this.props.getRelationProjectsListAction();
     }
 }

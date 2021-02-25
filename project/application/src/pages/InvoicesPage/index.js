@@ -18,12 +18,14 @@ import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoice
 import TotalInvoiceCounersComponent from '../../components/InvoicePageComponents/TotalInvoiceCounersComponent';
 import blankInvoice from '../../images/invoice_picture.png';
 import PageHeader from '../../components/PageHeader/index';
+import SearchComponent from '../../components/SearchComponent';
 
 class InvoicesPage extends Component {
     state = {
         isInitialFetching: true,
         sendInvoiceModalData: null,
         copiedInvoice: false,
+        searchValue: '',
     };
 
     componentDidMount() {
@@ -37,15 +39,28 @@ class InvoicesPage extends Component {
             prevProps.page !== this.props.page
         ) {
             if (this.state.copiedInvoice) {
-                this.props.getInvoicesList(0, this.props.limit);
+                this.props.getInvoicesList(0, this.props.limit, this.state.searchValue);
                 this.setState({ copiedInvoice: false }, () => {
                     this.props.history.push(`/invoices/update/${this.props.copiedInvoiceId}`);
                 });
             } else {
-                this.props.getInvoicesList(this.props.page, this.props.limit);
+                this.props.getInvoicesList(this.props.page, this.props.limit, this.state.searchValue);
             }
         }
     }
+
+    setSearchValue = value => {
+        this.setState({ searchValue: value });
+    };
+
+    handleSearch = () => {
+        this.props.getInvoicesList(0, this.props.limit, this.state.searchValue);
+    };
+
+    handleReset = () => {
+        this.setSearchValue('');
+        this.props.getInvoicesList(0, this.props.limit);
+    };
 
     toggleSendInvoiceModal = (sendInvoiceModalData = null) => {
         this.setState({ sendInvoiceModalData });
@@ -80,9 +95,19 @@ class InvoicesPage extends Component {
     };
 
     render() {
-        const { vocabulary, isMobile, invoices, page, pageCount, isFetching, history, isInitialFetching } = this.props;
-        const { v_invoices, v_add_new_invoice, v_no_invoices } = vocabulary;
-        const { sendInvoiceModalData } = this.state;
+        const {
+            vocabulary,
+            isMobile,
+            invoices,
+            page,
+            pageCount,
+            grandTotal,
+            isFetching,
+            history,
+            isInitialFetching,
+        } = this.props;
+        const { v_invoices, v_add_new_invoice } = vocabulary;
+        const { sendInvoiceModalData, searchValue } = this.state;
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar disableTimeEntriesFetch>
@@ -94,6 +119,14 @@ class InvoicesPage extends Component {
                                 })}
                             >
                                 <PageHeader title={v_invoices}>
+                                    <div className="invoices-page-top__search-input">
+                                        <SearchComponent
+                                            value={searchValue}
+                                            setValue={this.setSearchValue}
+                                            handleReset={this.handleReset}
+                                            handleSearch={this.handleSearch}
+                                        />
+                                    </div>
                                     <Link to="/invoices/create" className="header-wrapper__child-button">
                                         {v_add_new_invoice}
                                     </Link>
@@ -130,11 +163,15 @@ class InvoicesPage extends Component {
                                             page={page}
                                             pageCount={pageCount}
                                             changePage={this.changePage}
+                                            grandTotal={grandTotal}
                                         />
                                     </div>
                                 </div>
                             )}
-                            {invoices && invoices.length === 0 && <img src={blankInvoice} className="blank-invoice" />}
+                            {invoices &&
+                                invoices.length === 0 && (
+                                    <img src={blankInvoice} alt="invoice" className="blank-invoice" />
+                                )}
                         </Loading>
                     </div>
                 </CustomScrollbar>
@@ -155,6 +192,7 @@ const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
     page: invoicesReducer.page,
     limit: invoicesReducer.limit,
     pageCount: invoicesReducer.pageCount,
+    grandTotal: invoicesReducer.grandTotal,
     isFetching: invoicesReducer.isFetching,
     isInitialFetching: invoicesReducer.isInitialFetching,
     senderId: invoicesReducer.senderId,

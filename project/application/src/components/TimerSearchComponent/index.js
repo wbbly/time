@@ -46,6 +46,10 @@ const TimerSearchComponent = ({
         };
     }, []);
 
+    // const endSearch = useCallback(() => {
+    //     endSearchMode()
+    // }, [endSearchMode])
+
     // useEffect(() => {
     //     if(!searchValue){
     //         setSelectionRange({
@@ -116,7 +120,7 @@ const TimerSearchComponent = ({
     const setStartDate = date => {
         setStartDateValue(date);
         let formattedDate = date.replace(/\D+/g, '');
-        if (formattedDate && formattedDate.length == 8 && moment(date, dateFormat)._isValid) {
+        if (formattedDate && formattedDate.length === 8 && moment(date, dateFormat)._isValid) {
             let newDate = new Date(moment(date, dateFormat));
             if (newDate < selectionRange.endDate) {
                 let timeStart = {
@@ -134,7 +138,7 @@ const TimerSearchComponent = ({
     const setEndDate = date => {
         setEndDateValue(date);
         let formattedDate = date.replace(/\D+/g, '');
-        if (formattedDate && formattedDate.length == 8 && moment(date, dateFormat)._isValid) {
+        if (formattedDate && formattedDate.length === 8 && moment(date, dateFormat)._isValid) {
             let newDate = new Date(moment(date, dateFormat));
             if (newDate > selectionRange.startDate) {
                 let timeStart = {

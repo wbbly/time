@@ -16,10 +16,10 @@ const getClientsRequestError = payload => ({
     payload,
 });
 
-export const getClientsAction = () => async dispatch => {
+export const getClientsAction = (params = {}) => async dispatch => {
     dispatch(getClientsRequest());
     try {
-        const { data } = await getClientsList();
+        const { data } = await getClientsList(params);
         dispatch(getClientsRequestSuccess(data.data.client));
     } catch (error) {
         dispatch(getClientsRequestError(error));

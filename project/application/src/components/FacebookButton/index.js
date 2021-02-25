@@ -10,6 +10,7 @@ import { loginWithFacebook } from '../../configAPI';
 import { AppConfig } from '../../config';
 
 import { setTokenToLocalStorage } from '../../services/tokenStorageService';
+import { getUtcOffsetInMilliseconds } from '../../services/timeService';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
@@ -40,7 +41,13 @@ class FacebookButton extends Component {
             const { email, id, name } = response;
             const { lang } = vocabulary;
             try {
-                const response = await loginWithFacebook({ email, id, name, language: lang.short });
+                const response = await loginWithFacebook({
+                    email,
+                    id,
+                    name,
+                    language: lang.short,
+                    timezoneOffset: getUtcOffsetInMilliseconds(),
+                });
                 const { token } = response.data;
                 setTokenToLocalStorage(token);
                 document.cookie = 'isAuthWobbly=true; path=/; domain=.wobbly.me;';

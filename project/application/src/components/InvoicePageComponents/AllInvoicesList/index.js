@@ -5,6 +5,7 @@ import { deleteInvoiceById, editInvoicePaymentStatus } from '../../../actions/In
 import DeleteInvoiceModal from '../../../components/DeleteInvoiceModal/index';
 import InvoiceList from '../../InvoiceList/index';
 import CustomPagination from '../../CustomPagination/index';
+import { spaceAndFixNumber, fixNumberHundredths, internationalFormatNum } from '../../../services/numberHelpers';
 
 // Styles
 import './style.scss';
@@ -247,16 +248,12 @@ const AllInvoicesList = ({
     page,
     pageCount,
     changePage,
+    grandTotal,
 }) => {
     const {
         v_draft,
         v_paid,
         v_overdue,
-        v_edit_client,
-        v_download,
-        v_copy,
-        v_send,
-        v_delete,
         v_invoice,
         v_client,
         v_price,
@@ -322,6 +319,23 @@ const AllInvoicesList = ({
                     />
                 );
             })}
+            {Object.keys(grandTotal).length && (
+                <div className="all-invoices-list__grand-total-wrapper">
+                    <div className="all-invoices-list__grand-total">
+                        <div className="all-invoices-list__grand-total-title">Grand total:</div>
+                        {Object.keys(grandTotal).map((currencyCode, key) => {
+                            return (
+                                <div className="all-invoices-list__grand-total-currency" key={key}>
+                                    {currencyCode.toUpperCase()}{' '}
+                                    {internationalFormatNum(
+                                        fixNumberHundredths(spaceAndFixNumber(grandTotal[currencyCode]))
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
             {pageCount > 1 && <CustomPagination page={page} pageCount={pageCount} changePage={changePage} />}
             {modalOpeningId && (
                 <DeleteInvoiceModal

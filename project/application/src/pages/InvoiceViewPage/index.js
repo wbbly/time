@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-textarea-autosize';
 
 import { getInvoiceViewDataThunk } from '../../actions/InvoicesActions';
-import { showNotificationAction } from '../../actions/NotificationActions';
 import { AppConfig } from '../../config';
 import { spaceAndFixNumber, fixNumberHundredths, internationalFormatNum } from '../../services/numberHelpers';
 //Styles
@@ -20,13 +20,10 @@ import {
 import CustomScrollbar from '../../components/CustomScrollbar';
 import DetailedInvoiceProjectsTable from '../../components/DetailedInvoiceProjectsTable';
 import classNames from 'classnames';
-import { getProjectsListActions } from '../../actions/ProjectsActions';
 import { connect } from 'react-redux';
 import CurrencySelect from '../../components/CurrencySelect';
 import CalendarSelect from '../../components/CalendarSelect';
-import { getCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
 import PersonSelect from '../../components/PersonSelect';
-import { getClientsAction } from '../../actions/ClientsActions';
 import ImagePicker from '../../components/ImagePicker';
 import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoiceModal';
 import { downloadPDF } from '../../services/downloadPDF';
@@ -385,7 +382,7 @@ class InvoiceViewPage extends Component {
                                 <div className="invoices-page-detailed__comments">
                                     <div className="invoices-page-detailed__subtitle">{v_comments}</div>
 
-                                    <textarea
+                                    <TextareaAutosize
                                         value={invoice.comment || ''}
                                         onChange={e => this.handleInputChange('comment', e)}
                                         className="invoices-page-detailed__input invoices-page-detailed__textarea"
@@ -421,7 +418,7 @@ class InvoiceViewPage extends Component {
                                             onClick={async () => {
                                                 try {
                                                     let responce = await downloadInvoicePDF(invoice.id);
-                                                    downloadPDF(responce.data, `${invoice.invoice_number}.pdf`);
+                                                    downloadPDF(responce.data, `invoice-${invoice.invoice_number}.pdf`);
                                                 } catch (error) {
                                                     console.log(error);
                                                     showNotificationAction({

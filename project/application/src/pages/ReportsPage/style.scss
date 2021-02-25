@@ -11,6 +11,10 @@
     width: 100%;
     background-color: #333333;
     padding: 25px 40px 0;
+
+    @media screen and (max-width: 670px) {
+      height: auto;
+    }
   }
 
   .data_container_reports_page .header {
@@ -41,7 +45,6 @@
   .projects_chart_container {
     position: relative;
     top: 150px;
-    border-top: 1px solid #bdbdbd;
   }
 
   .selects_container {
@@ -54,9 +57,12 @@
     align-items: center;
     font-family: "Open Sans", sans-serif;
     line-height: normal;
-    font-size: 20px;
+    font-size: 2rem;
     color: #ffffff;
     cursor: pointer;
+    @media screen and (max-width: 670px) {
+      font-size: 1.4rem;
+    }
   }
 
   .select_input {
@@ -64,8 +70,13 @@
     background-color: #333333;
     color: white;
     border: none;
+    text-align: center;
     &::placeholder {
       color: white;
+    }
+    @media screen and (max-width: 670px) {
+      width: 80px;
+      padding: 0;
     }
   }
 
@@ -107,7 +118,7 @@
     top: 30px;
     right: 10px;
     z-index: 3;
-    background:#27292A;
+    background:#3f3f3f;
     box-shadow: 0px 3px 18px black;
   }
 
@@ -177,7 +188,7 @@
     }
     .rdrDateRangePickerWrapper {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: wrap-reverse;
     }
     .rdrDefinedRangesWrapper {
       width: 100%;

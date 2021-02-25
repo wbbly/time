@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Services
-import { checkIsAdminByRole } from '../../services/authentication';
+import { checkIsAdminByRole, checkIsOwnerByRole } from '../../services/authentication';
 import { apiCall } from '../../services/apiService';
 
 // Components
@@ -82,14 +82,16 @@ class ProjectsPage extends Component {
                         />
                     )}
                     <div className="data_container_projects_page">
-                        <PageHeader title={v_projects}>
-                            <button
-                                className="header-wrapper__child-button"
-                                onClick={() => projectsPageAction('TOGGLE_MODAL', { toggle: true })}
-                            >
-                                {v_create_new_project}
-                            </button>
-                        </PageHeader>
+                        {(checkIsAdminByRole(currentTeam.data.role) || checkIsOwnerByRole(currentTeam.data.role)) && (
+                            <PageHeader title={v_projects}>
+                                <button
+                                    className="header-wrapper__child-button"
+                                    onClick={() => projectsPageAction('TOGGLE_MODAL', { toggle: true })}
+                                >
+                                    {v_create_new_project}
+                                </button>
+                            </PageHeader>
+                        )}
                         <div className="project_page_filters">
                             <ProjectSearchBar
                                 tableInfo={this.props.tableData}

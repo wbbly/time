@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
+import { connect } from 'react-redux';
+import ReactTooltip from 'react-tooltip';
+import classNames from 'classnames';
+import _ from 'lodash';
 import {
     addInvoice,
     getInvoice,
@@ -10,8 +14,19 @@ import {
     setCopiedInvoiceId,
 } from '../../actions/InvoicesActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
+import { getProjectsListActions } from '../../actions/ProjectsActions';
+import { getCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
+import { getClientsAction } from '../../actions/ClientsActions';
+
+// Config
 import { AppConfig } from '../../config';
+import { downloadInvoicePDF } from '../../configAPI';
+
+// Services
 import { spaceAndFixNumber, fixNumberHundredths, internationalFormatNum } from '../../services/numberHelpers';
+import { apiCall } from '../../services/apiService';
+import { downloadPDF } from '../../services/downloadPDF';
+
 //Styles
 import './style.scss';
 
@@ -28,47 +43,29 @@ import {
 } from '../../components/InvoicePageComponents/AllInvoicesList';
 import CustomScrollbar from '../../components/CustomScrollbar';
 import DetailedInvoiceProjectsTable from '../../components/DetailedInvoiceProjectsTable';
-import classNames from 'classnames';
-import { getProjectsListActions } from '../../actions/ProjectsActions';
-import { connect } from 'react-redux';
 import CurrencySelect from '../../components/CurrencySelect';
 import CalendarSelect from '../../components/CalendarSelect';
-import { getCurrentTeamDetailedDataAction } from '../../actions/TeamActions';
 import PersonSelect from '../../components/PersonSelect';
-import { getClientsAction } from '../../actions/ClientsActions';
 import ImagePicker from '../../components/ImagePicker';
 import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoiceModal';
-import ReactTooltip from 'react-tooltip';
 import DeleteInvoiceModal from '../../components/DeleteInvoiceModal/index';
-import { downloadPDF } from '../../services/downloadPDF';
-import { downloadInvoicePDF } from '../../configAPI';
 import DiscountInvoiceModal from '../../components/DiscountInvoiceModal';
 
 //todo move to queries.js if needed
 export const calculateTaxSum = ({ amount, rate, tax, hours }) => (((amount || hours) * rate) / 100) * tax;
-
-//todo move to queries.js if needed
 export const calculateSubtotal = ({ amount, rate, tax, hours }) =>
     (amount || hours) * rate + calculateTaxSum({ amount, rate, tax, hours }) || 0;
 export const calculateSubtotalWithoutTax = ({ amount, rate, tax, hours }) => {
     return spaceAndFixNumber((amount || hours) * rate);
 };
-//todo move to queries.js if needed
 export const calculateSubtotals = projects =>
     projects.reduce((sum, { amount, rate, hours }) => sum + (amount || hours) * rate, 0) || 0;
-
-//todo move to queries.js if needed
 export const calculateTaxesSum = projects => projects.reduce((sum, project) => sum + calculateTaxSum(project), 0) || 0;
-
 export const subtotalWithDiscount = (subtotal, discount = 0) => (subtotal / 100) * discount;
-
 const calculateTotal = (projects, discount = 0) => {
     let subtotal = calculateSubtotals(projects);
-
     return subtotal - subtotalWithDiscount(subtotal, discount) + calculateTaxesSum(projects);
 };
-
-//todo move to queries.js if needed
 export const calculateSubtotalsWithTax = projects =>
     projects.reduce((sum, project) => sum + calculateSubtotal(project), 0);
 
@@ -123,9 +120,13 @@ class InvoicesPageDetailed extends Component {
     copyLinkRef = React.createRef();
 
     async componentDidMount() {
-        let dateDue = new Date();
-        dateDue.setDate(dateDue.getDate() + 1);
-        this.setState({ invoice: { ...this.state.invoice, dateDue: dateDue } });
+        if (this.isCreateMode) {
+            this.getNewInvoiceNumber();
+            let dateDue = new Date();
+            dateDue.setDate(dateDue.getDate() + 1);
+            this.setState({ invoice: { ...this.state.invoice, dateDue: dateDue } });
+        }
+
         setTimeout(() => this.setState({ isInitialFetching: false }), 500);
         const {
             getProjectsListActions,
@@ -139,14 +140,21 @@ class InvoicesPageDetailed extends Component {
         if (this.isUpdateMode || this.isViewMode) {
             getInvoice(params['invoiceId']);
         }
+
         await getProjectsListActions();
         await getCurrentTeamDetailedDataAction();
-        await getClientsAction();
+        await getClientsAction({
+            order_by: 'company_name',
+            sort: 'asc',
+        });
         await setCopiedInvoiceId('');
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.invoice && this.props.invoice !== prevProps.invoice) {
+        if (
+            (this.props.invoice && !_.isEqual(this.props.invoice, prevProps.invoice)) ||
+            (this.props.invoice && !_.isEqual(prevProps.match.params, this.props.match.params))
+        ) {
             const {
                 id,
                 invoice_number,
@@ -200,6 +208,26 @@ class InvoicesPageDetailed extends Component {
     get isUpdateMode() {
         return this.props.match.params.pageType === 'update';
     }
+
+    getNewInvoiceNumber = () => {
+        apiCall(AppConfig.apiURL + `invoice/free-invoice-number`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            result => {
+                this.setState({ invoice: { ...this.state.invoice, invoiceNumber: result } });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
+                }
+            }
+        );
+    };
 
     handleInputChange = (name, e) => {
         let value = e.target.value;
@@ -826,7 +854,10 @@ class InvoicesPageDetailed extends Component {
                                                 if (this.isViewMode) {
                                                     try {
                                                         let responce = await downloadInvoicePDF(invoice.id);
-                                                        downloadPDF(responce.data, `${invoice.invoiceNumber}.pdf`);
+                                                        downloadPDF(
+                                                            responce.data,
+                                                            `invoice-${invoice.invoiceNumber}.pdf`
+                                                        );
                                                     } catch (error) {
                                                         console.log(error);
                                                         showNotificationAction({

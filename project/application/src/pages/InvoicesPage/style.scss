@@ -19,6 +19,21 @@
       display: flex;
       width: 100%;
     }
+    .header-wrapper__child {
+      display: flex;
+      align-items: center;
+    }
+    &__search-input {
+      width: 300px;
+      margin-right: 3rem;
+      @media screen and (max-width: 768px) {
+        width: 100%;
+        margin: 0;
+        background: #4f4f4f;
+        padding: 1rem 1.2rem;
+        margin-bottom: 1.4rem;
+      }
+    }
   }
   @media screen and (max-width: 600px) {
     .invoices-page-top {

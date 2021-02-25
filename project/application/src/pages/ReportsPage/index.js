@@ -21,7 +21,7 @@ import classNames from 'classnames';
 import _ from 'lodash';
 
 // Services
-import { checkIsAdminByRole } from '../../services/authentication';
+import { checkIsAdminByRole, checkIsOwnerByRole } from '../../services/authentication';
 import { getParametersString } from '../../services/apiService';
 import {
     getTimeDurationByGivenTimestamp,
@@ -70,7 +70,6 @@ class ReportsPage extends Component {
         isFetchingList: false,
         toggleBar: false,
         toggleChar: false,
-        projectsArr: [],
         selectionRange: {
             startDate: getCurrentDate(),
             endDate: getCurrentDate(),
@@ -82,6 +81,9 @@ class ReportsPage extends Component {
         totalUpChartTime: '',
         startDateValue: moment(getCurrentDate()).format(this.props.dateFormat),
         endDateValue: moment(getCurrentDate()).format(this.props.dateFormat),
+        // This code was used for detecting first/last date select (click) on calendar, remove it for if this feature will needed
+        // but its still doesnt work correct (select side ranges)
+        // focusedRange: [0, 0],
     };
 
     lineChartOption = durationTimeFormat => ({
@@ -134,11 +136,20 @@ class ReportsPage extends Component {
     addDebounceToSearch = _.debounce(selection => {
         this.props.reportsPageAction('SET_TIME', { data: selection });
         this.applySearch(this.getYear(selection.startDate), this.getYear(selection.endDate));
-    }, 1000);
+    }, 1);
 
-    handleSelect = ranges => {
-        let { dateFormat } = this.props;
-        if (moment(ranges.selection.startDate).diff(moment([1919, 11, 18])) === 0) {
+    handleSelect = (ranges, inputSearch = false) => {
+        const { dateFormat } = this.props;
+        // This code was used for detecting first/last date select (click) on calendar, remove it for if this feature will needed
+        // but its still doesnt work correct (select side ranges)
+        // const { focusedRange } = this.state;
+        if (
+            moment(ranges.selection.startDate).diff(moment([1919, 11, 18])) === 0
+            // This code was used for detecting first/last date select (click) on calendar, remove it for if this feature will needed
+            // but its still doesnt work correct (select side ranges)
+            // ||
+            // (!inputSearch && focusedRange[1] === 0)
+        ) {
             this.setState({
                 selectionRange: ranges.selection,
                 startDateValue: moment(ranges.selection.startDate).format(dateFormat),
@@ -157,44 +168,36 @@ class ReportsPage extends Component {
             }
         );
     };
+    handleInputSearch = () => {
+        const { startDateValue, endDateValue, selectionRange } = this.state;
+        const { dateFormat } = this.props;
+        const startDateFormatted = startDateValue.replace(/\D+/g, '');
+        const endDateFormatted = endDateValue.replace(/\D+/g, '');
 
-    setStartDate(date) {
-        this.setState({ startDateValue: date });
-        let { dateFormat } = this.props;
-        let formattedDate = date.replace(/\D+/g, '');
-        if (formattedDate && formattedDate.length == 8 && moment(date, dateFormat)._isValid) {
-            let newDate = new Date(moment(date, dateFormat));
-            if (newDate < this.state.selectionRange.endDate) {
-                let timeStart = {
-                    selection: {
-                        ...this.state.selectionRange,
-                        startDate: newDate,
-                        endDate: this.state.selectionRange.endDate,
+        if (
+            startDateFormatted &&
+            endDateFormatted &&
+            endDateFormatted.length === 8 &&
+            startDateFormatted.length === 8 &&
+            moment(startDateValue, dateFormat)._isValid &&
+            moment(endDateValue, dateFormat)._isValid
+        ) {
+            const newStartDate = new Date(moment(startDateValue, dateFormat));
+            const newEndDate = new Date(moment(endDateValue, dateFormat));
+            if (newStartDate <= newEndDate) {
+                this.handleSelect(
+                    {
+                        selection: {
+                            ...selectionRange,
+                            startDate: newStartDate,
+                            endDate: newEndDate,
+                        },
                     },
-                };
-                this.handleSelect(timeStart);
+                    true
+                );
             }
         }
-    }
-
-    setEndDate(date) {
-        this.setState({ endDateValue: date });
-        let { dateFormat } = this.props;
-        let formattedDate = date.replace(/\D+/g, '');
-        if (formattedDate && formattedDate.length == 8 && moment(date, dateFormat)._isValid) {
-            let newDate = new Date(moment(date, dateFormat));
-            if (newDate > this.state.selectionRange.startDate) {
-                let timeStart = {
-                    selection: {
-                        ...this.state.selectionRange,
-                        endDate: newDate,
-                        startDate: this.state.selectionRange.startDate,
-                    },
-                };
-                this.handleSelect(timeStart);
-            }
-        }
-    }
+    };
 
     getYear(date) {
         return moment(date).format('YYYY-MM-DD');
@@ -232,7 +235,15 @@ class ReportsPage extends Component {
     };
 
     render() {
-        const { isMobile, vocabulary, currentTeam, dateFormat, firstDayOfWeek, durationTimeFormat } = this.props;
+        const {
+            isMobile,
+            vocabulary,
+            currentTeam,
+            dateFormat,
+            firstDayOfWeek,
+            durationTimeFormat,
+            timeRange,
+        } = this.props;
         const {
             v_summary_report,
             v_total,
@@ -255,12 +266,13 @@ class ReportsPage extends Component {
         const customLocale = localeMap[lang.short];
         customLocale.options.weekStartsOn = firstDayOfWeek;
         return (
-            <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
+            <Loading flag={isInitialFetching} mode={'parentSize'} withLogo={false}>
                 <div
                     className={classNames('wrapper_reports_page', {
                         'wrapper_reports_page--mobile': isMobile,
                     })}
                 >
+                    {(isFetchingProjects || isFetchingList) && <Spinner mode={'overlay'} withLogo={false} />}
                     <div className="data_container_reports_page">
                         <PageHeader title={v_summary_report}>
                             <div className="selects_container" ref={div => (this.datePickerSelect = div)}>
@@ -268,18 +280,38 @@ class ReportsPage extends Component {
                                     <span onClick={e => this.openCalendar()}>
                                         <InputMask
                                             className="select_input"
-                                            onChange={e => this.setStartDate(e.target.value)}
+                                            onChange={e =>
+                                                this.setState({ startDateValue: e.target.value, focusedRange: [0, 0] })
+                                            }
                                             mask={dateFormat.toLowerCase()}
                                             formatChars={{ d: '[0-9]', m: '[0-9]', y: '[0-9]' }}
                                             value={startDateValue}
+                                            alwaysShowMask={false}
+                                            onKeyUp={e => {
+                                                if (e.keyCode === 13) {
+                                                    this.handleInputSearch();
+                                                } else {
+                                                    return;
+                                                }
+                                            }}
                                         />
                                         {'-'}
                                         <InputMask
                                             className="select_input"
-                                            onChange={e => this.setEndDate(e.target.value)}
+                                            onChange={e =>
+                                                this.setState({ endDateValue: e.target.value, focusedRange: [0, 0] })
+                                            }
                                             mask={dateFormat.toLowerCase()}
                                             formatChars={{ d: '[0-9]', m: '[0-9]', y: '[0-9]' }}
                                             value={endDateValue}
+                                            alwaysShowMask={false}
+                                            onKeyUp={e => {
+                                                if (e.keyCode === 13) {
+                                                    this.handleInputSearch();
+                                                } else {
+                                                    return;
+                                                }
+                                            }}
                                         />
                                     </span>
                                     <i
@@ -316,14 +348,21 @@ class ReportsPage extends Component {
                                                 firstDayOfWeek
                                             )}
                                             onChange={this.handleSelect}
+                                            // This code was used for detecting first/last date select (click) on calendar, remove it for if this feature will needed
+                                            // but its still doesnt work correct (select side ranges)
+                                            // focusedRange={this.state.focusedRange}
+                                            // onRangeFocusChange={dateRange => this.setState({ focusedRange: dateRange })}
                                         />
                                     </div>
                                 )}
                             </div>
                         </PageHeader>
-                        <div className={'content_wrapper'}>
-                            {(isFetchingProjects || isFetchingList) && <Spinner withLogo={false} mode={'overlay'} />}
-                            {checkIsAdminByRole(currentTeam.data.role) && (
+                        <div
+                            className="content_wrapper"
+                            style={this.props.projectsArr.length > 0 ? { paddingBottom: '150px' } : {}}
+                        >
+                            {(checkIsAdminByRole(currentTeam.data.role) ||
+                                checkIsOwnerByRole(currentTeam.data.role)) && (
                                 <ReportsSearchBar
                                     applySearch={e => this.applySearch()}
                                     inputProjectData={this.props.inputProjectData}
@@ -345,9 +384,10 @@ class ReportsPage extends Component {
                                     data={this.props.dataBarChat}
                                     height={isMobile ? 150 : 50}
                                     lineChartOption={this.lineChartOption}
-                                    selectionRange={this.props.timeRange}
+                                    selectionRange={timeRange}
                                     usersArr={this.props.inputUserData}
                                     projectsArr={this.props.projectsArr}
+                                    userProjectsArr={this.props.userProjectsArr}
                                     dataDoughnutChat={this.props.dataDoughnutChat}
                                 />
                             ) : (
@@ -446,6 +486,46 @@ class ReportsPage extends Component {
         }
 
         return { statsByProjects, statsByDates };
+    }
+
+    getArrOfUserProjectsData(data) {
+        const statsByUserProjects = [];
+        data.project_v2.forEach(project => {
+            let diff = [];
+            project.timer.forEach(timer => {
+                const timerDiff = getDateTimestamp(timer.end_datetime) - getDateTimestamp(timer.start_datetime);
+                let diffIndex = diff.findIndex(item => item.email === timer.user.email);
+                if (diffIndex === -1) {
+                    diff.push({
+                        username: timer.user.username,
+                        email: timer.user.email,
+                        value: 0,
+                    });
+                    diffIndex = diff.length - 1;
+                }
+                diff[diffIndex].value += timerDiff;
+            });
+            if (diff.length) {
+                diff.forEach(user => {
+                    let index = statsByUserProjects.findIndex(item => item.email === user.email);
+                    if (index === -1) {
+                        statsByUserProjects.push({
+                            username: user.username,
+                            email: user.email,
+                            total: 0,
+                            projects: [],
+                        });
+                        index = statsByUserProjects.length - 1;
+                    }
+                    statsByUserProjects[index].total += user.value;
+                    statsByUserProjects[index].projects.push({
+                        name: project.name,
+                        duration: user.value,
+                    });
+                });
+            }
+        });
+        return statsByUserProjects;
     }
 
     getDatesListBetweenStartEndDates(startDate, stopDate) {
@@ -607,6 +687,8 @@ class ReportsPage extends Component {
 
                 let dataToGraph = this.getArrOfProjectsData(data);
                 this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
+                let statsByUserProjects = this.getArrOfUserProjectsData(data);
+                this.props.reportsPageAction('SET_USER_PROJECTS', { data: statsByUserProjects });
                 let obj = this.changeDoughnutChat(this.props.dataDoughnutChat, dataToGraph.statsByProjects);
                 this.props.reportsPageAction('SET_DOUGHNUT_GRAPH', { data: obj });
                 this.setState({ toggleChar: true, isInitialFetching: false, isFetchingProjects: false });
@@ -663,11 +745,19 @@ class ReportsPage extends Component {
     }
 
     componentDidMount() {
-        const { vocabulary, getClientsAction } = this.props;
+        const { timeRange, vocabulary, getClientsAction, dateFormat } = this.props;
         const { lang } = vocabulary;
+        const { startDate, endDate } = timeRange;
         moment.locale(lang.short);
-        this.setState({ selectionRange: this.props.timeRange });
-        getClientsAction();
+        this.setState({
+            selectionRange: timeRange,
+            startDateValue: moment(startDate).format(dateFormat),
+            endDateValue: moment(endDate).format(dateFormat),
+        });
+        getClientsAction({
+            order_by: 'company_name',
+            sort: 'asc',
+        });
         setTimeout(() => {
             this.applySearch(
                 this.getYear(this.state.selectionRange.startDate),
@@ -681,6 +771,7 @@ const mapStateToProps = store => ({
     dataBarChat: store.reportsPageReducer.dataBarChat,
     lineChartOption: store.reportsPageReducer.lineChartOption,
     projectsArr: store.reportsPageReducer.projectsArr,
+    userProjectsArr: store.reportsPageReducer.userProjectsArr,
     dataDoughnutChat: store.reportsPageReducer.dataDoughnutChat,
     dataFromServer: store.reportsPageReducer.dataFromServer,
     timeRange: store.reportsPageReducer.timeRange,
@@ -699,7 +790,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => {
     return {
         reportsPageAction: (actionType, toggle) => dispatch(reportsPageAction(actionType, toggle))[1],
-        getClientsAction: () => dispatch(getClientsAction()),
+        getClientsAction: params => dispatch(getClientsAction(params)),
     };
 };
 
