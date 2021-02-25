@@ -32,11 +32,34 @@ class Input extends Component {
                         'wrapper-base-input--error': errorMsg && withValidation,
                     })}
                 >
-                    <input placeholder={label} {...rest} id={id} type={type === 'password' ? typeInput : type} />
-                    {config.type === 'password' && (
+                    {(config.autocomplete !== 'off' || type !== 'password') && (
+                        <input placeholder={label} {...rest} id={id} type={type === 'password' ? typeInput : type} />
+                    )}
+                    {config.autocomplete === 'off' &&
+                        type === 'password' && (
+                            <input
+                                placeholder={label}
+                                {...rest}
+                                id={id}
+                                type="text"
+                                className={typeInput === 'password' ? 'hidden-password-input' : ''}
+                            />
+                        )}
+                    {config.autocomplete === 'off' &&
+                        type === 'password' &&
+                        typeInput === 'password' && (
+                            <span className="hidden-password-value">
+                                {config.value.split('').map(letter => (
+                                    <span className="hidden-password-letter">
+                                        {letter}
+                                        <span className="hidden-password-point">•</span>
+                                    </span>
+                                ))}
+                            </span>
+                        )}
+                    {type === 'password' && (
                         <span
-                            className={`wrapper-base-input__icon-eye ${'wrapper-base-input__icon-eye_' +
-                                this.state.typeInput}`}
+                            className={`wrapper-base-input__icon-eye ${'wrapper-base-input__icon-eye_' + typeInput}`}
                             onClick={event => {
                                 this.switchPasswordVisibility();
                                 checkFakePassword();

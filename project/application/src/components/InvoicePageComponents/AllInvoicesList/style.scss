@@ -40,6 +40,7 @@
       }
       .invoice-number-title {
         width: 40%;
+        white-space: nowrap;
       }
       .invoice-client-title {
         width: 60%;
@@ -114,6 +115,44 @@
   }
   .all-invoices-list-item-container {
     position: relative;
+  }
+  &__grand-total-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    @media (max-width: 680px) {
+      justify-content: flex-start;
+      width: 100%;
+      overflow: auto;
+      padding: 0 20px 5px;
+    }
+  }
+  &__grand-total {
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    @media (max-width: 680px) {
+      align-content: flex-start;
+      width: 100%;
+    }
+  }
+  &__grand-total-title {
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 20px;
+  }
+  &__grand-total-currency {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    padding-left: 50px;
+    &:last-child{
+      @media (max-width: 680px) {
+        padding-right: 20px;
+      }
+    }
   }
 }
 @media screen and (max-width: 550px) {

@@ -26,7 +26,7 @@ class ClientsDropdown extends Component {
     searchClient = e => {
         let targetValue = e.target.value;
         let afterSearch = this.props.clientsList.filter(
-            obj => obj.name.toLowerCase().indexOf(targetValue.toLowerCase().trim()) !== -1
+            obj => this.getClientFullName(obj, false).indexOf(targetValue.toLowerCase().trim()) >= 0
         );
         this.setState({
             clientsList: afterSearch,
@@ -34,9 +34,9 @@ class ClientsDropdown extends Component {
         });
     };
 
-    clientSelect = (name, id) => {
-        this.setState({ inputValue: '', showList: false, selectedItem: { name, id } });
-        this.props.clientSelect({ name, id });
+    clientSelect = client => {
+        this.setState({ inputValue: '', showList: false, selectedItem: client });
+        this.props.clientSelect(client);
     };
 
     removeSelectedClient = event => {
@@ -44,6 +44,16 @@ class ClientsDropdown extends Component {
         this.setState({ selectedItem: null });
         this.props.clientSelect(null);
     };
+
+    getClientFullName(client, listView = true) {
+        const { company_name, name } = client;
+        // returns 'Company (Client Name)' for list visualization, or 'company clientname' for search
+        if (listView) {
+            return company_name ? `${company_name}${name ? ` (${name})` : ''}` : name;
+        } else {
+            return (company_name ? `${company_name}${name ? ` ${name}` : ''}` : name).toLowerCase();
+        }
+    }
 
     componentDidUpdate(prevProps, prevState) {
         const { showList } = this.state;
@@ -88,7 +98,7 @@ class ClientsDropdown extends Component {
                 <div className="clients_list_select-title" onClick={e => this.setState({ showList: !showList })}>
                     <span>
                         {selectedItem ? (
-                            selectedItem.name
+                            this.getClientFullName(selectedItem)
                         ) : (
                             <span className="clients-select-placeholder">{`${v_clients}...`}</span>
                         )}
@@ -119,9 +129,9 @@ class ClientsDropdown extends Component {
                                     <div
                                         key={client.id}
                                         className="clients_list_item"
-                                        onClick={e => this.clientSelect(client.name, client.id)}
+                                        onClick={e => this.clientSelect(client)}
                                     >
-                                        <div className="clients_list_item_name">{client.name}</div>
+                                        <div className="clients_list_item_name">{this.getClientFullName(client)}</div>
                                     </div>
                                 );
                             })}

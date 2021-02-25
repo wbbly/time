@@ -127,6 +127,7 @@ class StartEditTaskModal extends Component {
             v_a_time_tracking,
             v_a_task_name_error,
             v_a_time_start_error,
+            v_a_time_end_error,
         } = vocabulary;
         const { taskName, selectedProject, isChanged, startDateTime, endDateTime } = this.state;
         if (editMode) {
@@ -158,8 +159,11 @@ class StartEditTaskModal extends Component {
                         startDateTime: startTime,
                         endDateTime: endTime,
                     });
-                } else {
+                } else if (!moment(startDateTime).isValid()) {
                     showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
+                    return;
+                } else {
+                    showNotificationAction({ text: v_a_time_end_error, type: 'warning' });
                     return;
                 }
             } else {

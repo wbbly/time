@@ -4,16 +4,22 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  border-bottom: 1px solid #4a4a4a;
+  border-top: 1px solid #4a4a4a;
   .email-edit-wrapper {
     display: flex;
     width: 50%;
     justify-content: space-between;
+    @media (max-width: 680px) {
+      width: auto;
+    }
   }
   &-data-wrapper {
-    min-width: 45%;
+    width: 45%;
     display: flex;
     align-items: center;
+    @media (max-width: 680px) {
+      width: auto;
+    }
     .arrow-space{
       cursor: pointer;
     }
@@ -33,23 +39,36 @@
     }
   }
 
-  .clients_list_item-avatar {
+  .client_arrow {
+    min-width: 27px;
+  }
+
+  .client_avatar {
     display: inline-block;
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
-    min-height: 24px;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
     border-radius: 50%;
     background-repeat: no-repeat;
-    background-position: top center;
-    background-size: cover;
+    background-position: center;
+    background-color: #c4c4c4;
     margin-right: 22px;
   }
+  .avatar-cover {
+    background-size: cover;
+  }
+
   .client_name {
     display: flex;
-    width: 100%;
-    div:first-child{
+    width: calc(100% - 27px);
+    .client_name_title {
       margin-right: 8px;
+      white-space: nowrap;
+    }
+    .client_name_value {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   
@@ -58,25 +77,32 @@
 .client_edit {
   width: 20px;
   height: 20px;
-  background: url("../../images/icons/edit.svg") no-repeat;
-  background-size: contain;
   margin-right: 10px;
-  cursor: pointer;
   position: relative;
+  cursor: pointer;
+  path {
+    stroke: white;
+  }
+  &:hover path {
+    stroke: #27ae60;
+  }
 }
+
 .clients_project_container {
   margin-top: 20px;
   width: 100%;
 }
 .clients-list__additional-information {
   transition-delay: 500ms;
-  padding-left:26px;
-  margin-top: 16px;
-  border-bottom: 1px solid #4a4a4a;
+  padding-left: 79px;
+  .common-block {
+    border-top: 1px solid #4a4a4a;
+  }
   
   &-data {
     display: inline-flex;
     flex-direction: column;
+    margin-top: 16px;
     margin-bottom: 22px;
     margin-right: 20px;
     div{
@@ -88,26 +114,38 @@
     
     .project {
       display: flex;
+      flex-wrap: wrap;
       div{
         margin-bottom: 0;
         display: flex;
-        margin-right: 18px;
+        align-items: center;
       }
       .project-title {
         display: flex;
         align-items: center;
+        margin-right: 18px;
+        @media (max-width: 680px) {
+          margin: 0 0 5px 0;
+          width: 100%;
+        }
       }
       .circle {
-        width: 10px;
-        height: 10px;
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
         margin-right: 8px;
+      }
+    }
+    @media (max-width: 795px) {
+      &:first-child {
+        display: none;
       }
     }
   }
 }
 @media (max-width: 680px) {
   .clients-list__item {
+    flex-wrap: nowrap;
     .client_name{
       
       flex-direction: column;
@@ -117,7 +155,7 @@
       max-width: 60%;
       word-break: break-all;
     }
-    .clients_list_item-avatar {
+    .client_avatar {
       margin-right: 5px;
     }
     .arrow-down,

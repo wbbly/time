@@ -65,6 +65,11 @@
   cursor: pointer;
 }
 
+.team_item_name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .team_item:hover > .team_selection {
   display: block;
 }

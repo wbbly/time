@@ -11,6 +11,14 @@
     overflow-y: auto;
   }
 
+  .team_page_main-controls {
+    white-space: nowrap;
+      .header-wrapper__child-button {
+          margin-left: 10px;
+          margin-top: 10px;
+      }
+  }
+
   .page_name {
     font-family: "Open Sans", sans-serif;
     line-height: normal;
@@ -90,12 +98,6 @@
     position: absolute;
     transition: transform 0.4s ease;
   }
-  .team_page_data table .user-container .user-name {
-    display: inline-block;
-    height: 30px;
-    line-height: 30px;
-    // margin-left: 10px;
-  }
   .team_page_data table .user-container .technology_container {
     display: flex;
     flex-wrap: wrap;
@@ -144,9 +146,13 @@
     margin-right: 0px;
     width: 20px;
     height: 20px;
-    background: url("../../images/icons/edit.svg") no-repeat center;
     cursor: pointer;
-    background-size: 20px;
+    path {
+      stroke: white;
+    }
+    &:hover path {
+      stroke: #27ae60;
+    }
   }
 }
 .avatar-big {
@@ -227,6 +233,9 @@
     // td:nth-child(5) {
     //   width: 20%;
     // }
+    td:nth-child(4){
+      height: 60px;
+    }
     tr {
       display: flex;
       flex-wrap: wrap;

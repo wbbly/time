@@ -75,7 +75,15 @@
   }
 
   &__icon-button {
+    width: 20px;
+    height: 20px;
     cursor: pointer;
+    path {
+      stroke: white;
+    }
+    &:hover path {
+      stroke: #27ae60;
+    }
   }
 
   &__header {
@@ -95,7 +103,7 @@
     }
   }
   &__tax-column {
-    width: 8%;
+    width: 10%;
     height: 50px;
     display: flex;
     padding-left: 5px;
@@ -115,10 +123,10 @@
     }
   }
   &__amount-column {
-    width: 12%;
+    width: 10%;
     height: 50px;
     display: flex;
-    padding-left: 2%;
+    padding-left: 5px;
     line-height: 30px;
     & > span {
       padding: 10px 0 10px 8px;
@@ -173,6 +181,7 @@
     }
     &__project-column {
       width: 110px;
+      min-width: 110px;
       input{
         width:100px;
       }

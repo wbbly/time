@@ -7,76 +7,7 @@
     right: 0;
     bottom: 0;
     top: 0;
-    z-index: 5;
-  }
-  .flag-select {
-    display: flex;
-    width: 100%;
-    font-family: "Open Sans", sans-serif;
-    font-weight: 400;
-    border: 1px solid #828282;
-    outline: none;
-    border-radius: 0.4rem;
-    color: black;
-    font-size: 1.4rem;
-    line-height: 1.9rem;
-    height: 41px;
-    .flag-select__option--placeholder {
-      padding-bottom: 0;
-    }
-    .flag-select__btn {
-      padding: 0 2px;
-      color: #828282;
-      font-family: "Open Sans", sans-serif;
-      font-size:  1.4rem !important;
-    }
-    .flag-select__btn::after {
-      width: 24px;
-      height: 24px;
-      background: url("../../images/icons/arrow-down-gray.svg") no-repeat center;
-      transition: all 0.3s;
-      position: absolute;
-      top: 7px;
-      right: 3px;
-      border: none;
-    }
-    .flag-select__btn[aria-expanded="true"]:after {
-      transform: rotate(-180deg);
-    }
-    .flag-select__options {
-      margin-top: 43px;
-      width: 100%;
-      background: white;
-      padding: 5px;
-      border-radius: 0.4rem;
-      border: 1px solid #828282;
-      .filterBox {
-        padding: 5px 10px;
-        input {
-          font-family: "Open Sans", sans-serif;
-          font-size: 14px;
-          line-height: 14px;
-          background-color: white;
-          color: #333333 !important;
-          padding: 5px 10px;
-          border: 1px solid #828282;
-          width: 100%;
-          margin: 0;
-          &::placeholder {
-            color: #828282;
-          }
-        }
-      }
-      li {
-        padding: 5px 10px;
-        color: #333333;
-    
-        &:hover {
-          background-color: #e0e0e0;
-          color: #333333;
-        }
-      }
-    }
+    z-index: 10;
   }
   &__container {
     
@@ -87,7 +18,7 @@
     left: 50%;
     width: 100%;
     max-width: 650px;
-    z-index: 5;
+    z-index: 50;
     background: #ffffff;
     border: 1px solid #828282;
     box-sizing: border-box;
@@ -129,10 +60,62 @@
     .flag-input-container {
       width: 100%;
       margin: 0 0 0.4rem 0;
+      position: relative;
       .flag-input-container-title {
         color: #333333;
         font-size: 1.4rem;
         margin-bottom: 5px;
+      }
+      &-select {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 400;
+        border: 1px solid #828282;
+        outline: none;
+        border-radius: 0.4rem;
+        color: black;
+        font-size: 1.4rem;
+        line-height: 1.9rem;
+        height: 41px;
+        padding: 1rem;
+        cursor: pointer;
+        position: relative;
+      }
+      &-selected {
+        display: flex;
+        align-items: center;
+      }
+      &-selected-flag {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+      }
+      &-selected-text {
+        margin-left: 9px;
+        line-height: 16px;
+      }
+      &-selected-text-empty {
+        color: grey;
+      }
+      &-select-arrow {
+        width: 15px;
+        height: 15px;
+        background: url(/static/media/arrow-down-gray.4e816b0d.svg) no-repeat
+          center;
+        transition: all 0.3s;
+        border: none;
+      }
+      &-select-dropdown {
+        position: absolute;
+        top: 93%;
+        width: 100%;
+        z-index: 123;
+      }
+      .rotated {
+        transform: rotate(-180deg);
       }
     }
 

@@ -19,11 +19,18 @@ class TutorialComponent extends Component {
         swipedElements: [],
     };
 
-    onSwipeLeft = () => {
+    onSwipeLeft = (event = {}) => {
         const { swipedTarget, swipedElements } = this.state;
-        swipedTarget.classList.add('swiped');
-        swipedElements.push(swipedTarget);
-        this.setState({ swipedElements });
+        if (swipedTarget) {
+            swipedTarget.classList.add('swiped');
+            swipedElements.push(swipedTarget);
+            this.setState({ swipedElements });
+        } else {
+            const swipe = event.currentTarget;
+            swipe.classList.add('swiped');
+            swipedElements.push(swipe);
+            this.setState({ swipedElements });
+        }
     };
 
     toggleSwipe = event => {
@@ -58,16 +65,17 @@ class TutorialComponent extends Component {
                             <button onClick={this.finishTutorial}>Get started</button>
                         </div>
                     </div>
-                    <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div
-                            className="slide"
-                            onClick={e => {
-                                if (e.target.className !== 'skip-link') {
-                                    this.onSwipeLeft();
-                                }
-                            }}
-                            style={{ backgroundImage: `url(${slide5})` }}
-                        >
+                    <Swipe
+                        className="swiped-elem"
+                        onSwipeStart={this.toggleSwipe}
+                        onSwipeLeft={this.onSwipeLeft}
+                        onClick={e => {
+                            if (e.target.className !== 'skip-link') {
+                                this.onSwipeLeft(e);
+                            }
+                        }}
+                    >
+                        <div className="slide" style={{ backgroundImage: `url(${slide5})` }}>
                             <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
@@ -77,16 +85,17 @@ class TutorialComponent extends Component {
                             </div>
                         </div>
                     </Swipe>
-                    <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div
-                            className="slide"
-                            onClick={e => {
-                                if (e.target.className !== 'skip-link') {
-                                    this.onSwipeLeft();
-                                }
-                            }}
-                            style={{ backgroundImage: `url(${slide4})` }}
-                        >
+                    <Swipe
+                        className="swiped-elem"
+                        onSwipeStart={this.toggleSwipe}
+                        onSwipeLeft={this.onSwipeLeft}
+                        onClick={e => {
+                            if (e.target.className !== 'skip-link') {
+                                this.onSwipeLeft(e);
+                            }
+                        }}
+                    >
+                        <div className="slide" style={{ backgroundImage: `url(${slide4})` }}>
                             <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
@@ -96,16 +105,17 @@ class TutorialComponent extends Component {
                             </div>
                         </div>
                     </Swipe>
-                    <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div
-                            className="slide"
-                            onClick={e => {
-                                if (e.target.className !== 'skip-link') {
-                                    this.onSwipeLeft();
-                                }
-                            }}
-                            style={{ backgroundImage: `url(${slide3})` }}
-                        >
+                    <Swipe
+                        className="swiped-elem"
+                        onSwipeStart={this.toggleSwipe}
+                        onSwipeLeft={this.onSwipeLeft}
+                        onClick={e => {
+                            if (e.target.className !== 'skip-link') {
+                                this.onSwipeLeft(e);
+                            }
+                        }}
+                    >
+                        <div className="slide" style={{ backgroundImage: `url(${slide3})` }}>
                             <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
@@ -115,16 +125,17 @@ class TutorialComponent extends Component {
                             </div>
                         </div>
                     </Swipe>
-                    <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div
-                            className="slide"
-                            onClick={e => {
-                                if (e.target.className !== 'skip-link') {
-                                    this.onSwipeLeft();
-                                }
-                            }}
-                            style={{ backgroundImage: `url(${slide2})` }}
-                        >
+                    <Swipe
+                        className="swiped-elem"
+                        onSwipeStart={this.toggleSwipe}
+                        onSwipeLeft={this.onSwipeLeft}
+                        onClick={e => {
+                            if (e.target.className !== 'skip-link') {
+                                this.onSwipeLeft(e);
+                            }
+                        }}
+                    >
+                        <div className="slide" style={{ backgroundImage: `url(${slide2})` }}>
                             <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
@@ -134,20 +145,20 @@ class TutorialComponent extends Component {
                             </div>
                         </div>
                     </Swipe>
-                    <Swipe className="swiped-elem" onSwipeStart={this.toggleSwipe} onSwipeLeft={this.onSwipeLeft}>
-                        <div
-                            className="slide"
-                            onClick={e => {
-                                if (e.target.className !== 'skip-link') {
-                                    this.onSwipeLeft();
-                                }
-                            }}
-                            style={{ backgroundImage: `url(${slide1})` }}
-                        >
-                            <a href="# " className="skip-link">
+                    <Swipe
+                        className="swiped-elem"
+                        onSwipeStart={this.toggleSwipe}
+                        onSwipeLeft={this.onSwipeLeft}
+                        onClick={e => {
+                            if (e.target.className !== 'skip-link') {
+                                this.onSwipeLeft(e);
+                            }
+                        }}
+                    >
+                        <div className="slide" style={{ backgroundImage: `url(${slide1})` }}>
+                            <a href="# " onClick={this.finishTutorial} className="skip-link">
                                 Skip tutorial
                             </a>
-                            {/* onClick={this.finishTutorial} */}
                             <div className="slide-title">
                                 <h1>Wellcome to wobbly!</h1>
                                 <p>Begin to track your time now</p>

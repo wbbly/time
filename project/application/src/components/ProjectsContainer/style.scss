@@ -1,0 +1,91 @@
+.projects_container_wrapper {
+    display: flex;
+    align-items: center;
+    a {
+        width: 46%;
+    }
+    .projects_container_projects {
+        width: 100%;
+        align-self: baseline;
+        font-family: "Open Sans", sans-serif;
+        line-height: 22px;
+        font-size: 16px;
+        color: #ffffff;
+        .projects_container_buttons {
+            display: flex;
+            margin-bottom: 20px;
+            .projects_container_button {
+                width: 50%;
+                height: 40px;
+                line-height: 40px;
+                background-color: #3b3b3b;
+                font-family: Open Sans;
+                font-style: normal;
+                font-weight: 600;
+                font-size: 16px;
+                color: white;        
+                opacity: 0.4;
+                text-align: center;
+                cursor: pointer;
+                &--active {            
+                    opacity: 1;
+                    box-shadow: -9px 4px 20px rgba(0, 0, 0, 0.2);
+                }
+            }
+        
+        }
+        .projects_data {
+            .projects_user {
+                border-bottom: 1px solid rgba(189, 189, 189, 0.11); 
+                .projects_user_data {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 12px;
+                    min-height: 26px;                
+                }
+                a .projects_user_data:hover {
+                    background-color: #4f4f4f;
+                }
+            }
+        }
+        .user-name {
+            width: 30%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 10px;
+        }
+        .project-name {
+            width: 50%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 10px;
+            color: #ffffff;
+        }
+        .time {
+            width: 20%;
+            text-align: right;
+            white-space: nowrap;
+            color: #ffffff;
+        }
+    }
+    .chart {
+        position: relative;
+        margin-top: 24px;
+        margin-left: 10%;
+        .total_time_tasks {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: "Open Sans", sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 22px;
+            line-height: normal;
+            color: #FFFFFF;
+        }
+    }
+}

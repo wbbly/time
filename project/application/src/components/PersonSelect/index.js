@@ -13,22 +13,6 @@ import clientSelect from '../../images/icons/add_client.svg';
 // Components
 import InvoiceSenderRecipienModal from '../InvoiceSenderRecipienModal/index';
 
-const PlusSvg = () => {
-    return (
-        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3.85651" width="1.28571" height="9" fill="#02AF67" />
-            <rect
-                x="8.99896"
-                y="3.85663"
-                width="1.28571"
-                height="9"
-                transform="rotate(90 8.99896 3.85663)"
-                fill="#02AF67"
-            />
-        </svg>
-    );
-};
-
 class PersonSelect extends Component {
     constructor(props) {
         super(props);
@@ -90,7 +74,7 @@ class PersonSelect extends Component {
     onChangeInput = event => {
         const value = event.target.value;
         this.setState({
-            inputValue: value.trim().toLowerCase(),
+            inputValue: value,
         });
     };
 
@@ -99,13 +83,9 @@ class PersonSelect extends Component {
         const { inputValue } = this.state;
         let filteredList = [];
         if (personsList) {
-            filteredList = personsList.filter(person => {
-                if (person.company_name) {
-                    return person.company_name.toLowerCase().indexOf(inputValue) !== -1;
-                } else if (person.name) {
-                    return person.name.toLowerCase().indexOf(inputValue) !== -1;
-                }
-            });
+            filteredList = personsList.filter(
+                person => this.getClientFullName(person, false).indexOf(inputValue.toLowerCase().trim()) >= 0
+            );
         }
         this.setState({
             personsList: initial ? personsList : filteredList,
@@ -153,15 +133,13 @@ class PersonSelect extends Component {
     }
     checkClientName = name => {
         const { clientsList } = this.props;
-        const isTheSameName = clientsList.some(obj => {
-            if (obj.company_name) {
-                return obj.company_name.toLowerCase().trim() === name.toLowerCase().trim();
-            }
-        });
+        const isTheSameName = clientsList.some(
+            obj => obj.company_name && obj.company_name.toLowerCase().trim() === name.toLowerCase().trim()
+        );
         return isTheSameName;
     };
     addNewClient = client => {
-        const { showNotificationAction, vocabulary, placeholder, clientsList } = this.props;
+        const { showNotificationAction, vocabulary } = this.props;
         const { v_a_client_existed, v_a_client_name_empty_error, client_was_created } = vocabulary;
         if (client.length === 0) {
             showNotificationAction({ text: v_a_client_name_empty_error, type: 'warning' });
@@ -185,6 +163,15 @@ class PersonSelect extends Component {
             });
         }
     };
+    getClientFullName(client, listView = true) {
+        const { company_name, name } = client;
+        // returns 'Company (Client Name)' for list visualization, or 'company clientname' for search
+        if (listView) {
+            return company_name ? `${company_name}${name ? ` (${name})` : ''}` : name;
+        } else {
+            return (company_name ? `${company_name}${name ? ` ${name}` : ''}` : name).toLowerCase();
+        }
+    }
 
     render() {
         const {
@@ -192,8 +179,6 @@ class PersonSelect extends Component {
             onChange,
             isMobile,
             disabled,
-            withAddLink,
-            history,
             isError,
             isErrorSender,
             userSender,
@@ -288,7 +273,7 @@ class PersonSelect extends Component {
                                                 onClick={event => onChange(person)}
                                             >
                                                 <span className="person-select__dropdown-list-item-username">
-                                                    {person.company_name || person.name}
+                                                    {this.getClientFullName(person)}
                                                 </span>
                                             </div>
                                         );

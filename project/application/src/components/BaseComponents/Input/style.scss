@@ -21,6 +21,11 @@
     line-height: 1.9rem;
   }
 
+  input::placeholder {
+    font-family: "Open Sans", sans-serif;
+    font-size: 1.4rem;
+  }
+
   .input_title {
     position: static;
     margin: 0 0 1rem 0;
@@ -39,14 +44,45 @@
   .wrapper-base-input {
     position: relative;
     width: 100%;
+    z-index: 10;
+  }
+
+  .hidden-password-input {
+    font-family: "Roboto Mono", monospace;
+    font-size: 1.4rem;
+    color: transparent;
+    caret-color: black;
+    background-color: transparent;
+  }
+
+  .hidden-password-value {    
+    position: absolute;
+    top: 1.7rem;
+    left: 1.5rem;
+    font-family: "Roboto Mono", monospace;
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    z-index: -1;
+  }
+
+  .hidden-password-letter {
+    position: relative;
+    color: transparent;
+  }
+
+  .hidden-password-point {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    color: black;
   }
 
   .wrapper-base-input__icon-eye {
     cursor: pointer;
     display: block;
     position: absolute;
-    top: calc(50% - 17px);
-    right: 24px;
+    top: 1.3rem;
+    right: 1rem;
     width: 24px;
     height: 24px;
     &_text {

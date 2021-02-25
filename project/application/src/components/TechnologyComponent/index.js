@@ -5,7 +5,7 @@ import './style.scss';
 
 import { searchTechnologies, addTechnology } from '../../configAPI';
 import { useDebounce, useOutsideClick } from '../../services/hookHelpers';
-import { object } from 'prop-types';
+// import { object } from 'prop-types';
 
 const RemoveSvg = ({ ligthMode }) => (
     <svg width="8" height="8" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">

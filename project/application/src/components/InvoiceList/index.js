@@ -332,7 +332,7 @@ const InvoiceList = ({
     toggleSendInvoiceModal,
     showNotificationAction,
 }) => {
-    const [openMenu, setOpenMenu] = useState(false);
+    // const [openMenu, setOpenMenu] = useState(false);
     const [showCopyModal, setShowCopyModal] = useState(false);
     const [showActionsMenu, setShowActionsMenu] = useState(false);
     const [showNotif, setShowNotif] = useState(false);
@@ -341,9 +341,9 @@ const InvoiceList = ({
 
     useOutsideClick(wrapperRef, () => setShowActionsMenu(false));
 
-    const toggleOpenMenu = () => {
-        setOpenMenu(!openMenu);
-    };
+    // const toggleOpenMenu = () => {
+    //     setOpenMenu(!openMenu);
+    // };
 
     const handleShowActionsMenu = show => {
         setShowActionsMenu(show);
@@ -455,7 +455,7 @@ const InvoiceList = ({
                                 setShowActionsMenu(false);
                                 try {
                                     let responce = await downloadInvoicePDF(invoice.id);
-                                    downloadPDF(responce.data, `${invoice.invoice_number}.pdf`);
+                                    downloadPDF(responce.data, `invoice-${invoice.invoice_number}.pdf`);
                                 } catch (error) {
                                     console.log(error);
                                     showNotificationAction({
@@ -480,6 +480,8 @@ const InvoiceList = ({
                                     setShowCopyModal(true);
                                 }
                             }}
+                            confirmed={invoice.status === 'paid'}
+                            confirmPayment={() => editInvoicePaymentStatus(invoice.id, !invoice.payment_status)}
                         />
                     )}
                 </div>

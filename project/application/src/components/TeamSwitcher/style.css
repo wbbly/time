@@ -2,61 +2,52 @@
   width: 100%;
   z-index: inherit;
   margin-bottom: 10px;
-  max-height: 156px;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
-.team_list ul {
-  padding-inline-start: 0;
-  padding-inline-end: 0;
-  padding-block-start: 0;
-  padding-block-end: 0;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
-  margin-block-start: 0;
-  margin-block-end: 0;
-  background-color: #3b3b3b;
+.team_list .team_link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 21px;
+  cursor: pointer;
+  width: 100%;
 }
-
-.team_list ul li {
-  color: #fff;
+.team_list .team_link:hover {
+  background-color: #4f4f4f;
+}
+.team_list .team {
+  width: 20px;
+  height: 20px;
+  background: url("../../images/icons/team.svg") no-repeat center;
+}
+.team_list .team_text {
   font-family: "Open Sans", sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 14px;
+  color: #ffffff;
+  margin-left: 8px;
+  text-transform: capitalize;
 }
-
-.team_list ul li div.team_list-item {
-  padding: 6px;
-  padding-left: 44px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  position: relative;
+.team_list .arrow_closed,
+.team_list .arrow_open,
+.team_list .arrow_closed_mobile,
+.team_list .arrow_open_mobile {
+  width: 28px;
+  height: 28px;
+  background: url("../../images/icons/arrow-down.svg") no-repeat center;
+  transition: all 0.3s;
 }
-
-.team_list ul li div.team_list-item.active {
-  padding: 6px 20px 6px 20px;
-  margin: 0 13px 0 25px;
-  border-radius: 60px;
+.team_list .arrow_closed {
+  transform: rotate(-90deg);
 }
-
-.team_list li.selected {
-  background: #333333;
+.team_list .arrow_open {
+  transform: rotate(90deg);
 }
-
-.team_list li:hover {
-  background: #333333;
+.team_list .arrow_closed_mobile {
+  transform: rotate(180deg);
 }
-
-.active-point {
-  height: 8px;
-  width: 8px;
-  background: #27ae60;
-  border-radius: 50%;
-  position: absolute;
-  top: calc(50% - 4px);
-  right: 10px;
+.team_list .arrow_open_mobile {
+  transform: rotate(0deg);
 }

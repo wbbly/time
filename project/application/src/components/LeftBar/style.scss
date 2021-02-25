@@ -9,6 +9,7 @@
   position: inherit;
   z-index: 1;
 }
+
 .wrapper-position-add-team {
   width: 100%;
 }
@@ -19,10 +20,6 @@
   height: 26px;
   background: url("../../images/icons/logo.svg") no-repeat center;
   background-size: 111px;
-}
-
-.team_list ul {
-  list-style: none;
 }
 
 i {
@@ -39,28 +36,6 @@ i {
   width: 100%;
 }
 
-.arrow_closed,
-.arrow_open,
-.arrow_closed_mobile,
-.arrow_open_mobile {
-  width: 28px;
-  height: 28px;
-  background: url("../../images/icons/arrow-down.svg") no-repeat center;
-  transition: all 0.3s;
-}
-
-.arrow_closed {
-  transform: rotate(-90deg);
-}
-.arrow_open {
-  transform: rotate(90deg);
-}
-.arrow_closed_mobile {
-  transform: rotate(180deg);
-}
-.arrow_open_mobile {
-  transform: rotate(0deg);
-}
 
 .timer {
   background: url("../../images/icons/time.svg") no-repeat center;
@@ -78,11 +53,6 @@ i {
   background: url("../../images/icons/help-circle.svg") no-repeat center;
 }
 
-.team {
-  width: 20px;
-  height: 20px;
-  background: url("../../images/icons/team.svg") no-repeat center;
-}
 .clients {
   background: url("../../images/icons/clients.svg") no-repeat center;
 }
@@ -116,15 +86,6 @@ i {
   background: #4f4f4f;
 }
 
-.team_link {
-  justify-content: space-between !important;
-  padding: 0 21px;
-}
-.team_link > span:hover {
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
 .navigation_links {
   display: flex;
   align-items: center;
@@ -146,6 +107,34 @@ i {
   }
 }
 
+.active_team {
+  position: relative;
+  padding-left: 49px;
+  padding-right: 39px;
+}
+
+.active_team span{
+  color: #fff;
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.active_team .active-point {
+  height: 8px;
+  width: 8px;
+  background: #27ae60;
+  border-radius: 50%;
+  position: absolute;
+  top: calc(50% - 4px);
+  right: 31px;
+}
+
 link,
 a {
   outline: none;
@@ -157,7 +146,7 @@ a {
   font-size: 1.6rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1062px) {
   .wrapper {
     width: 188px;
   }

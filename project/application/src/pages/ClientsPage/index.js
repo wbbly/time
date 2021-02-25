@@ -16,10 +16,11 @@ import { getClientsAction, setClientAction, editClientThunk, deleteClientThunk }
 import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Services
-import { checkIsAdminByRole } from '../../services/authentication';
+import { checkIsAdminByRole, checkIsOwnerByRole } from '../../services/authentication';
 
 // Styles
 import './style.scss';
+import ModalPortal from '../../components/ModalPortal';
 
 class ClientsPage extends Component {
     state = {
@@ -88,22 +89,23 @@ class ClientsPage extends Component {
 
     checkClientName = name => {
         const { clientsList } = this.props;
-        const isTheSameName = clientsList.some(obj => {
-            if (obj.company_name) {
-                return obj.company_name.toLowerCase().trim() === name.toLowerCase().trim();
-            }
-        });
+        const isTheSameName = clientsList.some(
+            obj => obj.company_name && obj.company_name.toLowerCase().trim() === name.toLowerCase().trim()
+        );
         return isTheSameName;
     };
 
     componentDidMount() {
-        this.props.getClientsAction();
+        this.props.getClientsAction({
+            order_by: 'company_name',
+            sort: 'asc',
+        });
     }
 
     componentDidUpdate(prevProps, prevState) {
         const { currentTeam, history, clientsList } = this.props;
         if (!prevProps.currentTeam.data.id && this.props.currentTeam.data.id) {
-            if (!checkIsAdminByRole(currentTeam.data.role)) {
+            if (!checkIsAdminByRole(currentTeam.data.role) && !checkIsOwnerByRole(currentTeam.data.role)) {
                 history.push('/timer');
             }
         }
@@ -129,14 +131,16 @@ class ClientsPage extends Component {
                         })}
                     >
                         {showModal && (
-                            <ClientModal
-                                closeModal={this.closeModal}
-                                addNewClient={this.addNewClient}
-                                toEditClient={this.editClient}
-                                deleteClient={this.deleteClient}
-                                editedClient={editedClient}
-                                vocabulary={vocabulary}
-                            />
+                            <ModalPortal>
+                                <ClientModal
+                                    closeModal={this.closeModal}
+                                    addNewClient={this.addNewClient}
+                                    toEditClient={this.editClient}
+                                    deleteClient={this.deleteClient}
+                                    editedClient={editedClient}
+                                    vocabulary={vocabulary}
+                                />
+                            </ModalPortal>
                         )}
                         <div className="data_container_clients_page">
                             <PageHeader title={v_clients}>
@@ -177,6 +181,7 @@ class ClientsPage extends Component {
                                             index={index}
                                             editClient={editClient}
                                             key={index}
+                                            isMobile={isMobile}
                                         />
                                     ))}
                             </div>

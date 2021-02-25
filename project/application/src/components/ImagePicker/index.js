@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Default image-picker
-import { AppConfig } from '../../config';
 
 // Actions
 import { setUserAvatarAction, deleteUserAvatarAction } from '../../actions/UserActions';
@@ -74,7 +73,7 @@ class ImagePicker extends Component {
     };
 
     render() {
-        const { vocabulary, placeholder, isViewMode, imageUrl, onDeleteImage } = this.props;
+        const { vocabulary, placeholder, isViewMode, imageUrl } = this.props;
         const { v_upload_image, v_delete_image } = vocabulary;
         const { isOpenDropdown, loadedImage, loadingImage } = this.state;
         return (

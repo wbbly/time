@@ -1,6 +1,7 @@
 import {
     createInvoice,
     getInvoices,
+    getInvoicesTotal,
     getInvoiceById,
     changeInvoice,
     deleteInvoice,
@@ -17,6 +18,7 @@ export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const DELETE_INVOICE_REQUEST = 'DELETE_INVOICE_REQUEST';
 export const GET_INVOICE_LIST_REQUEST = 'GET_INVOICE_LIST_REQUEST';
 export const GET_INVOICE_LIST_SUCCESS = 'GET_INVOICE_LIST_SUCCESS';
+export const GET_GRAND_TOTAL = 'GET_GRAND_TOTAL';
 export const GET_INVOICE_BY_ID_REQUEST = 'GET_INVOICE_BY_ID_REQUEST';
 export const GET_INVOICE_BY_ID_SUCCESS = 'GET_INVOICE_BY_ID_SUCCESS';
 export const SET_SENDER_ID = 'SET-SENDER-ID';
@@ -50,6 +52,11 @@ const getInvoiceListRequest = () => ({
 
 const getInvoiceListSuccess = payload => ({
     type: GET_INVOICE_LIST_SUCCESS,
+    payload,
+});
+
+const getGrandTotal = payload => ({
+    type: GET_GRAND_TOTAL,
     payload,
 });
 
@@ -185,7 +192,7 @@ export const sendInvoiceLetterThunk = (invoiceId, data, isInvoicePageDetailed) =
         dispatch(changeInvoiceStatusRequest());
     }
     try {
-        const res = await sendInvoiceLetter(invoiceId, data);
+        await sendInvoiceLetter(invoiceId, data);
         if (!isInvoicePageDetailed) {
             dispatch(changeInvoiceSuccess());
         }
@@ -194,10 +201,12 @@ export const sendInvoiceLetterThunk = (invoiceId, data, isInvoicePageDetailed) =
     }
 };
 
-export const getInvoicesList = (page, limit) => async dispatch => {
+export const getInvoicesList = (page, limit, searchValue = '') => async dispatch => {
     dispatch(getInvoiceListRequest());
     try {
-        const res = await getInvoices(page + 1, limit);
+        const res = await getInvoices(
+            searchValue ? { page: page + 1, limit: limit, search: searchValue } : { page: page + 1, limit: limit }
+        );
         if (res.data.data.invoices.length > 0) {
             const senderId = res.data.data.invoices[0].from.id;
             dispatch(setSenderIdAC(senderId));
@@ -213,6 +222,21 @@ export const getInvoicesList = (page, limit) => async dispatch => {
                 pageCount: +res.data.data.pagination.pagesAmount,
             })
         );
+
+        if (+res.data.data.pagination.pagesAmount > 0) {
+            dispatch(getInvoiceTotal(searchValue));
+        } else {
+            dispatch(getGrandTotal({}));
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getInvoiceTotal = (searchValue = '') => async dispatch => {
+    try {
+        const res = await getInvoicesTotal(searchValue ? { search: searchValue } : {});
+        dispatch(getGrandTotal(res.data));
     } catch (error) {
         console.log(error);
     }
@@ -258,7 +282,7 @@ export const updateInvoice = payload => async dispatch => {
             requestBody = fillFormDataWithObject(formData, requestBody);
         }
         console.log(requestBody);
-        const res = await changeInvoice({ invoiceId: payload.id, data: requestBody });
+        await changeInvoice({ invoiceId: payload.id, data: requestBody });
         dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);
@@ -292,7 +316,7 @@ export const deleteAvatarThunk = payload => async dispatch => {
             }, []),
             removeFile: true,
         };
-        const res = await changeInvoice({ invoiceId: payload.id, data: requestBody });
+        await changeInvoice({ invoiceId: payload.id, data: requestBody });
         dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);
@@ -302,7 +326,7 @@ export const deleteAvatarThunk = payload => async dispatch => {
 export const deleteInvoiceById = invoiceId => async dispatch => {
     dispatch(deleteInvoiceRequest());
     try {
-        const res = await deleteInvoice(invoiceId);
+        await deleteInvoice(invoiceId);
         dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);
@@ -312,7 +336,7 @@ export const deleteInvoiceById = invoiceId => async dispatch => {
 export const editInvoicePaymentStatus = (invoiceId, status) => async dispatch => {
     dispatch(changeInvoiceStatusRequest());
     try {
-        const res = await changeInvoiceStatus({ invoiceId, paymentStatus: status });
+        await changeInvoiceStatus({ invoiceId, paymentStatus: status });
         dispatch(changeInvoiceSuccess());
     } catch (error) {
         console.log(error);

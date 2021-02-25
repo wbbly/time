@@ -49,6 +49,10 @@
       font-weight: bold;
       font-size: 14px;
       line-height: 19px;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &__thin-text {
@@ -111,7 +115,7 @@
     }
   }
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1062px) {
   .last-invoices-list{
     justify-content: space-between;
     .last-invoices-list-item{

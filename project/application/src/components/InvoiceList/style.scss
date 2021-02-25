@@ -65,6 +65,12 @@
   }
   &__name {
     width: 60%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @media screen and (max-width: 650px) {
+      max-width: 100px;
+    }
   }
   &__status-button {
     display: flex;
@@ -101,6 +107,7 @@
     justify-content: space-between;
     .all-invoices-list-item__date {
       width: 50%;
+      white-space: nowrap;
     }
   }
   @media screen and (max-width: 750px) {

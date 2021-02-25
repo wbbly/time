@@ -28,7 +28,6 @@ const LastInvoicesList = ({
     moment.lang(vocabulary.lang.short);
     return (
         <div
-            className="last-invoices-list"
             className={classNames('last-invoices-list', {
                 'last-invoices-list--not-full': invoices.length < 4,
             })}

@@ -44,6 +44,7 @@ const initialState = {
             id: '',
             name: '',
             role: '',
+            owner_id: '',
         },
         error: null,
         isFetching: false,

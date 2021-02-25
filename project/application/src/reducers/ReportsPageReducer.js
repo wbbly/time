@@ -40,6 +40,7 @@ const initialState = {
         ],
     },
     projectsArr: [],
+    userProjectsArr: [],
     dataDoughnutChat: {
         labels: [],
         options: {
@@ -145,6 +146,8 @@ export function reportsPageReducer(state = initialState, action) {
             return { ...state, dataDoughnutChat: action.payload.data };
         case 'SET_PROJECTS':
             return { ...state, projectsArr: action.payload.data };
+        case 'SET_USER_PROJECTS':
+            return { ...state, userProjectsArr: action.payload.data };
         case 'SET_TIME':
             return { ...state, timeRange: action.payload.data };
         case 'SET_ACTIVE_USER':

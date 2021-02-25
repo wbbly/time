@@ -16,6 +16,9 @@ import { decodeTimeEntryIssue } from '../../services/timeEntryService';
 import { getParametersString } from '../../services/apiService';
 import { apiCall } from '../../services/apiService';
 
+// Components
+import ReportsByProjectSearchBar from '../../components/ReportsByProjectSearchBar';
+
 // Actions
 
 // Queries
@@ -31,6 +34,10 @@ class ReportsByProjectsPage extends Component {
         dataOfProject: [],
         totalTime: 0,
         countTasks: 0,
+        userEmailsList: [],
+        projectName: '',
+        dateStart: '',
+        endDate: '',
     };
 
     getDateInPointsFormat(momentDate) {
@@ -58,7 +65,7 @@ class ReportsByProjectsPage extends Component {
         const { v_issue, v_user_name, v_time, v_sum_tasks, v_sum_time } = vocabulary;
 
         let projectsItems = this.state.dataOfProject.map((item, index) => (
-            <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
+            <div className="tasks_data" key={'projects_container_project_data' + index}>
                 <div className="name">{this.getSlash(item.issue)}</div>
                 <div className="username">{item.user.username}</div>
                 <div className="time">
@@ -68,7 +75,7 @@ class ReportsByProjectsPage extends Component {
             </div>
         ));
         let projectsItemsMobile = this.state.dataOfProject.map((item, index) => (
-            <div className="projects_container_project_data" key={'projects_container_project_data' + index}>
+            <div className="tasks_data--mobile" key={'projects_container_project_data' + index}>
                 <div className="reports-by-project-list">
                     <span className="project-list-title">{v_issue}:</span>
                     <span>{this.getSlash(item.issue)}</span>
@@ -104,44 +111,39 @@ class ReportsByProjectsPage extends Component {
                             {' - '} {moment(this.props.match.params.endDate).format(dateFormat)}
                         </span>
                     </div>
-                    <div className="header_name">
+                    <div className="header_name header_name--task">
                         {v_sum_tasks}: {this.state.countTasks}
                     </div>
-                    <div className="header_name">
+                    <div className="header_name header_name--time">
                         {v_sum_time}: {getTimeDurationByGivenTimestamp(this.state.totalTime, durationTimeFormat)}
                     </div>
                 </div>
+                <ReportsByProjectSearchBar applySearch={this.applySearch} userEmailsList={this.state.userEmailsList} />
                 {!isMobile ? (
-                    <div className="projects_container_wrapper">
-                        <div className="projects_container_projects">
-                            <div className="projects_header">
-                                <div className="name">{v_issue}</div>
-                                <div className="username">{v_user_name}</div>
-                                <div className="time">{v_time}</div>
-                            </div>
-                            <div className="projects_container_project_data_container">{projectsItems}</div>
+                    <div className="tasks_wrapper">
+                        <div className="tasks_header">
+                            <div className="name">{v_issue}</div>
+                            <div className="username">{v_user_name}</div>
+                            <div className="time">{v_time}</div>
                         </div>
+                        <div className="tasks_data_container">{projectsItems}</div>
                     </div>
                 ) : (
-                    <div className="projects_container_project_data_container">{projectsItemsMobile}</div>
+                    <div className="tasks_data_container--mobile">{projectsItemsMobile}</div>
                 )}
             </div>
         );
     }
 
-    componentDidMount() {
-        let { userEmails } = this.props.match.params;
-        userEmails = userEmails.indexOf('all') > -1 ? '' : userEmails;
-        const userEmailsList = userEmails.length ? userEmails.split(',') : [];
-        const { projectName, dateStart, endDate } = this.props.match.params;
-
+    applySearch = (userEmailsList = [], searchValue = '') => {
+        let { projectName, dateStart, endDate } = this.state;
         apiCall(
             AppConfig.apiURL +
                 `project/reports-project?projectName=${projectName || ''}&startDate=${convertDateToISOString(
                     dateStart
                 )}&endDate=${convertDateToShiftedISOString(endDate, 24 * 60 * 60 * 1000)}${
                     userEmailsList.length ? `&${getParametersString('userEmails', userEmailsList)}` : ''
-                }`,
+                }${searchValue.length ? `&searchValue=${searchValue}` : ''}`,
             {
                 method: 'GET',
                 headers: {
@@ -172,6 +174,15 @@ class ReportsByProjectsPage extends Component {
                 }
             }
         );
+    };
+
+    componentDidMount() {
+        let { userEmails, projectName, dateStart, endDate } = this.props.match.params;
+        userEmails = userEmails.indexOf('all') > -1 ? '' : userEmails;
+        const userEmailsList = userEmails.length ? userEmails.split(',') : [];
+        this.setState({ userEmailsList, projectName, dateStart, endDate }, () => {
+            this.applySearch(userEmailsList, '');
+        });
     }
 }
 

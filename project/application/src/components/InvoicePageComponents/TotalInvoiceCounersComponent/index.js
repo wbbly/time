@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
-import moment from 'moment';
 
 import { spaceAndFixNumber, fixNumberHundredths } from '../../../services/numberHelpers';
 import { internationalFormatNum } from '../../../services/numberHelpers';
@@ -66,9 +65,12 @@ const TotalInvoiceCounersComponent = ({ invoices, vocabulary }) => {
             return acc;
         }, initialObject);
     };
-    useEffect(() => {
-        setTotalSumm(countTotals(invoices));
-    }, invoices);
+    useEffect(
+        () => {
+            setTotalSumm(countTotals(invoices));
+        },
+        [invoices]
+    );
 
     let isCurrencies = null;
     if (totalSumm) {

@@ -6,6 +6,7 @@ import classNames from 'classnames';
 // Services
 import { setTokenToLocalStorage, getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import { signUp } from '../../configAPI';
+import { getUtcOffsetInMilliseconds } from '../../services/timeService';
 
 // Components
 import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
@@ -38,7 +39,11 @@ class RegisterPage extends Component {
         const { v_a_account_create, lang } = vocabulary;
 
         try {
-            const response = await signUp({ ...values, language: lang.short });
+            const response = await signUp({
+                ...values,
+                language: lang.short,
+                timezoneOffset: getUtcOffsetInMilliseconds(),
+            });
             setTokenToLocalStorage(response.data.token);
             showNotificationAction({ text: v_a_account_create, type: 'success' });
             this.setState({ haveToken: true });

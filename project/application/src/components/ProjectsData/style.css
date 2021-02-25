@@ -105,8 +105,13 @@
     margin-left: 18px;
     width: 20px;
     height: 20px;
-    background: url("../../images/icons/edit.svg") no-repeat
-    center;
     cursor: pointer;
-    background-size: 20px;
+}
+
+.project_data_wrapper .edit_button path {
+    stroke: white;
+}
+
+.project_data_wrapper .edit_button:hover path {
+    stroke: #27ae60;
 }

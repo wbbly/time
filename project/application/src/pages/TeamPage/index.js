@@ -34,6 +34,26 @@ import { AppConfig } from '../../config';
 // Styles
 import './style.scss';
 
+const EditIcon = ({ className, onClick }) => (
+    <svg
+        className={className}
+        onClick={onClick}
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M14.166 2.5009C14.3849 2.28203 14.6447 2.10842 14.9307 1.98996C15.2167 1.87151 15.5232 1.81055 15.8327 1.81055C16.1422 1.81055 16.4487 1.87151 16.7347 1.98996C17.0206 2.10842 17.2805 2.28203 17.4993 2.5009C17.7182 2.71977 17.8918 2.97961 18.0103 3.26558C18.1287 3.55154 18.1897 3.85804 18.1897 4.16757C18.1897 4.4771 18.1287 4.7836 18.0103 5.06956C17.8918 5.35553 17.7182 5.61537 17.4993 5.83424L6.24935 17.0842L1.66602 18.3342L2.91602 13.7509L14.166 2.5009Z"
+            stroke="white"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
+
 class TeamPage extends Component {
     state = {
         renameModal: false,
@@ -62,7 +82,7 @@ class TeamPage extends Component {
 
     headerItems = () => {
         const { vocabulary } = this.props;
-        const { v_name, v_team_role, v_team_access, v_phone } = vocabulary;
+        const { v_name, v_phone } = vocabulary;
         return [
             <span onClick={() => this.setTechnology('')}>{v_name}</span>,
             v_phone,
@@ -105,7 +125,14 @@ class TeamPage extends Component {
         const { vocabulary, owner_id } = this.props;
         const { v_active, v_not_active } = vocabulary;
         return data
-            .filter(item => roleValue === 'all' || item.role_collaboration.title === 'ROLE_' + roleValue.toUpperCase())
+            .filter(
+                item =>
+                    roleValue === 'all' ||
+                    (roleValue === 'member' && item.role_collaboration.title === 'ROLE_MEMBER') ||
+                    (roleValue === 'admin' &&
+                        (item.role_collaboration.title === 'ROLE_ADMIN' ||
+                            item.role_collaboration.title === 'ROLE_OWNER'))
+            )
             .filter(
                 item =>
                     accessValue === 'all' ||
@@ -179,7 +206,6 @@ class TeamPage extends Component {
             v_team_role,
             v_team_access,
             v_phone,
-            v_owner,
         } = vocabulary;
         const headerItemsElements = this.headerItems().map((element, index) => (
             <th key={'team-group-header_' + index}>{element}</th>
@@ -225,10 +251,10 @@ class TeamPage extends Component {
                                 />
                             </>
                         )}
-                        <div style={{ marginBottom: '10px' }}>
-                            <div className="user-name">{username}</div>
+                        <div>
+                            <div>{username}</div>
                             <div className="technology_container">
-                                {(this.transformTechnologiesList(userTechnologies) || []).map((item, key) => {
+                                {this.transformTechnologiesList(userTechnologies || []).map((item, key) => {
                                     return (
                                         <span
                                             key={key}
@@ -258,7 +284,8 @@ class TeamPage extends Component {
                     <td data-label={v_team_access}>
                         <div
                             className={classNames('team-access-container', {
-                                'team-access-container-admin': checkIsAdminByRole(currentTeam.data.role),
+                                'team-access-container-admin':
+                                    checkIsAdminByRole(currentTeamRole) || checkIsOwnerByRole(currentTeamRole),
                             })}
                             onClick={e =>
                                 isMobile &&
@@ -271,7 +298,7 @@ class TeamPage extends Component {
                             {isActive ? v_active : v_not_active}
                             {(checkIsOwnerByRole(currentTeamRole) ||
                                 (checkIsAdminByRole(currentTeamRole) && checkIsMemberByRole(role))) && (
-                                <i onClick={e => this.openEditModal(item)} className="edit_button item_button" />
+                                <EditIcon className="edit_button item_button" onClick={e => this.openEditModal(item)} />
                             )}
                         </div>
                     </td>
@@ -309,31 +336,31 @@ class TeamPage extends Component {
                     )}
                     <div className="data_container_team_page">
                         <PageHeader title={`${v_team}: ${currentTeam.data.name}`}>
-                            {/* <div className="team_page_main-controls"> */}
+                            <div className="team_page_main-controls">
+                                {(checkIsAdminByRole(currentTeam.data.role) ||
+                                    checkIsOwnerByRole(currentTeam.data.role)) && (
+                                    <button
+                                        className="header-wrapper__child-button"
+                                        onClick={e => {
+                                            this.openRenameModal();
+                                        }}
+                                    >
+                                        {v_rename_team}
+                                    </button>
+                                )}
 
-                            {checkIsAdminByRole(currentTeam.data.role) && (
-                                <button
-                                    className="header-wrapper__child-button"
-                                    onClick={e => {
-                                        this.openRenameModal();
-                                    }}
-                                >
-                                    {v_rename_team}
-                                </button>
-                            )}
-
-                            {checkIsAdminByRole(currentTeam.data.role) && (
-                                <button
-                                    className="header-wrapper__child-button"
-                                    onClick={e => {
-                                        this.openAddUserModal();
-                                    }}
-                                >
-                                    {v_invite_to_team}
-                                </button>
-                            )}
-
-                            {/* </div> */}
+                                {(checkIsAdminByRole(currentTeam.data.role) ||
+                                    checkIsOwnerByRole(currentTeam.data.role)) && (
+                                    <button
+                                        className="header-wrapper__child-button"
+                                        onClick={e => {
+                                            this.openAddUserModal();
+                                        }}
+                                    >
+                                        {v_invite_to_team}
+                                    </button>
+                                )}
+                            </div>
                         </PageHeader>
                         <div className="team_page_searchBar">
                             <TeamSearchBar search={this.setSearch} />

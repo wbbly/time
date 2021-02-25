@@ -42,7 +42,7 @@ const LogoutIcon = ({ className, onClick }) => (
     <svg
         onClick={onClick}
         className={className}
-        width="15"
+        width="20"
         height="15"
         viewBox="0 0 15 15"
         fill="none"

@@ -14,89 +14,58 @@
   }
 
   .flag-input-container {
-    .flag-select {
+    position: relative;
+    &-select {
       display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 100%;
       font-family: "Open Sans", sans-serif;
       font-weight: 400;
       outline: none;
       border-radius: 0.4rem;
+      color: #d8d8d8;
+      background: #4f4f4f;
+      font-size: 1.6rem;
       line-height: 1.9rem;
       height: 45px;
-      background: #4f4f4f;
-      ul {
-        border: none;
-        margin-top: 5px;
-        li {
-          color: #d8d8d8;
-        }
-        li:hover {
-          background-color: #333;
-        }
-      }
-      .flag-select__option--placeholder {
-        padding-bottom: 0;
-        color: #d8d8d8 !important;
-        font-size: 16px;
-      }
-      .flag-select__btn {
-        padding: 0 2px;
-      }
-      .flag-select__btn::after {
-        width: 24px;
-        height: 24px;
-        background: url("../../images/icons/arrow-down.svg") no-repeat center;
-        transition: all 0.3s;
-        position: absolute;
-        top: 10px;
-        right: 3px;
-        border: none;
-      }
-      .flag-select__btn[aria-expanded="true"]:after {
-        transform: rotate(-180deg);
-      }
-      .flag-select__btn::before {
-        z-index: 14;
-      }
-      .flag-select__options {
-        margin-top: 50px;
-        width: 100%;
-        background:#4f4f4f;
-        box-shadow: 2px 2px 4px black;
-        padding: 5px;
-        border-radius: 0;
-        .filterBox {
-          padding: 5px 10px;
-          input {
-            font-family: "Open Sans", sans-serif;
-            font-size: 14px;
-            line-height: 14px;
-            background-color: #333333;
-            color: white !important;
-            padding: 5px 10px;
-            border: none;
-            width: 100%;
-            margin: 0;
-            &::placeholder {
-              color: white;
-            }
-          }
-        }
-        li {
-          padding: 5px 10px;
-          color: white;
-      
-          &:hover {
-            background-color: #e0e0e0;
-            color: #333333;
-          }
-        }
-      }
-      .filterBox {
-        input {
-          color: #d8d8d8;
-        }
-      }
+      padding: 1rem 0.8rem 1rem 1rem;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    }
+    &-selected {
+      display: flex;
+      align-items: center;
+    }
+    &-selected-flag {
+      width: 21px;
+      height: 21px;
+      object-fit: contain;
+    }
+    &-selected-text {
+      margin-left: 9px;
+      line-height: 16px;
+    }
+    &-selected-text-empty {
+      color: grey;
+    }
+    &-select-arrow {
+      width: 15px;
+      height: 15px;
+      background: url("../../images/icons/arrow-down.svg") no-repeat
+        center;
+      transition: all 0.3s;
+      border: none;
+    }
+    &-select-dropdown {
+      position: absolute;
+      top: 93%;
+      width: 100%;
+      z-index: 123;
+    }
+    .rotated {
+      transform: rotate(-180deg);
     }
     &__icon-arrow {
       position: relative;
@@ -108,9 +77,6 @@
     }
   }
   .input_container {
-    input {
-      padding: 1.1rem 1.5rem 1.1rem 1.5rem;
-    }
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
       -webkit-appearance: none;
@@ -150,6 +116,7 @@
     width: 160px;
     height: 36px;
     margin-left: 5px;
+    margin-right: 1px;
     border: 1px solid #27ae60;
     border-radius: 4px;
     font-family: "Open Sans";
@@ -168,8 +135,11 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      .column-avatar-social {
-        margin-bottom: 20px;
+    }
+    .column-avatar-social {
+      margin: 0 20px 0 0;
+      @media screen and (max-width: 800px) {
+        margin: 0 20px 20px;
       }
     }
     .input_container {
@@ -188,7 +158,7 @@
 
   .column-inputs {
     width: 100%;
-    padding: 0 0 20px 20px;
+    padding-bottom: 20px;
     max-width: 670px;
     .save_btn {
       width: 196px;
@@ -268,6 +238,9 @@
       }
     }
   }
+.fourth-inputs-wrapper {
+  margin-top: 12px;
+}
 .fifth-inputs-wrapper{
   align-items: flex-start;
 }
@@ -405,7 +378,6 @@
       flex-direction: row;
       justify-content: space-between;
       width: 100%;
-      margin: 0 0 16px 0;
       @media screen and (max-width: 800px) {
         flex-direction: column;
       }
@@ -414,6 +386,7 @@
       .time-format,
       .duration-time-format {
         width: 48%;
+        margin-bottom: 12px;
 
         @media screen and (max-width: 800px) {
           width: 100%;
@@ -464,6 +437,12 @@
       justify-content: flex-start;
       align-items: center;
       margin: 0 20px 0 0 !important;
+      .MuiCheckbox-root {
+        color: white !important;
+      }
+      &:hover .MuiCheckbox-root {
+        color: #333333 !important;
+      }
       span{
         color: #ffffff;
         margin:0;

@@ -9,7 +9,7 @@ class DeleteInvoiceModal extends Component {
     };
 
     render() {
-        const { closeModal, vocabulary, deleteInvoice, openCloseModal, modalOpeningId } = this.props;
+        const { vocabulary, deleteInvoice, openCloseModal, modalOpeningId } = this.props;
         const { v_delete_invoice, v_prompt, v_delete } = vocabulary;
 
         return (

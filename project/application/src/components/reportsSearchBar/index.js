@@ -106,14 +106,7 @@ class ReportsSearchBar extends Component {
     }
 
     closeDropdownUser = e => {
-        if (
-            !this.selectListUsersRef ||
-            !this.selectAllUsersRef ||
-            !this.selectNoneUsersRef ||
-            !this.selectListUsersRef.contains(e.target) ||
-            this.selectAllUsersRef.contains(e.target) ||
-            this.selectNoneUsersRef.contains(e.target)
-        ) {
+        if (this.selectListUsersRef && !this.selectListUsersRef.contains(e.target)) {
             this.setState(
                 {
                     toggleSelectUser: false,
@@ -126,14 +119,7 @@ class ReportsSearchBar extends Component {
     };
 
     closeDropdownProject = e => {
-        if (
-            !this.selectListProjectsRef ||
-            !this.selectAllProjectsRef ||
-            !this.selectNoneProjectsRef ||
-            !this.selectListProjectsRef.contains(e.target) ||
-            this.selectAllProjectsRef.contains(e.target) ||
-            this.selectNoneProjectsRef.contains(e.target)
-        ) {
+        if (this.selectListProjectsRef && !this.selectListProjectsRef.contains(e.target)) {
             this.setState(
                 {
                     toggleSelectProject: false,
@@ -146,14 +132,7 @@ class ReportsSearchBar extends Component {
     };
 
     closeDropdownClient = e => {
-        if (
-            !this.selectListClientsRef ||
-            !this.selectAllClientsRef ||
-            !this.selectNoneClientsRef ||
-            !this.selectListClientsRef.contains(e.target) ||
-            this.selectAllClientsRef.contains(e.target) ||
-            this.selectNoneClientsRef.contains(e.target)
-        ) {
+        if (this.selectListClientsRef && !this.selectListClientsRef.contains(e.target)) {
             this.setState(
                 {
                     toggleSelectClient: false,
@@ -211,6 +190,7 @@ class ReportsSearchBar extends Component {
             searchText = searchText.toLowerCase().trim();
             const filteredArr = items.filter(it => {
                 const values = [];
+                values.push(it['company_name']);
                 values.push(it['name']);
 
                 return values
@@ -230,22 +210,35 @@ class ReportsSearchBar extends Component {
         this.props.applySearch();
     }
 
-    getCheckedProjects(name) {
-        if (JSON.stringify(this.state.projectDataSelected).indexOf(name) > -1) {
-            return true;
-        }
+    getCheckedProjects(id) {
+        // console.log(this.state.projectDataSelected)
+        // console.log(JSON.stringify(this.state.projectDataSelected))
+        // if (name && JSON.stringify(this.state.projectDataSelected).indexOf(name) > -1) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+        return this.state.projectDataSelected.some(item => item.id === id);
     }
 
-    getCheckedUsers(name) {
-        if (JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
-            return true;
-        }
+    getCheckedUsers(id) {
+        // console.log(this.state.userDataSelected)
+        // if (name && JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+        return this.state.userDataSelected.some(item => item.id === id);
     }
 
-    getCheckedClients(name) {
-        if (JSON.stringify(this.state.clientDataSelected).indexOf(name) > -1) {
-            return true;
-        }
+    getCheckedClients(id) {
+        // console.log(this.state.clientDataSelected)
+        // if (name && JSON.stringify(this.state.clientDataSelected).indexOf(name) > -1) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+        return this.state.clientDataSelected.some(item => item.id === id);
     }
 
     clientCheckbox(client) {
@@ -286,7 +279,6 @@ class ReportsSearchBar extends Component {
             projectDataSelected: projects,
             clientDataSelected: this.filterClientsByProject(projects),
         });
-        this.filterClientsByProject(projects);
         this.props.reportsPageAction('SET_SELECTED_PROJECTS', { data: projects.map(p => p.name) });
     }
 
@@ -315,7 +307,7 @@ class ReportsSearchBar extends Component {
         let exists = false;
         for (let i = 0; i < clients.length; i++) {
             const currentClient = clients[i];
-            if (currentClient.name === client.name) {
+            if (currentClient.company_name === client.company_name) {
                 exists = true;
                 clients.splice(i, 1);
                 break;
@@ -384,12 +376,15 @@ class ReportsSearchBar extends Component {
         projects.forEach(project => {
             clientDataEtalon.forEach(client => {
                 if (project.client && client.id === project.client.id) {
-                    newArr.push(client);
+                    if (!newArr.find(item => item.id === client.id)) {
+                        newArr.push(client);
+                    }
                 }
             });
         });
-        return [...new Set(newArr)];
+        return newArr;
     };
+
     filterProjectsByClient = clients => {
         const { projectDataEtalon } = this.state;
         let projectIds = [];
@@ -427,9 +422,11 @@ class ReportsSearchBar extends Component {
         }).then(
             result => {
                 const teamUsers = result.data.team[0].team_users;
-                const users = teamUsers.map(teamUser => {
-                    return { ...teamUser.user[0], is_active: teamUser.is_active };
-                });
+                const users = teamUsers
+                    .map(teamUser => {
+                        return { ...teamUser.user[0], is_active: teamUser.is_active };
+                    })
+                    .filter(user => user.is_active);
                 this.setState({ userDataEtalon: users });
                 const inputUserData = this.props.inputUserData;
                 for (let i = 0; i < inputUserData.length; i++) {
@@ -492,16 +489,18 @@ class ReportsSearchBar extends Component {
         }
     }
 
-    sortData = data => {
+    sortData = (data, type) => {
         let selectedData = [];
         let noSelectedData = [];
         data.forEach(item => {
-            if (item.is_active) {
-                if (this.getCheckedUsers(item.email)) {
-                    selectedData.push(item);
-                } else {
-                    noSelectedData.push(item);
-                }
+            if (
+                (type === 'user' && this.getCheckedUsers(item.id)) ||
+                (type === 'project' && this.getCheckedProjects(item.id)) ||
+                (type === 'client' && this.getCheckedClients(item.id))
+            ) {
+                selectedData.push(item);
+            } else {
+                noSelectedData.push(item);
             }
         });
         return selectedData.concat(noSelectedData);
@@ -510,7 +509,9 @@ class ReportsSearchBar extends Component {
     render() {
         const { vocabulary } = this.props;
         const { v_user, v_project, v_find, v_select_all, v_select_none, v_apply, v_client } = vocabulary;
-        const sortedData = this.sortData(this.state.userDataFiltered);
+        const sortedUserData = this.sortData(this.state.userDataFiltered, 'user');
+        const sortedProjectData = this.sortData(this.state.projectDataFiltered, 'project');
+        const sortedClientData = this.sortData(this.state.clientDataFiltered, 'client');
         return (
             <div className="wrapper_reports_search_bar">
                 <div className="reports_search_bar_search_field_container select">
@@ -552,14 +553,14 @@ class ReportsSearchBar extends Component {
                                 <i className="small_clear" onClick={_ => this.clearUserSearch()} />
                             </div>
                             <div className="select_items_container">
-                                {sortedData.map((item, index) => (
-                                    <div className="select_users_item" key={item.email + index}>
+                                {sortedUserData.map((item, index) => (
+                                    <div className="select_users_item" key={item.email}>
                                         <label>
                                             <ThemeProvider theme={materialTheme}>
                                                 <Checkbox
                                                     color={'primary'}
                                                     value={item.email || ''}
-                                                    checked={this.getCheckedUsers(item.email)}
+                                                    checked={this.getCheckedUsers(item.id)}
                                                     onChange={_ => {
                                                         this.toggleUser(item);
                                                     }}
@@ -619,14 +620,14 @@ class ReportsSearchBar extends Component {
                                 <i className="small_clear" onClick={_ => this.clearProjectSearch()} />
                             </div>
                             <div className="select_items_container">
-                                {this.state.projectDataFiltered.map((item, index) => (
-                                    <div className="select_users_item" key={item.name + index}>
+                                {sortedProjectData.map((item, index) => (
+                                    <div className="select_users_item" key={item.id}>
                                         <label>
                                             <ThemeProvider theme={materialTheme}>
                                                 <Checkbox
                                                     color={'primary'}
                                                     value={item.name}
-                                                    checked={this.getCheckedProjects(item.name)}
+                                                    checked={this.getCheckedProjects(item.id)}
                                                     onChange={_ => {
                                                         this.toggleProject(item);
                                                     }}
@@ -651,7 +652,9 @@ class ReportsSearchBar extends Component {
                                 {v_client}
                                 :&nbsp;
                                 {this.state.clientDataSelected.map((item, index) => (
-                                    <span key={item.name + index}>{index === 0 ? item.name : `, ${item.name}`}</span>
+                                    <span key={item.company_name + index}>
+                                        {index === 0 ? item.company_name : `, ${item.company_name}`}
+                                    </span>
                                 ))}
                             </div>
                             <i className={`arrow_down ${this.state.toggleSelectClient ? 'arrow_up' : ''}`} />
@@ -686,21 +689,20 @@ class ReportsSearchBar extends Component {
                                 <i className="small_clear" onClick={_ => this.clearClientSearch()} />
                             </div>
                             <div className="select_items_container">
-                                {this.state.clientDataFiltered.map((item, index) => (
-                                    <div className="select_users_item" key={item.name + index}>
+                                {sortedClientData.map((item, index) => (
+                                    <div className="select_users_item" key={item.id}>
                                         <label>
                                             <ThemeProvider theme={materialTheme}>
                                                 <Checkbox
                                                     color={'primary'}
-                                                    value={item.name || ''}
-                                                    checked={this.getCheckedClients(item.name)}
-                                                    checkedIcon={this.clientCheckbox(item)}
+                                                    value={item.company_name || ''}
+                                                    checked={this.getCheckedClients(item.id)}
                                                     onChange={_ => {
                                                         this.toggleClient(item);
                                                     }}
                                                 />
                                             </ThemeProvider>{' '}
-                                            <span className="select_users_item_username">{item.name}</span>
+                                            <span className="select_users_item_username">{item.company_name}</span>
                                         </label>
                                     </div>
                                 ))}

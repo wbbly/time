@@ -139,7 +139,7 @@ class CalendarPopup extends Component {
 
     componentWillUnmount() {
         const { updateTask, vocabulary, showNotificationAction } = this.props;
-        const { v_a_time_start_error } = vocabulary;
+        const { v_a_time_start_error, v_a_time_end_error } = vocabulary;
         const { startDateTime, endDateTime, date, isChangedTime, isChangedDate } = this.state;
         if (isChangedTime || isChangedDate) {
             if (moment(startDateTime).isValid() && moment(endDateTime).isValid()) {
@@ -161,8 +161,10 @@ class CalendarPopup extends Component {
                     startDateTime: startTime,
                     endDateTime: endTime,
                 });
-            } else {
+            } else if (!moment(startDateTime).isValid()) {
                 showNotificationAction({ text: v_a_time_start_error, type: 'warning' });
+            } else {
+                showNotificationAction({ text: v_a_time_end_error, type: 'warning' });
             }
         }
     }

@@ -2,6 +2,7 @@ import {
     CREATE_INVOICE_REQUEST,
     GET_INVOICE_LIST_REQUEST,
     GET_INVOICE_LIST_SUCCESS,
+    GET_GRAND_TOTAL,
     GET_INVOICE_BY_ID_REQUEST,
     GET_INVOICE_BY_ID_SUCCESS,
     CHANGE_INVOICE_REQUEST,
@@ -17,8 +18,9 @@ import {
 const initialState = {
     invoices: [],
     page: 0,
-    limit: 5,
+    limit: 10,
     pageCount: 1,
+    grandTotal: {},
     invoice: null,
     isFetching: false,
     isInitialFetching: false,
@@ -79,6 +81,11 @@ export default function invoicesReducer(state = initialState, { type, payload })
                 invoices: payload.invoices,
                 page: payload.page,
                 pageCount: payload.pageCount,
+            };
+        case GET_GRAND_TOTAL:
+            return {
+                ...state,
+                grandTotal: payload,
             };
         case SET_SENDER_ID:
             return {

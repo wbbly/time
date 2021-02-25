@@ -5,6 +5,7 @@ import { Redirect, withRouter } from 'react-router-dom';
 // Services
 import { setTokenToLocalStorage, getTokenFromLocalStorage } from '../../services/tokenStorageService';
 import { signIn } from '../../configAPI';
+import { getUtcOffsetInMilliseconds } from '../../services/timeService';
 
 // Components
 import SwitchLanguageLogin from '../../components/SwitchLanguageLogin';
@@ -36,7 +37,7 @@ class AuthPage extends Component {
     submitForm = async values => {
         const { vocabulary, showNotificationAction } = this.props;
         try {
-            const response = await signIn(values);
+            const response = await signIn({ ...values, timezoneOffset: getUtcOffsetInMilliseconds() });
             setTokenToLocalStorage(response.data.token);
             document.cookie = 'isAuthWobbly=true; path=/; domain=.wobbly.me;';
             this.setState({ haveToken: true });

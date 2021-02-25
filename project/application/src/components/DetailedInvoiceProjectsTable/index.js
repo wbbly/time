@@ -118,6 +118,7 @@ class DetailedInvoiceProjectsTable extends Component {
 
     finishEditing = async (continueEditing = false) => {
         const { editingProject } = this.state;
+        // eslint-disable-next-line
         if (editingProject.tax == 0) {
             editingProject.tax = '';
         }
@@ -134,6 +135,7 @@ class DetailedInvoiceProjectsTable extends Component {
     addProject = async () => {
         this.props.onChangeInput();
         const { newProject } = this.state;
+        // eslint-disable-next-line
         if (newProject.tax == 0) {
             newProject.tax = '';
         }
@@ -152,6 +154,7 @@ class DetailedInvoiceProjectsTable extends Component {
     removeProject = id => {
         const { removeProject } = this.props;
         removeProject(id);
+        this.setState({ editingProject: { ...emptyProject } });
     };
 
     getProjectValue = (project, name) => {
@@ -183,7 +186,6 @@ class DetailedInvoiceProjectsTable extends Component {
             projectNameError,
             isHoursError,
             isRateError,
-            projectNameEditingError,
         } = this.state;
         const { vocabulary, projects, currency, isError } = this.props;
         const {
@@ -252,6 +254,7 @@ class DetailedInvoiceProjectsTable extends Component {
                                             'detailed-invoice-projects-table__input--disabled':
                                                 editingProject.id !== project.id,
                                             'detailed-invoice-projects-table__input--empty':
+                                                // eslint-disable-next-line
                                                 this.getProjectValue(project, 'hours') == 0,
                                         })}
                                         type="text"
@@ -271,6 +274,7 @@ class DetailedInvoiceProjectsTable extends Component {
                                             'detailed-invoice-projects-table__input--disabled':
                                                 editingProject.id !== project.id,
                                             'detailed-invoice-projects-table__input--empty':
+                                                // eslint-disable-next-line
                                                 this.getProjectValue(project, 'rate') == 0,
                                         })}
                                         type="text"
