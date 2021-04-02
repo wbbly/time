@@ -11,6 +11,7 @@
     width: 100%;
     background-color: #333333;
     padding: 25px 40px 0;
+    overflow: auto;
 
     @media screen and (max-width: 670px) {
       height: auto;
@@ -118,7 +119,7 @@
     top: 30px;
     right: 10px;
     z-index: 3;
-    background:#3f3f3f;
+    background: #3f3f3f;
     box-shadow: 0px 3px 18px black;
   }
 
@@ -150,6 +151,7 @@
   }
 
   .export_button {
+    display: flex;
     position: absolute;
     right: 0;
     top: 10px;
@@ -159,6 +161,26 @@
     line-height: normal;
     color: #ffffff;
     cursor: pointer;
+    user-select: none;
+    & > i {
+      margin-left: 10px;
+    }
+  }
+  .export_dropdown {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    min-width: 200%;
+    background-color: #3b3b3b;
+    box-shadow: 0px 3px 18px black;
+
+    z-index: 5;
+    & > div {
+      padding: 5px;
+    }
+    & > div:hover {
+      background-color: #616161;
+    }
   }
 }
 

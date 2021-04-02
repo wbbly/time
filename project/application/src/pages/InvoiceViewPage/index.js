@@ -53,15 +53,24 @@ const parseUsersData = users => {
     return users.data.map(user => user.user[0]);
 };
 
+export const subtotalWithDiscount = (subtotal, discount = 0) => (subtotal / 100) * discount;
+
+const calculateTotal = (projects, discount = 0) => {
+    let subtotal = calculateSubtotals(projects);
+    return subtotal - subtotalWithDiscount(subtotal, discount) + calculateTaxesSum(projects);
+};
+
 class InvoiceViewPage extends Component {
     state = {
         isInitialFetching: true,
         invoice: {
             id: ``,
             number: '',
+            reference: '',
             dateFrom: new Date(),
             dateDue: new Date(),
             timezoneOffset: new Date().getTimezoneOffset() * 60 * 1000,
+            discount: 0,
             currency: 'usd',
             sender: {
                 city: '',
@@ -171,9 +180,11 @@ class InvoiceViewPage extends Component {
             v_add_client,
             v_select_logo_file,
             v_will_generate,
+            v_discount,
+            v_invoice_reference,
         } = vocabulary;
         const { isInitialFetching, invoice, errors } = this.state;
-
+        console.log(invoice);
         return (
             <Loading flag={isInitialFetching || isFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar disableTimeEntriesFetch>
@@ -216,16 +227,44 @@ class InvoiceViewPage extends Component {
                                                 <div className="input-wrapper">
                                                     <div>
                                                         <label>{`${v_invoice_number}:`}</label>
-                                                        <input
-                                                            value={
-                                                                invoice.invoice_number && `#${invoice.invoice_number}`
-                                                            }
-                                                            onChange={e => this.handleInputChange('number', e)}
-                                                            className="invoices-page-detailed__input"
-                                                            type="text"
-                                                            placeholder={v_will_generate}
-                                                            disabled
-                                                        />
+                                                        <div className="invoice-number">
+                                                            <input
+                                                                value={invoice.invoice_number}
+                                                                onChange={e =>
+                                                                    this.handleInputChange('invoiceNumber', e)
+                                                                }
+                                                                className="invoices-page-detailed__input"
+                                                                type="text"
+                                                                placeholder={v_will_generate}
+                                                                disabled={this.isViewMode}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="input-wrapper__second-input">
+                                                        <label>{`${v_invoice_date}:`}</label>
+                                                        <div className="invoices-page-detailed__calendar-select">
+                                                            <CalendarSelect
+                                                                onChangeDate={date =>
+                                                                    this.handleDateChange('dateFrom', date)
+                                                                }
+                                                                date={invoice.invoice_date}
+                                                                disabled={this.isViewMode}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="input-wrapper">
+                                                    <div>
+                                                        <label>{`${v_invoice_reference}:`}</label>
+                                                        <div className="invoice-reference">
+                                                            <textarea
+                                                                value={invoice.reference}
+                                                                onChange={e => this.handleInputChange('reference', e)}
+                                                                className="invoices-page-detailed__input"
+                                                                type="text"
+                                                                disabled={this.isViewMode}
+                                                            />
+                                                        </div>
                                                     </div>
                                                     <div className="input-wrapper__second-input">
                                                         <label>{`${v_invoice_due}:`}</label>
@@ -234,22 +273,10 @@ class InvoiceViewPage extends Component {
                                                                 onChangeDate={date =>
                                                                     this.handleDateChange('dateDue', date)
                                                                 }
-                                                                date={invoice.dateDue}
+                                                                date={invoice.due_date}
                                                                 disabled={this.isViewMode}
                                                             />
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div className="second-input-wrapper">
-                                                    <label>{`${v_invoice_date}:`}</label>
-                                                    <div className="invoices-page-detailed__calendar-select">
-                                                        <CalendarSelect
-                                                            onChangeDate={date =>
-                                                                this.handleDateChange('dateFrom', date)
-                                                            }
-                                                            date={invoice.dateFrom}
-                                                            disabled={this.isViewMode}
-                                                        />
                                                     </div>
                                                 </div>
                                             </div>
@@ -338,6 +365,32 @@ class InvoiceViewPage extends Component {
                                                     </span>
                                                 </div>
                                             </div>
+
+                                            <div className="invoices-page-detailed__summary-table-row">
+                                                <>
+                                                    <span className="invoices-page-detailed__summary-title">
+                                                        {`${v_discount} ${invoice.discount}%`}
+                                                    </span>
+
+                                                    <div className="invoices-page-detailed__summary-price">
+                                                        {invoice.currency.toUpperCase()}
+                                                        <span>
+                                                            -
+                                                            {internationalFormatNum(
+                                                                fixNumberHundredths(
+                                                                    spaceAndFixNumber(
+                                                                        subtotalWithDiscount(
+                                                                            calculateSubtotals(invoice.projects),
+                                                                            invoice.discount
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                </>
+                                            </div>
+
                                             <div className="invoices-page-detailed__summary-table-row">
                                                 <span className="invoices-page-detailed__summary-title">{v_tax}</span>
                                                 <div className="invoices-page-detailed__summary-price">
@@ -351,6 +404,7 @@ class InvoiceViewPage extends Component {
                                                     </span>
                                                 </div>
                                             </div>
+
                                             <div className="invoices-page-detailed__summary-table-row">
                                                 <div className="invoices-page-detailed__summary-total">
                                                     <span className="invoices-page-detailed__summary-title">
@@ -369,7 +423,7 @@ class InvoiceViewPage extends Component {
                                                         {internationalFormatNum(
                                                             fixNumberHundredths(
                                                                 spaceAndFixNumber(
-                                                                    calculateSubtotalsWithTax(invoice.projects)
+                                                                    calculateTotal(invoice.projects, invoice.discount)
                                                                 )
                                                             )
                                                         )}

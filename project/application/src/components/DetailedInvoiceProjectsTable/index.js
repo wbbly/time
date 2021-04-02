@@ -177,6 +177,13 @@ class DetailedInvoiceProjectsTable extends Component {
         newProject.project_name = projectName;
         this.setState({ newProject });
     };
+
+    componentDidUpdate(prevProps) {
+        console.log(prevProps, this.props);
+        if (prevProps.reset !== this.props.reset && this.props.reset) {
+            this.setState({ editingProject: { ...emptyProject } });
+        }
+    }
     render() {
         const {
             newProject,

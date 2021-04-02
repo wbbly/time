@@ -45,16 +45,16 @@
         flex-direction: row;
       }
       .rdrStaticRange {
-          width: 50%;
+        width: 50%;
       }
       .rdrMonth {
-          padding-bottom: 0;
+        padding-bottom: 0;
       }
       .rdrInputRanges {
-          display: flex;
+        display: flex;
       }
       .rdrStaticRangeLabel {
-          padding: 8px 20px;
+        padding: 8px 20px;
       }
       .rdrInputRange {
         padding: 0px 20px;
@@ -100,7 +100,7 @@
       &_up {
         transform: rotate(-180deg);
       }
-      
+
       @media screen and (max-width: 768px) {
         margin-left: 0;
       }
@@ -112,13 +112,15 @@
       z-index: 15;
       background-color: #f5f5f5;
       box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+      overflow: scroll;
+      max-height: calc(100vh - (71px+4rem));
 
+      @media screen and (max-width: 1061px) {
+        max-height: calc(100vh - (89px+4rem));
+      }
       @media screen and (max-width: 768px) {
-          right: 0;
-          top: 46px;
-          max-height: 400px;
-          overflow: scroll;
-        //   max-height: 365px;
+        right: 0;
+        max-height: calc(100vh - (150px+4rem));
       }
     }
   }
@@ -126,12 +128,12 @@
     color: #ffffff;
     font-size: 1.4rem;
     line-height: 1.9rem;
-    background: #4F4F4F;
+    background: #4f4f4f;
     border-radius: 2px;
-    padding: .5rem 1.2rem;
+    padding: 0.5rem 1.2rem;
 
     @media screen and (max-width: 768px) {
-      padding: .5rem .5rem;
+      padding: 0.5rem 0.5rem;
     }
   }
 }

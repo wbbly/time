@@ -72,6 +72,7 @@ class FacebookButton extends Component {
                 autoLoad={false}
                 fields="name,email"
                 callback={this.responseFacebook}
+                disableMobileRedirect={true}
             />
         );
     }

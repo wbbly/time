@@ -40,6 +40,7 @@ export default {
     'ERROR.USER.CREATE_USER_FAILED': 'Произошла ошибка при создании пользователя.',
     'ERROR.USER.UPDATE_USER_PERMISSIONS_DENIED': 'У вас нет разрешения на обновление пользователя.',
     'ERROR.USER.UPDATE_USER_FAILED': 'Произошла ошибка при обновлении пользователя.',
+    'ERROR.USER.UPDATE_USER_EMAIL_EXISTS': 'Этот адрес электронной почты уже существует.',
     'ERROR.USER.UPDATE_USER_ROLE_FAILED': 'Вы не сможете изменить роль в своей команде.',
     'ERROR.USER.UPDATE_TEAM_OWNER_ROLE_FAILED': 'Вы не можете изменить роль владельца команды.',
     'ERROR.USER.UPDATE_ACTIVE_STATUS_FAILED':
@@ -157,6 +158,8 @@ export default {
     v_summary_report: 'Общий отчет',
     v_total: 'Всего',
     v_export: 'Экспорт',
+    v_detailed_export: 'Подробный отчёт',
+    v_simple_export: 'Обобщенный отчет',
     v_user: 'Пользователь',
     v_select_all: 'Выделить все',
     v_select_none: 'Убрать выделения',
@@ -254,7 +257,10 @@ export default {
     v_subtotal: 'Итог',
     v_enter_project: 'Текст',
     v_pic_tax: 'Налог',
+    v_payment_confirmation_window_confirm: 'Вы уверены, что хотите подтвердить платеж?',
+    v_payment_confirmation_window_cancel: 'Вы уверены, что хотите отменить платеж?',
     v_invoice_summary: 'Общий Счет',
+    v_invoice_reference: 'Сноска',
     v_comments: 'Комментарии',
     v_select_currency: 'Выберите Валюту',
     v_invoice_number: 'Номер Счета',
@@ -348,4 +354,7 @@ export default {
     v_add_discount: 'Добавить скидку',
     v_discount: 'Скидка',
     v_discount_subtotal: 'от суммы промежуточного счета',
+
+    v_page_access_denied: 'У вас недостаточно прав для просмотра этой страницы',
+    v_page_access_request_owner: 'Попросите владельца команды предоставить вам доступ',
 };

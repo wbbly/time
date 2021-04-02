@@ -38,6 +38,7 @@ class ReportsByProjectsPage extends Component {
         projectName: '',
         dateStart: '',
         endDate: '',
+        reportUsers: [],
     };
 
     getDateInPointsFormat(momentDate) {
@@ -118,7 +119,11 @@ class ReportsByProjectsPage extends Component {
                         {v_sum_time}: {getTimeDurationByGivenTimestamp(this.state.totalTime, durationTimeFormat)}
                     </div>
                 </div>
-                <ReportsByProjectSearchBar applySearch={this.applySearch} userEmailsList={this.state.userEmailsList} />
+                <ReportsByProjectSearchBar
+                    reportUsers={this.state.reportUsers}
+                    applySearch={this.applySearch}
+                    userEmailsList={this.state.userEmailsList}
+                />
                 {!isMobile ? (
                     <div className="tasks_wrapper">
                         <div className="tasks_header">
@@ -162,9 +167,18 @@ class ReportsByProjectsPage extends Component {
                 }
 
                 const timer = data.project_v2.length ? data.project_v2[0].timer : [];
-                this.setState({ dataOfProject: timer });
-                this.setState({ totalTime: this.getTotalTime(timer) });
-                this.setState({ countTasks: timer.length });
+                const uniqueUsersArray = timer
+                    .filter((item, index) => {
+                        const _item = item.user.id;
+                        return index === timer.findIndex(obj => obj.user.id === _item);
+                    })
+                    .map(item => item.user);
+                this.setState({
+                    dataOfProject: timer,
+                    totalTime: this.getTotalTime(timer),
+                    countTasks: timer.length,
+                    reportUsers: uniqueUsersArray,
+                });
             },
             err => {
                 if (err instanceof Response) {

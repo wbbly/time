@@ -31,7 +31,7 @@
         justify-content: center;
         align-items: center;
         height: 100%;
-        .text-client{
+        .text-client {
           margin-top: 8px;
         }
       }
@@ -64,7 +64,7 @@
     width: 100%;
     top: 105%;
     left: 0;
-    background:#27292A;
+    background: #27292a;
     box-shadow: 2px 2px 4px black;
     padding: 5px;
     animation: slowVisibility 0.3s;
@@ -78,6 +78,9 @@
       align-items: center;
       cursor: pointer;
       margin: 5px 10px;
+    }
+    &-btn--disabled {
+      background: #333333;
     }
   }
 

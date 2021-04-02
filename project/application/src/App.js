@@ -29,6 +29,7 @@ import './fonts/icomoon/icomoon.css';
 
 import * as responsiveActions from './actions/ResponsiveActions';
 import { showNotificationAction } from './actions/NotificationActions';
+import { checkAccessByRole, ROLES } from './services/authentication';
 
 // const addEvent = (object, type, callback) => {
 //     if (object === null || typeof object === 'undefined') return false;
@@ -45,8 +46,8 @@ class App extends Component {
     setResponsiveReducer = event => {
         const { setViewportSize, setIsMobile, isMobile } = this.props;
         setViewportSize({
-            width: window.innerWidth,
-            height: window.innerHeight,
+            width: document.documentElement.clientWidth,
+            height: document.documentElement.clientHeight,
         });
 
         if (window.innerWidth >= 1062 && isMobile) {
@@ -90,12 +91,7 @@ class App extends Component {
 
     render() {
         const redirect = to => () => <Redirect to={to} />;
-        const { isOwner, user } = this.props;
-
-        let userId = '';
-        if (user) {
-            userId = user.id;
-        }
+        const { userRole } = this.props;
 
         return (
             <Switch>
@@ -130,29 +126,37 @@ class App extends Component {
                     render={() => <PageTemplate hideSidebar hideHeader content={ResetPasswordPage} />}
                 />
 
-                <PrivateRoute
-                    exact
-                    path="/invoices"
-                    render={() => (isOwner === userId ? <PageTemplate content={InvoicesPage} /> : '')}
-                />
+                <PrivateRoute exact path="/invoices" render={() => <PageTemplate content={InvoicesPage} />} />
                 <PrivateRoute
                     exact
                     path="/invoices/:pageType"
-                    render={() => (isOwner === userId ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
+                    render={() =>
+                        checkAccessByRole(userRole, [ROLES.ROLE_OWNER, ROLES.ROLE_INVOICES_MANAGER]) ? (
+                            <PageTemplate content={InvoicesPageDetailed} />
+                        ) : (
+                            <Redirect to={'/invoices'} />
+                        )
+                    }
                 />
                 <PrivateRoute
                     exact
                     path="/invoices/:pageType/:invoiceId"
-                    render={() => (isOwner === userId ? <PageTemplate content={InvoicesPageDetailed} /> : '')}
+                    render={() =>
+                        checkAccessByRole(userRole, [ROLES.ROLE_OWNER, ROLES.ROLE_INVOICES_MANAGER]) ? (
+                            <PageTemplate content={InvoicesPageDetailed} />
+                        ) : (
+                            <Redirect to={'/invoices'} />
+                        )
+                    }
                 />
                 <PrivateRoute
                     exact
                     path="/invoices/view/:invoiceId"
                     render={() =>
-                        isOwner === userId ? (
+                        checkAccessByRole(userRole, [ROLES.ROLE_OWNER, ROLES.ROLE_INVOICES_MANAGER]) ? (
                             <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="view" />} />
                         ) : (
-                            ''
+                            <Redirect to={'/invoices'} />
                         )
                     }
                 />
@@ -165,10 +169,10 @@ class App extends Component {
                     exact
                     path="/invoices/update/:invoiceId"
                     render={() =>
-                        isOwner === userId ? (
+                        checkAccessByRole(userRole, [ROLES.ROLE_OWNER, ROLES.ROLE_INVOICES_MANAGER]) ? (
                             <PageTemplate content={props => <InvoicesPageDetailed {...props} mode="update" />} />
                         ) : (
-                            ''
+                            <Redirect to={'/invoices'} />
                         )
                     }
                 />
@@ -183,6 +187,7 @@ const mapStateToProps = state => ({
     isOwner: state.teamReducer.currentTeam.data.owner_id,
     user: state.userReducer.user,
     vocabulary: state.languageReducer.vocabulary,
+    userRole: state.teamReducer.currentTeam.data.role,
 });
 
 const mapDispatchToProps = {

@@ -93,19 +93,17 @@ class LeftBar extends Component {
                             </div>
                         </NavLink>
                     )}
-                    {isOwner === userId && (
-                        <NavLink
-                            activeClassName="active-link"
-                            onClick={switchMenu}
-                            to="/invoices"
-                            style={{ textDecoration: 'none' }}
-                        >
-                            <div className="navigation_links">
-                                <i className="invoices" />
-                                <div className="links_text">{v_invoices}</div>
-                            </div>
-                        </NavLink>
-                    )}
+                    <NavLink
+                        activeClassName="active-link"
+                        onClick={switchMenu}
+                        to="/invoices"
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <div className="navigation_links">
+                            <i className="invoices" />
+                            <div className="links_text">{v_invoices}</div>
+                        </div>
+                    </NavLink>
                 </div>
                 <div className="wrapper-position-add-team">
                     <TeamSwitcher isMobile={isMobile} />

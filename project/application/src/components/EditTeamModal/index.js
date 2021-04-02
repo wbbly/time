@@ -34,6 +34,16 @@ const materialTheme = createMuiTheme({
                 fontSize: '24px',
             },
         },
+        MuiButtonBase: {
+            root: {
+                padding: '3px !important',
+            },
+        },
+        MuiFormControlLabel: {
+            root: {
+                paddingLeft: '5px',
+            },
+        },
     },
 });
 
@@ -151,7 +161,7 @@ class EditTeamModal extends Component {
     }
 
     render() {
-        const { vocabulary } = this.props;
+        const { vocabulary, isTeamOwner } = this.props;
 
         const {
             v_name,
@@ -163,7 +173,6 @@ class EditTeamModal extends Component {
             v_delete_member,
             v_tags,
         } = vocabulary;
-
         return (
             <div className="edit_team_modal_wrapper">
                 <div className="edit_team_modal_data">
@@ -176,6 +185,7 @@ class EditTeamModal extends Component {
                                 this.email = input;
                             }}
                             className="edit_team_modal_input"
+                            disabled={true}
                         />
                     </div>
                     <div className="edit_team_modal_input_container">
@@ -204,6 +214,14 @@ class EditTeamModal extends Component {
                                     label="User"
                                     disabled={this.state.isOwner}
                                 />
+                                {isTeamOwner && (
+                                    <FormControlLabel
+                                        value={ROLES.ROLE_INVOICES_MANAGER}
+                                        control={<Radio color="primary" />}
+                                        label="Invoices manager"
+                                        disabled={this.state.isOwner}
+                                    />
+                                )}
                                 {this.state.isOwner && (
                                     <FormControlLabel
                                         value={ROLES.ROLE_OWNER}

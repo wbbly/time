@@ -4,6 +4,7 @@ import moment from 'moment';
 import { DateRangePicker } from 'react-date-range';
 import { enGB, ru, de, it, ua } from 'react-date-range/src/locale';
 import InputMask from 'react-input-mask';
+import axios from 'axios';
 
 import { inputRanges, staticRanges } from '../../pages/ReportsPage/ranges';
 import { useOutsideClick } from '../../services/hookHelpers';
@@ -80,6 +81,7 @@ const TimerSearchComponent = ({
     customLocale.options.weekStartsOn = firstDayOfWeek;
 
     const wrapperRef = useRef(null);
+    const abort = useRef(null);
     useOutsideClick(wrapperRef, () => setShowCallendar(false));
 
     const handleSearch = async () => {
@@ -99,6 +101,11 @@ const TimerSearchComponent = ({
     };
 
     const handleSelect = async ranges => {
+        if (abort.current) {
+            abort.current.cancel();
+        }
+        const CancelToken = axios.CancelToken;
+        abort.current = CancelToken.source();
         setSelectionRange(ranges.selection);
         setStartDateValue(moment(ranges.selection.startDate).format(dateFormat));
         setEndDateValue(moment(ranges.selection.endDate).format(dateFormat));
@@ -109,46 +116,36 @@ const TimerSearchComponent = ({
                     .utc()
                     .toISOString(),
                 endDateTime: moment(ranges.selection.endDate)
-                    .add(1, 'day')
+                    .endOf('day')
                     .utc()
                     .toISOString(),
             },
         });
-        await getTimeEntriesListAction();
+        await getTimeEntriesListAction(abort.current.token);
     };
 
-    const setStartDate = date => {
-        setStartDateValue(date);
-        let formattedDate = date.replace(/\D+/g, '');
-        if (formattedDate && formattedDate.length === 8 && moment(date, dateFormat)._isValid) {
-            let newDate = new Date(moment(date, dateFormat));
-            if (newDate < selectionRange.endDate) {
-                let timeStart = {
-                    selection: {
-                        ...selectionRange,
-                        startDate: newDate,
-                        endDate: selectionRange.endDate,
-                    },
-                };
-                handleSelect(timeStart);
-            }
-        }
-    };
+    const inputSelect = () => {
+        const startDateFormatted = startDateValue.replace(/\D+/g, '');
+        const endDateFormatted = endDateValue.replace(/\D+/g, '');
 
-    const setEndDate = date => {
-        setEndDateValue(date);
-        let formattedDate = date.replace(/\D+/g, '');
-        if (formattedDate && formattedDate.length === 8 && moment(date, dateFormat)._isValid) {
-            let newDate = new Date(moment(date, dateFormat));
-            if (newDate > selectionRange.startDate) {
-                let timeStart = {
+        if (
+            startDateFormatted &&
+            endDateFormatted &&
+            endDateFormatted.length === 8 &&
+            startDateFormatted.length === 8 &&
+            moment(startDateValue, dateFormat)._isValid &&
+            moment(endDateValue, dateFormat)._isValid
+        ) {
+            const newStartDate = new Date(moment(startDateValue, dateFormat));
+            const newEndDate = new Date(moment(endDateValue, dateFormat));
+            if (newStartDate <= newEndDate) {
+                handleSelect({
                     selection: {
                         ...selectionRange,
-                        endDate: newDate,
-                        startDate: selectionRange.startDate,
+                        startDate: newStartDate,
+                        endDate: newEndDate,
                     },
-                };
-                handleSelect(timeStart);
+                });
             }
         }
     };
@@ -184,18 +181,32 @@ const TimerSearchComponent = ({
                     <span onClick={() => (!showCallendar ? setShowCallendar(true) : null)}>
                         <InputMask
                             className="select_input"
-                            onChange={e => setStartDate(e.target.value)}
+                            onChange={e => setStartDateValue(e.target.value)}
                             mask={dateFormat.toLowerCase()}
                             formatChars={{ d: '[0-9]', m: '[0-9]', y: '[0-9]' }}
                             value={startDateValue}
+                            onKeyUp={e => {
+                                if (e.keyCode === 13) {
+                                    inputSelect();
+                                } else {
+                                    return;
+                                }
+                            }}
                         />
                         {'-'}
                         <InputMask
                             className="select_input"
-                            onChange={e => setEndDate(e.target.value)}
+                            onChange={e => setEndDateValue(e.target.value)}
                             mask={dateFormat.toLowerCase()}
                             formatChars={{ d: '[0-9]', m: '[0-9]', y: '[0-9]' }}
                             value={endDateValue}
+                            onKeyUp={e => {
+                                if (e.keyCode === 13) {
+                                    inputSelect();
+                                } else {
+                                    return;
+                                }
+                            }}
                         />
                     </span>
                     <i

@@ -42,6 +42,7 @@ export default {
     'ERROR.USER.CREATE_USER_FAILED': 'Beim Anlegen des Benutzers ist ein Fehler aufgetreten.',
     'ERROR.USER.UPDATE_USER_PERMISSIONS_DENIED': 'Sie haben keine Berechtigung, die Benutzerdaten zu aktualisieren.',
     'ERROR.USER.UPDATE_USER_FAILED': 'Beim Aktualisieren der Benutzerdaten ist ein Fehler aufgetreten.',
+    'ERROR.USER.UPDATE_USER_EMAIL_EXISTS': 'Diese Emailadresse existiert bereits.',
     'ERROR.USER.UPDATE_USER_ROLE_FAILED':
         'Sie habe nicht die notwendige Berechtigung, um die Rolle in Ihrem Team zu ändern.',
     'ERROR.USER.UPDATE_TEAM_OWNER_ROLE_FAILED':
@@ -161,6 +162,8 @@ export default {
     v_summary_report: 'General Report',
     v_total: 'Gesamt',
     v_export: 'Export',
+    v_detailed_export: 'Ausführlicher Bericht',
+    v_simple_export: 'Kurzbericht',
     v_user: 'Benutzer',
     v_select_all: 'Alles auswählen',
     v_select_none: 'Auswahl entfernen',
@@ -260,7 +263,10 @@ export default {
     v_subtotal: 'Zwischensum',
     v_enter_project: 'Text',
     v_pic_tax: 'MwSt',
+    v_payment_confirmation_window_confirm: 'Möchten Sie die Zahlung wirklich bestätigen?',
+    v_payment_confirmation_window_cancel: 'Möchten Sie die Zahlung wirklich stornieren?',
     v_invoice_summary: 'Rechnungszusammenfassung',
+    v_invoice_reference: 'Referenz',
     v_comments: 'Bemerkungen',
     v_select_currency: 'Währung Wählen',
     v_invoice_number: 'Rechnung Nr',
@@ -355,4 +361,7 @@ export default {
     v_add_discount: 'Fügen Sie einen Rabatt hinzu',
     v_discount: 'Rabatt',
     v_discount_subtotal: 'der Rechnungssumme',
+
+    v_page_access_denied: 'Sie haben nicht genügend Rechte, um diese Seite anzuzeigen',
+    v_page_access_request_owner: 'Bitten Sie den Teambesitzer, Ihnen Zugriff zu gewähren',
 };

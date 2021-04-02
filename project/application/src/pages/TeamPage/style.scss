@@ -30,6 +30,18 @@
     margin-bottom: 30px;
   }
 
+  .role_access_team_page {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    .team-role-access {
+      border: 1px solid rgba(156, 138, 138, 0.4);
+      &_select {
+        padding-left: 1rem;
+      }
+    }
+  }
+
   .team_page_data table {
     width: 100%;
     border-spacing: inherit;
@@ -52,9 +64,11 @@
       width: 17%;
     }
     &:nth-child(3) {
-      width: 26%;
+      width: 24%;
     }
-    &:nth-child(4),
+    &:nth-child(4) {
+      width: 16%;
+    }
     &:nth-child(5) {
       width: 14%;
     }
@@ -120,17 +134,29 @@
   }
 
   .team_page_data table .access_container {
-    width: 124px;
+    min-width: 145px;
     height: 30px;
-    background: #27ae60;
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0 5px;
+  }
+  .team_page_data table .team-access-role {
+    display: flex;
   }
 
-  .team_page_data table .access_container.red {
+  .access_container.ROLE_OWNER {
+    background-color: rgb(255, 174, 0);
+  }
+  .access_container.ROLE_MEMBER {
+    background-color: #27ae60;
+  }
+  .access_container.ROLE_ADMIN {
     background-color: red;
+  }
+  .access_container.ROLE_INVOICES_MANAGER {
+    background-color: #ff5e00;
   }
   .team_page_data table .team-access-container {
     min-width: 110px;
@@ -167,8 +193,8 @@
   background-position: top center;
   background-size: cover;
   left: 0;
-  bottom: 40px;
-  transform: scale(0);
+  top: 0;
+  transform: translateY(-88%) scale(0);
   transition: transform 0.4s ease;
 }
 
@@ -243,7 +269,7 @@
       flex-direction: column;
       position: relative;
       // height: 160px;
-      border-bottom: 1px solid rgba(156, 156, 156, 0.4);
+      border-bottom: 1px solid rgba(156, 138, 138, 0.4);
       margin-top: 15px;
     }
     // td:nth-child(4) {

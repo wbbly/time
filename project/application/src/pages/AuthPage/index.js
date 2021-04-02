@@ -66,13 +66,12 @@ class AuthPage extends Component {
                 <i className="page_title" />
                 <div className="authorisation_container">
                     <LoginForm submitForm={this.submitForm} />
-                    {AppConfig.socialAuth.active &&
-                        !isMobile && (
-                            <>
-                                <div className={'or'}>{v_or}</div>
-                                <FacebookButton setHaveToken={this.setHaveToken} login={this.login} />
-                            </>
-                        )}
+                    {AppConfig.socialAuth.active && (
+                        <>
+                            <div className={'or'}>{v_or}</div>
+                            <FacebookButton setHaveToken={this.setHaveToken} login={this.login} />
+                        </>
+                    )}
                     <button
                         type="button"
                         className="forgot_password_button"

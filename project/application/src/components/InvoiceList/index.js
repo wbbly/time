@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { deleteInvoiceById, editInvoicePaymentStatus } from '../../actions/InvoicesActions';
+import { deleteInvoiceById } from '../../actions/InvoicesActions';
 import { spaceAndFixNumber, fixNumberHundredths, internationalFormatNum } from '../../services/numberHelpers';
 import { downloadPDF } from '../../services/downloadPDF';
 import { downloadInvoicePDF } from '../../configAPI';
@@ -326,11 +326,12 @@ const InvoiceList = ({
     dateFormat,
     getInvoice,
     history,
-    editInvoicePaymentStatus,
     openCloseModal,
     copyInvoice,
     toggleSendInvoiceModal,
     showNotificationAction,
+    confirmationModalHandler,
+    setCurrentInvoice,
 }) => {
     // const [openMenu, setOpenMenu] = useState(false);
     const [showCopyModal, setShowCopyModal] = useState(false);
@@ -366,7 +367,6 @@ const InvoiceList = ({
             setShowNotif(false);
         }, 2000);
     };
-
     return (
         <Link
             to={`/invoices/view/${invoice.id}`}
@@ -403,7 +403,10 @@ const InvoiceList = ({
                     <CheckIcon
                         className={invoice.status}
                         vocabulary={vocabulary}
-                        onClick={e => editInvoicePaymentStatus(invoice.id, !invoice.payment_status)}
+                        onClick={e => {
+                            confirmationModalHandler();
+                            setCurrentInvoice(invoice);
+                        }}
                     />
                 </div>
             </div>
@@ -481,7 +484,10 @@ const InvoiceList = ({
                                 }
                             }}
                             confirmed={invoice.status === 'paid'}
-                            confirmPayment={() => editInvoicePaymentStatus(invoice.id, !invoice.payment_status)}
+                            confirmPayment={() => {
+                                confirmationModalHandler();
+                                setCurrentInvoice(invoice);
+                            }}
                         />
                     )}
                 </div>
@@ -509,7 +515,6 @@ const mapStateToProps = ({ invoicesReducer, userReducer, languageReducer }) => (
 
 const mapDispatchToProps = {
     deleteInvoiceById,
-    editInvoicePaymentStatus,
     showNotificationAction,
 };
 

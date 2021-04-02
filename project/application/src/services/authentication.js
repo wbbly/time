@@ -13,12 +13,14 @@ export const ROLES = {
     ROLE_ADMIN: 'ROLE_ADMIN',
     ROLE_MEMBER: 'ROLE_MEMBER',
     ROLE_OWNER: 'ROLE_OWNER',
+    ROLE_INVOICES_MANAGER: 'ROLE_INVOICES_MANAGER',
 };
 
 export const ROLES_TITLES = {
     [ROLES.ROLE_ADMIN]: 'Admin',
     [ROLES.ROLE_MEMBER]: 'Member',
     [ROLES.ROLE_OWNER]: 'Owner',
+    [ROLES.ROLE_INVOICES_MANAGER]: 'Invoices manager',
 };
 
 export const checkAppVersion = () => {
@@ -44,6 +46,10 @@ export function checkIsMemberByRole(role) {
 export function checkIsOwnerByRole(role) {
     return role === ROLES.ROLE_OWNER;
 }
+
+export const checkAccessByRole = (role, grantedRoles) => {
+    return grantedRoles.some(item => item === role);
+};
 
 export function logoutByUnauthorized() {
     closeSocket();

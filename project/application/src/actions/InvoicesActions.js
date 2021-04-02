@@ -120,6 +120,7 @@ export const addInvoice = (payload, isClone) => async dispatch => {
         if (!isClone) {
             requestBody = {
                 invoiceNumber: payload.invoiceNumber,
+                reference: payload.reference,
                 vendorId: payload.vendorId,
                 clientId: payload.recipient.id,
                 invoiceDate: payload.dateFrom.toISOString(),
@@ -142,6 +143,7 @@ export const addInvoice = (payload, isClone) => async dispatch => {
         } else {
             requestBody = {
                 invoiceNumber: '',
+                reference: payload.reference,
                 vendorId: payload.vendorId,
                 clientId: payload.recipient.id,
                 invoiceDate: payload.dateFrom,
@@ -258,6 +260,7 @@ export const updateInvoice = payload => async dispatch => {
     try {
         let requestBody = {
             invoiceNumber: payload.invoiceNumber,
+            reference: payload.reference,
             vendorId: payload.vendorId,
             clientId: payload.recipient.id,
             invoiceDate: payload.dateFrom,

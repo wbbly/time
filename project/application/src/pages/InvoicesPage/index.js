@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 // Actions
-import { getInvoicesList, addInvoice, changePage } from '../../actions/InvoicesActions';
+import { getInvoicesList, addInvoice, changePage, editInvoicePaymentStatus } from '../../actions/InvoicesActions';
 
 // Styles
 import './style.scss';
@@ -19,6 +19,7 @@ import TotalInvoiceCounersComponent from '../../components/InvoicePageComponents
 import blankInvoice from '../../images/invoice_picture.png';
 import PageHeader from '../../components/PageHeader/index';
 import SearchComponent from '../../components/SearchComponent';
+import { checkAccessByRole, ROLES } from '../../services/authentication';
 
 class InvoicesPage extends Component {
     state = {
@@ -26,6 +27,8 @@ class InvoicesPage extends Component {
         sendInvoiceModalData: null,
         copiedInvoice: false,
         searchValue: '',
+        confirmationWindowFlag: false,
+        currentInvoice: null,
     };
 
     componentDidMount() {
@@ -85,6 +88,7 @@ class InvoicesPage extends Component {
         newObject.projects = oldObject.projects;
         newObject.image = oldObject.logo;
         newObject.discount = oldObject.discount;
+        newObject.reference = oldObject.reference;
         return newObject;
     };
 
@@ -92,6 +96,24 @@ class InvoicesPage extends Component {
         const newInvoice = this.prepareBodyRequest(oldInvoice);
         this.props.addInvoice(newInvoice, true);
         this.setState({ copiedInvoice: true });
+    };
+
+    confirmationModalHandler = () => {
+        this.setState({ confirmationWindowFlag: !this.state.confirmationWindowFlag });
+    };
+
+    setCurrentInvoice = invoice => {
+        this.setState({ currentInvoice: invoice });
+    };
+
+    confirmPaymentHandler = () => {
+        this.props.editInvoicePaymentStatus(this.state.currentInvoice.id, !this.state.currentInvoice.payment_status);
+        this.cancelConfirmationHandler();
+    };
+
+    cancelConfirmationHandler = () => {
+        this.confirmationModalHandler();
+        this.setCurrentInvoice(null);
     };
 
     render() {
@@ -105,13 +127,46 @@ class InvoicesPage extends Component {
             isFetching,
             history,
             isInitialFetching,
+            userRole,
         } = this.props;
-        const { v_invoices, v_add_new_invoice } = vocabulary;
-        const { sendInvoiceModalData, searchValue } = this.state;
+        const {
+            v_invoices,
+            v_add_new_invoice,
+            v_confirm,
+            v_cancel,
+            v_payment_confirmation_window_confirm,
+            v_payment_confirmation_window_cancel,
+            v_page_access_denied,
+            v_page_access_request_owner,
+        } = vocabulary;
+        const { sendInvoiceModalData, searchValue, confirmationWindowFlag, currentInvoice } = this.state;
+
         return (
             <Loading flag={isInitialFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar disableTimeEntriesFetch>
-                    <div className="wrapper-invoices-page">
+                    <div
+                        className={classNames('wrapper-invoices-page', {
+                            'wrapper-invoices-page--blured': !checkAccessByRole(userRole, [
+                                ROLES.ROLE_OWNER,
+                                ROLES.ROLE_INVOICES_MANAGER,
+                            ]),
+                        })}
+                    >
+                        {confirmationWindowFlag && (
+                            <div className="confirmation-modal">
+                                <div>
+                                    <h2>
+                                        {currentInvoice.payment_status
+                                            ? v_payment_confirmation_window_cancel
+                                            : v_payment_confirmation_window_confirm}
+                                    </h2>
+                                    <div>
+                                        <button onClick={this.confirmPaymentHandler}>{v_confirm}</button>
+                                        <button onClick={this.confirmationModalHandler}>{v_cancel}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         <Loading flag={isFetching} mode="overlay" withLogo={false}>
                             <div
                                 className={classNames('invoices-page-top', {
@@ -119,17 +174,21 @@ class InvoicesPage extends Component {
                                 })}
                             >
                                 <PageHeader title={v_invoices}>
-                                    <div className="invoices-page-top__search-input">
-                                        <SearchComponent
-                                            value={searchValue}
-                                            setValue={this.setSearchValue}
-                                            handleReset={this.handleReset}
-                                            handleSearch={this.handleSearch}
-                                        />
-                                    </div>
-                                    <Link to="/invoices/create" className="header-wrapper__child-button">
-                                        {v_add_new_invoice}
-                                    </Link>
+                                    {checkAccessByRole(userRole, [ROLES.ROLE_OWNER, ROLES.ROLE_INVOICES_MANAGER]) && (
+                                        <>
+                                            <div className="invoices-page-top__search-input">
+                                                <SearchComponent
+                                                    value={searchValue}
+                                                    setValue={this.setSearchValue}
+                                                    handleReset={this.handleReset}
+                                                    handleSearch={this.handleSearch}
+                                                />
+                                            </div>
+                                            <Link to="/invoices/create" className="header-wrapper__child-button">
+                                                {v_add_new_invoice}
+                                            </Link>
+                                        </>
+                                    )}
                                 </PageHeader>
 
                                 {!!invoices.length && (
@@ -145,6 +204,8 @@ class InvoicesPage extends Component {
                                             invoices={invoices.slice(0, 4)}
                                             vocabulary={vocabulary}
                                             toggleSendInvoiceModal={this.toggleSendInvoiceModal}
+                                            confirmationModalHandler={this.confirmationModalHandler}
+                                            setCurrentInvoice={this.setCurrentInvoice}
                                         />
                                     </div>
                                 )}
@@ -164,6 +225,8 @@ class InvoicesPage extends Component {
                                             pageCount={pageCount}
                                             changePage={this.changePage}
                                             grandTotal={grandTotal}
+                                            confirmationModalHandler={this.confirmationModalHandler}
+                                            setCurrentInvoice={this.setCurrentInvoice}
                                         />
                                     </div>
                                 </div>
@@ -174,6 +237,16 @@ class InvoicesPage extends Component {
                                 )}
                         </Loading>
                     </div>
+                    {!checkAccessByRole(userRole, [ROLES.ROLE_OWNER, ROLES.ROLE_INVOICES_MANAGER]) && (
+                        <div className="invoices-page__access-blocked">
+                            <div className="invoices-page__access-blocked-text-block">
+                                <span className="invoices-page__access-blocked-text">{v_page_access_denied}</span>
+                                <span className="invoices-page__access-blocked-text">
+                                    {v_page_access_request_owner}
+                                </span>
+                            </div>
+                        </div>
+                    )}
                 </CustomScrollbar>
                 {sendInvoiceModalData && (
                     <SendInvoiceModal
@@ -187,7 +260,7 @@ class InvoicesPage extends Component {
     }
 }
 
-const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
+const mapStateToProps = ({ invoicesReducer, userReducer, teamReducer }) => ({
     invoices: invoicesReducer.invoices,
     page: invoicesReducer.page,
     limit: invoicesReducer.limit,
@@ -198,12 +271,14 @@ const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
     senderId: invoicesReducer.senderId,
     defaultUserSender: userReducer.user,
     copiedInvoiceId: invoicesReducer.copiedInvoiceId,
+    userRole: teamReducer.currentTeam.data.role,
 });
 
 const mapDispatchToProps = {
     getInvoicesList,
     addInvoice,
     changePage,
+    editInvoicePaymentStatus,
 };
 
 export default withRouter(

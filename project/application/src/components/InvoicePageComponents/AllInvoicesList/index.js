@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { deleteInvoiceById, editInvoicePaymentStatus } from '../../../actions/InvoicesActions';
+import { deleteInvoiceById } from '../../../actions/InvoicesActions';
 import DeleteInvoiceModal from '../../../components/DeleteInvoiceModal/index';
 import InvoiceList from '../../InvoiceList/index';
 import CustomPagination from '../../CustomPagination/index';
@@ -249,6 +249,8 @@ const AllInvoicesList = ({
     pageCount,
     changePage,
     grandTotal,
+    confirmationModalHandler,
+    setCurrentInvoice,
 }) => {
     const {
         v_draft,
@@ -316,6 +318,8 @@ const AllInvoicesList = ({
                         copyInvoice={copyInvoice}
                         history={history}
                         key={id}
+                        confirmationModalHandler={confirmationModalHandler}
+                        setCurrentInvoice={setCurrentInvoice}
                     />
                 );
             })}
@@ -352,7 +356,6 @@ const mapStateToProps = ({ invoicesReducer, userReducer }) => ({});
 
 const mapDispatchToProps = {
     deleteInvoiceById,
-    editInvoicePaymentStatus,
 };
 
 export default connect(

@@ -93,7 +93,7 @@
     &__icon-button {
       cursor: pointer;
     }
-    &__icon-button.icon-fill path{
+    &__icon-button.icon-fill path {
       stroke: white;
       fill: none;
     }
@@ -105,12 +105,11 @@
       path {
         stroke: gray;
       }
-    } 
+    }
     &__icon-button.icon-fill:hover {
       path {
         stroke: #27ae60;
       }
-
     }
 
     &__calendar-select {
@@ -167,6 +166,16 @@
             padding-left: 30px;
           }
         }
+        .invoice-reference {
+          position: relative;
+          .invoices-page-detailed__input {
+            padding: 16px;
+            margin-top: 5px;
+            resize: none;
+            outline: none;
+            height: 48px;
+          }
+        }
         .invoice-number:before {
           content: "#";
           position: absolute;
@@ -175,17 +184,23 @@
           left: 23px;
         }
         .invoices-page-detailed__input {
+          color: #ffffff;
+          -webkit-text-fill-color: #ffffff;
           padding: 16px;
+          opacity: 1;
         }
         &__second-input {
           margin-top: 5px;
         }
       }
-
-      .second-input-wrapper {
-        width: 50%;
-        margin-left: 20px;
+      .input-wrapper:first-child {
+        width: calc(50% - 20px);
       }
+
+      // .second-input-wrapper {
+      //   width: 50%;
+      //   margin-left: 20px;
+      // }
 
       label {
         font-weight: 600;
@@ -211,12 +226,22 @@
           margin-top: 10px;
           .input-wrapper {
             width: 100%;
+            margin-bottom: 5px;
+            &__second-input {
+              margin: 0;
+            }
+            & div {
+              margin-bottom: 5px;
+            }
           }
-          .second-input-wrapper {
-            margin-left: 0;
-            width: 100%;
-            margin-top: 5px;
+          .input-wrapper:last-child {
+            flex-direction: column-reverse;
           }
+          // .second-input-wrapper {
+          //   margin-left: 0;
+          //   width: 100%;
+          //   margin-top: 5px;
+          // }
         }
       }
     }
