@@ -524,11 +524,15 @@ class ReportsSearchBar extends Component {
                             <div>
                                 {v_user}
                                 :&nbsp;
-                                {this.state.userDataSelected.map((item, index) => (
-                                    <span key={item.username + index}>
-                                        {index === 0 ? item.username : `, ${item.username}`}
-                                    </span>
-                                ))}
+                                {this.state.userDataSelected.length === 0
+                                    ? v_select_none
+                                    : this.state.userDataSelected.length === this.state.userDataEtalon.length
+                                        ? v_select_all
+                                        : this.state.userDataSelected.map((item, index) => (
+                                              <span key={item.username + index}>
+                                                  {index === 0 ? item.username : `, ${item.username}`}
+                                              </span>
+                                          ))}
                             </div>
                             <i className={`arrow_down ${this.state.toggleSelectUser ? 'arrow_up' : ''}`} />
                         </div>
@@ -584,9 +588,15 @@ class ReportsSearchBar extends Component {
                             <div>
                                 {v_project}
                                 :&nbsp;
-                                {this.state.projectDataSelected.map((item, index) => (
-                                    <span key={item.name + index}>{index === 0 ? item.name : `, ${item.name}`}</span>
-                                ))}
+                                {this.state.projectDataSelected.length === 0
+                                    ? v_select_none
+                                    : this.state.projectDataSelected.length === this.state.projectDataEtalon.length
+                                        ? v_select_all
+                                        : this.state.projectDataSelected.map((item, index) => (
+                                              <span key={item.name + index}>
+                                                  {index === 0 ? item.name : `, ${item.name}`}
+                                              </span>
+                                          ))}
                             </div>
                             <i className={`arrow_down ${this.state.toggleSelectProject ? 'arrow_up' : ''}`} />
                         </div>
@@ -651,11 +661,15 @@ class ReportsSearchBar extends Component {
                             <div>
                                 {v_client}
                                 :&nbsp;
-                                {this.state.clientDataSelected.map((item, index) => (
-                                    <span key={item.company_name + index}>
-                                        {index === 0 ? item.company_name : `, ${item.company_name}`}
-                                    </span>
-                                ))}
+                                {this.state.clientDataSelected.length === 0
+                                    ? v_select_none
+                                    : this.state.clientDataSelected.length === this.state.clientDataEtalon.length
+                                        ? v_select_all
+                                        : this.state.clientDataSelected.map((item, index) => (
+                                              <span key={item.company_name + index}>
+                                                  {index === 0 ? item.company_name : `, ${item.company_name}`}
+                                              </span>
+                                          ))}
                             </div>
                             <i className={`arrow_down ${this.state.toggleSelectClient ? 'arrow_up' : ''}`} />
                         </div>
@@ -710,7 +724,6 @@ class ReportsSearchBar extends Component {
                         </div>
                     )}
                 </div>
-
                 <div className="reports_search_bar_button_container">
                     <button className="reports_search_bar_button" onClick={_ => this.applySearch()}>
                         {v_apply}

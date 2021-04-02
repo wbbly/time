@@ -100,8 +100,8 @@ class CreateProjectModal extends Component {
                 if (err instanceof Response) {
                     err.text().then(error => {
                         const errorParsed = JSON.parse(error);
-                        if (Array.isArray(error)) {
-                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(errorParsed));
+                        if (Array.isArray(errorParsed)) {
+                            const errorMessages = responseErrorsHandling.getErrorMessages(errorParsed);
                             if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
                                 showNotificationAction({ text: v_a_project_existed, type: 'warning' });
                             } else {

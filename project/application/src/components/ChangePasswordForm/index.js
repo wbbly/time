@@ -81,7 +81,7 @@ class ChangePasswordForm extends Component {
                                     onBlur: formik.handleBlur,
                                     value: formik.values.password,
                                     placeholder: `${v_add_new_password}...`,
-                                    autocomplete: 'off',
+                                    // autocomplete: 'off',
                                 }}
                                 errorMsg={formik.errors.password}
                                 label={v_new_password}
@@ -96,7 +96,7 @@ class ChangePasswordForm extends Component {
                                     onBlur: formik.handleBlur,
                                     value: formik.values.confirmPassword,
                                     placeholder: `${v_add_confirm_password}...`,
-                                    autocomplete: 'off',
+                                    // autocomplete: 'off',
                                 }}
                                 errorMsg={formik.errors.confirmPassword}
                                 label={v_cofirm_password}

@@ -41,7 +41,7 @@ class Input extends Component {
                                 placeholder={label}
                                 {...rest}
                                 id={id}
-                                type="text"
+                                type={type}
                                 className={typeInput === 'password' ? 'hidden-password-input' : ''}
                             />
                         )}

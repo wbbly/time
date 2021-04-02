@@ -109,12 +109,8 @@ class ReportsByProjectSearchBar extends Component {
         }
     }
 
-    getCheckedUsers(name) {
-        if (name && JSON.stringify(this.state.userDataSelected).indexOf(name) > -1) {
-            return true;
-        } else {
-            return false;
-        }
+    getCheckedUsers(email) {
+        return this.state.userDataSelected.some(item => item.email === email);
     }
 
     toggleUser(user) {
@@ -144,37 +140,21 @@ class ReportsByProjectSearchBar extends Component {
         this.setState({ userDataSelected: [] });
     }
 
-    componentDidMount() {
-        apiCall(AppConfig.apiURL + `team/current/detailed-data`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            result => {
-                const teamUsers = result.data.team[0].team_users;
-                const users = teamUsers.map(teamUser => {
-                    return { ...teamUser.user[0], is_active: teamUser.is_active };
-                });
-                let currentUsers = users.filter(user => this.props.userEmailsList.find(email => user.email === email));
-                this.setState({ userDataEtalon: currentUsers });
-                currentUsers.forEach(currentUser => this.toggleUser(currentUser));
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => console.log(errorMessage));
-                } else {
-                    console.log(err);
-                }
-            }
-        );
-    }
-
     componentDidUpdate(prevProps, prevState) {
         if (prevState.userDataEtalon !== this.state.userDataEtalon) {
             let userDataEtalonSorted = this.state.userDataEtalon;
             this.setState({
                 userDataEtalon: userDataEtalonSorted.sort((a, b) => this.sortEtalonUser(a, b)),
+            });
+        }
+        if (
+            prevProps.reportUsers !== this.props.reportUsers &&
+            !!this.props.reportUsers.length &&
+            !prevProps.reportUsers.length
+        ) {
+            this.setState({
+                userDataEtalon: this.props.reportUsers,
+                userDataSelected: this.props.reportUsers,
             });
         }
     }
@@ -215,11 +195,15 @@ class ReportsByProjectSearchBar extends Component {
                             <div>
                                 {v_user}
                                 :&nbsp;
-                                {this.state.userDataSelected.map((item, index) => (
-                                    <span key={item.username + index}>
-                                        {index === 0 ? item.username : `, ${item.username}`}
-                                    </span>
-                                ))}
+                                {this.state.userDataSelected.length === 0
+                                    ? v_select_none
+                                    : this.state.userDataSelected.length === this.state.userDataEtalon.length
+                                        ? v_select_all
+                                        : this.state.userDataSelected.map((item, index) => (
+                                              <span key={item.username + index}>
+                                                  {index === 0 ? item.username : `, ${item.username}`}
+                                              </span>
+                                          ))}
                             </div>
                             <i className={`arrow_down ${this.state.toggleSelectUser ? 'arrow_up' : ''}`} />
                         </div>

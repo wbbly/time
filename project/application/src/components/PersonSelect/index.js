@@ -183,6 +183,7 @@ class PersonSelect extends Component {
             isErrorSender,
             userSender,
             selectedRecipient,
+            withAddLink,
         } = this.props;
         const { v_find, v_add_new_client, v_add_client } = vocabulary;
         const { isOpen, personsList, inputValue, openModal } = this.state;
@@ -279,7 +280,12 @@ class PersonSelect extends Component {
                                         );
                                     })}
                             </div>
-                            <div className="person-select__dropdown-btn" onClick={() => this.openModal()}>
+                            <div
+                                className={classNames('person-select__dropdown-btn', {
+                                    'person-select__dropdown-btn--disabled': !withAddLink,
+                                })}
+                                onClick={() => (withAddLink ? this.openModal() : null)}
+                            >
                                 <div>{v_add_new_client}</div>
                             </div>
                         </div>

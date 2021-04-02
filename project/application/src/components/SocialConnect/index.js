@@ -114,6 +114,7 @@ class SocialConnect extends Component {
                                         textButton={textButton}
                                     />
                                 )}
+                                disableMobileRedirect={true}
                             />
                         );
                     }

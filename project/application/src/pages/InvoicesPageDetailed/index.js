@@ -50,6 +50,7 @@ import ImagePicker from '../../components/ImagePicker';
 import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoiceModal';
 import DeleteInvoiceModal from '../../components/DeleteInvoiceModal/index';
 import DiscountInvoiceModal from '../../components/DiscountInvoiceModal';
+import { checkAccessByRole, ROLES } from '../../services/authentication';
 
 //todo move to queries.js if needed
 export const calculateTaxSum = ({ amount, rate, tax, hours }) => (((amount || hours) * rate) / 100) * tax;
@@ -79,6 +80,7 @@ class InvoicesPageDetailed extends Component {
         invoice: {
             vendorId: this.props.defaultUserSender.id,
             invoiceNumber: '',
+            reference: '',
             id: ``,
             number: '',
             dateFrom: new Date(),
@@ -115,6 +117,7 @@ class InvoicesPageDetailed extends Component {
         linkCopied: false,
         discountModalIsOpen: false,
         copiedInvoice: false,
+        resetDetailedInvoice: false,
     };
 
     copyLinkRef = React.createRef();
@@ -147,10 +150,12 @@ class InvoicesPageDetailed extends Component {
             order_by: 'company_name',
             sort: 'asc',
         });
-        await setCopiedInvoiceId('');
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if (prevState.resetDetailedInvoice !== this.state.resetDetailedInvoice && this.state.resetDetailedInvoice) {
+            this.setState({ ...this.state, resetDetailedInvoice: false });
+        }
         if (
             (this.props.invoice && !_.isEqual(this.props.invoice, prevProps.invoice)) ||
             (this.props.invoice && !_.isEqual(prevProps.match.params, this.props.match.params))
@@ -168,12 +173,14 @@ class InvoicesPageDetailed extends Component {
                 comment,
                 discount,
                 invoice_vendor,
+                reference,
             } = this.props.invoice;
             this.setState({
                 invoice: {
                     id,
                     vendorId: this.props.defaultUserSender.id,
                     invoiceNumber: invoice_number,
+                    reference: reference,
                     dateFrom: invoice_date,
                     dateDue: due_date,
                     timezoneOffset: timezone_offset,
@@ -192,8 +199,13 @@ class InvoicesPageDetailed extends Component {
             this.setState({ copiedInvoice: false }, () => {
                 this.props.history.replace(`/invoices/update/${this.props.copiedInvoiceId}`);
                 this.props.getInvoice(this.props.copiedInvoiceId);
-                this.props.setCopiedInvoiceId('');
             });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.props.copiedInvoiceId) {
+            this.handleDeleteInvoice(false);
         }
     }
 
@@ -366,6 +378,7 @@ class InvoicesPageDetailed extends Component {
                     showNotificationAction({ text: this.props.sameInvoiceNumberErr, type: 'error' });
                 }
             } else {
+                this.props.setCopiedInvoiceId('');
                 history.push(`/invoices/`);
             }
         } else if (this.isCreateMode) {
@@ -385,12 +398,17 @@ class InvoicesPageDetailed extends Component {
         }
     };
 
-    handleDeleteInvoice = async () => {
+    handleDeleteInvoice = async (toInvoices = true) => {
         const { invoice } = this.state;
         const { deleteInvoiceById, history } = this.props;
         if (invoice.id) {
             await deleteInvoiceById(invoice.id);
-            history.push('/invoices');
+            if (this.props.copiedInvoiceId) {
+                this.props.setCopiedInvoiceId('');
+            }
+            if (toInvoices) {
+                history.push('/invoices');
+            }
         }
     };
 
@@ -431,12 +449,14 @@ class InvoicesPageDetailed extends Component {
                 comment,
                 discount,
                 invoice_vendor,
+                reference,
             } = this.props.invoice;
             this.setState({
                 invoice: {
                     id,
                     vendorId: this.props.defaultUserSender.id,
                     invoiceNumber: invoice_number,
+                    reference: reference,
                     dateFrom: invoice_date,
                     dateDue: due_date,
                     timezoneOffset: timezone_offset,
@@ -448,7 +468,17 @@ class InvoicesPageDetailed extends Component {
                     comment,
                     discount,
                 },
+                errors: {
+                    sender: false,
+                    recipient: false,
+                    projects: false,
+                    hours: false,
+                },
+                resetDetailedInvoice: true,
             });
+        }
+        if (this.props.copiedInvoiceId) {
+            this.handleDeleteInvoice(false);
         }
         this.props.history.goBack();
     };
@@ -482,7 +512,14 @@ class InvoicesPageDetailed extends Component {
     };
 
     render() {
-        const { vocabulary, currentTeamDetailedData, clientsList, isFetching, showNotificationAction } = this.props;
+        const {
+            vocabulary,
+            currentTeamDetailedData,
+            clientsList,
+            isFetching,
+            showNotificationAction,
+            userRole,
+        } = this.props;
         const {
             v_invoice,
             v_tax,
@@ -509,9 +546,16 @@ class InvoicesPageDetailed extends Component {
             v_copy_link,
             v_add_a_discount,
             v_discount,
+            v_invoice_reference,
         } = vocabulary;
-        const { isInitialFetching, discountModalIsOpen, invoice, errors, linkCopied } = this.state;
-
+        const {
+            isInitialFetching,
+            discountModalIsOpen,
+            invoice,
+            errors,
+            linkCopied,
+            resetDetailedInvoice,
+        } = this.state;
         return (
             <Loading flag={isInitialFetching || isFetching} mode="parentSize" withLogo={false}>
                 <CustomScrollbar disableTimeEntriesFetch>
@@ -561,11 +605,37 @@ class InvoicesPageDetailed extends Component {
                                                                 onChange={e =>
                                                                     this.handleInputChange('invoiceNumber', e)
                                                                 }
-                                                                className="invoices-page-detailed__input "
+                                                                className="invoices-page-detailed__input"
                                                                 type="text"
-                                                                maxLength="15"
                                                                 placeholder={v_enter_number}
                                                                 disabled={this.isViewMode}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="input-wrapper__second-input">
+                                                        <label>{`${v_invoice_date}:`}</label>
+                                                        <div className="invoices-page-detailed__calendar-select">
+                                                            <CalendarSelect
+                                                                onChangeDate={date =>
+                                                                    this.handleDateChange('dateFrom', date)
+                                                                }
+                                                                date={invoice.dateFrom}
+                                                                disabled={this.isViewMode}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="input-wrapper">
+                                                    <div>
+                                                        <label>{`${v_invoice_reference}:`}</label>
+                                                        <div className="invoice-reference">
+                                                            <textarea
+                                                                value={invoice.reference}
+                                                                onChange={e => this.handleInputChange('reference', e)}
+                                                                className="invoices-page-detailed__input"
+                                                                type="text"
+                                                                disabled={this.isViewMode}
+                                                                maxLength={400}
                                                             />
                                                         </div>
                                                     </div>
@@ -580,18 +650,6 @@ class InvoicesPageDetailed extends Component {
                                                                 disabled={this.isViewMode}
                                                             />
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div className="second-input-wrapper">
-                                                    <label>{`${v_invoice_date}:`}</label>
-                                                    <div className="invoices-page-detailed__calendar-select">
-                                                        <CalendarSelect
-                                                            onChangeDate={date =>
-                                                                this.handleDateChange('dateFrom', date)
-                                                            }
-                                                            date={invoice.dateFrom}
-                                                            disabled={this.isViewMode}
-                                                        />
                                                     </div>
                                                 </div>
                                             </div>
@@ -636,13 +694,14 @@ class InvoicesPageDetailed extends Component {
                                                 placeholder={v_add_client}
                                                 disabled={this.isViewMode}
                                                 isError={errors.recipient}
-                                                withAddLink
+                                                withAddLink={checkAccessByRole(userRole, [ROLES.ROLE_OWNER])}
                                             />
                                         </div>
                                     </div>
                                 </div>
 
                                 <DetailedInvoiceProjectsTable
+                                    reset={resetDetailedInvoice}
                                     mode={this.props.match.params.pageType}
                                     vocabulary={vocabulary}
                                     projects={invoice.projects}
@@ -971,6 +1030,7 @@ const mapStateToProps = ({ teamReducer, clientsReducer, invoicesReducer, userRed
     defaultUserSender: userReducer.user,
     sameInvoiceNumberErr: invoicesReducer.error,
     copiedInvoiceId: invoicesReducer.copiedInvoiceId,
+    userRole: teamReducer.currentTeam.data.role,
 });
 
 const mapDispatchToProps = {

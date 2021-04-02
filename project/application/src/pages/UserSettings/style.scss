@@ -94,6 +94,7 @@
     color: #c9c9c9;
     line-height: 19px;
     font-family: "Open Sans", sans-serif;
+    cursor: default;
   }
 
   .header_user_setting {
@@ -153,6 +154,7 @@
     .fakecredentials {
       opacity: 0;
       position: absolute;
+      top: -100%;
     }
   }
 
@@ -183,6 +185,7 @@
     line-height: 25px;
     color: #c9c9c9;
     margin-bottom: 3px;
+    cursor: default;
   }
 
   .body_user_setting .input_subtitle {
@@ -192,6 +195,7 @@
     line-height: 25px;
     color: #c9c9c9;
     margin-bottom: 3px;
+    cursor: text;
 
     a {
       color: #d9d9d9;
@@ -406,6 +410,7 @@
     font-family: "Open Sans", sans-serif;
     line-height: 24px;
     vertical-align: middle;
+    cursor: default;
   }
   &__technology-info {
     display: inline-block;

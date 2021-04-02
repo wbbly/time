@@ -3,6 +3,9 @@ import { getClientsList, setClient, editClient, deleteClient } from '../configAP
 export const GET_CLIENTS_REQUEST = 'GET_CLIENTS_REQUEST';
 export const GET_CLIENTS_REQUEST_SUCCESS = 'GET_CLIENTS_REQUEST_SUCCESS';
 export const GET_CLIENTS_REQUEST_ERROR = 'GET_CLIENTS_REQUEST_ERROR';
+export const CHANGE_CLIENTS_REQUEST = 'CHANGE_CLIENTS_REQUEST';
+export const CHANGE_CLIENTS_SUCCESS = 'CHANGE_CLIENTS_SUCCESS';
+export const CHANGE_CLIENTS_ERROR = 'CHANGE_CLIENTS_ERROR';
 
 const getClientsRequest = () => ({
     type: GET_CLIENTS_REQUEST,
@@ -13,6 +16,17 @@ const getClientsRequestSuccess = payload => ({
 });
 const getClientsRequestError = payload => ({
     type: GET_CLIENTS_REQUEST_ERROR,
+    payload,
+});
+const changeClientsRequest = () => ({
+    type: CHANGE_CLIENTS_REQUEST,
+});
+const changeClientsSuccess = payload => ({
+    type: CHANGE_CLIENTS_SUCCESS,
+    payload,
+});
+const changeClientsError = payload => ({
+    type: CHANGE_CLIENTS_ERROR,
     payload,
 });
 
@@ -39,11 +53,16 @@ const fillFormDataWithObject = (formData, obj) => {
     }
     return formData;
 };
-export const setClientAction = (client, logoFile) => async dispatch => {
+export const setClientAction = (
+    client,
+    logoFile,
+    params = { order_by: 'company_name', sort: 'asc' }
+) => async dispatch => {
+    dispatch(changeClientsRequest());
     let formData = logoFile;
     try {
         let requestBody = {
-            name: client.name,
+            name: client.name || client.username,
             language: client.language,
             country: client.country,
             city: client.city,
@@ -56,14 +75,21 @@ export const setClientAction = (client, logoFile) => async dispatch => {
         if (formData instanceof FormData) {
             requestBody = fillFormDataWithObject(formData, requestBody);
         }
-        const { data } = await setClient(requestBody);
-        dispatch(getClientsRequestSuccess(data.data.client));
+        await setClient(requestBody);
+        const { data } = await getClientsList(params);
+        dispatch(changeClientsSuccess(data.data.client));
         return data;
     } catch (error) {
-        dispatch(getClientsRequestError(error));
+        dispatch(changeClientsError(error));
     }
 };
-export const editClientThunk = (client, id, logoFile) => async dispatch => {
+export const editClientThunk = (
+    client,
+    id,
+    logoFile,
+    params = { order_by: 'company_name', sort: 'asc' }
+) => async dispatch => {
+    dispatch(changeClientsRequest());
     let formData = logoFile;
     try {
         let requestBody = {
@@ -82,18 +108,20 @@ export const editClientThunk = (client, id, logoFile) => async dispatch => {
             requestBody = fillFormDataWithObject(formData, requestBody);
         }
 
-        const { data } = await editClient(requestBody, id);
-
-        dispatch(getClientsRequestSuccess(data.data.client));
+        await editClient(requestBody, id);
+        const { data } = await getClientsList(params);
+        dispatch(changeClientsSuccess(data.data.client));
     } catch (error) {
-        dispatch(getClientsRequestError(error));
+        dispatch(changeClientsError(error));
     }
 };
-export const deleteClientThunk = id => async dispatch => {
+export const deleteClientThunk = (id, params = { order_by: 'company_name', sort: 'asc' }) => async dispatch => {
+    dispatch(changeClientsRequest());
     try {
-        const data = await deleteClient(id);
-        dispatch(getClientsRequestSuccess(data.data.data.client));
+        await deleteClient(id);
+        const { data } = await getClientsList(params);
+        dispatch(changeClientsSuccess(data.data.client));
     } catch (error) {
-        dispatch(getClientsRequestError(error));
+        dispatch(changeClientsError(error));
     }
 };

@@ -86,6 +86,9 @@ class ReportsPage extends Component {
         // focusedRange: [0, 0],
     };
 
+    abortData = null;
+    abortList = null;
+
     lineChartOption = durationTimeFormat => ({
         scales: {
             xAxes: [
@@ -246,6 +249,8 @@ class ReportsPage extends Component {
         } = this.props;
         const {
             v_summary_report,
+            v_detailed_export,
+            v_simple_export,
             v_total,
             v_export,
             v_today,
@@ -272,7 +277,8 @@ class ReportsPage extends Component {
                         'wrapper_reports_page--mobile': isMobile,
                     })}
                 >
-                    {(isFetchingProjects || isFetchingList) && <Spinner mode={'overlay'} withLogo={false} />}
+                    {/* {(isFetchingProjects || isFetchingList) && <Spinner mode={'overlay'} withLogo={false} />} */}
+
                     <div className="data_container_reports_page">
                         <PageHeader title={v_summary_report}>
                             <div className="selects_container" ref={div => (this.datePickerSelect = div)}>
@@ -357,13 +363,19 @@ class ReportsPage extends Component {
                                 )}
                             </div>
                         </PageHeader>
+
                         <div
                             className="content_wrapper"
                             style={this.props.projectsArr.length > 0 ? { paddingBottom: '150px' } : {}}
                         >
+                            {(isFetchingProjects || isFetchingList) && <Spinner mode={'overlay'} withLogo={false} />}
                             {(checkIsAdminByRole(currentTeam.data.role) ||
                                 checkIsOwnerByRole(currentTeam.data.role)) && (
                                 <ReportsSearchBar
+                                    adminOrOwner={
+                                        checkIsAdminByRole(currentTeam.data.role) ||
+                                        checkIsOwnerByRole(currentTeam.data.role)
+                                    }
                                     applySearch={e => this.applySearch()}
                                     inputProjectData={this.props.inputProjectData}
                                     inputUserData={this.props.inputUserData}
@@ -371,11 +383,14 @@ class ReportsPage extends Component {
                                     inputClientData={this.props.clientsList}
                                 />
                             )}
+
                             {this.props.projectsArr.length > 0 ? (
                                 <UnitedReportsComponents
                                     toggleBar={this.state.toggleBar}
                                     toggleChar={this.state.toggleChar}
                                     v_total={v_total}
+                                    v_detailed_export={v_detailed_export}
+                                    v_simple_export={v_simple_export}
                                     totalUpChartTime={this.state.totalUpChartTime}
                                     getTimeDurationByGivenTimestamp={getTimeDurationByGivenTimestamp}
                                     durationTimeFormat={durationTimeFormat}
@@ -600,7 +615,7 @@ class ReportsPage extends Component {
         }
     }
 
-    export() {
+    export(detailed) {
         const { user } = this.props;
         const { timezoneOffset } = user;
 
@@ -616,7 +631,7 @@ class ReportsPage extends Component {
                 : '';
         apiCall(
             AppConfig.apiURL +
-                `report/export?timezoneOffset=${timezoneOffset}&startDate=${convertDateToISOString(
+                `report/export?detailed=${detailed}&timezoneOffset=${timezoneOffset}&startDate=${convertDateToISOString(
                     dateFrom
                 )}&endDate=${convertDateToShiftedISOString(dateTo, 24 * 60 * 60 * 1000)}${
                     inputUserData ? `&${inputUserData}` : ''
@@ -657,11 +672,25 @@ class ReportsPage extends Component {
         dateFrom = this.getYear(this.state.selectionRange.startDate),
         dateTo = this.getYear(this.state.selectionRange.endDate)
     ) {
+        if (this.abortData) this.abortData.abort();
+        if (this.abortList) this.abortList.abort();
+        this.abortData = new AbortController();
+        this.abortList = new AbortController();
+
         this.setState({ isFetchingProjects: true, isFetchingList: true });
-        let inputUserData =
-            !!this.props.inputUserData && !!this.props.inputUserData.length
-                ? getParametersString('userEmails', this.props.inputUserData)
-                : '';
+        let inputUserData;
+        if (
+            !checkIsAdminByRole(this.props.currentTeam.data.role) &&
+            !checkIsOwnerByRole(this.props.currentTeam.data.role)
+        ) {
+            inputUserData = getParametersString('userEmails', [this.props.user.email]);
+        } else {
+            inputUserData =
+                !!this.props.inputUserData && !!this.props.inputUserData.length
+                    ? getParametersString('userEmails', this.props.inputUserData)
+                    : '';
+        }
+
         let setProjectNames =
             !!this.props.inputProjectData && !!this.props.inputProjectData.length
                 ? getParametersString('projectNames', this.props.inputProjectData)
@@ -678,13 +707,13 @@ class ReportsPage extends Component {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                signal: this.abortData.signal,
             }
         ).then(
             result => {
                 let data = result.data;
                 const { project_v2: projectV2 } = data;
                 this.setState({ projectsData: projectV2 });
-
                 let dataToGraph = this.getArrOfProjectsData(data);
                 this.props.reportsPageAction('SET_PROJECTS', { data: dataToGraph.statsByProjects });
                 let statsByUserProjects = this.getArrOfUserProjectsData(data);
@@ -694,7 +723,8 @@ class ReportsPage extends Component {
                 this.setState({ toggleChar: true, isInitialFetching: false, isFetchingProjects: false });
             },
             err => {
-                this.setState({ isInitialFetching: false, isFetchingProjects: false });
+                err.code !== DOMException.ABORT_ERR &&
+                    this.setState({ isInitialFetching: false, isFetchingProjects: false });
                 if (err instanceof Response) {
                     err.text().then(errorMessage => console.log(errorMessage));
                 } else {
@@ -714,6 +744,7 @@ class ReportsPage extends Component {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                signal: this.abortList.signal,
             }
         ).then(
             result => {
@@ -739,7 +770,7 @@ class ReportsPage extends Component {
                 } else {
                     console.log(err);
                 }
-                this.setState({ isFetchingList: false });
+                err.code !== DOMException.ABORT_ERR && this.setState({ isFetchingList: false });
             }
         );
     }

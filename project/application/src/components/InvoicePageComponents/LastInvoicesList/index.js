@@ -1,10 +1,11 @@
 import React from 'react';
+// { useState }
+
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { editInvoicePaymentStatus } from '../../../actions/InvoicesActions';
 import { spaceAndFixNumber, fixNumberHundredths, internationalFormatNum } from '../../../services/numberHelpers';
 
 // Styles
@@ -22,6 +23,8 @@ const LastInvoicesList = ({
     editInvoicePaymentStatus,
     dateFormat,
     invoicesNumber,
+    confirmationModalHandler,
+    setCurrentInvoice,
 }) => {
     const { v_invoice, v_total, v_confirm_payment, v_send_payment } = vocabulary;
 
@@ -63,7 +66,8 @@ const LastInvoicesList = ({
                                     <button
                                         onClick={e => {
                                             prevent(e);
-                                            editInvoicePaymentStatus(invoice.id, !invoice.payment_status);
+                                            setCurrentInvoice(invoice);
+                                            confirmationModalHandler();
                                         }}
                                         className="last-invoices-list-item__confirm-button"
                                     >
@@ -100,11 +104,4 @@ const mapStateToProps = ({ invoicesReducer, userReducer }) => ({
     dateFormat: userReducer.dateFormat,
 });
 
-const mapDispatchToProps = {
-    editInvoicePaymentStatus,
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(LastInvoicesList);
+export default connect(mapStateToProps)(LastInvoicesList);

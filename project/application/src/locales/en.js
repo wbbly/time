@@ -39,6 +39,7 @@ export default {
     'ERROR.USER.CREATE_USER_FAILED': 'An error occurred while creating the user.',
     'ERROR.USER.UPDATE_USER_PERMISSIONS_DENIED': "You don't have permission to update the user.",
     'ERROR.USER.UPDATE_USER_FAILED': 'An error occurred while updating the user.',
+    'ERROR.USER.UPDATE_USER_EMAIL_EXISTS': 'This Email already exists.',
     'ERROR.USER.UPDATE_USER_ROLE_FAILED': "You can't be able to change the role in your own team.",
     'ERROR.USER.UPDATE_TEAM_OWNER_ROLE_FAILED': "You can't be able to change the team owner's role.",
     'ERROR.USER.UPDATE_ACTIVE_STATUS_FAILED': "You can't be able to set your account as inactive in your own team.",
@@ -154,6 +155,8 @@ export default {
     v_summary_report: 'Summary Report',
     v_total: 'Total',
     v_export: 'Export',
+    v_detailed_export: 'Detailed report',
+    v_simple_export: 'Summary report',
     v_user: 'User',
     v_select_all: 'Select All',
     v_select_none: 'Select None',
@@ -252,8 +255,11 @@ export default {
     v_subtotal: 'Subtotal',
     v_enter_project: 'Text',
     v_pic_tax: 'Tax',
+    v_payment_confirmation_window_confirm: 'Are you sure you want to confirm payment?',
+    v_payment_confirmation_window_cancel: 'Are you sure you want to cancel payment?',
 
     v_invoice_summary: 'Invoice Summary',
+    v_invoice_reference: 'Reference',
     v_comments: 'Comments',
     v_select_currency: 'Select Currency',
     v_invoice_number: 'Invoice No',
@@ -350,4 +356,7 @@ export default {
     v_add_discount: 'Add Discount',
     v_discount: 'Discount',
     v_discount_subtotal: 'of invoice subtotal',
+
+    v_page_access_denied: 'You do not have sufficient rights to view this page',
+    v_page_access_request_owner: 'Ask the team owner to grant you access',
 };

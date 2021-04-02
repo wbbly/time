@@ -87,6 +87,13 @@ class AddTask extends Component {
 
     updateTaskIssueDebounced = _.debounce(() => {
         const { issue } = this.state;
+        const {
+            currentTimer: { issue: currentIssue },
+        } = this.props;
+        if (issue === currentIssue) {
+            this.setState({ isUpdating: false });
+            return;
+        }
         updateTimerSocket({
             issue,
         });

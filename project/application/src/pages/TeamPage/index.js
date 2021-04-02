@@ -113,11 +113,11 @@ class TeamPage extends Component {
     }
 
     showBigAvatar = event => {
-        event.target.nextSibling.style.transform = 'scale(1)';
+        event.target.nextSibling.style.transform = 'translateY(-88%) scale(1)';
     };
 
     hideBigAvatar = event => {
-        event.target.nextSibling.style.transform = 'scale(0)';
+        event.target.nextSibling.style.transform = 'translateY(-88%) scale(0)';
     };
 
     filterData = data => {
@@ -273,13 +273,9 @@ class TeamPage extends Component {
                     </td>
                     <td data-label="E-mail">{email}</td>
                     <td data-label={v_team_role}>
-                        {checkIsMemberByRole(role) && <div className="access_container">{ROLES_TITLES[role]}</div>}
-                        {checkIsAdminByRole(role) && <div className="access_container red">{ROLES_TITLES[role]}</div>}
-                        {checkIsOwnerByRole(role) && (
-                            <div className="access_container red" style={{ backgroundColor: 'rgb(255, 174, 0)' }}>
-                                {ROLES_TITLES[role]}
-                            </div>
-                        )}
+                        <div className="team-access-role">
+                            <div className={`access_container ${role || ROLES.ROLE_MEMBER}`}>{ROLES_TITLES[role]}</div>
+                        </div>
                     </td>
                     <td data-label={v_team_access}>
                         <div
@@ -305,7 +301,6 @@ class TeamPage extends Component {
                 </tr>
             );
         });
-
         return (
             <Loading
                 flag={
@@ -323,7 +318,11 @@ class TeamPage extends Component {
                 >
                     {this.props.createUserModal && <AddToTeamModal teamPageAction={this.props.teamPageAction} />}
                     {this.props.editUserModal && (
-                        <EditTeamModal teamPageAction={this.props.teamPageAction} editedUser={this.props.editedUser} />
+                        <EditTeamModal
+                            teamPageAction={this.props.teamPageAction}
+                            editedUser={this.props.editedUser}
+                            isTeamOwner={checkIsOwnerByRole(currentTeam.data.role)}
+                        />
                     )}
                     {this.state.renameModal && (
                         <RenameTeamModal
@@ -365,6 +364,20 @@ class TeamPage extends Component {
                         <div className="team_page_searchBar">
                             <TeamSearchBar search={this.setSearch} />
                         </div>
+                        {isMobile && (
+                            <div className="role_access_team_page">
+                                <SelectTeamRoleAccess
+                                    type="role"
+                                    value={this.state.roleValue}
+                                    setTeamRoleAccess={this.setTeamRole}
+                                />
+                                <SelectTeamRoleAccess
+                                    type="access"
+                                    value={this.state.accessValue}
+                                    setTeamRoleAccess={this.setAccess}
+                                />
+                            </div>
+                        )}
                         <div className="team_page_data">
                             <table>
                                 <thead>

@@ -22,11 +22,10 @@ const setTimeEntriesListAction = payload => ({
     payload,
 });
 
-export const getTimeEntriesListAction = byPage => async dispatch => {
+export const getTimeEntriesListAction = signal => async dispatch => {
     const { searchValue, searchDateRange, isSearchMode, pagination } = store.getState().mainPageReducer;
     const { page, limit, disabled } = pagination;
-
-    let res = [];
+    let res = null;
 
     if (disabled) {
         res = await getTimeEntriesList(
@@ -36,7 +35,9 @@ export const getTimeEntriesListAction = byPage => async dispatch => {
         );
     } else if (page === 1) {
         res = await getTimeEntriesList(
-            isSearchMode ? { page, limit, ...searchDateRange, searchValue } : { page, limit }
+            isSearchMode
+                ? { page, limit, ...searchDateRange, searchValue, cancelToken: signal }
+                : { page, limit, cancelToken: signal }
         );
     } else {
         res = await getTimeEntriesList(
@@ -53,9 +54,12 @@ export const getTimeEntriesListAction = byPage => async dispatch => {
                   }
         );
     }
-    const parsedList = getTodayTimeEntriesParseFunction(res.data.data);
-    const { timerV2 } = parsedList;
-    dispatch(setTimeEntriesListAction(timerV2));
+    if (res) {
+        const parsedList = getTodayTimeEntriesParseFunction(res.data.data);
+        const { timerV2 } = parsedList;
+
+        dispatch(setTimeEntriesListAction(timerV2));
+    }
 };
 
 export const setCurrentTimerAction = payload => ({

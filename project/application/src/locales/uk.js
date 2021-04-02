@@ -39,6 +39,7 @@ export default {
     'ERROR.USER.CREATE_USER_FAILED': 'Сталася помилка під час створення користувача.',
     'ERROR.USER.UPDATE_USER_PERMISSIONS_DENIED': 'У вас немає дозволу на оновлення користувача.',
     'ERROR.USER.UPDATE_USER_FAILED': 'Сталася помилка під час оновлення користувача.',
+    'ERROR.USER.UPDATE_USER_EMAIL_EXISTS': 'Ця електронна адреса вже існує.',
     'ERROR.USER.UPDATE_USER_ROLE_FAILED': 'Ви не зможете змінити роль у своїй команді.',
     'ERROR.USER.UPDATE_TEAM_OWNER_ROLE_FAILED': 'Ви не можете змінити роль власника команди.',
     'ERROR.USER.UPDATE_ACTIVE_STATUS_FAILED':
@@ -155,6 +156,8 @@ export default {
     v_summary_report: 'Загальний звіт',
     v_total: 'Всього',
     v_export: 'Експортувати',
+    v_detailed_export: 'Детальний звіт',
+    v_simple_export: 'Зведений звіт',
     v_user: 'Користувач',
     v_select_all: 'Виділити все',
     v_select_none: 'Прибрати виділення',
@@ -253,7 +256,10 @@ export default {
     v_subtotal: 'Підсумок',
     v_enter_project: 'Текст',
     v_pic_tax: 'Податок',
+    v_payment_confirmation_window_confirm: 'Ви впевнені, що хочете підтвердити оплату?',
+    v_payment_confirmation_window_cancel: 'Ви впевнені, що хочете скасувати платіж?',
     v_invoice_summary: 'Загальний Рахунок',
+    v_invoice_reference: 'Довідка',
     v_comments: 'Коментарі',
     v_select_currency: 'Виберіть Валюту',
     v_invoice_number: 'Номер Рахунку',
@@ -347,4 +353,7 @@ export default {
     v_add_discount: 'Додати знижку',
     v_discount: 'Знижка',
     v_discount_subtotal: 'від суми проміжного рахунку',
+
+    v_page_access_denied: 'У вас недостатньо прав для перегляду цієї сторінки',
+    v_page_access_request_owner: 'Попросіть власника команди надати вам доступ',
 };

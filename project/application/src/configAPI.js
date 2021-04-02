@@ -8,6 +8,8 @@ import { AppConfig } from './config';
 
 import { getTokenFromLocalStorage } from './services/tokenStorageService';
 
+import _ from 'lodash';
+
 const baseURL = AppConfig.apiURL;
 
 const instance = axios.create({
@@ -141,7 +143,8 @@ export const getTimeEntriesList = (params = {}) =>
     instance({
         url: '/timer/user-list',
         method: 'GET',
-        params,
+        cancelToken: params.cancelToken,
+        params: _.omit(params, ['cancelToken']),
     });
 
 export const getCurrentTime = () =>
@@ -362,10 +365,13 @@ instance.interceptors.response.use(
         return response;
     },
     error => {
-        if (error.response.data.statusCode === 401) {
-            logoutByUnauthorized();
+        if (error.response) {
+            if (error.response.data.statusCode === 401) {
+                logoutByUnauthorized();
+            }
+            return Promise.reject(error);
         }
-        return Promise.reject(error);
+        return;
     }
 );
 

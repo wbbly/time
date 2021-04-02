@@ -41,6 +41,7 @@ export default {
     'ERROR.USER.CREATE_USER_FAILED': 'Errore durante la creazione dell’utente.',
     'ERROR.USER.UPDATE_USER_PERMISSIONS_DENIED': 'Non hai i permessi per aggiornare l’utente.',
     'ERROR.USER.UPDATE_USER_FAILED': 'Errore durante l’aggiornamento dell’utente.',
+    'ERROR.USER.UPDATE_USER_EMAIL_EXISTS': 'Questa email esiste già.',
     'ERROR.USER.UPDATE_USER_ROLE_FAILED': 'Non puoi cambiare il ruolo nella tua squadra.',
     'ERROR.USER.UPDATE_TEAM_OWNER_ROLE_FAILED': 'Non puoi modificare il ruolo del proprietario della squadra.',
     'ERROR.USER.UPDATE_ACTIVE_STATUS_FAILED':
@@ -159,6 +160,8 @@ export default {
     v_summary_report: 'Relazione di sintesi',
     v_total: 'Totale',
     v_export: 'Esportare',
+    v_detailed_export: 'Rapporto dettagliato',
+    v_simple_export: 'Relazione di sintesi',
     v_user: 'Utente',
     v_select_all: 'Seleziona tutto',
     v_select_none: 'Non selezionare niente',
@@ -256,7 +259,10 @@ export default {
     v_subtotal: 'Totale parziale',
     v_enter_project: 'Testo',
     v_pic_tax: 'Imposta',
+    v_payment_confirmation_window_confirm: 'Sei sicuro di voler confermare il pagamento?',
+    v_payment_confirmation_window_cancel: 'Sei sicuro di voler annullare il pagamento?',
     v_invoice_summary: 'Riepilogo Fattura',
+    v_invoice_reference: 'Riferimento',
     v_comments: 'Commenti',
     v_select_currency: 'Seleziona la Valuta',
     v_invoice_number: 'Numero di fattura',
@@ -351,4 +357,7 @@ export default {
     v_add_discount: 'Aggiungi uno sconto',
     v_discount: 'Sconto',
     v_discount_subtotal: 'del totale parziale della fattura',
+
+    v_page_access_denied: 'Non disponi di diritti sufficienti per visualizzare questa pagina',
+    v_page_access_request_owner: "Chiedi al proprietario del team di concederti l'accesso",
 };

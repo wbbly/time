@@ -4,6 +4,8 @@
   &__input {
     width: 100%;
     color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    opacity: 1;
     background: #3f3f3f;
     border-radius: 3px;
     padding: 10px 8px;
@@ -38,6 +40,8 @@
     min-height: 50px;
     resize: none;
     color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    opacity: 1;
     background: #3f3f3f;
     border-radius: 3px;
     padding: 15px 10px 10px;

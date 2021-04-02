@@ -116,7 +116,7 @@ class ClientsPage extends Component {
 
     render() {
         const { showModal, searchValue, editedClient, clientsList, isInitialFetching } = this.state;
-        const { vocabulary, isMobile, currentTeam } = this.props;
+        const { vocabulary, isMobile, currentTeam, clientsFetching } = this.props;
         const { v_clients, v_add_new_client, v_apply } = vocabulary;
 
         const editClient = index => {
@@ -124,70 +124,72 @@ class ClientsPage extends Component {
         };
         return (
             <Loading flag={isInitialFetching || currentTeam.isFetching} mode="parentSize" withLogo={false}>
-                <CustomScrollbar disableTimeEntriesFetch>
-                    <div
-                        className={classNames('wrapper_clients_page', {
-                            'wrapper_clients_page--mobile': isMobile,
-                        })}
-                    >
-                        {showModal && (
-                            <ModalPortal>
-                                <ClientModal
-                                    closeModal={this.closeModal}
-                                    addNewClient={this.addNewClient}
-                                    toEditClient={this.editClient}
-                                    deleteClient={this.deleteClient}
-                                    editedClient={editedClient}
-                                    vocabulary={vocabulary}
-                                />
-                            </ModalPortal>
-                        )}
-                        <div className="data_container_clients_page">
-                            <PageHeader title={v_clients}>
-                                <button
-                                    className="header-wrapper__child-button"
-                                    onClick={() => this.setState({ showModal: true })}
-                                >
-                                    {v_add_new_client}
-                                </button>
-                            </PageHeader>
-
-                            <div className="wrapper_clients_search_bar">
-                                <div className="clients_search_bar_search_field_container">
-                                    <i className="magnifer" />
-                                    <input
-                                        onChange={this.handleChange}
-                                        type="text"
-                                        value={searchValue}
-                                        onKeyUp={e => (e.keyCode === 13 ? this.searchClient() : null)}
-                                        className="clients_search_bar_search_field"
+                <Loading flag={clientsFetching} mode="overlay" withLogo={false}>
+                    <CustomScrollbar disableTimeEntriesFetch>
+                        <div
+                            className={classNames('wrapper_clients_page', {
+                                'wrapper_clients_page--mobile': isMobile,
+                            })}
+                        >
+                            {showModal && (
+                                <ModalPortal>
+                                    <ClientModal
+                                        closeModal={this.closeModal}
+                                        addNewClient={this.addNewClient}
+                                        toEditClient={this.editClient}
+                                        deleteClient={this.deleteClient}
+                                        editedClient={editedClient}
+                                        vocabulary={vocabulary}
                                     />
-                                </div>
-                                <div className="clients_search_bar_button_container">
-                                    <button className="clients_search_bar_button" onClick={this.searchClient}>
-                                        {v_apply}
+                                </ModalPortal>
+                            )}
+                            <div className="data_container_clients_page">
+                                <PageHeader title={v_clients}>
+                                    <button
+                                        className="header-wrapper__child-button"
+                                        onClick={() => this.setState({ showModal: true })}
+                                    >
+                                        {v_add_new_client}
                                     </button>
-                                </div>
-                            </div>
-                            <div className={classNames('clients_list_container')}>
-                                {clientsList &&
-                                    clientsList.length === 0 &&
-                                    BlankListComponent(this.props.vocabulary.v_no_clients, null, null)}
-                                {!!clientsList.length &&
-                                    clientsList.map((item, index) => (
-                                        <ClientComponent
-                                            client={item}
-                                            vocabulary={vocabulary}
-                                            index={index}
-                                            editClient={editClient}
-                                            key={index}
-                                            isMobile={isMobile}
+                                </PageHeader>
+
+                                <div className="wrapper_clients_search_bar">
+                                    <div className="clients_search_bar_search_field_container">
+                                        <i className="magnifer" />
+                                        <input
+                                            onChange={this.handleChange}
+                                            type="text"
+                                            value={searchValue}
+                                            onKeyUp={e => (e.keyCode === 13 ? this.searchClient() : null)}
+                                            className="clients_search_bar_search_field"
                                         />
-                                    ))}
+                                    </div>
+                                    <div className="clients_search_bar_button_container">
+                                        <button className="clients_search_bar_button" onClick={this.searchClient}>
+                                            {v_apply}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className={classNames('clients_list_container')}>
+                                    {clientsList &&
+                                        clientsList.length === 0 &&
+                                        BlankListComponent(this.props.vocabulary.v_no_clients, null, null)}
+                                    {!!clientsList.length &&
+                                        clientsList.map((item, index) => (
+                                            <ClientComponent
+                                                client={item}
+                                                vocabulary={vocabulary}
+                                                index={index}
+                                                editClient={editClient}
+                                                key={index}
+                                                isMobile={isMobile}
+                                            />
+                                        ))}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </CustomScrollbar>
+                    </CustomScrollbar>
+                </Loading>
             </Loading>
         );
     }
@@ -199,6 +201,7 @@ const mapStateToProps = state => ({
     isMobile: state.responsiveReducer.isMobile,
     isInitialFetching: state.clientsReducer.isInitialFetching,
     clientsList: state.clientsReducer.clientsList,
+    clientsFetching: state.clientsReducer.isFetching,
 });
 
 const mapDispatchToProps = {

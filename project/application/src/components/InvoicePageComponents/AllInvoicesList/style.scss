@@ -11,11 +11,11 @@
     margin-bottom: 8px;
     font-weight: bold;
     &:after {
-      content: '';
+      content: "";
       display: block;
       width: calc(100% + 8px);
       height: 1px;
-      background: #BDBDBD;
+      background: #bdbdbd;
       position: absolute;
       bottom: 0;
       left: -8px;
@@ -70,10 +70,10 @@
       @media screen and (max-width: 750px) {
         .date-wrapper {
           flex-direction: column;
-          .invoice-issued-title{
+          .invoice-issued-title {
             width: 100%;
           }
-          .invoice-due-title{
+          .invoice-due-title {
             width: 100%;
           }
         }
@@ -84,7 +84,7 @@
       }
     }
     .data-wrapper:first-child {
-      width: 34%;
+      width: calc(29%-45px);
       padding-left: 20px;
     }
     @media screen and (max-width: 750px) {
@@ -148,7 +148,7 @@
     font-weight: 600;
     line-height: 20px;
     padding-left: 50px;
-    &:last-child{
+    &:last-child {
       @media (max-width: 680px) {
         padding-right: 20px;
       }
@@ -156,7 +156,7 @@
   }
 }
 @media screen and (max-width: 550px) {
-  .all-invoices-list{
+  .all-invoices-list {
     font-size: 12px;
     &__title-wrapper:after {
       width: calc(100% - 8px);
