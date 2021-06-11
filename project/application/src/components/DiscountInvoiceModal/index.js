@@ -5,17 +5,20 @@ import './style.scss';
 
 class DiscountInvoiceModal extends Component {
     state = {
-        discountField: 0,
+        discountField: '',
     };
 
     componentDidMount() {
-        this.setState({ discountField: this.props.initDiscount });
+        this.setState({ discountField: Number(this.props.initDiscount) > 0 ? this.props.initDiscount : '' });
     }
 
     onDiscountChange = e => {
-        if (e.target.value < 0 || e.target.value > 100) return;
+        let val = e.target.value;
 
-        this.setState({ discountField: e.target.value });
+        if (val.length > 0 && val.search('^[1-9]{1}[0-9]?[0]?$') < 0) return;
+        if (val > 100) return;
+
+        this.setState({ discountField: val });
     };
 
     render() {
@@ -35,10 +38,11 @@ class DiscountInvoiceModal extends Component {
                     <div className="discount-modal__main">
                         <div className="discount-modal__main-input-container">
                             <input
+                                type="text"
+                                placeholder="0"
                                 className="discount-modal__main-input"
-                                onChange={this.onDiscountChange}
                                 value={discountField}
-                                type="number"
+                                onChange={this.onDiscountChange}
                             />
                             <div className="discount-modal__main-precent">%</div>
                         </div>
@@ -49,7 +53,11 @@ class DiscountInvoiceModal extends Component {
                         <button
                             className="discount-modal__container-btn discount-modal__btn-save"
                             onClick={() => {
-                                saveDiscount(discountField);
+                                if (!discountField) {
+                                    saveDiscount(0);
+                                } else {
+                                    saveDiscount(Number(discountField));
+                                }
                             }}
                         >
                             {v_add_discount}

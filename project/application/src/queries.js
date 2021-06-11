@@ -1,23 +1,35 @@
 import { getDateTimestamp } from './services/timeService';
 import { decodeTimeEntryIssue } from './services/timeEntryService';
 
-export function getProjectListParseFunction(result) {
-    const dataParsed = {
-        projectV2: [],
-    };
-    const { project_v2 } = result.data;
-    for (let i = 0; i < project_v2.length; i++) {
-        const item = project_v2[i];
-        const { id, is_active: isActive, name, project_color: projectColor } = item;
-        dataParsed.projectV2.push({
-            id,
-            isActive,
-            name,
-            projectColor,
-        });
-    }
+export function getProjectListParseFunction(array) {
+    return array.map(project => {
+        const { is_active: isActive, project_color: projectColor, user_projects: userProjects, ...rest } = project;
+        let { timer } = project;
+        if (timer) {
+            timer = timer.map(item => {
+                const { start_datetime: startDatetime, end_datetime: endDatetime } = item;
+                return {
+                    startDatetime,
+                    endDatetime,
+                };
+            });
 
-    return dataParsed;
+            return {
+                ...rest,
+                isActive,
+                projectColor,
+                timer,
+                userProjects: userProjects ? userProjects.map(item => item.user) : [],
+            };
+        } else {
+            return {
+                ...rest,
+                isActive,
+                projectColor,
+                userProjects: userProjects ? userProjects.map(item => item.user) : [],
+            };
+        }
+    });
 }
 
 export function getProjectsV2ProjectPageAdminParseFunction(data) {
@@ -47,32 +59,16 @@ export function getProjectsV2ProjectPageAdminParseFunction(data) {
     return dataParsed;
 }
 
-export function getProjectsV2ProjectPageUserParseFunction(data) {
-    const dataParsed = {
-        projectV2: [],
-    };
-    const { project_v2: projectV2 } = data;
-    for (let i = 0; i < projectV2.length; i++) {
-        const project = projectV2[i];
-
-        const { id, name, timer, client } = project;
-
-        let totalTime = 0; // in ms
-        for (let i = 0; i < timer.length; i++) {
-            const timeEntry = timer[i];
-            const { start_datetime: startDatetime, end_datetime: endDatetime } = timeEntry;
-            totalTime += getDateTimestamp(endDatetime) - getDateTimestamp(startDatetime);
+export function addUserRoleToProjects(data) {
+    return data.map(item => {
+        const { userProjects } = item;
+        if (!!userProjects.length) {
+            userProjects.forEach(user => {
+                user.role = user.user_teams[0].role_collaboration.title;
+            });
         }
-
-        dataParsed.projectV2.push({
-            id,
-            name,
-            totalTime,
-            client,
-        });
-    }
-
-    return dataParsed;
+        return { ...item, userProjects };
+    });
 }
 
 export function getTodayTimeEntriesParseFunction(data) {

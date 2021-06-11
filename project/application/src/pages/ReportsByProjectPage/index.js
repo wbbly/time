@@ -18,6 +18,8 @@ import { apiCall } from '../../services/apiService';
 
 // Components
 import ReportsByProjectSearchBar from '../../components/ReportsByProjectSearchBar';
+import { ThemeProvider } from '@material-ui/styles';
+import { Checkbox, FormControlLabel, createMuiTheme } from '@material-ui/core';
 
 // Actions
 
@@ -28,6 +30,40 @@ import { AppConfig } from '../../config';
 
 // Styles
 import './style.scss';
+import CustomScrollbar from '../../components/CustomScrollbar';
+
+const checkboxTheme = createMuiTheme({
+    overrides: {
+        MuiSvgIcon: {
+            root: {
+                fontSize: '24px',
+                color: '#fff',
+            },
+        },
+        MuiCheckbox: {
+            root: {
+                padding: '5px',
+            },
+            checked: {
+                color: '#fff',
+            },
+        },
+        MuiIconButton: {
+            colorPrimary: {
+                color: '#fff',
+                '&:hover': {
+                    backgroundColor: 'transparent !important',
+                },
+            },
+        },
+        MuiFormControlLabel: {
+            label: {
+                fontFamily: 'Open Sans, sans-serif',
+                fontSize: '16px',
+            },
+        },
+    },
+});
 
 class ReportsByProjectsPage extends Component {
     state = {
@@ -39,6 +75,7 @@ class ReportsByProjectsPage extends Component {
         dateStart: '',
         endDate: '',
         reportUsers: [],
+        isCombine: false,
     };
 
     getDateInPointsFormat(momentDate) {
@@ -61,9 +98,13 @@ class ReportsByProjectsPage extends Component {
         return totalTime;
     }
 
+    onCombineChange = event => {
+        this.setState({ isCombine: event.target.checked });
+    };
+
     render() {
         const { isMobile, dateFormat, durationTimeFormat, vocabulary } = this.props;
-        const { v_issue, v_user_name, v_time, v_sum_tasks, v_sum_time } = vocabulary;
+        const { v_issue, v_user_name, v_time, v_sum_tasks, v_sum_time, v_combine } = vocabulary;
 
         let projectsItems = this.state.dataOfProject.map((item, index) => (
             <div className="tasks_data" key={'projects_container_project_data' + index}>
@@ -113,7 +154,22 @@ class ReportsByProjectsPage extends Component {
                         </span>
                     </div>
                     <div className="header_name header_name--task">
-                        {v_sum_tasks}: {this.state.countTasks}
+                        <div className="tasks_sum">
+                            {v_sum_tasks}: {this.state.countTasks}
+                        </div>
+                        <ThemeProvider theme={checkboxTheme}>
+                            <FormControlLabel
+                                label={v_combine}
+                                control={
+                                    <Checkbox
+                                        disableRipple
+                                        color={'primary'}
+                                        checked={this.state.isCombine}
+                                        onChange={this.onCombineChange}
+                                    />
+                                }
+                            />
+                        </ThemeProvider>
                     </div>
                     <div className="header_name header_name--time">
                         {v_sum_time}: {getTimeDurationByGivenTimestamp(this.state.totalTime, durationTimeFormat)}
@@ -131,24 +187,32 @@ class ReportsByProjectsPage extends Component {
                             <div className="username">{v_user_name}</div>
                             <div className="time">{v_time}</div>
                         </div>
-                        <div className="tasks_data_container">{projectsItems}</div>
+                        <CustomScrollbar>
+                            <div className="tasks_data_container">{projectsItems}</div>
+                        </CustomScrollbar>
                     </div>
                 ) : (
-                    <div className="tasks_data_container--mobile">{projectsItemsMobile}</div>
+                    <div className="tasks_data_wrap">
+                        <CustomScrollbar>
+                            <div className="tasks_data_container--mobile">{projectsItemsMobile}</div>
+                        </CustomScrollbar>
+                    </div>
                 )}
             </div>
         );
     }
 
     applySearch = (userEmailsList = [], searchValue = '') => {
-        let { projectName, dateStart, endDate } = this.state;
+        let { projectName, dateStart, endDate, isCombine } = this.state;
         apiCall(
             AppConfig.apiURL +
                 `project/reports-project?projectName=${projectName || ''}&startDate=${convertDateToISOString(
                     dateStart
                 )}&endDate=${convertDateToShiftedISOString(endDate, 24 * 60 * 60 * 1000)}${
                     userEmailsList.length ? `&${getParametersString('userEmails', userEmailsList)}` : ''
-                }${searchValue.length ? `&searchValue=${searchValue}` : ''}`,
+                }${searchValue.length ? `&searchValue=${searchValue}` : ''}${
+                    isCombine ? `&combined=${isCombine}` : ''
+                }`,
             {
                 method: 'GET',
                 headers: {

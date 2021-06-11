@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
 // Actions
 import { scrollToAction } from '../../actions/ResponsiveActions';
-import { setClientAction } from '../../actions/ClientsActions';
+import { addClientAction } from '../../actions/ClientsActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 // Styles
 import './style.scss';
@@ -138,7 +138,7 @@ class PersonSelect extends Component {
         );
         return isTheSameName;
     };
-    addNewClient = client => {
+    addNewClient = async client => {
         const { showNotificationAction, vocabulary } = this.props;
         const { v_a_client_existed, v_a_client_name_empty_error, client_was_created } = vocabulary;
         if (client.length === 0) {
@@ -150,17 +150,15 @@ class PersonSelect extends Component {
         } else {
             const phone = client.phone ? '+' + client.phone.replace(/[^0-9]/g, '') : null;
             const data = { ...client, phone: phone };
-            const promise = this.props.setClientAction(data);
-
+            const clientsList = await this.props.addClientAction(data);
             showNotificationAction({
                 text: client_was_created,
                 type: 'success',
             });
-            promise.then(clients => {
-                const lastClient = clients.data.client.length - 1;
-                this.props.onChange(clients.data.client[lastClient]);
-                this.closeModal();
-            });
+            const addedClient = clientsList.find(item => item.company_name === client.company_name);
+            const fullClientData = { id: addedClient?.id, ...client };
+            this.props.onChange(fullClientData);
+            this.closeModal();
         }
     };
     getClientFullName(client, listView = true) {
@@ -231,7 +229,7 @@ class PersonSelect extends Component {
                             <div className="data-wrapper">
                                 <div className="person-select__selected-person-row">
                                     <div>{selectedRecipient.company_name}</div>
-                                    {selectedRecipient.name && <div>{selectedRecipient.name}</div>}
+                                    {selectedRecipient.username && <div>{selectedRecipient.username}</div>}
                                     {selectedRecipient.email && <div>{selectedRecipient.email}</div>}
                                     {selectedRecipient.phone && <div>{selectedRecipient.phone}</div>}
                                     <div>{`${(selectedRecipient.country && selectedRecipient.country) ||
@@ -317,7 +315,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     scrollToAction,
-    setClientAction,
+    addClientAction,
     showNotificationAction,
 };
 

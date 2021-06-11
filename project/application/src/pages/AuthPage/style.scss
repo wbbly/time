@@ -15,7 +15,7 @@
   position: relative;
 
   .fixed_right_corner {
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 14px;
     z-index: 20;
@@ -43,7 +43,7 @@
     min-height: 46px;
     background: url("../../images/icons/logo.svg") no-repeat center;
     background-size: 196px 46px;
-    margin: 0 0 2rem 0;
+    margin: 2rem 0 2rem 0;
   }
 
   .forgot_password_button {

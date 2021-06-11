@@ -4,6 +4,8 @@
   height: 100%;
 
   .data_container_team_page {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     background-color: #333333;
@@ -13,10 +15,10 @@
 
   .team_page_main-controls {
     white-space: nowrap;
-      .header-wrapper__child-button {
-          margin-left: 10px;
-          margin-top: 10px;
-      }
+    .header-wrapper__child-button {
+      margin-left: 10px;
+      margin-top: 10px;
+    }
   }
 
   .page_name {
@@ -42,9 +44,22 @@
     }
   }
 
+  .team_page_data {
+    height: 100%;
+  }
+
   .team_page_data table {
     width: 100%;
     border-spacing: inherit;
+  }
+
+  .team_page_data_table {
+    height: 100%;
+  }
+
+  .team_page_data .team_page_row {
+    display: flex;
+    width: 100%;
   }
 
   .team_page_data table th {
@@ -74,7 +89,7 @@
     }
   }
 
-  .team_page_data table td {
+  .team_page_data table .team_page_col {
     position: relative;
     min-height: 50px;
     font-family: "Open Sans", sans-serif;
@@ -83,7 +98,6 @@
     line-height: normal;
     font-size: 16px;
     color: #ffffff;
-    vertical-align: top;
     padding: 15px 0;
   }
   .team_page_data table .avatar-small {
@@ -104,6 +118,7 @@
   }
   .team_page_data table .user-container {
     display: flex;
+    width: 29%;
   }
   .team_page_data table .user-container span {
     margin-left: 5px;
@@ -130,7 +145,20 @@
     cursor: pointer;
   }
   .team_page_data table .phone_container {
+    width: 17%;
     min-width: 100px;
+  }
+
+  .team_page_data .email_container {
+    width: 24%;
+  }
+
+  .team_page_data .role_container {
+    width: 16%;
+  }
+
+  .team_page_data .access_wrap {
+    width: 13%;
   }
 
   .team_page_data table .access_container {
@@ -165,7 +193,7 @@
   .edit_button {
     display: block;
     position: absolute;
-    top: 21px;
+    top: 18px;
     right: 0px;
     margin-top: -2px;
     margin-left: 18px;
@@ -179,6 +207,13 @@
     &:hover path {
       stroke: #27ae60;
     }
+  }
+  .table-scroll {
+    overflow: auto;
+    height: 100%;
+  }
+  .team-page-label {
+    display: none;
   }
 }
 .avatar-big {
@@ -235,62 +270,48 @@
     thead {
       display: none;
     }
-    td {
+    .team_page_data table .team_page_col {
       position: relative;
       display: flex;
       align-items: center;
       width: 50%;
+      padding: 15px 0 25px 0;
     }
-    td:before {
-      content: attr(data-label);
-      font-size: 13px;
-      color: #bdbdbd;
-      position: absolute;
-      top: -10px;
-    }
-    td:nth-child(1),
-    td:nth-child(2),
-    td:nth-child(3),
-    td:nth-child(4),
-    td:nth-child(5) {
-      width: 100%;
-    }
-    // td:nth-child(4),
-    // td:nth-child(5) {
-    //   width: 20%;
-    // }
-    td:nth-child(4){
-      height: 60px;
-    }
-    tr {
+    .team_page_row {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       flex-direction: column;
       position: relative;
-      // height: 160px;
       border-bottom: 1px solid rgba(156, 138, 138, 0.4);
-      margin-top: 15px;
+      margin-top: 25px;
     }
-    // td:nth-child(4) {
-    //   justify-content: flex-end;
-    // }
-    // td:nth-child(5) {
-    //   justify-content: flex-end;
-    // }
-    // .team_page_data table .user-container span {
-    //   margin-left: 0;
-    // }
-    // .team_page_data table .team-access-container {
-    //   min-width: auto;
-    // }
     .team_page_data table .access_container {
       height: auto;
       width: 75px;
-      // margin-top: 5px;
     }
-    // .team-access-container-admin {
-    //   padding-right: 20px;
-    // }
+    .team_page_data table .user-container {
+      width: 100%;
+    }
+    .team_page_data table .phone_container {
+      width: 100%;
+    }
+    .team_page_data table .email_container {
+      width: 100%;
+    }
+    .team_page_data table .role_container {
+      width: 100%;
+    }
+    .team_page_data table .access_wrap {
+      width: 100%;
+    }
+    .team_page_data table .team-page-label {
+      position: absolute;
+      top: -10px;
+      left: 0;
+      display: block;
+      font-size: 13px;
+      color: #bdbdbd;
+    }
   }
 }

@@ -15,7 +15,7 @@
       display: block;
       width: calc(100% + 8px);
       height: 1px;
-      background: #bdbdbd;
+      background: #bdbdbd4d;
       position: absolute;
       bottom: 0;
       left: -8px;
@@ -84,7 +84,7 @@
       }
     }
     .data-wrapper:first-child {
-      width: calc(29%-45px);
+      width: calc(29% - 45px);
       padding-left: 20px;
     }
     @media screen and (max-width: 750px) {

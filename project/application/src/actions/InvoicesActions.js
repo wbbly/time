@@ -8,6 +8,9 @@ import {
     changeInvoiceStatus,
     getInvoiceViewData,
     sendInvoiceLetter,
+    getInvoicesCountsByStatus,
+    getPartialPayments,
+    postPartialPayments,
 } from '../configAPI';
 
 export const CREATE_INVOICE_REQUEST = 'CREATE_INVOICE_REQUEST';
@@ -16,14 +19,54 @@ export const CHANGE_INVOICE_SUCCESS = 'CHANGE_INVOICE_SUCCESS';
 export const CHANGE_INVOICE_STATUS_REQUEST = 'CHANGE_INVOICE_STATUS_REQUEST';
 export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const DELETE_INVOICE_REQUEST = 'DELETE_INVOICE_REQUEST';
+export const GET_INVOICE_LIST_INITIAL_REQUEST = 'GET_INVOICE_LIST_INITIAL_REQUEST';
 export const GET_INVOICE_LIST_REQUEST = 'GET_INVOICE_LIST_REQUEST';
 export const GET_INVOICE_LIST_SUCCESS = 'GET_INVOICE_LIST_SUCCESS';
+export const GET_INVOICE_COUNTS_BY_STATUS = 'GET_INVOICE_COUNTS_BY_STATUS';
 export const GET_GRAND_TOTAL = 'GET_GRAND_TOTAL';
 export const GET_INVOICE_BY_ID_REQUEST = 'GET_INVOICE_BY_ID_REQUEST';
 export const GET_INVOICE_BY_ID_SUCCESS = 'GET_INVOICE_BY_ID_SUCCESS';
+export const GET_INVOICE_BY_ID_ERROR = 'GET_INVOICE_BY_ID_ERROR';
 export const SET_SENDER_ID = 'SET-SENDER-ID';
 export const SET_COPIED_INVOICE_ID = 'SET_COPIED_INVOICE_ID';
 export const ADD_INVOICE_ERROR = 'ADD_INVOICE_ERROR';
+export const GET_PARTIAL_PAYMENTS = 'GET_PARTIAL_PAYMENTS';
+export const GET_PARTIAL_PAYMENTS_SUCCESS = 'GET_PARTIAL_PAYMENTS_SUCCESS';
+export const GET_PARTIAL_PAYMENTS_FAIL = 'GET_PARTIAL_PAYMENTS_FAIL';
+export const CLEAR_PARTIAL_PAYMENT = 'CLEAR_PARTIAL_PAYMENT';
+export const ADD_PARTIAL_PAYMENT = 'ADD_PARTIAL_PAYMENT';
+export const ADD_PARTIAL_PAYMENT_SUCCESS = 'ADD_PARTIAL_PAYMENT_SUCCESS';
+export const ADD_PARTIAL_PAYMENT_FAIL = 'ADD_PARTIAL_PAYMENT_FAIL';
+export const CHANGE_INITIAL_LOADER = 'CHANGE_INITIAL_LOADER';
+
+const addPartialPaymentsRequest = payload => ({
+    type: ADD_PARTIAL_PAYMENT,
+    payload,
+});
+const addPartialPaymentsRequestSuccess = () => ({
+    type: ADD_PARTIAL_PAYMENT_SUCCESS,
+});
+const addPpartialPaymentsRequestFail = payload => ({
+    type: ADD_PARTIAL_PAYMENT_FAIL,
+    payload,
+});
+
+const partialPaymentsRequest = payload => ({
+    type: GET_PARTIAL_PAYMENTS,
+    payload,
+});
+const partialPaymentsRequestSuccess = payload => ({
+    type: GET_PARTIAL_PAYMENTS_SUCCESS,
+    payload,
+});
+const partialPaymentsRequestFail = payload => ({
+    type: GET_PARTIAL_PAYMENTS_FAIL,
+    payload,
+});
+
+export const clearPartialPaymentInfo = () => ({
+    type: CLEAR_PARTIAL_PAYMENT,
+});
 
 const getInvoiceByIdRequest = () => ({
     type: GET_INVOICE_BY_ID_REQUEST,
@@ -32,6 +75,10 @@ const getInvoiceByIdRequest = () => ({
 const getInvoiceByIdSuccess = payload => ({
     type: GET_INVOICE_BY_ID_SUCCESS,
     payload,
+});
+
+const getInvoiceByIdError = () => ({
+    type: GET_INVOICE_BY_ID_ERROR,
 });
 
 const createInvoiceRequest = () => ({
@@ -48,6 +95,15 @@ const changeInvoiceSuccess = () => ({
 
 const getInvoiceListRequest = () => ({
     type: GET_INVOICE_LIST_REQUEST,
+});
+
+const getInvoiceListInitialRequest = () => ({
+    type: GET_INVOICE_LIST_INITIAL_REQUEST,
+});
+
+const getInvoiceCountsByStatus = payload => ({
+    type: GET_INVOICE_COUNTS_BY_STATUS,
+    payload,
 });
 
 const getInvoiceListSuccess = payload => ({
@@ -88,6 +144,11 @@ const addInvoiceError = payload => ({
     payload,
 });
 
+const changeInitialLoader = payload => ({
+    type: CHANGE_INITIAL_LOADER,
+    payload,
+});
+
 const fillFormDataWithObject = (formData, obj) => {
     for (let key in obj) {
         if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
@@ -107,6 +168,35 @@ const fillFormDataWithObject = (formData, obj) => {
         }
     }
     return formData;
+};
+
+export const getPartialPaymentsRequest = invoiceId => {
+    return async dispatch => {
+        dispatch(partialPaymentsRequest());
+        try {
+            const { data } = await getPartialPayments(invoiceId);
+            dispatch(partialPaymentsRequestSuccess(data));
+        } catch (error) {
+            dispatch(partialPaymentsRequestFail(error));
+        }
+    };
+};
+
+export const addPartialPayments = payload => {
+    return async dispatch => {
+        dispatch(addPartialPaymentsRequest());
+        try {
+            await postPartialPayments(payload);
+            dispatch(addPartialPaymentsRequestSuccess());
+            dispatch(getPartialPaymentsRequest(payload.invoiceId));
+        } catch (error) {
+            dispatch(addPpartialPaymentsRequestFail(error));
+        }
+    };
+};
+
+export const resetInvoicesParams = () => dispatch => {
+    dispatch(changePage(0));
 };
 
 export const addInvoice = (payload, isClone) => async dispatch => {
@@ -203,12 +293,26 @@ export const sendInvoiceLetterThunk = (invoiceId, data, isInvoicePageDetailed) =
     }
 };
 
-export const getInvoicesList = (page, limit, searchValue = '') => async dispatch => {
-    dispatch(getInvoiceListRequest());
+export const getInvoicesList = ({
+    page,
+    limit,
+    searchValue = null,
+    status = null,
+    isInitialFetching = false,
+}) => async dispatch => {
+    if (isInitialFetching) {
+        dispatch(getInvoiceListInitialRequest());
+    } else {
+        dispatch(getInvoiceListRequest());
+    }
+    const params = {
+        search: searchValue,
+        page: page + 1,
+        limit,
+        status: status === 'all' ? null : status,
+    };
     try {
-        const res = await getInvoices(
-            searchValue ? { page: page + 1, limit: limit, search: searchValue } : { page: page + 1, limit: limit }
-        );
+        const res = await getInvoices(params);
         if (res.data.data.invoices.length > 0) {
             const senderId = res.data.data.invoices[0].from.id;
             dispatch(setSenderIdAC(senderId));
@@ -226,7 +330,12 @@ export const getInvoicesList = (page, limit, searchValue = '') => async dispatch
         );
 
         if (+res.data.data.pagination.pagesAmount > 0) {
-            dispatch(getInvoiceTotal(searchValue));
+            dispatch(
+                getInvoiceTotal({
+                    searchValue: params.search,
+                    status: params.status,
+                })
+            );
         } else {
             dispatch(getGrandTotal({}));
         }
@@ -235,10 +344,23 @@ export const getInvoicesList = (page, limit, searchValue = '') => async dispatch
     }
 };
 
-export const getInvoiceTotal = (searchValue = '') => async dispatch => {
+export const getInvoiceTotal = ({ searchValue = null, status = null }) => async dispatch => {
+    const params = {
+        search: searchValue,
+        status,
+    };
     try {
-        const res = await getInvoicesTotal(searchValue ? { search: searchValue } : {});
+        const res = await getInvoicesTotal(params);
         dispatch(getGrandTotal(res.data));
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getInvoicesCountsByStatusAction = () => async dispatch => {
+    try {
+        const res = await getInvoicesCountsByStatus();
+        dispatch(getInvoiceCountsByStatus(res.data));
     } catch (error) {
         console.log(error);
     }
@@ -250,12 +372,15 @@ export const getInvoiceViewDataThunk = id => async dispatch => {
         const res = await getInvoiceViewData(id);
         dispatch(getInvoiceByIdSuccess(res.data));
     } catch (error) {
+        dispatch(getInvoiceByIdError());
         console.log(error);
     }
 };
 
-export const updateInvoice = payload => async dispatch => {
-    dispatch(changeInvoiceRequest());
+export const updateInvoice = (payload, withLoader) => async dispatch => {
+    if (withLoader) {
+        dispatch(changeInvoiceRequest());
+    }
     let formData = payload.image;
     try {
         let requestBody = {
@@ -284,7 +409,6 @@ export const updateInvoice = payload => async dispatch => {
         if (formData instanceof FormData) {
             requestBody = fillFormDataWithObject(formData, requestBody);
         }
-        console.log(requestBody);
         await changeInvoice({ invoiceId: payload.id, data: requestBody });
         dispatch(changeInvoiceSuccess());
     } catch (error) {
@@ -344,4 +468,8 @@ export const editInvoicePaymentStatus = (invoiceId, status) => async dispatch =>
     } catch (error) {
         console.log(error);
     }
+};
+
+export const changeInitialLoaderAction = value => dispatch => {
+    dispatch(changeInitialLoader(value));
 };

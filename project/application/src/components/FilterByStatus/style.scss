@@ -1,0 +1,30 @@
+.filter-by-status {
+  display: flex;
+  width: 100%;
+  padding: 0 40px;
+  border-bottom: 1px solid #bdbdbd4d;
+  @media (max-width: 576px) {
+    flex-wrap: wrap;
+    padding: 0 20px;
+  }
+  &__status {
+    padding: 8px 0;
+    margin-right: 40px;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 19px;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    @media (max-width: 576px) {
+      margin-right: 30px;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+    &--active {
+      color: #27ae60;
+      border-bottom: 2px solid #27ae60;
+    }
+  }
+}

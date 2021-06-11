@@ -1,0 +1,58 @@
+.partial-payment {
+  width: 100%;
+  margin-top: 40px;
+  &__action {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    & > p {
+      margin: 0;
+      margin-right: 10px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    & > svg {
+      cursor: pointer;
+    }
+  }
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+  &__list-sides {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #292929;
+    padding: 10px 16px;
+  }
+
+  &__payment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+  }
+
+  &__payment:not(:last-child) {
+    border-bottom: 1px solid #3f3f3f;
+  }
+
+  &__comment {
+    width: calc(40% - 32px);
+  }
+  &__date,
+  &__currency,
+  &__outstanding,
+  &__paid {
+    width: 15%;
+  }
+  &__currency,
+  &__paid,
+  &__outstanding {
+    text-align: end;
+  }
+  &__total {
+    width: calc(55% - 32px);
+  }
+}

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { deleteInvoiceById } from '../../../actions/InvoicesActions';
-import DeleteInvoiceModal from '../../../components/DeleteInvoiceModal/index';
 import InvoiceList from '../../InvoiceList/index';
 import CustomPagination from '../../CustomPagination/index';
 import { spaceAndFixNumber, fixNumberHundredths, internationalFormatNum } from '../../../services/numberHelpers';
@@ -241,16 +239,19 @@ export const SendIcon = ({ className, onClick, color }) => (
 const AllInvoicesList = ({
     invoices,
     vocabulary,
+    isMobile,
     toggleSendInvoiceModal,
     history,
-    deleteInvoiceById,
     copyInvoice,
     page,
     pageCount,
     changePage,
     grandTotal,
     confirmationModalHandler,
+    editConfirmationModalHandler,
     setCurrentInvoice,
+    openCloseModal,
+    partialPaymentModalHandler,
 }) => {
     const {
         v_draft,
@@ -274,13 +275,6 @@ const AllInvoicesList = ({
                 return v_overdue;
             }
         }
-    };
-
-    const [modalOpeningId, openCloseModal] = useState(false);
-
-    const deleteInvoice = id => {
-        openCloseModal(false);
-        deleteInvoiceById(id);
     };
 
     return (
@@ -312,6 +306,7 @@ const AllInvoicesList = ({
                 return (
                     <InvoiceList
                         invoice={invoice}
+                        isMobile={isMobile}
                         openCloseModal={openCloseModal}
                         toggleSendInvoiceModal={toggleSendInvoiceModal}
                         getInvoice={getInvoice}
@@ -319,7 +314,9 @@ const AllInvoicesList = ({
                         history={history}
                         key={id}
                         confirmationModalHandler={confirmationModalHandler}
+                        editConfirmationModalHandler={editConfirmationModalHandler}
                         setCurrentInvoice={setCurrentInvoice}
+                        partialPaymentModalHandler={partialPaymentModalHandler}
                     />
                 );
             })}
@@ -341,24 +338,10 @@ const AllInvoicesList = ({
                 </div>
             )}
             {pageCount > 1 && <CustomPagination page={page} pageCount={pageCount} changePage={changePage} />}
-            {modalOpeningId && (
-                <DeleteInvoiceModal
-                    deleteInvoice={deleteInvoice}
-                    openCloseModal={openCloseModal}
-                    modalOpeningId={modalOpeningId}
-                />
-            )}
         </div>
     );
 };
 
 const mapStateToProps = ({ invoicesReducer, userReducer }) => ({});
 
-const mapDispatchToProps = {
-    deleteInvoiceById,
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AllInvoicesList);
+export default connect(mapStateToProps)(AllInvoicesList);

@@ -19,7 +19,7 @@ import { DeleteIcon, EditIcon, SaveInvoice } from '../InvoicePageComponents/AllI
 import { calculateSubtotalWithoutTax } from '../../pages/InvoicesPageDetailed';
 import { Loading } from '../Loading';
 
-const PlusIcon = ({ className, onClick }) => (
+export const PlusIcon = ({ className, onClick }) => (
     <svg
         className={className}
         onClick={onClick}
@@ -179,7 +179,6 @@ class DetailedInvoiceProjectsTable extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        console.log(prevProps, this.props);
         if (prevProps.reset !== this.props.reset && this.props.reset) {
             this.setState({ editingProject: { ...emptyProject } });
         }

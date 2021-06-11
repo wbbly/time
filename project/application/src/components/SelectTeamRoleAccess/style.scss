@@ -21,13 +21,14 @@
   &__list {
     position: absolute;
     z-index: 15;
-    width: 100%;
+    width: auto;
     right: 0;
     top: 100%;
-    background:#27292A;
+    background: #27292a;
     box-shadow: 2px 2px 4px black;
     padding: 5px;
     overflow: hidden;
+    white-space: nowrap;
   }
 
   &__list-item {
@@ -44,7 +45,7 @@
 
   &__icon-arrow {
     position: absolute;
-    top: 11px;
+    top: calc(50% - 1rem);
     right: 10px;
     height: 21px;
     width: 11px;

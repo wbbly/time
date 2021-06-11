@@ -89,6 +89,11 @@
       &__textarea {
         height: 40px;
       }
+      &__textarea:disabled {
+        color: #fff;
+        -webkit-text-fill-color: #fff;
+        opacity: 1;
+      }
     }
     &__icon-button {
       cursor: pointer;

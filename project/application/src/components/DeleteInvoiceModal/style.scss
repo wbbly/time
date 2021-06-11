@@ -32,7 +32,7 @@
 
       &-title {
         font-size: 16px;
-        color: #000000;;
+        color: #000000;
         font-weight: 600;
       }
 
@@ -46,19 +46,19 @@
       }
     }
     &-content {
-      color:  #273443;;
-      margin-top:24px;
+      color: #273443;
+      margin-top: 24px;
       font-size: 14px;
     }
-    &-btn{
-        
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        justify-self: center;
-        font-size: 18px;
-        cursor: pointer;
-        div{
+    &-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      justify-self: center;
+      font-size: 18px;
+      cursor: pointer;
+      color: #ffffff;
+      div {
         background-color: #eb5757;
         width: 182px;
         height: 41px;
@@ -66,9 +66,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-top:44px;
-        }
+        margin-top: 44px;
       }
+    }
   }
-  
 }
