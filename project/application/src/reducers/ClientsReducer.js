@@ -5,11 +5,15 @@ import {
     CHANGE_CLIENTS_REQUEST,
     CHANGE_CLIENTS_SUCCESS,
     CHANGE_CLIENTS_ERROR,
+    CHANGE_CLIENTS_SEARCH_VALUE,
+    CHANGE_CLIENTS_FILTER_STATUS,
 } from '../actions/ClientsActions';
 
 const initialState = {
     clientsList: null,
     isFetching: false,
+    searchValue: '',
+    filterStatus: 'all',
     isInitialFetching: true,
     error: null,
 };
@@ -19,21 +23,18 @@ export default (state = initialState, { type, payload }) => {
         case GET_CLIENTS_REQUEST:
             return {
                 ...state,
-                isFetching: true,
                 isInitialFetching: false,
             };
         case GET_CLIENTS_REQUEST_SUCCESS:
             return {
                 ...state,
                 clientsList: payload,
-                isFetching: false,
                 isInitialFetching: false,
             };
         case GET_CLIENTS_REQUEST_ERROR:
             return {
                 ...state,
                 error: payload,
-                isFetching: false,
                 isInitialFetching: false,
             };
         case CHANGE_CLIENTS_REQUEST:
@@ -53,6 +54,16 @@ export default (state = initialState, { type, payload }) => {
                 ...state,
                 error: payload,
                 isFetching: false,
+            };
+        case CHANGE_CLIENTS_SEARCH_VALUE:
+            return {
+                ...state,
+                searchValue: payload,
+            };
+        case CHANGE_CLIENTS_FILTER_STATUS:
+            return {
+                ...state,
+                filterStatus: payload,
             };
         case 'RESET_ALL':
             return {

@@ -81,7 +81,7 @@ const SyncIcon = props => {
 class AddTask extends Component {
     state = {
         issue: '',
-        projectId: null,
+        project: null,
         isUpdating: false,
     };
 
@@ -101,17 +101,36 @@ class AddTask extends Component {
 
     static getDerivedStateFromProps(props, state) {
         const { timeEntriesList, currentTimer, projectsList } = props;
+        const isArchived = (projectIdFromTimeEntry, allProjects) => {
+            const project = allProjects.find(item => item.id === projectIdFromTimeEntry);
+            if (project && project.isActive) {
+                return false;
+            }
+            return true;
+        };
+        const findUnarchivedProject = (timeEntriesList, projectsList) => {
+            return timeEntriesList.find(item => !isArchived(item.project.id, projectsList));
+        };
+
         // check first render
-        if (state.projectId === null) {
+        if (state.project === null) {
             if (currentTimer) {
                 return {
                     issue: currentTimer.issue,
-                    projectId: currentTimer.project.id,
+                    project: currentTimer.project,
                 };
             } else {
-                const projectId = timeEntriesList[0] ? timeEntriesList[0].project.id : projectsList[0].id;
+                let project = null;
+                if (timeEntriesList[0]) {
+                    const unarchivedProject = findUnarchivedProject(timeEntriesList, projectsList)?.project;
+                    if (unarchivedProject) {
+                        project = unarchivedProject;
+                    }
+                } else {
+                    project = projectsList[0];
+                }
                 return {
-                    projectId,
+                    project,
                 };
             }
         }
@@ -122,7 +141,7 @@ class AddTask extends Component {
         const { currentTimer } = this.props;
         this.setState({
             issue: currentTimer.issue,
-            projectId: currentTimer.project.id,
+            project: currentTimer.project,
         });
     };
 
@@ -134,22 +153,29 @@ class AddTask extends Component {
 
     startTimer = event => {
         const { showNotificationAction, vocabulary } = this.props;
-        const { v_a_task_name_before, v_a_starting, v_a_time_tracking } = vocabulary;
-        const { issue, projectId } = this.state;
-        if (issue.trim()) {
-            this.setState({
-                isUpdating: true,
-            });
-            startTimerSocket({
-                issue,
-                projectId,
-            });
+        const { v_a_task_name_before, v_a_starting, v_a_time_tracking, v_a_project_before } = vocabulary;
+        const { issue, project } = this.state;
+        if (project) {
+            if (issue.trim()) {
+                this.setState({
+                    isUpdating: true,
+                });
+                startTimerSocket({
+                    issue,
+                    projectId: project.id,
+                });
+            } else {
+                this.setState({
+                    issue: '',
+                });
+                showNotificationAction({
+                    text: `${v_a_task_name_before} ${v_a_starting} ${v_a_time_tracking}`,
+                    type: 'warning',
+                });
+            }
         } else {
-            this.setState({
-                issue: '',
-            });
             showNotificationAction({
-                text: `${v_a_task_name_before} ${v_a_starting} ${v_a_time_tracking}`,
+                text: `${v_a_project_before} ${v_a_starting} ${v_a_time_tracking}`,
                 type: 'warning',
             });
         }
@@ -188,7 +214,7 @@ class AddTask extends Component {
         }
     };
 
-    onChangeProject = id => {
+    onChangeProject = project => {
         const { currentTimer } = this.props;
         const { issue } = this.state;
         if (currentTimer) {
@@ -196,12 +222,12 @@ class AddTask extends Component {
                 isUpdating: true,
             });
             updateTimerSocket({
-                projectId: id,
+                projectId: project.id,
                 issue,
             });
         } else {
             this.setState({
-                projectId: id,
+                project,
             });
         }
     };
@@ -255,7 +281,7 @@ class AddTask extends Component {
     }
 
     render() {
-        const { issue, projectId, isUpdating } = this.state;
+        const { issue, project, isUpdating } = this.state;
         const { currentTimer, vocabulary, timerTick, isMobile, handleJiraSync, user } = this.props;
         const { v_add_your_task_name, v_jira_synchronization } = vocabulary;
         return (
@@ -282,7 +308,7 @@ class AddTask extends Component {
                         withFolder
                         disabled={isUpdating}
                         onChange={this.onChangeProject}
-                        selectedProjectId={projectId}
+                        selectedProject={project}
                     />
                     <span className="add-task__duration">{timerTick ? timerTick : '00:00:00'}</span>
                     <Loading mode="overlay" flag={isUpdating} withLogo={false} circle width="3.6rem" height="3.6rem">

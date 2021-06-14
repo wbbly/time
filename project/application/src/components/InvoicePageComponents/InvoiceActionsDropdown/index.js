@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import './style.scss';
-import { CopyIcon, CopyLinkIcon, DeleteIcon, EditIcon, SaveIcon, SendIcon } from '../../InvoiceList';
+import { CopyIcon, CopyLinkIcon, DeleteIcon, EditIcon, SaveIcon, SendIcon } from '../../SvgIcons';
 
 const ConfirmSvg = ({ className }) => (
     <svg
@@ -46,6 +46,41 @@ const CancelConfirmSVG = ({ className }) => (
     </svg>
 );
 
+const AddPaymentSVG = ({ className }) => (
+    <svg
+        width="18"
+        height="18"
+        className={className}
+        viewBox="0 0 18 18"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M8.625 14.25H2.25C1.42157 14.25 0.75 13.5784 0.75 12.75V3.75C0.75 2.92157 1.42157 2.25 2.25 2.25H15.75C16.5784 2.25 17.25 2.92157 17.25 3.75V10.5"
+            stroke="black"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path d="M0.75 5.25H17.25" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="12.75" cy="12" r="4.5" stroke="black" strokeWidth="1.5" />
+        <path
+            d="M10.875 12.0002H14.625"
+            stroke="black"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M12.75 13.8752L12.75 10.1252"
+            stroke="black"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
+
 const InvoiceActionsDropdown = ({
     downloadHandler,
     sendHandler,
@@ -57,6 +92,7 @@ const InvoiceActionsDropdown = ({
     vocabulary,
     confirmPayment,
     confirmed,
+    addPartialPaymentHandler,
 }) => {
     const {
         v_download,
@@ -67,6 +103,7 @@ const InvoiceActionsDropdown = ({
         v_copy_and_share,
         v_confirm_payment,
         v_cancel_confirm,
+        v_add_part_of_payment,
     } = vocabulary;
     return (
         <div className="invoice-action-dropdown__wrapper">
@@ -128,6 +165,14 @@ const InvoiceActionsDropdown = ({
                     </div>
                     <div className="invoice-action-dropdown__item-text">{v_copy_and_share}</div>
                 </div>
+                {!confirmed && (
+                    <div className="invoice-action-dropdown__item" onClick={addPartialPaymentHandler}>
+                        <div className="invoice-action-dropdown__item-icon-block">
+                            <AddPaymentSVG className="invoice-action-dropdown__item-icon action-icon" />
+                        </div>
+                        <div className="invoice-action-dropdown__item-text">{v_add_part_of_payment}</div>
+                    </div>
+                )}
             </div>
         </div>
     );

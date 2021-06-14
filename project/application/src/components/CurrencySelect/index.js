@@ -9,7 +9,6 @@ import { scrollToAction } from '../../actions/ResponsiveActions';
 import './style.scss';
 
 import currenciesList from '../../services/currenciesList.json';
-// const currencies = ['usd', 'eur', 'uah'];
 
 class CurrencySelect extends Component {
     constructor(props) {
@@ -24,16 +23,6 @@ class CurrencySelect extends Component {
             currencyList: [],
         };
     }
-
-    // static getDerivedStateFromProps(props, state) {
-    //     if (state.projectsList === null) {
-    //         const { projectsList } = props;
-    //         return {
-    //             projectsList,
-    //         };
-    //     }
-    //     return null;
-    // }
 
     openDropdown = event => {
         const { onChangeVisibility, disabled } = this.props;
@@ -95,8 +84,6 @@ class CurrencySelect extends Component {
                     scrollToAction(diff);
                 }
             }
-        }
-        if (prevState.isOpen && !isOpen) {
         }
     }
 

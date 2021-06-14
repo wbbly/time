@@ -12,6 +12,9 @@ import {
     deleteInvoiceById,
     deleteAvatarThunk,
     setCopiedInvoiceId,
+    getPartialPaymentsRequest,
+    clearPartialPaymentInfo,
+    editInvoicePaymentStatus,
 } from '../../actions/InvoicesActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 import { getProjectsListActions } from '../../actions/ProjectsActions';
@@ -50,7 +53,10 @@ import ImagePicker from '../../components/ImagePicker';
 import SendInvoiceModal from '../../components/InvoicePageComponents/SendInvoiceModal';
 import DeleteInvoiceModal from '../../components/DeleteInvoiceModal/index';
 import DiscountInvoiceModal from '../../components/DiscountInvoiceModal';
+import PartialPayment from '../../components/InvoicePageComponents/PartialPayment';
+import AddPaymentModal from '../../components/InvoicePageComponents/AddPaymentModal';
 import { checkAccessByRole, ROLES } from '../../services/authentication';
+import ConfirmationModal from '../../components/ConfirmationModal';
 
 //todo move to queries.js if needed
 export const calculateTaxSum = ({ amount, rate, tax, hours }) => (((amount || hours) * rate) / 100) * tax;
@@ -63,7 +69,7 @@ export const calculateSubtotals = projects =>
     projects.reduce((sum, { amount, rate, hours }) => sum + (amount || hours) * rate, 0) || 0;
 export const calculateTaxesSum = projects => projects.reduce((sum, project) => sum + calculateTaxSum(project), 0) || 0;
 export const subtotalWithDiscount = (subtotal, discount = 0) => (subtotal / 100) * discount;
-const calculateTotal = (projects, discount = 0) => {
+export const calculateTotal = (projects, discount = 0) => {
     let subtotal = calculateSubtotals(projects);
     return subtotal - subtotalWithDiscount(subtotal, discount) + calculateTaxesSum(projects);
 };
@@ -118,7 +124,11 @@ class InvoicesPageDetailed extends Component {
         discountModalIsOpen: false,
         copiedInvoice: false,
         resetDetailedInvoice: false,
+        addPaymentModal: false,
+        editConfirmationWindowFlag: false,
     };
+
+    initialInvoice = { ...this.state.invoice };
 
     copyLinkRef = React.createRef();
 
@@ -137,19 +147,21 @@ class InvoicesPageDetailed extends Component {
             getClientsAction,
             getInvoice,
             setCopiedInvoiceId,
+            getPartialPaymentsRequest,
             match: { params },
         } = this.props;
 
         if (this.isUpdateMode || this.isViewMode) {
             getInvoice(params['invoiceId']);
+            getPartialPaymentsRequest(params['invoiceId']);
         }
 
-        await getProjectsListActions();
-        await getCurrentTeamDetailedDataAction();
-        await getClientsAction({
-            order_by: 'company_name',
-            sort: 'asc',
+        await getProjectsListActions({
+            withTimerList: false,
+            withUserInfo: false,
         });
+        await getCurrentTeamDetailedDataAction();
+        await getClientsAction();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -175,24 +187,26 @@ class InvoicesPageDetailed extends Component {
                 invoice_vendor,
                 reference,
             } = this.props.invoice;
+            const invoice = {
+                id,
+                vendorId: this.props.defaultUserSender.id,
+                invoiceNumber: invoice_number,
+                reference: reference,
+                dateFrom: invoice_date,
+                dateDue: due_date,
+                timezoneOffset: timezone_offset,
+                currency,
+                sender: invoice_vendor,
+                recipient: to,
+                image: logo,
+                projects,
+                comment,
+                discount,
+            };
             this.setState({
-                invoice: {
-                    id,
-                    vendorId: this.props.defaultUserSender.id,
-                    invoiceNumber: invoice_number,
-                    reference: reference,
-                    dateFrom: invoice_date,
-                    dateDue: due_date,
-                    timezoneOffset: timezone_offset,
-                    currency,
-                    sender: invoice_vendor,
-                    recipient: to,
-                    image: logo,
-                    projects,
-                    comment,
-                    discount,
-                },
+                invoice,
             });
+            this.initialInvoice = { ...invoice };
         } else if (this.props.sameInvoiceNumberErr !== prevProps.sameInvoiceNumberErr) {
             this.setState({ invoice: prevState.invoice });
         } else if (prevProps.copiedInvoiceId !== this.props.copiedInvoiceId && this.state.copiedInvoice) {
@@ -207,6 +221,7 @@ class InvoicesPageDetailed extends Component {
         if (this.props.copiedInvoiceId) {
             this.handleDeleteInvoice(false);
         }
+        this.props.clearPartialPaymentInfo();
     }
 
     get isCreateMode() {
@@ -220,6 +235,10 @@ class InvoicesPageDetailed extends Component {
     get isUpdateMode() {
         return this.props.match.params.pageType === 'update';
     }
+
+    addPaymentModalHandler = () => {
+        this.setState({ addPaymentModal: !this.state.addPaymentModal });
+    };
 
     getNewInvoiceNumber = () => {
         apiCall(AppConfig.apiURL + `invoice/free-invoice-number`, {
@@ -264,11 +283,10 @@ class InvoicesPageDetailed extends Component {
     };
 
     handleAddProject = project => {
-        let { invoice } = this.state;
-
-        invoice.projects.push(project);
-        this.setState({ invoice });
-
+        const projects = [...this.state.invoice.projects, project];
+        this.setState(prevState => ({
+            invoice: { ...prevState.invoice, projects },
+        }));
         return new Promise(resolve => {
             setTimeout(resolve, 500);
         });
@@ -281,10 +299,13 @@ class InvoicesPageDetailed extends Component {
     };
 
     onChangeCurrency = currency => {
-        let { invoice } = this.state;
+        let invoice = { ...this.state.invoice };
+        let initialInvoice = { ...this.initialInvoice };
         invoice.currency = currency;
+        initialInvoice.currency = currency;
 
         this.setState({ invoice });
+        this.props.updateInvoice(initialInvoice, false);
     };
 
     handleDateChange = (name, value) => {
@@ -370,7 +391,7 @@ class InvoicesPageDetailed extends Component {
             }
         }
         if (this.isUpdateMode) {
-            await updateInvoice(invoice);
+            await updateInvoice(invoice, true);
             if (this.props.sameInvoiceNumberErr) {
                 if (this.props.sameInvoiceNumberErr === 'ERROR.CHECK_REQUEST_PARAMS(INVOICE_NUM_ALREADY_EXISTS)') {
                     showNotificationAction({ text: v_invoice_number_exist, type: 'error' });
@@ -480,7 +501,7 @@ class InvoicesPageDetailed extends Component {
         if (this.props.copiedInvoiceId) {
             this.handleDeleteInvoice(false);
         }
-        this.props.history.goBack();
+        this.props.history.push(`/invoices`);
     };
 
     copyToClipBoard = invoice => {
@@ -503,12 +524,34 @@ class InvoicesPageDetailed extends Component {
     };
 
     saveDiscount = discount => {
-        let { invoice } = this.state;
-        invoice.discount = discount;
+        if (discount) {
+            let { invoice } = this.state;
+            invoice.discount = discount;
 
-        this.setState({ invoice });
-
+            this.setState({ invoice });
+        }
         this.closeDiscountModal();
+    };
+
+    checkInvoiceStatus = invoice => {
+        if (invoice.status === 'awaiting' || invoice.status === 'reviewed') {
+            this.editConfirmationModalToggler();
+            return;
+        }
+        this.props.history.push(`/invoices/update/${this.state.invoice.id}`);
+    };
+
+    editConfirmationModalToggler = () => {
+        this.setState(prevState => ({ editConfirmationWindowFlag: !prevState.editConfirmationWindowFlag }));
+    };
+
+    confirmEditHandler = () => {
+        this.editConfirmationModalToggler();
+        this.props.history.push(`/invoices/update/${this.state.invoice.id}`);
+    };
+
+    cancelEditHandler = () => {
+        this.editConfirmationModalToggler();
     };
 
     render() {
@@ -519,6 +562,7 @@ class InvoicesPageDetailed extends Component {
             isFetching,
             showNotificationAction,
             userRole,
+            payments,
         } = this.props;
         const {
             v_invoice,
@@ -547,6 +591,8 @@ class InvoicesPageDetailed extends Component {
             v_add_a_discount,
             v_discount,
             v_invoice_reference,
+            v_edit_confirmation_window,
+            v_confirm,
         } = vocabulary;
         const {
             isInitialFetching,
@@ -876,17 +922,27 @@ class InvoicesPageDetailed extends Component {
                                         </button>
                                     </div>
                                 )}
+                                {!this.isCreateMode && (
+                                    <PartialPayment
+                                        invoice={this.state.invoice}
+                                        payments={payments}
+                                        calculateTotal={calculateTotal}
+                                        addPaymentModalHandler={this.addPaymentModalHandler}
+                                        vocabulary={vocabulary}
+                                    />
+                                )}
                             </div>
                             <div className="invoices-page-detailed__tools">
                                 <div className="invoices-page-detailed__tools-container">
                                     {this.isViewMode ? (
-                                        <Link
+                                        <div
                                             data-tip={v_edit}
                                             to={`/invoices/update/${invoice.id}`}
                                             className="invoices-page-detailed__tool-button"
+                                            onClick={() => this.checkInvoiceStatus(this.props.invoice)}
                                         >
                                             <EditIcon className="invoices-page-detailed__icon-button" />
-                                        </Link>
+                                        </div>
                                     ) : (
                                         <div
                                             data-tip={v_save}
@@ -994,10 +1050,6 @@ class InvoicesPageDetailed extends Component {
                                             })}
                                         />
                                     </button>
-                                    {/* {this.isViewMode && (
-                                        <ReactTooltip className={'tool-tip'} arrowColor={' #FFFFFF'} place="right" />
-                                    )}
-                                    {!this.isViewMode && ( */}
                                     <ReactTooltip
                                         id={this.isViewMode ? null : 'save'}
                                         className={'tool-tip'}
@@ -1015,8 +1067,25 @@ class InvoicesPageDetailed extends Component {
                                 openCloseModal={this.closeDeleteModal}
                             />
                         )}
+                        {this.state.addPaymentModal && (
+                            <AddPaymentModal
+                                addPaymentModalHandler={this.addPaymentModalHandler}
+                                confirmPaymentHandler={() => this.props.editInvoicePaymentStatus(invoice.id, true)}
+                                invoiceId={this.state.invoice.id}
+                                total={calculateTotal(this.state.invoice.projects, this.state.invoice.discount)}
+                            />
+                        )}
                     </div>
                 </CustomScrollbar>
+                {this.state.editConfirmationWindowFlag && (
+                    <ConfirmationModal
+                        vocabulary={vocabulary}
+                        confirmHandler={this.confirmEditHandler}
+                        cancelHandler={this.cancelEditHandler}
+                    >
+                        {v_edit_confirmation_window}
+                    </ConfirmationModal>
+                )}
             </Loading>
         );
     }
@@ -1031,6 +1100,7 @@ const mapStateToProps = ({ teamReducer, clientsReducer, invoicesReducer, userRed
     sameInvoiceNumberErr: invoicesReducer.error,
     copiedInvoiceId: invoicesReducer.copiedInvoiceId,
     userRole: teamReducer.currentTeam.data.role,
+    payments: invoicesReducer.partialPayments,
 });
 
 const mapDispatchToProps = {
@@ -1044,6 +1114,9 @@ const mapDispatchToProps = {
     showNotificationAction,
     deleteAvatarThunk,
     setCopiedInvoiceId,
+    getPartialPaymentsRequest,
+    clearPartialPaymentInfo,
+    editInvoicePaymentStatus,
 };
 
 export default withRouter(

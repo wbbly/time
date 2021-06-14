@@ -150,7 +150,11 @@ class ClientModal extends Component {
                         }}
                     >
                         {formik => (
-                            <form className="billing-modal__container-form" onSubmit={formik.handleSubmit} noValidate>
+                            <form
+                                className="client-modal__body billing-modal__container-form"
+                                onSubmit={formik.handleSubmit}
+                                noValidate
+                            >
                                 <Input
                                     config={{
                                         id: 'company_name',

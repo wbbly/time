@@ -29,7 +29,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    border-bottom: 1px solid #bdbdbd;
+    border-bottom: 1px solid #bdbdbd80;
     height: 63px;
 }
 
@@ -104,13 +104,13 @@
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
-    line-height: 45px;
+    /* line-height: 45px; */
     font-size: 14px;
     color: #4f4f4f;
     opacity: 1;
 }
 
-.create_projects_modal_data
+/* .create_projects_modal_data
     .create_projects_modal_data_input_container
     input:-moz-placeholder {
     font-family: "Open Sans", sans-serif;
@@ -120,7 +120,7 @@
     font-size: 14px;
     color: #4f4f4f;
     opacity: 1;
-}
+} */
 
 .create_projects_modal_data
     .create_projects_modal_data_input_container
@@ -143,8 +143,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    padding-left: 10px;
-    width: 70px;
+    padding: 0 5px 0 10px;
     height: 47px;
     margin-left: -1px;
     border: 1px solid #828282;
@@ -156,7 +155,7 @@
 .create_projects_modal_data_select_container .select_list {
     background: white;
     border: 1px solid #828282;
-    width: 70px;
+    width: 69px;
     position: absolute;
     top: 110%;
     left: -1px;
@@ -199,9 +198,9 @@
 }
 
 .create_projects_modal_button_container_button {
-    width: 177px;
+    width: 100%;
     height: 41px;
-    margin-right: 20px;
+    margin: 0 20px;
     border: 0;
     background-color: #27ae60;
     font-family: "Open Sans", sans-serif;
@@ -226,3 +225,66 @@
 .create_projects_modal_container i.vector_up {
   transform: rotate(-180deg);
 }
+
+.create-project__users-select-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 35px;
+    background: #ffffff;
+}
+.create-project__users-select-wrapper::before {
+    content: attr(data-label);
+    position: absolute;
+    font-family: "Open Sans", sans-serif;
+    color: #4f4f4f;
+    font-size: 14px;
+    top: -25px;
+  }
+.create-project__users-selected {
+    padding-left: 16px;
+    flex-grow: 1;
+    height: 47px;
+    border: 1px solid #828282;
+    border-radius: 4px;
+    text-transform: none;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 47px;
+    font-size: 16px;
+    color: #4f4f4f;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-project__vector {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: url("../../images/icons/arrow-down-gray.svg") no-repeat center;
+    transition: all 0.3s;
+    right: 5px;
+    cursor: pointer;
+  }
+.create-project__vector--up {
+    transform: rotate(-180deg);
+}
+.create-project__placeholder {
+    font-size: 14px;
+}
+.create-project__users-selected-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 92%;
+  }
+.create-project__dropdown-container {
+    position: absolute;
+    width: 100%;
+    top: 110%;
+    z-index: 1;
+  }

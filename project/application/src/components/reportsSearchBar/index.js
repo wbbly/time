@@ -463,7 +463,7 @@ class ReportsSearchBar extends Component {
                     const inputProject = inputProjectData[i];
                     for (let j = 0; j < projects.length; j++) {
                         const currentProject = projects[j];
-                        if (JSON.stringify(currentProject).indexOf(inputProject) > -1) {
+                        if (currentProject.name === inputProject) {
                             this.toggleProject(currentProject);
                             break;
                         }
@@ -489,29 +489,9 @@ class ReportsSearchBar extends Component {
         }
     }
 
-    sortData = (data, type) => {
-        let selectedData = [];
-        let noSelectedData = [];
-        data.forEach(item => {
-            if (
-                (type === 'user' && this.getCheckedUsers(item.id)) ||
-                (type === 'project' && this.getCheckedProjects(item.id)) ||
-                (type === 'client' && this.getCheckedClients(item.id))
-            ) {
-                selectedData.push(item);
-            } else {
-                noSelectedData.push(item);
-            }
-        });
-        return selectedData.concat(noSelectedData);
-    };
-
     render() {
         const { vocabulary } = this.props;
         const { v_user, v_project, v_find, v_select_all, v_select_none, v_apply, v_client } = vocabulary;
-        const sortedUserData = this.sortData(this.state.userDataFiltered, 'user');
-        const sortedProjectData = this.sortData(this.state.projectDataFiltered, 'project');
-        const sortedClientData = this.sortData(this.state.clientDataFiltered, 'client');
         return (
             <div className="wrapper_reports_search_bar">
                 <div className="reports_search_bar_search_field_container select">
@@ -557,7 +537,7 @@ class ReportsSearchBar extends Component {
                                 <i className="small_clear" onClick={_ => this.clearUserSearch()} />
                             </div>
                             <div className="select_items_container">
-                                {sortedUserData.map((item, index) => (
+                                {this.state.userDataFiltered.map((item, index) => (
                                     <div className="select_users_item" key={item.email}>
                                         <label>
                                             <ThemeProvider theme={materialTheme}>
@@ -630,7 +610,7 @@ class ReportsSearchBar extends Component {
                                 <i className="small_clear" onClick={_ => this.clearProjectSearch()} />
                             </div>
                             <div className="select_items_container">
-                                {sortedProjectData.map((item, index) => (
+                                {this.state.projectDataFiltered.map((item, index) => (
                                     <div className="select_users_item" key={item.id}>
                                         <label>
                                             <ThemeProvider theme={materialTheme}>
@@ -703,7 +683,7 @@ class ReportsSearchBar extends Component {
                                 <i className="small_clear" onClick={_ => this.clearClientSearch()} />
                             </div>
                             <div className="select_items_container">
-                                {sortedClientData.map((item, index) => (
+                                {this.state.clientDataFiltered.map((item, index) => (
                                     <div className="select_users_item" key={item.id}>
                                         <label>
                                             <ThemeProvider theme={materialTheme}>

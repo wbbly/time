@@ -1,5 +1,7 @@
 .reports_by_projects_wrapper {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   background-color: #333333;
@@ -19,17 +21,23 @@
       font-size: 2rem;
       color: #ffffff;
       &--task {
-        width: 150px;
+        display: flex;
       }
       &--time {
         width: 230px;
         text-align: right;
       }
+      .tasks_sum {
+        margin-right: 40px;
+      }
     }
   }
 
   .tasks_wrapper {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
     font-family: "Open Sans", sans-serif;
     line-height: 22px;
     font-size: 16px;
@@ -68,6 +76,7 @@
     }
     .time {
       width: 208px;
+      padding-right: 10px;
       text-align: right;
       white-space: nowrap;
     }
@@ -85,20 +94,22 @@
       display: inline-flex;
       flex-wrap: wrap;
       margin-bottom: 10px;
-      &:not(:last-child){
+      &:not(:last-child) {
         font-size: 18px;
         color: #bdbdbd;
       }
     }
   }
-
+  .tasks_data_wrap {
+    height: 100%;
+    margin-top: 32px;
+    border-top: 1px solid #bdbdbd;
+  }
   .tasks_data_container--mobile {
     font-family: "Open Sans", sans-serif;
     line-height: normal;
     font-size: 16px;
     color: #ffffff;
-    border-top: 1px solid #bdbdbd;
-    margin-top: 32px;
     .tasks_data--mobile {
       padding: 15px 0;
       border-bottom: 1px solid rgba(189, 189, 189, 0.11);
@@ -121,7 +132,7 @@
       }
     }
   }
-    
+
   .wrapper_reports_by_project_search_bar {
     height: auto;
     flex-direction: column;

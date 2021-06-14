@@ -111,7 +111,7 @@ class UserSetting extends Component {
         return `+${code}`;
     };
 
-    changeUserSetting = async ({ userName: username, ...rest }) => {
+    changeUserSetting = async ({ userName: username, zip, ...rest }) => {
         const { vocabulary, changeUserData, userReducer, showNotificationAction } = this.props;
         const { v_a_data_updated_ok, lang } = vocabulary;
 
@@ -124,6 +124,7 @@ class UserSetting extends Component {
             phone: (phone.value || '').trim().indexOf(' ') > -1 ? phone.value : '',
             language: lang.short,
             technologies: userTechnologies.map(item => item.id),
+            zip: String(zip),
         };
 
         try {

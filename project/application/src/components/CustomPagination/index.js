@@ -18,13 +18,13 @@ const CustomPagination = ({ page, pageCount, changePage }) => {
     return (
         <div className="custom-pagination">
             <ReactPaginate
+                forcePage={page}
                 pageCount={pageCount}
                 pageRangeDisplayed={2}
                 marginPagesDisplayed={2}
                 previousLabel={<ChevronLeftIcon />}
                 nextLabel={<ChevronRightIcon />}
                 onPageChange={changePage}
-                initialPage={page}
             />
         </div>
     );

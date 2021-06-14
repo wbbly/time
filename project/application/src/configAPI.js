@@ -19,6 +19,23 @@ const instance = axios.create({
     },
 });
 
+export const postPartialPayments = ({ invoiceId, sum, date, comments }) =>
+    instance({
+        url: `/invoice/${invoiceId}/payment`,
+        method: 'POST',
+        data: {
+            sum: sum,
+            date: date,
+            comments: comments,
+        },
+    });
+
+export const getPartialPayments = id =>
+    instance({
+        url: `invoice/${id}/payment-list`,
+        method: 'GET',
+    });
+
 export const setSocialConnect = (userId, { socialId, socialName }) =>
     instance({
         url: `user/${userId}/set-social/${socialName}`,
@@ -113,7 +130,7 @@ export const getClientsList = async (params = {}) => {
     });
 };
 
-export const setClient = data =>
+export const addClient = data =>
     instance({
         url: 'client/add',
         method: 'POST',
@@ -131,6 +148,15 @@ export const deleteClient = id =>
     instance({
         url: `client/${id}`,
         method: 'DELETE',
+    });
+
+export const changeClientActiveStatus = (clientId, status) =>
+    instance({
+        url: `client/${clientId}/active-status`,
+        method: 'PATCH',
+        data: {
+            isActive: status,
+        },
     });
 
 export const deleteTask = id =>
@@ -153,14 +179,28 @@ export const getCurrentTime = () =>
         method: 'GET',
     });
 
-export const getProjectsList = (withTimerList = false) =>
-    instance({
+export const getProjectsList = ({
+    withTimerList = false,
+    withUserInfo = false,
+    page = null,
+    limit = null,
+    searchValue = null,
+    isActive = null,
+}) => {
+    const params = {
+        withTimerList,
+        withUserInfo,
+        page,
+        limit,
+        isActive,
+        searchValue,
+    };
+    return instance({
         url: '/project/list',
         method: 'GET',
-        params: {
-            withTimerList,
-        },
+        params,
     });
+};
 
 export const getRelationProjectsList = syncType =>
     instance({
@@ -168,7 +208,7 @@ export const getRelationProjectsList = syncType =>
         method: 'GET',
     });
 
-// keys for data: issue, projectId, startDatetime, endDatetime
+// keys for data: issue, projectId, startDatetime, endDatetime, timezoneOffset
 export const changeTask = (id, data) =>
     instance({
         url: `/timer/${id}`,
@@ -203,7 +243,7 @@ export const userChangePassword = ({ password, newPassword }) =>
         },
     });
 
-export const addProject = ({ name, projectColorId }) =>
+export const addProject = ({ name, projectColorId, users }) =>
     instance({
         url: '/project/add',
         method: 'POST',
@@ -212,6 +252,7 @@ export const addProject = ({ name, projectColorId }) =>
                 name,
                 projectColorId,
             },
+            users,
         },
     });
 
@@ -221,7 +262,7 @@ export const getProjectColorList = () =>
         method: 'GET',
     });
 
-export const changeProject = ({ id, name, projectColorId }) =>
+export const changeProject = ({ id, name, projectColorId, users }) =>
     instance({
         url: `/project/${id}`,
         method: 'PATCH',
@@ -230,6 +271,7 @@ export const changeProject = ({ id, name, projectColorId }) =>
                 name,
                 projectColorId,
             },
+            users,
         },
     });
 
@@ -421,6 +463,13 @@ export const getInvoicesTotal = params =>
         params,
     });
 
+export const getInvoicesCountsByStatus = params =>
+    instance({
+        url: `/invoice/total-by-status`,
+        method: 'GET',
+        params,
+    });
+
 export const getInvoiceViewData = id =>
     instance({
         url: `/invoice/${id}`,
@@ -455,7 +504,7 @@ export const deleteInvoice = invoiceId =>
 
 export const changeInvoiceStatus = ({ invoiceId, paymentStatus }) =>
     instance({
-        url: `/invoice/${invoiceId}/payment`,
+        url: `/invoice/${invoiceId}/payment-status`,
         method: 'PATCH',
         data: {
             paymentStatus,
@@ -464,7 +513,7 @@ export const changeInvoiceStatus = ({ invoiceId, paymentStatus }) =>
 
 export const downloadInvoicePDF = id =>
     instance({
-        url: `/invoice/${id}/generatePDF`,
+        url: `/invoice/${id}/pdf`,
         responseType: 'blob',
         method: 'GET',
     });
@@ -481,5 +530,23 @@ export const addTechnology = title =>
         method: 'POST',
         data: {
             title,
+        },
+    });
+
+export const deleteUserFromProject = (userId, projectId) =>
+    instance({
+        url: `project/user/${projectId}`,
+        method: 'DELETE',
+        data: {
+            id: userId,
+        },
+    });
+
+export const changeProjectActiveStatus = (projectId, status) =>
+    instance({
+        url: `project/${projectId}/active-status`,
+        method: 'PATCH',
+        data: {
+            isActive: status,
         },
     });
