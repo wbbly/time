@@ -176,6 +176,9 @@ export function getDataStorageDateByPlan(days = 0) {
     return moment(date).format('YYYY-MM-DD');
 }
 
-export const getUtcOffsetInMilliseconds = () => {
+export const getUtcOffsetInMilliseconds = date => {
+    if (date) {
+        return -moment(date).utcOffset() * 60000;
+    }
     return -moment().utcOffset() * 60000;
 };

@@ -131,7 +131,8 @@ class TeamPage extends Component {
                     (roleValue === 'member' && item.role_collaboration.title === 'ROLE_MEMBER') ||
                     (roleValue === 'admin' &&
                         (item.role_collaboration.title === 'ROLE_ADMIN' ||
-                            item.role_collaboration.title === 'ROLE_OWNER'))
+                            item.role_collaboration.title === 'ROLE_OWNER')) ||
+                    (roleValue === 'manager' && item.role_collaboration.title === 'ROLE_INVOICES_MANAGER')
             )
             .filter(
                 item =>
@@ -159,7 +160,11 @@ class TeamPage extends Component {
                             .toLowerCase()
                             .indexOf(searchValue.toLowerCase().trim()) !== -1) ||
                     (item.is_active && v_active.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1) ||
-                    (!item.is_active && v_not_active.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1)
+                    (!item.is_active && v_not_active.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1) ||
+                    ROLES_TITLES[item.role_collaboration.title]
+                        .toLowerCase()
+                        .trim()
+                        .indexOf(searchValue.toLowerCase().trim()) !== -1
             );
     };
 
@@ -229,8 +234,11 @@ class TeamPage extends Component {
             }
 
             return (
-                <tr key={item.user[0].id}>
-                    <td data-label={v_name} className="user-container">
+                <tr className="team_page_row" key={item.user[0].id}>
+                    <td data-label={v_name} className="team_page_col user-container">
+                        <div className="team-page-label" onClick={() => isMobile && this.setTechnology('')}>
+                            {v_name}
+                        </div>
                         {!avatar ? (
                             <div className="avatar-small" />
                         ) : (
@@ -268,16 +276,23 @@ class TeamPage extends Component {
                             </div>
                         </div>
                     </td>
-                    <td data-label={v_phone} className="phone_container">
-                        {phone ? phone : '-'}
+                    <td data-label={v_phone} className="team_page_col phone_container">
+                        <div className="team-page-label">{v_phone}</div>
+                        <div className="team-page-phone">{phone ? phone : '-'}</div>
                     </td>
-                    <td data-label="E-mail">{email}</td>
-                    <td data-label={v_team_role}>
+                    <td data-label="E-mail" className="team_page_col email_container">
+                        <div className="team-page-label">E-mail</div>
+                        <div className="team-page-email">{email}</div>
+                    </td>
+                    <td data-label={v_team_role} className="team_page_col role_container">
+                        <div className="team-page-label">{v_team_role}</div>
+
                         <div className="team-access-role">
                             <div className={`access_container ${role || ROLES.ROLE_MEMBER}`}>{ROLES_TITLES[role]}</div>
                         </div>
                     </td>
-                    <td data-label={v_team_access}>
+                    <td data-label={v_team_access} className="team_page_col access_wrap">
+                        <div className="team-page-label">{v_team_access}</div>
                         <div
                             className={classNames('team-access-container', {
                                 'team-access-container-admin':
@@ -379,11 +394,22 @@ class TeamPage extends Component {
                             </div>
                         )}
                         <div className="team_page_data">
-                            <table>
+                            <table className="team_page_data_table">
                                 <thead>
                                     <tr>{headerItemsElements}</tr>
                                 </thead>
-                                <tbody>{items}</tbody>
+                                <tbody>
+                                    {/* <div className="table-scroll">{items}</div> */}
+                                    <tr>
+                                        <td colSpan="5">
+                                            <div className="table-scroll">
+                                                <table>
+                                                    <tbody>{items}</tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>

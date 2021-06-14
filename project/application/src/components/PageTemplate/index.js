@@ -44,10 +44,14 @@ class PageTemplate extends Component {
             viewport,
             notificationId,
             user,
+            authPage,
         } = this.props;
         const { width, height } = viewport;
         return (
-            <div className="wrapper-page-template" style={{ width: width - 1 }}>
+            <div
+                className="wrapper-page-template"
+                style={{ width: width - 1, height: !authPage ? height : null, minHeight: authPage ? height : null }}
+            >
                 {isMobile &&
                     !hideHeader && (
                         <header className="header">

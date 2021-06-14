@@ -8,7 +8,7 @@ class SelectTeamRoleAccess extends Component {
         isOpenDropdown: false,
         value: this.props.value,
         list: {
-            role: ['all', 'member', 'admin'],
+            role: ['all', 'member', 'admin', 'manager'],
             access: ['all', 'granted', 'denied'],
         },
     };
@@ -40,6 +40,7 @@ class SelectTeamRoleAccess extends Component {
                 all: v_all_role,
                 member: 'Member',
                 admin: 'Admin',
+                manager: 'Invoices manager',
             },
             access: {
                 all: v_all_access,

@@ -4,7 +4,6 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  border-top: 1px solid #4a4a4a;
   .email-edit-wrapper {
     display: flex;
     width: 50%;
@@ -20,7 +19,7 @@
     @media (max-width: 680px) {
       width: auto;
     }
-    .arrow-space{
+    .arrow-space {
       cursor: pointer;
     }
     .arrow-up,
@@ -71,13 +70,43 @@
       text-overflow: ellipsis;
     }
   }
-  
+
+  .unarchive-wrap {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    &__text {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 19px;
+      color: #f3ad26;
+    }
+    &__button {
+      display: block;
+      width: 20px;
+      height: 20px;
+      margin: 0 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+.clients-list__buttons {
+  display: flex;
+  align-items: center;
+}
+
+.clients-list__item-wrap {
+  border-top: 1px solid #4a4a4a;
+  &:first-child {
+    border-top: none;
+  }
 }
 
 .client_edit {
   width: 20px;
   height: 20px;
-  margin-right: 10px;
+  margin-right: 20px;
   position: relative;
   cursor: pointer;
   path {
@@ -85,6 +114,20 @@
   }
   &:hover path {
     stroke: #27ae60;
+  }
+}
+
+.client_archive {
+  width: 20px;
+  height: 20px;
+  margin-right: 20px;
+  position: relative;
+  cursor: pointer;
+  path {
+    fill: white;
+  }
+  &:hover path {
+    fill: #27ae60;
   }
 }
 
@@ -98,24 +141,24 @@
   .common-block {
     border-top: 1px solid #4a4a4a;
   }
-  
+
   &-data {
     display: inline-flex;
     flex-direction: column;
     margin-top: 16px;
     margin-bottom: 22px;
     margin-right: 20px;
-    div{
+    div {
       margin-bottom: 22px;
     }
-    div:last-child{
+    div:last-child {
       margin-bottom: 0;
     }
-    
+
     .project {
       display: flex;
       flex-wrap: wrap;
-      div{
+      div {
         margin-bottom: 0;
         display: flex;
         align-items: center;
@@ -146,8 +189,7 @@
 @media (max-width: 680px) {
   .clients-list__item {
     flex-wrap: nowrap;
-    .client_name{
-      
+    .client_name {
       flex-direction: column;
     }
     .client_mail {

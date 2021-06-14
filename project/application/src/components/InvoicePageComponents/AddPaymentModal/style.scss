@@ -1,0 +1,133 @@
+.partial-modal {
+  &__background {
+    position: fixed;
+    background: #24232b;
+    opacity: 0.5;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  &__container {
+    position: fixed;
+
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    max-width: 545px;
+    z-index: 5;
+    background: #ffffff;
+    border: 1px solid #828282;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0px 4px 34px rgba(0, 0, 0, 0.25);
+  }
+  &__header {
+    border-bottom: 1px solid #bdbdbd;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    & > p {
+      margin: 0;
+      font-weight: 600;
+      font-size: 18px;
+      color: #000000;
+    }
+  }
+  &__body {
+    padding: 0 28px 44px 28px;
+  }
+  &__input,
+  &__sum-input {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #828282;
+    padding: 14px 16px;
+    margin-bottom: 22px;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 18px;
+    margin-top: 10px;
+  }
+
+  &__sum-input {
+    margin-bottom: 7px;
+    -moz-appearance: textfield;
+  }
+  &__sum-input::-webkit-outer-spin-button,
+  &__sum-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &__error {
+    font-weight: normal;
+    font-size: 12px;
+    color: #eb5757;
+    margin-bottom: 15px;
+  }
+
+  &__calendar {
+    & > div {
+      background: #ffffff;
+      border: 1px solid #828282;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      margin-top: 10px;
+    }
+    & span {
+      font-weight: normal;
+      font-size: 14px;
+    }
+    & svg {
+      width: 18px;
+      height: 18px;
+    }
+    & path {
+      stroke: #828282;
+    }
+  }
+  & label {
+    font-weight: normal;
+    font-size: 14px;
+  }
+
+  &__button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__button-confirm,
+  &__button-cancel {
+    flex: 1;
+    text-align: center;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 19px;
+    color: #ffffff;
+    border-radius: 4px;
+  }
+  &__button-confirm {
+    margin-right: 20px;
+    background: #27ae60;
+  }
+  &__button-cancel {
+    background: #eb5757;
+  }
+  &__close-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: url("../../../images/icons/close_black.svg") no-repeat;
+    background-position: center;
+    cursor: pointer;
+  }
+}

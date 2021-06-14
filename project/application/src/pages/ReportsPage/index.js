@@ -406,7 +406,10 @@ class ReportsPage extends Component {
                                     dataDoughnutChat={this.props.dataDoughnutChat}
                                 />
                             ) : (
-                                BlankListComponent(this.props.vocabulary.v_no_report, null, { bottom: '-70px' })
+                                <BlankListComponent
+                                    text={this.props.vocabulary.v_no_report}
+                                    position={{ bottom: '-70px' }}
+                                />
                             )}
                         </div>
                     </div>
@@ -785,10 +788,7 @@ class ReportsPage extends Component {
             startDateValue: moment(startDate).format(dateFormat),
             endDateValue: moment(endDate).format(dateFormat),
         });
-        getClientsAction({
-            order_by: 'company_name',
-            sort: 'asc',
-        });
+        getClientsAction();
         setTimeout(() => {
             this.applySearch(
                 this.getYear(this.state.selectionRange.startDate),

@@ -28,8 +28,66 @@ const EditIcon = ({ className, onClick }) => (
     </svg>
 );
 
-export const ClientComponent = ({ client, vocabulary, index, editClient, isMobile }) => {
-    const { v_client_name, v_language, v_phone, v_address, v_project, company_name, v_email } = vocabulary;
+const AddToArchiveIcon = ({ className, onClick }) => (
+    <svg className={className} onClick={onClick} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M2.49999 5.83325C2.96023 5.83325 3.33332 6.20635 3.33332 6.66659V16.6666H16.6667V6.66659C16.6667 6.20635 17.0398 5.83325 17.5 5.83325C17.9602 5.83325 18.3333 6.20635 18.3333 6.66659V17.4999C18.3333 17.9602 17.9602 18.3333 17.5 18.3333H2.49999C2.03975 18.3333 1.66666 17.9602 1.66666 17.4999V6.66659C1.66666 6.20635 2.03975 5.83325 2.49999 5.83325Z"
+            fill="#D3DCE6"
+        />
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M0 2.50008C0 2.03984 0.373096 1.66675 0.833333 1.66675H19.1667C19.6269 1.66675 20 2.03984 20 2.50008V6.66675C20 7.12699 19.6269 7.50008 19.1667 7.50008H0.833333C0.373096 7.50008 0 7.12699 0 6.66675V2.50008ZM1.66667 3.33341V5.83341H18.3333V3.33341H1.66667Z"
+            fill="#D3DCE6"
+        />
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M7.5 10.0001C7.5 9.53984 7.8731 9.16675 8.33333 9.16675H11.6667C12.1269 9.16675 12.5 9.53984 12.5 10.0001C12.5 10.4603 12.1269 10.8334 11.6667 10.8334H8.33333C7.8731 10.8334 7.5 10.4603 7.5 10.0001Z"
+            fill="#D3DCE6"
+        />
+    </svg>
+);
+
+const RemoveFromArchiveIcon = ({ className, onClick }) => (
+    <svg className={className} onClick={onClick} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#clip0)">
+            <path
+                d="M0.833344 3.33325V8.33325H5.83334"
+                stroke="#F3AD26"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M2.92501 12.5C3.46534 14.0337 4.48946 15.3502 5.84306 16.2512C7.19666 17.1522 8.80641 17.5889 10.4298 17.4954C12.0531 17.402 13.6022 16.7835 14.8434 15.7332C16.0847 14.6828 16.9511 13.2575 17.3119 11.672C17.6727 10.0865 17.5084 8.42667 16.8439 6.94262C16.1793 5.45857 15.0504 4.2307 13.6274 3.44401C12.2043 2.65732 10.5641 2.35442 8.95391 2.58097C7.34372 2.80751 5.85077 3.55122 4.70001 4.70004L0.833344 8.33337"
+                stroke="#F3AD26"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </g>
+        <defs>
+            <clipPath id="clip0">
+                <rect width="20" height="20" fill="white" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+export const ClientComponent = ({ client, vocabulary, index, editClient, isMobile, changeClientActiveStatus }) => {
+    const {
+        v_client_name,
+        v_language,
+        v_phone,
+        v_address,
+        v_project,
+        company_name,
+        v_email,
+        v_filter_archived,
+    } = vocabulary;
     const [isOpenDropdown, setDropDown] = useState(false);
     const isAddress = client.country || client.city || client.zip || client.state;
     const isAdditionalClientlData =
@@ -42,7 +100,7 @@ export const ClientComponent = ({ client, vocabulary, index, editClient, isMobil
         client.phone ||
         client.project.length > 0;
     return (
-        <div>
+        <div className="clients-list__item-wrap">
             <div className="clients-list__item" key={index}>
                 <div className="clients-list__item-data-wrapper">
                     <div className="client_arrow">
@@ -73,7 +131,23 @@ export const ClientComponent = ({ client, vocabulary, index, editClient, isMobil
                 </div>
                 <div className="email-edit-wrapper">
                     {!isMobile && <div className="client_mail">{client.email}</div>}
-                    <EditIcon className="client_edit" onClick={() => editClient(index)} />
+                    {client.is_active ? (
+                        <div className="clients-list__buttons">
+                            <EditIcon className="client_edit" onClick={() => editClient(index)} />
+                            <AddToArchiveIcon
+                                className="client_archive"
+                                onClick={e => changeClientActiveStatus(client.id, false)}
+                            />
+                        </div>
+                    ) : (
+                        <div className="unarchive-wrap">
+                            <div className="unarchive-wrap__text">{v_filter_archived}</div>
+                            <RemoveFromArchiveIcon
+                                className="unarchive-wrap__button"
+                                onClick={e => changeClientActiveStatus(client.id, true)}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
             {isOpenDropdown &&

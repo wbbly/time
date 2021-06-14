@@ -53,29 +53,47 @@ class ProjectsListPopup extends Component {
             isOpen: false,
             inputValue: '',
         };
+
+        this.emptyProject = {
+            id: 'project-palceholder-id',
+            name: props.vocabulary.v_a_select_project,
+            projectColor: {
+                name: 'gray',
+            },
+            userProjects: [],
+            client: {},
+        };
     }
 
     static getDerivedStateFromProps(props, state) {
         if (state.projectsList === null) {
-            const { projectsList } = props;
             return {
-                projectsList,
+                projectsList: props.projectsList,
             };
         }
         return null;
     }
 
     getProjectData = key => {
-        const { projectsList, selectedProjectId } = this.props;
-        const filteredProjectsList = projectsList.filter(project => project.id === selectedProjectId);
+        const { projectsList, selectedProject, listItem } = this.props;
+        const filteredProjectsList = projectsList.filter(project => project.id === selectedProject?.id);
         if (key === 'color') {
             if (filteredProjectsList.length > 0) {
                 return filteredProjectsList[0].projectColor.name;
             }
-        } else if (key === 'name') {
+            if (filteredProjectsList.length === 0 && listItem) {
+                return selectedProject.projectColor.name;
+            }
+            return this.emptyProject.projectColor.name;
+        }
+        if (key === 'name') {
             if (filteredProjectsList.length > 0) {
                 return filteredProjectsList[0].name;
             }
+            if (filteredProjectsList.length === 0 && listItem) {
+                return selectedProject.name;
+            }
+            return this.emptyProject.name;
         }
         return filteredProjectsList[0];
     };
@@ -93,7 +111,7 @@ class ProjectsListPopup extends Component {
     };
 
     closeDropdown = event => {
-        if (!event.target.classList.contains('project-list-popup__dropdown-list-input')) {
+        if (event.target.classList.length) {
             const { onChangeVisibility } = this.props;
             document.removeEventListener('click', this.closeDropdown);
             this.setState(
@@ -196,7 +214,7 @@ class ProjectsListPopup extends Component {
                                     <div
                                         key={id}
                                         className="project-list-popup__dropdown-list-item"
-                                        onClick={event => onChange(id)}
+                                        onClick={event => onChange(project)}
                                     >
                                         <span
                                             className="project-list-popup__dropdown-list-item-circle"

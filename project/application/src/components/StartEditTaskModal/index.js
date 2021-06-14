@@ -8,6 +8,7 @@ import { startTimerSocket } from '../../configSocket';
 
 // Services
 import { encodeTimeEntryIssue } from '../../services/timeEntryService';
+import { getUtcOffsetInMilliseconds } from '../../services/timeService';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
@@ -244,6 +245,7 @@ class StartEditTaskModal extends Component {
             projectId,
             startDatetime: startDateTime.utc().toISOString(),
             endDatetime: endDateTime.utc().toISOString(),
+            timezoneOffset: getUtcOffsetInMilliseconds(endDateTime.utc().toISOString()),
         };
         await changeTask(task.id, data);
         await getTimeEntriesListAction();

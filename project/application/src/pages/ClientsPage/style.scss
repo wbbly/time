@@ -1,9 +1,22 @@
 .wrapper_clients_page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   font-family: "Open Sans", sans-serif;
   color: #ffffff;
   font-size: 14px;
   .data_container_clients_page {
-    padding: 25px 40px 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 25px 0 0;
+  }
+
+  .data_container_clients_page_top {
+    padding: 0 40px;
+    @media (max-width: 768px) {
+      padding: 0;
+    }
   }
 
   .wrapper_clients_search_bar {
@@ -66,8 +79,32 @@
     line-height: normal;
     cursor: pointer;
   }
+
+  .reset-clients {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    &__button {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 22px;
+      text-decoration: underline;
+      color: #2d9cdb;
+      cursor: pointer;
+    }
+  }
+
+  .clients_list {
+    height: 100%;
+  }
+
   .clients_list_container {
-    margin-top: 53px;
+    height: 100%;
+    padding: 0 40px;
+    @media (max-width: 768px) {
+      padding: 0;
+    }
   }
   .borderOf {
     border-top: none;

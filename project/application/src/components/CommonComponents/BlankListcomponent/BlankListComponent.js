@@ -6,7 +6,7 @@ import React from 'react';
 import './blankList.scss';
 import animation_cat from '../../../images/animation_cat.gif';
 
-export const BlankListComponent = (text, subtext, position) => {
+export const BlankListComponent = ({ text, subtext, position }) => {
     return (
         <div className="cat-wrapper" style={position}>
             <img alt="animation-cat" src={animation_cat} className={'animation-cat'} />

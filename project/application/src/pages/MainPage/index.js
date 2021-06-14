@@ -18,7 +18,7 @@ import CustomScrollbar from '../../components/CustomScrollbar';
 import { BlankListComponent } from '../../components/CommonComponents/BlankListcomponent/BlankListComponent';
 
 // Actions
-import { getProjectsListActions } from '../../actions/ProjectsActions';
+import projectsPageAction, { getProjectsListActions } from '../../actions/ProjectsActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 import { getTimeEntriesListAction, restorePaginationAction } from '../../actions/MainPageAction';
 
@@ -91,7 +91,10 @@ class MainPage extends Component {
         syncAllTasksWithJira()
             .then(() => {
                 getTimeEntriesListAction();
-                getProjectsListActions();
+                getProjectsListActions({
+                    withTimerList: false,
+                    withUserInfo: false,
+                });
             })
             .then(() => {
                 showNotificationAction({
@@ -115,7 +118,11 @@ class MainPage extends Component {
     async componentDidMount() {
         const { getTimeEntriesListAction, getProjectsListActions } = this.props;
         await getTimeEntriesListAction();
-        await getProjectsListActions();
+        await getProjectsListActions({
+            withTimerList: false,
+            withUserInfo: false,
+            filterStatus: 'active',
+        });
         this.setState({
             isInitialFetching: false,
         });
@@ -134,8 +141,9 @@ class MainPage extends Component {
     }
 
     componentWillUnmount() {
-        const { restorePaginationAction } = this.props;
+        const { restorePaginationAction, projectsPageAction } = this.props;
         restorePaginationAction();
+        projectsPageAction('RESET_PROJECTS_PAGE', {});
     }
 
     render() {
@@ -169,11 +177,12 @@ class MainPage extends Component {
                             <CustomScrollbar>
                                 <div className="main-page__list">
                                     {timeEntriesList &&
-                                        timeEntriesList.length === 0 &&
-                                        BlankListComponent(
-                                            this.props.vocabulary.v_no_entries,
-                                            this.props.vocabulary.v_no_entries_sub,
-                                            { bottom: '-175px' }
+                                        timeEntriesList.length === 0 && (
+                                            <BlankListComponent
+                                                text={this.props.vocabulary.v_no_entries}
+                                                subtext={this.props.vocabulary.v_no_entries_sub}
+                                                position={{ bottom: '-175px' }}
+                                            />
                                         )}
                                     {this.splitTimersByDay(timeEntriesList).map((day, index, arr) => (
                                         <div
@@ -238,6 +247,7 @@ const mapDispatchToProps = {
     getProjectsListActions,
     restorePaginationAction,
     showNotificationAction,
+    projectsPageAction,
 };
 
 export default connect(

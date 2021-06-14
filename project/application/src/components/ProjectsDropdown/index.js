@@ -44,6 +44,22 @@ class ProjectsDropdown extends Component {
         this.props.projectSelect(null);
     };
 
+    removeSelectedClient = event => {
+        event.stopPropagation();
+        this.setState({ selectedItem: null });
+        this.props.projectSelect(null);
+    };
+
+    getClientFullName(client, listView = true) {
+        const { company_name, name } = client;
+        // returns 'Company (Client Name)' for list visualization, or 'company clientname' for search
+        if (listView) {
+            return company_name ? `${company_name}${name ? ` (${name})` : ''}` : name;
+        } else {
+            return (company_name ? `${company_name}${name ? ` ${name}` : ''}` : name).toLowerCase();
+        }
+    }
+
     componentDidUpdate(prevProps, prevState) {
         const { showList } = this.state;
         const { relationProjectsList, selectedProject } = this.props;
@@ -81,27 +97,33 @@ class ProjectsDropdown extends Component {
         const { vocabulary } = this.props;
         const { v_sync_with_jira_project, v_projects, v_find, v_empty } = vocabulary;
         return (
-            <div
-                className="projects_list_wrapper"
-                data-label={v_sync_with_jira_project}
-                onClick={event => event.stopPropagation()}
-            >
-                <div className="projects_list_select-title" onClick={e => this.setState({ showList: !showList })}>
-                    <span>
-                        {selectedItem ? (
-                            selectedItem.name
-                        ) : (
-                            <span className="projects-select-placeholder">{`${v_projects}...`}</span>
-                        )}
-                    </span>
-                    <span>
-                        {selectedItem ? <i className="client-remove" onClick={this.removeSelectedProject} /> : null}
-                    </span>
+            <div className="projects_list_wrapper" data-label={v_sync_with_jira_project}>
+                {selectedItem && (
+                    <div className="projects_clear" onClick={this.removeSelectedClient}>
+                        <p>Clear field</p>
+                        <i className="client-remove" />
+                    </div>
+                )}
+                <div className="projects_list_container">
+                    <div className="projects_list_select-title">
+                        <span>
+                            {selectedItem ? (
+                                this.getClientFullName(selectedItem)
+                            ) : (
+                                <span className="projects-select-placeholder">{`${v_projects}...`}</span>
+                            )}
+                        </span>
+                    </div>
+                    <div
+                        className="projects-vector-container"
+                        onClick={e => {
+                            this.setState({ showList: !showList });
+                        }}
+                    >
+                        <i className={`projects-vector ${showList ? 'projects-vector_up' : ''}`} />
+                    </div>
                 </div>
-                <i
-                    className={`projects-vector ${showList ? 'projects-vector_up' : ''}`}
-                    onClick={e => this.setState({ showList: !showList })}
-                />
+
                 {showList && (
                     <div className="projects_list_dropdown">
                         <div className="projects_list_input">

@@ -9,11 +9,13 @@ import _ from 'lodash';
 // Actions
 import { setSwipedTaskAction } from '../../actions/ResponsiveActions';
 import { getTimeEntriesListAction } from '../../actions/MainPageAction';
+import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Services
 import { getTimeDurationByGivenTimestamp } from '../../services/timeService';
 import { encodeTimeEntryIssue } from '../../services/timeEntryService';
 import { sleep } from '../../services/sleep';
+import { getUtcOffsetInMilliseconds } from '../../services/timeService';
 
 // API
 import { deleteTask, changeTask } from '../../configAPI';
@@ -107,6 +109,7 @@ class TaskListItem extends Component {
         isOpenCalendar: false,
         isOpenProjectsListPopup: false,
         isUpdatingIssue: false,
+        isProjectAvailable: false,
         newIssue: '',
     };
 
@@ -147,6 +150,7 @@ class TaskListItem extends Component {
         const data = {
             issue: issue ? encodeTimeEntryIssue(issue) : encodeTimeEntryIssue(initialIssue),
             projectId: projectId || project.id,
+            timezoneOffset: getUtcOffsetInMilliseconds(),
         };
         if (startDateTime && endDateTime) {
             data.startDatetime = startDateTime.utc().toISOString();
@@ -157,11 +161,22 @@ class TaskListItem extends Component {
         this.setState({ isUpdatingTask: false });
     };
 
-    onChangeProject = projectId => {
-        this.updateTask({ projectId });
+    onChangeProject = project => {
+        const { projectsList } = this.props;
+        this.updateTask({ projectId: project.id });
+        this.setState({ isProjectAvailable: !!projectsList.find(item => item.id === project.id) });
     };
 
     openCalendar = event => {
+        const { v_project_not_available } = this.props.vocabulary;
+        if (!this.state.isProjectAvailable) {
+            this.props.showNotificationAction({
+                text: v_project_not_available,
+                type: 'warning',
+            });
+            return;
+        }
+
         this.setState({
             isOpenCalendar: true,
         });
@@ -189,7 +204,9 @@ class TaskListItem extends Component {
 
     startEditIssue = event => {
         const { isMobile } = this.props;
+
         if (isMobile) return;
+
         this.setState({
             isUpdatingIssue: true,
             newIssue: '',
@@ -204,6 +221,7 @@ class TaskListItem extends Component {
             await this.updateTask({ issue: newIssue.trim() });
         } else {
             event.target.textContent = task.issue;
+            event.target.scroll(0, 0);
         }
         this.setState({
             isUpdatingIssue: false,
@@ -238,8 +256,18 @@ class TaskListItem extends Component {
     };
 
     setCaretPositionToState = event => {
-        const { isMobile } = this.props;
+        const { isMobile, vocabulary } = this.props;
+        const { v_project_not_available } = vocabulary;
         if (isMobile) return;
+
+        if (!this.state.isProjectAvailable) {
+            this.props.showNotificationAction({
+                text: v_project_not_available,
+                type: 'warning',
+            });
+            return;
+        }
+
         const sel = window.getSelection();
         if (sel.anchorOffset <= sel.focusOffset) {
             this.setState({
@@ -253,8 +281,18 @@ class TaskListItem extends Component {
     };
 
     handleStartTimer = event => {
-        const { task } = this.props;
+        const { task, vocabulary } = this.props;
+        const { v_project_not_available } = vocabulary;
         const { issue, project } = task;
+
+        if (!this.state.isProjectAvailable) {
+            this.props.showNotificationAction({
+                text: v_project_not_available,
+                type: 'warning',
+            });
+            return;
+        }
+
         this.setState(
             {
                 isStartingTask: true,
@@ -288,6 +326,12 @@ class TaskListItem extends Component {
         });
     };
 
+    componentDidMount() {
+        const { projectsList, task } = this.props;
+        const { project } = task;
+        this.setState({ isProjectAvailable: !!projectsList.find(item => item.id === project.id) });
+    }
+
     componentDidUpdate(prevProps, prevState) {
         const { isUpdatingTask, isStartingTask } = this.state;
         const { timeEntriesList, currentTimer } = this.props;
@@ -309,6 +353,7 @@ class TaskListItem extends Component {
             newIssue,
             isStartingTask,
             showEditModal,
+            isProjectAvailable,
         } = this.state;
         const { task, isMobile, vocabulary, swipedTask } = this.props;
         const { v_edit_task, v_delete_task } = vocabulary;
@@ -340,7 +385,7 @@ class TaskListItem extends Component {
                                 'task-item__issue--editing': isUpdatingIssue,
                             })}
                             spellCheck={false}
-                            contentEditable={!isMobile}
+                            contentEditable={!isMobile && isProjectAvailable}
                             suppressContentEditableWarning={true}
                             onKeyUp={this.setCaretPositionToState}
                             onClick={this.setCaretPositionToState}
@@ -364,7 +409,7 @@ class TaskListItem extends Component {
                             onChangeVisibility={this.setIsOpenProjectsListPopup}
                             listItem
                             onChange={this.onChangeProject}
-                            selectedProjectId={project.id}
+                            selectedProject={project}
                         />
                         <p className="task-item__period-time">
                             <span className="task-item__start-time">{this.formatPeriodTime(startDatetime)}</span>
@@ -424,6 +469,7 @@ const mapStateToProps = state => ({
     timeFormat: state.userReducer.timeFormat,
     durationTimeFormat: state.userReducer.durationTimeFormat,
     timeEntriesList: state.mainPageReducer.timeEntriesList,
+    projectsList: state.projectReducer.projectsList,
     currentTimer: state.mainPageReducer.currentTimer,
     isMobile: state.responsiveReducer.isMobile,
     viewport: state.responsiveReducer.viewport,
@@ -433,6 +479,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     getTimeEntriesListAction,
     setSwipedTaskAction,
+    showNotificationAction,
 };
 
 export default connect(

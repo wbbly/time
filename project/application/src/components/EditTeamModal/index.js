@@ -178,6 +178,16 @@ class EditTeamModal extends Component {
                 <div className="edit_team_modal_data">
                     <i onClick={e => this.closeModal()} />
                     <div className="edit_team_modal_input_container">
+                        <div className="edit_team_modal_input_title">{v_name}</div>
+                        <input
+                            type="text"
+                            ref={input => {
+                                this.name = input;
+                            }}
+                            className="edit_team_modal_input"
+                        />
+                    </div>
+                    <div className="edit_team_modal_input_container">
                         <div className="edit_team_modal_input_title">E-mail</div>
                         <input
                             type="text"
@@ -186,16 +196,6 @@ class EditTeamModal extends Component {
                             }}
                             className="edit_team_modal_input"
                             disabled={true}
-                        />
-                    </div>
-                    <div className="edit_team_modal_input_container">
-                        <div className="edit_team_modal_input_title">{v_name}</div>
-                        <input
-                            type="text"
-                            ref={input => {
-                                this.name = input;
-                            }}
-                            className="edit_team_modal_input"
                         />
                     </div>
                     <div className="edit_team_modal_input_container">
