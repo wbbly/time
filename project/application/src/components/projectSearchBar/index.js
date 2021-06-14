@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import PropTypes from 'prop-types';
 
@@ -17,25 +18,6 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 class ProjectSearchBar extends Component {
-    etalonTable = [];
-
-    search() {
-        if (this.searchInput.value.length) {
-            let afterSearch = this.props.etalonArr.filter(
-                obj => obj.name.toLowerCase().indexOf(this.searchInput.value.toLowerCase().trim()) !== -1
-            );
-            this.props.projectsPageAction('CHANGE_ARR', { tableData: afterSearch });
-        } else {
-            this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
-        }
-    }
-
-    setDefaultArr() {
-        if (this.searchInput.value.length < 1) {
-            this.props.projectsPageAction('CHANGE_ARR', { tableData: this.props.etalonArr });
-        }
-    }
-
     render() {
         const { vocabulary } = this.props;
         const { v_apply } = vocabulary;
@@ -44,15 +26,15 @@ class ProjectSearchBar extends Component {
                 <div className="project_search_bar_search_field_container">
                     <i className="magnifer" />
                     <input
-                        onChange={e => this.setDefaultArr()}
                         type="text"
-                        onKeyUp={e => (e.keyCode === 13 ? this.search() : null)}
-                        ref={input => (this.searchInput = input)}
+                        onKeyUp={e => (e.keyCode === 13 ? this.props.filterProjects() : null)}
+                        value={this.props.searchValue}
+                        onChange={this.props.searchValueHandler}
                         className="project_search_bar_search_field"
                     />
                 </div>
                 <div className="project_search_bar_button_container">
-                    <button className="project_search_bar_button" onClick={e => this.search()}>
+                    <button className="project_search_bar_button" onClick={e => this.props.filterProjects()}>
                         {v_apply}
                     </button>
                 </div>
@@ -62,7 +44,9 @@ class ProjectSearchBar extends Component {
 }
 
 ProjectSearchBar.propTypes = {
-    tableInfo: PropTypes.array.isRequired,
+    searchValue: PropTypes.string.isRequired,
+    searchValueHandler: PropTypes.func.isRequired,
+    filterProjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

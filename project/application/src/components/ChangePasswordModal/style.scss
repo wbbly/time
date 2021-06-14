@@ -20,6 +20,10 @@
     border: 1px solid #828282;
     box-sizing: border-box;
     border-radius: 4px;
+    @media (max-width: 900px) and (max-height: 450px) and (orientation: landscape) {
+      height: 100%;
+      overflow: auto;
+    }
   }
 
   .change_password_modal_header {

@@ -18,17 +18,19 @@ export const useDebounce = (value, delay) => {
 };
 
 export const useOutsideClick = (ref, callback) => {
-    const handleClick = e => {
-        if (ref.current && !ref.current.contains(e.target)) {
-            callback();
-        }
-    };
+    useEffect(
+        () => {
+            const handleClick = e => {
+                if (ref.current && !ref.current.contains(e.target)) {
+                    callback();
+                }
+            };
 
-    useEffect(() => {
-        document.addEventListener('click', handleClick);
-
-        return () => {
-            document.removeEventListener('click', handleClick);
-        };
-    });
+            document.addEventListener('click', handleClick);
+            return () => {
+                document.removeEventListener('click', handleClick);
+            };
+        },
+        [ref, callback]
+    );
 };

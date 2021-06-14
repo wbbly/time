@@ -1,0 +1,191 @@
+.projects_toggle {
+}
+.project-row-data {
+  &:not(.expanded-row) {
+    border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+  }
+  &__project-name {
+    display: inline-flex;
+    white-space: nowrap;
+    align-items: center;
+    @media screen and (max-width: 894px) {
+      white-space: normal;
+    }
+  }
+  &__project-color {
+    padding-left: 45px;
+    @media screen and (max-width: 894px) {
+      display: none;
+    }
+    &-circle {
+      max-width: 11px;
+      min-width: 11px;
+      max-height: 11px;
+      min-height: 11px;
+      border-radius: 50%;
+    }
+  }
+  &__project-color-circle--mobile {
+    max-width: 11px;
+    min-width: 11px;
+    max-height: 11px;
+    min-height: 11px;
+    border-radius: 50%;
+    margin-left: 10px;
+    display: none;
+    @media screen and (max-width: 894px) {
+      display: block;
+    }
+  }
+}
+.projects_toggle-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+  @media screen and (max-width: 894px) {
+    width: 30px;
+    height: 30px;
+  }
+}
+.projects_toggle-icon--rotated {
+  transform: rotate(180deg);
+}
+.projects_toggle-icon__img {
+  width: 20px;
+  height: 20px;
+  @media screen and (max-width: 894px) {
+    width: 30px;
+    height: 30px;
+  }
+}
+.avatar-small {
+  display: inline-block;
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #4f4f4f;
+  background-image: url("../../images/icons/user.svg");
+}
+.avatar-cover {
+  background-size: cover;
+}
+tr.project-expanded.highlighted-last {
+  border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+  //   &__toggle {
+  //   }
+  //   &__user {
+  //     border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+  //   }
+  //   &__user-client {
+  //     border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+  //   }
+  //   &__user-time {
+  //     border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+  //   }
+}
+.highlighted .project-expanded {
+  &__user {
+    border-top: 1px solid rgba(189, 189, 189, 0.11);
+    @media screen and (max-width: 894px) {
+      border-top: none;
+    }
+  }
+  &__user-client {
+    border-top: 1px solid rgba(189, 189, 189, 0.11);
+    @media screen and (max-width: 894px) {
+      border-top: none;
+    }
+  }
+  &__user-time {
+    border-top: 1px solid rgba(189, 189, 189, 0.11);
+    @media screen and (max-width: 894px) {
+      border-top: none;
+    }
+  }
+  &__user-color {
+    border-top: 1px solid rgba(189, 189, 189, 0.11);
+    @media screen and (max-width: 894px) {
+      border-top: none;
+    }
+  }
+}
+tbody tr.project-expanded {
+  @media screen and (max-width: 894px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+.project-expanded {
+  td:first-child {
+    @media screen and (max-width: 894px) {
+      display: none;
+    }
+  }
+  &__user {
+    display: flex;
+    align-items: center;
+  }
+  &__user-name {
+    @media screen and (max-width: 894px) {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 175px;
+    }
+  }
+  &__edit-button-icon {
+    width: 1.5rem;
+    height: 2rem;
+    fill: #ffffff;
+    // margin: 0 0 0.5rem 0;
+    display: block;
+    position: absolute;
+    top: 21px;
+    right: 11px;
+    margin-top: -2px;
+    margin-left: 18px;
+    cursor: pointer;
+    @media screen and (max-width: 894px) {
+      width: 1.8rem;
+      height: 2.3rem;
+      top: 13px;
+      right: 8px;
+      &:hover {
+        fill: #ffffff;
+      }
+    }
+
+    &:hover {
+      fill: #27ae60;
+    }
+  }
+  &__user-avatar {
+    display: inline-flex;
+  }
+  &__user-client {
+    @media screen and (max-width: 894px) {
+      display: none;
+    }
+  }
+  &__user-time {
+    @media screen and (max-width: 894px) {
+      margin-right: 60px;
+    }
+  }
+  &__user-color {
+    @media screen and (max-width: 894px) {
+      display: none;
+    }
+  }
+}
+.project-expanded tr:hover {
+  background-color: transparent;
+}

@@ -90,27 +90,32 @@ class ClientsDropdown extends Component {
         const { vocabulary } = this.props;
         const { v_select_client, v_clients, v_find, v_empty } = vocabulary;
         return (
-            <div
-                className="clients_list_wrapper"
-                data-label={v_select_client}
-                onClick={event => event.stopPropagation()}
-            >
-                <div className="clients_list_select-title" onClick={e => this.setState({ showList: !showList })}>
-                    <span>
-                        {selectedItem ? (
-                            this.getClientFullName(selectedItem)
-                        ) : (
-                            <span className="clients-select-placeholder">{`${v_clients}...`}</span>
-                        )}
-                    </span>
-                    <span>
-                        {selectedItem ? <i className="client-remove" onClick={this.removeSelectedClient} /> : null}
-                    </span>
+            <div className="clients_list_wrapper" data-label={v_select_client}>
+                {selectedItem && (
+                    <div className="clients_clear" onClick={this.removeSelectedClient}>
+                        <p>Clear field</p>
+                        <i className="client-remove" />
+                    </div>
+                )}
+                <div className="clients_list_container">
+                    <div className="clients_list_select-title">
+                        <span>
+                            {selectedItem ? (
+                                this.getClientFullName(selectedItem)
+                            ) : (
+                                <span className="clients-select-placeholder">{`${v_clients}...`}</span>
+                            )}
+                        </span>
+                    </div>
+                    <div
+                        className="cliens-vector-container"
+                        onClick={e => {
+                            this.setState({ showList: !showList });
+                        }}
+                    >
+                        <i className={`clients-vector ${showList ? 'clients-vector_up' : ''}`} />
+                    </div>
                 </div>
-                <i
-                    className={`clients-vector ${showList ? 'clients-vector_up' : ''}`}
-                    onClick={e => this.setState({ showList: !showList })}
-                />
                 {showList && (
                     <div className="clients_list_dropdown">
                         <div className="clients_list_input">

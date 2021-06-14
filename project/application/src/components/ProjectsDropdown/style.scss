@@ -3,34 +3,55 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  top: 110%;
-  left: 0;
-  /* max-height: 200px; */
   width: 100%;
   margin-top: 35px;
   background: #ffffff;
-  /* padding: 1rem; */
-  /* box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.25); */
+
+  .projects_clear {
+    position: absolute;
+    top: -25px;
+    right: 0;
+    display: flex;
+    align-items: center;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: #eb5757;
+    cursor: pointer;
+    & > p {
+      margin: 0;
+    }
+  }
+
+  .projects_list_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-radius: 0.4rem;
+    border: 1px solid #828282;
+  }
 
   .projects_list_select-title {
-    padding-left: 16px;
-    flex-grow: 1;
-    height: 47px;
-    border: 1px solid #828282;
-    border-radius: 4px;
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
     text-transform: none;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
-    line-height: 47px;
+    line-height: 29px;
     font-size: 16px;
     color: #4f4f4f;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
+    overflow: auto;
+    & > span {
+      padding: 0 16px;
+    }
   }
   .projects-select-placeholder {
-      font-size: 14px;
+    font-size: 14px;
   }
   .projects_list_input {
     padding: 5px 10px;
@@ -79,8 +100,15 @@
       color: #333333;
     }
   }
+  .projects-vector-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    align-self: stretch;
+    cursor: pointer;
+  }
   .projects-vector {
-    position: absolute;
     width: 24px;
     height: 24px;
     background: url("../../images/icons/arrow-down-gray.svg") no-repeat center;
@@ -93,10 +121,10 @@
     transform: rotate(-180deg);
   }
   .client-remove {
-    width: 30px;
-    height: 30px;
+    margin-left: 5px;
+    width: 14px;
+    height: 14px;
     background: url("../../images/icons/close-thin.svg") no-repeat center;
-    background-size: 35%;
   }
 }
 .projects_list_wrapper::before {

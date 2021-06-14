@@ -6,15 +6,17 @@ import { addProjectPreProcessing } from '../../services/mutationProjectsFunction
 import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { apiCall } from '../../services/apiService';
 import { vocabularyInterpolation } from '../../services/vocabulary';
+import { checkIsAdminByRole, checkIsOwnerByRole } from '../../services/authentication';
 
 // Components
 import ClientsDropdown from '../ClientsDropdown';
 import ProjectsDropdown from '../ProjectsDropdown';
+import UsersSelectComponent from '../UsersSelectComponent';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
 import { getClientsAction } from '../../actions/ClientsActions';
-import { getRelationProjectsListAction } from '../../actions/ProjectsActions';
+import { getRelationProjectsListAction, getProjectsListActions } from '../../actions/ProjectsActions';
 
 // Queries
 
@@ -35,102 +37,9 @@ class EditProjectModal extends Component {
         projectId: '',
         selectedClient: null,
         selectedProject: null,
+        selectedUsers: [],
         relationProjectsList: null,
-    };
-
-    setItem(value) {
-        this.setState({
-            selectedValue: value,
-        });
-    }
-
-    toggleSelect() {
-        this.setState({
-            listOpen: !this.state.listOpen,
-        });
-    }
-
-    changeProject() {
-        const { vocabulary, showNotificationAction } = this.props;
-        const {
-            v_a_project_updated,
-            v_a_project_existed,
-            v_a_project_edit_error,
-            v_sync_with_jira_project_exist,
-        } = vocabulary;
-        const { selectedClient, selectedProject } = this.state;
-        const project = addProjectPreProcessing(
-            this.editProjectInput.value,
-            this.state.selectedValue.id,
-            vocabulary,
-            showNotificationAction
-        );
-        if (!project) {
-            return null;
-        }
-
-        let object = {
-            id: this.state.projectId,
-            name: this.editProjectInput.value,
-            colorProject: this.state.selectedValue.id,
-        };
-
-        apiCall(AppConfig.apiURL + `project/${object.id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                project: {
-                    name: this.editProjectInput.value,
-                    projectColorId: this.state.selectedValue.id,
-                    clientId: selectedClient ? selectedClient.id : null,
-                    jiraProjectId: selectedProject ? selectedProject : null,
-                },
-            }),
-        }).then(
-            result => {
-                this.props.getProjects();
-                this.closeModal();
-                showNotificationAction({ text: v_a_project_updated, type: 'success' });
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(error => {
-                        const errorParsed = JSON.parse(error);
-                        if (Array.isArray(error)) {
-                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(errorParsed));
-                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
-                                showNotificationAction({ text: v_a_project_existed, type: 'warning' });
-                            } else {
-                                showNotificationAction({ text: v_a_project_edit_error, type: 'error' });
-                            }
-                        } else if (errorParsed.message && errorParsed.message === 'ERROR.PROJECT.SYNC_FAILED') {
-                            showNotificationAction({
-                                text: vocabularyInterpolation(v_sync_with_jira_project_exist, {
-                                    projectName: errorParsed.project,
-                                }),
-                                type: 'warning',
-                            });
-                        }
-                    });
-                } else {
-                    console.log(err);
-                }
-            }
-        );
-    }
-
-    closeModal = () => {
-        this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', { tableData: false });
-    };
-
-    clientSelect = data => {
-        this.setState({ selectedClient: data ? data : null });
-    };
-
-    projectSelect = data => {
-        this.setState({ selectedProject: data ? data : null });
+        showUsersSelect: false,
     };
 
     componentDidMount() {
@@ -181,20 +90,11 @@ class EditProjectModal extends Component {
                 }
             }
         );
-        this.props.getClientsAction({
-            order_by: 'company_name',
-            sort: 'asc',
-        });
+        this.props.getClientsAction();
         document.addEventListener('mousedown', this.closeList);
         this.props.userReducer.user.tokenJira && this.props.getRelationProjectsListAction();
+        this.setState({ selectedUsers: this.filterUsersByRole(this.props.editedProject.userProjects) });
     }
-
-    closeList = e => {
-        const { listOpen } = this.state;
-        if (listOpen && !e.target.closest('.edit_projects_modal_data_select_container')) {
-            this.setState({ listOpen: false });
-        }
-    };
 
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.closeList);
@@ -207,10 +107,132 @@ class EditProjectModal extends Component {
         }
     }
 
+    setItem(value) {
+        this.setState({
+            selectedValue: value,
+        });
+    }
+
+    toggleSelect() {
+        this.setState({
+            listOpen: !this.state.listOpen,
+        });
+    }
+
+    changeProject() {
+        const { vocabulary, showNotificationAction } = this.props;
+        const {
+            v_a_project_updated,
+            v_a_project_existed,
+            v_a_project_edit_error,
+            v_sync_with_jira_project_exist,
+        } = vocabulary;
+        const { selectedClient, selectedProject, selectedUsers } = this.state;
+        const project = addProjectPreProcessing(
+            this.editProjectInput.value,
+            this.state.selectedValue.id,
+            vocabulary,
+            showNotificationAction
+        );
+        if (!project) {
+            return null;
+        }
+
+        let object = {
+            id: this.state.projectId,
+            name: this.editProjectInput.value,
+            colorProject: this.state.selectedValue.id,
+        };
+
+        apiCall(AppConfig.apiURL + `project/${object.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                project: {
+                    name: this.editProjectInput.value,
+                    projectColorId: this.state.selectedValue.id,
+                    clientId: selectedClient ? selectedClient.id : null,
+                    jiraProjectId: selectedProject ? selectedProject : null,
+                },
+                users: selectedUsers.map(item => item.id),
+            }),
+        }).then(
+            result => {
+                this.props.getProjectsListActions({
+                    page: 1,
+                    withPagination: true,
+                    withTimerList: false,
+                });
+                this.closeModal();
+                showNotificationAction({ text: v_a_project_updated, type: 'success' });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(error => {
+                        const errorParsed = JSON.parse(error);
+                        if (Array.isArray(error)) {
+                            const errorMessages = responseErrorsHandling.getErrorMessages(JSON.parse(errorParsed));
+                            if (responseErrorsHandling.checkIsDuplicateError(errorMessages.join('\n'))) {
+                                showNotificationAction({ text: v_a_project_existed, type: 'warning' });
+                            } else {
+                                showNotificationAction({ text: v_a_project_edit_error, type: 'error' });
+                            }
+                        } else if (errorParsed.message && errorParsed.message === 'ERROR.PROJECT.SYNC_FAILED') {
+                            showNotificationAction({
+                                text: vocabularyInterpolation(v_sync_with_jira_project_exist, {
+                                    projectName: errorParsed.project,
+                                }),
+                                type: 'warning',
+                            });
+                        }
+                    });
+                } else {
+                    console.log(err);
+                }
+            }
+        );
+    }
+
+    closeModal = () => {
+        this.props.projectsPageAction('TOGGLE_EDIT_PROJECT_MODAL', { tableData: false });
+    };
+
+    clientSelect = data => {
+        this.setState({ selectedClient: data ? data : null });
+    };
+
+    projectSelect = data => {
+        this.setState({ selectedProject: data ? data : null });
+    };
+
+    filterUsersByRole = users => {
+        return users.filter(item => !checkIsAdminByRole(item.role) && !checkIsOwnerByRole(item.role));
+    };
+
+    closeList = e => {
+        const { listOpen } = this.state;
+        if (listOpen && !e.target.closest('.edit_projects_modal_data_select_container')) {
+            this.setState({ listOpen: false });
+        }
+    };
+
+    parseTeamUsers = teamData => {
+        return teamData
+            .filter(
+                item =>
+                    !checkIsOwnerByRole(item.role_collaboration.title) &&
+                    !checkIsAdminByRole(item.role_collaboration.title) &&
+                    item.is_active
+            )
+            .map(teamUser => teamUser.user[0]);
+    };
+
     render() {
-        const { vocabulary } = this.props;
-        const { selectedClient, relationProjectsList, selectedProject } = this.state;
-        const { v_edit_project, v_project_name, v_edit_project_name, v_save } = vocabulary;
+        const { vocabulary, teamUsers } = this.props;
+        const { selectedClient, relationProjectsList, selectedProject, selectedUsers, showUsersSelect } = this.state;
+        const { v_edit_project, v_project_name, v_edit_project_name, v_save, v_add_member, v_member } = vocabulary;
 
         let selectItems = this.state.selectValue.map(value => {
             const { id, name } = value;
@@ -252,9 +274,41 @@ class EditProjectModal extends Component {
                             <ClientsDropdown
                                 clientSelect={this.clientSelect}
                                 editedClient={selectedClient}
-                                clientsList={this.props.clientsList}
+                                clientsList={this.props.clientsList?.filter(item => item.is_active)}
                                 vocabulary={vocabulary}
                             />
+                            <div className="edit-project__users-select-wrapper" data-label={v_add_member}>
+                                <div
+                                    className="edit-project__users-selected"
+                                    onClick={() => this.setState(prev => ({ showUsersSelect: !prev.showUsersSelect }))}
+                                >
+                                    {!!selectedUsers.length ? (
+                                        <span className="edit-project__users-selected-text">
+                                            {selectedUsers.map(item => item.username).join(', ')}
+                                        </span>
+                                    ) : (
+                                        <span className="edit-project__placeholder">{v_member}</span>
+                                    )}
+                                    <i
+                                        className={`edit-project__vector ${
+                                            showUsersSelect ? 'edit-project__vector--up' : ''
+                                        }`}
+                                    />
+                                </div>
+                                {showUsersSelect && (
+                                    <div className="edit-project__dropdown-container">
+                                        <UsersSelectComponent
+                                            users={this.parseTeamUsers(teamUsers)}
+                                            selectedUsers={selectedUsers}
+                                            vocabulary={vocabulary}
+                                            toggleSelect={selectedItems =>
+                                                this.setState({ selectedUsers: selectedItems })
+                                            }
+                                            closePopup={() => this.setState({ showUsersSelect: false })}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                             {this.props.userReducer.user.tokenJira && (
                                 <ProjectsDropdown
                                     relationProjectsList={relationProjectsList}
@@ -284,12 +338,14 @@ const mapStateToProps = state => ({
     clientsList: state.clientsReducer.clientsList,
     relationProjectsList: state.projectReducer.relationProjectsList,
     userReducer: state.userReducer,
+    teamUsers: state.teamReducer.currentTeamDetailedData.data,
 });
 
 const mapDispatchToProps = {
     showNotificationAction,
     getClientsAction,
     getRelationProjectsListAction,
+    getProjectsListActions,
 };
 
 export default connect(

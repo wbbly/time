@@ -103,12 +103,6 @@ class ReportsByProjectSearchBar extends Component {
         }
     }
 
-    setDefaultArr() {
-        if (this.searchInput.value.length < 1) {
-            this.applySearch();
-        }
-    }
-
     getCheckedUsers(email) {
         return this.state.userDataSelected.some(item => item.email === email);
     }
@@ -159,29 +153,14 @@ class ReportsByProjectSearchBar extends Component {
         }
     }
 
-    sortData = data => {
-        let selectedData = [];
-        let noSelectedData = [];
-        data.forEach(item => {
-            if (this.getCheckedUsers(item.email)) {
-                selectedData.push(item);
-            } else {
-                noSelectedData.push(item);
-            }
-        });
-        return selectedData.concat(noSelectedData);
-    };
-
     render() {
         const { vocabulary } = this.props;
         const { v_user, v_find, v_select_all, v_select_none, v_apply } = vocabulary;
-        const sortedData = this.sortData(this.state.userDataFiltered);
         return (
             <div className="wrapper_reports_by_project_search_bar">
                 <div className="reports_by_project_search_bar_search_field_container">
                     <i className="magnifer" />
                     <input
-                        onChange={e => this.setDefaultArr()}
                         type="text"
                         onKeyUp={e => (e.keyCode === 13 ? this.applySearch() : null)}
                         ref={input => (this.searchInput = input)}
@@ -228,7 +207,7 @@ class ReportsByProjectSearchBar extends Component {
                                 <i className="small_clear" onClick={_ => this.clearUserSearch()} />
                             </div>
                             <div className="select_items_container">
-                                {sortedData.map((item, index) => (
+                                {this.state.userDataFiltered.map((item, index) => (
                                     <div className="select_users_item" key={item.email}>
                                         <label>
                                             <ThemeProvider theme={materialTheme}>

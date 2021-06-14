@@ -28,7 +28,7 @@
   padding: 20px 12px 0 12px;
   background-color: #2d2d2d !important;
   filter: drop-shadow(2px 4px 16px rgba(0, 0, 0, 0.3));
-  z-index: 3;
+  z-index: 11;
   max-width: 304px;
   width: 10000px;
 }

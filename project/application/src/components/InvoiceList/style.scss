@@ -24,6 +24,9 @@
   &--awaiting {
     border-left: 8px solid rgb(255, 174, 0);
   }
+  &--reviewed {
+    border-left: 8px solid #299bc1;
+  }
   &__block {
     width: 50%;
     display: flex;

@@ -1,11 +1,16 @@
 .project_data_wrapper {
     width: 100%;
-    /* height: 100%; */
+    padding: 0 40px;
+    margin-top: 35px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .project_data_wrapper table {
     width: 100%;
     border-spacing: inherit;
+    border-collapse: collapse;
 }
 
 .project_data_wrapper table th,
@@ -18,12 +23,12 @@
 }
 
 .project_data_wrapper table thead tr {
-    border-bottom: 1px solid white;
+    /* border-bottom: 1px solid white; */
 }
 
 .project_data_wrapper table tbody td {
     position: relative;
-    height: 50px;
+    height: 63px;
     font-family: "Open Sans", sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -32,7 +37,9 @@
     color: #ffffff;
 }
 .table-project-name {
-    width: 60%;
+    /* min-width: 25%; */
+    width: 1%;
+    white-space: nowrap;
 }
 .table-project-client {
     width: 25%;
@@ -40,12 +47,31 @@
 .table-project-time {
     width: 15%;
 }
-
-.project_data_wrapper table tbody tr {
-    border-bottom: 1px solid rgba(189, 189, 189, 0.11);
+.table-project-toggle {
+    width: 5%;
+}
+.table-project-color {
+    /* width: 30%; */
+}
+.projects_toggle {
+    
+}
+.projects_toggle-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transform: rotate(0deg);
+    transition: transform .3s ease;
+}
+.projects_toggle-icon--rotated {
+    transform: rotate(180deg);
 }
 
-.project_data_wrapper table tbody tr:hover {
+.project_data_wrapper table tbody tr {
+    /* border-bottom: 1px solid rgba(189, 189, 189, 0.11); */
+}
+
+.project_data_wrapper .project_data_row:hover {
     background-color: #2f2f2f;
 }
 
@@ -57,7 +83,7 @@
     font-size: 18px;
     text-align: left;
     color: #ffffff;
-    border-bottom: 1px solid #bdbdbd;
+    border-bottom: 1px solid #bdbdbd4d;
 }
 
 .project_data_wrapper .delete {
@@ -96,15 +122,17 @@
     background-color: pink;
 }
 
+.project_data_wrapper .buttons-wrap {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .project_data_wrapper .edit_button {
     display: block;
-    position: absolute;
-    top: 21px;
-    right: 8px;
-    margin-top: -2px;
-    margin-left: 18px;
     width: 20px;
     height: 20px;
+    margin-right: 20px;
     cursor: pointer;
 }
 
@@ -114,4 +142,48 @@
 
 .project_data_wrapper .edit_button:hover path {
     stroke: #27ae60;
+}
+
+.project_data_wrapper .archive_button {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.project_data_wrapper .archive_button path {
+    fill: white;
+}
+
+.project_data_wrapper .archive_button:hover path {
+    fill: #27ae60;
+}
+
+.project_data_wrapper .unarchive-wrap {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.project_data_wrapper .unarchive-wrap__text {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 19px;
+    color: #F3AD26;
+}
+
+.project_data_wrapper .unarchive_button {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.project_data_wrapper .table-scroll {
+    overflow: auto;
+    height: 100%;
+    margin-right: -8px;
 }

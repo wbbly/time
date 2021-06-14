@@ -109,21 +109,25 @@ class App extends Component {
                 />
                 <PrivateRoute exact path="/user-settings" render={() => <PageTemplate content={UserSettings} />} />
 
-                <Route exact path="/login" render={() => <PageTemplate hideSidebar hideHeader content={AuthPage} />} />
+                <Route
+                    exact
+                    path="/login"
+                    render={() => <PageTemplate authPage hideSidebar hideHeader content={AuthPage} />}
+                />
                 <Route
                     exact
                     path="/register"
-                    render={() => <PageTemplate hideSidebar hideHeader content={RegisterPage} />}
+                    render={() => <PageTemplate authPage hideSidebar hideHeader content={RegisterPage} />}
                 />
                 <Route
                     exact
                     path="/forgot-password"
-                    render={() => <PageTemplate hideSidebar hideHeader content={ForgotPassword} />}
+                    render={() => <PageTemplate authPage hideSidebar hideHeader content={ForgotPassword} />}
                 />
                 <Route
                     exact
                     path="/reset-password"
-                    render={() => <PageTemplate hideSidebar hideHeader content={ResetPasswordPage} />}
+                    render={() => <PageTemplate authPage hideSidebar hideHeader content={ResetPasswordPage} />}
                 />
 
                 <PrivateRoute exact path="/invoices" render={() => <PageTemplate content={InvoicesPage} />} />

@@ -142,7 +142,7 @@ export const inputRanges = (daysUpToToday, daysStartingToday, weekStartsOn) => [
             if (value > 366) {
                 value = 366;
             }
-            const today = new Date();
+            const today = defineds(weekStartsOn).startOfToday;
             return {
                 startDate: today,
                 endDate: addDays(today, Math.max(Number(value), 0)),

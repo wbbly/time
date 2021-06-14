@@ -11,8 +11,16 @@ import { BlankListComponent } from '../../components/CommonComponents/BlankListc
 import { ClientComponent } from '../../components/ClientComponent/index';
 import CustomScrollbar from '../../components/CustomScrollbar';
 import PageHeader from '../../components/PageHeader/index';
+import FilterByStatus from '../../components/FilterByStatus';
 // Actions
-import { getClientsAction, setClientAction, editClientThunk, deleteClientThunk } from '../../actions/ClientsActions';
+import {
+    getClientsAction,
+    addClientAction,
+    editClientThunk,
+    deleteClientThunk,
+    changeClientActiveStatusAction,
+    resetClientsParamsAction,
+} from '../../actions/ClientsActions';
 import { showNotificationAction } from '../../actions/NotificationActions';
 
 // Services
@@ -25,81 +33,19 @@ import ModalPortal from '../../components/ModalPortal';
 class ClientsPage extends Component {
     state = {
         showModal: false,
-        searchValue: '',
         editedClient: null,
+        stateSearchValue: '',
         clientsList: [],
         isOpenDropdown: false,
         isInitialFetching: true,
     };
 
-    closeModal = () => {
-        this.setState({ showModal: false, editedClient: null });
-    };
-
-    editClient = (client, id, logoFile) => {
-        const { editClientThunk } = this.props;
-
-        const phone = client.phone ? '+' + client.phone.replace(/[^0-9]/g, '') : null;
-        const data = { ...client, phone: phone };
-        editClientThunk(data, id, logoFile);
-        this.closeModal();
-    };
-    deleteClient = id => {
-        this.props.deleteClientThunk(id);
-        this.closeModal();
-    };
-
-    searchClient = async () => {
-        const { searchValue } = this.state;
-        const { clientsList } = this.props;
-        let afterSearch = clientsList.filter(
-            obj => obj.company_name.toLowerCase().indexOf(searchValue.toLowerCase().trim()) !== -1
-        );
-        this.setState({ clientsList: afterSearch });
-    };
-
-    addNewClient = (client, logoFile) => {
-        const { showNotificationAction, vocabulary } = this.props;
-        const { v_a_client_existed, v_a_client_name_empty_error, client_was_created } = vocabulary;
-        if (client.length === 0) {
-            showNotificationAction({ text: v_a_client_name_empty_error, type: 'warning' });
-            return;
-        } else if (this.checkClientName(client.company_name)) {
-            showNotificationAction({ text: v_a_client_existed, type: 'warning' });
-            return;
-        } else {
-            const phone = client.phone ? '+' + client.phone.replace(/[^0-9]/g, '') : null;
-            const data = { ...client, phone: phone };
-            this.props.setClientAction(data, logoFile);
-            showNotificationAction({
-                text: client_was_created,
-                type: 'success',
-            });
-            this.closeModal();
-        }
-    };
-
-    handleChange = e => {
-        const { clientsList } = this.props;
-        this.setState({ searchValue: e.target.value });
-        if (e.target.value.length === 0) {
-            this.setState({ clientsList });
-        }
-    };
-
-    checkClientName = name => {
-        const { clientsList } = this.props;
-        const isTheSameName = clientsList.some(
-            obj => obj.company_name && obj.company_name.toLowerCase().trim() === name.toLowerCase().trim()
-        );
-        return isTheSameName;
-    };
-
     componentDidMount() {
-        this.props.getClientsAction({
-            order_by: 'company_name',
-            sort: 'asc',
-        });
+        this.props.getClientsAction();
+    }
+
+    componentWillUnmount() {
+        this.props.resetClientsParamsAction();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -114,10 +60,94 @@ class ClientsPage extends Component {
         }
     }
 
+    closeModal = () => {
+        this.setState({ showModal: false, editedClient: null });
+    };
+
+    editClient = (client, id, logoFile) => {
+        const { editClientThunk } = this.props;
+
+        const phone = client.phone ? '+' + client.phone.replace(/[^0-9]/g, '') : null;
+        const data = { ...client, phone: phone };
+        editClientThunk(data, id, logoFile);
+        this.closeModal();
+    };
+
+    deleteClient = id => {
+        this.props.deleteClientThunk(id);
+        this.closeModal();
+    };
+
+    searchClient = searchValue => {
+        this.props.getClientsAction({
+            searchValue,
+        });
+    };
+
+    addNewClient = (client, logoFile) => {
+        const { showNotificationAction, vocabulary } = this.props;
+        const { v_a_client_existed, v_a_client_name_empty_error, client_was_created } = vocabulary;
+        if (client.length === 0) {
+            showNotificationAction({ text: v_a_client_name_empty_error, type: 'warning' });
+            return;
+        } else if (this.checkClientName(client.company_name)) {
+            showNotificationAction({ text: v_a_client_existed, type: 'warning' });
+            return;
+        } else {
+            const phone = client.phone ? '+' + client.phone.replace(/[^0-9]/g, '') : null;
+            const data = { ...client, phone: phone };
+            this.props.addClientAction(data, logoFile);
+            showNotificationAction({
+                text: client_was_created,
+                type: 'success',
+            });
+            this.closeModal();
+        }
+    };
+
+    onSearchValueChange = e => {
+        this.setState({ stateSearchValue: e.target.value });
+    };
+
+    checkClientName = name => {
+        const { clientsList } = this.props;
+        const isTheSameName = clientsList.some(
+            obj => obj.company_name && obj.company_name.toLowerCase().trim() === name.toLowerCase().trim()
+        );
+        return isTheSameName;
+    };
+
+    setFilterStatus = status => {
+        this.props.getClientsAction({
+            filterStatus: status,
+        });
+    };
+
+    changeClientActiveStatus = async (clientId, isActive) => {
+        await this.props.changeClientActiveStatusAction(clientId, isActive);
+        this.props.getClientsAction();
+    };
+
+    resetFilters = () => {
+        this.setState({ stateSearchValue: '' });
+        this.props.getClientsAction({
+            searchValue: '',
+            filterStatus: 'all',
+        });
+    };
+
     render() {
-        const { showModal, searchValue, editedClient, clientsList, isInitialFetching } = this.state;
-        const { vocabulary, isMobile, currentTeam, clientsFetching } = this.props;
-        const { v_clients, v_add_new_client, v_apply } = vocabulary;
+        const { showModal, stateSearchValue, editedClient, clientsList, isInitialFetching } = this.state;
+        const { vocabulary, isMobile, currentTeam, clientsFetching, filterStatus } = this.props;
+        const {
+            v_clients,
+            v_add_new_client,
+            v_apply,
+            v_clear_filters,
+            v_filter_all_clients,
+            v_filter_active,
+            v_filter_archived,
+        } = vocabulary;
 
         const editClient = index => {
             this.setState({ editedClient: clientsList[index], showModal: true });
@@ -125,25 +155,25 @@ class ClientsPage extends Component {
         return (
             <Loading flag={isInitialFetching || currentTeam.isFetching} mode="parentSize" withLogo={false}>
                 <Loading flag={clientsFetching} mode="overlay" withLogo={false}>
-                    <CustomScrollbar disableTimeEntriesFetch>
-                        <div
-                            className={classNames('wrapper_clients_page', {
-                                'wrapper_clients_page--mobile': isMobile,
-                            })}
-                        >
-                            {showModal && (
-                                <ModalPortal>
-                                    <ClientModal
-                                        closeModal={this.closeModal}
-                                        addNewClient={this.addNewClient}
-                                        toEditClient={this.editClient}
-                                        deleteClient={this.deleteClient}
-                                        editedClient={editedClient}
-                                        vocabulary={vocabulary}
-                                    />
-                                </ModalPortal>
-                            )}
-                            <div className="data_container_clients_page">
+                    <div
+                        className={classNames('wrapper_clients_page', {
+                            'wrapper_clients_page--mobile': isMobile,
+                        })}
+                    >
+                        {showModal && (
+                            <ModalPortal>
+                                <ClientModal
+                                    closeModal={this.closeModal}
+                                    addNewClient={this.addNewClient}
+                                    toEditClient={this.editClient}
+                                    deleteClient={this.deleteClient}
+                                    editedClient={editedClient}
+                                    vocabulary={vocabulary}
+                                />
+                            </ModalPortal>
+                        )}
+                        <div className="data_container_clients_page">
+                            <div className="data_container_clients_page_top">
                                 <PageHeader title={v_clients}>
                                     <button
                                         className="header-wrapper__child-button"
@@ -152,43 +182,78 @@ class ClientsPage extends Component {
                                         {v_add_new_client}
                                     </button>
                                 </PageHeader>
-
-                                <div className="wrapper_clients_search_bar">
-                                    <div className="clients_search_bar_search_field_container">
-                                        <i className="magnifer" />
-                                        <input
-                                            onChange={this.handleChange}
-                                            type="text"
-                                            value={searchValue}
-                                            onKeyUp={e => (e.keyCode === 13 ? this.searchClient() : null)}
-                                            className="clients_search_bar_search_field"
-                                        />
-                                    </div>
-                                    <div className="clients_search_bar_button_container">
-                                        <button className="clients_search_bar_button" onClick={this.searchClient}>
-                                            {v_apply}
-                                        </button>
+                                <div className="clients_search_bar__container">
+                                    <div className="wrapper_clients_search_bar">
+                                        <div className="clients_search_bar_search_field_container">
+                                            <i className="magnifer" />
+                                            <input
+                                                onChange={this.onSearchValueChange}
+                                                type="text"
+                                                value={stateSearchValue}
+                                                onKeyUp={e =>
+                                                    e.keyCode === 13 ? this.searchClient(stateSearchValue) : null
+                                                }
+                                                className="clients_search_bar_search_field"
+                                            />
+                                        </div>
+                                        <div className="clients_search_bar_button_container">
+                                            <button
+                                                className="clients_search_bar_button"
+                                                onClick={() => this.searchClient(stateSearchValue)}
+                                            >
+                                                {v_apply}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className={classNames('clients_list_container')}>
+                                <div className="reset-clients">
+                                    <div className="reset-clients__button" onClick={this.resetFilters}>
+                                        {v_clear_filters}
+                                    </div>
+                                </div>
+                            </div>
+                            <FilterByStatus
+                                status={filterStatus}
+                                onClick={this.setFilterStatus}
+                                items={[
+                                    {
+                                        id: 'all',
+                                        text: v_filter_all_clients,
+                                    },
+                                    {
+                                        id: 'active',
+                                        text: v_filter_active,
+                                    },
+                                    {
+                                        id: 'archived',
+                                        text: v_filter_archived,
+                                    },
+                                ]}
+                            />
+                            <div className="clients_list_container">
+                                <div className={classNames('clients_list')}>
                                     {clientsList &&
                                         clientsList.length === 0 &&
                                         BlankListComponent(this.props.vocabulary.v_no_clients, null, null)}
-                                    {!!clientsList.length &&
-                                        clientsList.map((item, index) => (
-                                            <ClientComponent
-                                                client={item}
-                                                vocabulary={vocabulary}
-                                                index={index}
-                                                editClient={editClient}
-                                                key={index}
-                                                isMobile={isMobile}
-                                            />
-                                        ))}
+                                    {!!clientsList.length && (
+                                        <CustomScrollbar>
+                                            {clientsList.map((item, index) => (
+                                                <ClientComponent
+                                                    client={item}
+                                                    vocabulary={vocabulary}
+                                                    index={index}
+                                                    editClient={editClient}
+                                                    key={index}
+                                                    isMobile={isMobile}
+                                                    changeClientActiveStatus={this.changeClientActiveStatus}
+                                                />
+                                            ))}
+                                        </CustomScrollbar>
+                                    )}
                                 </div>
                             </div>
                         </div>
-                    </CustomScrollbar>
+                    </div>
                 </Loading>
             </Loading>
         );
@@ -199,17 +264,20 @@ const mapStateToProps = state => ({
     vocabulary: state.languageReducer.vocabulary,
     currentTeam: state.teamReducer.currentTeam,
     isMobile: state.responsiveReducer.isMobile,
-    isInitialFetching: state.clientsReducer.isInitialFetching,
     clientsList: state.clientsReducer.clientsList,
+    searchValue: state.clientsReducer.searchValue,
+    filterStatus: state.clientsReducer.filterStatus,
     clientsFetching: state.clientsReducer.isFetching,
 });
 
 const mapDispatchToProps = {
     getClientsAction,
-    setClientAction,
+    addClientAction,
     editClientThunk,
     deleteClientThunk,
     showNotificationAction,
+    changeClientActiveStatusAction,
+    resetClientsParamsAction,
 };
 
 export default withRouter(

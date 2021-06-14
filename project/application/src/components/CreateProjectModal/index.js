@@ -7,15 +7,17 @@ import { responseErrorsHandling } from '../../services/responseErrorsHandling';
 import { addProjectPreProcessing } from '../../services/mutationProjectsFunction';
 import { apiCall } from '../../services/apiService';
 import { vocabularyInterpolation } from '../../services/vocabulary';
+import { checkIsAdminByRole, checkIsOwnerByRole } from '../../services/authentication';
 
 // Components
 import ClientsDropdown from '../ClientsDropdown';
 import ProjectsDropdown from '../ProjectsDropdown';
+import UsersSelectComponent from '../UsersSelectComponent';
 
 // Actions
 import { showNotificationAction } from '../../actions/NotificationActions';
 import { getClientsAction } from '../../actions/ClientsActions';
-import { getRelationProjectsListAction } from '../../actions/ProjectsActions';
+import { getRelationProjectsListAction, getProjectsListActions } from '../../actions/ProjectsActions';
 
 // Queries
 
@@ -35,9 +37,46 @@ class CreateProjectModal extends Component {
         selectValue: [],
         selectedClient: null,
         clientsList: null,
+        selectedUsers: [],
         selectedProject: null,
         relationProjectsList: null,
+        showUsersSelect: false,
     };
+
+    componentDidMount() {
+        apiCall(AppConfig.apiURL + `project-color/list`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            result => {
+                let data = result.data;
+                this.setState({ selectValue: data.project_color });
+            },
+            err => {
+                if (err instanceof Response) {
+                    err.text().then(errorMessage => console.log(errorMessage));
+                } else {
+                    console.log(err);
+                }
+            }
+        );
+        document.addEventListener('mousedown', this.closeList);
+        this.props.getClientsAction();
+        this.props.userReducer.user.tokenJira && this.props.getRelationProjectsListAction();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { clientsList, relationProjectsList } = this.props;
+        if (prevProps.clientsList !== clientsList) {
+            const filteredClients = clientsList.filter(item => item.is_active);
+            this.setState({ clientsList: filteredClients });
+        }
+        if (prevProps.relationProjectsList !== relationProjectsList) {
+            this.setState({ relationProjectsList });
+        }
+    }
 
     setItem(value) {
         this.setState({
@@ -61,7 +100,7 @@ class CreateProjectModal extends Component {
 
     addProject() {
         const { vocabulary, showNotificationAction } = this.props;
-        const { selectedClient, selectedProject } = this.state;
+        const { selectedClient, selectedProject, selectedUsers } = this.state;
         const {
             v_a_project_created,
             v_a_project_existed,
@@ -89,10 +128,15 @@ class CreateProjectModal extends Component {
                     clientId: selectedClient ? selectedClient.id : null,
                     jiraProjectId: selectedProject ? selectedProject : null,
                 },
+                users: selectedUsers.map(item => item.id),
             }),
         }).then(
             result => {
-                this.props.getProjects();
+                this.props.getProjectsListActions({
+                    page: 1,
+                    withPagination: true,
+                    withTimerList: false,
+                });
                 this.props.projectsPageAction('TOGGLE_MODAL', { toggle: false });
                 showNotificationAction({ text: v_a_project_created, type: 'success' });
             },
@@ -129,24 +173,26 @@ class CreateProjectModal extends Component {
             this.setState({ listOpen: false });
         }
     };
+
+    parseTeamUsers = teamData => {
+        return teamData
+            .filter(
+                item =>
+                    item.is_active &&
+                    !checkIsAdminByRole(item.role_collaboration.title) &&
+                    !checkIsOwnerByRole(item.role_collaboration.title)
+            )
+            .map(teamUser => teamUser.user[0]);
+    };
+
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.closeList);
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        const { clientsList, relationProjectsList } = this.props;
-        if (prevProps.clientsList !== clientsList) {
-            this.setState({ clientsList });
-        }
-        if (prevProps.relationProjectsList !== relationProjectsList) {
-            this.setState({ relationProjectsList });
-        }
-    }
-
     render() {
-        const { vocabulary } = this.props;
-        const { v_create_project, v_project_name, v_add_project_name } = vocabulary;
-        const { clientsList, relationProjectsList } = this.state;
+        const { vocabulary, teamUsers } = this.props;
+        const { v_create_project, v_project_name, v_add_project_name, v_add_member, v_member } = vocabulary;
+        const { clientsList, relationProjectsList, selectedUsers, showUsersSelect } = this.state;
         let selectItems = this.state.selectValue.map(value => {
             const { id, name } = value;
             return (
@@ -192,6 +238,38 @@ class CreateProjectModal extends Component {
                                 clientSelect={this.clientSelect}
                                 vocabulary={vocabulary}
                             />
+                            <div className="create-project__users-select-wrapper" data-label={v_add_member}>
+                                <div
+                                    className="create-project__users-selected"
+                                    onClick={() => this.setState(prev => ({ showUsersSelect: !prev.showUsersSelect }))}
+                                >
+                                    {!!selectedUsers.length ? (
+                                        <span className="create-project__users-selected-text">
+                                            {selectedUsers.map(item => item.username).join(', ')}
+                                        </span>
+                                    ) : (
+                                        <span className="create-project__placeholder">{v_member}</span>
+                                    )}
+                                    <i
+                                        className={`create-project__vector ${
+                                            showUsersSelect ? 'create-project__vector--up' : ''
+                                        }`}
+                                    />
+                                </div>
+                                {showUsersSelect && (
+                                    <div className="create-project__dropdown-container">
+                                        <UsersSelectComponent
+                                            users={this.parseTeamUsers(teamUsers)}
+                                            selectedUsers={selectedUsers}
+                                            vocabulary={vocabulary}
+                                            toggleSelect={selectedItems =>
+                                                this.setState({ selectedUsers: selectedItems })
+                                            }
+                                            closePopup={() => this.setState({ showUsersSelect: false })}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                             {this.props.userReducer.user.tokenJira && (
                                 <ProjectsDropdown
                                     relationProjectsList={relationProjectsList}
@@ -213,33 +291,6 @@ class CreateProjectModal extends Component {
             </div>
         );
     }
-
-    componentDidMount() {
-        apiCall(AppConfig.apiURL + `project-color/list`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            result => {
-                let data = result.data;
-                this.setState({ selectValue: data.project_color });
-            },
-            err => {
-                if (err instanceof Response) {
-                    err.text().then(errorMessage => console.log(errorMessage));
-                } else {
-                    console.log(err);
-                }
-            }
-        );
-        document.addEventListener('mousedown', this.closeList);
-        this.props.getClientsAction({
-            order_by: 'company_name',
-            sort: 'asc',
-        });
-        this.props.userReducer.user.tokenJira && this.props.getRelationProjectsListAction();
-    }
 }
 
 CreateProjectModal.propTypes = {
@@ -251,12 +302,14 @@ const mapStateToProps = state => ({
     clientsList: state.clientsReducer.clientsList,
     relationProjectsList: state.projectReducer.relationProjectsList,
     userReducer: state.userReducer,
+    teamUsers: state.teamReducer.currentTeamDetailedData.data,
 });
 
 const mapDispatchToProps = {
     showNotificationAction,
     getClientsAction,
     getRelationProjectsListAction,
+    getProjectsListActions,
 };
 
 export default connect(

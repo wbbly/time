@@ -29,21 +29,35 @@ Wobbly team`,
             closeModal,
             vocabulary,
             invoice,
+            getInvoices,
             sendInvoiceLetterThunk,
             isInvoicePageDetailed,
             showNotificationAction,
         } = this.props;
         const { inputValue } = this.state;
-        const { v_send_invoice, v_send_invoice_placeholder, v_send, v_cancel, v_from, v_to } = vocabulary;
-        const sendInvoiceLetter = () => {
+        const {
+            v_send_invoice,
+            v_send_invoice_placeholder,
+            v_send,
+            v_cancel,
+            v_from,
+            v_to,
+            v_client_no_email,
+        } = vocabulary;
+        const sendInvoiceLetter = async () => {
             const message = this.state.inputValue.replace(/\n/g, '<br>');
             let data = {
                 message: message,
                 sendingStatus: true,
             };
-            sendInvoiceLetterThunk(invoice.id, data, isInvoicePageDetailed);
-            closeModal();
-            showNotificationAction({ text: 'Invoice was sent', type: 'success' });
+            if (invoice.to.email) {
+                await sendInvoiceLetterThunk(invoice.id, data, isInvoicePageDetailed);
+                closeModal();
+                showNotificationAction({ text: 'Invoice was sent', type: 'success' });
+                getInvoices();
+            } else {
+                showNotificationAction({ text: v_client_no_email, type: 'error' });
+            }
         };
         return (
             <ModalPortal>

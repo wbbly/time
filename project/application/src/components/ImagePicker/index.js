@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FileType from 'file-type/browser';
 
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -32,7 +33,7 @@ class ImagePicker extends Component {
         this.setState({ isOpenDropdown: true });
     };
 
-    fileHandler = event => {
+    fileHandler = async event => {
         const { onFileLoaded, vocabulary, showNotificationAction } = this.props;
         const { v_a_avatar_upload_error } = vocabulary;
         let img = null;
@@ -44,26 +45,26 @@ class ImagePicker extends Component {
         }
 
         if (img) {
-            if (img.type.split('/')[0] !== 'image' || img.size > 1000000) {
+            const type = await FileType.fromBlob(img);
+            if ((type.mime === 'image/jpeg' || type.mime === 'image/png') && img.size < 1000000) {
+                const FR = new FileReader();
+
+                FR.onloadstart = () => this.setState({ loadingImage: true });
+                FR.onloadend = () => this.setState({ loadingImage: false });
+
+                FR.addEventListener('load', e => {
+                    this.setState({ loadedImage: e.target.result });
+                });
+
+                FR.readAsDataURL(img);
+
+                const formData = new FormData();
+                formData.append('file', img, img.name);
+
+                onFileLoaded(formData);
+            } else {
                 showNotificationAction({ text: v_a_avatar_upload_error, type: 'error' });
-                return;
             }
-
-            const FR = new FileReader();
-
-            FR.onloadstart = () => this.setState({ loadingImage: true });
-            FR.onloadend = () => this.setState({ loadingImage: false });
-
-            FR.addEventListener('load', e => {
-                this.setState({ loadedImage: e.target.result });
-            });
-
-            FR.readAsDataURL(img);
-
-            const formData = new FormData();
-            formData.append('file', img, img.name);
-
-            onFileLoaded(formData);
         }
     };
 
