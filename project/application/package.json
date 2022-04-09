@@ -17,7 +17,7 @@
     "formik": "2.0.4",
     "jwt-decode": "2.2.0",
     "lodash": "4.17.21",
-    "moment": "2.24.0",
+    "moment": "2.29.2",
     "moment-range": "4.0.2",
     "normalize.css": "8.0.1",
     "prop-types": "15.6.2",
